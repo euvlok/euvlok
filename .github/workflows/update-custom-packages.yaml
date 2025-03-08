@@ -1,0 +1,71 @@
+name: Update All Nix Packages in ./pkgs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update-packages:
+    name: Recursively update & Commit all Nix packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Grant perms to update script
+        run: chmod +x ./pkgs/update.sh
+
+      - name: Update & Commit each package (recursively, graceful)
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          changes=0
+
+          find ./pkgs -type f -name '*.nix' | while read -r nixfile; do
+            name=$(basename "$nixfile" .nix)
+            abs_path=$(realpath "$nixfile")
+            echo "Processing $nixfile"
+
+            OLD_REV=$(nix eval --impure --raw --expr \
+              "with import <nixpkgs> {}; builtins.substring 0 7 ((callPackage \"$abs_path\" {}).src.rev or \"\")" 2>/dev/null || echo "")
+            echo "Old revision for $name: $OLD_REV"
+
+            if ./pkgs/update.sh "$nixfile"; then
+              echo "Update script succeeded for $nixfile"
+            else
+              echo "Update script failed for $nixfile, skipping commit."
+              continue
+            fi
+
+            NEW_REV=$(nix eval --impure --raw --expr \
+              "with import <nixpkgs> {}; builtins.substring 0 7 ((callPackage \"$abs_path\" {}).src.rev or \"\")" 2>/dev/null || echo "")
+            echo "New revision for $name: $NEW_REV"
+
+            if git diff --quiet "$nixfile"; then
+              echo "No changes detected in $nixfile."
+            else
+              echo "$nixfile has changed."
+              git add "$nixfile"
+              COMMIT_MSG="$name: $OLD_REV -> $NEW_REV"
+              echo "Committing: $COMMIT_MSG"
+              git commit -m "$COMMIT_MSG"
+              # Rebase and push after each commit to avoid conflicts
+              git fetch origin master
+              git pull origin master --rebase
+              git push origin master
+              changes=1
+            fi
+          done
+
+          if [ "$changes" -eq 0 ]; then
+            echo "No updates needed for pkgs."
+          fi

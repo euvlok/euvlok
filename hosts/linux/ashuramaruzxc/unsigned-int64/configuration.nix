@@ -1,0 +1,59 @@
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  imports = [
+    ../shared/firmware.nix
+    ../shared/fonts.nix
+    ../shared/plasma.nix
+    ../shared/nvidia.nix
+    ../shared/settings.nix
+
+    ./hardware-configuration.nix
+    ./users.nix
+  ];
+
+  security = {
+    sudo = {
+      wheelNeedsPassword = false;
+      execWheelOnly = true;
+    };
+  };
+
+  services.protonmail-bridge = {
+    enable = true;
+    package =
+      # Ensure pass is not in the PATH.
+      pkgs.runCommand "protonmail-bridge"
+        {
+          bridge = pkgs.protonmail-bridge;
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+        }
+        ''
+          mkdir -p "$out/bin"
+          makeWrapper "$bridge/bin/protonmail-bridge" "$out/bin/protonmail-bridge" \
+            --set PATH ${lib.strings.makeBinPath [ pkgs.gnome-keyring ]}
+        '';
+  };
+
+  programs = {
+    gnupg.dirmngr.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      enableBrowserSocket = true;
+      enableExtraSocket = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+  };
+
+  environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
+
+  time.timeZone = "Europe/Berlin";
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  system.stateVersion = config.system.nixos.release;
+}

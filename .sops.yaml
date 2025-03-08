@@ -1,0 +1,13 @@
+keys:
+  - &ashuramaruzxc age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - &bigshaq9999 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - &donteatoreo age1kc4gmk6jztv6schw3mhwwea7nn8emce4uwqufawfwapv9tlgdazqz7fc2w
+  - &lay-by age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+creation_rules:
+  - path_regex: secrets/.*\.ya?ml$
+    key_groups:
+      - age:
+          - *ashuramaruzxc
+          - *bigshaq9999
+          - *donteatoreo
+          - *lay-by

@@ -1,0 +1,109 @@
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+
+{
+  imports = [
+    ./fonts.nix
+    ./hardware-configuration.nix
+    ./packages.nix
+    ./programs.nix
+    ./services.nix
+  ];
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.memtest86.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "blind-faith";
+
+  time.timeZone = "America/Chicago";
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.hushh = {
+    isNormalUser = true;
+    description = "hushh";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "input"
+      "disk"
+      "libvirtd"
+      "wireshark"
+    ];
+  };
+
+  networking.firewall.enable = false;
+
+  # Set some annoying env vars to make sure gayland and nshitia play nice together
+  environment.variables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    NVD_BACKEND = "direct";
+    WLR_DRM_NO_ATOMIC = "1";
+    TERMINAL = "alacritty";
+    EDITOR = "nvim";
+    TERM = "alacritty";
+    __GL_VRR_ALLOWED = "0";
+  };
+
+  # Ugly hack to fix a bug in egl-wayland, see
+  #! https://github.com/NixOS/nixpkgs/issues/202454
+  environment.etc."egl/egl_external_platform.d".source =
+    let
+      nvidia_wayland = pkgs.writeText "10_nvidia_wayland.json" ''
+        {
+            "file_format_version" : "1.0.0",
+            "ICD" : {
+                "library_path" : "${pkgs.egl-wayland}/lib/libnvidia-egl-wayland.so"
+            }
+        }
+      '';
+      nvidia_gbm = pkgs.writeText "15_nvidia_gbm.json" ''
+        {
+            "file_format_version" : "1.0.0",
+            "ICD" : {
+                "library_path" : "${config.hardware.nvidia.package}/lib/libnvidia-egl-gbm.so.1"
+            }
+        }
+      '';
+    in
+    lib.mkForce (
+      pkgs.runCommandLocal "nvidia-egl-hack" { } ''
+        mkdir -p "$out"
+        cp ${nvidia_wayland} "$out/10_nvidia_wayland.json"
+        cp ${nvidia_gbm} "$out/15_nvidia_gbm.json"
+      ''
+    );
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+    ];
+  };
+
+  virtualisation.libvirtd.enable = true;
+
+  system.stateVersion = "24.11";
+}
