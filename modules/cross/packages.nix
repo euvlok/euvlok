@@ -13,15 +13,16 @@
 
     # Networking
     inherit (pkgs)
-    /** #! only for linux
-    #TODO: separate these packages from macos
-    bsd-finger 
-    bsd-fingerd 
-     */
+      /**
+        #! only for linux
+        #TODO: separate these packages from macos
+        bsd-finger
+        bsd-fingerd
+      */
       dig
       curl
       nmap
-    ;
+      ;
     # Archive utils
     inherit (pkgs)
       p7zip
@@ -31,7 +32,7 @@
       unzip
       zstd
       gzip
-    ;
+      ;
     # Basic Utils
     inherit (pkgs)
       btop
