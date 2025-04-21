@@ -5,8 +5,15 @@
     modules = [
       ./configuration.nix
       ./home.nix
+      inputs.anime-game-launcher.nixosModules.default
       inputs.catppuccin.nixosModules.catppuccin
-
+      {
+        catppuccin = {
+          enable = true;
+          flavor = "mocha";
+          accent = "rosewater";
+        };
+      }
       ../../../../modules/nixos
       ../../../../modules/cross
       {

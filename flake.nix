@@ -161,5 +161,8 @@
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    anime-game-launcher.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
+    anime-game-launcher.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
   };
 }

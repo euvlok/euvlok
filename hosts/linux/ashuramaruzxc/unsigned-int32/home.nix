@@ -12,8 +12,7 @@ let
       builtins.fromJSON (config.system.nixos.release);
 in
 {
-  #! ??????
-  imports = [ inputs.home-manager-ashuramaruzxc.darwinModules.home-manager ];
+  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -22,9 +21,23 @@ in
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
+        {
+          catppuccin = {
+            enable = true;
+            flavor = "mocha";
+            accent = "rosewater";
+          };
+        }
         ./systemd-utils.nix
 
         ../../../../modules/hm
+        inputs.sops-nix.homeManagerModules.sops
+        {
+          sops = {
+            age.keyFile = "/Users/marie/.config/sops/age/keys.txt";
+            defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+          };
+        }
         {
           hm = {
             bash.enable = true;
@@ -33,7 +46,7 @@ in
             fastfetch.enable = true;
             firefox.enable = true;
             fzf.enable = true;
-            git.enable = true;
+            # git.enable = true;
             mpv.enable = true;
             nixcord.enable = true;
             nushell.enable = true;
@@ -42,7 +55,6 @@ in
             vscode.enable = true;
             zellij.enable = true;
             zsh.enable = true;
-            services.protonmail-bridge.enable = true;
           };
         }
 
@@ -155,7 +167,7 @@ in
                 };
               };
             }
-            // (
+            ++ (
               let
                 inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
                 inherit (pkgs.unstable.jetbrains) rider clion idea-ultimate;
@@ -165,12 +177,12 @@ in
                   "catppuccin-theme"
                   "csv-editor"
                   "ini"
-                  "nix-lsp"
+                  # "nix-lsp"
                   "nixidea"
                   "rainbow-brackets"
                 ];
               in
-              {
+              builtins.attrValues {
                 riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
                 clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
                 ideaUltimateWithPlugins = addPlugins idea-ultimate (
@@ -194,28 +206,6 @@ in
               };
             };
             btop.enable = true;
-          };
-          catppuccin = {
-            fcitx5 = {
-              enable = true;
-              apply = true;
-              flavor = "mocha";
-            };
-            mpv = {
-              enable = true;
-              flavor = "mocha";
-              accent = "rosewater";
-            };
-            tmux = {
-              flavor = "mocha";
-              extraConfig = ''
-                set -g @catppuccin_status_modules_right "application session user host date_time"
-              '';
-            };
-            btop = {
-              enable = true;
-              flavor = "mocha";
-            };
           };
         }
       ];

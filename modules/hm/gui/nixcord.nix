@@ -38,13 +38,15 @@ in
     programs.nixcord = {
       enable = true;
       discord.package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
-        pkgs.discord.overrideAttrs (oldAttrs: {
-          installPhase =
-            oldAttrs.installPhase
-            + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
-        })
+        inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.discord.overrideAttrs
+          (oldAttrs: {
+            installPhase =
+              oldAttrs.installPhase
+              + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
+          })
       );
       discord.vencord.unstable = true;
+      discord.openASAR.enable = false;
       config = {
         useQuickCss = true;
         plugins = {

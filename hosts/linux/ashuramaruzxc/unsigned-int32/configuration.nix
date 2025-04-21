@@ -14,6 +14,16 @@
     ./hardware-configuration.nix
     ./steam.nix
     ./users.nix
+
+    inputs.sops-nix.nixosModules.sops
+    {
+      sops = {
+        age.keyFile = "/var/lib/sops/age/keys.txt";
+        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+        secrets.gh_token = { };
+        secrets.netrc_creds = { };
+      };
+    }
   ];
 
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
@@ -27,7 +37,6 @@
 
   hardware = {
     gpgSmartcards.enable = true;
-    hardware.bolt.enable = true;
     bluetooth = {
       settings.General = {
         ControllerMode = "bredr";
@@ -47,6 +56,7 @@
       enable = true;
       motherboard = "amd";
     };
+    hardware.bolt.enable = true;
     xserver = {
       enable = true;
       xkb.layout = "us";
@@ -100,23 +110,6 @@
     zsh.enable = true;
   };
 
-  age = {
-    # ageBin = "${pkgs.rage}/bin/rage";
-    secrets = {
-      "gh_token" = {
-        # file = path + /secrets/gh_token.age;
-        mode = "0640";
-        owner = "root";
-        group = "root";
-      };
-      "netrc_creds" = {
-        # file = path + /secrets/netrc_creds.age;
-        mode = "0644";
-        owner = "root";
-        group = "root";
-      };
-    };
-  };
   security = {
     wrappers = {
       doas = {
@@ -171,13 +164,6 @@
         };
         control = "required";
       };
-      # yubico = {
-      #   enable = true;
-      #   debug = true;
-      #   mode = "challenge-response";
-      #   id = [ "" ];
-      #   control = "required";
-      # };
     };
   };
 
@@ -196,8 +182,6 @@
     gphoto2.enable = if config.services.gvfs.enable == true then true else false;
   };
 
-  services.yubikey-agent.enable = true;
-
   environment = {
     systemPackages = builtins.attrValues {
       inherit (pkgs)
@@ -208,10 +192,6 @@
         apfsprogs
         ;
       inherit (pkgs.xorg) xhost;
-      inherit (inputs.nix-software-center.packages.${config.nixpkgs.hostPlatform.system})
-        nix-software-center
-        ;
-      inherit (inputs.nixos-conf-editor.packages.${config.nixpkgs.hostPlatform.system}) nixos-conf-editor;
     };
   };
 
@@ -235,8 +215,8 @@
   };
 
   nix.settings = {
-    access-tokens = config.age.secrets.gh_token.path;
-    netrc-file = config.age.secrets.netrc_creds.path;
+    access-tokens = config.sops.secrets.gh_token.path;
+    netrc-file = config.sops.secrets.netrc_creds.path;
   };
 
   system.stateVersion = "24.11";

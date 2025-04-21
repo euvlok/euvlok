@@ -1,5 +1,4 @@
-#! supposed to be in my home directory
-{ pkgs, path, ... }:
+{ pkgs, ... }:
 let
   generate_uuid = pkgs.stdenv.mkDerivation {
     pname = "assign_uuid";
@@ -12,8 +11,8 @@ let
 
     installPhase = ''
       makeWrapper ${pkgs.python3Packages.python.interpreter} $out/bin/assign_uuid \
-        --set PYTHONPATH "$PYTHONPATH:${path + /src/generateuuid.py}" \
-        --add-flags "-O ${path + /src/generateuuid.py}" \
+        --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/generateuuid.py}" \
+        --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/generateuuid.py}" \
     '';
   };
   generate_md5 = pkgs.stdenv.mkDerivation {
@@ -27,8 +26,8 @@ let
 
     installPhase = ''
       makeWrapper ${pkgs.python3Packages.python.interpreter} $out/bin/assign_md5 \
-        --set PYTHONPATH "$PYTHONPATH:${path + /src/generatemd5.py}" \
-        --add-flags "-O ${path + /src/generatemd5.py}" \
+        --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/generatemd5.py}" \
+        --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/generatemd5.py}" \
     '';
   };
   video2gif = pkgs.stdenv.mkDerivation {
@@ -42,8 +41,8 @@ let
 
     installPhase = ''
       makeWrapper ${pkgs.python3Packages.python.interpreter} $out/bin/video2gif \
-        --set PYTHONPATH "$PYTHONPATH:${path + /src/video2gif.py}" \
-        --add-flags "-O ${path + /src/video2gif.py}" \
+        --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/video2gif.py}" \
+        --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/video2gif.py}" \
     '';
   };
 in

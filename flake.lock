@@ -1,5 +1,27 @@
 {
   "nodes": {
+    "anime-game-launcher": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "nixpkgs-ashuramaruzxc"
+        ]
+      },
+      "locked": {
+        "lastModified": 1744237139,
+        "narHash": "sha256-f395cE+MIvKcRfRZubYXc7TJfJJ7edwpt7tYIFDgYQo=",
+        "owner": "ezKEa",
+        "repo": "aagl-gtk-on-nix",
+        "rev": "a1a00f83d74988e98af8757e9b86ddf04d2ecdfc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ezKEa",
+        "ref": "release-24.11",
+        "repo": "aagl-gtk-on-nix",
+        "type": "github"
+      }
+    },
     "aquamarine": {
       "inputs": {
         "hyprutils": [
@@ -169,7 +191,7 @@
     "devenv": {
       "inputs": {
         "cachix": "cachix",
-        "flake-compat": "flake-compat",
+        "flake-compat": "flake-compat_2",
         "git-hooks": "git-hooks",
         "nix": "nix",
         "nixpkgs": [
@@ -267,6 +289,22 @@
     "flake-compat_2": {
       "flake": false,
       "locked": {
+        "lastModified": 1733328505,
+        "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "ff81ac966bb2cae68946d5ed5fc4994f96d0ffec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_3": {
+      "flake": false,
+      "locked": {
         "lastModified": 1696426674,
         "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
         "owner": "edolstra",
@@ -280,7 +318,7 @@
         "type": "github"
       }
     },
-    "flake-compat_3": {
+    "flake-compat_4": {
       "locked": {
         "lastModified": 1733328505,
         "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
@@ -1589,7 +1627,7 @@
     },
     "pre-commit-hooks": {
       "inputs": {
-        "flake-compat": "flake-compat_2",
+        "flake-compat": "flake-compat_3",
         "gitignore": "gitignore_2",
         "nixpkgs": [
           "hyprland",
@@ -1634,6 +1672,7 @@
     },
     "root": {
       "inputs": {
+        "anime-game-launcher": "anime-game-launcher",
         "base16": "base16",
         "catppuccin": "catppuccin",
         "devenv": "devenv",
@@ -1740,7 +1779,7 @@
         "base16-helix": "base16-helix",
         "base16-vim": "base16-vim",
         "firefox-gnome-theme": "firefox-gnome-theme",
-        "flake-compat": "flake-compat_3",
+        "flake-compat": "flake-compat_4",
         "flake-utils": "flake-utils_5",
         "git-hooks": [],
         "gnome-shell": "gnome-shell",

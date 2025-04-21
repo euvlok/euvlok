@@ -3,7 +3,6 @@
   pkgs,
   lib,
   config,
-  osConfig,
   ...
 }:
 # GNOME Stuff
@@ -122,7 +121,7 @@
       catppuccin-kvantum
       ;
 
-    inherit (inputs.lightly.packages.${osConfig.nixpkgs.hostPlatform.system})
+    inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
       darkly-qt5
       darkly-qt6
       ;
@@ -185,7 +184,7 @@
       accents = [ config.catppuccin.accent ];
       size = "compact";
       tweaks = [ "normal" ];
-      variant = config.catppuccin.variant;
+      variant = config.catppuccin.flavor;
     };
   };
 }

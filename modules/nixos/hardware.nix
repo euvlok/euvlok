@@ -109,7 +109,7 @@
 
       environment.systemPackages = builtins.attrValues {
         inherit (pkgs) zenith-nvidia;
-        inherit (pkgs.nvtopPackages.full) nvtop;
+        inherit (pkgs.nvtopPackages) full;
       };
 
       nixpkgs.overlays =

@@ -1,7 +1,6 @@
-#! move this to hm directory
-{ pkgs, osConfig, ... }:
+{ pkgs, config, ... }:
 {
-  fonts.fontDir.enable = osConfig.nixpkgs.hostPlatform.isLinux;
+  fonts.fontDir.enable = config.nixpkgs.hostPlatform.isLinux;
   fonts.packages = builtins.attrValues {
     mplus = pkgs.mplus-outline-fonts.githubRelease;
     inherit (pkgs)
