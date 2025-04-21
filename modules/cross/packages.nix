@@ -4,9 +4,97 @@
   config,
   ...
 }:
-{
-  environment.systemPackages =
-    (builtins.attrValues {
+let
+  commonPkgs =
+    pkgs:
+    (builtins.attrValues pkgs {
+      # --- Core Utilities (Shell essentials, replacements, process management) ---
+      inherit (pkgs)
+        bc
+        coreutils # Basic file, shell and text manipulation utilities
+        diffutils
+        findutils
+        gawk
+        gnugrep
+        gnused
+        gnutar
+        moreutils # Collection of handy Unix tools (parallel, sponge, ts, ...)
+        patch
+        procps # Utilities for monitoring system processes (ps, top, kill...)
+        psmisc # `pstree`, `killall`, `fuser`
+        tldr # Simplified man pages
+        util-linux # Essential Linux utilities (dmesg, fdisk, mount...)
+        which
+        ;
+
+      # --- Modern Core Utility Replacements ---
+      inherit (pkgs)
+        bat # `cat` clone with syntax highlighting and Git integration
+        eza # Modern `ls` replacement
+        fd # Simple, fast and user-friendly `find` alternative
+        procs # Modern `ps` replacement with colored output
+        ripgrep # Fast `grep` alternative (rg)
+        sd # Intuitive `sed` alternative
+        ;
+
+      # --- File Management & Archiving ---
+      inherit (pkgs)
+        lz4
+        ncdu # NCurses Disk Usage analyzer
+        p7zip
+        rsync
+        tree
+        unrar
+        unzip
+        xz
+        zip
+        ;
+
+      # --- Modern File Management Replacements ---
+      inherit (pkgs)
+        dust # More intuitive `du` alternative
+        ;
+
+      # --- Text Processing & Viewing ---
+      inherit (pkgs)
+        delta # Feature-rich `diff` viewer, especially for Git
+        hexyl # CLI hex viewer
+        jq # CLI JSON processor
+        less
+        ;
+
+      # --- Networking ---
+      inherit (pkgs)
+        curl
+        dnsutils # `dig`, `nslookup`, etc.
+        iputils # `ping`, `arping`, `tracepath`, etc.
+        netcat-gnu # GNU netcat
+        nmap
+        openssh_hpn # SSH client/server (High Performance Networking patches)
+        wget
+        ;
+
+      # --- Modern Networking Replacements ---
+      inherit (pkgs)
+        xh # Friendly `curl` alternative for HTTP requests
+        ;
+
+      # --- System Information & Monitoring ---
+      inherit (pkgs)
+        file # Determine file type
+        lsof # List open files
+        pciutils # `lspci`
+        smartmontools # S.M.A.R.T. disk health monitoring tools
+        sysstat # `iostat`, `mpstat`, `sar`
+        ;
+
+      # --- Modern System Info/Monitoring Replacements ---
+      inherit (pkgs)
+        bottom # TUI process/system monitor
+        btop # TUI resource monitor (C++)
+        duf # Disk Usage/Free utility (df alternative)
+        ;
+
       # --- Media ---
       inherit (pkgs)
         ffmpeg-full
@@ -15,127 +103,66 @@
         yt-dlp
         ;
 
-      # --- Basic CLI Utilities ---
+      # --- Development Tools ---
       inherit (pkgs)
-        bat
-        bc
-        btop # Resource monitor (nicer htop)
-        curl
-        delta # Superior git diff viewer
-        diffutils
-        dnsutils # For dig, nslookup, etc.
-        file
-        findutils
-        gawk
-        gnused
-        gnutar
-        gnugrep
-        iputils # `ping`, `arping`, etc.
-        jq
-        less
-        lsof # List open files
-        lz4 # Fast compression algorithm command-line tools
-        moreutils
-        ncdu
-        nmap
-        openssh_hpn
-        p7zip # CLI 7-Zip tools
-        patch
-        procps # `ps`, `top`, `free`, `kill`
-        psmisc # `pstree`, `killall`, `fuser`
-        rsync
-        sysstat # `iostat`, `mpstat`, `sar` for system monitoring
-        tldr
-        tree
-        unrar
-        unzip
-        util-linux # Collection of essential Linux utilities (like `dmesg`, `fdisk`, `mount`)
-        wget
-        which
-        xz
-        zip
-        ;
-
-      # --- Rust-based CLI Replacements ---
-      inherit (pkgs)
-        bottom # (alternative to btop)
-        duf # Disk Usage/Free utility (df alternative)
-        dust # Disk Usage analyzer (du alternative)
-        eza # Modern `ls` replacement
-        fd # Fast `find` alternative
-        hexyl # Command-line hex viewer
-        hyperfine # CLI benchmarking tool
-        procs # Modern `ps` replacement
-        ripgrep # Fast `grep` alternative (rg)
-        sd # `sed` alternative
-        tokei # Code statistics (cloc alternative)
-        xh # Friendly `curl` alternative for HTTP requests
-        ;
-
-      # --- System / Hardware ---
-      inherit (pkgs)
-        smartmontools # Utilities for disk health monitoring (S.M.A.R.T.)
-        pciutils # `lspci`
-        ;
-
-      # --- Networking ---
-      inherit (pkgs)
-        netcat-gnu # GNU netcat (often preferred over OpenBSD version for features)
-        ;
-
-      # --- Dev Tools ---
-      inherit (pkgs)
-        # --- General ---
+        # --- Build Tools & Compilers ---
         clang
         cmake
         gcc
         gnumake
+        # --- Dev Utilities ---
+        hyperfine # CLI benchmarking tool
+        tokei # Counts lines of code
         ;
-    })
-    # --- Concatenate with Linux-specific packages ---
-    ++ lib.optionals config.nixpkgs.hostPlatform.isLinux (
-      builtins.attrValues {
-        # --- Media ---
-        inherit (pkgs) ffmpegthumbs; # Video thumbnail generator for file managers
+    });
 
-        # --- Networking ---
-        inherit (pkgs)
-          bsd-finger # User information lookup protocol client
-          mtr # Network diagnostic tool (combines traceroute and ping)
-          iftop # Display bandwidth usage on an interface (TUI)
-          nethogs # Display per-process network usage (TUI)
-          wireguard-tools # WireGuard VPN command-line tools
-          ;
+  linuxOnlyPkgs =
+    pkgs:
+    (builtins.attrValues pkgs {
+      # --- Networking ---
+      inherit (pkgs)
+        bsd-finger
+        mtr # Network diagnostic tool (traceroute + ping)
+        iftop # TUI display of bandwidth usage on an interface
+        nethogs # TUI display of per-process network usage
+        wireguard-tools
+        ;
 
-        # --- Desktop/Audio ---
-        inherit (pkgs)
-          pavucontrol # PulseAudio Volume Control GUI
-          playerctl # Control media players via MPRIS (CLI)
-          networkmanagerapplet # GUI applet for NetworkManager
-          ;
+      # --- System / Hardware ---
+      inherit (pkgs)
+        hdparm
+        lm_sensors # Tools for monitoring hardware sensors
+        ;
 
-        # --- Clipboard Tools ---
-        inherit (pkgs)
-          wl-clipboard-rs # Wayland clipboard (wl-copy/wl-paste) - Rust version
-          xclip # X11 clipboard CLI
-          clipcat # Clipboard manager (works across X11/Wayland)
-          wayland-protocols
-          wayland-utils
-          ;
+      # --- Desktop / GUI / Audio ---
+      inherit (pkgs)
+        networkmanagerapplet
+        pavucontrol # PulseAudio Volume Control GUI
+        playerctl # Control media players via MPRIS (CLI)
+        ;
 
-        # --- System / Hardware ---
-        inherit (pkgs)
-          pciutils # `lspci`
-          hdparm # Get/set SATA/IDE device parameters
-          lm_sensors # Tools for monitoring hardware sensors (needs configuration)
-          ;
+      # --- Clipboard Tools ---
+      inherit (pkgs)
+        xclip # X11 clipboard CLI utility
+        wl-clipboard-rs # Wayland clipboard utilities (wl-copy/wl-paste)
+        clipcat # Clipboard manager (X11/Wayland)
+        ;
 
-        # --- Theme stuff ---
-        inherit (pkgs.kdePackages)
-          breeze
-          breeze-gtk
-          breeze-icons
-          ;
-      }
-    );
+      # --- Media ---
+      inherit (pkgs)
+        ffmpegthumbs # Video thumbnail generator for file managers
+        ;
+
+      # --- Theming ---
+      inherit (pkgs.kdePackages)
+        breeze
+        breeze-gtk
+        breeze-icons
+        ;
+    });
+in
+{
+  environment.systemPackages =
+    (commonPkgs pkgs)
+    ++ lib.optionals config.nixpkgs.hostPlatform.isLinux (linuxOnlyPkgs pkgs);
 }

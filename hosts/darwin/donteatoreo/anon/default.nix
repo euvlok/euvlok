@@ -8,6 +8,7 @@ in
     modules = [
       ./fonts.nix
       ./home.nix
+      ./system.nix
       ./zsh.nix
 
       {

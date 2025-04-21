@@ -15,7 +15,6 @@ let
     unstable = import inputs.nixpkgs-unstable { inherit (final) system config; };
   };
 in
-#! ?????? imports of my system settings????
 {
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
@@ -45,8 +44,6 @@ in
   };
 
   security.pam.enableSudoTouchIdAuth = true;
-  system.keyboard.enableKeyMapping = true;
-  system.stateVersion = 5;
 
   networking = {
     computerName = "Marie's Mac Mini M2 Pro unsigned-int8";

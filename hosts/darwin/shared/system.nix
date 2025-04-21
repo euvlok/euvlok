@@ -11,10 +11,6 @@ _: {
 
         AppleMetricUnits = 1; # Use Metric
 
-        AppleInterfaceStyleSwitchesAutomatically = true; # Auto Switch Light-Dark Mode
-
-        NSAutomaticWindowAnimationsEnabled = false; # Disable opening and closing animation
-
         NSDocumentSaveNewDocumentsToCloud = false; # Disable auto save text files to iCloud
 
         NSAutomaticCapitalizationEnabled = false; # Disable auto capitalization
@@ -43,7 +39,6 @@ _: {
         orientation = "bottom";
         show-recents = false; # Show Recently Open
         showhidden = true;
-        tilesize = 65; # Size of Dock Icons
 
         # Disable all Corners, 1 = Disabled
         # Top Left
