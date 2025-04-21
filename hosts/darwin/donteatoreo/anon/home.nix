@@ -2,7 +2,6 @@
   inputs,
   pkgs,
   config,
-  osConfig,
   ...
 }:
 let
@@ -19,7 +18,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     users.anon =
-      { config, ... }:
+      { config, osConfig, ... }:
       {
         imports = [
           { home.stateVersion = "24.11"; }
