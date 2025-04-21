@@ -9,7 +9,6 @@
     ../shared/firmware.nix
     ../shared/fonts.nix
     ../shared/plasma.nix
-    ../shared/nvidia.nix
     ../shared/settings.nix
 
     ./hardware-configuration.nix
