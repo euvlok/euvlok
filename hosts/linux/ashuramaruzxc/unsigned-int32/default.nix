@@ -3,6 +3,7 @@
   unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      ../../shared/configuration.nix
       ./configuration.nix
       ./home.nix
       inputs.anime-game-launcher.nixosModules.default

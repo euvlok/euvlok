@@ -13,13 +13,13 @@ in
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
       (lib.mkIf config.nixpkgs.hostPlatform.isLinux {
-        # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
-        environment.etc = lib.optionalAttrs isLinux (
-          lib.mapAttrs' (name: value: {
-            name = "nix/path/${name}";
-            value.source = value.flake;
-          }) config.nix.registry
-        );
+        # # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
+        # environment.etc = lib.optionalAttrs isLinux (
+        #   lib.mapAttrs' (name: value: {
+        #     name = "nix/path/${name}";
+        #     value.source = value.flake;
+        #   }) config.nix.registry
+        # );
 
         /*
           "truetype:interpreter-version=40" tells freetype to use version 40 of the
