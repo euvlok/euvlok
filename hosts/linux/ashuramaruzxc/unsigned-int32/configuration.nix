@@ -13,7 +13,6 @@
 
     ./hardware-configuration.nix
     ./users.nix
-    ./flatpak.nix
 
     inputs.sops-nix.nixosModules.sops
     {

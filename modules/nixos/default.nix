@@ -4,7 +4,7 @@ _: {
     ./hardware.nix
     ./kanata
     ./networking.nix
-    ./programs.nix
+    # ./programs.nix
     ./security.nix
     ./services.nix
     ./sessionVariables.nix

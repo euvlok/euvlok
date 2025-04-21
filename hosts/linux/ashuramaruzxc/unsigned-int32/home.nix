@@ -23,6 +23,7 @@ in
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
         { inherit (osConfig) catppuccin; }
+        ./flatpak.nix
         ./systemd-utils.nix
 
         ../../../../modules/hm
