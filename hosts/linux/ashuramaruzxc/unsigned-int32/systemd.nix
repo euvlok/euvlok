@@ -1,3 +1,4 @@
+#! supposed to be in my home directory
 { pkgs, path, ... }:
 let
   generate_uuid = pkgs.stdenv.mkDerivation {

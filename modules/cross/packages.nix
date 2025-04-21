@@ -1,39 +1,48 @@
 { pkgs, ... }:
 {
   environment.systemPackages = builtins.attrValues {
+    # mail client
+    inherit (pkgs) thunderbird; # it works on macos now
     # Media
     inherit (pkgs)
       ffmpeg-full
-      # ffmpegthumbs
+      # ffmpegthumbs #! this is supposed to be kdePackages
       imagemagick
       yt-dlp
       ;
 
-    # # Networking
-    # inherit (pkgs)
-    #   bsd-finger
-    #   ;
-
+    # Networking
+    inherit (pkgs)
+    /** #! only for linux
+    #TODO: separate these packages from macos
+    bsd-finger 
+    bsd-fingerd 
+     */
+      dig
+      curl
+      nmap
+    ;
+    # Archive utils
+    inherit (pkgs)
+      p7zip
+      lz4
+      rar
+      zip
+      unzip
+      zstd
+      gzip
+    ;
     # Basic Utils
     inherit (pkgs)
       btop
-      curl
-      dig
       htop
       jq
-      lz4
       ncdu
-      nmap
-      p7zip
-      # pavucontrol
-      rar
       tldr
       tree
-      unzip
       wget
       wl-clipboard
       xclip
-      zip
       ;
 
     # Rust Tools

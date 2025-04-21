@@ -17,7 +17,8 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.unsigned-int32 = {
+    #! unsigned-int64 user?????
+    users.unsigned-int64 = {
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
@@ -38,7 +39,6 @@ in
             zsh.enable = true;
           };
         }
-        { home.packages = builtins.attrValues { inherit (pkgs) ani-cli thefuck; }; }
       ];
     };
     extraSpecialArgs = { inherit inputs release; };

@@ -15,18 +15,10 @@ _: {
       "homebrew/cask-versions"
       "cfergeau/crc"
     ];
-    brews = [
-      "winetricks"
-      "smartmontools"
-      # virtualization
-      "vfkit"
-      # networking
-    ];
     casks = [
       ### --- Socials --- ###
       "telegram" # telegram swift client
       "element" # halo based department?
-      "thunderbird" # mail client
       ### --- Socials
       ### --- Gayming --- ###
       "crossover" # Supporting wine project
@@ -34,9 +26,8 @@ _: {
       "mythic" # heroic but better
       "heroic"
       "steam" # Gayming
-      "flycast"
-      "ppsspp"
       "xemu"
+      "ppsspp"
       "cemu"
       ### --- Gayming --- ###
       ### --- Graphics --- ###

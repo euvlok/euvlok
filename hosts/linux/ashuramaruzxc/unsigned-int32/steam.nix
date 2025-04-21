@@ -1,3 +1,4 @@
+#! add this to shared since it's perfect one for steam
 { pkgs, lib, ... }:
 {
   nixpkgs.overlays = [

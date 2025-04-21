@@ -40,6 +40,7 @@
           };
         in
         browserPackages.${config.hm.chromium.browser};
+      #TODO: add more dictionaries
       dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
       extensions = [
         { id = "lckanjgmijmafbedllaakclkaicjfmnk"; } # ClearURLs
@@ -47,12 +48,14 @@
         { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # Ublock Origin
         { id = "jinjaccalgkegednnccohejagnlnfdag"; } # Violentmonkey
         { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; } # Sponsor Block
+        #TODO: preferably having bypass paywal by default
       ] ++ lib.optionals (config.catppuccin.enable) [ { id = "lnjaiaapbakfhlbjenjkhffcdpoompki"; } ];
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
 
         # Web
+        #! could cause issues in the future on darwin if there will be a chromium package
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 

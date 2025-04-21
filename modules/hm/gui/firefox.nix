@@ -186,6 +186,7 @@ in
               {
                 "browser.urlbar.suggest.calculator" = true;
                 "browser.urlbar.update2.engineAliasRefresh" = true;
+                #TODO: would cause issues on macos
                 "widget.use-xdg-desktop-portal.file-picker" = 1;
               }
               // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
@@ -200,6 +201,7 @@ in
                   return-youtube-dislikes
                   sponsorblock
                   ublock-origin
+                  #TODO: add bypass paywall
                   ;
               }
               ++ lib.optionals config.catppuccin.enable [

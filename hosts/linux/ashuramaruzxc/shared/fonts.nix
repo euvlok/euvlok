@@ -1,3 +1,4 @@
+#! move this to hm directory
 { pkgs, osConfig, ... }:
 {
   fonts.fontDir.enable = osConfig.nixpkgs.hostPlatform.isLinux;

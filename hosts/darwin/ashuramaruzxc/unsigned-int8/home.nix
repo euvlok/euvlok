@@ -62,17 +62,17 @@ in
         # SNS
         inherit (pkgs)
           signal-desktop # just in case
-          kotatogram-desktop # Telegram but better
-          #TODO dino # Jabber client gstreamer-vaapi is unsupported
+          materialgram # Telegram but better
+          dino # Jabber client gstreamer-vaapi is unsupported
           ;
 
         # Utilities
         inherit (pkgs)
           # Audio
-          anki-bin
+          anki
           audacity
-          nicotine-plus
           qbittorrent
+          nicotine-plus
 
           # Graphics
           #! krita brew
@@ -80,49 +80,67 @@ in
           inkscape # Vector graphics
           #! kdenlive brew
           #! obs-studio brew
-          #! blender # 3D creation suite BREW
+          blender # 3D creation suite
 
           yubikey-manager # OTP
-          yt-dlp # must have
-          ani-cli # Anime downloader
-          thefuck # just for lulz
+          
           ;
 
         # Gaming
         inherit (pkgs)
+          winetricks
           # Misc
           #! xemu brew
-          #! flycast brew
+          #! np2kai
+          flycast
           prismlauncher
 
           # Nintendo
           #! mgba brew
           dolphin-emu
+          #! cemu
+          ryubing
 
           # Playstation
           chiaki # remote-play
           duckstation-bin # PlayStation 1 emulator
           #TODO pcsx2-bin # PlayStation 2 emulator maybe later
           #! ppsspp # PlayStation PSP emulator BREW
+          #! rpcs3
+          #! shadps4
 
           # Stores
-          #! heroic brew
           gogdl
           ;
-
-        inherit (pkgs) mono powershell;
-        inherit (pkgs) sass deno;
-        inherit (pkgs.jetbrains) rider clion;
-        dotnetCorePackages = pkgs.dotnetCorePackages.combinePackages (
-          builtins.attrValues {
-            inherit (pkgs.dotnetCorePackages) sdk_8_0 sdk_9_0;
-          }
-        );
-        nodejs = pkgs.nodejs.override {
-          enableNpm = true;
-          python3 = pkgs.python312;
-        };
-      };
+        inherit (pkgs.jetbrains) dataspell datagrip;
+      }
+      // (
+              let
+                inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
+                inherit (pkgs.unstable.jetbrains) rider clion idea-ultimate;
+                commonPlugins = [
+                  "better-direnv"
+                  "catppuccin-icons"
+                  "catppuccin-theme"
+                  "csv-editor"
+                  "ini"
+                  "nix-lsp"
+                  "nixidea"
+                  "rainbow-brackets"
+                ];
+              in
+              {
+                riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
+                clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
+                ideaUltimateWithPlugins = addPlugins idea-ultimate (
+                  commonPlugins
+                  ++ [
+                    "rust"
+                    "go"
+                  ]
+                );
+              }
+            );
     };
     extraSpecialArgs = { inherit inputs release; };
   };

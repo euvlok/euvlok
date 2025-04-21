@@ -8,6 +8,7 @@
 }:
 let
   # krisp-patcher ~/.config/discord/x.x.xx/modules/discord_krisp/discord_krisp.node
+  #TODO: write a systemd service that will patch discord automatically assigned to: ashuramaruzxc 
   krisp-patcher =
     pkgs.writers.writePython3Bin "krisp-patcher"
       {
