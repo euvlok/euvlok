@@ -17,7 +17,7 @@
 
   services.xserver.displayManager.gdm.autoSuspend = true;
 
-  nixpkgs.overlays = lib.optionals ((builtins.fromJSON pkgs.mutter.version) < 48) [
+  nixpkgs.overlays = [
     # GNOME 47: triple-buffering-v4-47
     (_: prev: {
       gnome = prev.gnome.overrideScope (
