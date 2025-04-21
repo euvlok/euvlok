@@ -5,9 +5,8 @@
   ...
 }:
 let
-  commonPkgs =
-    pkgs:
-    (builtins.attrValues pkgs {
+  commonPkgs = (
+    builtins.attrValues {
       # --- Core Utilities (Shell essentials, replacements, process management) ---
       inherit (pkgs)
         bc
@@ -114,11 +113,11 @@ let
         hyperfine # CLI benchmarking tool
         tokei # Counts lines of code
         ;
-    });
+    }
+  );
 
-  linuxOnlyPkgs =
-    pkgs:
-    (builtins.attrValues pkgs {
+  linuxOnlyPkgs = (
+    builtins.attrValues {
       # --- Networking ---
       inherit (pkgs)
         bsd-finger
@@ -159,10 +158,11 @@ let
         breeze-gtk
         breeze-icons
         ;
-    });
+    }
+  );
 in
 {
   environment.systemPackages =
-    (commonPkgs pkgs)
-    ++ lib.optionals config.nixpkgs.hostPlatform.isLinux (linuxOnlyPkgs pkgs);
+    commonPkgs
+    ++ lib.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
 }
