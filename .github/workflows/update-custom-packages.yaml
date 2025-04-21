@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@main
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@main
 
       - name: Grant perms to update script
         run: chmod +x ./pkgs/update.sh
@@ -25,7 +25,7 @@ jobs:
       - name: Update & Commit each package (recursively, graceful)
         run: |
           set -e
-          git config user.name "github-actions[bot]"
+          gt config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           changes=0
@@ -34,6 +34,13 @@ jobs:
             name=$(basename "$nixfile" .nix)
             abs_path=$(realpath "$nixfile")
             echo "Processing $nixfile"
+
+            if nix eval --impure --raw --expr \
+              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).type" 2>/dev/null | grep -qx "derivation"; then
+            else
+                echo "$nixfile is NOT a derivation, skipping."
+                continue
+            fi
 
             OLD_REV=$(nix eval --impure --raw --expr \
               "with import <nixpkgs> {}; builtins.substring 0 7 ((callPackage \"$abs_path\" {}).src.rev or \"\")" 2>/dev/null || echo "")

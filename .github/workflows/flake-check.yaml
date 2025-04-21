@@ -16,10 +16,8 @@ jobs:
         uses: actions/checkout@main
 
       - name: Install Nix
-        uses: cachix/install-nix-action@master
-        with:
-          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
-
+        uses: DeterminateSystems/nix-installer-action@v16
+      
       - name: Run Flake Checker
         uses: DeterminateSystems/flake-checker-action@main
         with:
