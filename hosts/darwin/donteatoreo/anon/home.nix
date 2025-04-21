@@ -23,7 +23,13 @@ in
         imports = [
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+          {
+            catppuccin = {
+              enable = true;
+              flavor = "frappe";
+              accent = "teal";
+            };
+          }
 
           ../../../hm/donteatoreo/ghostty.nix
           ../../../hm/donteatoreo/git.nix
