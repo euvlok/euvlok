@@ -1,10 +1,10 @@
 _: {
   imports = [
+    ./audio.nix
     ./gnome.nix
     ./hardware.nix
     ./kanata
     ./networking.nix
-    # ./programs.nix
     ./security.nix
     ./services.nix
     ./sessionVariables.nix

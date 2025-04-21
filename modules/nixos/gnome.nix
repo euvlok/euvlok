@@ -18,7 +18,6 @@
         gnome-settings-daemon.enable = true;
         sushi.enable = true;
       };
-      pulseaudio.enable = false;
       udev.packages = builtins.attrValues { inherit (pkgs) gnome-settings-daemon; };
       xserver = {
         enable = true;
