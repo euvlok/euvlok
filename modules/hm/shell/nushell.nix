@@ -1,7 +1,9 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
+  osConfig,
   release,
   ...
 }:
@@ -17,6 +19,7 @@ in
     programs.nushell =
       {
         enable = true;
+        package = inputs.nixpkgs-unstable.legacyPackage.${osConfig.nixpkgs.hostPlatform.system}.nushell;
         shellAliases = lib.mkDefault {
           # CD
           cd = "z";

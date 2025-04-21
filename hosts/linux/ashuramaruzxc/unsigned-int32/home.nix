@@ -16,6 +16,7 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
+
     useUserPackages = true;
     users.ashuramaru =
       { osConfig, ... }:
@@ -24,10 +25,14 @@ in
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+
           ./flatpak.nix
           ./systemd-utils.nix
 
-          ../../../../modules/hm
+          ../../../hm/ashuramaruzxc/firefox.nix
+          ../../../hm/ashuramaruzxc/nushell.nix
+          ../../../hm/ashuramaruzxc/starship.nix
+          ../../../hm/ashuramaruzxc/vscode.nix
           inputs.sops-nix.homeManagerModules.sops
           {
             sops = {
@@ -35,6 +40,8 @@ in
               defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
             };
           }
+
+          ../../../../modules/hm
           {
             hm = {
               bash.enable = true;
@@ -43,7 +50,7 @@ in
               fastfetch.enable = true;
               firefox.enable = true;
               fzf.enable = true;
-              # git.enable = true;
+              git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
               nushell.enable = true;
@@ -174,7 +181,6 @@ in
                     "catppuccin-theme"
                     "csv-editor"
                     "ini"
-                    # "nix-lsp"
                     "nixidea"
                     "rainbow-brackets"
                   ];
