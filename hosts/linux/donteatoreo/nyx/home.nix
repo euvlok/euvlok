@@ -2,6 +2,7 @@
   inputs,
   lib,
   config,
+  osConfig,
   ...
 }:
 let
@@ -23,13 +24,7 @@ in
           { home.stateVersion = "24.11"; }
           { home.shellAliases = import ../../../hm/donteatoreo/aliases.nix { }; }
           inputs.catppuccin.homeModules.catppuccin
-          {
-            catppuccin = {
-              enable = true;
-              flavor = "frappe";
-              accent = "teal";
-            };
-          }
+          { inherit (osConfig) catppuccin; }
 
           ../../../hm/donteatoreo/ghostty.nix
           ../../../hm/donteatoreo/git.nix

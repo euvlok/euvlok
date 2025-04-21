@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ pkgs, config, ... }:
 {
   imports = [
     ../shared/firmware.nix

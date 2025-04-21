@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
@@ -21,6 +22,7 @@ in
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
+        { inherit (osConfig) catppuccin; }
 
         ../../../hm/ashuramaruzxc/firefox.nix
         ../../../hm/ashuramaruzxc/nushell.nix

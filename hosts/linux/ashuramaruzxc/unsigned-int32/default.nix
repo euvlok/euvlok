@@ -14,10 +14,15 @@
           accent = "rosewater";
         };
       }
+
       ../../../../modules/nixos
       ../../../../modules/cross
       {
-        nixos.nvidia.enable = true;
+        nixos = {
+          gnome.enable = true;
+          nvidia.enable = true;
+          steam.enable = true;
+        };
         cross = {
           nix.enable = true;
           nixpkgs = {

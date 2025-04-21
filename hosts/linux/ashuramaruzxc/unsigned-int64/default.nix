@@ -10,13 +10,11 @@
       ../../../../modules/nixos
       ../../../../modules/cross
       {
-        # nixos.nvidia.enable = true;
         cross = {
           nix.enable = true;
           nixpkgs = {
             enable = true;
             allowUnfree = true;
-            # cudaSupport = true;
           };
         };
       }

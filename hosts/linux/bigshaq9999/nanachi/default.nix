@@ -6,14 +6,21 @@
       ./configuration.nix
       ./home.nix
       inputs.catppuccin.nixosModules.catppuccin
+      {
+        catppuccin = {
+          enable = true;
+          flavor = "frappe";
+          accent = "blue";
+        };
+      }
 
       ../../../../modules/nixos
       ../../../../modules/cross
       {
+        nixos.gnome.enable = true;
         cross = {
           nix.enable = true;
           nixpkgs.enable = true;
-          nixpkgs.allowUnfree = true;
         };
       }
     ];

@@ -10,7 +10,11 @@
       ../../../../modules/nixos
       ../../../../modules/cross
       {
-        nixos.nvidia.enable = true;
+        nixos = {
+          amd.enable = true;
+          nvidia.enable = true;
+          gnome.enable = true;
+        };
         cross = {
           nix.enable = true;
           nixpkgs = {

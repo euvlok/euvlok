@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
@@ -21,13 +22,7 @@ in
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
-        {
-          catppuccin = {
-            enable = true;
-            flavor = "mocha";
-            accent = "rosewater";
-          };
-        }
+        { inherit (osConfig) catppuccin; }
         ./systemd-utils.nix
 
         ../../../../modules/hm

@@ -8,10 +8,23 @@
   options.nixos.gnome.enable = lib.mkEnableOption "GNOME";
 
   config = lib.mkIf config.nixos.gnome.enable {
-    services.xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+    services = {
+      gnome = {
+        glib-networking.enable = true;
+        gnome-browser-connector.enable = true;
+        gnome-keyring.enable = true;
+        gnome-online-accounts.enable = true;
+        gnome-remote-desktop.enable = true;
+        gnome-settings-daemon.enable = true;
+        sushi.enable = true;
+      };
+      pulseaudio.enable = false;
+      udev.packages = builtins.attrValues { inherit (pkgs) gnome-settings-daemon; };
+      xserver = {
+        enable = true;
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
     };
     nixpkgs.overlays = lib.optionals ((lib.toInt (lib.versions.major pkgs.mutter.version)) < 48) [
       # GNOME 47: triple-buffering-v4-47
@@ -32,21 +45,28 @@
         );
       })
     ];
-    services.udev.packages = builtins.attrValues { inherit (pkgs) gnome-settings-daemon; };
-    services.pulseaudio.enable = false;
     environment = {
-      systemPackages = builtins.attrValues {
-        inherit (pkgs)
-          apostrophe # Markdown Editor
-          decibels # Audio Player
-          gnome-obfuscate # Censor Private Info
-          loupe # Image Viewer
-          mousai # Shazam-like
-          resources # Task Manager
-          textpieces
-          ;
-        inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
-      };
+      systemPackages =
+        builtins.attrValues {
+          inherit (pkgs)
+            apostrophe # Markdown Editor
+            decibels # Audio Player
+            gnome-obfuscate # Censor Private Info
+            loupe # Image Viewer
+            mousai # Shazam-like
+            resources # Task Manager
+            textpieces
+            ;
+          inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
+        }
+        ++ lib.optionalAttrs config.catppuccin.enable {
+          catppuccin-gtk = pkgs.catppuccin-gtk.override {
+            accents = [ config.catppuccin.accent ];
+            size = "compact";
+            tweaks = [ "normal" ];
+            variant = config.catppuccin.flavor;
+          };
+        };
       gnome.excludePackages = builtins.attrValues {
         inherit (pkgs)
           epiphany # Browser

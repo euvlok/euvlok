@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   config,
+  osConfig,
   ...
 }:
 let
@@ -23,13 +24,7 @@ in
         imports = [
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
-          {
-            catppuccin = {
-              enable = true;
-              flavor = "frappe";
-              accent = "teal";
-            };
-          }
+          { inherit (osConfig) catppuccin; }
 
           ../../../hm/donteatoreo/ghostty.nix
           ../../../hm/donteatoreo/git.nix

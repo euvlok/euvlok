@@ -11,51 +11,11 @@
     at-spi2-core.enable = true;
     core-developer-tools.enable = true;
     core-utilities.enable = true;
-    glib-networking.enable = true;
-    gnome-keyring.enable = true;
-    gnome-online-accounts.enable = true;
-    gnome-remote-desktop.enable = true;
-    gnome-settings-daemon.enable = true;
     localsearch.enable = true;
-    sushi.enable = true;
     tinysparql.enable = true;
   };
 
-  environment.gnome.excludePackages = builtins.attrValues {
-    inherit (pkgs) gnome-console gnome-builder;
-  };
-
-  nixpkgs.overlays = [
-    # GNOME 47: triple-buffering-v4-47
-    (_: prev: {
-      gnome = prev.gnome.overrideScope (
-        _: gnomePrev: {
-          mutter = gnomePrev.mutter.overrideAttrs (_: {
-            src = pkgs.fetchFromGitLab {
-              domain = "gitlab.gnome.org";
-              owner = "vanvugt";
-              repo = "mutter";
-              # Tag: triple-buffering-v4-47
-              rev = "4a884e571ea044e8078abc826cc1b1abd55c936c";
-              hash = "sha256-6n5HSbocU8QDwuhBvhRuvkUE4NflUiUKE0QQ5DJEzwI=";
-            };
-          });
-        }
-      );
-    })
-  ];
-
-  services = {
-    gnome.gnome-browser-connector.enable = true;
-    xserver.displayManager = {
-      gdm = {
-        enable = true;
-        debug = true;
-        autoSuspend = true;
-      };
-      gnome.enable = true;
-    };
-  };
+  services.xserver.displayManager.gdm.autoSuspend = true;
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
@@ -90,7 +50,6 @@
     desktopManager.plasma6.enable = true;
     displayManager.defaultSession = "plasma";
     libinput = {
-      enable = true;
       mouse.accelProfile = "flat";
       mouse.accelSpeed = "0";
     };
@@ -179,12 +138,5 @@
       kcmutils
       packagekit-qt
       ;
-
-    catppuccin-gtk = pkgs.catppuccin-gtk.override {
-      accents = [ config.catppuccin.accent ];
-      size = "compact";
-      tweaks = [ "normal" ];
-      variant = config.catppuccin.flavor;
-    };
   };
 }

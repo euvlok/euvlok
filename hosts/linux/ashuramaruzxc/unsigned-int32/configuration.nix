@@ -12,7 +12,6 @@
     ../shared/settings.nix
 
     ./hardware-configuration.nix
-    ./steam.nix
     ./users.nix
 
     inputs.sops-nix.nixosModules.sops

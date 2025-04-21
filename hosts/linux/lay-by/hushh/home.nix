@@ -1,4 +1,9 @@
-{ inputs, config, ... }:
+{
+  inputs,
+  config,
+  osConfig,
+  ...
+}:
 let
   release =
     if builtins.hasAttr "darwinRelease" config.system then
@@ -16,6 +21,7 @@ in
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
+        { inherit (osConfig) catppuccin; }
 
         ../../../hm/lay-by/hyprland/dunst.nix
         ../../../hm/lay-by/hyprland/hypridle.nix
