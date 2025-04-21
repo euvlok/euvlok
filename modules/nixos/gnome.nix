@@ -7,7 +7,7 @@
 {
   options.nixos.gnome.enable = lib.mkEnableOption "GNOME";
 
-  config = lib.mkIf config.nixOS.gnome.enable {
+  config = lib.mkIf config.nixos.gnome.enable {
     services.xserver = {
       enable = true;
       displayManager.gdm.enable = true;

@@ -1,5 +1,7 @@
 { pkgs, config, ... }:
 {
+  sops.secrets.ashuramaru.neededForUsers = true;
+  sops.secrets.meanrin.neededForUsers = true;
   users = {
     mutableUsers = false;
     groups = {
@@ -22,8 +24,7 @@
         description = "Maria Levjewa";
         home = "/Users/marie";
         uid = 1000;
-        initialHashedPassword = "$6$79Eopfg.bX9kzgyR$mPzq3.dFGkCaX2NiAPiTqltBQ0b9gLpEPsX7YdKLyuMbvLssUlfFDiOhZ.FZ.AwS6JbXQ6AXB41Yq5QpJxWJ6/";
-        hashedPassword = "$6$77kLLDvOgu.dYPBM$r5c3DxYM9fYb0qUqvJ8TwDbjFtGol3fIAj38U4785h9iXkzNMiDrr71xigw2JE/uOzWsa5LfvhtsR4r30/fmo/";
+        hashedPasswordFile = config.sops.secrets.ashuramaru.path;
         extraGroups = [
           "wheel"
           "networkmanager"
@@ -52,7 +53,7 @@
         description = "Alex";
         home = "/Users/alex";
         uid = 1001;
-        initialHashedPassword = "$6$Vyk8fqJUAWcfHcZ.$JrE0aK4.LSzpDlXNIHs9LFHyoaMXHFe9S0B66Kx8Wv0nVCnh7ACeeiTIkX95YjGoH0R8DavzSS/aSizJH1YgV0";
+        hashedPasswordFile = config.sops.secrets.meanrin.path;
         extraGroups = [
           "wheel"
           "networkmanager"

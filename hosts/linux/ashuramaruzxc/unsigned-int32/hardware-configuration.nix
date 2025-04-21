@@ -84,8 +84,8 @@
       efiSupport = true;
       useOSProber = true;
       configurationLimit = 15;
-      font = "${pkgs.terminus_font_ttf}/share/fonts/truetype/TerminusTTF.ttf";
-      fontSize = 32;
+      # font = "${pkgs.terminus_font_ttf}/share/fonts/truetype/TerminusTTF.ttf";
+      # fontSize = 32;
 
       # memtest
       memtest86.enable = true;

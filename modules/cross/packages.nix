@@ -29,13 +29,13 @@
         gawk
         gnused
         gnutar
-        grep
+        gnugrep
         iputils # `ping`, `arping`, etc.
         jq
         less
         lsof # List open files
         lz4 # Fast compression algorithm command-line tools
-        moreutil
+        moreutils
         ncdu
         nmap
         openssh_hpn

@@ -90,6 +90,7 @@
       };
 
       hardware.nvidia = {
+        open = true;
         modesetting.enable = true;
         package = pkgs.nvidia-patch.patch-nvenc (
           pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.latest

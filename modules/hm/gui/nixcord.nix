@@ -37,14 +37,20 @@ in
     home.packages = builtins.attrValues { inherit krisp-patcher; };
     programs.nixcord = {
       enable = true;
-      discord.package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
-        inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.discord.overrideAttrs
-          (oldAttrs: {
+      discord.package =
+        let
+          discordia = import inputs.nixpkgs-unstable {
+            system = osConfig.nixpkgs.hostPlatform.system;
+            config = osConfig.nixpkgs.config;
+          };
+        in
+        lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
+          discordia.discord.overrideAttrs (oldAttrs: {
             installPhase =
               oldAttrs.installPhase
               + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
           })
-      );
+        );
       discord.vencord.unstable = true;
       discord.openASAR.enable = false;
       config = {

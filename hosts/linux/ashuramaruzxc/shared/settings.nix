@@ -6,10 +6,14 @@
 }:
 let
   add-24_05-packages = final: _: {
-    nixpkgs-24_05 = import inputs.nixpkgs-ashuramaruzxc { inherit (final) system config; };
+    nixpkgs-24_05 = import inputs.nixpkgs-ashuramaruzxc {
+      inherit (final) system config;
+    };
   };
   addUnstablePackages = final: _: {
-    unstable = import inputs.nixpkgs-unstable { inherit (final) system config; };
+    unstable = import inputs.nixpkgs-unstable {
+      inherit (final) system config;
+    };
   };
 in
 {

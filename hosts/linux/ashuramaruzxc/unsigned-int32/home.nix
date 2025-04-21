@@ -17,7 +17,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.unsigned-int32 = {
+    users.ashuramaru = {
       imports = [
         { home.stateVersion = "24.11"; }
         inputs.catppuccin.homeModules.catppuccin
