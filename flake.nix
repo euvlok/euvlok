@@ -4,8 +4,13 @@
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ inputs.devenv.flakeModule ];
       systems = [
+        # Linux
         "x86_64-linux"
+        "aarch64-linux"
+        # Że macos(EU approved)
+        "x86_64-darwin"
         "aarch64-darwin"
       ];
 
@@ -27,6 +32,32 @@
               };
             };
           };
+          devenv.shells.default = {
+            name = "euvlok development shell";
+            languages = {
+              nix.enable = true;
+              shell.enable = true;
+            };
+            pre-commit = {
+              excludes = [
+                ".direnv"
+                ".devenv"
+              ];
+              hooks.nixfmt-rfc-style = {
+                enable = true;
+                excludes = [
+                  ".direnv"
+                  ".devenv"
+                ];
+                package = pkgs.nixfmt-rfc-style;
+              };
+              hooks.shellcheck.enable = true;
+            };
+            packages = builtins.attrValues {
+              inherit (pkgs) git pre-commit;
+              inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
+            };
+          };
           formatter = pkgs.nixfmt-rfc-style;
         };
 
@@ -39,6 +70,11 @@
   inputs = {
     # Flake-Parts and Devenv
     flake-parts.url = "github:hercules-ci/flake-parts";
+    devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix2container.url = "github:nlewo/nix2container";
+    nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
     pre-commit-hooks.inputs.flake-compat.follows = "";

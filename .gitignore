@@ -8,6 +8,8 @@ Thumbs.db
 .direnv/
 result
 result-*
+/.pre-commit-config.yaml
+.pre-commit-config.yaml
 
 # IDEs
 **/.idea/
