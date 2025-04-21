@@ -12,10 +12,7 @@
       {
         cross = {
           nix.enable = true;
-          nixpkgs = {
-            enable = true;
-            allowUnfree = true;
-          };
+          nixpkgs.enable = true;
         };
       }
     ];

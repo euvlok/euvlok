@@ -30,7 +30,6 @@
       ;
 
     inherit (pkgs.gnomeExtensions)
-      appindicator
       arcmenu
       blur-my-shell
       clipboard-history
@@ -90,12 +89,6 @@
       gradience
       pop-launcher
       sysprof
-      ;
-
-    inherit (pkgs.kdePackages)
-      breeze
-      breeze-gtk
-      breeze-icons
       ;
 
     inherit (pkgs.kdePackages)

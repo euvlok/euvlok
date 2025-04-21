@@ -18,7 +18,6 @@
           nix.enable = true;
           nixpkgs = {
             enable = true;
-            allowUnfree = true;
             cudaSupport = true;
           };
         };
