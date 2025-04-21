@@ -6,6 +6,13 @@
       ./configuration.nix
       ./home.nix
       inputs.catppuccin.nixosModules.catppuccin
+      {
+        catppuccin = {
+          enable = true;
+          flavor = "frappe";
+          accent = "teal";
+        };
+      }
 
       ../../../../modules/nixos
       ../../../../modules/cross

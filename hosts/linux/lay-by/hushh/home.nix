@@ -22,7 +22,7 @@ in
         imports = [
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
-          { inherit (osConfig) catppuccin; }
+          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/lay-by/hyprland/dunst.nix
           ../../../hm/lay-by/hyprland/hypridle.nix

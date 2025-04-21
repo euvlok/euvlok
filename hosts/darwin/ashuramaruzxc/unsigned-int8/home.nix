@@ -23,7 +23,7 @@ in
         imports = [
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
-          { inherit (osConfig) catppuccin; }
+          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/nushell.nix

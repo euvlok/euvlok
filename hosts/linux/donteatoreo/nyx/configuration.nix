@@ -15,14 +15,6 @@
     inputs.nur.modules.nixos.default
     inputs.nixos-hardware.nixosModules.lenovo-legion-15arh05h
 
-    inputs.catppuccin.nixosModules.catppuccin
-    {
-      catppuccin = {
-        enable = true;
-        flavor = "frappe";
-        accent = "teal";
-      };
-    }
     inputs.sops-nix.nixosModules.sops
     {
       sops = {
@@ -78,7 +70,7 @@
       ;
   };
 
-  wireplumber.extraConfig = {
+  services.pipewire.wireplumber.extraConfig = {
     # Fixes the "Corsair HS80 Wireless" Volume desync between Headset & System
     "volume-sync" = {
       "bluez5.enable-absolute-volume" = true;

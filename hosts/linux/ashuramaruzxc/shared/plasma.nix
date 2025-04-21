@@ -17,6 +17,26 @@
 
   services.xserver.displayManager.gdm.autoSuspend = true;
 
+  nixpkgs.overlays = lib.optionals ((builtins.fromJSON pkgs.mutter.version) < 48) [
+    # GNOME 47: triple-buffering-v4-47
+    (_: prev: {
+      gnome = prev.gnome.overrideScope (
+        _: gnomePrev: {
+          mutter = gnomePrev.mutter.overrideAttrs (_: {
+            src = pkgs.fetchFromGitLab {
+              domain = "gitlab.gnome.org";
+              owner = "vanvugt";
+              repo = "mutter";
+              # Tag: triple-buffering-v4-47
+              rev = "4a884e571ea044e8078abc826cc1b1abd55c936c";
+              hash = "sha256-6n5HSbocU8QDwuhBvhRuvkUE4NflUiUKE0QQ5DJEzwI=";
+            };
+          });
+        }
+      );
+    })
+  ];
+
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
       adw-gtk3
