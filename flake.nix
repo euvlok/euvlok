@@ -88,6 +88,9 @@
     nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    home-manager-stable.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-24.11";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
 
@@ -120,6 +123,10 @@
     lightly.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+
+    flatpak-declerative.url = "github:in-a-dil-emma/declarative-flatpak";
+    flatpak-declerative.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    flatpak-declerative.inputs.home-manager.follows = "home-manager-stable";
 
     nil.url = "github:oxalica/nil";
     nil.inputs.nixpkgs.follows = "nixpkgs-unstable";
