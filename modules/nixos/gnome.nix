@@ -39,7 +39,7 @@
             ;
           inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
         }
-        ++ lib.optionalAttrs config.catppuccin.enable {
+        ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
           catppuccin-gtk = pkgs.catppuccin-gtk.override {
             accents = [ config.catppuccin.accent ];
             size = "compact";
