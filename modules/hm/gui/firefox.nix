@@ -188,11 +188,11 @@ let
   };
   policies = {
     DisableTelemetry = true;
-    OfferToSaveLogins = false;
-    OfferToSaveLoginsDefault = false;
-    PasswordManagerEnabled = false;
+    # OfferToSaveLogins = false;
+    # OfferToSaveLoginsDefault = false;
+    # asswordManagerEnabled = false;
     NoDefaultBookmarks = true;
-    DisableFirefoxAccounts = true;
+    # DisableFirefoxAccounts = true;
     DisableFeedbackCommands = true;
     DisableFirefoxStudies = true;
     DisableMasterPasswordCreation = true;

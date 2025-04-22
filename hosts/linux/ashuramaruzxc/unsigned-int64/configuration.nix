@@ -11,6 +11,7 @@
 
     ./services/default.nix
 
+    ./settings.nix
     ./shadowsocks.nix
     ./tailscale.nix
     ./wireguard.nix
