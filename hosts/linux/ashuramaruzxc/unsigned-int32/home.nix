@@ -51,6 +51,7 @@ in
               fastfetch.enable = true;
               firefox.enable = true;
               fzf.enable = true;
+              ghostty.enable = true;
               git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
@@ -60,7 +61,6 @@ in
               vscode.enable = true;
               zellij.enable = true;
               zsh.enable = true;
-              ghostty.enable = true;
             };
           }
 
@@ -215,6 +215,13 @@ in
             };
           }
         ];
+        qt = {
+          style.package = [
+            inputs.lightly.packages.${config.nixpkgs.hostPlatform.system}.darkly-qt5
+            inputs.lightly.packages.${config.nixpkgs.hostPlatform.system}.darkly-qt6
+          ];
+          platformTheme.name = "kde";
+        };
       };
     extraSpecialArgs = { inherit inputs release; };
   };

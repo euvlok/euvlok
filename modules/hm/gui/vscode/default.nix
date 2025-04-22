@@ -76,7 +76,7 @@ in
         enable = true;
         package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
           pkgs.vscode.override {
-            commandLineArgs = "--wayland-text-input-version=3";
+            commandLineArgs = "--wayland-text-input-version=3 --enable-wayland-ime";
           }
         );
       }
