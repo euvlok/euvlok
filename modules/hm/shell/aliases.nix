@@ -8,9 +8,8 @@ let
   yt-dlp-script = lib.getExe (
     pkgs.writeScriptBin "yt-dlp-script" (builtins.readFile ../../../modules/scripts/yt-dlp-script.sh)
   );
-in
-{
-  home.shellAliases = {
+
+  aliases = {
     # Navigate
     ".." = "../";
     ".3" = "../../";
@@ -91,4 +90,8 @@ in
       }; __nixos_flake_update_func
     '';
   };
+in
+{
+  programs.bash.shellAliases = aliases;
+  programs.zsh.shellAliases = aliases;
 }

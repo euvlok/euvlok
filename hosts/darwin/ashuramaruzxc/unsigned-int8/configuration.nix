@@ -29,7 +29,10 @@ in
     promptInit = lib.optionalString (starship.enable) (''eval "$(starship init zsh)"'');
     interactiveShellInit =
       let
-        shellAliases = ((pkgs.callPackage ../../../../modules/hm/shell/aliases.nix { }).home.shellAliases);
+        shellAliases = (
+          (pkgs.callPackage ../../../../modules/hm/shell/aliases.nix { osConfig = config; })
+          .programs.zsh.shellAliases
+        );
         shellAliasesStr =
           builtins.attrNames shellAliases
           |> builtins.filter (an: builtins.isString shellAliases.${an})

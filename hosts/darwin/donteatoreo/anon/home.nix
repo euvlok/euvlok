@@ -31,6 +31,7 @@ in
             };
           }
 
+          ../../../hm/donteatoreo/aliases.nix
           ../../../hm/donteatoreo/ghostty.nix
           ../../../hm/donteatoreo/git.nix
           ../../../hm/donteatoreo/helix.nix
@@ -81,7 +82,6 @@ in
                   inherit (config.catppuccin) accent flavor;
                 }).outPath
                 + "/dist/import.json";
-              shellAliases = import ../../../hm/donteatoreo/aliases.nix { };
             };
           }
         ];

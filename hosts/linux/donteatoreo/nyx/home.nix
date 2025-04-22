@@ -23,9 +23,9 @@ in
         imports =
           [
             { home.stateVersion = "24.11"; }
-            { home.shellAliases = import ../../../hm/donteatoreo/aliases.nix { }; }
             inputs.catppuccin.homeModules.catppuccin
             { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+            ../../../hm/donteatoreo/aliases.nix
 
             ../../../hm/donteatoreo/ghostty.nix
             ../../../hm/donteatoreo/git.nix

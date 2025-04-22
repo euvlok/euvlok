@@ -20,7 +20,6 @@ let
         moreutils # Collection of handy Unix tools (parallel, sponge, ts, ...)
         patch
         procps # Utilities for monitoring system processes (ps, top, kill...)
-        psmisc # `pstree`, `killall`, `fuser`
         tldr # Simplified man pages
         util-linux # Essential Linux utilities (dmesg, fdisk, mount...)
         which
@@ -66,7 +65,6 @@ let
       inherit (pkgs)
         curl
         dnsutils # `dig`, `nslookup`, etc.
-        iputils # `ping`, `arping`, `tracepath`, etc.
         netcat-gnu # GNU netcat
         nmap
         openssh_hpn # SSH client/server (High Performance Networking patches)
@@ -84,7 +82,6 @@ let
         lsof # List open files
         pciutils # `lspci`
         smartmontools # S.M.A.R.T. disk health monitoring tools
-        sysstat # `iostat`, `mpstat`, `sar`
         ;
 
       # --- Modern System Info/Monitoring Replacements ---
@@ -121,8 +118,9 @@ let
       # --- Networking ---
       inherit (pkgs)
         bsd-finger
-        mtr # Network diagnostic tool (traceroute + ping)
         iftop # TUI display of bandwidth usage on an interface
+        iputils
+        mtr # Network diagnostic tool (traceroute + ping)
         nethogs # TUI display of per-process network usage
         wireguard-tools
         ;
@@ -131,6 +129,7 @@ let
       inherit (pkgs)
         hdparm
         lm_sensors # Tools for monitoring hardware sensors
+        psmisc
         ;
 
       # --- Desktop / GUI / Audio ---
@@ -157,6 +156,11 @@ let
         breeze
         breeze-gtk
         breeze-icons
+        ;
+
+      # --- Misc ---
+      inherit (pkgs)
+        sysstat
         ;
     }
   );

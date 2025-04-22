@@ -39,7 +39,6 @@
       }
     ];
     programs.fish.shellAliases = {
-
       nix-build-file = ''
         function nix-build-file --description 'Build a Nix file using callPackage'
             set file "$argv[1]"
@@ -57,7 +56,6 @@
             nix-build -E "$nix_expr"
         end
       '';
-
       rebuild = ''
         function rebuild --description 'Rebuild system configuration (NixOS or Darwin)'
             set uname_str (uname -s)
@@ -68,7 +66,6 @@
             end
         end
       '';
-
       update = ''
         function update --description 'Update personal inputs'
             set nix_user (whoami)

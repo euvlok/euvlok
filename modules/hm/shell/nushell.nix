@@ -20,7 +20,7 @@ in
       {
         enable = true;
         package = inputs.nixpkgs-unstable.legacyPackage.${osConfig.nixpkgs.hostPlatform.system}.nushell;
-        shellAliases = lib.mkDefault {
+        shellAliases = {
           # CD
           cd = "z";
           dc = "zi";

@@ -21,8 +21,10 @@
     interactiveShellInit =
       let
         shellAliases =
-          ((pkgs.callPackage ../../../../modules/hm/shell/aliases.nix { }).home.shellAliases)
-          // (pkgs.callPackage ../../../hm/donteatoreo/aliases.nix { });
+          ((pkgs.callPackage ../../../../modules/hm/shell/aliases.nix { osConfig = config; })
+            .programs.zsh.shellAliases
+          )
+          // (pkgs.callPackage ../../../hm/donteatoreo/aliases.nix { }).programs.zsh.shellAliases;
         shellAliasesStr =
           builtins.attrNames shellAliases
           |> builtins.filter (an: builtins.isString shellAliases.${an})

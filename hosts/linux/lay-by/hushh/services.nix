@@ -18,14 +18,6 @@ _: {
       };
     };
 
-    xserver.videoDrivers = [ "nvidia" ];
-
-    # Keep AMD microcode up to date
-    ucodenix = {
-      enable = true;
-      cpuModelId = "00800F11";
-    };
-
     # Misc services
     gvfs.enable = true;
     tumbler.enable = true;

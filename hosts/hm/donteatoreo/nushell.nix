@@ -22,18 +22,6 @@ in
     # Programs
     htop = "btop";
     neofetch = "fastfetch";
-
-    # Nix
-    check =
-      if isDarwin then
-        "darwin-rebuild check --flake $env.NIX_CONFIG_HOME"
-      else
-        "nix flake check $env.NIX_CONFIG_HOME";
-    rebuild =
-      if isDarwin then
-        "darwin-rebuild switch --flake $env.NIX_CONFIG_HOME"
-      else
-        "nixos-rebuild switch --use-remote-sudo --flake $env.NIX_CONFIG_HOME";
   } // lib.optionalAttrs isDarwin { micfix = "sudo killall coreaudiod"; };
   programs.nushell.configFile.text =
     ''
