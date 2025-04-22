@@ -11,19 +11,28 @@ let
       builtins.fromJSON (config.system.nixos.release);
 in
 {
-  imports = [ inputs.home-manager-ashuramaruzxc.darwinModules.home-manager ];
+  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.ashuramaru =
+    users.root =
       { osConfig, ... }:
       {
         imports = [
           { home.stateVersion = "24.11"; }
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-
+          ../../../hm/ashuramaruzxc/nushell.nix
+          ../../../hm/ashuramaruzxc/starship.nix
+          ../../../hm/ashuramaruzxc/vscode.nix
+          inputs.sops-nix.homeManagerModules.sops
+          {
+            sops = {
+              age.keyFile = "$HOME/.config/sops/age/keys.txt";
+              defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
+            };
+          }
           ../../../../modules/hm
           {
             hm = {
@@ -42,6 +51,11 @@ in
           }
         ];
       };
+
+    users.ashuramaru = config.home-manager.users.root;
+    users.fumono = config.home-manager.users.root;
+    users.minecraft = config.home-manager.users.root;
+
     extraSpecialArgs = { inherit inputs release; };
   };
 }

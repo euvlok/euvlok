@@ -7,6 +7,13 @@
       ./configuration.nix
       ./home.nix
       inputs.catppuccin.nixosModules.catppuccin
+      {
+        catppuccin = {
+          enable = true;
+          flavor = "mocha";
+          accent = "rosewater";
+        };
+      }
 
       ../../../../modules/nixos
       ../../../../modules/cross

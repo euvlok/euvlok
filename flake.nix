@@ -120,7 +120,7 @@
     nix-vscode-extensions.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     lightly.url = "github:Bali10050/Darkly";
-    lightly.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    #! do not override lightly.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
 

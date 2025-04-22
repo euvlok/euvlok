@@ -68,8 +68,7 @@ in
         enable = true;
         port = 2222;
         hostKeys = [
-          "/boot/crypt-storage/sshd/ssh_host_ed25519"
-          "/boot/crypt-storage/sshd/ssh_host_rsa_key"
+          config.sops.secrets.ssh_key.path
         ];
         authorizedKeys = lib.flatten [
           config.users.users.ashuramaru.openssh.authorizedKeys.keys

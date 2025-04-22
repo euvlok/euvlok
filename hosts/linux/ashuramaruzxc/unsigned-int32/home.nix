@@ -215,13 +215,6 @@ in
             };
           }
         ];
-        qt = {
-          style.package = [
-            inputs.lightly.packages.${config.nixpkgs.hostPlatform.system}.darkly-qt5
-            inputs.lightly.packages.${config.nixpkgs.hostPlatform.system}.darkly-qt6
-          ];
-          platformTheme.name = "kde";
-        };
       };
     extraSpecialArgs = { inherit inputs release; };
   };

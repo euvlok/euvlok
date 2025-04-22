@@ -154,6 +154,7 @@ let
       inherit (pkgs.kdePackages)
         ffmpegthumbs # Video thumbnail generator for file managers
         ;
+      inherit (pkgs) nufraw-thumbnailer;
 
       # --- Theming ---
       inherit (pkgs.kdePackages)

@@ -52,12 +52,12 @@
           epiphany # Browser
           evince # Docs
           geary # Email
-          gnome-builder
+          # gnome-builder
           gnome-console
-          gnome-maps
+          # gnome-maps
           gnome-music
           gnome-tour
-          gnome-weather
+          # gnome-weather
           ;
       };
     };
