@@ -1,5 +1,5 @@
 _: {
-  systems = {
+  system = {
     defaults = {
       dock.tilesize = 65; # Size of Dock Icons
       NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false; # Disable opening and closing animation
