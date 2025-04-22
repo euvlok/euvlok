@@ -35,7 +35,21 @@
       pinentryPackage = pkgs.pinentry-curses;
     };
   };
+  virtualisation.oci-containers.containers.FlareSolverr = {
+    image = "ghcr.io/flaresolverr/flaresolverr:latest";
+    autoStart = true;
+    ports = [
+      "172.16.31.1:8191:8191"
+      "127.0.0.1:8191:8191"
+    ];
 
+    environment = {
+      LOG_LEVEL = "info";
+      LOG_HTML = "false";
+      CAPTCHA_SOLVER = "hcaptcha-solver";
+      TZ = "${config.time.timeZone}";
+    };
+  };
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
 
   time.timeZone = "Europe/Berlin";

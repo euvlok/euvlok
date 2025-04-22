@@ -220,6 +220,17 @@
       };
     };
   };
+  virtualisation.oci-containers.containers.FlareSolverr = {
+    image = "ghcr.io/flaresolverr/flaresolverr:latest";
+    autoStart = true;
+    ports = [ "127.0.0.1:8191:8191" ];
+    environment = {
+      LOG_LEVEL = "info";
+      LOG_HTML = "false";
+      CAPTCHA_SOLVER = "hcaptcha-solver";
+      TZ = "${config.time.timeZone}";
+    };
+  };
   nix.settings = {
     access-tokens = config.sops.secrets.gh_token.path;
     netrc-file = config.sops.secrets.netrc_creds.path;

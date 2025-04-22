@@ -1,8 +1,12 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   admins = [
     "ashuramaru"
-    "meanrin"
   ];
 in
 {
@@ -29,26 +33,12 @@ in
       dns_enabled = true;
     };
   };
-  virtualisation.oci-containers = {
-    backend = "podman";
-    containers = {
-      FlareSolverr = {
-        image = "ghcr.io/flaresolverr/flaresolverr:latest";
-        autoStart = true;
-        ports = [ "127.0.0.1:8191:8191" ];
-        environment = {
-          LOG_LEVEL = "info";
-          LOG_HTML = "false";
-          CAPTCHA_SOLVER = "hcaptcha-solver";
-          TZ = "Europe/Kyiv";
-        };
-      };
-    };
-  };
-  hardware.nvidia-container-toolkit = {
-    enable = if config.hardware.nvidia.modesetting.enable then true else false;
+  virtualisation.oci-containers.backend = "podman";
+  hardware.nvidia-container-toolkit = lib.optionalAttrs (config.nixos.nvidia.enable) {
+    enable = true;
     mount-nvidia-executables = true;
   };
+
   systemd.timers."podman-auto-update".wantedBy = [ "timers.target" ];
   environment.systemPackages = [ pkgs.distrobox ];
   users.groups = {
