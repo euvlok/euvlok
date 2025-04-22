@@ -11,6 +11,7 @@ let
 in
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  sops.secrets.ssh-initrd-key = { };
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod;
     kernelModules = [
@@ -68,7 +69,7 @@ in
         enable = true;
         port = 2222;
         hostKeys = [
-          config.sops.secrets.ssh_key.path
+          config.sops.secrets.ssh-initrd-key.path
         ];
         authorizedKeys = lib.flatten [
           config.users.users.ashuramaru.openssh.authorizedKeys.keys
