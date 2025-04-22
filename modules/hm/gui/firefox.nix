@@ -176,64 +176,63 @@ in
 
   config =
     lib.mkIf config.hm.firefox.enable {
-      programs.firefox =
-        {
-          enable = true;
-          enableGnomeExtensions = supportGnome;
-          profiles.default = {
-            isDefault = true;
-            settings =
-              {
-                "browser.urlbar.suggest.calculator" = true;
-                "browser.urlbar.update2.engineAliasRefresh" = true;
-                #TODO: would cause issues on macos
-                "widget.use-xdg-desktop-portal.file-picker" = 1;
-              }
-              // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
-                "media.ffmpeg.vaapi.enabled" = true;
-                "media.gpu-process.enabled" = true;
-              });
-            extensions =
-              builtins.attrValues {
-                inherit (pkgs.nur.repos.rycee.firefox-addons)
-                  clearurls
-                  firemonkey
-                  return-youtube-dislikes
-                  sponsorblock
-                  ublock-origin
-                  #TODO: add bypass paywall
-                  ;
-              }
-              ++ lib.optionals config.catppuccin.enable [
-                pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
-              ]
-              ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ]);
-            inherit search;
-          };
-          policies = {
-            DisableTelemetry = true;
-            OfferToSaveLogins = false;
-            OfferToSaveLoginsDefault = false;
-            PasswordManagerEnabled = false;
-            NoDefaultBookmarks = true;
-            DisableFirefoxAccounts = true;
-            DisableFeedbackCommands = true;
-            DisableFirefoxStudies = true;
-            DisableMasterPasswordCreation = true;
-            DisablePocket = true;
-            DisableSetDesktopBackground = true;
-          };
-        }
-        // (lib.optionalAttrs (supportGnome) {
-          enableGnomeExtensions = true;
-        });
+      programs.firefox = {
+        enable = true;
+        nativeMessagingHosts = lib.optionals supportGnome (
+          builtins.attrValues {
+            inherit (pkgs) gnome-browser-connector;
+          }
+        );
+        profiles.default = {
+          inherit search;
+          isDefault = true;
+          settings =
+            {
+              "browser.urlbar.suggest.calculator" = true;
+              "browser.urlbar.update2.engineAliasRefresh" = true;
+            }
+            // lib.optionalAttrs (!isLinux) {
+              "widget.use-xdg-desktop-portal.file-picker" = 1;
+            }
+            // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
+              "media.ffmpeg.vaapi.enabled" = true;
+              "media.gpu-process.enabled" = true;
+            });
+          extensions =
+            builtins.attrValues {
+              inherit (pkgs.nur.repos.rycee.firefox-addons)
+                clearurls
+                firemonkey
+                return-youtube-dislikes
+                sponsorblock
+                ublock-origin
+                ;
+            }
+            ++ lib.optionals config.catppuccin.enable [
+              pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
+            ]
+            ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ]);
+        };
+        policies = {
+          DisableTelemetry = true;
+          OfferToSaveLogins = false;
+          OfferToSaveLoginsDefault = false;
+          PasswordManagerEnabled = false;
+          NoDefaultBookmarks = true;
+          DisableFirefoxAccounts = true;
+          DisableFeedbackCommands = true;
+          DisableFirefoxStudies = true;
+          DisableMasterPasswordCreation = true;
+          DisablePocket = true;
+          DisableSetDesktopBackground = true;
+        };
+      };
     }
     // lib.optionalAttrs isLinux {
       programs.floorp = {
         enable = true;
-        enableGnomeExtensions = supportGnome;
-        profiles.default = config.programs.firefox.profiles.default;
-        policies = config.programs.firefox.policies;
+        inherit (config.programs.firefox) nativeMessagingHosts policies;
+        inherit (config.programs.firefox.profiles) default;
       };
     };
 }
