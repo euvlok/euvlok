@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -7,6 +8,8 @@
 let
   commonPkgs = (
     builtins.attrValues {
+      # --- Nix Server Agent --- #
+      inherit (inputs.nil.packages.${config.nixpkgs.hostPlatform.system}) nil;
       # --- Core Utilities (Shell essentials, replacements, process management) ---
       inherit (pkgs)
         bc
@@ -137,6 +140,7 @@ let
         networkmanagerapplet
         pavucontrol # PulseAudio Volume Control GUI
         playerctl # Control media players via MPRIS (CLI)
+        thunderbird
         ;
 
       # --- Clipboard Tools ---

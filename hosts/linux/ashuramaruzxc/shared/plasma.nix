@@ -72,7 +72,6 @@
       mouse.accelProfile = "flat";
       mouse.accelSpeed = "0";
     };
-    sysprof.enable = true;
   };
 
   xdg.portal = {
@@ -89,6 +88,7 @@
     gnome-terminal.enable = true;
     gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
     kdeconnect.enable = true;
+    ssh.startAgent = true;
     ssh.askPassword = lib.mkForce (lib.getExe pkgs.kdePackages.ksshaskpass);
   };
 
@@ -108,7 +108,6 @@
       gparted
       gradience
       pop-launcher
-      sysprof
       ;
 
     inherit (pkgs.kdePackages)

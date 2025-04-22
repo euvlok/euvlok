@@ -33,20 +33,27 @@
       package =
         let
           browserPackages = {
-            chromium = pkgs.chromium;
+            chromium = pkgs.chromium.override {
+              enableWideVine = true;
+            };
             ungoogled = pkgs.ungoogled-chromium;
             brave = pkgs.brave;
             vivaldi = pkgs.vivaldi;
           };
         in
         browserPackages.${config.hm.chromium.browser};
-      #TODO: add more dictionaries
-      dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
+      dictionaries = builtins.attrValues {
+        inherit (pkgs.hunspellDictsChromium)
+          en_US
+          de_DE
+          fr_FR
+          ;
+      };
       extensions = [
-        { id = "lckanjgmijmafbedllaakclkaicjfmnk"; } # ClearURLs
-        { id = "gebbhagfogifgggkldgodflihgfeippi"; } # Return YT Dislikes
         { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # Ublock Origin
+        { id = "gebbhagfogifgggkldgodflihgfeippi"; } # Return YT Dislikes
         { id = "jinjaccalgkegednnccohejagnlnfdag"; } # Violentmonkey
+        { id = "lckanjgmijmafbedllaakclkaicjfmnk"; } # ClearURLs
         { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; } # Sponsor Block
         #TODO: preferably having bypass paywal by default
       ] ++ lib.optionals (config.catppuccin.enable) [ { id = "lnjaiaapbakfhlbjenjkhffcdpoompki"; } ];

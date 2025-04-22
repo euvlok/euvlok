@@ -16,8 +16,8 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-
     useUserPackages = true;
+    backupFileExtension = "bak";
     users.ashuramaru =
       { osConfig, ... }:
       {
@@ -30,6 +30,7 @@ in
 
           ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/firefox.nix
+          ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
@@ -108,6 +109,7 @@ in
                   dino # Jabber client
                   signal-desktop # Signal desktop client
                   tdesktop # Telegram desktop
+                  materialgram # Telegram but better
                   ;
                 # Utilities
                 inherit (pkgs)

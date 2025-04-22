@@ -42,26 +42,6 @@ in
         "　" = true;
       };
 
-      # Nix
-      "nix" = {
-        "enableLanguageServer" = true;
-        "serverPath" = "nil";
-        "serverSettings.nil" = {
-          "formatting" = {
-            "command" = [
-              "nixfmt -w=120 -v $(find * -type d | grep -v \".direnv\")"
-            ];
-          };
-          "nix" = {
-            "binary" = "nix";
-            "maxMemoryMB" = 8124;
-            "flake.autoArchive" = true;
-            "flake.autoEvalInputs" = true;
-          };
-        };
-        "formatterPath" = "nixfmt";
-      };
-
       # Python
       "[python]" = {
         "formatting.provider" = "none";

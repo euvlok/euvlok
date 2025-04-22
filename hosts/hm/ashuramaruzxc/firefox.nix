@@ -8,6 +8,7 @@
 }:
 let
   search = {
+    force = true;
     order = lib.mkForce [
       "Kagi"
       "Google"

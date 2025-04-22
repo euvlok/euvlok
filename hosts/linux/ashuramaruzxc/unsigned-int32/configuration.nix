@@ -174,7 +174,6 @@
     gnupg.dirmngr.enable = true;
     gnupg.agent = {
       enable = true;
-      enableSSHSupport = true;
       enableBrowserSocket = true;
       enableExtraSocket = true;
     };
