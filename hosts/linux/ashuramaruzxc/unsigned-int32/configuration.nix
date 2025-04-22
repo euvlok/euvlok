@@ -6,8 +6,12 @@
 }:
 {
   imports = [
+    ../shared/android.nix
+    ../shared/containers.nix
     ../shared/firmware.nix
     ../shared/fonts.nix
+    ../shared/hyperv.nix
+    ../shared/lxc.nix
     ../shared/plasma.nix
     ../shared/settings.nix
     ./hardware-configuration.nix
@@ -174,6 +178,11 @@
       enableBrowserSocket = true;
       enableExtraSocket = true;
     };
+    android-development = {
+      enable = true;
+      users = [ "ashuramaru" ];
+      waydroid.enable = true;
+    };
     appimage = {
       enable = true;
       binfmt = true;
@@ -216,6 +225,8 @@
     access-tokens = config.sops.secrets.gh_token.path;
     netrc-file = config.sops.secrets.netrc_creds.path;
   };
+  nix.gc.automatic = true;
+  nix.gc.options = "--delete-older-than 14d";
 
   system.stateVersion = "24.11";
 }

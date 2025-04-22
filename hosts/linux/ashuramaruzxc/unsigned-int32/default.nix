@@ -14,16 +14,16 @@
           accent = "rosewater";
         };
       }
-      inputs.flatpak-declerative.nixosModules.declarative-flatpak
-      {
-        config.services.flatpak = {
-          enable = true;
-          remotes = {
-            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
-          };
-        };
-      }
+      # inputs.flatpak-declerative.nixosModules.declarative-flatpak
+      # {
+      #   config.services.flatpak = {
+      #     enable = true;
+      #     remotes = {
+      #       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      #       "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
+      #     };
+      #   };
+      # }
       ../../../../modules/nixos
       ../../../../modules/cross
       {
