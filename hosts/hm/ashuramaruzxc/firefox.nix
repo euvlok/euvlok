@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  config,
   osConfig,
   inputs,
   ...
@@ -140,8 +139,6 @@ let
   ];
 in
 {
-  home.packages = [ pkgs.keepassxc ];
-
   programs.floorp = {
     enable = true;
     profiles.default = {
@@ -193,6 +190,14 @@ in
       };
       inherit search;
     };
-    nativeMessagingHosts = [ pkgs.keepassxc ];
+    nativeMessagingHosts = [
+      pkgs.firefoxpwa
+      pkgs.keepassxc
+    ];
   };
+  home.packages = [
+    pkgs.firefoxpwa
+    pkgs.keepassxc
+  ];
+  programs.firefox.enable = lib.mkForce false;
 }

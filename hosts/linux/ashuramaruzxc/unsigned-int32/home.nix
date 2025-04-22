@@ -50,6 +50,7 @@ in
               direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
+              firefox.defaultSearchEngine = "Kagi";
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
@@ -61,6 +62,7 @@ in
               vscode.enable = true;
               zellij.enable = true;
               zsh.enable = true;
+              ghostty.enable = true;
             };
           }
 
@@ -107,14 +109,22 @@ in
                 # Social & Communication
                 inherit (pkgs)
                   dino # Jabber client
+                  element-desktop # matrix client
+                  materialgram # tg client but better
+                  nextcloud-client # nextcloud client
                   signal-desktop # Signal desktop client
                   tdesktop # Telegram desktop
-                  materialgram # Telegram but better
                   ;
                 # Utilities
                 inherit (pkgs)
-                  ani-cli # Anime downloader
-                  cdrtools # cd burner CLI
+                  nekoray
+                  openvpn
+                  protonvpn-cli
+                  protonvpn-gui
+                  udptunnel
+                  v2raya
+                  ;
+                inherit (pkgs)
                   feather # monero
                   helvum # Jack controls
                   imgbrd-grabber
