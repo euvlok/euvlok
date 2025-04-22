@@ -6,9 +6,9 @@
 }:
 {
   sops.secrets.admin = {
-    mode = "0640";
-    # owner = config.users.users.nextcloud.name;
-    # group = config.users.users.nextcloud.group;
+    mode = "0740";
+    owner = config.users.users.nextcloud.name;
+    group = config.users.users.nextcloud.group;
   };
   services.nextcloud = {
     enable = true;

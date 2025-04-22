@@ -32,7 +32,7 @@ let
         nushell.enable = true;
         nvf.enable = true;
         ssh.enable = true;
-        vscode.enable = true;
+        # vscode.enable = true;
         # yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
