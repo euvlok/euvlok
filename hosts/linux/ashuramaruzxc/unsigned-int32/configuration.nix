@@ -18,15 +18,6 @@
     ./networking.nix
     ./samba.nix
     ./users.nix
-    inputs.sops-nix.nixosModules.sops
-    {
-      sops = {
-        age.keyFile = "/var/lib/sops/age/keys.txt";
-        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        secrets.gh_token = { };
-        secrets.netrc_creds = { };
-      };
-    }
   ];
 
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
@@ -231,6 +222,10 @@
       TZ = "${config.time.timeZone}";
     };
   };
+
+  sops.secrets.gh_token = { };
+  sops.secrets.netrc_creds = { };
+
   nix.settings = {
     access-tokens = config.sops.secrets.gh_token.path;
     netrc-file = config.sops.secrets.netrc_creds.path;

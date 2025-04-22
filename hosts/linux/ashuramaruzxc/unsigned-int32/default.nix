@@ -5,6 +5,13 @@
     modules = [
       ./configuration.nix
       ./home.nix
+      inputs.sops-nix.nixosModules.sops
+      {
+        sops = {
+          age.keyFile = "/var/lib/sops/age/keys.txt";
+          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+        };
+      }
       inputs.anime-game-launcher.nixosModules.default
       inputs.catppuccin.nixosModules.catppuccin
       {

@@ -55,5 +55,15 @@
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  sops.secrets.gh_token = { };
+  sops.secrets.netrc_creds = { };
+
+  nix.settings = {
+    access-tokens = config.sops.secrets.gh_token.path;
+    netrc-file = config.sops.secrets.netrc_creds.path;
+  };
+  nix.gc.automatic = true;
+  nix.gc.options = "--delete-older-than 14d";
+
   system.stateVersion = config.system.nixos.release;
 }
