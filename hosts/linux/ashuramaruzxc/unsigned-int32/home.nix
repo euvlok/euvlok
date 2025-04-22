@@ -62,7 +62,6 @@ in
               vscode.enable = true;
               zellij.enable = true;
               zsh.enable = true;
-              ghostty.enable = true;
             };
           }
 
