@@ -3,7 +3,7 @@
   unsigned-int64 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      ../../shared/configuration.nix
+      # ../../shared/configuration.nix
       ./configuration.nix
       ./home.nix
       inputs.sops-nix.nixosModules.sops

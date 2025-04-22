@@ -29,7 +29,6 @@ let
         bash.enable = true;
         fastfetch.enable = true;
         fzf.enable = true;
-        nixcord.enable = true;
         nushell.enable = true;
         nvf.enable = true;
         ssh.enable = true;
