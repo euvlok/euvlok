@@ -19,7 +19,7 @@ in
     programs.nushell =
       {
         enable = true;
-        package = inputs.nixpkgs-unstable.legacyPackage.${osConfig.nixpkgs.hostPlatform.system}.nushell;
+        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.nushell;
         shellAliases = {
           # CD
           cd = "z";

@@ -3,7 +3,6 @@
   unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      ../../shared/configuration.nix
       ./configuration.nix
       ./home.nix
       inputs.anime-game-launcher.nixosModules.default
@@ -15,7 +14,16 @@
           accent = "rosewater";
         };
       }
-
+      inputs.flatpak-declerative.nixosModules.declarative-flatpak
+      {
+        config.services.flatpak = {
+          enable = true;
+          remotes = {
+            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
+          };
+        };
+      }
       ../../../../modules/nixos
       ../../../../modules/cross
       {

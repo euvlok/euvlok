@@ -1,6 +1,11 @@
-_:
+{
+  inputs,
+  osConfig,
+  pkgs,
+  ...
+}:
 let
-  mkExt = (import ../../../modules/hm/gui/vscode/lib.nix { }).mkExt;
+  mkExt = (import ../../../modules/hm/gui/vscode/lib.nix { inherit inputs osConfig pkgs; }).mkExt;
 in
 {
   programs.vscode = {
@@ -70,7 +75,8 @@ in
       (mkExt "visualstudioexptteam" "vscodeintellicode")
       (mkExt "visualstudioexptteam" "intellicode-api-usage-examples")
       (mkExt "christian-kohler" "path-intellisense")
-      (mkExt "github" "vscode-pull-request-github")
+      # (mkExt "github" "vscode-pull-request-github")
+      pkgs.vscode-extensions.github.vscode-pull-request-github
       (mkExt "donjayamanne" "githistory")
       (mkExt "eamodio" "gitlens")
       (mkExt "aaron-bond" "better-comments")
@@ -101,6 +107,7 @@ in
       (mkExt "github" "vscode-github-actions")
       (mkExt "mathematic" "vscode-latex")
       # (mkExt "lizebang" "bash-extension-pack")
+
       ## -- Programming languages/lsp support -- ##
 
       ## -- Misc Utils -- ##
@@ -179,7 +186,8 @@ in
       ## -- VSCode Themes/Icons -- ##
 
       ## -- Dictionary/Languages support -- ##
-      (mkExt "ms-ceintl" "vscode-language-pack-ja")
+      # (mkExt "ms-ceintl" "vscode-language-pack
+      pkgs.vscode-extensions.ms-ceintl.vscode-language-pack-ja
       ## -- Dictionary/Languages support -- ##
     ];
   };

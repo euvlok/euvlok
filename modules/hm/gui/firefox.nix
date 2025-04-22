@@ -158,6 +158,7 @@ let
   };
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
   supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
+  supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
   options.hm.firefox = {
@@ -211,7 +212,8 @@ in
             ++ lib.optionals config.catppuccin.enable [
               pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
             ]
-            ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ]);
+            ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ])
+            ++ (lib.optionals (supportPlasma) [ pkgs.nur.repos.rycee.firefox-addons.plasma-integration ]);
         };
         policies = {
           DisableTelemetry = true;
@@ -228,7 +230,7 @@ in
         };
       };
     }
-    // lib.optionalAttrs isLinux {
+    // {
       programs.floorp = {
         enable = true;
         inherit (config.programs.firefox) nativeMessagingHosts policies;

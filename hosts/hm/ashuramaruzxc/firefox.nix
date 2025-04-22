@@ -141,9 +141,8 @@ in
 {
   home.packages = [ pkgs.keepassxc ];
 
-  programs.firefox = {
+  programs.floorp = {
     enable = true;
-    package = pkgs.unstable.firefox-unwrapped;
     profiles.default = {
       settings = {
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
@@ -195,32 +194,4 @@ in
     };
     nativeMessagingHosts = [ pkgs.keepassxc ];
   };
-
-  home.file."Library/Application Support/Firefox/profiles.ini" =
-    lib.optionalAttrs osConfig.nixpkgs.hostPlatform.isDarwin
-      (
-        let
-          profiles =
-            lib.flip lib.mapAttrs' config.programs.firefox.profiles (
-              _: profile:
-              lib.nameValuePair "Profile${toString profile.id}" {
-                Name = profile.name;
-                Path = if pkgs.stdenv.isDarwin then "Profiles/${profile.path}" else profile.path;
-                IsRelative = 1;
-                Default = if profile.isDefault then 1 else 0;
-              }
-            )
-            // {
-              General = {
-                StartWithLastProfile = 1;
-              };
-            };
-
-          profile-ini = lib.generators.toINI { } profiles;
-        in
-        {
-          enable = true;
-          text = lib.mkForce profile-ini;
-        }
-      );
 }

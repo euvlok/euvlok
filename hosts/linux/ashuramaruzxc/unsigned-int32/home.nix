@@ -26,9 +26,9 @@ in
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
-          ./flatpak.nix
           ./systemd-utils.nix
 
+          ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/starship.nix
@@ -59,6 +59,7 @@ in
               vscode.enable = true;
               zellij.enable = true;
               zsh.enable = true;
+              ghostty.enable = true;
             };
           }
 

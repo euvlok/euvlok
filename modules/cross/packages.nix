@@ -147,7 +147,7 @@ let
         ;
 
       # --- Media ---
-      inherit (pkgs)
+      inherit (pkgs.kdePackages)
         ffmpegthumbs # Video thumbnail generator for file managers
         ;
 

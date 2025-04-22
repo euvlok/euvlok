@@ -1,7 +1,7 @@
 {
   inputs,
-  pkgs,
   config,
+  pkgs,
   ...
 }:
 {
@@ -10,10 +10,10 @@
     ../shared/fonts.nix
     ../shared/plasma.nix
     ../shared/settings.nix
-
     ./hardware-configuration.nix
+    ./networking.nix
+    ./samba.nix
     ./users.nix
-
     inputs.sops-nix.nixosModules.sops
     {
       sops = {
@@ -185,10 +185,10 @@
     systemPackages = builtins.attrValues {
       inherit (pkgs)
         # yubico
+        apfsprogs
+        fcitx5-gtk
         gpgme
         yubioath-flutter
-        fcitx5-gtk
-        apfsprogs
         ;
       inherit (pkgs.xorg) xhost;
     };
@@ -212,7 +212,6 @@
       };
     };
   };
-
   nix.settings = {
     access-tokens = config.sops.secrets.gh_token.path;
     netrc-file = config.sops.secrets.netrc_creds.path;
