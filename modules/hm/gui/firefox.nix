@@ -223,19 +223,18 @@ in
     };
   };
 
-  config =
-    lib.mkIf config.hm.firefox.enable {
-      programs.firefox = {
+  config = lib.mkIf config.hm.firefox.enable {
+    programs = {
+      firefox = {
         enable = true;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
-    }
-    // {
-      programs.floorp = {
+      floorp = {
         enable = true;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
     };
+  };
 }
