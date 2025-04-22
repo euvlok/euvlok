@@ -87,23 +87,5 @@
       ];
       shell = pkgs.zsh;
     };
-    minecraft = {
-      uid = 5333;
-      isNormalUser = true;
-      home = "/var/lib/minecraft";
-      initialHashedPassword = "";
-      extraGroups = [
-        "minecraft"
-        "ashuramaru"
-        "fumono"
-        "docker"
-        "nginx"
-      ];
-      openssh.authorizedKeys.keys = lib.flatten [
-        config.users.users.ashuramaru.openssh.authorizedKeys.keys
-        config.users.users.fumono.openssh.authorizedKeys.keys
-      ];
-      shell = pkgs.zsh;
-    };
   };
 }

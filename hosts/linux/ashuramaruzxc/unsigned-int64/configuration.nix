@@ -1,10 +1,19 @@
 { pkgs, config, ... }:
 {
   imports = [
+    ../shared/android.nix
+    ../shared/containers.nix
     ../shared/firmware.nix
     ../shared/fonts.nix
-    ../shared/plasma.nix
+    ../shared/hyperv.nix
+    ../shared/lxc.nix
     ../shared/settings.nix
+
+    ./services/default.nix
+
+    ./shadowsocks.nix
+    ./tailscale.nix
+    ./wireguard.nix
 
     ./hardware-configuration.nix
     ./users.nix

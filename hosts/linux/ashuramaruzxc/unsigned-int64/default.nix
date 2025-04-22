@@ -6,6 +6,15 @@
       ../../shared/configuration.nix
       ./configuration.nix
       ./home.nix
+      inputs.sops-nix.nixosModules.sops
+      {
+        sops = {
+          age.keyFile = "/var/lib/sops/age/keys.txt";
+          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
+          secrets.gh_token = { };
+          secrets.netrc_creds = { };
+        };
+      }
       inputs.catppuccin.nixosModules.catppuccin
       {
         catppuccin = {
