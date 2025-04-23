@@ -3,7 +3,6 @@
   nyx = inputs.nixpkgs-donteatoreo.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      ../../shared/configuration.nix
       ./configuration.nix
       ./home.nix
       inputs.catppuccin.nixosModules.catppuccin

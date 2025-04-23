@@ -14,12 +14,12 @@ in
     lib.mkMerge [
       (lib.mkIf config.nixpkgs.hostPlatform.isLinux {
         # # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
-        # environment.etc = lib.optionalAttrs isLinux (
-        #   lib.mapAttrs' (name: value: {
-        #     name = "nix/path/${name}";
-        #     value.source = value.flake;
-        #   }) config.nix.registry
-        # );
+        environment.etc = lib.optionalAttrs isLinux (
+          lib.mapAttrs' (name: value: {
+            name = "nix/path/${name}";
+            value.source = value.flake;
+          }) config.nix.registry
+        );
 
         /*
           "truetype:interpreter-version=40" tells freetype to use version 40 of the
@@ -61,7 +61,7 @@ in
           channel.enable = false;
 
           # Make flake registry and nix path match flake inputs
-          registry = lib.mkDefault (
+          registry = (
             lib.mapAttrs (_: flake: { inherit flake; }) (
               # Flake Inputs
               lib.filterAttrs (_: lib.isType "flake") inputs
