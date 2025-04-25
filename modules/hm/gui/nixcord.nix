@@ -39,13 +39,13 @@ in
       enable = true;
       discord.package =
         let
-          discordia = import inputs.nixpkgs-unstable {
+          discordPkg = import inputs.nixpkgs-unstable {
             system = osConfig.nixpkgs.hostPlatform.system;
             config = osConfig.nixpkgs.config;
           };
         in
         lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
-          discordia.discord.overrideAttrs (oldAttrs: {
+          discordPkg.discord.overrideAttrs (oldAttrs: {
             installPhase =
               oldAttrs.installPhase
               + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
@@ -77,6 +77,41 @@ in
           noUnblockToJump.enable = true;
           onePingPerDM.enable = true;
           readAllNotificationsButton.enable = true;
+          textReplace.enable = true;
+          textReplace.regexRules = [
+            {
+              find = "https?:\\/\\/(www\\.)?instagram\\.com\\/[^\\/]+\\/(p|reel)\\/([A-Za-z0-9-_]+)\\/?";
+              replace = "https://g.ddinstagram.com/$2/$3";
+            }
+            {
+              find = "https:\\/\\/x\\.com\\/([^\\/]+\\/status\\/[0-9]+)";
+              replace = "https://vxtwitter.com/$1";
+            }
+            {
+              find = "https:\\/\\/twitter\\.com\\/([^\\/]+\\/status\\/[0-9]+)";
+              replace = "https://vxtwitter.com/$1";
+            }
+            {
+              find = "https:\\/\\/(www\\.)?tiktok\\.com\\/(.*)";
+              replace = "https://vxtiktok.com/$2";
+            }
+            {
+              find = "https:\\/\\/(www\\.|old\\.)?reddit\\.com\\/(r\\/[a-zA-Z0-9_]+\\/comments\\/[a-zA-Z0-9_]+\\/[^\\s]*)";
+              replace = "https://vxreddit.com/$2";
+            }
+            {
+              find = "https:\\/\\/(www\\.)?pixiv\\.net\\/(.*)";
+              replace = "https://phixiv.net/$2";
+            }
+            {
+              find = "https:\\/\\/(?:www\\.|m\\.)?twitch\\.tv\\/twitch\\/clip\\/(.*)";
+              replace = "https://clips.fxtwitch.tv/$1";
+            }
+            {
+              find = "https:\\/\\/(?:www\\.)?youtube\\.com\\/(?:watch\\?v=|shorts\\/)([a-zA-Z0-9_-]+)";
+              replace = "https://youtu.be/$1";
+            }
+          ];
           translate.enable = true;
           validReply.enable = true;
           validUser.enable = true;
