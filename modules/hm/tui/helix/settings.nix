@@ -66,13 +66,15 @@ in
 {
   programs.helix.settings = {
     inherit editor;
-    normal = {
-      space.space = "file_picker";
-      esc = [
-        "collapse_selection"
-        "keep_primary_selection"
-      ];
+    keys = {
+      normal = {
+        space.space = "file_picker";
+        esc = [
+          "collapse_selection"
+          "keep_primary_selection"
+        ];
+      };
+      select = { };
     };
-    select = { };
   };
 }
