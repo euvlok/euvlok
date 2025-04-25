@@ -63,12 +63,10 @@
         notify_push
         twofactor_webauthn
         # twofactor_nextcloud_notification
-
         # ical
         calendar
         contacts
         deck
-
         # productivity
         mail
         polls
@@ -79,7 +77,6 @@
         qownnotesapi
         richdocuments
         previewgenerator
-
         # misc
         groupfolders
         gpoddersync

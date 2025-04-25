@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 {
   imports = [
     ../shared/android.nix
@@ -10,10 +15,9 @@
     ../shared/settings.nix
 
     ./services/default.nix
-
     ./settings.nix
     ./shadowsocks.nix
-    ./tailscale.nix
+    # ./tailscale.nix
     ./wireguard.nix
 
     ./hardware-configuration.nix
@@ -55,6 +59,9 @@
 
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_US.UTF-8";
+
+  services.avahi.enable = lib.mkForce false;
+  services.xserver.displayManager.gdm.autoSuspend = false;
 
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

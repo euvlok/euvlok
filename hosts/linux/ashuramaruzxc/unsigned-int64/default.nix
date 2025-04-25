@@ -24,6 +24,10 @@
       ../../../../modules/nixos
       ../../../../modules/cross
       {
+        nixos = {
+          gnome.enable = true;
+          amd.enable = true;
+        };
         cross = {
           nix.enable = true;
           nixpkgs.enable = true;

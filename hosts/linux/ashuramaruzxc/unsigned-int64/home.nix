@@ -27,12 +27,14 @@ let
     {
       hm = {
         bash.enable = true;
+        direnv.enable = true;
         fastfetch.enable = true;
         fzf.enable = true;
+        git.enable = true;
         nushell.enable = true;
         nvf.enable = true;
+        helix.enable = true;
         ssh.enable = true;
-        # vscode.enable = true;
         # yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
@@ -58,6 +60,7 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+          { config.hm.vscode.enable = true; }
         ] ++ commonUsers;
       };
     users.fumono =
@@ -65,6 +68,7 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+          { config.hm.vscode.enable = true; }
         ] ++ commonUsers;
       };
     users.minecraft =
@@ -72,6 +76,7 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+          { config.hm.vscode.enable = true; }
         ] ++ commonUsers;
       };
 

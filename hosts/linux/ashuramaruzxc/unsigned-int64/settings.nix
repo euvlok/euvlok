@@ -2,8 +2,8 @@ _: {
   networking = {
     hostName = "unsigned-int64";
     interfaces = {
-      "eth0" = {
-        name = "eth0";
+      "enp5s0" = {
+        name = "enp5s0";
         useDHCP = true;
         wakeOnLan = {
           enable = true;
@@ -25,11 +25,11 @@ _: {
     };
     defaultGateway = {
       address = "188.34.136.193";
-      interface = "eth0";
+      interface = "enp5s0";
     };
     defaultGateway6 = {
       address = "fe80::1";
-      interface = "eth0";
+      interface = "enp5s0";
     };
     nameservers = [
       "127.0.0.1"
@@ -38,7 +38,7 @@ _: {
     nat = {
       enable = true;
       enableIPv6 = true;
-      externalInterface = "eth0";
+      externalInterface = "enp5s0";
       internalInterfaces = [
         "ve-+"
         "virbr0"
