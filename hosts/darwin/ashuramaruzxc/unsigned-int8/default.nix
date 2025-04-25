@@ -6,6 +6,7 @@
       ../../shared
       ./brew.nix
       ./configuration.nix
+      ./zsh.nix
       ./home.nix
 
       ../../../../modules/cross

@@ -1,13 +1,10 @@
 {
   inputs,
   pkgs,
-  lib,
   config,
   ...
 }:
 let
-  inherit (config.users.users.ashuramaru) home;
-  inherit (config.home-manager.users.ashuramaru.programs) starship zoxide;
   add-24_05-packages = final: _: {
     nixpkgs-24_05 = import inputs.nixpkgs-ashuramaruzxc { inherit (final) system config; };
   };
@@ -17,34 +14,6 @@ let
 in
 {
   nixpkgs.hostPlatform.system = "aarch64-darwin";
-
-  # ZSH
-  system.activationScripts.postActivation.text = ''
-    ln -sfn "/etc/zshrc" "${home}/.zshrc"
-    ln -sfn "/etc/zshenv" "${home}/.zshenv"
-    ln -sfn "/etc/zprofile" "${home}/.zprofile"
-  '';
-
-  programs.zsh = {
-    promptInit = lib.optionalString (starship.enable) (''eval "$(starship init zsh)"'');
-    interactiveShellInit =
-      let
-        shellAliases = (
-          (pkgs.callPackage ../../../../modules/hm/shell/aliases.nix { osConfig = config; })
-          .programs.zsh.shellAliases
-        );
-        shellAliasesStr =
-          builtins.attrNames shellAliases
-          |> builtins.filter (an: builtins.isString shellAliases.${an})
-          |> map (an: "alias ${an}=${lib.escapeShellArg shellAliases.${an}}")
-          |> builtins.concatStringsSep "\n";
-      in
-      ''
-        # Aliases
-        ${shellAliasesStr}
-      ''
-      + lib.optionalString zoxide.enable (''eval "$(zoxide init zsh)"'');
-  };
 
   security.pam.enableSudoTouchIdAuth = true;
 
