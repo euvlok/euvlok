@@ -69,8 +69,8 @@ in
 
               # SNS
               inherit (pkgs)
-                # signal-desktop # just in case
-                # dino # Jabber client gstreamer-vaapi is unsupported
+                signal-desktop-bin # just in case
+                materialgram
                 ;
 
               # Utilities
