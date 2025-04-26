@@ -6,6 +6,7 @@ in
   anons-Mac-mini = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      ../../shared/system.nix
       ./fonts.nix
       ./home.nix
       ./system.nix

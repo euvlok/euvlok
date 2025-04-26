@@ -104,7 +104,7 @@ in
   config = lib.mkIf (config.hm.ghostty.enable && release > 25) {
     programs.ghostty = {
       enable = true;
-      package = if osConfig.nixpkgs.hostPlatform.isLinux then null else pkgs.ghostty;
+      package = if osConfig.nixpkgs.hostPlatform.isDarwin then null else pkgs.ghostty;
       clearDefaultKeybinds = true;
       settings = {
         ## Scroll

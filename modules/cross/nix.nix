@@ -5,7 +5,10 @@
   ...
 }:
 let
-  inherit (config.nixpkgs.hostPlatform) isLinux;
+  inherit (config.nixpkgs.hostPlatform) isLinux isDarwin;
+  registry = lib.mapAttrs (_: flake: { inherit flake; }) (
+    lib.filterAttrs (_: lib.isType "flake") inputs
+  );
 in
 {
   options.cross.nix.enable = lib.mkEnableOption "Nix";
@@ -30,6 +33,8 @@ in
         */
         environment.variables.FREETYPE_PROPERTIES = lib.optionalString isLinux "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
       })
+      (lib.mkIf isDarwin { nix.registry = lib.mkForce registry; })
+      (lib.mkIf (!isDarwin) { nix.registry = registry; })
       {
         nix = {
           settings =
@@ -47,19 +52,14 @@ in
             // lib.optionalAttrs isLinux {
               # Disable global registry
               flake-registry = "";
+              # Workaround for https://github.com/NixOS/nix/issues/9574
+              nix-path = config.nix.nixPath;
             };
           # Obviously, we don't want channels; they're imperatively managed. Disabling
           # them means that the `nixpkgs` instance with which the host was built is used
           # as the "de facto" channel when referring to `<nixpkgs>`
           channel.enable = false;
-          # Make flake registry and nix path match flake inputs
-          # Using mkForce to override any existing registry definitions
-          registry = lib.mkForce (
-            lib.mapAttrs (_: flake: { inherit flake; }) (
-              # Flake Inputs
-              lib.filterAttrs (_: lib.isType "flake") inputs
-            )
-          );
+
           nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") (
             # Flake Inputs
             lib.filterAttrs (_: lib.isType "flake") inputs

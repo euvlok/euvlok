@@ -85,7 +85,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Shared unstable
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small"; # Shared unstable small
 
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-unstable";

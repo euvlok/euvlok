@@ -67,15 +67,26 @@ let
     extraInteractiveInit
   ];
   promptInit = lib.mkMerge [
-    ''''
+    (lib.optionalString (hmConfig.programs.ghostty.enable) (''
+      if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+        source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+      fi
+    ''))
     (lib.optionalString (hmConfig.programs.starship.enable) (''
       if [[ $TERM != "dumb" ]]; then
         eval "$(starship init zsh)"
       fi
     ''))
-    (lib.optionalString (hmConfig.programs.zellij.enable) (
-      lib.mkOrder 200 ''eval "$(zellij setup --generate-completion zsh)"''
-    ))
+    (lib.optionalString (hmConfig.programs.yazi.enable) (''
+      function yy() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+        yazi "$@" --cwd-file="$tmp"
+          if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+      }
+    ''))
     (lib.optionalString (hmConfig.programs.zoxide.enable) (
       lib.mkOrder 2000 ''eval "$(zoxide init zsh)"''
     ))
@@ -83,9 +94,9 @@ let
 in
 {
   system.activationScripts.postActivation.text = ''
-    ln -sfn "/etc/zshrc" "${hmConfig.home.homeDirectory}/.zshrc"
-    ln -sfn "/etc/zshenv" "${hmConfig.home.homeDirectory}/.zshenv"
     ln -sfn "/etc/zprofile" "${hmConfig.home.homeDirectory}/.zprofile"
+    ln -sfn "/etc/zshenv" "${hmConfig.home.homeDirectory}/.zshenv"
+    ln -sfn "/etc/zshrc" "${hmConfig.home.homeDirectory}/.zshrc"
   '';
   programs.zsh = { inherit promptInit interactiveShellInit; };
 }

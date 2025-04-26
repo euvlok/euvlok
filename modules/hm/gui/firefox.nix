@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -7,6 +8,21 @@
 }:
 let
   default = {
+    extensions.packages =
+      builtins.attrValues {
+        inherit (pkgs.nur.repos.rycee.firefox-addons)
+          clearurls
+          firemonkey
+          return-youtube-dislikes
+          sponsorblock
+          ublock-origin
+          ;
+      }
+      ++ lib.optionals config.catppuccin.enable [
+        pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
+      ]
+      ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ])
+      ++ (lib.optionals (supportPlasma) [ pkgs.nur.repos.rycee.firefox-addons.plasma-integration ]);
     search = {
       force = true;
       default = config.hm.firefox.defaultSearchEngine;
@@ -170,21 +186,6 @@ let
         "media.ffmpeg.vaapi.enabled" = true;
         "media.gpu-process.enabled" = true;
       });
-    extensions =
-      builtins.attrValues {
-        inherit (pkgs.nur.repos.rycee.firefox-addons)
-          clearurls
-          firemonkey
-          return-youtube-dislikes
-          sponsorblock
-          ublock-origin
-          ;
-      }
-      ++ lib.optionals config.catppuccin.enable [
-        pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
-      ]
-      ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ])
-      ++ (lib.optionals (supportPlasma) [ pkgs.nur.repos.rycee.firefox-addons.plasma-integration ]);
   };
   policies = {
     DisableTelemetry = true;
@@ -227,11 +228,13 @@ in
     programs = {
       firefox = {
         enable = true;
+        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.firefox;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
       floorp = {
         enable = true;
+        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.floorp;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };

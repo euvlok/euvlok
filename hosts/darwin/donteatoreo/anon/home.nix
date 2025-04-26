@@ -18,7 +18,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     users.anon =
-      { config, osConfig, ... }:
+      { config, ... }:
       {
         imports = [
           { home.stateVersion = "24.11"; }
