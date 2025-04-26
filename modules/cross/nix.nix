@@ -9,7 +9,6 @@ let
 in
 {
   options.cross.nix.enable = lib.mkEnableOption "Nix";
-
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
       (lib.mkIf config.nixpkgs.hostPlatform.isLinux {
@@ -20,16 +19,12 @@ in
             value.source = value.flake;
           }) config.nix.registry
         );
-
         /*
           "truetype:interpreter-version=40" tells freetype to use version 40 of the
           TrueType bytecode interpreter
-
           "cff:no-stem-darkening=0" tells freetype to not darken the stems (the main
           vertical strokes) when processing fonts using the CFF engine
-
           "autofitter:no-stem-darkening=0" does the same for the autofitter component
-
           Essentially, it's a way to keep fonts looking as natural as they were
           designed, without any extra darkening that might make them look a tad heavier
         */
@@ -40,7 +35,6 @@ in
           settings =
             {
               experimental-features = "nix-command flakes pipe-operators";
-
               substituters = [
                 "https://devenv.cachix.org"
                 "https://nix-community.cachix.org"
@@ -54,14 +48,13 @@ in
               # Disable global registry
               flake-registry = "";
             };
-
           # Obviously, we don't want channels; they're imperatively managed. Disabling
           # them means that the `nixpkgs` instance with which the host was built is used
           # as the "de facto" channel when referring to `<nixpkgs>`
           channel.enable = false;
-
           # Make flake registry and nix path match flake inputs
-          registry = (
+          # Using mkForce to override any existing registry definitions
+          registry = lib.mkForce (
             lib.mapAttrs (_: flake: { inherit flake; }) (
               # Flake Inputs
               lib.filterAttrs (_: lib.isType "flake") inputs

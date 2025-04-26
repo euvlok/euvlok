@@ -22,7 +22,6 @@ _: {
       ### --- Socials
       ### --- Gayming --- ###
       "crossover" # Supporting wine project
-      "whisky" # just for the wine
       "mythic" # heroic but better
       "heroic"
       "steam" # Gayming

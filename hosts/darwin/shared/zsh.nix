@@ -7,7 +7,6 @@
   extraInteractiveInit ? "",
   ...
 }:
-
 let
   shellAliases =
     ((pkgs.callPackage ../../../modules/hm/shell/aliases.nix { osConfig = config; })
@@ -16,13 +15,11 @@ let
     // lib.optionalAttrs (hmConfig.home.username == "anon") (
       (pkgs.callPackage ../../hm/donteatoreo/aliases.nix { }).programs.zsh.shellAliases
     );
-
   shellAliasesStr =
     builtins.attrNames shellAliases
     |> builtins.filter (an: builtins.isString shellAliases.${an})
     |> map (an: "alias ${an}=${lib.escapeShellArg shellAliases.${an}}")
     |> builtins.concatStringsSep "\n";
-
   omzPlugins = [
     "colorize"
     "direnv"
@@ -33,7 +30,6 @@ let
     "ssh"
     "vscode"
   ];
-
   customPlugins = [
     {
       name = "fast-syntax-highlighting";
@@ -48,10 +44,8 @@ let
       src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
     }
   ];
-
   customPluginsStr = customPlugins |> lib.concatMapStringsSep "\n" (p: "source ${p.src}");
   omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
-
   interactiveShellInit = lib.concatStringsSep "\n" [
     "# Aliases"
     shellAliasesStr
@@ -72,7 +66,6 @@ let
     "source ${pkgs.oh-my-zsh}/share/oh-my-zsh/oh-my-zsh.sh"
     extraInteractiveInit
   ];
-
   promptInit = lib.mkMerge [
     ''''
     (lib.optionalString (hmConfig.programs.starship.enable) (''
@@ -81,7 +74,7 @@ let
       fi
     ''))
     (lib.optionalString (hmConfig.programs.zellij.enable) (
-      lib.mkOrder 200 ''eval "$(zellij setup --generate-auto-start zsh)"''
+      lib.mkOrder 200 ''eval "$(zellij setup --generate-completion zsh)"''
     ))
     (lib.optionalString (hmConfig.programs.zoxide.enable) (
       lib.mkOrder 2000 ''eval "$(zoxide init zsh)"''
@@ -94,6 +87,5 @@ in
     ln -sfn "/etc/zshenv" "${hmConfig.home.homeDirectory}/.zshenv"
     ln -sfn "/etc/zprofile" "${hmConfig.home.homeDirectory}/.zprofile"
   '';
-
   programs.zsh = { inherit promptInit interactiveShellInit; };
 }

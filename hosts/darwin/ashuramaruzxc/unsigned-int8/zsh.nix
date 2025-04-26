@@ -2,6 +2,7 @@
 {
   programs.zsh =
     (pkgs.callPackage ../../shared/zsh.nix {
-      hmConfig = config.home-manager.users.ashuramaruzxc;
+      inherit config;
+      hmConfig = config.home-manager.users.ashuramaru;
     }).programs.zsh;
 }

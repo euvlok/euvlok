@@ -80,8 +80,10 @@
     pre-commit-hooks.inputs.flake-compat.follows = "";
     # --------------------------------------------------
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11"; # For compatibility reasons
+    nixpkgs-24_05.url = "github:NixOS/nixpkgs/nixos-24.05"; # For compatibility reasons right now
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11"; # For compatibility reasons in the future
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Shared unstable
+    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small"; # Shared unstable small
 
     nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-24.11";
@@ -125,8 +127,6 @@
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
 
     flatpak-declerative.url = "github:in-a-dil-emma/declarative-flatpak";
-    flatpak-declerative.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    flatpak-declerative.inputs.home-manager.follows = "home-manager-stable";
 
     nil.url = "github:oxalica/nil";
     nil.inputs.nixpkgs.follows = "nixpkgs-unstable";

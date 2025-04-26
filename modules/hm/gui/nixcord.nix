@@ -29,7 +29,7 @@ let
       );
 in
 {
-  imports = [ inputs.nixcord.homeManagerModules.nixcord ];
+  imports = [ inputs.nixcord.homeModules.nixcord ];
 
   options.hm.nixcord.enable = lib.mkEnableOption "NixCord";
 

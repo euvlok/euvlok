@@ -190,14 +190,14 @@ in
       };
       inherit search;
     };
-    nativeMessagingHosts = [
-      pkgs.firefoxpwa
-      pkgs.keepassxc
-    ];
+    # nativeMessagingHosts = [
+    #   pkgs.firefoxpwa
+    #   pkgs.keepassxc
+    # ];
   };
-  home.packages = [
-    pkgs.firefoxpwa
-    pkgs.keepassxc
-  ];
+  # home.packages = [
+  #   pkgs.firefoxpwa
+  #   pkgs.keepassxc
+  # ];
   programs.firefox.enable = lib.mkForce false;
 }
