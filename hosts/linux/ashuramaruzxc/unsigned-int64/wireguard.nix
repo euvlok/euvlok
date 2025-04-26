@@ -33,6 +33,14 @@
         ];
       }
       {
+        publicKey = "w5lvJLqFUliUA9jBdKl7B5KB35L87hBK3n786yUgvSk=";
+        presharedKeyFile = config.sops.secrets.wireguard-shared.path;
+        allowedIPs = [
+          "172.16.31.5/32"
+          "fd17:216b:31bc:1::5/128"
+        ];
+      }
+      {
         # root@v1
         publicKey = "4WCatIaSouTOmlpVjHWsB3zZN6ikStYGyg6esqejhQo=";
         presharedKeyFile = config.sops.secrets.wireguard-shared_fumono.path;
