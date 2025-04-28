@@ -47,23 +47,29 @@ let
   customPluginsStr = customPlugins |> lib.concatMapStringsSep "\n" (p: "source ${p.src}");
   omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
   interactiveShellInit = lib.concatStringsSep "\n" [
-    "# Aliases"
-    shellAliasesStr
-    extraAliases
-    "# autocd"
-    "setopt autocd"
-    "# Autosuggestions"
-    "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-    "# Syntax highlighting"
-    "ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)"
-    "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-    "# History substring search"
-    "source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-    "# Custom plugins"
-    customPluginsStr
     "# Oh My Zsh"
     omzPluginsStr
     "source ${pkgs.oh-my-zsh}/share/oh-my-zsh/oh-my-zsh.sh"
+
+    "# Aliases"
+    shellAliasesStr
+    extraAliases
+
+    "# autocd"
+    "setopt autocd"
+
+    "# Autosuggestions"
+    "source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+    "# Syntax highlighting"
+    "ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)"
+    "source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+    "# History substring search"
+    "source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+    "# Custom plugins"
+    customPluginsStr
     extraInteractiveInit
   ];
   promptInit = lib.mkMerge [
@@ -96,7 +102,7 @@ in
   system.activationScripts.postActivation.text = ''
     ln -sfn "/etc/zprofile" "${hmConfig.home.homeDirectory}/.zprofile"
     ln -sfn "/etc/zshenv" "${hmConfig.home.homeDirectory}/.zshenv"
-    ln -sfn "/etc/zshrc" "${hmConfig.home.homeDirectory}/.zshrc"
+    ln -sfn "/etc/zshrc" "${hmConfig.home.homeDirectory}/.zshrc"  
   '';
   programs.zsh = { inherit promptInit interactiveShellInit; };
 }
