@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  osConfig,
-  ...
-}:
+{ pkgs, ... }:
 let
   userName = "Tenjin";
   userEmail = "ashuramaru@tenjin-dk.com";

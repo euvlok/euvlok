@@ -38,8 +38,6 @@ in
         "terminal.integrated.cursorStyle" = "line";
         "terminal.integrated.cursorBlinking" = true;
 
-        "workbench.colorTheme" = "Catppuccin Mocha";
-        "workbench.iconTheme" = "catppuccin-mocha";
         "workbench.sideBar.location" = "right";
         "window.titleBarStyle" = "native";
         "telemetry.telemetryLevel" = "off";

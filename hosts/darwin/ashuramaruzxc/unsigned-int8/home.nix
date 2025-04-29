@@ -40,6 +40,14 @@ in
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
 
+          inputs.sops-nix.homeManagerModules.sops
+          {
+            sops = {
+              age.keyFile = "${config.home.homeDirectory}/Library/Application\ Support/sops/age/keys.txt";
+              defaultSopsFile = ../../../../secrets/unsigned-int8.yaml;
+            };
+          }
+
           ../../../../modules/hm
           {
             hm = {
@@ -55,7 +63,6 @@ in
               nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;
-              ssh.enable = true;
               vscode.enable = true;
               yazi.enable = true;
               zellij.enable = true;
@@ -95,7 +102,7 @@ in
                 inherit (pkgs)
                   # blender # 3D creation suite
                   # Graphics
-                  #! qbittorrent
+                  #! qbittorrent @ashuramaruzxc: for some reason only works on nixos-unstable
                   #! kdenlive brew
                   #! krita brew
                   #! obs-studio brew
@@ -103,9 +110,14 @@ in
                   audacity
                   gimp # Image editing
                   inkscape # Vector graphics
-                  nicotine-plus # Errrrm but le piracy le bad
                   yubikey-manager # OTP
                   ;
+                /**
+                  * NOOOOOOO ❗❗❗ 🙀 😾 BUT LE PIRACY LE BAD HOW WILL SONY AND OTHER
+                  * MULTIBILLION CORPORATIONS MAKE MONEY OF COPYRIGHTED SONGS WHAT ABOUT THE
+                  * SHARE HOLDERS VALUE ❗❗❗ 🙀
+                */
+                inherit (pkgs) nicotine-plus;
 
                 # Gaming
                 inherit (pkgs)
@@ -122,7 +134,6 @@ in
                   # Playstation
                   chiaki # remote-play
                   duckstation-bin # PlayStation 1 emulator
-                  #! TODO # PlayStation 2 emulator maybe later
                   #! ppsspp # PlayStation PSP emulator BREW
                   #! rpcs3
                   #! shadps4
@@ -169,6 +180,7 @@ in
                   email = "ashuramaru@tenjin-dk.com";
                   base_url = "https://bitwarden.tenjin-dk.com";
                   lock_timeout = 600;
+                  pinentry = pkgs.pinentry_mac;
                 };
               };
               btop.enable = true;

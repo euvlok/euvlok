@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  config,
   ...
 }:
 {
@@ -11,33 +10,16 @@
       sops = {
         age.keyFile = "/var/lib/sops/age/keys.txt";
         age.sshKeyPaths = [ ]; # we don't need this shit here
-        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int8.yaml;
-        # secrets.id_ed25519-sk = {
-        #   mode = "0600";
-        #   owner = config.users.users.ashuramaru.name;
-        #   neededForUsers = true;
-        # };
-        # secrets.id_ecdsa-sk-sk = {
-        #   mode = "0600";
-        #   owner = config.users.users.ashuramaru.name;
-        #   neededForUsers = true;
-        # };
-        secrets.id_ecdsa-sk_github = {
-          mode = "0600";
-          owner = config.users.users.ashuramaru.name;
-          neededForUsers = true;
-        };
+        defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
       };
     }
   ];
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
-  security.pam.services.sudo_local.touchIdAuth = true;
-
   networking = {
-    computerName = "Marie's Mac Mini M2 Pro unsigned-int8";
-    hostName = "unsigned-int8";
-    localHostName = "unsigned-int8";
+    computerName = "Marie's boyfriend's Mac Mini M4 Pro nanachi";
+    hostName = "nanachi";
+    localHostName = "nanachi";
     knownNetworkServices = [
       "Ethernet"
       "Thunderbolt Bridge"
@@ -45,14 +27,14 @@
     ];
     dns = [
       "192.168.1.1"
-      "172.16.31.1"
-      "fd17:216b:31bc:1::1"
+      "172.16.31.3"
+      "fd17:216b:31bc:3::1"
     ];
   };
 
   users.users = {
-    ashuramaru = {
-      home = "/Users/ashuramaru";
+    faputa = {
+      home = "/Users/faputa";
       shell = pkgs.zsh;
     };
   };
