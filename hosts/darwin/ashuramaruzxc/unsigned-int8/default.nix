@@ -3,6 +3,7 @@
   unsigned-int8 = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      ../../../hm/ashuramaruzxc/fonts.nix
       ../../shared/system.nix
       ./brew.nix
       ./configuration.nix
@@ -10,6 +11,10 @@
       ./system.nix
       ./zsh.nix
 
+      ../../shared/protonmail-bridge.nix
+      {
+        services.protonmail-bridge.enable = true;
+      }
       ../../../../modules/cross
       {
         cross = {

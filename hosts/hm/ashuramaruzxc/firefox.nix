@@ -2,6 +2,7 @@
   pkgs,
   lib,
   osConfig,
+  config,
   inputs,
   ...
 }:
@@ -10,8 +11,8 @@ let
     force = true;
     order = lib.mkForce [
       "Kagi"
-      "Google"
-      "DuckDuckGo"
+      "google"
+      "ddg"
       "Home Manager"
       "Nix Options"
       "Nix Packages"
@@ -19,13 +20,13 @@ let
       "GitHub"
       "SteamDB"
       "ProtonDB"
-      "YouTube"
+      "youtube"
       "YoutubeMusic"
     ];
     engines = {
-      "Bing".metaData.hidden = true;
-      "You".metaData.hidden = true;
-      "You.com".metaData.hidden = true;
+      "bing".metaData.hidden = true;
+      "you".metaData.hidden = true;
+      "you.com".metaData.hidden = true;
       "NixOS Wiki" = {
         urls = [
           {
@@ -57,7 +58,7 @@ let
             ];
           }
         ];
-        iconUpdateURL = "https://steamdb.info/static/logos/512px.png";
+        icon = "https://steamdb.info/static/logos/512px.png";
         updateInterval = 7 * 24 * 60 * 60 * 1000;
         definedAliases = [ "@steamdb" ];
       };
@@ -73,7 +74,7 @@ let
             ];
           }
         ];
-        iconUpdateURL = "https://www.protondb.com/sites/protondb/images/favicon.ico";
+        icon = "https://www.protondb.com/sites/protondb/images/favicon.ico";
         updateInterval = 7 * 24 * 60 * 60 * 1000;
         definedAliases = [ "@protondb" ];
       };
@@ -89,7 +90,7 @@ let
             ];
           }
         ];
-        iconUpdateURL = "https://www.youtube.com/s/desktop/5d5de6d9/img/favicon.ico";
+        icon = "https://www.youtube.com/s/desktop/5d5de6d9/img/favicon.ico";
         updateInterval = 7 * 24 * 60 * 60 * 1000;
         definedAliases = [
           "@ytm"
@@ -114,6 +115,24 @@ let
         homepage = "https://twitter.com/Magnolia1234B";
         description = "Bypass Paywalls of (custom) news sites";
         license = lib.licenses.mit;
+        platforms = lib.platforms.all;
+      };
+    };
+  old-twitter-layout =
+    let
+      pname = "old-twitter-layout-2024";
+      version = "1.8.9.9";
+      addonId = "4473235";
+    in
+    inputs.firefox-addons.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
+      inherit pname version addonId;
+      url = "https://addons.mozilla.org/firefox/downloads/file/${addonId}/${pname}-${version}.xpi";
+      name = "${pname}";
+      sha256 = "sha256-XxWcd5Ku2jpw2652/j2iJmUUrLzqJn6LOMEawlOKkGY=";
+      meta = {
+        homepage = "https://github.com/dimdenGD/OldTwitter";
+        description = "Extension to return old Twitter layout from 2015 / 2018";
+        # license = lib.licenses.unfree; # for some reason ?? ?? ? ? ? ??
         platforms = lib.platforms.all;
       };
     };
@@ -145,17 +164,14 @@ in
       settings = {
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
-      extensions = builtins.attrValues {
+      extensions.packages = builtins.attrValues {
         inherit (pkgs.nur.repos.rycee.firefox-addons)
           # necessity
           mullvad
           darkreader
 
-          # firemonkey
-          tree-style-tab
           facebook-container
 
-          clearurls
           user-agent-string-switcher
           web-archives
 
@@ -186,7 +202,7 @@ in
           polish-dictionary
           bulgarian-dictionary
           ;
-        inherit bypass-paywalls-clean;
+        inherit bypass-paywalls-clean old-twitter-layout;
       };
       inherit search;
     };

@@ -1,5 +1,25 @@
-{ pkgs, ... }:
 {
+  inputs,
+  pkgs,
+  config,
+  ...
+}:
+{
+  imports = [
+    inputs.sops-nix.darwinModules.sops
+    {
+      sops = {
+        age.keyFile = "/var/lib/sops/age/keys.txt";
+        age.sshKeyPaths = [ ]; # we don't need this shit here
+        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int8.yaml;
+        secrets.ssh_ed25519-sk_github = {
+          mode = "0600";
+          owner = config.users.users.ashuramaru.name;
+          neededForUsers = true;
+        };
+      };
+    }
+  ];
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -33,7 +53,6 @@
 
   programs = {
     gnupg.agent.enable = true;
-    gnupg.agent.enableSSHSupport = true;
     nix-index.enable = true;
   };
 
@@ -54,6 +73,10 @@
       # Android
       android-tools
       scrcpy
+
+      # fine lol
+      pinentry_mac
+      gnupg
       ;
   };
 }

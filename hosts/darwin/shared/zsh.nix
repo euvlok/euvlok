@@ -99,10 +99,5 @@ let
   ];
 in
 {
-  system.activationScripts.postActivation.text = ''
-    ln -sfn "/etc/zprofile" "${hmConfig.home.homeDirectory}/.zprofile"
-    ln -sfn "/etc/zshenv" "${hmConfig.home.homeDirectory}/.zshenv"
-    ln -sfn "/etc/zshrc" "${hmConfig.home.homeDirectory}/.zshrc"  
-  '';
   programs.zsh = { inherit promptInit interactiveShellInit; };
 }

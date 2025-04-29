@@ -19,9 +19,9 @@ let
     dc = "z";
 
     # List
-    ls = "eza --oneline --icons";
+    ls = "eza --oneline --icons auto";
     lt = "eza --oneline --reverse --sort=size --icons";
-    ll = "eza --long --icons";
+    ll = "eza --long --icons auto";
     ld = "ls -d .*";
 
     # Time

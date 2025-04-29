@@ -12,7 +12,6 @@ _: {
       require_sha = true;
     };
     taps = [
-      "homebrew/cask-versions"
       "cfergeau/crc"
     ];
     casks = [
@@ -24,7 +23,7 @@ _: {
       "crossover" # Supporting wine project
       "mythic" # heroic but better
       "heroic"
-      "steam" # Gayming
+      # "steam" # Gayming
       "xemu"
       "ppsspp"
       "cemu"
@@ -40,7 +39,7 @@ _: {
       ### --- Utilities --- ###
       "shottr"
       "forklift"
-      "nextcloud"
+      "nextcloud-vfs"
       "yubico-authenticator"
       ### --- Utilities --- ###
     ];

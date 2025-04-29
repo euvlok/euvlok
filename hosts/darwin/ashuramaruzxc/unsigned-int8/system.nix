@@ -26,7 +26,7 @@ in
   system = {
     keyboard.enableKeyMapping = true;
     defaults.dock.tilesize = 42;
-    stateVersion = 4;
+    stateVersion = 5;
   };
   nixpkgs.overlays = [
     add-24_05-packages

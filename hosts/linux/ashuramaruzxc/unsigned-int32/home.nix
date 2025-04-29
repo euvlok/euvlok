@@ -30,8 +30,10 @@ in
 
           ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/firefox.nix
-          ../../../hm/ashuramaruzxc/chrome.nix
+          ../../../hm/ashuramaruzxc/git.nix
+          ../../../hm/ashuramaruzxc/nixcord.nix
           ../../../hm/ashuramaruzxc/nushell.nix
+          ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
           inputs.sops-nix.homeManagerModules.sops
@@ -62,6 +64,13 @@ in
               vscode.enable = true;
               zellij.enable = true;
               zsh.enable = true;
+            };
+          }
+          ../../../hm/ashuramaruzxc/protonmail-bridge.nix
+          {
+            services.protonmail-bridge = {
+              enable = true;
+              logLevel = "info";
             };
           }
 

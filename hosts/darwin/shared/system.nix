@@ -2,7 +2,11 @@ _: {
   system = {
     # Global macOS System Settings
     defaults = {
-      CustomUserPreferences."FeatureFlags/Domain/UIKit".redesigned_text_cursor.enable = false;
+      CustomUserPreferences = {
+        "FeatureFlags/Domain/UIKit".redesigned_text_cursor.enable = false;
+        "com.colliderli.iina".enableThumbnailForRemoteFiles = true;
+        ".GlobalPreferences".TSMLanguageIndicatorEnabled = 0;
+      };
       LaunchServices.LSQuarantine = false; # Disable Quarantine for Downloaded Applications
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
       NSGlobalDomain = {

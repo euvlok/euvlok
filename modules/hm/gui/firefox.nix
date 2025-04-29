@@ -29,13 +29,13 @@ let
       privateDefault = config.hm.firefox.defaultSearchEngine;
       order = [
         "GitHub"
-        "Google"
+        "google"
         "Kagi"
         "Nix Packages"
-        "YouTube"
+        "youtube"
       ];
       engines = {
-        "DuckDuckGo" = {
+        "ddg" = {
           urls = [
             {
               template = "https://duckduckgo.com/";
@@ -47,7 +47,7 @@ let
               ];
             }
           ];
-          iconUpdateURL = "https://duckduckgo.com/favicon.ico";
+          icon = "https://duckduckgo.com/favicon.ico";
           updateInterval = 24 * 60 * 60 * 1000;
           definedAliases = [ "@ddg" ];
         };
@@ -63,11 +63,11 @@ let
               ];
             }
           ];
-          iconUpdateURL = "https://github.com/favicon.ico";
+          icon = "https://github.com/favicon.ico";
           updateInterval = 24 * 60 * 60 * 1000;
           definedAliases = [ "@gh" ];
         };
-        "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
+        "google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
         "Kagi" = {
           urls = [
             {
@@ -90,7 +90,7 @@ let
               type = "application/x-suggestions+json";
             }
           ];
-          iconUpdateURL = "https://assets.kagi.com/v2/apple-touch-icon.png";
+          icon = "https://assets.kagi.com/v2/apple-touch-icon.png";
           updateInterval = 24 * 60 * 60 * 1000;
           definedAliases = [ "@kagi" ];
         };
@@ -136,7 +136,7 @@ let
           icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
           definedAliases = [ "@nq" ];
         };
-        "YouTube" = {
+        "youtube" = {
           urls = [
             {
               template = "https://www.youtube.com/results";
@@ -148,7 +148,7 @@ let
               ];
             }
           ];
-          iconUpdateURL = "https://youtube.com/favicon.ico";
+          icon = "https://youtube.com/favicon.ico";
           updateInterval = 24 * 60 * 60 * 1000;
           definedAliases = [ "@yt" ];
         };
@@ -213,12 +213,12 @@ in
   options.hm.firefox = {
     enable = lib.mkEnableOption "Declarative Firefox";
     defaultSearchEngine = lib.mkOption {
-      default = "Google";
+      default = "google";
       description = "Which Search Engine to set as Default";
       example = lib.literalExpression "Google";
       type = lib.types.enum [
-        "DuckDuckGo"
-        "Google"
+        "ddg"
+        "google"
         "Kagi"
       ];
     };

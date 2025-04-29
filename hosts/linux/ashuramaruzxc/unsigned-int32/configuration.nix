@@ -6,10 +6,10 @@
 }:
 {
   imports = [
+    ../../../hm/ashuramaruzxc/fonts.nix
     ../shared/android.nix
     ../shared/containers.nix
     ../shared/firmware.nix
-    ../shared/fonts.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
     ../shared/plasma.nix
