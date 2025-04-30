@@ -1,10 +1,4 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-
+{ lib, config, ... }:
 let
   cfg = config.virtualisation.kvmfr;
 in

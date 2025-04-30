@@ -29,7 +29,7 @@ assert
   builtins.replaceStrings [ "é" ] [ "e" ] (lib.strings.toLower normalizedFlavor)
   == lib.strings.toLower flavor;
 assert lib.strings.toLower accent == lib.strings.toLower normalizedAccent;
-pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
+pkgs.stdenvNoCC.mkDerivation (_: {
   pname = "catppuccin-userstyles";
   version = "all-userstyles-export-unstable-2025-04-20";
 

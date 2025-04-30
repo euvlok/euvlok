@@ -1,9 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}:
+{ pkgs, config, ... }:
 {
   imports = [
     ../../../hm/ashuramaruzxc/fonts.nix
