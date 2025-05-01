@@ -13,6 +13,7 @@ let
         inherit (pkgs.nur.repos.rycee.firefox-addons)
           clearurls
           firemonkey
+          refined-github
           return-youtube-dislikes
           sponsorblock
           ublock-origin
