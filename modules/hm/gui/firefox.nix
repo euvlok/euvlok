@@ -204,6 +204,7 @@ let
       });
   };
   policies = {
+    DisableAppUpdate = true;
     DisableTelemetry = true;
     # OfferToSaveLogins = false;
     # OfferToSaveLoginsDefault = false;
@@ -226,8 +227,17 @@ let
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
+  imports = [ inputs.zen-browser.homeModules.beta ];
+
   options.hm.firefox = {
-    enable = lib.mkEnableOption "Declarative Firefox";
+    enable = lib.mkEnableOption "Declarative Firefox-based Browsers";
+    firefox.enable = lib.mkOption {
+      default = true;
+      description = "Enable Declerative Firefox";
+    };
+    floorp.enable = lib.mkEnableOption "Declarative Floorp";
+    librewolf.enable = lib.mkEnableOption "Declarative LibreWolf";
+    zen-browser.enable = lib.mkEnableOption "Declarative Zen Browser";
     defaultSearchEngine = lib.mkOption {
       default = "google";
       description = "Which Search Engine to set as Default";
@@ -240,20 +250,37 @@ in
     };
   };
 
-  config = lib.mkIf config.hm.firefox.enable {
-    programs = {
-      firefox = {
+  config = lib.mkMerge [
+    (lib.mkIf config.hm.firefox.enable {
+      programs.firefox = {
         enable = true;
         package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.firefox;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
-      floorp = {
+    })
+    (lib.mkIf config.hm.floorp.enable {
+      programs.floorp = {
         enable = true;
         package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.floorp;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
-    };
-  };
+    })
+    (lib.mkIf config.hm.librewolf.enable {
+      programs.librewolf = {
+        enable = true;
+        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.librewolf;
+        profiles.default = default;
+        inherit policies nativeMessagingHosts;
+      };
+    })
+    (lib.mkIf config.hm.zen-browser.enable {
+      programs.zen-browser = {
+        enable = true;
+        profiles.default = default;
+        inherit policies nativeMessagingHosts;
+      };
+    })
+  ];
 }

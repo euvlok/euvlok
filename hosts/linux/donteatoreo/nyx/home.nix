@@ -47,6 +47,7 @@ in
                 direnv.enable = true;
                 fastfetch.enable = true;
                 firefox.enable = true;
+                firefox.zen-browser.enable = true;
                 fzf.enable = true;
                 ghostty.altKeyBehavior = true;
                 ghostty.enable = true;

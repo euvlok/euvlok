@@ -52,6 +52,7 @@ in
               direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
+              firefox.floorp.enable = true;
               firefox.defaultSearchEngine = "kagi";
               fzf.enable = true;
               ghostty.enable = true;

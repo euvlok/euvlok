@@ -53,6 +53,8 @@ in
               chromium.enable = true;
               direnv.enable = true;
               fastfetch.enable = true;
+              firefox.enable = true;
+              firefox.zen-browser.enable = true;
               fish.enable = true;
               fzf.enable = true;
               ghostty.altKeyBehavior = true;

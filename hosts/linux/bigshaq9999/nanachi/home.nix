@@ -43,6 +43,7 @@ in
               direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
+              firefox.floorp.enable = true;
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
