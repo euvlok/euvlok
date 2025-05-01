@@ -52,7 +52,7 @@ in
               ghostty.enable = true;
               git.enable = true;
               mpv.enable = true;
-              # nixcord.enable = true;
+              nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;
               ssh.enable = true;
