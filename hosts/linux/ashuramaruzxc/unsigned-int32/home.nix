@@ -66,13 +66,10 @@ in
               zsh.enable = true;
             };
           }
-          # ../../../hm/ashuramaruzxc/protonmail-bridge.nix
-          # {
-          #   services.protonmail-bridge = {
-          #     enable = true;
-          #     logLevel = "info";
-          #   };
-          # }
+          ../../../linux/shared/protonmail-bridge.nix
+          {
+            services.protonmail-bridge.enable = true;
+          }
 
           {
             home.sessionVariables = {

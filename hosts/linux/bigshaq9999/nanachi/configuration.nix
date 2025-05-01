@@ -41,22 +41,6 @@
   console.font = "Lat2-Terminus16";
   console.keyMap = "us";
 
-  services.protonmail-bridge = {
-    enable = true;
-    package =
-      # Ensure pass is not in the PATH.
-      pkgs.runCommand "protonmail-bridge"
-        {
-          bridge = pkgs.protonmail-bridge;
-          nativeBuildInputs = [ pkgs.makeWrapper ];
-        }
-        ''
-          mkdir -p "$out/bin"
-          makeWrapper "$bridge/bin/protonmail-bridge" "$out/bin/protonmail-bridge" \
-            --set PATH ${lib.strings.makeBinPath [ pkgs.gnome-keyring ]}
-        '';
-  };
-
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e";

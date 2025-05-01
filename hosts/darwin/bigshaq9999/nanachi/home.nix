@@ -62,6 +62,10 @@ in
               zellij.enable = true;
             };
           }
+          ../../../linux/shared/protonmail-bridge.nix
+          {
+            services.protonmail-bridge.enable = true;
+          }
 
           # Misc
           {
