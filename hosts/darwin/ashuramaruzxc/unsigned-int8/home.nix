@@ -5,11 +5,7 @@
   ...
 }:
 let
-  release =
-    if builtins.hasAttr "darwinRelease" config.system then
-      builtins.fromJSON (config.system.darwinRelease)
-    else
-      builtins.fromJSON (config.system.nixos.release);
+  release = builtins.fromJSON (config.system.darwinRelease);
 in
 {
   imports = [ inputs.home-manager-donteatoreo.darwinModules.home-manager ];
