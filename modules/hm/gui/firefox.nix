@@ -29,10 +29,10 @@ let
       default = config.hm.firefox.defaultSearchEngine;
       privateDefault = config.hm.firefox.defaultSearchEngine;
       order = [
-        "GitHub"
         "google"
-        "Kagi"
+        "kagi"
         "Nix Packages"
+        "GitHub"
         "youtube"
       ];
       engines = {
@@ -69,7 +69,7 @@ let
           definedAliases = [ "@gh" ];
         };
         "google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
-        "Kagi" = {
+        "kagi" = {
           urls = [
             {
               template = "https://kagi.com/search";
@@ -195,7 +195,7 @@ let
         "browser.urlbar.suggest.calculator" = true;
         "browser.urlbar.update2.engineAliasRefresh" = true;
       }
-      // lib.optionalAttrs (!isLinux) {
+      // lib.optionalAttrs (isLinux && osConfig.xdg.portal.xdgOpenUsePortal == true) {
         "widget.use-xdg-desktop-portal.file-picker" = 1;
       }
       // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
@@ -217,17 +217,17 @@ let
     DisablePocket = true;
     DisableSetDesktopBackground = true;
   };
-  nativeMessagingHosts = lib.optionals supportGnome (
-    builtins.attrValues {
-      inherit (pkgs) gnome-browser-connector;
-    }
-  );
+  nativeMessagingHosts =
+    (lib.optionals (supportGnome) builtins.attrValues { inherit (pkgs) gnome-browser-connector; })
+    ++ (lib.optionals (supportPlasma) builtins.attrValues {
+      inherit (pkgs.kdePackages) plasma-integration;
+    });
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
   supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
-  imports = [ inputs.zen-browser.homeModules.beta ];
+  imports = [ inputs.zen-browser.homeModules.twilight ];
 
   options.hm.firefox = {
     enable = lib.mkEnableOption "Declarative Firefox-based Browsers";
@@ -259,7 +259,7 @@ in
         inherit policies nativeMessagingHosts;
       };
     })
-    (lib.mkIf config.hm.floorp.enable {
+    (lib.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
         package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.floorp;
@@ -267,7 +267,7 @@ in
         inherit policies nativeMessagingHosts;
       };
     })
-    (lib.mkIf config.hm.librewolf.enable {
+    (lib.mkIf config.hm.firefox.librewolf.enable {
       programs.librewolf = {
         enable = true;
         package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.librewolf;
@@ -275,12 +275,17 @@ in
         inherit policies nativeMessagingHosts;
       };
     })
-    (lib.mkIf config.hm.zen-browser.enable {
+    (lib.mkIf config.hm.firefox.zen-browser.enable {
       programs.zen-browser = {
         enable = true;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
     })
+    {
+      home.packages =
+        (lib.optionals (supportGnome) [ pkgs.gnome-browser-connector ])
+        ++ (lib.optionals (supportPlasma) [ pkgs.kdePackages.plasma-integration ]);
+    }
   ];
 }

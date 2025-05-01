@@ -12,7 +12,6 @@
           defaultSopsFile = ../../../../secrets/2husecondary.yaml;
         };
       }
-      inputs.anime-game-launcher-2husecondary.nixosModules.default
       inputs.catppuccin.nixosModules.catppuccin
       {
         catppuccin = {
@@ -37,6 +36,10 @@
             cudaSupport = true;
           };
         };
+      }
+      inputs.anime-game-launcher.nixosModules.default
+      {
+        programs.anime-game-launcher.enable = true;
       }
     ];
   };

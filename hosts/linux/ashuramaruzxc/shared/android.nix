@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   cfg = config.programs.android-development;
 in
@@ -23,5 +28,6 @@ in
     programs.adb.enable = true;
     users.groups.adbusers.members = lib.optionals cfg.enable cfg.users;
     virtualisation.waydroid.enable = lib.optionals cfg.enable cfg.waydroid.enable;
+    environment.systemPackages = [ pkgs.scrcpy ];
   };
 }

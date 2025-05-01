@@ -133,11 +133,10 @@ in
       extensions.packages = builtins.attrValues {
         inherit (pkgs.nur.repos.rycee.firefox-addons)
           # necessity
-          mullvad
           darkreader
-
           facebook-container
-
+          mullvad
+          multi-account-containers
           user-agent-string-switcher
           web-archives
 
@@ -147,19 +146,17 @@ in
           reduxdevtools
           vue-js-devtools
 
-          # utils
-          multi-account-containers
-
-          stylus
-          steam-database
-          search-by-image
-          foxyproxy-standard
           bitwarden
-          firefox-translations
+          firefox-color
           floccus
-          tabliss
+          foxyproxy-standard
           old-reddit-redirect
           reddit-enhancement-suite
+          search-by-image
+          steam-database
+          stylus
+          tabliss
+          translate-web-pages
 
           # Dictionaries
           ukrainian-dictionary
@@ -172,14 +169,24 @@ in
       };
       inherit search;
     };
-    # nativeMessagingHosts = [
-    #   pkgs.firefoxpwa
-    #   pkgs.keepassxc
-    # ];
+    #! keep an eye on
+    #! https://github.com/NixOS/nixpkgs/pull/374068
+    #! https://github.com/NixOS/nixpkgs/issues/347350
+    nativeMessagingHosts = (
+      lib.optionals (osConfig.nixpkgs.hostPlatform.isLinux) builtins.attrValues {
+        inherit (pkgs) firefoxpwa;
+      }
+    );
+    languagePacks = [
+      "en-CA"
+      "en-GB"
+      "en-US"
+      "ja"
+    ];
   };
-  # home.packages = [
-  #   pkgs.firefoxpwa
-  #   pkgs.keepassxc
-  # ];
-  programs.firefox.enable = lib.mkForce false;
+  home.packages = (
+    lib.optionals (osConfig.nixpkgs.hostPlatform.isLinux) builtins.attrValues {
+      inherit (pkgs) firefoxpwa keepassxc bitwarden;
+    }
+  );
 }

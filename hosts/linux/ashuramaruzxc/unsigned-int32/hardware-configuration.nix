@@ -32,11 +32,11 @@
     kernelParams = [
       ### ------------------------------------ ###
       # if thunderbolt turned off
-      "ip=192.168.1.100::192.168.1.1:255.255.255.0::enp5s0:dhcp"
-      "ip=192.168.1.110::192.168.1.1:255.255.255.0::enp7s0:dhcp"
+      # "ip=192.168.1.100::192.168.1.1:255.255.255.0::enp5s0:dhcp"
+      # "ip=192.168.1.110::192.168.1.1:255.255.255.0::enp7s0:dhcp"
       # if thunerbolt turned on
-      "ip=192.168.1.100::192.168.1.1:255.255.255.0::enp57s0:dhcp"
-      "ip=192.168.1.110::192.168.1.1:255.255.255.0::enp59s0:dhcp"
+      # "ip=192.168.1.100::192.168.1.1:255.255.255.0::enp57s0:dhcp"
+      # "ip=192.168.1.110::192.168.1.1:255.255.255.0::enp59s0:dhcp"
       ### ------------------------------------ ###
       "video=DP-1:2560x1440@120"
       "video=DP-2:2560x1440@120"
@@ -95,7 +95,7 @@
     efi.efiSysMountPoint = "/boot";
     timeout = 30;
   };
-  boot.plymouth.enable = true;
+  # boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/12CE-A600";
@@ -318,47 +318,47 @@
   ### ---------------/dev/md/nvmepool0-------------------- ###
 
   ### ---------------/dev/md/hddpool0-------------------- ###
-  # fileSystems."/var/lib/backup/unsigned-int32" = {
-  #   device = "/dev/hddpool0/backup";
-  #   fsType = "btrfs";
-  #   options = [
-  #     "subvol=unsigned-int32"
-  #     "noatime"
-  #     "autodefrag"
-  #     "compres=zstd"
-  #   ];
-  # };
-  # fileSystems."/var/lib/backup/unsigned-int64" = {
-  #   device = "/dev/hddpool0/backup";
-  #   fsType = "btrfs";
-  #   options = [
-  #     "subvol=unsigned-int64"
-  #     "noatime"
-  #     "autodefrag"
-  #     "compres=zstd"
-  #   ];
-  # };
-  # fileSystems."/var/lib/backup/shared" = {
-  #   device = "/dev/hddpool0/backup";
-  #   fsType = "btrfs";
-  #   options = [
-  #     "subvol=shared"
-  #     "noatime"
-  #     "autodefrag"
-  #     "compres=zstd"
-  #   ];
-  # };
-  # fileSystems."/Shared/archive" = {
-  #   device = "/dev/hddpool0/archive";
-  #   fsType = "ext4";
-  #   options = [
-  #     "noatime"
-  #     "nofail"
-  #   ];
-  # };
+  fileSystems."/var/lib/backup/unsigned-int32" = {
+    device = "/dev/hddpool0/backup";
+    fsType = "btrfs";
+    options = [
+      "subvol=unsigned-int32"
+      "noatime"
+      "autodefrag"
+      "compress=zstd"
+    ];
+  };
+  fileSystems."/var/lib/backup/unsigned-int64" = {
+    device = "/dev/hddpool0/backup";
+    fsType = "btrfs";
+    options = [
+      "subvol=unsigned-int64"
+      "noatime"
+      "autodefrag"
+      "compress=zstd"
+    ];
+  };
+  fileSystems."/var/lib/backup/shared" = {
+    device = "/dev/hddpool0/backup";
+    fsType = "btrfs";
+    options = [
+      "subvol=shared"
+      "noatime"
+      "autodefrag"
+      "compress=zstd"
+    ];
+  };
+  fileSystems."/Shared/archive" = {
+    device = "/dev/hddpool0/archive";
+    fsType = "ext4";
+    options = [
+      "noatime"
+      "nofail"
+    ];
+  };
   ### ---------------/dev/md/hddpool0-------------------- ###
 
-  ### --------------- /dev/sda2(windows) --------------- ###
+  ### --------------- /dev/nvme0n1p4 --------------- ###
   fileSystems."/Shared/windows" = {
     device = "/dev/disk/by-uuid/8E34B63434B61EE1";
     fsType = "ntfs3";
@@ -387,8 +387,5 @@
     enable = true;
     interval = "weekly";
   };
-  system.fsPackages = [
-    pkgs.sshfs
-    pkgs.gphoto2fs
-  ];
+  system.fsPackages = [ pkgs.sshfs ];
 }

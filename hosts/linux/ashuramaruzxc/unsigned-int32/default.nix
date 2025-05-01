@@ -12,7 +12,6 @@
           defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
         };
       }
-      inputs.anime-game-launcher-ashuramaruzxc.nixosModules.default
       inputs.catppuccin.nixosModules.catppuccin
       {
         catppuccin = {
@@ -25,6 +24,7 @@
       ../../../../modules/cross
       {
         nixos = {
+          plasma.enable = true;
           gnome.enable = true;
           nvidia.enable = true;
           steam.enable = true;
@@ -36,6 +36,10 @@
             cudaSupport = true;
           };
         };
+      }
+      inputs.anime-game-launcher.nixosModules.default
+      {
+        programs.anime-game-launcher.enable = true;
       }
     ];
   };

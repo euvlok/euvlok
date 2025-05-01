@@ -16,17 +16,18 @@ in
         "typescript.suggest.paths" = false;
         "javascript.suggest.paths" = false;
         "files.autoSave" = "afterDelay";
-        "editor.fontSize" = 19;
-        "editor.fontFamily" = "'MesloLGL Nerd Font'";
-        "editor.tabSize" = 2;
-        "editor.renderWhitespace" = "selection";
-        "editor.cursorStyle" = "line";
-        "editor.cursorBlinking" = "blink";
         "editor.bracketPairColorization.enabled" = true;
         "editor.bracketPairColorization.independentColorPoolPerBracketType" = true;
+        "editor.cursorBlinking" = "blink";
+        "editor.cursorStyle" = "line";
+        "editor.fontFamily" = "'MesloLGL Nerd Font'";
+        "editor.fontSize" = 19;
         "editor.formatOnSave" = true;
-        "editor.wordWrap" = "on";
         "editor.minimap.enabled" = false;
+        "editor.renderWhitespace" = "selection";
+        "editor.semanticHighlighting.enabled" = true;
+        "editor.tabSize" = 2;
+        "editor.wordWrap" = "on";
         "editor.quickSuggestions" = {
           "other" = "on";
           "comments" = "on";
@@ -38,6 +39,8 @@ in
         "terminal.integrated.cursorStyle" = "line";
         "terminal.integrated.cursorBlinking" = true;
 
+        "workbench.editor.showIcons" = true;
+        "workbench.iconTheme" = "catppuccin-${config.catppuccin.flavor}";
         "workbench.sideBar.location" = "right";
         "window.titleBarStyle" = "native";
         "telemetry.telemetryLevel" = "off";
@@ -162,12 +165,8 @@ in
         ## -- JavaScript/Typescript Utils -- ##
 
         ## -- VSCode Themes/Icons -- ##
-        (mkExt "jdinhlife" "gruvbox")
         (mkExt "catppuccin" "catppuccin-vsc")
         (mkExt "catppuccin" "catppuccin-vsc-icons")
-        (mkExt "dracula-theme" "theme-dracula")
-        (mkExt "zhuangtongfa" "material-theme")
-        (mkExt "pkief" "material-icon-theme")
         ## -- VSCode Themes/Icons -- ##
 
         ## -- Dictionary/Languages support -- ##

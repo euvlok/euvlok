@@ -73,7 +73,6 @@ in
     daemon.enable = true;
   };
   services.ratbagd.enable = true;
-  programs.anime-game-launcher.enable = true;
 
   nixpkgs.overlays = [ addUnstablePackages ];
 }

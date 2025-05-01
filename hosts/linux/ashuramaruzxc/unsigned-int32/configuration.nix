@@ -57,11 +57,9 @@
     };
     udev = {
       packages = builtins.attrValues {
-        inherit (pkgs.gnome2) GConf;
         inherit (pkgs)
           libwacom
           yubikey-personalization
-          gnome-settings-daemon
           ;
         inherit (pkgs.unstable) opentabletdriver;
       };
@@ -210,6 +208,7 @@
       LC_TELEPHONE = "pl_PL.UTF-8";
       LC_NUMERIC = "pl_PL.UTF-8";
     };
+
     inputMethod = {
       enable = true;
       type = "fcitx5";
@@ -217,12 +216,19 @@
         plasma6Support = true;
         waylandFrontend = true;
         addons = builtins.attrValues {
-          inherit (pkgs) fcitx5-anthy fcitx5-gtk;
-          inherit (pkgs) fcitx5-mozc;
+          inherit (pkgs) fcitx5-gtk fcitx5-mozc;
         };
       };
     };
   };
+
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "Monaspice Kr Nerd Font" ];
+    sansSerif = [ "Noto Nerd Font" ];
+    serif = [ "Noto Nerd Font" ];
+    emoji = [ "Twitter Color Emoji" ];
+  };
+
   virtualisation.oci-containers.containers.FlareSolverr = {
     image = "ghcr.io/flaresolverr/flaresolverr:latest";
     autoStart = true;

@@ -14,6 +14,28 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
+    users.root =
+      { osConfig, ... }:
+      {
+        imports = [
+          { home.stateVersion = "25.05"; }
+          inputs.catppuccin.homeModules.catppuccin
+          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+          ../../../hm/ashuramaruzxc/starship.nix
+
+          ../../../../modules/hm
+          {
+            hm = {
+              bash.enable = true;
+              direnv.enable = true;
+              fzf.enable = true;
+              nvf.enable = true;
+              zellij.enable = true;
+              zsh.enable = true;
+            };
+          }
+        ];
+      };
     users.ashuramaru =
       { osConfig, ... }:
       {
@@ -24,14 +46,15 @@ in
 
           ./systemd-utils.nix
 
-          ../../../hm/ashuramaruzxc/flatpak.nix
+          ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/firefox.nix
+          ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
-          # ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
+          # ../../../hm/ashuramaruzxc/nushell.nix
           inputs.sops-nix.homeManagerModules.sops
           {
             sops = {
@@ -47,9 +70,12 @@ in
               chromium.enable = true;
               direnv.enable = true;
               fastfetch.enable = true;
-              firefox.enable = true;
-              firefox.floorp.enable = true;
-              firefox.defaultSearchEngine = "kagi";
+              firefox = {
+                enable = true;
+                floorp.enable = true;
+                zen-browser.enable = true;
+                defaultSearchEngine = "kagi";
+              };
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
@@ -65,17 +91,11 @@ in
           }
           ../../../linux/shared/protonmail-bridge.nix
           {
+            services.easyeffects.enable = true;
             services.protonmail-bridge.enable = true;
           }
 
           {
-            home.sessionVariables = {
-              XCURSOR_THEME = "Remilia";
-              XCURSOR_SIZE = 32;
-            };
-
-            services.easyeffects.enable = true;
-
             home.packages =
               builtins.attrValues {
                 # Multimedia
@@ -97,6 +117,7 @@ in
                   inkscape # Vector graphics
                   krita # Digital painting
                   obs-studio # Streaming and recording
+                  tenacity # Audio recording/editing
                   ;
                 inherit (pkgs.kdePackages)
                   kdenlive # Video editing
@@ -106,7 +127,7 @@ in
                   anki # Flashcard app
                   libreoffice-fresh
                   obsidian
-                  tenacity # Audio recording/editing
+                  gImageReader
                   ;
                 # Social & Communication
                 inherit (pkgs)
@@ -115,9 +136,8 @@ in
                   materialgram # tg client but better
                   nextcloud-client # nextcloud client
                   signal-desktop # Signal desktop client
-                  tdesktop # Telegram desktop
                   ;
-                # Utilities
+                # Networking
                 inherit (pkgs)
                   nekoray
                   openvpn
@@ -129,11 +149,8 @@ in
                 inherit (pkgs)
                   feather # monero
                   helvum # Jack controls
-                  #! imgbrd-grabber
-                  media-downloader
                   pavucontrol # PulseAudio volume control
                   qpwgraph
-                  yt-dlp # youtube and whatnot media downloader
                   ;
 
                 # Gaming
@@ -144,7 +161,6 @@ in
                   mangohud # Vulkan overlay
 
                   # Misc
-                  bottles # Play On Linux but modern
                   flycast # Sega Dreamcast emulator
                   #! np2kai # PC-98 emulator
                   prismlauncher # Minecraft launcher
@@ -224,6 +240,20 @@ in
               };
               btop.enable = true;
             };
+            home.sessionVariables = {
+              XCURSOR_THEME = "Remilia";
+              XCURSOR_SIZE = 32;
+            };
+          }
+          # gtk settings
+          {
+            # gtk = {
+            #   enable = true;
+            #   iconTheme.name = "Breeze-dark";
+            #   cursorTheme.name = "Breeze_cursors";
+            # };
+            # catppuccin.gtk.enable = true;
+            # catppuccin.gtk.gnomeShellTheme = true;
           }
         ];
       };

@@ -3,10 +3,10 @@
   programs.chromium = {
     extensions =
       let
-        bpc-version = "3.9.1.2";
+        bpc-version = "4.1.1.4";
         bpc-src = pkgs.fetchurl {
           url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-${bpc-version}.crx";
-          sha256 = "sha256-KvHSxP4zC+VvYoGFyz2b2e8CDlu0N/ujiq99LVdpr3E=";
+          sha256 = "sha256-8TIQ7iC2oQWFEFObwBp/jatEY9kgqo7SBcve9HAofCg=";
         };
       in
       [
@@ -34,11 +34,11 @@
         { id = "cnojnbdhbhnkbcieeekonklommdnndci"; } # search by image
         { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # google translate
         { id = "jgejdcdoeeabklepnkdbglgccjpdgpmf"; } # old twitter layout
-        # {
-        # id = "lkbebcjgcmobigpeffafkodonchffocl";
-        # version = bpc-version;
-        # crxPath = bpc-src;
-        # }
+        {
+          id = "lkbebcjgcmobigpeffafkodonchffocl";
+          version = bpc-version;
+          crxPath = bpc-src;
+        }
       ];
   };
 }

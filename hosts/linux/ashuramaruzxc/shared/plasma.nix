@@ -37,14 +37,11 @@
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
-      adw-gtk3
-      adwaita-icon-theme
-      adwaita-qt
-      adwaita-qt6
-      adwsteamgtk
       gnome-boxes
       gnome-themes-extra
       gnome-tweaks
+      gparted
+      pop-launcher
       ;
 
     inherit (pkgs.gnomeExtensions)
@@ -63,19 +60,10 @@
 }
 // {
   services = {
-    dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
-    desktopManager.plasma6.enable = true;
-    displayManager.defaultSession = "plasma";
     libinput = {
       mouse.accelProfile = "flat";
       mouse.accelSpeed = "0";
     };
-  };
-
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    xdgOpenUsePortal = true;
   };
 
   qt.enable = true;
@@ -83,57 +71,9 @@
 
   programs = {
     calls.enable = true;
-    gnome-terminal.enable = true;
     gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
     kdeconnect.enable = true;
     ssh.startAgent = true;
     ssh.askPassword = lib.mkForce (lib.getExe pkgs.kdePackages.ksshaskpass);
-  };
-
-  environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
-      capitaine-cursors
-      catppuccin-kde
-      ;
-
-    inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
-      darkly-qt5
-      darkly-qt6
-      ;
-
-    inherit (pkgs)
-      gparted
-      gradience
-      pop-launcher
-      ;
-
-    inherit (pkgs.kdePackages)
-      ark
-      dolphin
-      filelight
-      kclock
-      konsole
-      merkuro # mail client
-
-      # Kio
-      dolphin-plugins
-      kio-admin
-      kio-extras
-      kio-extras-kf5
-      kio-fuse
-      kio-gdrive
-      kio-zeroconf
-
-      # Formats
-      kdegraphics-thumbnailers # blender etc
-      kdesdk-thumbnailers # test
-      kimageformats # gimp
-      qtimageformats # webp etc
-      qtsvg # svg
-
-      # Misc
-      flatpak-kcm
-      kcmutils
-      ;
   };
 }

@@ -1,10 +1,5 @@
 { inputs, ... }:
 let
-  add-24_05-packages = final: _: {
-    nixpkgs-24_11 = import inputs.nixpkgs-24_05 {
-      inherit (final) system config;
-    };
-  };
   add-24_11-packages = final: _: {
     nixpkgs-24_11 = import inputs.nixpkgs-ashuramaruzxc {
       inherit (final) system config;
@@ -29,7 +24,6 @@ in
     stateVersion = 5;
   };
   nixpkgs.overlays = [
-    add-24_05-packages
     add-24_11-packages
     add-unstable-small-packages
     add-x86_64-darwin-packages

@@ -19,9 +19,6 @@
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.gamescope/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.vkBasalt/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.OBSVkCapture/x86_64/24.08"
-
-      # Utils
-      "flathub:runtime/org.gtk.Gtk3theme.adw-gtk3-dark/x86_64/3.22"
     ];
     overrides = {
       "global" = {

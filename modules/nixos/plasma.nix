@@ -10,6 +10,7 @@
 
   config = lib.mkIf config.nixos.plasma.enable {
     services = {
+      gnome.gnome-settings-daemon.enable = true;
       dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
       udev.packages = builtins.attrValues {
         inherit (pkgs) gnome-settings-daemon;
@@ -31,8 +32,9 @@
       systemPackages =
         builtins.attrValues {
           inherit (pkgs)
-            adw-gtk3
-            catppuccin-kde
+            adwaita-icon-theme
+            adwaita-qt
+            adwaita-qt6
             ;
           inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
             darkly-qt5
@@ -72,6 +74,11 @@
             size = "compact";
             tweaks = [ "normal" ];
             variant = config.catppuccin.flavor;
+          };
+          catppuccin-kde = pkgs.catppuccin-kde.override {
+            accents = [ config.catppuccin.accent ];
+            flavour = [ config.catppuccin.flavor ];
+            winDecStyles = [ "classic" ];
           };
         };
     };
