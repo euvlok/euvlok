@@ -52,6 +52,7 @@
       extensions = [
         { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # Ublock Origin
         { id = "gebbhagfogifgggkldgodflihgfeippi"; } # Return YT Dislikes
+        { id = "hlepfoohegkhhmjieoechaddaejaokhf"; } # Refined GitHub
         { id = "jinjaccalgkegednnccohejagnlnfdag"; } # Violentmonkey
         { id = "lckanjgmijmafbedllaakclkaicjfmnk"; } # ClearURLs
         { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; } # Sponsor Block
