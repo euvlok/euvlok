@@ -94,6 +94,21 @@ let
           updateInterval = 24 * 60 * 60 * 1000;
           definedAliases = [ "@kagi" ];
         };
+        "NixOS Wiki" = {
+          urls = [
+            {
+              template = "https://nixos.wiki/index.php";
+              params = [
+                {
+                  name = "search";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
+          icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+          definedAliases = [ "@nw" ];
+        };
         "Nix Packages" = {
           urls = [
             {
@@ -136,22 +151,6 @@ let
           icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
           definedAliases = [ "@nq" ];
         };
-        "youtube" = {
-          urls = [
-            {
-              template = "https://www.youtube.com/results";
-              params = [
-                {
-                  name = "search_query";
-                  value = "{searchTerms}";
-                }
-              ];
-            }
-          ];
-          icon = "https://youtube.com/favicon.ico";
-          updateInterval = 24 * 60 * 60 * 1000;
-          definedAliases = [ "@yt" ];
-        };
         "Home Manager" = {
           urls = [
             {
@@ -170,6 +169,22 @@ let
           ];
           icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
           definedAliases = [ "@hm" ];
+        };
+        "youtube" = {
+          urls = [
+            {
+              template = "https://www.youtube.com/results";
+              params = [
+                {
+                  name = "search_query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
+          icon = "https://youtube.com/favicon.ico";
+          updateInterval = 24 * 60 * 60 * 1000;
+          definedAliases = [ "@yt" ];
         };
       };
     };
@@ -219,7 +234,7 @@ in
       type = lib.types.enum [
         "ddg"
         "google"
-        "Kagi"
+        "kagi"
       ];
     };
   };

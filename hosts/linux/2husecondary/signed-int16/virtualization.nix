@@ -1,27 +1,9 @@
 {
-  config,
   pkgs,
+  config,
   ...
 }:
-let
-  admins = [
-    "ashuramaru"
-    "meanrin"
-  ];
-in
 {
-  imports = [ ./kvmfr.nix ];
-  boot.extraModprobeConfig = "options kvm_intel kvm_amd nested=1";
-  virtualisation.libvirtd = {
-    enable = true;
-    allowedBridges = [
-      "br0"
-      "virbr0"
-      "virbr1"
-      "vireth0"
-    ];
-    extraOptions = [ "--verbose" ];
-  };
   virtualisation.libvirtd.qemu = {
     ovmf = {
       enable = true;
@@ -50,13 +32,11 @@ in
     spice-webdavd.enable = true;
     spice-vdagentd.enable = true;
   };
-
   users.groups = {
-    kvm.members = admins;
-    libvirtd.members = admins;
-    qemu.members = admins;
+    kvm.members = [ "${config.users.users.reisen.name}" ];
+    libvirtd.members = [ "${config.users.users.reisen.name}" ];
+    qemu.members = [ "${config.users.users.reisen.name}" ];
   };
-
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
       virt-manager
@@ -69,7 +49,6 @@ in
       virtiofsd
       win-spice
       swtpm
-      looking-glass-client
       ;
   };
   environment.etc = {
@@ -95,24 +74,12 @@ in
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-arm-vars.fd";
     };
   };
-  #! wait until the next lts kernel
-  virtualisation.kvmfr = {
-    enable = true;
-    shm = {
-      enable = true;
-      size = 128;
-      user = "qemu-libvirtd";
-      group = "libvirtd";
-      mode = "0600";
-    };
-  };
   systemd.services.libvirtd.path = builtins.attrValues {
     inherit (pkgs)
       virtiofsd
       virtio-win
       mdevctl
       swtpm
-      looking-glass-client
       ;
   };
 }

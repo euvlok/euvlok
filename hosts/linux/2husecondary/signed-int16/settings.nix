@@ -1,15 +1,9 @@
 {
   inputs,
   pkgs,
-  config,
   ...
 }:
 let
-  add-24_05-packages = final: _: {
-    nixpkgs-24_05 = import inputs.nixpkgs-ashuramaruzxc {
-      inherit (final) system config;
-    };
-  };
   addUnstablePackages = final: _: {
     unstable = import inputs.nixpkgs-unstable {
       inherit (final) system config;
@@ -25,17 +19,13 @@ in
     fonts = [
       {
         name = "MesloLGL Nerd Font";
-        package = pkgs.nerdfonts.override { fonts = [ "Meslo" ]; };
+        package = pkgs.nerd-fonts.meslo-lg;
       }
     ];
   };
 
   hardware.pulseaudio.enable = false;
-  services = {
-    fstrim.enable = true;
-    fstrim.interval = "weekly";
-  };
-
+  programs.adb.enable = true;
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
       # utils
@@ -60,16 +50,31 @@ in
       gstreamer
       gstreamermm
       ;
+
+    inherit (pkgs) piper; # mouse settings
   };
 
-  programs = {
-    nix-index.enableBashIntegration = true;
-    nix-index.enableZshIntegration = true;
-    dconf.enable = config.services.xserver.enable;
-  };
+  services.udev.extraRules = ''
+    # SayoDevice O3C
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1d6b", TAG+="uaccess"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="1d6b", TAG+="uaccess"
 
-  nixpkgs.overlays = [
-    add-24_05-packages
-    addUnstablePackages
-  ];
+    # SayoDevice O3C++ / CM51+
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="8089", TAG+="uaccess" 
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="8089", TAG+="uaccess"
+  '';
+  services.hardware.openrgb = {
+    enable = true;
+    motherboard = "intel";
+    package = pkgs.openrgb-with-all-plugins;
+  };
+  hardware.opentabletdriver = {
+    enable = true;
+    package = pkgs.unstable.opentabletdriver;
+    daemon.enable = true;
+  };
+  services.ratbagd.enable = true;
+  programs.anime-game-launcher.enable = true;
+
+  nixpkgs.overlays = [ addUnstablePackages ];
 }

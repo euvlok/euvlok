@@ -9,7 +9,6 @@ let
   search = {
     force = true;
     order = lib.mkForce [
-      "kagi"
       "google"
       "ddg"
       "NixOS Wiki"
@@ -124,7 +123,7 @@ let
   ];
 in
 {
-  programs.floorp = {
+  programs.firefox = {
     enable = true;
     profiles.default = {
       settings = {
@@ -141,45 +140,21 @@ in
           user-agent-string-switcher
           web-archives
 
-          # devtools
-          angular-devtools
-          react-devtools
-          reduxdevtools
-          vue-js-devtools
-
           # utils
           multi-account-containers
-
           stylus
           steam-database
           search-by-image
           foxyproxy-standard
           bitwarden
           firefox-translations
-          floccus
           tabliss
           old-reddit-redirect
           reddit-enhancement-suite
-
-          # Dictionaries
-          ukrainian-dictionary
-          french-dictionary
-          dictionary-german
-          polish-dictionary
-          bulgarian-dictionary
           ;
         inherit bypass-paywalls-clean;
       };
       inherit search;
     };
-    # nativeMessagingHosts = [
-    #   pkgs.firefoxpwa
-    #   pkgs.keepassxc
-    # ];
   };
-  # home.packages = [
-  #   pkgs.firefoxpwa
-  #   pkgs.keepassxc
-  # ];
-  programs.firefox.enable = lib.mkForce false;
 }

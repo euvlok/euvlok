@@ -54,7 +54,7 @@ in
               bash.enable = true;
               direnv.enable = true;
               fastfetch.enable = true;
-              firefox.defaultSearchEngine = "Kagi";
+              firefox.defaultSearchEngine = "kagi";
               firefox.enable = true;
               fzf.enable = true;
               git.enable = true;
@@ -79,6 +79,7 @@ in
                 + "/dist/import.json";
             };
           }
+
           {
             home.packages =
               builtins.attrValues {
@@ -144,7 +145,7 @@ in
                   # Playstation
                   pcsx2-bin
                   ;
-                inherit (pkgs.unstable-small) prismlauncher;
+                inherit (pkgs.unstable-small) prismlauncher qbittorrent;
                 inherit (pkgs.jetbrains) dataspell datagrip;
               }
               ++ (

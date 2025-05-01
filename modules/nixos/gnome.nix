@@ -18,12 +18,17 @@
         gnome-settings-daemon.enable = true;
         sushi.enable = true;
       };
-      udev.packages = builtins.attrValues { inherit (pkgs) gnome-settings-daemon; };
+      dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
+      udev.packages = builtins.attrValues {
+        inherit (pkgs) gnome-settings-daemon;
+        inherit (pkgs.gnome2) GConf;
+      };
       xserver = {
         enable = true;
         displayManager.gdm.enable = true;
         desktopManager.gnome.enable = true;
       };
+      gvfs.enable = true;
     };
     environment = {
       systemPackages =

@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
+  signed-int16 = inputs.nixpkgs-2husecondary.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
       ./configuration.nix
@@ -9,24 +9,24 @@
       {
         sops = {
           age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+          defaultSopsFile = ../../../../secrets/2husecondary.yaml;
         };
       }
-      inputs.anime-game-launcher-ashuramaruzxc.nixosModules.default
+      inputs.anime-game-launcher-2husecondary.nixosModules.default
       inputs.catppuccin.nixosModules.catppuccin
       {
         catppuccin = {
           enable = true;
-          flavor = "mocha";
-          accent = "rosewater";
+          flavor = "latte";
+          accent = "sky";
         };
       }
       ../../../../modules/nixos
       ../../../../modules/cross
       {
         nixos = {
-          gnome.enable = true;
           nvidia.enable = true;
+          plasma.enable = true;
           steam.enable = true;
           zramSwap.enable = true;
         };

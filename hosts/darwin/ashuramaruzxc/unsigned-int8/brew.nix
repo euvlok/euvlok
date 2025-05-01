@@ -9,7 +9,7 @@ _: {
     caskArgs = {
       appdir = "/Applications";
       no_quarantine = true;
-      require_sha = true;
+      require_sha = false;
     };
     taps = [
       "cfergeau/crc"
@@ -23,7 +23,7 @@ _: {
       "crossover" # Supporting wine project
       "mythic" # heroic but better
       "heroic"
-      # "steam" # Gayming
+      "steam" # Gayming
       "xemu"
       "ppsspp"
       "cemu"

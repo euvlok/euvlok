@@ -85,13 +85,21 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Shared unstable
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small"; # Shared unstable small
 
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # Generic for shared usage purpose
     home-manager-stable.url = "github:nix-community/home-manager/release-24.11";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager-unstable.url = "github:nix-community/home-manager";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    home-manager-2husecondary.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-24.11";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
@@ -105,8 +113,12 @@
     home-manager-lay-by.url = "github:nix-community/home-manager";
     home-manager-lay-by.inputs.nixpkgs.follows = "nixpkgs-lay-by";
 
-    nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
-    nix-darwin-ashuramaruzxc.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+    #! @ashuramaruzxc: for now nix-darwin only properly works on unstable
+    nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
+    nix-darwin-ashuramaruzxc.url = "github:LnL7/nix-darwin";
+
+    nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
+    nix-darwin-bigshaq9999.url = "github:LnL7/nix-darwin";
 
     nix-darwin-donteatoreo.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
     nix-darwin-donteatoreo.url = "github:LnL7/nix-darwin";
@@ -169,7 +181,10 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    anime-game-launcher.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
+    anime-game-launcher-ashuramaruzxc.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
     anime-game-launcher.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
+
+    anime-game-launcher-2husecondary.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
+    anime-game-launcher-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
   };
 }

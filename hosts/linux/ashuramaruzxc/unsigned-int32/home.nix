@@ -52,7 +52,7 @@ in
               direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
-              firefox.defaultSearchEngine = "Kagi";
+              firefox.defaultSearchEngine = "kagi";
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
@@ -139,7 +139,6 @@ in
                   media-downloader
                   pavucontrol # PulseAudio volume control
                   qpwgraph
-                  thefuck # Correcting previous command
                   yt-dlp # youtube and whatnot media downloader
                   ;
 

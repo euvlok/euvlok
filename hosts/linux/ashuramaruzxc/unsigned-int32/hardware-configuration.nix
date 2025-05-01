@@ -45,7 +45,6 @@
       "video=DP-4:2560x1440@120"
       "video=HDMI1:2560x1440@120"
       ### ------------------------------------ ###
-      "nvidia_drm.fbdev=1"
       "iommu=pt"
       ### ------------------------------------ ###
       "nvme_core.default_ps_max_latency_us=0"
@@ -84,10 +83,6 @@
       efiSupport = true;
       useOSProber = true;
       configurationLimit = 15;
-      # font = "${pkgs.terminus_font_ttf}/share/fonts/truetype/TerminusTTF.ttf";
-      # fontSize = 32;
-
-      # memtest
       memtest86.enable = true;
       memtest86.params = [
         "console=ttyS0,115200n8"
@@ -99,10 +94,7 @@
     efi.efiSysMountPoint = "/boot";
     timeout = 30;
   };
-  boot.plymouth = {
-    enable = true;
-    logo = "${pkgs.nixos-icons}/share/icons/hicolor/24x24/apps/nix-snowflake-white.png";
-  };
+  boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/D4E8-E96E";

@@ -228,5 +228,5 @@
   nix.gc.automatic = true;
   nix.gc.options = "--delete-older-than 14d";
 
-  system.stateVersion = "24.11";
+  system.stateVersion = config.system.nixos.release;
 }
