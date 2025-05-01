@@ -1,12 +1,11 @@
 {
+  pkgs,
   lib,
   config,
-  pkgs,
-  modulesPath,
   ...
 }:
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   boot = {
     kernelPackages = pkgs.unstable.linuxPackages_xanmod;
     kernelModules = [
@@ -54,12 +53,12 @@
     extraModprobeConfig = ''
       options hid_apple fnmode=2
     '';
+    #ARRAY /dev/md/nvmepool0 metadata=1.2 name=unsgined-int32:nvmepool0 #UUID=22366d16:84656da4:2612b2de:a3e77bca
     swraid = {
       enable = true;
       mdadmConf = ''
         HOMEHOST <ignore>
         ARRAY /dev/md/hddpool0 metadata=1.2 name=unsgined-int32:hddpool0 UUID=fe0631c5:f6957b40:6b696546:015251d0
-        ARRAY /dev/md/nvmepool0 metadata=1.2 name=unsgined-int32:nvmepool0 UUID=22366d16:84656da4:2612b2de:a3e77bca
         MAILADDR ashuramaru@tenjin-dk.com
         MAILFROM no-reply@cloud.tenjin-dk.com
       '';
@@ -83,6 +82,8 @@
       efiSupport = true;
       useOSProber = true;
       configurationLimit = 15;
+
+      # memtest
       memtest86.enable = true;
       memtest86.params = [
         "console=ttyS0,115200n8"
@@ -97,7 +98,7 @@
   boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/D4E8-E96E";
+    device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -113,7 +114,7 @@
       mitigateDMAAttacks = true;
       devices = {
         "root" = {
-          device = "/dev/disk/by-uuid/d4305e26-65e9-490d-aa42-299c6f0ca3ed";
+          device = "/dev/disk/by-uuid/5c64c922-ed1d-4c90-b926-39bc58340188";
           allowDiscards = true;
           bypassWorkqueues = true;
           yubikey = {
@@ -131,8 +132,6 @@
         };
         "hddpool0" = {
           device = "/dev/md/hddpool0";
-          allowDiscards = true;
-          bypassWorkqueues = true;
           yubikey = {
             slot = 2;
             twoFactor = true;
@@ -153,6 +152,7 @@
     network.enable = true;
     availableKernelModules = [
       "nvme"
+      "thunderbolt"
       "xhci_pci"
       "ahci"
       "usbhid"
@@ -178,73 +178,121 @@
     ];
     supportedFilesystems = config.boot.supportedFilesystems;
   };
-  ### ---------------/dev/nvme0n1p2-------------------- ###
+  ### ---------------/dev/sdc2-------------------- ###
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "autodefrag"
       "subvol=root"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
     ];
   };
   fileSystems."/var" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "autodefrag"
       "subvol=var"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
     ];
     neededForBoot = true;
   };
   fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "autodefrag"
       "subvol=log"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
+    ];
+    neededForBoot = true;
+  };
+  fileSystems."/var/cache" = {
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    fsType = "btrfs";
+    options = [
+      "noatime"
+      "autodefrag"
+      "subvol=cache"
+      "space_cache=v2"
+      "compress=zstd"
+    ];
+    neededForBoot = true;
+  };
+  fileSystems."/var/lib/machines" = {
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    fsType = "btrfs";
+    options = [
+      "noatime"
+      "autodefrag"
+      "subvol=machines"
+      "space_cache=v2"
+      "compress=zstd"
+    ];
+    neededForBoot = true;
+  };
+  fileSystems."/var/lib/docker" = {
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    fsType = "btrfs";
+    options = [
+      "noatime"
+      "autodefrag"
+      "subvol=docker"
+      "space_cache=v2"
+      "compress=zstd"
+    ];
+    neededForBoot = true;
+  };
+  fileSystems."/var/lib/sops" = {
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    fsType = "btrfs";
+    options = [
+      "noatime"
+      "autodefrag"
+      "subvol=sops"
+      "space_cache=v2"
+      "compress=zstd"
     ];
     neededForBoot = true;
   };
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "subvol=nix"
       "autodefrag"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
     ];
   };
-  fileSystems."/persist" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+  fileSystems."/etc" = {
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "autodefrag"
-      "subvol=persist"
+      "subvol=etc"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
     ];
   };
   fileSystems."/Users" = {
-    device = "/dev/disk/by-uuid/2faf4c47-1541-45de-ba3e-757a22818bf3";
+    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
     fsType = "btrfs";
     options = [
       "noatime"
       "autodefrag"
       "subvol=Users"
       "space_cache=v2"
-      "compress-force=zstd:1"
+      "compress=zstd"
     ];
   };
   fileSystems."/home/ashuramaru" = {
@@ -255,7 +303,7 @@
     device = "/Users/alex";
     options = [ "bind" ];
   };
-  ### ---------------/dev/nvme0n1p2-------------------- ###
+  ### ---------------/dev/sdc2-------------------- ###
 
   ### ---------------/dev/md/nvmepool0-------------------- ###
   # fileSystems."/Shared/games" = {
@@ -270,50 +318,50 @@
   ### ---------------/dev/md/nvmepool0-------------------- ###
 
   ### ---------------/dev/md/hddpool0-------------------- ###
-  fileSystems."/var/lib/backup/unsigned-int32" = {
-    device = "/dev/hddpool0/backup";
-    fsType = "btrfs";
-    options = [
-      "subvol=unsigned-int32"
-      "noatime"
-      "autodefrag"
-      "compress-force=zstd:9"
-    ];
-  };
-  fileSystems."/var/lib/backup/unsigned-int64" = {
-    device = "/dev/hddpool0/backup";
-    fsType = "btrfs";
-    options = [
-      "subvol=unsigned-int64"
-      "noatime"
-      "autodefrag"
-      "compress-force=zstd:9"
-    ];
-  };
-  fileSystems."/var/lib/backup/shared" = {
-    device = "/dev/hddpool0/backup";
-    fsType = "btrfs";
-    options = [
-      "subvol=shared"
-      "noatime"
-      "autodefrag"
-      "compress-force=zstd:9"
-    ];
-  };
-  fileSystems."/Shared/archive" = {
-    device = "/dev/hddpool0/archive";
-    fsType = "ext4";
-    options = [
-      "noatime"
-      "nofail"
-    ];
-  };
+  # fileSystems."/var/lib/backup/unsigned-int32" = {
+  #   device = "/dev/hddpool0/backup";
+  #   fsType = "btrfs";
+  #   options = [
+  #     "subvol=unsigned-int32"
+  #     "noatime"
+  #     "autodefrag"
+  #     "compres=zstd"
+  #   ];
+  # };
+  # fileSystems."/var/lib/backup/unsigned-int64" = {
+  #   device = "/dev/hddpool0/backup";
+  #   fsType = "btrfs";
+  #   options = [
+  #     "subvol=unsigned-int64"
+  #     "noatime"
+  #     "autodefrag"
+  #     "compres=zstd"
+  #   ];
+  # };
+  # fileSystems."/var/lib/backup/shared" = {
+  #   device = "/dev/hddpool0/backup";
+  #   fsType = "btrfs";
+  #   options = [
+  #     "subvol=shared"
+  #     "noatime"
+  #     "autodefrag"
+  #     "compres=zstd"
+  #   ];
+  # };
+  # fileSystems."/Shared/archive" = {
+  #   device = "/dev/hddpool0/archive";
+  #   fsType = "ext4";
+  #   options = [
+  #     "noatime"
+  #     "nofail"
+  #   ];
+  # };
   ### ---------------/dev/md/hddpool0-------------------- ###
 
   ### --------------- /dev/sda2(windows) --------------- ###
   fileSystems."/Shared/windows" = {
-    device = "/dev/disk/by-uuid/E40A5B280A5AF750";
-    fsType = "ntfs-3g";
+    device = "/dev/disk/by-uuid/8E34B63434B61EE1";
+    fsType = "ntfs3";
     options = [
       "acl"
       "noatime"
@@ -325,7 +373,7 @@
       "gid=100"
     ];
   };
-  ### --------------- /dev/sda2(windows) --------------- ###
+  ### --------------- /dev/nvme0n1p4 (windows) --------------- ###
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";
@@ -343,5 +391,4 @@
     pkgs.sshfs
     pkgs.gphoto2fs
   ];
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

@@ -34,11 +34,11 @@
         { id = "cnojnbdhbhnkbcieeekonklommdnndci"; } # search by image
         { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # google translate
         { id = "jgejdcdoeeabklepnkdbglgccjpdgpmf"; } # old twitter layout
-        {
-          id = "lkbebcjgcmobigpeffafkodonchffocl";
-          version = bpc-version;
-          crxPath = bpc-src;
-        }
+        # {
+        # id = "lkbebcjgcmobigpeffafkodonchffocl";
+        # version = bpc-version;
+        # crxPath = bpc-src;
+        # }
       ];
   };
 }

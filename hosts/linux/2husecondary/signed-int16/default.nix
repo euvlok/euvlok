@@ -28,7 +28,7 @@
           nvidia.enable = true;
           plasma.enable = true;
           steam.enable = true;
-          zramSwap.enable = true;
+          zram.enable = true;
         };
         cross = {
           nix.enable = true;

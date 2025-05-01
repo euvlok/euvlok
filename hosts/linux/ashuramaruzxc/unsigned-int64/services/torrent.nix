@@ -198,7 +198,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "${pkgs.podman}/bin/podman network rm -f transmission_openvpn-default";
+      ExecStop = "${lib.getExe' pkgs.podman "podman"} network rm -f transmission_openvpn-default";
     };
     script = ''
       podman network inspect transmission_openvpn-default || podman network create transmission_openvpn-default --opt isolate=true

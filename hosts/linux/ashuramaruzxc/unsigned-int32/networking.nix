@@ -1,12 +1,6 @@
+{ lib, config, ... }:
 {
-  lib,
-  pkgs,
-
-  config,
-  ...
-}:
-{
-  sops.secrets.tailscale-auth-key = { };
+  sops.secrets.tailscale_auth = { };
   networking = {
     hostName = "unsigned-int32";
     hostId = "ab5d64f5";
@@ -75,7 +69,6 @@
   networking.wireguard.enable = true;
   services.mullvad-vpn = {
     enable = true;
-    package = pkgs.mullvad-vpn;
     enableExcludeWrapper = false;
   };
   services.v2raya.enable = true;
@@ -83,8 +76,7 @@
     enable = true;
     useRoutingFeatures = "both";
     openFirewall = true;
-    authKeyFile = config.sops.secrets.tailscale-auth-key.path;
-    extraUpFlags = [ "--ssh" ];
+    authKeyFile = config.sops.secrets.tailscale_auth.path;
   };
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;

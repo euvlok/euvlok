@@ -15,8 +15,6 @@
     tinysparql.enable = true;
   };
 
-  services.xserver.displayManager.gdm.autoSuspend = true;
-
   nixpkgs.overlays = [
     # GNOME 47: triple-buffering-v4-47
     (_: prev: {
@@ -96,7 +94,6 @@
     inherit (pkgs)
       capitaine-cursors
       catppuccin-kde
-      catppuccin-kvantum
       ;
 
     inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
@@ -127,16 +124,6 @@
       kio-gdrive
       kio-zeroconf
 
-      # For some reason it's not enabled by default
-      accounts-qt
-      calendarsupport
-      kaccounts-integration
-      kaccounts-providers
-      kauth
-      qtspeech
-      signon-kwallet-extension
-      signond
-
       # Formats
       kdegraphics-thumbnailers # blender etc
       kdesdk-thumbnailers # test
@@ -145,10 +132,8 @@
       qtsvg # svg
 
       # Misc
-      discover
       flatpak-kcm
       kcmutils
-      packagekit-qt
       ;
   };
 }

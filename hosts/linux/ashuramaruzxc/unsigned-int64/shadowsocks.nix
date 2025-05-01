@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}:
+{ config, ... }:
 {
   sops.secrets.shadowsocks = {
     mode = "0775";

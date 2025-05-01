@@ -1,17 +1,12 @@
 { pkgs, config, ... }:
 {
   sops.secrets.ashuramaru.neededForUsers = true;
-  sops.secrets.meanrin.neededForUsers = true;
   users = {
     mutableUsers = false;
     groups = {
       ashuramaru = {
         gid = config.users.users.ashuramaru.uid;
-        members = [ "ashuramaru" ];
-      };
-      meanrin = {
-        gid = config.users.users.meanrin.uid;
-        members = [ "meanrin" ];
+        members = [ "${config.users.users.ashuramaru.name}" ];
       };
     };
     users = {
@@ -47,23 +42,6 @@
           ### --- ed25519-sk_bio --- ###
         ];
         shell = pkgs.zsh;
-      };
-      meanrin = {
-        isNormalUser = true;
-        description = "Alex";
-        home = "/Users/alex";
-        uid = 1001;
-        hashedPasswordFile = config.sops.secrets.meanrin.path;
-        extraGroups = [
-          "wheel"
-          "networkmanager"
-          "video"
-          "audio"
-          "storage"
-        ];
-        openssh.authorizedKeys.keys = [
-          "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBCzoNOzhhF9uYDu7CbuzVRJ2K6dClXLrEoJrQvIYjnxHTBMqKuByi9M2HEmkpGO+a3H3WjeeXfqjH2CwZJ97jmIAAAAEc3NoOg== meanrin@outlook.com"
-        ];
       };
     };
   };

@@ -28,7 +28,6 @@
           gnome.enable = true;
           nvidia.enable = true;
           steam.enable = true;
-          zramSwap.enable = true;
         };
         cross = {
           nix.enable = true;

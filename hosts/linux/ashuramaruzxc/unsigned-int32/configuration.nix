@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 {
   imports = [
     ../../../hm/ashuramaruzxc/fonts.nix
@@ -15,7 +20,6 @@
     ./users.nix
   ];
 
-  environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
   environment.localBinInPath = true;
   environment.sessionVariables = {
     XDG_DATA_HOME = "\${HOME}/.local/share";
@@ -105,7 +109,7 @@
         setuid = true;
         owner = "root";
         group = "root";
-        source = "${pkgs.doas}/bin/doas";
+        source = "${lib.getExe pkgs.doas}";
       };
     };
     sudo = {
@@ -146,13 +150,13 @@
           googleAuthenticator.enable = true;
         };
       };
-      u2f = {
-        enable = true;
-        settings = {
-          cue = true;
-        };
-        control = "required";
-      };
+      # u2f = {
+      # enable = true;
+      # settings = {
+      # cue = true;
+      # };
+      # control = "required";
+      # };
     };
   };
 
@@ -165,34 +169,47 @@
     };
     android-development = {
       enable = true;
-      users = [ "ashuramaru" ];
+      users = [ "${config.users.users.ashuramaru.name}" ];
       waydroid.enable = true;
     };
     appimage = {
       enable = true;
       binfmt = true;
     };
-    gphoto2.enable = if config.services.gvfs.enable == true then true else false;
+    gphoto2.enable = true;
   };
 
   environment = {
     systemPackages = builtins.attrValues {
       inherit (pkgs)
         # yubico
+        yubioath-flutter
+
         apfsprogs
         fcitx5-gtk
         gpgme
-        yubioath-flutter
         ;
-      inherit (pkgs.xorg) xhost;
     };
   };
 
   time.timeZone = "Europe/Warsaw";
-
   i18n = {
-    defaultLocale = "en_US.utf8";
-    supportedLocales = [ "all" ];
+    defaultLocale = "en_US.UTF-8";
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "pl_PL.UTF-8/UTF-8"
+      "all"
+    ];
+    extraLocaleSettings = {
+      LC_MESSAGES = "en_US.UTF-8";
+      LC_MEASUREMENT = "pl_PL.UTF-8";
+      LC_MONETARY = "pl_PL.UTF-8";
+      LC_TIME = "pl_PL.UTF-8";
+      LC_PAPER = "pl_PL.UTF-8";
+      LC_ADDRESS = "pl_PL.UTF-8";
+      LC_TELEPHONE = "pl_PL.UTF-8";
+      LC_NUMERIC = "pl_PL.UTF-8";
+    };
     inputMethod = {
       enable = true;
       type = "fcitx5";
@@ -221,10 +238,9 @@
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };
 
-  nix.settings = {
-    access-tokens = config.sops.secrets.gh_token.path;
-    netrc-file = config.sops.secrets.netrc_creds.path;
-  };
+  nix.settings.access-tokens = config.sops.secrets.gh_token.path;
+  nix.settings.netrc-file = config.sops.secrets.netrc_creds.path;
+
   nix.gc.automatic = true;
   nix.gc.options = "--delete-older-than 14d";
 

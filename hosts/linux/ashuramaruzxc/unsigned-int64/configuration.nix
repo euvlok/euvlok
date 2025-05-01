@@ -1,27 +1,25 @@
 {
-  lib,
   pkgs,
+  lib,
   config,
   ...
 }:
 {
   imports = [
+    ../../../hm/ashuramaruzxc/fonts.nix
     ../shared/android.nix
     ../shared/containers.nix
     ../shared/firmware.nix
-    ../shared/fonts.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
     ../shared/settings.nix
-
+    ./hardware-configuration.nix
     ./services/default.nix
     ./settings.nix
     ./shadowsocks.nix
-    # ./tailscale.nix
-    ./wireguard.nix
-
-    ./hardware-configuration.nix
     ./users.nix
+    ./wireguard.nix
+    ./tailscale.nix
   ];
 
   security = {

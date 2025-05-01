@@ -12,7 +12,7 @@ let
       builtins.fromJSON (config.system.nixos.release);
 in
 {
-  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
+  imports = [ inputs.home-manager-2husecondary.nixosModules.home-manager ];
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -52,7 +52,7 @@ in
               ghostty.enable = true;
               git.enable = true;
               mpv.enable = true;
-              nixcord.enable = true;
+              # nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;
               ssh.enable = true;
@@ -113,7 +113,7 @@ in
             };
           }
         ];
-        extraSpecialArgs = { inherit inputs release; };
       };
+    extraSpecialArgs = { inherit inputs release; };
   };
 }

@@ -22,7 +22,7 @@ in
       { osConfig, ... }:
       {
         imports = [
-          { home.stateVersion = "24.11"; }
+          { home.stateVersion = "25.05"; }
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
@@ -32,14 +32,14 @@ in
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
-          ../../../hm/ashuramaruzxc/nushell.nix
+          # ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
           inputs.sops-nix.homeManagerModules.sops
           {
             sops = {
-              age.keyFile = "/Users/marie/.config/sops/age/keys.txt";
+              age.keyFile = "$HOME/.config/sops/age/keys.txt";
               defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
             };
           }
@@ -58,7 +58,7 @@ in
               git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              nushell.enable = true;
+              # nushell.enable = true;
               nvf.enable = true;
               ssh.enable = true;
               vscode.enable = true;
@@ -66,13 +66,13 @@ in
               zsh.enable = true;
             };
           }
-          ../../../hm/ashuramaruzxc/protonmail-bridge.nix
-          {
-            services.protonmail-bridge = {
-              enable = true;
-              logLevel = "info";
-            };
-          }
+          # ../../../hm/ashuramaruzxc/protonmail-bridge.nix
+          # {
+          #   services.protonmail-bridge = {
+          #     enable = true;
+          #     logLevel = "info";
+          #   };
+          # }
 
           {
             home.sessionVariables = {
@@ -135,7 +135,7 @@ in
                 inherit (pkgs)
                   feather # monero
                   helvum # Jack controls
-                  imgbrd-grabber
+                  #! imgbrd-grabber
                   media-downloader
                   pavucontrol # PulseAudio volume control
                   qpwgraph
@@ -152,7 +152,7 @@ in
                   # Misc
                   bottles # Play On Linux but modern
                   flycast # Sega Dreamcast emulator
-                  np2kai # PC-98 emulator
+                  #! np2kai # PC-98 emulator
                   prismlauncher # Minecraft launcher
                   xemu # Xbox emulator
 
@@ -167,7 +167,7 @@ in
                   duckstation # PlayStation 1 emulator
                   pcsx2 # PlayStation 2 emulator
                   ppsspp # PlayStation Portable emulator
-                  rpcs3 # PlayStation 3 emulator
+                  #! rpcs3 # PlayStation 3 emulator
                   shadps4 # PlayStation 4 emulator
 
                   # Stores

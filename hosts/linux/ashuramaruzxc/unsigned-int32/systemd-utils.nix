@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   generate_uuid = pkgs.stdenv.mkDerivation {
     pname = "assign_uuid";
@@ -14,6 +14,7 @@ let
         --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/generateuuid.py}" \
         --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/generateuuid.py}" \
     '';
+    meta.mainProgram = "assign_uuid";
   };
   generate_md5 = pkgs.stdenv.mkDerivation {
     pname = "assign_md5";
@@ -29,6 +30,7 @@ let
         --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/generatemd5.py}" \
         --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/generatemd5.py}" \
     '';
+    meta.mainProgram = "assign_md5";
   };
   video2gif = pkgs.stdenv.mkDerivation {
     pname = "video2gif";
@@ -44,6 +46,7 @@ let
         --set PYTHONPATH "$PYTHONPATH:${../../../../pkgs/scripts/ashuramaruzxc/video2gif.py}" \
         --add-flags "-O ${../../../../pkgs/scripts/ashuramaruzxc/video2gif.py}" \
     '';
+    meta.mainProgram = "video2gif";
   };
 in
 {
@@ -60,7 +63,7 @@ in
       };
       Service = {
         Type = "oneshot";
-        ExecStart = "${generate_uuid}/bin/assign_uuid /Users/marie/Downloads";
+        ExecStart = "${lib.getExe generate_uuid} /Users/marie/Downloads";
       };
     };
     services."assign_md5" = {
@@ -70,7 +73,7 @@ in
       };
       Service = {
         Type = "oneshot";
-        ExecStart = "${generate_md5}/bin/assign_md5 /Users/marie/Pictures/d_PN";
+        ExecStart = "${lib.getExe generate_md5} /Users/marie/Pictures/d_PN";
       };
     };
     timers."assign_uuid" = {

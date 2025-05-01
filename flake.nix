@@ -80,13 +80,12 @@
     pre-commit-hooks.inputs.flake-compat.follows = "";
     # --------------------------------------------------
 
-    nixpkgs-24_05.url = "github:NixOS/nixpkgs/nixos-24.05"; # For compatibility reasons right now
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11"; # For compatibility reasons in the future
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Shared unstable
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small"; # Shared unstable small
 
-    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -98,13 +97,13 @@
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    home-manager-2husecondary.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-2husecondary.url = "github:nix-community/home-manager";
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
-    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
 
-    home-manager-bigshaq9999.url = "github:nix-community/home-manager";
+    home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-24.11";
     home-manager-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
 
     home-manager-donteatoreo.url = "github:nix-community/home-manager";
@@ -181,10 +180,10 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    anime-game-launcher-ashuramaruzxc.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
+    anime-game-launcher-ashuramaruzxc.url = "github:ezKEa/aagl-gtk-on-nix";
     anime-game-launcher.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
 
-    anime-game-launcher-2husecondary.url = "github:ezKEa/aagl-gtk-on-nix/release-24.11";
+    anime-game-launcher-2husecondary.url = "github:ezKEa/aagl-gtk-on-nix";
     anime-game-launcher-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
   };
 }

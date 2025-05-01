@@ -51,7 +51,7 @@
         "fd17:216b:31bc:1::10/128"
       ];
       dns = [ "172.16.31.1" ];
-      privateKeyFile = config.sops.secrets.secrets.wireguard-client_fumono.path;
+      privateKeyFile = config.sops.secrets.wireguard-client_fumono.path;
       postUp = ''
         ${lib.getExe' pkgs.systemd "resolvectl"} dns wg-ui64 172.16.31.1
         ${lib.getExe' pkgs.systemd "resolvectl"} domain wg-ui64 ~tenjin.com ~internal.com ~\rcon.fumoposting.com

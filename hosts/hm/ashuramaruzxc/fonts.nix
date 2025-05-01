@@ -23,6 +23,7 @@
       ubuntu_font_family
       wqy_zenhei
       ;
+    mplus = pkgs.mplus-outline-fonts.githubRelease;
     inherit (pkgs.nerd-fonts)
       agave
       fira-code
@@ -34,7 +35,6 @@
       jetbrains-mono
       meslo-lg
       monaspace
-      mplus
       noto
       recursive-mono
       ubuntu

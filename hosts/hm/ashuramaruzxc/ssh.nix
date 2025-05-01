@@ -1,10 +1,11 @@
-{ pkgs, config, ... }:
 {
-  programs.ssh = {
-    enable = true;
-    package = pkgs.openssh_hpn;
-    addKeysToAgent = "no";
-  };
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  programs.ssh.addKeysToAgent = lib.mkForce "no";
   programs.ssh.extraConfig = ''
     Host *
         IdentitiesOnly yes

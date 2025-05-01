@@ -5,11 +5,6 @@
   ...
 }:
 let
-  add-24_05-packages = final: _: {
-    nixpkgs-24_05 = import inputs.nixpkgs-ashuramaruzxc {
-      inherit (final) system config;
-    };
-  };
   addUnstablePackages = final: _: {
     unstable = import inputs.nixpkgs-unstable {
       inherit (final) system config;
@@ -25,12 +20,11 @@ in
     fonts = [
       {
         name = "MesloLGL Nerd Font";
-        package = pkgs.nerdfonts.override { fonts = [ "Meslo" ]; };
+        package = pkgs.nerd-fonts.meslo-lg;
       }
     ];
   };
 
-  hardware.pulseaudio.enable = false;
   services = {
     fstrim.enable = true;
     fstrim.interval = "weekly";
@@ -69,7 +63,6 @@ in
   };
 
   nixpkgs.overlays = [
-    add-24_05-packages
     addUnstablePackages
   ];
 }

@@ -34,7 +34,7 @@ in
         environment.variables.FREETYPE_PROPERTIES = lib.optionalString isLinux "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
       })
       (lib.mkIf isDarwin { nix.registry = lib.mkForce registry; })
-      (lib.mkIf (!isDarwin) { nix.registry = registry; })
+      (lib.mkIf (!isDarwin) { nix.registry = lib.mkForce registry; })
       {
         nix = {
           settings =

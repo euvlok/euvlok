@@ -16,8 +16,7 @@
         inherit (pkgs.gnome2) GConf;
       };
       gvfs.enable = true;
-      displayManager.gdm.enable = true;
-      displayManager.gdm.autoSuspend = true;
+      xserver.displayManager.gdm.enable = true;
       displayManager.defaultSession = "plasma";
       desktopManager.plasma6.enable = true;
     };
