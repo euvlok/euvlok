@@ -27,11 +27,11 @@ in
           ../../../hm/ashuramaruzxc/nixcord.nix
           ../../../hm/ashuramaruzxc/vscode.nix
           ../../../hm/ashuramaruzxc/starship.nix
-          ../../../hm/donteatoreo/nushell.nix
+          #../../../hm/donteatoreo/nushell.nix
           inputs.sops-nix.homeManagerModules.sops
           {
             sops = {
-              age.keyFile = "/Users/marie/.config/sops/age/keys.txt";
+              age.keyFile = "/Users/reisen/.config/sops/age/keys.txt";
               defaultSopsFile = ../../../../secrets/2husecondary.yaml;
             };
           }
@@ -49,7 +49,7 @@ in
               git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              nushell.enable = true;
+              #nushell.enable = true;
               nvf.enable = true;
               ssh.enable = true;
               vscode.enable = true;

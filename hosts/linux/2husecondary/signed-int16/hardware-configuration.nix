@@ -101,6 +101,9 @@
     ];
   };
   ### ---------------anything else-------------------- ###
+
+  swapDevices = [ { device = "/mnt/wiwi/swapfile"; } ];
+
   hardware = {
     enableRedistributableFirmware = true;
     firmware = builtins.attrValues { inherit (pkgs) linux-firmware; };
