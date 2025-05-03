@@ -89,7 +89,7 @@
       # Camera raw previes
       camerarawpreviews = pkgs.fetchNextcloudApp {
         appName = "camerarawpreviews";
-        homepage = "https://github.com/ariselseng/camerarawpreviews";
+        homepage = "https:2//github.com/ariselseng/camerarawpreviews";
         description = "Camera Raw Previews app for Nextcloud";
         url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.7/camerarawpreviews_nextcloud.tar.gz";
         sha256 = "sha256-aiMUSJQVbr3xlJkqOaE3cNhdZu3CnPEIWTNVOoG4HSo=";
@@ -103,7 +103,7 @@
         url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.6/integration_paperless-v1.0.6.tar.gz";
         sha256 = "sha256-Tw0VZk+ByXLmFdNBgJdFnHUiFarDP+YyulzvCmE3ivw=";
         license = "${lib.licenses.agpl3Only.shortName}";
-        appVersion = "1.0.4";
+        appVersion = "1.0.6";
       };
     };
     extraAppsEnable = true;
