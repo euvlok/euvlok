@@ -113,27 +113,7 @@ _: {
           67
           5353
           8053
-          # 3001
-          # # prometheus
-          # 9000
-
-          # #radarr
-          # 7878
-          # # sonarr
-          # 8989
-          # # lidarr
-          # 8686
-          # # readarr
-          # 8787
-          # # prowlarr
-          # 9696
-          # # bazarr
-          # 8763
-          # # jackett
-          # 9117
-          # # transmission
-          # 9091
-          # 18765
+          3389
         ];
       };
     };
