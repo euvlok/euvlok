@@ -8,7 +8,7 @@ let
 
   commonUsers = [
     { home.stateVersion = "24.11"; }
-    ../../../hm/ashuramaruzxc/nushell.nix
+    # ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix
     inputs.catppuccin.homeModules.catppuccin
@@ -27,11 +27,11 @@ let
         fastfetch.enable = true;
         fzf.enable = true;
         git.enable = true;
-        nushell.enable = true;
+        # nushell.enable = true;
         nvf.enable = true;
         helix.enable = true;
         ssh.enable = true;
-        # yazi.enable = true;
+        yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
       };
