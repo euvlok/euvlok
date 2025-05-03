@@ -14,7 +14,7 @@
     enable = true;
     enableImagemagick = true;
     database.createLocally = true;
-    package = pkgs.nextcloud30;
+    package = pkgs.nextcloud31;
     settings = {
       enablePreview = true;
       enabledPreviewProviders = [
@@ -91,16 +91,16 @@
         appName = "camerarawpreviews";
         homepage = "https://github.com/ariselseng/camerarawpreviews";
         description = "Camera Raw Previews app for Nextcloud";
-        url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.6/camerarawpreviews_nextcloud.tar.gz";
+        url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.7/camerarawpreviews_nextcloud.tar.gz";
         sha256 = "sha256-78Px5OwmwV2QSmpFBxi6uDI+RxG6BOeXxNqiFd2torc=";
         license = "${lib.licenses.agpl3Only.shortName}";
-        appVersion = "0.8.6";
+        appVersion = "0.8.7";
       };
       integration_paperless = pkgs.fetchNextcloudApp {
         appName = "integration_paperless";
         homepage = "https://apps.nextcloud.com/apps/integration_paperless";
         description = "Integration with the Paperless Document Management System";
-        url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.4/integration_paperless-v1.0.4.tar.gz";
+        url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.6/integration_paperless-v1.0.4.tar.gz";
         sha256 = "sha256-D8w2TA2Olab326REnHHG+fFWRmWrhejAEokXZYx5H6w=";
         license = "${lib.licenses.agpl3Only.shortName}";
         appVersion = "1.0.4";

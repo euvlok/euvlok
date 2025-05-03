@@ -217,11 +217,12 @@ let
     DisablePocket = true;
     DisableSetDesktopBackground = true;
   };
-  nativeMessagingHosts =
-    (lib.optionals (supportGnome) builtins.attrValues { inherit (pkgs) gnome-browser-connector; })
-    ++ (lib.optionals (supportPlasma) builtins.attrValues {
-      inherit (pkgs.kdePackages) plasma-integration;
-    });
+  nativeMessagingHosts = (
+    lib.optionals (supportGnome) builtins.attrValues { inherit (pkgs) gnome-browser-connector; }
+  );
+  # ++ (lib.optionals (supportPlasma) builtins.attrValues {
+  #   inherit (pkgs.kdePackages) plasma-integration;
+  # })
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
   supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
@@ -283,9 +284,8 @@ in
       };
     })
     {
-      home.packages =
-        (lib.optionals (supportGnome) [ pkgs.gnome-browser-connector ])
-        ++ (lib.optionals (supportPlasma) [ pkgs.kdePackages.plasma-integration ]);
+      home.packages = (lib.optionals (supportGnome) [ pkgs.gnome-browser-connector ]);
+      # ++ (lib.optionals (supportPlasma) [ pkgs.kdePackages.plasma-integration ]);
     }
   ];
 }

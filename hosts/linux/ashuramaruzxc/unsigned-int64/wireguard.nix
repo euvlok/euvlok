@@ -46,8 +46,8 @@
         ];
       }
       {
-        # root@v1
-        publicKey = "4WCatIaSouTOmlpVjHWsB3zZN6ikStYGyg6esqejhQo=";
+        # reisen@signed-int16
+        publicKey = "ZTGv1F/RgFxt/UxTf/gAxz5yP51VqjEz9ISaL3Pnmh8=";
         presharedKeyFile = config.sops.secrets.wireguard-shared_fumono.path;
         allowedIPs = [
           "172.16.31.10/32"
