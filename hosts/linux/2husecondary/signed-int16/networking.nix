@@ -39,8 +39,8 @@
     ];
   };
 
-  sops.secrets.wireguard-client_fumono = { };
-  sops.secrets.wireguard-shared_fumono = { };
+  sops.secrets.wireguard-client = { };
+  sops.secrets.wireguard-shared = { };
 
   services.wg-netmanager.enable = true;
   networking.wireguard.enable = true;
@@ -51,7 +51,7 @@
         "fd17:216b:31bc:1::10/128"
       ];
       dns = [ "172.16.31.1" ];
-      privateKeyFile = config.sops.secrets.wireguard-client_fumono.path;
+      privateKeyFile = config.sops.secrets.wireguard-client.path;
       postUp = ''
         ${lib.getExe' pkgs.systemd "resolvectl"} dns wg-ui64 172.16.31.1
         ${lib.getExe' pkgs.systemd "resolvectl"} domain wg-ui64 ~tenjin.com ~internal.com ~\rcon.fumoposting.com
@@ -59,7 +59,7 @@
       peers = [
         {
           publicKey = "X6OBa2aMpoLGx9lYSa+p1U8OAx0iUxAE6Te9Mucu/HQ=";
-          presharedKeyFile = config.sops.secrets.wireguard-shared_fumono.path;
+          presharedKeyFile = config.sops.secrets.wireguard-shared.path;
           allowedIPs = [
             "172.16.31.1/24"
             "fd17:216b:31bc:1::1/128"

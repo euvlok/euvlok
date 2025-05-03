@@ -20,7 +20,7 @@
     XDG_DATA_DIRS = [ "${XDG_DATA_HOME}/.icons" ];
   };
 
-  sops.secrets.reisen-password.neededForUsers = true;
+  sops.secrets.reisen.neededForUsers = true;
   users.mutableUsers = false;
   users.users.reisen = {
     isNormalUser = true;
@@ -34,7 +34,7 @@
       "wheel"
     ];
     shell = pkgs.zsh;
-    hashedPasswordFile = config.sops.secrets.reisen-password.path;
+    hashedPasswordFile = config.sops.secrets.reisen.path;
     openssh.authorizedKeys.keys = [ ]; # ! @2husecondary don't forget to add your public key
   };
 
