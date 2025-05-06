@@ -44,8 +44,7 @@ in
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
-          ./systemd-utils.nix
-
+          ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/flatpak.nix
