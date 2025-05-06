@@ -11,11 +11,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1746536000,
-        "narHash": "sha256-DU68zlIzc6poivIoJDdH2SOpbpUu4lzFKFooJuKYWD8=",
+        "lastModified": 1746540694,
+        "narHash": "sha256-ewq/zsFCYvk3yEj5w+Po7AT6BeFehH903zHkHQnyH94=",
         "owner": "ashuramaruzxc",
         "repo": "anime-cursors",
-        "rev": "d9415e407e86b6e77a47c10c08f9f7964ddbfaec",
+        "rev": "30bd8b4cb568d082a9021c83dbddda31f58914cd",
         "type": "github"
       },
       "original": {

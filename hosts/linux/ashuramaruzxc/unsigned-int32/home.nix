@@ -267,10 +267,8 @@ in
             };
             home.pointerCursor = {
               enable = true;
-              gtk.enable = true;
-              dotIcons.enable = true;
               name = "Junko";
-              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors.junko;
+              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors.marisa;
               size = 32;
             };
           }
