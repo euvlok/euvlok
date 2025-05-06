@@ -63,7 +63,10 @@ let
   };
 
   themes = {
-    extensions = [ (mkExt "catppuccin" "catppuccin-vsc-icons") ];
+    extensions = [
+      (mkExt "catppuccin" "catppuccin-vsc-icons")
+      (mkExt "catppuccin" "catppuccin-vsc")
+    ];
     settings = {
       workbench.iconTheme = "catppuccin-${config.catppuccin.flavor}";
     };

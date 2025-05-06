@@ -19,6 +19,7 @@ in
       {
         imports = [
           { home.stateVersion = "25.05"; }
+          { home.stateVersion = "25.05"; }
           inputs.catppuccin.homeModules.catppuccin
           {
             catppuccin = {
@@ -31,8 +32,8 @@ in
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
-          # ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/ssh.nix
+          # ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
 
@@ -55,13 +56,14 @@ in
                 floorp.enable = true;
                 defaultSearchEngine = "kagi";
               };
+              # nushell.enable = true;
               fzf.enable = true;
               git.enable = true;
               helix.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              # nushell.enable = true;
               nvf.enable = true;
+              ssh.enable = true;
               vscode.enable = true;
               yazi.enable = true;
               zellij.enable = true;

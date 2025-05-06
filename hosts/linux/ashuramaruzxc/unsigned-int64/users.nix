@@ -46,7 +46,7 @@
       isNormalUser = true;
       uid = 1000;
       home = "/Users/ashuramaru";
-      description = "Marie";
+      description = "Mariè Levjéwa";
       initialHashedPassword = "";
       extraGroups = [
         "ashuramaru"

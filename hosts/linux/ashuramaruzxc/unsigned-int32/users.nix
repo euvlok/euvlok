@@ -16,7 +16,7 @@
       };
       ashuramaru = {
         isNormalUser = true;
-        description = "Maria Levjewa";
+        description = "Mariè Levjéwa";
         home = "/Users/marie";
         uid = 1000;
         hashedPasswordFile = config.sops.secrets.ashuramaru.path;
