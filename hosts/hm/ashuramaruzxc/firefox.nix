@@ -172,10 +172,8 @@ in
     #! keep an eye on
     #! https://github.com/NixOS/nixpkgs/pull/374068
     #! https://github.com/NixOS/nixpkgs/issues/347350
-    nativeMessagingHosts = (
-      lib.optionals (osConfig.nixpkgs.hostPlatform.isLinux) builtins.attrValues {
-        inherit (pkgs) firefoxpwa;
-      }
+    nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
+      builtins.attrValues { inherit (pkgs) firefoxpwa; }
     );
     languagePacks = [
       "en-CA"
@@ -184,8 +182,8 @@ in
       "ja"
     ];
   };
-  home.packages = (
-    lib.optionals (osConfig.nixpkgs.hostPlatform.isLinux) builtins.attrValues {
+  home.packages = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
+    builtins.attrValues {
       inherit (pkgs) firefoxpwa;
     }
   );

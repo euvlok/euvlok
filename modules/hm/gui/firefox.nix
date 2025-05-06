@@ -217,12 +217,12 @@ let
     DisablePocket = true;
     DisableSetDesktopBackground = true;
   };
-  nativeMessagingHosts = (
-    lib.optionals (supportGnome) builtins.attrValues { inherit (pkgs) gnome-browser-connector; }
+  nativeMessagingHosts = lib.mkIf isLinux (
+    builtins.attrValues (
+      lib.optionalAttrs supportGnome { inherit (pkgs) gnome-browser-connector; }
+      // lib.optionalAttrs supportPlasma { inherit (pkgs.kdePackages) plasma-integration; }
+    )
   );
-  # ++ (lib.optionals (supportPlasma) builtins.attrValues {
-  #   inherit (pkgs.kdePackages) plasma-integration;
-  # })
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
   supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;

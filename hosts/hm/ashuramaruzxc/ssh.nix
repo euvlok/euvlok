@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ lib, config, ... }:
 {
   programs.ssh.addKeysToAgent = lib.mkForce "no";
   programs.ssh.extraConfig = ''
@@ -26,5 +21,9 @@
       Host tenjin-dk.com
         Hostname www.tenjin-dk.com
         Port 57255
+      Host unsigned-int4.home.lan
+        Hostname 192.168.50.15
+        Port 22
+        IdentityFile "${config.home.homeDirectory}/.ssh/id_ecdsa-sk"
   '';
 }

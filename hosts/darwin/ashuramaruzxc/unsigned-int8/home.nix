@@ -8,7 +8,7 @@ let
   release = builtins.fromJSON (config.system.darwinRelease);
 in
 {
-  imports = [ inputs.home-manager-donteatoreo.darwinModules.home-manager ];
+  imports = [ inputs.home-manager-ashuramaruzxc.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -18,7 +18,7 @@ in
       { config, ... }:
       {
         imports = [
-          { home.stateVersion = "24.11"; }
+          { home.stateVersion = "25.05"; }
           inputs.catppuccin.homeModules.catppuccin
           {
             catppuccin = {
@@ -31,7 +31,7 @@ in
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
-          ../../../hm/ashuramaruzxc/nushell.nix
+          # ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
@@ -50,14 +50,17 @@ in
               bash.enable = true;
               direnv.enable = true;
               fastfetch.enable = true;
-              firefox.defaultSearchEngine = "kagi";
-              firefox.enable = true;
+              firefox = {
+                enable = true;
+                floorp.enable = true;
+                defaultSearchEngine = "kagi";
+              };
               fzf.enable = true;
               git.enable = true;
               helix.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              nushell.enable = true;
+              # nushell.enable = true;
               nvf.enable = true;
               vscode.enable = true;
               yazi.enable = true;
