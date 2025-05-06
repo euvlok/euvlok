@@ -50,6 +50,7 @@
             # for some reason not in by default
             dolphin
             dolphin-plugins
+            kio
             kio-admin
             kio-extras
             kio-extras-kf5
@@ -64,15 +65,37 @@
             qtimageformats # webp etc
             qtsvg # svg
 
+            discover
             flatpak-kcm
             kcmutils
+            packagekit-qt
+
+            # Somehwat working support accounts support
+            accounts-qt
+            kaccounts-integration
+            kaccounts-providers
+            signond
+
+            # mail
+            akonadi
+            akonadi-calendar
+            akonadi-contacts
+            akonadi-search
+            calendarsupport
+            kcontacts
+            kmail
+            kmail-account-wizard
+            kmailtransport
+            knotifications
+            korganizer
+            kservice
             ;
         }
         ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
           catppuccin-gtk = pkgs.catppuccin-gtk.override {
             accents = [ config.catppuccin.accent ];
             size = "compact";
-            tweaks = [ "normal" ];
+            tweaks = [ "rimless" ];
             variant = config.catppuccin.flavor;
           };
           catppuccin-kde = pkgs.catppuccin-kde.override {

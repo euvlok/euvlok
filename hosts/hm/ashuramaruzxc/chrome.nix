@@ -27,7 +27,6 @@
         { id = "hipekcciheckooncpjeljhnekcoolahp"; } # tabliss
         { id = "clngdbkpkpeebahjckkjfobafhncgmne"; } # stylus
         { id = "gcknhkkoolaabfmlnjonogaaifnjlfnp"; } # foxyproxy
-        { id = "oboonakemofpalcgghocfoadofidjkkk"; } # keepassxc
         { id = "nngceckbapebfimnlniiiahkandclblb"; } # bitwarden
         { id = "kbmfpngjjgdllneeigpgjifpgocmfgmb"; } # reddit enhancment
         { id = "dneaehbmnbhcippjikoajpoabadpodje"; } # old reddit

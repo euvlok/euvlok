@@ -1,13 +1,25 @@
-# All credit goes to "https://github.com/nix-community/home-manager/issues/3019#issuecomment-2241833501"
-# !@nick4f42
 {
   lib,
   config,
   pkgs,
   ...
 }:
+
 let
   cfg = config.services.protonmail-bridge;
+
+  # Create a wrapped protonmail-bridge package
+  wrappedBridge =
+    pkgs.runCommand "protonmail-bridge"
+      {
+        bridge = pkgs.protonmail-bridge;
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      }
+      ''
+        mkdir -p $out/bin
+        makeWrapper $bridge/bin/protonmail-bridge $out/bin/protonmail-bridge \
+            --set PATH ${lib.strings.makeBinPath [ pkgs.gnome-keyring ]}
+      '';
 in
 {
   options = {
@@ -15,16 +27,14 @@ in
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
-        description = "Whether to enable the Bridge.";
+        description = "Whether to enable the ProtonMail Bridge.";
       };
-
       package = lib.mkOption {
         type = lib.types.package;
         default = pkgs.protonmail-bridge;
         defaultText = lib.literalExpression "pkgs.protonmail-bridge";
         description = "The protonmail-bridge package to use.";
       };
-
       logLevel = lib.mkOption {
         type = lib.types.enum [
           "panic"
@@ -35,25 +45,23 @@ in
           "debug"
         ];
         default = "info";
-        description = "The log level";
+        description = "The log level.";
       };
     };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = [ wrappedBridge ];
 
     systemd.user.services.protonmail-bridge = {
       Unit = {
-        Description = "Protonmail Bridge";
+        Description = "ProtonMail Bridge";
         After = [ "network.target" ];
       };
-
       Service = {
         Restart = "always";
-        ExecStart = "${cfg.package}/bin/protonmail-bridge --noninteractive --log-level ${cfg.logLevel}";
+        ExecStart = "${wrappedBridge}/bin/protonmail-bridge --noninteractive --log-level ${cfg.logLevel}";
       };
-
       Install = {
         WantedBy = [ "default.target" ];
       };

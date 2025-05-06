@@ -1,20 +1,134 @@
 {
   inputs,
   osConfig,
+  lib,
   config,
   pkgs,
   ...
 }:
 let
-  mkExt = (import ../../../modules/hm/gui/vscode/lib.nix { inherit inputs osConfig pkgs; }).mkExt;
+  mkExt =
+    (import ../../../modules/hm/gui/vscode/lib.nix {
+      inherit
+        inputs
+        osConfig
+        pkgs
+        ;
+    }).mkExt;
+  inherit
+    (inputs.nix-vscode-extensions.extensions.${osConfig.nixpkgs.hostPlatform.system}.forVSCodeVersion
+      pkgs.vscode.version
+    )
+    vscode-marketplace
+    ;
+  languages = {
+    extensions = [
+      (mkExt "james-yu" "latex-workshop")
+    ];
+    settings = {
+      latex-workshop.latex = {
+        outDir = "./output";
+        recipes = [
+          {
+            name = "xeLaTeX -> Biber -> xeLaTeX";
+            tools = [
+              "xelatex"
+              "biber"
+              "xelatex"
+            ];
+          }
+          {
+            name = "xeLaTeX -> pdflatex";
+            tools = [
+              "xelatex"
+              "pdflatex"
+            ];
+          }
+        ];
+        tools =
+          let
+            commonLatexArgs = lib.splitString " " "-synctex=1 -interaction=nonstopmode -file-line-error -shell-escape -output-directory=output %DOC%";
+            mkLatexTool = name: command: args: { inherit name command args; };
+          in
+          [
+            (mkLatexTool "xelatex" "xelatex" commonLatexArgs)
+            (mkLatexTool "biber" "biber" [
+              "--output-directory=output"
+              "%DOCFILE%"
+            ])
+            (mkLatexTool "pdflatex" "pdflatex" commonLatexArgs)
+          ];
+      };
+    };
+  };
+
+  themes = {
+    extensions = [ (mkExt "catppuccin" "catppuccin-vsc-icons") ];
+    settings = {
+      workbench.iconTheme = "catppuccin-${config.catppuccin.flavor}";
+    };
+  };
+
+  flattenAttrs =
+    attrs: excludePaths:
+    let
+      isAttrSet = v: builtins.isAttrs v && !builtins.isList v;
+      isExcluded = path: lib.any (excludePath: path == excludePath) excludePaths;
+
+      # Convert nested set to flat dot-notation
+      go =
+        prefix: set:
+        lib.concatMap (
+          name:
+          let
+            value = set.${name};
+            newPrefix = if prefix == "" then name else "${prefix}.${name}";
+          in
+          if isExcluded newPrefix then
+            [
+              {
+                name = newPrefix;
+                value = value;
+              }
+            ]
+          else if isAttrSet value then
+            go newPrefix value
+          else
+            [
+              {
+                name = newPrefix;
+                value = value;
+              }
+            ]
+        ) (builtins.attrNames set);
+    in
+    builtins.listToAttrs (go "" attrs);
+
+  mergeFrom =
+    let
+      modules = [
+        languages
+        themes
+      ];
+      excludePaths = [
+        "[javascript]"
+        "[nix]"
+        "[typescript]"
+      ];
+    in
+    p:
+    if p == "extensions" then
+      lib.concatLists (map (module: module.${p}) modules)
+    else
+      flattenAttrs (lib.foldl' (
+        acc: module: lib.recursiveUpdate acc module.${p}
+      ) { } modules) excludePaths;
 in
 {
   programs.vscode = {
     profiles.default = {
       userSettings = {
         "search.followSymlinks" = false;
-        "typescript.suggest.paths" = false;
-        "javascript.suggest.paths" = false;
         "files.autoSave" = "afterDelay";
         "editor.bracketPairColorization.enabled" = true;
         "editor.bracketPairColorization.independentColorPoolPerBracketType" = true;
@@ -34,13 +148,14 @@ in
           "strings" = "off";
         };
         "diffEditor.maxFileSize" = 0;
+        # Terminal
         "terminal.integrated.minimumContrastRatio" = 1;
         "terminal.integrated.fontFamily" = "'Hack Nerd Font'";
         "terminal.integrated.cursorStyle" = "line";
         "terminal.integrated.cursorBlinking" = true;
+        "terminal.integrated.inheritEnv" = true;
 
         "workbench.editor.showIcons" = true;
-        "workbench.iconTheme" = "catppuccin-${config.catppuccin.flavor}";
         "workbench.sideBar.location" = "right";
         "window.titleBarStyle" = "native";
         "telemetry.telemetryLevel" = "off";
@@ -51,29 +166,28 @@ in
 
         # Python
         "[python]" = {
-          "formatting.provider" = "none";
-          "editor.defaultFormatter" = "omnilib.ufmt";
+          "editor.defaultFormatter" = "ms-python.black-formatter";
           "editor.formatOnSave" = true;
+          "editor.insertSpaces" = true;
+          "languageServer" = "Pylance";
+          "formatting.provider" = "black";
+          "formatting.blackArgs" = [
+            "--line-length"
+            "120"
+          ];
         };
-      };
+        "isort.args" = [
+          "--profile"
+          "black"
+        ];
+        #JS
+        "javascript.suggest.paths" = false;
+        "typescript.suggest.paths" = false;
+      } // mergeFrom "settings";
       extensions = [
-        (mkExt "ms-vscode" "hexeditor")
-        (mkExt "ms-vsliveshare" "vsliveshare")
-        (mkExt "visualstudioexptteam" "vscodeintellicode")
-        (mkExt "visualstudioexptteam" "intellicode-api-usage-examples")
-        (mkExt "christian-kohler" "path-intellisense")
-        # (mkExt "github" "vscode-pull-request-github")
-        pkgs.vscode-extensions.github.vscode-pull-request-github
-        (mkExt "donjayamanne" "githistory")
-        (mkExt "eamodio" "gitlens")
-        (mkExt "aaron-bond" "better-comments")
-        (mkExt "streetsidesoftware" "code-spell-checker")
-        ## -- Vscode specific -- ##
-
         ## -- Programming languages/lsp support -- ##
-        (mkExt "josetr" "cmake-language-support-vscode")
-        (mkExt "ms-python" "python")
         (mkExt "ms-vscode" "cpptools-extension-pack")
+        (mkExt "josetr" "cmake-language-support-vscode")
         (mkExt "rust-lang" "rust-analyzer")
         (mkExt "golang" "go")
         (mkExt "scala-lang" "scala")
@@ -91,12 +205,11 @@ in
         (mkExt "graphql" "vscode-graphql")
         (mkExt "graphql" "vscode-graphql-syntax")
         (mkExt "bbenoist" "nix")
-        (mkExt "github" "vscode-github-actions")
-        (mkExt "mathematic" "vscode-latex")
-        # (mkExt "lizebang" "bash-extension-pack")
-
+        (mkExt "pinage404" "bash-extension-pack")
         ## -- Programming languages/lsp support -- ##
-
+        ## -- git -- ##
+        pkgs.vscode-extensions.github.vscode-pull-request-github
+        (mkExt "github" "vscode-github-actions")
         ## -- Misc Utils -- ##
         (mkExt "esbenp" "prettier-vscode")
         (mkExt "davidanson" "vscode-markdownlint")
@@ -132,51 +245,67 @@ in
         ## -- Dotnet Utils -- ##
 
         ## -- Python Utils -- ##
-        (mkExt "omnilib" "ufmt")
-        (mkExt "ms-python" "black-formatter")
-        (mkExt "ms-python" "pylint")
-        (mkExt "ms-python" "debugpy")
+        # Fuck you sarco
         (mkExt "batisteo" "vscode-django")
-        (mkExt "kevinrose" "vsc-python-indent")
-        (mkExt "wholroyd" "jinja")
         (mkExt "donjayamanne" "python-environment-manager")
+        (mkExt "kaih2o" "python-resource-monitor")
+        (mkExt "kevinrose" "vsc-python-indent")
+        (mkExt "ms-python" "black-formatter")
+        (mkExt "ms-python" "flake8")
+        (mkExt "ms-python" "gather")
+        (mkExt "ms-python" "isort")
+        (mkExt "ms-python" "debugpy")
+        (mkExt "ms-python" "mypy-type-checker")
+        (mkExt "ms-python" "pylint")
+        (mkExt "wholroyd" "jinja")
+        vscode-marketplace.ms-python.python
+        vscode-marketplace.ms-toolsai.jupyter
         ## -- Python Utils -- ##
 
         ## -- JavaScript/Typescript Utils -- ##
-        (mkExt "steoates" "autoimport")
-        (mkExt "ecmel" "vscode-html-css")
-        (mkExt "bradlc" "vscode-tailwindcss")
-        (mkExt "formulahendry" "auto-rename-tag")
-        (mkExt "formulahendry" "auto-close-tag")
-        (mkExt "ritwickdey" "liveserver")
-        (mkExt "firefox-devtools" "vscode-firefox-debug")
         (mkExt "angular" "ng-template")
-        (mkExt "johnpapa" "angular2")
-        (mkExt "dbaeumer" "vscode-eslint")
-        (mkExt "jasonnutter" "search-node-modules")
+        (mkExt "bradlc" "vscode-tailwindcss")
         (mkExt "christian-kohler" "npm-intellisense")
-        (mkExt "prisma" "prisma")
-        (mkExt "wix" "vscode-import-cost")
-        (mkExt "octref" "vetur")
-        (mkExt "vue" "volar")
-        (mkExt "hollowtree" "vue-snippets")
-        (mkExt "msjsdiag" "vscode-react-native")
+        (mkExt "dbaeumer" "vscode-eslint")
         (mkExt "dsznajder" "es7-react-js-snippets")
+        (mkExt "ecmel" "vscode-html-css")
+        (mkExt "firefox-devtools" "vscode-firefox-debug")
+        (mkExt "formulahendry" "auto-close-tag")
+        (mkExt "formulahendry" "auto-rename-tag")
+        (mkExt "hollowtree" "vue-snippets")
+        (mkExt "jasonnutter" "search-node-modules")
+        (mkExt "johnpapa" "angular2")
+        (mkExt "msjsdiag" "vscode-react-native")
+        (mkExt "octref" "vetur")
+        (mkExt "prisma" "prisma")
+        (mkExt "ritwickdey" "liveserver")
+        (mkExt "steoates" "autoimport")
+        (mkExt "vue" "volar")
+        (mkExt "wix" "vscode-import-cost")
         ## -- JavaScript/Typescript Utils -- ##
 
-        ## -- VSCode Themes/Icons -- ##
-        (mkExt "catppuccin" "catppuccin-vsc")
-        (mkExt "catppuccin" "catppuccin-vsc-icons")
-        ## -- VSCode Themes/Icons -- ##
+        ## -- Vscode specific -- ##
+        (mkExt "aaron-bond" "better-comments")
+        (mkExt "christian-kohler" "path-intellisense")
+        (mkExt "donjayamanne" "githistory")
+        (mkExt "donjayamanne" "git-extension-pack")
+        (mkExt "eamodio" "gitlens")
+        (mkExt "ms-vscode" "hexeditor")
+        (mkExt "ms-vsliveshare" "vsliveshare")
+        (mkExt "streetsidesoftware" "code-spell-checker")
+        (mkExt "visualstudioexptteam" "intellicode-api-usage-examples")
+        (mkExt "visualstudioexptteam" "vscodeintellicode")
+        pkgs.vscode-extensions.github.vscode-pull-request-github
+        ## -- Vscode specific -- ##
 
         ## -- Dictionary/Languages support -- ##
-        # (mkExt "ms-ceintl" "vscode-language-pack
         pkgs.vscode-extensions.ms-ceintl.vscode-language-pack-ja
         ## -- Dictionary/Languages support -- ##
-      ];
+      ] ++ mergeFrom "extensions";
     };
   };
   home.sessionVariables = {
     GO_PATH = "${config.home.homeDirectory}/.go";
   };
+  home.packages = [ pkgs.nil ];
 }

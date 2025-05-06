@@ -12,18 +12,18 @@ let
   };
 in
 {
-  services.kmscon = {
-    enable = true;
-    extraOptions = "--term xterm-256color";
-    extraConfig = "font-size=18";
-    hwRender = true;
-    fonts = [
-      {
-        name = "MesloLGL Nerd Font";
-        package = pkgs.nerd-fonts.meslo-lg;
-      }
-    ];
-  };
+  # services.kmscon = {
+  #   enable = true;
+  #   extraOptions = "--term xterm-256color";
+  #   extraConfig = "font-size=18";
+  #   hwRender = true;
+  #   fonts = [
+  #     {
+  #       name = "MesloLGL Nerd Font";
+  #       package = pkgs.nerd-fonts.meslo-lg;
+  #     }
+  #   ];
+  # };
 
   services = {
     fstrim.enable = true;

@@ -11,6 +11,7 @@
   options.hm.nvf.enable = lib.mkEnableOption "Neovim";
 
   config = lib.mkIf config.hm.nvf.enable {
+    programs.vim.defaultEditor = true;
     programs.nvf.enable = true;
     programs.nvf.settings.vim = {
       package = pkgs.neovim-unwrapped;

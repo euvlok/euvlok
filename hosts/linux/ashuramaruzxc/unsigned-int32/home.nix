@@ -85,6 +85,7 @@ in
               nvf.enable = true;
               ssh.enable = true;
               vscode.enable = true;
+              yazi.enable = true;
               zellij.enable = true;
               zsh.enable = true;
             };
@@ -98,11 +99,17 @@ in
           {
             home.packages =
               builtins.attrValues {
+                # Important
+                inherit (pkgs)
+                  keepassxc
+                  bitwarden
+                  ;
                 # Multimedia
                 inherit (pkgs)
                   nicotine-plus
                   quodlibet-full
                   vlc
+                  youtube-music
                   ;
                 inherit (pkgs.kdePackages)
                   k3b
@@ -136,6 +143,7 @@ in
                   materialgram # tg client but better
                   nextcloud-client # nextcloud client
                   signal-desktop # Signal desktop client
+                  protonmail-bridge-gui
                   ;
                 # Networking
                 inherit (pkgs)
@@ -203,26 +211,43 @@ in
               }
               ++ (
                 let
-                  inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
-                  inherit (pkgs.unstable.jetbrains) rider clion idea-ultimate;
+                  inherit (pkgs.jetbrains.plugins) addPlugins;
+                  inherit (pkgs.jetbrains) rider clion idea-ultimate;
                   commonPlugins = [
                     "better-direnv"
                     "catppuccin-icons"
                     "catppuccin-theme"
                     "csv-editor"
+                    "docker"
+                    "gittoolbox"
+                    "graphql"
+                    "indent-rainbow"
                     "ini"
+                    # "nix-lsp"
                     "nixidea"
                     "rainbow-brackets"
+                    "rainbow-csv"
+                    "toml"
+                    "vscode-keymap"
                   ];
                 in
                 builtins.attrValues {
                   riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
-                  clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
-                  ideaUltimateWithPlugins = addPlugins idea-ultimate (
+                  clionWithPlugins = addPlugins clion (
                     commonPlugins
                     ++ [
                       "rust"
+                      "python-community-edition"
+                    ]
+                  );
+                  ideaUltimateWithPlugins = addPlugins idea-ultimate (
+                    commonPlugins
+                    ++ [
                       "go"
+                      "minecraft-development"
+                      "python"
+                      "rust"
+                      "scala"
                     ]
                   );
                 }
@@ -240,17 +265,19 @@ in
               };
               btop.enable = true;
             };
-            home.sessionVariables = {
-              XCURSOR_THEME = "Remilia";
-              XCURSOR_SIZE = 32;
+            home.pointerCursor = {
+              enable = true;
+              gtk.enable = true;
+              dotIcons.enable = true;
+              name = "Junko";
+              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors.junko;
+              size = 32;
             };
           }
           # gtk settings
           {
             # gtk = {
             #   enable = true;
-            #   iconTheme.name = "Breeze-dark";
-            #   cursorTheme.name = "Breeze_cursors";
             # };
             # catppuccin.gtk.enable = true;
             # catppuccin.gtk.gnomeShellTheme = true;

@@ -11,10 +11,9 @@
     };
     packages = [
       # Desktop
-      "flathub:app/com.github.tchx84.Flatseal/x86_64/stable" # Easier permission manager
-      "flathub:app/com.usebottles.bottles/x86_64/stable"
-
-      # `
+      "flathub:app/com.github.tchx84.Flatseal//stable" # Easier permission manager
+      "flathub:app/com.usebottles.bottles//stable"
+      #
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.gamescope/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.vkBasalt/x86_64/24.08"
@@ -27,10 +26,20 @@
           "xdg-config/gtkrc-2.0:ro"
           "xdg-config/gtk-3.0:ro"
           "xdg-config/gtk-4.0:ro"
+          "xdg-run/app/com.discordapp.Discord:create"
         ];
       };
       "com.usebottles.bottles" = {
         sockets = [ "pcsc" ];
+        filesystems = [
+          "xdg-downloads:rw"
+          "xdg-pictures:rw"
+          "xdg-data/Steam:rw"
+          "xdg-data/games:rw"
+          "xdg-config/MangoHud:ro"
+        ];
+      };
+      "sh.ppy.osu" = {
         filesystems = [
           "xdg-downloads:rw"
           "xdg-pictures:rw"

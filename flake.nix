@@ -181,6 +181,7 @@
     zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     anime-game-launcher.url = "github:ezKEa/aagl-gtk-on-nix";
+    anime-cursors.url = "github:ashuramaruzxc/anime-cursors";
     #! @ashuramaruzxc: don't override inputs
   };
 }

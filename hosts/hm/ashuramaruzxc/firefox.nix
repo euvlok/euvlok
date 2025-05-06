@@ -186,7 +186,7 @@ in
   };
   home.packages = (
     lib.optionals (osConfig.nixpkgs.hostPlatform.isLinux) builtins.attrValues {
-      inherit (pkgs) firefoxpwa keepassxc bitwarden;
+      inherit (pkgs) firefoxpwa;
     }
   );
 }

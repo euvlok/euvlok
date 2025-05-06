@@ -14,7 +14,7 @@
     localsearch.enable = true;
     tinysparql.enable = true;
   };
-
+  services.gnome.gnome-keyring.enable = true;
   nixpkgs.overlays = [
     # GNOME 47: triple-buffering-v4-47
     (_: prev: {
@@ -74,6 +74,6 @@
     gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
     kdeconnect.enable = true;
     ssh.startAgent = true;
-    ssh.askPassword = lib.mkForce (lib.getExe pkgs.kdePackages.ksshaskpass);
+    ssh.askPassword = lib.mkForce (lib.getExe pkgs.seahorse);
   };
 }

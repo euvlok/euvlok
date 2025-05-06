@@ -187,6 +187,7 @@
         fcitx5-gtk
         gpgme
         ;
+      inherit (pkgs.kdePackages) bluedevil;
     };
   };
 
