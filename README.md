@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nixcordia/euvlok/refs/heads/master/.github/assets/eu-stars.png?token=GHSAT0AAAAAAC3W6YC6K56KMT7ENYPB4WAO2AFA3AQ" width="400" height="400" />
+  <img src="https://raw.githubusercontent.com/nixcordia/euvlok/refs/heads/master/.github/assets/eu-stars.png" width="400" height="400" />
 </p>
 
 <p align="center">
@@ -14,38 +14,28 @@
 
 # 🇪🇺 ❄️ EUVlok
 
-__EU__ represents the European Union, while __Vlok__ is derived from the Dutch
-word for "flake".
+__EU__ stands for the European Union, while __Vlok__ comes from the Dutch word
+for "flake".
 
-Choosing the name took us some time because we really wanted something that
-is simple, short, and meaningful. We aimed for a name that resonates with our
-technical philosophy and our appreciation for Europe.
+When choosing the name for this repository, we focused on three factors:
 
-We are __strong__ advocates for the European Union and its values. In light
-of recent events in the U.S. and the overall global state in 2025 and beyond,
-__we believe it is more important than ever to stand by and promote these
-principles.__
+1. It should be short
+2. It should relate to the EU
+3. It should include some Dutch elements
 
-Some of our friends are outside the EU also share these values. We recognize
-that people anywhere in world can hold these beliefs, and we aim to empower and
-support them.
-
-We also want to acknowledge that Nix—its ideas, community, and evolution—is
-__rooted in both European & World Wide ingenuity__. In Dutch, "_Vlok_" comes
-from Middle Dutch, meaning "a small, distinct piece". This reflects our
-approach: each module, like a small yet essential piece, contributes to a
-greater, cohesive whole.
+We chose a Dutch word because NixOS was created in the Netherlands by [Eelco
+Dolstra](https://edolstra.github.io/). Additionally, the Netherlands is a
+strong supporter of the EU, shares its values, and has close ties to both Nix
+and NixOS.
 
 ----
 
-## 👋🏻 👥 Welcome to our communal dotfiles
+## 👋🏻 👥 Welcome to our communal repository
 
-All of us use Nix to manage our dotfiles, we constantly learn and grow. Although
-we progress at different paces, we often share modules with each other—sometimes
-almost verbatim.
-
-As close friends, we've decided to create a shared repo where we will store
-our dotfiles.
+As friends, we've decided to create this shared repo where we will store
+our dotfiles. This endeavor is more than just a convenient place to keep
+our dotfiles. It's a shared commitment to __deepen our understanding of Nix and
+collectively learn and grow.__
 
 We frequently discuss Nix and share new programs with each other. Previously,
 our repositories were separate, which made instant sharing difficult.
@@ -54,15 +44,25 @@ Now, we can immediately access the [modules](/modules/) folder to share
 our latest findings. Also, we can easily tap into each other's dotfiles to
 experiment with and adopt opinionated settings that we like.
 
+Beyond the immediate benefits of sharing _(between ourselves)_, a core motivation
+for this communal repository is our ambition to truly push Nix to its limits.
+Crafting an isolated Nix configuration tailored to a single individual is
+_relatively easy_, you can take as many shortcuts as you like, and design
+choices be damned. ___We, however, aspire to the opposite.___
+
+We want to cultivate a shared "system," so to speak, that is not only robust and
+highly maintainable, but also serves as a practical demonstration of advanced,
+collaborative testament to what can be done with Nix.
+
 ----
 
-## 🤝🏻 💖 🤲🏻 Sharing Is Caring
+## 🤝🏻 🤲🏻 Open Hands, Open Code
 
 _Sharing is the core motivation behind this repo._ Every single line here was
 made possible by the broader community of Nix users, most of whom have chosen to
-make their work publicly available for anyone to study and use freely.
+make their work publicly available for everyone.
 
-All of us have learned practically _EVERYTHING_ from reading both official
+All of us have practically learned _EVERYTHING_ from reading both official
 and unofficial Nix docs, spending countless hours looking at Nixpkgs source
 code, following PRs and issues, and reading discussions on "NixOS Discourse."
 By casually exploring and sharing knowledge within the Nix community, we have
@@ -82,63 +82,59 @@ discovers this repo.
 We think that you'll find the most use out of the [modules](/modules/) folder;
 it contains all of the module bases we use and extend in our configs.
 
-We also think that you will find some value in [pkgs](/pkgs/); it contains
-"recipes," so to speak, for more niche but useful "packages" that you might
-find interesting. It might even be the reason you ended up on this repo to begin
-with!
+We also think that you will find value in [pkgs](/pkgs/); it contains a custom
+derivation for packages that do not exist on `nixpkgs`. It's very likely you
+ended up in this repo because of this folder!
 
-A notable example would be the `mkExt` function we have for VSCode; it allows
-us to very easily and quickly declare an extension in one line without being
-super verbose.
+## Before you leave
 
-For example witohut `mkExt` we would have to write this:
+Before you leave, we want to provide you with a nicely curated list of useful
+nix resources
 
-```nix
-author.extension = (inputs.nix-vscode-extensions.extensions.${osConfig.nixpkgs.hostPlatform.system}.forVSCodeVersion
-pkgs.vscode.version).author.extension;
-```
+### Some general Nix resources
 
-But with `mkExt` we can just simple do:
+- [Devenv](https://devenv.sh/) (<https://devenv.sh/>)
+- [Learn X in Y minutes - Nix](https://learnxinyminutes.com/nix/) (<https://learnxinyminutes.com/nix/>)
+- [Main NixOS Wiki](https://wiki.nixos.org/wiki/NixOS_Wiki) (<https://wiki.nixos.org/wiki/NixOS_Wiki>)
+- [Nix Dev](https://nix.dev/) (<https://nix.dev/>)
+- [NixOS Discourse](https://discourse.nixos.org/) (<https://discourse.nixos.org/>)
+- [Noogle](https://noogle.dev/) (<https://noogle.dev/>)
 
-```nix
-(mkExt "author" "extension")
-```
+- [Nixpkgs](https://github.com/NixOS/nixpkgs)
+(<https://github.com/NixOS/nixpkgs>)
+- [Nixpkgs Docs](https://github.com/NixOS/nixpkgs/tree/master/doc)
+(<https://github.com/NixOS/nixpkgs/tree/master/doc>)
+- [Nixpkgs 25.05 Release Notes](https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md) (<https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md>)
 
-Another example would be the `genKeybind` function; we use it for `yazi` (a file
-manager). It's a very simple function, _YET_ it saves us so much code. Without
-it, we would have to write something like this:
+- [Home Manager 24.11 Options](https://home-manager-options.extranix.com/?query=&release=release-24.11) (<https://home-manager-options.extranix.com/?query=&release=release-24.11>)
+- [Home Manager Unstable Options](https://home-manager-options.extranix.com/?query=&release=master) (<https://home-manager-options.extranix.com/?query=&release=master>)
 
-```nix
-{
-  desc = "Open help";
-  on = [ "~" ];
-  run = "help";
-}
-````
+### Nix & Nix Adjacent YouTube Channels
 
-But with `genKeybind` we can just simple do:
+- [Vimjoyer](https://www.youtube.com/channel/UC_zBdZ0_H_jn41FDRG7q4Tw) (<https://www.youtube.com/channel/UC_zBdZ0_H_jn41FDRG7q4Tw>)
+- [logaMaster](https://www.youtube.com/channel/UCFzUEe9XUlkDLp6AmtNzmOA) (<https://www.youtube.com/channel/UCFzUEe9XUlkDLp6AmtNzmOA>)
+- [EmergentMind](https://www.youtube.com/channel/UCsWaVYzOFvEWDsEuvuZJ-8A) (<https://www.youtube.com/channel/UCsWaVYzOFvEWDsEuvuZJ-8A>)
 
-```nix
-(genKeyBind "Open help" [ "~" ] "help")
-```
+### Some Nix blogs
 
-This saves us 5 lines, not a lot by itself, but this scales massively when you
-have to define many keybinds, as Yazi does require you to do so
+- [Flakes aren't real and cannot hurt you: a guide to using Nix flakes the non-flake way](https://jade.fyi/blog/flakes-arent-real/) (<https://jade.fyi/blog/flakes-arent-real/>)
+- [Nix Flakes is an experiment that did too much at once…](https://samuel.dionne-riel.com/blog/2023/09/06/flakes-is-an-experiment-that-did-too-much-at-once.html) (<https://samuel.dionne-riel.com/blog/2023/09/06/flakes-is-an-experiment-that-did-too-much-at-once.html>)
+- [Pinning NixOS with npins, or how to kill channels forever without flakes](https://jade.fyi/blog/pinning-nixos-with-npins/) (<https://jade.fyi/blog/pinning-nixos-with-npins/>)
+- [Stop Using nix-env](https://stop-using-nix-env.privatevoid.net/) (<https://stop-using-nix-env.privatevoid.net/>)
+- [The wonders of Nix remotebuilders](https://heitorpb.github.io/bla/wonders-of-nix-remote-builders/) (<https://heitorpb.github.io/bla/wonders-of-nix-remote-builders/>)
 
-We have a bunch of other small, neat functions that we use to be more brief and
-save us from writing a lot of verbose code; after all, this is not Java...
+## Credits
 
-### Credits
-
-- Catpuccified EU stars generated with ⸺ [Catppify](https://github.com/raluvy95/catppify)
-- Shields ⸺ [Catppuccin Org](https://github.com/catppuccin)
+- "Catpuccified" EU stars generated with ⸺
+[Catppify](https://github.com/raluvy95/catppify)
+- Catppuccin Shields ⸺ [Catppuccin Org](https://github.com/catppuccin)
 
 &nbsp;
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" />
+  <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" />
 </p>
 
 <p align="center">
-	<a href="https://github.com/catppuccin/catppuccin/blob/main/LICENSE"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8"/></a>
+  <a href="https://github.com/catppuccin/catppuccin/blob/main/LICENSE"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8"/></a>
 </p>
