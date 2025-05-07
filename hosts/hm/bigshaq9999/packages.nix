@@ -12,12 +12,8 @@
     inherit (pkgs)
       appimage-run
       hugo
-      imagemagick
-      nixfmt-rfc-style
       octaveFull
-      pandoc
       pdftk
-      rar
       steam-run
       ;
 
@@ -28,7 +24,6 @@
       nchat
       signal-desktop
       tdesktop
-      thunderbird-bin
       ;
 
     # Sound
