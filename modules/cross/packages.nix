@@ -8,9 +8,11 @@
 let
   commonPkgs = (
     builtins.attrValues {
-      # --- Nix Server Agent --- #
+      # Nix Related
       inherit (inputs.nil.packages.${config.nixpkgs.hostPlatform.system}) nil;
-      # --- Core Utilities (Shell essentials, replacements, process management) ---
+      inherit (pkgs) nixfmt-rfc-style;
+
+      # Core Utilities (Shell essentials, replacements, process management)
       inherit (pkgs)
         bc
         coreutils # Basic file, shell and text manipulation utilities
@@ -28,43 +30,47 @@ let
         which
         ;
 
-      # --- Modern Core Utility Replacements ---
+      # Modern Rust/Go/Zig Replacements
       inherit (pkgs)
-        bat # `cat` clone with syntax highlighting and Git integration
-        eza # Modern `ls` replacement
-        fd # Simple, fast and user-friendly `find` alternative
-        procs # Modern `ps` replacement with colored output
-        ripgrep # Fast `grep` alternative (rg)
-        sd # Intuitive `sed` alternative
+        bat # cat
+        bottom # htop & btop
+        broot # tree
+        delta # difff
+        duf # df
+        dust # du
+        eza # ls
+        fd # find
+        procs # ps
+        ripgrep # grep
+        sd # sed
+        xh # curl
         ;
 
-      # --- File Management & Archiving ---
+      # File Management & Archiving
       inherit (pkgs)
-        lz4
-        ncdu # NCurses Disk Usage analyzer
-        p7zip
-        rsync
-        tree
+        rar
         unrar
         unzip
-        xz
         zip
         ;
-
-      # --- Modern File Management Replacements ---
       inherit (pkgs)
-        dust # More intuitive `du` alternative
+        lz4
+        ncdu
+        p7zip
+        pandoc
+        rsync
+        tree
+        xz
         ;
 
-      # --- Text Processing & Viewing ---
+      # Text Processing & Viewing
       inherit (pkgs)
-        delta # Feature-rich `diff` viewer, especially for Git
         hexyl # CLI hex viewer
         jq # CLI JSON processor
         less
         ;
 
-      # --- Networking ---
+      # Networking
       inherit (pkgs)
         curl
         dnsutils # `dig`, `nslookup`, etc.
@@ -74,27 +80,20 @@ let
         wget
         ;
 
-      # --- Modern Networking Replacements ---
+      # System Information & Monitoring
       inherit (pkgs)
-        xh # Friendly `curl` alternative for HTTP requests
-        ;
-
-      # --- System Information & Monitoring ---
-      inherit (pkgs)
-        file # Determine file type
+        file
         lsof # List open files
-        pciutils # `lspci`
+        pciutils # lspci
         smartmontools # S.M.A.R.T. disk health monitoring tools
         ;
 
-      # --- Modern System Info/Monitoring Replacements ---
+      # Modern System Info/Monitoring Replacements
       inherit (pkgs)
-        bottom # TUI process/system monitor
         btop # TUI resource monitor (C++)
-        duf # Disk Usage/Free utility (df alternative)
         ;
 
-      # --- Media ---
+      # Media
       inherit (pkgs)
         ffmpeg-full
         imagemagick
@@ -102,14 +101,14 @@ let
         yt-dlp
         ;
 
-      # --- Development Tools ---
+      # Development Tools
       inherit (pkgs)
-        # --- Build Tools & Compilers ---
+        # Build Tools & Compilers
         clang
         cmake
         gcc
         gnumake
-        # --- Dev Utilities ---
+        # Dev Utilities
         hyperfine # CLI benchmarking tool
         tokei # Counts lines of code
         ;
@@ -118,9 +117,8 @@ let
 
   linuxOnlyPkgs = (
     builtins.attrValues {
-      # --- Networking ---
+      # Networking
       inherit (pkgs)
-        bsd-finger
         iftop # TUI display of bandwidth usage on an interface
         iputils
         mtr # Network diagnostic tool (traceroute + ping)
@@ -128,45 +126,35 @@ let
         wireguard-tools
         ;
 
-      # --- System / Hardware ---
+      # System / Hardware
       inherit (pkgs)
         hdparm
         lm_sensors # Tools for monitoring hardware sensors
         psmisc
         ;
 
-      # --- Desktop / GUI / Audio ---
-      inherit (pkgs)
-        networkmanagerapplet
-        pavucontrol # PulseAudio Volume Control GUI
-        playerctl # Control media players via MPRIS (CLI)
-        thunderbird
-        ;
-
-      # --- Clipboard Tools ---
+      # Clipboard Tools
       inherit (pkgs)
         xclip # X11 clipboard CLI utility
         wl-clipboard-rs # Wayland clipboard utilities (wl-copy/wl-paste)
         clipcat # Clipboard manager (X11/Wayland)
         ;
 
-      # --- Media ---
-      inherit (pkgs.kdePackages)
-        ffmpegthumbs # Video thumbnail generator for file managers
+      # Misc
+      inherit (pkgs) sysstat;
+    }
+    # Pacakges only meant for Desktops
+    // lib.optionalAttrs (config.nixos.amd.enable or config.nixos.nvidia.enable) {
+      inherit (pkgs)
+        networkmanagerapplet
+        pavucontrol # PulseAudio Volume Control GUI
+        playerctl # Control media players via MPRIS (CLI)
         ;
+
+      inherit (pkgs.kdePackages) ffmpegthumbs;
       inherit (pkgs) nufraw-thumbnailer;
 
-      # --- Theming ---
-      inherit (pkgs.kdePackages)
-        breeze
-        breeze-gtk
-        breeze-icons
-        ;
-
-      # --- Misc ---
-      inherit (pkgs)
-        sysstat
-        ;
+      inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
     }
   );
 in
