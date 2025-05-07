@@ -1,18 +1,17 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 let
-
   language-server = {
     bash-language-server = {
       args = [ "start" ];
-      command = lib.getExe pkgs.bash-language-server;
+      command = "bash-language-server";
       config.enable = true;
     };
     nil = {
       command = "nil";
-      config.nil.formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
+      config.nil.formatting.command = [ "nixfmt-rfc-style" ];
     };
     ruff = {
-      command = lib.getExe pkgs.ruff;
+      command = "ruff";
       args = [
         "server"
         "--preview"
@@ -23,7 +22,7 @@ let
       };
     };
     deno = {
-      command = lib.getExe pkgs.deno;
+      command = "deno";
       args = [ "lsp" ];
       config = {
         enable = true;
@@ -69,7 +68,7 @@ let
       };
     };
     yaml-language-server = {
-      command = lib.getExe pkgs.yaml-language-server;
+      command = "yaml-language-server";
       args = [ "--stdio" ];
       config = {
         yaml = {
@@ -84,7 +83,7 @@ let
       };
     };
     taplo = {
-      command = lib.getExe pkgs.taplo;
+      command = "taplo";
       args = [
         "lsp"
         "stdio"
@@ -114,7 +113,7 @@ let
       diagnostic-severity = "warning";
       formatter = {
         args = [ "-w" ];
-        command = lib.getExe pkgs.shfmt;
+        command = "shfmt";
       };
       language-servers = [ "bash-language-server" ];
     }
@@ -163,5 +162,14 @@ let
   ];
 in
 {
+  home.packages = builtins.attrValues {
+    inherit (pkgs)
+      deno # JS, TS, CSS
+      ruff # Python
+      shfmt # Bash
+      taplo # TOML
+      yaml-language-server
+      ;
+  };
   programs.helix.languages = { inherit language-server language; };
 }
