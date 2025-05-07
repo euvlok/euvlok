@@ -57,6 +57,7 @@ in
               ghostty.enable = true;
               git.enable = true;
               helix.enable = true;
+              hyprland.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
               ssh.enable = true;
