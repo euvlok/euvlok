@@ -10,33 +10,36 @@
 let
   mkExt = (pkgs.callPackage ./lib.nix { inherit inputs osConfig; }).mkExt;
 
-  extensions = [
-    # Nix
-    (mkExt "bbenoist" "nix")
-    (mkExt "jnoortheen" "nix-ide")
-    (mkExt "kamadorueda" "alejandra")
-    (mkExt "mkhl" "direnv")
+  extensions =
+    [
+      # Nix
+      (mkExt "bbenoist" "nix")
+      (mkExt "jnoortheen" "nix-ide")
+      (mkExt "kamadorueda" "alejandra")
 
-    # Shells
-    (mkExt "bmalehorn" "shell-syntax")
-    (mkExt "mads-hartmann" "bash-ide-vscode")
-    (mkExt "thenuprojectcontributors" "vscode-nushell-lang")
-    (mkExt "timonwong" "shellcheck")
+      # Shells
+      (mkExt "bmalehorn" "shell-syntax")
+      (mkExt "mads-hartmann" "bash-ide-vscode")
+      (mkExt "timonwong" "shellcheck")
 
-    # Markdown
-    (mkExt "davidanson" "vscode-markdownlint")
-    (mkExt "yzhang" "markdown-all-in-one")
+      # Languages
+      (mkExt "charliermarsh" "ruff")
+      (mkExt "davidanson" "vscode-markdownlint")
+      (mkExt "dbaeumer" "vscode-eslint")
+      (mkExt "mgmcdermott" "vscode-language-babel")
+      (mkExt "tamasfe" "even-better-toml")
+      (mkExt "yzhang" "markdown-all-in-one")
 
-    # JS & TS
-    (mkExt "dbaeumer" "vscode-eslint")
-    (mkExt "mgmcdermott" "vscode-language-babel")
-
-    # Misc
-    (mkExt "editorconfig" "editorconfig")
-    (mkExt "oderwat" "indent-rainbow")
-    (mkExt "skellock" "just")
-    (mkExt "visualstudioexptteam" "vscodeintellicode")
-  ];
+      # Misc
+      (mkExt "editorconfig" "editorconfig")
+      (mkExt "oderwat" "indent-rainbow")
+      (mkExt "visualstudioexptteam" "vscodeintellicode")
+    ]
+    ++ lib.optionals config.profiles.direnv.enable [ (mkExt "mkhl" "direnv") ]
+    ++ lib.optionals config.profiles.fish.enable [ (mkExt "bmalehorn" "vscode-fish") ]
+    ++ lib.optionals config.programs.nushell.enable [
+      (mkExt "thenuprojectcontributors" "vscode-nushell-lang")
+    ];
 
   settings = {
     security.workspace.trust.enabled = false;
@@ -60,7 +63,29 @@ let
       editor.formatOnPaste = true;
       editor.defaultFormatter = "esbenp.prettier-vscode";
       editor.formatOnSave = true;
-      editor.formatOnType = true;
+    };
+    "[python]" = {
+      editor.defaultFormatter = "charliermarsh.ruff";
+      editor.codeActionsOnSave = {
+        source.fixAll.ruff = "explicit";
+        source.organizeImports.ruff = "explicit";
+      };
+      editor.formatOnSave = true;
+    };
+    "[html]" = {
+      editor.defaultFormatter = "esbenp.prettier-vscode";
+    };
+    "[yaml]" = {
+      editor.defaultFormatter = "esbenp.prettier-vscode";
+      editor.formatOnSave = true;
+    };
+    "[yml]" = {
+      editor.defaultFormatter = "esbenp.prettier-vscode";
+      editor.formatOnSave = true;
+    };
+    "[toml]" = {
+      editor.defaultFormatter = "tamasfe.even-better-toml";
+      editor.formatOnSave = true;
     };
 
     bashIde.explainshellEndpoint = "http://
