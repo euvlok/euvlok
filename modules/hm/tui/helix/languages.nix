@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   language-server = {
     bash-language-server = {
@@ -8,18 +8,13 @@ let
     };
     nil = {
       command = "nil";
-      config.nil.formatting.command = [ "nixfmt-rfc-style" ];
+      config.nil.formatting.command = [ "nixfmt" ];
     };
     ruff = {
       command = "ruff";
-      args = [
-        "server"
-        "--preview"
-      ];
-      config = {
-        lineLength = 100;
-        lint.extendSelect = [ "I" ];
-      };
+      args = lib.splitString " " "server --preview";
+      config.lineLength = 100;
+      config.lint.extendSelect = [ "I" ];
     };
     deno = {
       command = "deno";
@@ -28,26 +23,10 @@ let
         enable = true;
         lint = true;
         unstable = true;
-        format = {
-          options = {
-            lineWidth = 100;
-            indentWidth = 2;
-          };
-        };
-        javascript = {
-          format = {
-            options = {
-              indentWidth = 4;
-            };
-          };
-        };
-        typescript = {
-          format = {
-            options = {
-              indentWidth = 4;
-            };
-          };
-        };
+        format.options.lineWidth = 100;
+        format.options.indentWidth = 2;
+        javascript.format.options.indentWidth = 4;
+        typescript.format.options.indentWidth = 4;
         suggest = {
           imports = {
             hosts = {
@@ -72,28 +51,17 @@ let
       args = [ "--stdio" ];
       config = {
         yaml = {
-          format = {
-            enable = true;
-          };
+          format.enable = true;
           validation = true;
-          schemas = {
-            https = true;
-          };
+          schemas.https = true;
         };
       };
     };
     taplo = {
       command = "taplo";
-      args = [
-        "lsp"
-        "stdio"
-      ];
-      config = {
-        formatter = {
-          alignEntries = true;
-          columnWidth = 100;
-        };
-      };
+      args = lib.splitString " " "lsp" "stdio";
+      config.formatter.alignEntries = true;
+      config.formatter.columnWidth = 100;
     };
   };
   language = [
@@ -111,28 +79,22 @@ let
       name = "bash";
       auto-format = true;
       diagnostic-severity = "warning";
-      formatter = {
-        args = [ "-w" ];
-        command = "shfmt";
-      };
+      formatter.args = [ "-w" ];
+      formatter.command = "shfmt";
       language-servers = [ "bash-language-server" ];
     }
     {
       name = "javascript";
       auto-format = true;
-      indent = {
-        tab-width = 4;
-        unit = "    ";
-      };
+      indent.tab-width = 4;
+      indent.unit = "    ";
       language-servers = [ "deno" ];
     }
     {
       name = "typescript";
       auto-format = true;
-      indent = {
-        tab-width = 4;
-        unit = "    ";
-      };
+      indent.tab-width = 4;
+      indent.unit = "    ";
       language-servers = [ "deno" ];
     }
     {
@@ -143,10 +105,8 @@ let
     {
       name = "json";
       auto-format = true;
-      indent = {
-        tab-width = 2;
-        unit = "  ";
-      };
+      indent.tab-width = 2;
+      indent.unit = "  ";
       language-servers = [ "deno" ];
     }
     {
