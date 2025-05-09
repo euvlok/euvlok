@@ -14,7 +14,6 @@ let
           clearurls
           firemonkey
           refined-github
-          return-youtube-dislikes
           sponsorblock
           ublock-origin
           ;
