@@ -88,6 +88,12 @@ let
       editor.formatOnSave = true;
     };
 
+    markdownlint.config = {
+      "MD033" = false; # Inline HTML
+      "MD041" = false; # First line in a file should be a top-level heading
+      "MD045" = false; # Images should have alternate text
+    };
+
     bashIde.explainshellEndpoint = "http://
     localhost:5134";
   };
