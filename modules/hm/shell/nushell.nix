@@ -163,7 +163,7 @@ in
         plugins = builtins.attrValues {
           inherit (pkgs.nushellPlugins)
             formats
-            highlight
+            # highlight
             query
             ;
         };

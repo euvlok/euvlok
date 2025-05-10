@@ -18,8 +18,8 @@
 
   networking = {
     computerName = "Marie's boyfriend's Mac Mini M4 Pro nanachi";
-    hostName = "nanachi";
-    localHostName = "nanachi";
+    hostName = "faputas-Mac-mini.local";
+    localHostName = "faputa";
     knownNetworkServices = [
       "Ethernet"
       "Thunderbolt Bridge"
