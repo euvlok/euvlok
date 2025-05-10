@@ -1,8 +1,8 @@
 {
   inputs,
-  pkgs,
   lib,
   config,
+  pkgs,
   ...
 }:
 {
@@ -35,6 +35,7 @@
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
+            dconf-editor # if not declaratively
             ;
           inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
             darkly-qt5

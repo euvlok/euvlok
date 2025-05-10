@@ -19,7 +19,6 @@ in
       {
         imports = [
           { home.stateVersion = "25.05"; }
-          { home.stateVersion = "25.05"; }
           inputs.catppuccin.homeModules.catppuccin
           {
             catppuccin = {

@@ -222,14 +222,6 @@
       };
     };
   };
-
-  fonts.fontconfig.defaultFonts = {
-    monospace = [ "Monaspice Kr Nerd Font" ];
-    sansSerif = [ "Noto Nerd Font" ];
-    serif = [ "Noto Nerd Font" ];
-    emoji = [ "Twitter Color Emoji" ];
-  };
-
   virtualisation.oci-containers.containers.FlareSolverr = {
     image = "ghcr.io/flaresolverr/flaresolverr:latest";
     autoStart = true;

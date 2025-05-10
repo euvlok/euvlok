@@ -1,7 +1,7 @@
 {
-  pkgs,
   lib,
   config,
+  pkgs,
   ...
 }:
 {
@@ -23,7 +23,7 @@
                 mesa-demos
                 source-han-sans
                 steamtinkerlaunch
-                thcrap-steam-proton-wrapper
+                thcrap-steam-proton-wrapper # preferably should be optional since only @ashuramaruxzc plays touhou games
                 vkBasalt
                 vulkan-validation-layers
                 wqy_zenhei
@@ -63,6 +63,9 @@
         protontricks.enable = true;
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
+        # https://github.com/NixOS/nixpkgs/blob/3730d8a308f94996a9ba7c7138ede69c1b9ac4ae/nixos/modules/programs/steam.nix#L12C3-L12C92
+        # steam added a proper search for steamcompattools in your ~/.steam so variable should not be needed anymore
+        # don't forget to periodically change steam's compatibility layer
         extraCompatPackages = builtins.attrValues { inherit (pkgs) proton-ge-bin; };
       };
       gamemode = {
@@ -76,14 +79,17 @@
     };
 
     environment = {
-      systemPackages = builtins.attrValues {
-        inherit (pkgs) scummvm inotify-tools;
-        inherit (pkgs) winetricks protonplus;
-        inherit (pkgs.wineWowPackages) stagingFull;
-      };
-      sessionVariables.STEAM_EXTRA_COMPAT_TOOLS_PATHS = [
-        "\${HOME}/.steam/root/compatibilitytools.d:${pkgs.proton-ge-bin}"
-      ];
+      systemPackages =
+        builtins.attrValues {
+          inherit (pkgs) scummvm inotify-tools;
+          inherit (pkgs) winetricks protonplus;
+          inherit (pkgs.wineWowPackages) stagingFull;
+        }
+        ++ lib.optionalAttrs config.services.xserver.desktopManager.gnome.enable (
+          builtins.attrValues {
+            inherit (pkgs) adwsteamgtk;
+          }
+        );
     };
   };
 }

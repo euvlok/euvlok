@@ -47,7 +47,6 @@
     inherit (pkgs.gnomeExtensions)
       arcmenu
       blur-my-shell
-      clipboard-history
       dash-to-dock
       dual-monitor-toggle
       gsconnect
@@ -55,6 +54,7 @@
       pop-shell
       rounded-corners
       smart-auto-move
+      system-monitor
       ;
   };
 }

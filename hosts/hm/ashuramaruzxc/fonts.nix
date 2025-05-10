@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   fonts.packages = builtins.attrValues {
     inherit (pkgs)
@@ -44,4 +49,6 @@
       ;
   };
 }
-# // lib.optionalAttrs config.nixpkgs.hostPlatform.isLinux { fonts.fontDir.enable = true; }
+// lib.mkIf config.nixpkgs.hostPlatform.isLinux {
+  fonts.fontDir.enable = true;
+}

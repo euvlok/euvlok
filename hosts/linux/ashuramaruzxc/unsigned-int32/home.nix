@@ -1,7 +1,7 @@
 {
   inputs,
-  pkgs,
   config,
+  pkgs,
   ...
 }:
 let
@@ -53,6 +53,7 @@ in
           ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
+          ../../../hm/ashuramaruzxc/dconf.nix
           # ../../../hm/ashuramaruzxc/nushell.nix
           inputs.sops-nix.homeManagerModules.sops
           {
@@ -266,18 +267,33 @@ in
             };
             home.pointerCursor = {
               enable = true;
-              name = "Junko";
-              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors.marisa;
+              name = "touhou-reisen";
+              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors;
               size = 32;
+              gtk.enable = true;
+              x11 = {
+                enable = true;
+                defaultCursor = "touhou-reisen";
+              };
             };
           }
-          # gtk settings
           {
-            # gtk = {
-            #   enable = true;
-            # };
-            # catppuccin.gtk.enable = true;
-            # catppuccin.gtk.gnomeShellTheme = true;
+            gtk = {
+              enable = true;
+              iconTheme = {
+                name = "breeze-dark";
+                package = pkgs.kdePackages.breeze-icons;
+              };
+            };
+            catppuccin.gtk.enable = true;
+            catppuccin.gtk.gnomeShellTheme = true;
+            catppuccin.gtk.tweaks = [
+              "rimless"
+              "normal"
+            ];
+            home.sessionVariables = {
+              GTK_CSD = "0";
+            };
           }
         ];
       };
