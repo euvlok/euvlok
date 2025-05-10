@@ -35,8 +35,8 @@ let
       (mkExt "oderwat" "indent-rainbow")
       (mkExt "visualstudioexptteam" "vscodeintellicode")
     ]
-    ++ lib.optionals config.profiles.direnv.enable [ (mkExt "mkhl" "direnv") ]
-    ++ lib.optionals config.profiles.fish.enable [ (mkExt "bmalehorn" "vscode-fish") ]
+    ++ lib.optionals config.programs.direnv.enable [ (mkExt "mkhl" "direnv") ]
+    ++ lib.optionals config.programs.fish.enable [ (mkExt "bmalehorn" "vscode-fish") ]
     ++ lib.optionals config.programs.nushell.enable [
       (mkExt "thenuprojectcontributors" "vscode-nushell-lang")
     ];
