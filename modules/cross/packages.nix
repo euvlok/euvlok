@@ -144,18 +144,20 @@ let
       inherit (pkgs) sysstat;
     }
     # Pacakges only meant for Desktops
-    // lib.optionalAttrs (config.nixos.amd.enable or config.nixos.nvidia.enable) {
-      inherit (pkgs)
-        networkmanagerapplet
-        pavucontrol # PulseAudio Volume Control GUI
-        playerctl # Control media players via MPRIS (CLI)
-        ;
+    ++ lib.optionals (config.nixos.amd.enable or config.nixos.nvidia.enable) (
+      builtins.attrValues {
+        inherit (pkgs)
+          networkmanagerapplet
+          pavucontrol # PulseAudio Volume Control GUI
+          playerctl # Control media players via MPRIS (CLI)
+          ;
 
-      inherit (pkgs.kdePackages) ffmpegthumbs;
-      inherit (pkgs) nufraw-thumbnailer;
+        inherit (pkgs.kdePackages) ffmpegthumbs;
+        inherit (pkgs) nufraw-thumbnailer;
 
-      inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
-    }
+        inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
+      }
+    )
   );
 in
 {
