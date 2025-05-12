@@ -1,5 +1,5 @@
 keys:
-  - # &2husecondary age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @2husecondary
+  - &2husecondary age13v0c9ys9hjq7ccsxftkmnx9ht8ff6sf2f0j2lrcfqjz4ljvppqys6nv9r8 # @2husecondary
   - &ashuramaruzxc_unsigned-int8 age1z5xkrf7tpcs58c53nzjgm7tegv9jk3z73zeyec0q7sjzuvth2dxqz6znnj  # @ashuramaruzxc macos
   - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
   - &ashuramaruzxc_unsigned-int64 age1a4cshc8aq9v9ez57r4mljddls3wfzchpc2uhmvjvnzk4wvr2mdequaej6d # @ashuramaruzxc server
@@ -10,7 +10,7 @@ creation_rules:
   - path_regex: secrets/.*\.ya?ml$
     key_groups:
       - age:
-          # - *2husecondary
+          - *2husecondary
           - *ashuramaruzxc_unsigned-int8
           - *ashuramaruzxc_unsigned-int32
           - *ashuramaruzxc_unsigned-int64

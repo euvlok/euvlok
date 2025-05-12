@@ -102,8 +102,6 @@
   };
   ### ---------------anything else-------------------- ###
 
-  swapDevices = [ { device = "/mnt/wiwi/swapfile"; } ];
-
   hardware = {
     enableRedistributableFirmware = true;
     firmware = builtins.attrValues { inherit (pkgs) linux-firmware; };
@@ -112,7 +110,6 @@
     enable = true;
     interval = "weekly";
   };
-  services.fwupd.enable = true;
   system.fsPackages = [ pkgs.sshfs ];
   environment.systemPackages = [ pkgs.cifs-utils ];
 }
