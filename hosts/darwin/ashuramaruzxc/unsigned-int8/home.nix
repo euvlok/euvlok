@@ -28,12 +28,12 @@ in
             };
           }
 
-          ../../../hm/ashuramaruzxc/aliases.nix
+          # ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
           ../../../hm/ashuramaruzxc/ssh.nix
-          # ../../../hm/ashuramaruzxc/nushell.nix
+          ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
 
@@ -56,7 +56,6 @@ in
                 floorp.enable = true;
                 defaultSearchEngine = "kagi";
               };
-              # nushell.enable = true;
               fzf.enable = true;
               git.enable = true;
               helix.enable = true;

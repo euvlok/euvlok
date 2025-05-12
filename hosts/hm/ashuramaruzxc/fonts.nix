@@ -25,6 +25,7 @@
       source-code-pro
       source-han-sans
       terminus_font
+      twemoji-color-font
       ubuntu_font_family
       wqy_zenhei
       ;
@@ -48,7 +49,4 @@
       zed-mono
       ;
   };
-}
-// lib.mkIf config.nixpkgs.hostPlatform.isLinux {
-  fonts.fontDir.enable = true;
 }

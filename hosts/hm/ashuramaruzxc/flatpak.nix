@@ -11,7 +11,7 @@
     packages = [
       # Desktop
       # "flathub:app/com.github.tchx84.Flatseal//stable" # Easier permission manager
-      # "flathub:app/com.usebottles.bottles//stable"
+      "flathub:app/com.usebottles.bottles//stable"
       #
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.gamescope/x86_64/24.08"

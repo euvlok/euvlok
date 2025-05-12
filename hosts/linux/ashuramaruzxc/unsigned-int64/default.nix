@@ -20,6 +20,10 @@
           accent = "rosewater";
         };
       }
+      inputs.nix-vscode-server.nixosModules.default
+      {
+        services.vscode-server.enable = true;
+      }
 
       ../../../../modules/nixos
       ../../../../modules/cross

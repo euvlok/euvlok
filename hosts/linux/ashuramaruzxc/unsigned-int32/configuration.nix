@@ -222,6 +222,12 @@
       };
     };
   };
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "Hack Nerd Font Mono" ];
+    sansSerif = [ "Noto Nerd Font" ];
+    serif = [ "Noto Nerd Font" ];
+    emoji = [ "Twitter Color Emoji" ];
+  };
   virtualisation.oci-containers.containers.FlareSolverr = {
     image = "ghcr.io/flaresolverr/flaresolverr:latest";
     autoStart = true;

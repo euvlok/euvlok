@@ -129,8 +129,10 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    # vscode
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     nix-vscode-extensions.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     lightly.url = "github:Bali10050/Darkly";
     #! do not override lightly.inputs.nixpkgs.follows = "nixpkgs-unstable";

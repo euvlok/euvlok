@@ -7,8 +7,8 @@ let
   release = builtins.fromJSON (config.system.nixos.release);
 
   commonUsers = [
-    { home.stateVersion = "24.11"; }
-    # ../../../hm/ashuramaruzxc/nushell.nix
+    { home.stateVersion = "25.05"; }
+    ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix
     inputs.catppuccin.homeModules.catppuccin
@@ -22,15 +22,17 @@ let
     ../../../../modules/hm
     {
       hm = {
+        # helix.enable = true;
         bash.enable = true;
         direnv.enable = true;
         fastfetch.enable = true;
         fzf.enable = true;
+        ghostty.enable = true;
         git.enable = true;
-        # nushell.enable = true;
+        nushell.enable = true;
         nvf.enable = true;
-        helix.enable = true;
         ssh.enable = true;
+        vscode.enable = true;
         yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
@@ -56,7 +58,6 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-          { config.hm.vscode.enable = true; }
         ] ++ commonUsers;
       };
     users.fumono =
@@ -64,7 +65,7 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-          { config.hm.vscode.enable = true; }
+          ../../../hm/2husecondary/git.nix
         ] ++ commonUsers;
       };
     users.minecraft =
@@ -72,7 +73,6 @@ in
       {
         imports = [
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-          { config.hm.vscode.enable = true; }
         ] ++ commonUsers;
       };
 

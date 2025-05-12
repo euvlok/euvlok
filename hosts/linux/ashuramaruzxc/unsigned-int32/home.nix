@@ -32,6 +32,7 @@ in
               nvf.enable = true;
               zellij.enable = true;
               zsh.enable = true;
+              # helix.enable = true;
             };
           }
         ];
@@ -44,7 +45,7 @@ in
           inputs.catppuccin.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
-          ../../../hm/ashuramaruzxc/aliases.nix
+          # ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/flatpak.nix
@@ -54,7 +55,7 @@ in
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
           ../../../hm/ashuramaruzxc/dconf.nix
-          # ../../../hm/ashuramaruzxc/nushell.nix
+          ../../../hm/ashuramaruzxc/nushell.nix
           inputs.sops-nix.homeManagerModules.sops
           {
             sops = {
@@ -76,12 +77,13 @@ in
                 zen-browser.enable = true;
                 defaultSearchEngine = "kagi";
               };
+              # helix.enable = true;
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              # nushell.enable = true;
+              nushell.enable = true;
               nvf.enable = true;
               ssh.enable = true;
               vscode.enable = true;
@@ -103,6 +105,7 @@ in
                 inherit (pkgs)
                   keepassxc
                   bitwarden
+                  thunderbird
                   ;
                 # Multimedia
                 inherit (pkgs)
@@ -181,7 +184,7 @@ in
                   ryujinx # Nintendo Switch emulator
 
                   # PlayStation
-                  chiaki # PS4 Remote Play
+                  # chiaki # PS4 Remote Play
                   duckstation # PlayStation 1 emulator
                   pcsx2 # PlayStation 2 emulator
                   ppsspp # PlayStation Portable emulator
@@ -267,13 +270,13 @@ in
             };
             home.pointerCursor = {
               enable = true;
-              name = "touhou-reisen";
+              name = "touhou-reimu";
               package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors;
               size = 32;
               gtk.enable = true;
               x11 = {
                 enable = true;
-                defaultCursor = "touhou-reisen";
+                defaultCursor = "touhou-reimu";
               };
             };
           }
