@@ -40,24 +40,22 @@
           "vscode"
         ];
       };
-      # plugins = [
-      #   {
-      #     name = "fast-syntax-highlighting";
-      #     src = pkgs.zsh-fast-syntax-highlighting;
-      #   }
-      #   {
-      #     name = "fzf-tab";
-      #     src = pkgs.zsh-fzf-tab;
-      #   }
-      #   {
-      #     name = "nix-shell";
-      #     src = pkgs.zsh-nix-shell;
-      #   }
-      # ];
+      plugins = [
+        {
+          name = "fast-syntax-highlighting";
+          src = pkgs.zsh-fast-syntax-highlighting;
+        }
+        # {
+        #   name = "fzf-tab";
+        #   src = pkgs.zsh-fzf-tab;
+        # }
+        {
+          name = "nix-shell";
+          src = pkgs.zsh-nix-shell;
+        }
+      ];
       initContent = ''
-        source "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh"
         source "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
-        source "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
       '';
     };
   };
