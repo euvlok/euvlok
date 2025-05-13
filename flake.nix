@@ -3,12 +3,12 @@
 
   inputs = {
     # --- 2husecondary ---
-    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager-2husecondary.url = "github:nix-community/home-manager";
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     # --- ashuramaruzxc ---
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager-ashuramaruzxc.url = "github:nix-community/home-manager";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nix-darwin-ashuramaruzxc.url = "github:LnL7/nix-darwin";
