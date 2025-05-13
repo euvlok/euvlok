@@ -17,7 +17,7 @@
     ../shared/fh.nix
     ./hardware-configuration.nix
     ./networking.nix
-    ./samba.nix
+    # ./samba.nix
     ./users.nix
   ];
 

@@ -17,13 +17,14 @@ let
           "E501" # line too long (82 > 79 characters)
           "F403" # 'from module import *' used; unable to detect undefined names
           "F405" # name may be undefined, or defined from star imports: module
+          "W391" # blank line at end of file
         ];
       }
       (
         builtins.readFile (
           pkgs.fetchurl {
-            url = "https://raw.githubusercontent.com/sersorrel/sys/afc85e6b249e5cd86a7bcf001b544019091b928c/hm/discord/krisp-patcher.py";
-            sha256 = "sha256-h8Jjd9ZQBjtO3xbnYuxUsDctGEMFUB5hzR/QOQ71j/E=";
+            url = "https://pastebin.com/raw/USp9dsxQ";
+            sha256 = "sha256-2rUTAqV6kaEETFQFEjQ/T43Vurlh/QGh7d76T7n2jzU=";
           }
         )
       );

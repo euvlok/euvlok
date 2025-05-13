@@ -29,10 +29,11 @@ in
               bash.enable = true;
               direnv.enable = true;
               fzf.enable = true;
+              helix.enable = true;
+              nh.enable = true;
               nvf.enable = true;
               zellij.enable = true;
               zsh.enable = true;
-              # helix.enable = true;
             };
           }
         ];
@@ -77,11 +78,12 @@ in
                 zen-browser.enable = true;
                 defaultSearchEngine = "kagi";
               };
-              # helix.enable = true;
               fzf.enable = true;
               ghostty.enable = true;
               git.enable = true;
+              helix.enable = true;
               mpv.enable = true;
+              nh.enable = true;
               nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;

@@ -22,13 +22,14 @@ let
     ../../../../modules/hm
     {
       hm = {
-        # helix.enable = true;
         bash.enable = true;
         direnv.enable = true;
         fastfetch.enable = true;
         fzf.enable = true;
         ghostty.enable = true;
         git.enable = true;
+        helix.enable = true;
+        nh.enable = true;
         nushell.enable = true;
         nvf.enable = true;
         ssh.enable = true;

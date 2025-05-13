@@ -66,6 +66,7 @@ in
               vscode.enable = true;
               yazi.enable = true;
               zellij.enable = true;
+              nh.enable = true;
             };
           }
 
