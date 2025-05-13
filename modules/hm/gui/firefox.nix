@@ -227,7 +227,7 @@ let
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
-  imports = [ inputs.zen-browser.homeModules.twilight ];
+  imports = [ inputs.zen-browser-trivial.homeModules.twilight ];
 
   options.hm.firefox = {
     enable = lib.mkEnableOption "Declarative Firefox-based Browsers";

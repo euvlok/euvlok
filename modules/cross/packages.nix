@@ -9,7 +9,7 @@ let
   commonPkgs = (
     builtins.attrValues {
       # Nix Related
-      inherit (inputs.nil.packages.${config.nixpkgs.hostPlatform.system}) nil;
+      inherit (inputs.nil-source.packages.${config.nixpkgs.hostPlatform.system}) nil;
       inherit (pkgs) nixfmt-rfc-style;
 
       # Core Utilities (Shell essentials, replacements, process management)

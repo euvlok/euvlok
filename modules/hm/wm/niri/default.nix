@@ -7,7 +7,7 @@
 }:
 {
   imports = [
-    inputs.niri-flake.homeModules.niri
+    inputs.niri-flake-trivial.homeModules.niri
     ./binds.nix
     ./settings.nix
   ];

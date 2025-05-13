@@ -17,7 +17,7 @@ in
       {
         imports = [
           { home.stateVersion = "24.11"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/lay-by/hyprland/dunst.nix
@@ -30,12 +30,12 @@ in
             programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
           }
 
-          inputs.stylix.homeManagerModules.stylix
+          inputs.stylix-trivial.homeManagerModules.stylix
           ../../../hm/lay-by/stylix.nix
 
           {
             home.sessionVariables = {
-              DEFAULT_BROWSER = "${inputs.zen-browser.packages.x86_64-linux.default}/bin/zen";
+              DEFAULT_BROWSER = "${inputs.zen-browser-trivial.packages.x86_64-linux.default}/bin/zen";
             };
           }
 
@@ -80,11 +80,11 @@ in
             xsession.numlock.enable = true;
           }
 
-          inputs.spicetify-nix.homeManagerModules.default
+          inputs.spicetify-nix-trivial.homeManagerModules.default
           {
             programs.spicetify.enable = true;
             programs.spicetify.enabledExtensions = builtins.attrValues {
-              inherit (inputs.spicetify-nix.legacyPackages.x86_64-linux.extensions)
+              inherit (inputs.spicetify-nix-trivial.legacyPackages.x86_64-linux.extensions)
                 # NO❗❗❗ 🙀 😾 HOW WILL SPOTIFY MAKE MONEY FROM THEIR
                 # AI-GENERATED SONGS AND KEEP ALL THE PROFITS FOR THEMSELVES?!
                 # *(Allegedly)*

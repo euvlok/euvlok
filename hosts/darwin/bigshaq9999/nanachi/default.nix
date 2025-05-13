@@ -1,6 +1,7 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   faputa = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
-    specialArgs = {inherit inputs;};
+    specialArgs = { inherit inputs; };
     modules = [
       ../../shared/system.nix
       # ./brew.nix

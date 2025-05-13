@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    inputs.sops-nix.darwinModules.sops
+    inputs.sops-nix-trivial.darwinModules.sops
     {
       sops = {
         age.keyFile = "/var/lib/sops/age/keys.txt";

@@ -126,7 +126,7 @@
         (map (browser: _: prev: {
           ${browser} = prev.${browser}.override { inherit commandLineArgs; };
         }) browsers)
-        ++ [ inputs.nvidia-patch.overlays.default ];
+        ++ [ inputs.nvidia-patch-trivial.overlays.default ];
     })
     (lib.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {

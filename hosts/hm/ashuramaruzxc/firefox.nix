@@ -88,7 +88,7 @@ let
     let
       version = "4.1.0.0";
     in
-    inputs.firefox-addons.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
+    inputs.firefox-addons-trivial.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
       inherit version;
       addonId = "magnolia@12.34";

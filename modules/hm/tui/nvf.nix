@@ -6,7 +6,7 @@
   ...
 }:
 {
-  imports = [ inputs.nvf.homeManagerModules.default ];
+  imports = [ inputs.nvf-source.homeManagerModules.default ];
 
   options.hm.nvf.enable = lib.mkEnableOption "Neovim";
 

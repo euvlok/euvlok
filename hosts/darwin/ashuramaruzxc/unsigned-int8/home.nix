@@ -19,7 +19,7 @@ in
       {
         imports = [
           { home.stateVersion = "25.05"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           {
             catppuccin = {
               enable = true;
@@ -37,7 +37,7 @@ in
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
 
-          inputs.sops-nix.homeManagerModules.sops
+          inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
               age.keyFile = "${config.home.homeDirectory}/Library/Application\ Support/sops/age/keys.txt";

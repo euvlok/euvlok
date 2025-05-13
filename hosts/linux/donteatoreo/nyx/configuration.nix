@@ -12,10 +12,10 @@
     ./services.nix
     ./systemd.nix
 
-    inputs.nur.modules.nixos.default
-    inputs.nixos-hardware.nixosModules.lenovo-legion-15arh05h
+    inputs.nur-trivial.modules.nixos.default
+    inputs.nixos-hardware-trivial.nixosModules.lenovo-legion-15arh05h
 
-    inputs.sops-nix.nixosModules.sops
+    inputs.sops-nix-trivial.nixosModules.sops
     {
       sops = {
         age.keyFile = "/home/nyx/.config/sops/age/keys.txt";

@@ -18,7 +18,7 @@ in
       {
         imports = [
           { home.stateVersion = "24.11"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           {
             catppuccin = {
               enable = true;
@@ -37,7 +37,7 @@ in
           ../../../hm/donteatoreo/starship.nix
           ../../../hm/donteatoreo/yazi.nix
 
-          inputs.sops-nix.homeManagerModules.sops
+          inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
               age.keyFile = "/home/nyx/.config/sops/age/keys.txt";

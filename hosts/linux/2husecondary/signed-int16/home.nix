@@ -18,7 +18,7 @@ in
       {
         imports = [
           { home.stateVersion = "24.11"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/2husecondary/firefox.nix
@@ -28,7 +28,7 @@ in
           ../../../hm/ashuramaruzxc/vscode.nix
           ../../../hm/ashuramaruzxc/starship.nix
           #../../../hm/donteatoreo/nushell.nix
-          inputs.sops-nix.homeManagerModules.sops
+          inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
               age.keyFile = "/Users/reisen/.config/sops/age/keys.txt";

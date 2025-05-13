@@ -19,7 +19,7 @@ in
       {
         imports = [
           { home.stateVersion = "25.05"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
           ../../../hm/ashuramaruzxc/starship.nix
 
@@ -42,7 +42,7 @@ in
       {
         imports = [
           { home.stateVersion = "25.05"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/ashuramaruzxc/aliases.nix
@@ -56,7 +56,7 @@ in
           ../../../hm/ashuramaruzxc/vscode.nix
           ../../../hm/ashuramaruzxc/dconf.nix
           ../../../hm/ashuramaruzxc/nushell.nix
-          inputs.sops-nix.homeManagerModules.sops
+          inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
               age.keyFile = "$HOME/.config/sops/age/keys.txt";
@@ -271,7 +271,7 @@ in
             home.pointerCursor = {
               enable = true;
               name = "touhou-reimu";
-              package = inputs.anime-cursors.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors;
+              package = inputs.anime-cursors-source.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors;
               size = 32;
               gtk.enable = true;
               x11 = {

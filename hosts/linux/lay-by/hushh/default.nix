@@ -5,7 +5,7 @@
     modules = [
       ./configuration.nix
       ./home.nix
-      inputs.catppuccin.nixosModules.catppuccin
+      inputs.catppuccin-trivial.nixosModules.catppuccin
 
       ../../../../modules/nixos
       ../../../../modules/cross

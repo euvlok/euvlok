@@ -37,7 +37,7 @@
             adwaita-qt6
             dconf-editor # if not declaratively
             ;
-          inherit (inputs.lightly.packages.${config.nixpkgs.hostPlatform.system})
+          inherit (inputs.lightly-source.packages.${config.nixpkgs.hostPlatform.system})
             darkly-qt5
             darkly-qt6
             ;

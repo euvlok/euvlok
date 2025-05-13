@@ -5,14 +5,14 @@
     modules = [
       ./configuration.nix
       ./home.nix
-      inputs.sops-nix.nixosModules.sops
+      inputs.sops-nix-trivial.nixosModules.sops
       {
         sops = {
           age.keyFile = "/var/lib/sops/age/keys.txt";
           defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
         };
       }
-      inputs.catppuccin.nixosModules.catppuccin
+      inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
           enable = true;
@@ -37,11 +37,11 @@
           };
         };
       }
-      inputs.anime-game-launcher.nixosModules.default
+      inputs.anime-game-launcher-source.nixosModules.default
       {
         programs.anime-game-launcher.enable = true;
       }
-      inputs.flatpak-declerative.nixosModule
+      inputs.flatpak-declerative-trivial.nixosModule
       {
         services.flatpak = {
           enable = true;

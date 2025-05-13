@@ -7,7 +7,7 @@
 {
   home.packages = builtins.attrValues {
     # CLI
-    dis = inputs.dis.packages.${config.nixpkgs.hostPlatform.system}.default;
+    dis = inputs.dis-source.packages.${config.nixpkgs.hostPlatform.system}.default;
 
     inherit (pkgs)
       appimage-run

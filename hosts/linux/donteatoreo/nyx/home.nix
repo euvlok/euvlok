@@ -19,7 +19,7 @@ in
         imports =
           [
             { home.stateVersion = "24.11"; }
-            inputs.catppuccin.homeModules.catppuccin
+            inputs.catppuccin-trivial.homeModules.catppuccin
             { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
             ../../../hm/donteatoreo/aliases.nix
 
@@ -65,7 +65,7 @@ in
             ../../../hm/donteatoreo/dconf.nix
           ]
           ++ lib.optionals (builtins.hasAttr "sops" config) [
-            inputs.sops-nix.homeManagerModules.sops
+            inputs.sops-nix-trivial.homeManagerModules.sops
             {
               sops = {
                 age.keyFile = "/home/nyx/.config/sops/age/keys.txt";

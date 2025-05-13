@@ -17,7 +17,7 @@ in
       {
         imports = [
           { home.stateVersion = "24.11"; }
-          inputs.catppuccin.homeModules.catppuccin
+          inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
           ../../../hm/bigshaq9999/niri.nix

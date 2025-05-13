@@ -16,7 +16,8 @@ let
         ;
     }).mkExt;
   inherit
-    (inputs.nix-vscode-extensions.extensions.${osConfig.nixpkgs.hostPlatform.system}.forVSCodeVersion
+    (
+      inputs.nix-vscode-extensions-trivial.extensions.${osConfig.nixpkgs.hostPlatform.system}.forVSCodeVersion
       pkgs.vscode.version
     )
     vscode-marketplace

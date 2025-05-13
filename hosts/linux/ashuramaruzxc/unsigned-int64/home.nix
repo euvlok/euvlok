@@ -11,8 +11,8 @@ let
     ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix
-    inputs.catppuccin.homeModules.catppuccin
-    inputs.sops-nix.homeManagerModules.sops
+    inputs.catppuccin-trivial.homeModules.catppuccin
+    inputs.sops-nix-trivial.homeManagerModules.sops
     {
       sops = {
         age.keyFile = "$HOME/.config/sops/age/keys.txt";
