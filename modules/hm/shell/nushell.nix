@@ -20,14 +20,7 @@ in
       enable = true;
       package =
         inputs.nixpkgs-unstable-small.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.nushell;
-      plugins = builtins.attrValues {
-        inherit (pkgs.nushellPlugins)
-          formats
-          highlight
-          query
-          units
-          ;
-      };
+      plugins = builtins.attrValues { inherit (pkgs.nushellPlugins) formats highlight query; };
       shellAliases = {
         # CD
         cd = "z";
@@ -67,66 +60,58 @@ in
         xdg-data-dirs = ''echo $env.XDG_DATA_DIRS | str replace -a ":" "\n" | lines | enumerate'';
         path = ''echo $env.PATH'';
 
-        nix-build-file = ''
-          def nix-build-file [
-              file: string, 
-              args: string = "{}"
-          ] {
-              nix-build -E $"with import (builtins.getFlake 'nixpkgs') {}; callPackage ./$file $args"
-          }
-        '';
+        # nix-build-file = ''
+        #   def nix-build-file [
+        #       file: string,
+        #       args: string = "{}"
+        #   ] {
+        #       nix-build -E $"with import (builtins.getFlake 'nixpkgs') {}; callPackage ./$file $args"
+        #   }
+        # '';
 
-        rebuild = ''
-          def rebuild [] {
-              if (sys host | get name | str downcase | str contains "linux") {
-                  nixos-rebuild switch --use-remote-sudo --flake /etc/nixos/
-              } else {
-                  darwin-rebuild switch --flake /etc/nixos/
-              }
-          }
-        '';
+        rebuild = if osConfig.nixpkgs.hostPlatform.isLinux then "nh os switch" else "nh darwin switch";
 
-        update = ''
-          def update [] {
-              let nix_user = (whoami)
-              let raw_host = (hostname)
-              let is_darwin = (sys host | get name | str downcase | str contains "darwin")
-              let nix_host = if $is_darwin {
-                  # Only strip .local if present on macOS
-                  $raw_host | str replace -r '\.local$' \'\'
-              } else {
-                  $raw_host
-              }
-              let flake_path = "/etc/nixos"
-              let flake_eval_path = "/etc/nixos"
-              let flake_attr = if $is_darwin {
-                  "darwinConfigurations"
-              } else {
-                  "nixosConfigurations"
-              }
-              let nix_user_escaped = ($nix_user | str replace '"' '\\"')
-              let nix_host_escaped = ($nix_host | str replace '"' '\\"')
-              let github_username = (
-                  nix eval --raw --impure --expr (
-                      'let
-                        flake = builtins.getFlake "' + $flake_eval_path + '";
-                        host = flake.' + $flake_attr + '."' + $nix_host_escaped + '";
-                        user = "' + $nix_user_escaped + '";
-                      in
-                        host.config.home-manager.users.''${user}.programs.git.userName'
-                  ) | str downcase | str trim
-              )
-              let matching_inputs = (
-                  nix eval --json --impure --expr (
-                      '(builtins.attrNames (builtins.getFlake "' + $flake_eval_path + '").inputs)'
-                  )
-                  | from json
-                  | filter {|x| $x | str ends-with ("-" + $github_username)}
-                  | str join " "
-              )
-              nix flake update $matching_inputs --flake $flake_path
-          }
-        '';
+        # update = ''
+        #   def update [] {
+        #       let nix_user = (whoami)
+        #       let raw_host = (hostname)
+        #       let is_darwin = (sys host | get name | str downcase | str contains "darwin")
+        #       let nix_host = if $is_darwin {
+        #           # Only strip .local if present on macOS
+        #           $raw_host | str replace -r '\.local$' \'\'
+        #       } else {
+        #           $raw_host
+        #       }
+        #       let flake_path = "/etc/nixos"
+        #       let flake_eval_path = "/etc/nixos"
+        #       let flake_attr = if $is_darwin {
+        #           "darwinConfigurations"
+        #       } else {
+        #           "nixosConfigurations"
+        #       }
+        #       let nix_user_escaped = ($nix_user | str replace '"' '\\"')
+        #       let nix_host_escaped = ($nix_host | str replace '"' '\\"')
+        #       let github_username = (
+        #           nix eval --raw --impure --expr (
+        #               'let
+        #                 flake = builtins.getFlake "' + $flake_eval_path + '";
+        #                 host = flake.' + $flake_attr + '."' + $nix_host_escaped + '";
+        #                 user = "' + $nix_user_escaped + '";
+        #               in
+        #                 host.config.home-manager.users.''${user}.programs.git.userName'
+        #           ) | str downcase | str trim
+        #       )
+        #       let matching_inputs = (
+        #           nix eval --json --impure --expr (
+        #               '(builtins.attrNames (builtins.getFlake "' + $flake_eval_path + '").inputs)'
+        #           )
+        #           | from json
+        #           | filter {|x| $x | str ends-with ("-" + $github_username)}
+        #           | str join " "
+        #       )
+        #       nix flake update $matching_inputs --flake $flake_path
+        #   }
+        # '';
       };
 
       configFile.text = ''
