@@ -11,6 +11,8 @@ let
   );
 in
 {
+  imports = [ inputs.lix-module-source.nixosModules.default ];
+
   options.cross.nix.enable = lib.mkEnableOption "Nix";
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
@@ -39,7 +41,7 @@ in
         nix = {
           settings =
             {
-              experimental-features = "nix-command flakes pipe-operators";
+              experimental-features = "nix-command flakes pipe-operator";
               substituters = [
                 "https://devenv.cachix.org"
                 "https://nix-community.cachix.org"

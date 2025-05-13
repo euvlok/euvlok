@@ -84,6 +84,8 @@
     dis-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     dis-source.url = "github:DontEatOreo/dis/develop";
     hyprland-source.url = "github:hyprwm/Hyprland";
+    lix-module-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
     nil-source.inputs.flake-utils.follows = "flake-utils";
     nil-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nil-source.url = "github:oxalica/nil";
