@@ -5,6 +5,7 @@ _: {
     ./fzf.nix
     ./git.nix
     ./jujutsu.nix
+    ./nh.nix
     ./ssh.nix
     ./zoxide.nix
   ];
