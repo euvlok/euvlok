@@ -114,7 +114,10 @@ let
     "content.cdn.mozilla.net"
     "discovery.addons.mozilla.org"
     "install.mozilla.org"
+    "media.tenjin-dk.com"
+    "media.tenjin.com"
     "metrics.tenjin-dk.com"
+    "metrics.tenjin.com"
     "oauth.accounts.firefox.com"
     "private.tenjin.com"
     "profile.accounts.firefox.com"
@@ -122,6 +125,43 @@ let
     "support.mozilla.org"
     "sync.services.mozilla.com"
   ];
+  defaultExtensionsList = builtins.attrValues {
+    inherit (pkgs.nur.repos.rycee.firefox-addons)
+      # necessity
+      darkreader
+      facebook-container
+      mullvad
+      multi-account-containers
+      user-agent-string-switcher
+      web-archives
+
+      # devtools
+      angular-devtools
+      react-devtools
+      reduxdevtools
+      vue-js-devtools
+
+      bitwarden
+      firefox-color
+      floccus
+      foxyproxy-standard
+      old-reddit-redirect
+      reddit-enhancement-suite
+      search-by-image
+      steam-database
+      stylus
+      tabliss
+      translate-web-pages
+
+      # Dictionaries
+      ukrainian-dictionary
+      french-dictionary
+      dictionary-german
+      polish-dictionary
+      bulgarian-dictionary
+      ;
+    inherit bypass-paywalls-clean;
+  };
 in
 {
   programs.floorp = {
@@ -130,43 +170,15 @@ in
       settings = {
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
-      extensions.packages = builtins.attrValues {
-        inherit (pkgs.nur.repos.rycee.firefox-addons)
-          # necessity
-          darkreader
-          facebook-container
-          mullvad
-          multi-account-containers
-          user-agent-string-switcher
-          web-archives
-
-          # devtools
-          angular-devtools
-          react-devtools
-          reduxdevtools
-          vue-js-devtools
-
-          bitwarden
-          firefox-color
-          floccus
-          foxyproxy-standard
-          old-reddit-redirect
-          reddit-enhancement-suite
-          search-by-image
-          steam-database
-          stylus
-          tabliss
-          translate-web-pages
-
-          # Dictionaries
-          ukrainian-dictionary
-          french-dictionary
-          dictionary-german
-          polish-dictionary
-          bulgarian-dictionary
-          ;
-        inherit bypass-paywalls-clean;
+      extensions.packages = defaultExtensionsList;
+      inherit search;
+    };
+    profiles.backup = {
+      id = 1;
+      settings = {
+        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
+      extensions.packages = defaultExtensionsList;
       inherit search;
     };
     #! keep an eye on

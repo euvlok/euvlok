@@ -14,6 +14,7 @@
     ../shared/lxc.nix
     ../shared/plasma.nix
     ../shared/settings.nix
+    ../shared/fh.nix
     ./hardware-configuration.nix
     ./networking.nix
     ./samba.nix
