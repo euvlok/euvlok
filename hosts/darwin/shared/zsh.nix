@@ -20,32 +20,41 @@ let
     |> builtins.filter (an: builtins.isString shellAliases.${an})
     |> map (an: "alias ${an}=${lib.escapeShellArg shellAliases.${an}}")
     |> builtins.concatStringsSep "\n";
-  omzPlugins = [
-    "colorize"
-    "direnv"
-    "dotnet"
-    "fzf"
-    "gitfast"
-    "podman"
-    "ssh"
-    "vscode"
-  ];
-  customPlugins = [
-    {
-      name = "fast-syntax-highlighting";
-      src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
-    }
-    {
-      name = "fzf-tab";
-      src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
-    }
-    {
-      name = "nix-shell";
-      src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
-    }
-  ];
+
+  omzPlugins =
+    let
+      enablePlugin = n: lib.optionals hmConfig.programs.${n}.enable [ n ];
+    in
+    [
+      "colorize"
+      "dotnet"
+      "podman"
+    ]
+    ++ enablePlugin "fzf"
+    ++ enablePlugin "ssh"
+    ++ enablePlugin "git"
+    ++ enablePlugin "direnv"
+    ++ enablePlugin "vscode";
+  customPlugins =
+    [
+      {
+        name = "fast-syntax-highlighting";
+        src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+      }
+      {
+        name = "nix-shell";
+        src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
+      }
+    ]
+    ++ lib.optionals hmConfig.programs.fzf.enable [
+      {
+        name = "fzf-tab";
+        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
+      }
+    ];
   customPluginsStr = customPlugins |> lib.concatMapStringsSep "\n" (p: "source ${p.src}");
   omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
+
   interactiveShellInit = lib.concatStringsSep "\n" [
     "# Oh My Zsh"
     omzPluginsStr
@@ -93,9 +102,7 @@ let
         rm -f -- "$tmp"
       }
     ''))
-    (lib.optionalString (hmConfig.programs.zoxide.enable) (
-      lib.mkOrder 2000 ''eval "$(zoxide init zsh)"''
-    ))
+    (lib.optionalString (hmConfig.programs.zoxide.enable) (''eval "$(zoxide init zsh)"''))
   ];
 in
 {
