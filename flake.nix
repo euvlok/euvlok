@@ -94,7 +94,9 @@
     nvf-source.url = "github:NotAShelf/nvf";
 
     # DO NOT OVERRIDE NIXPKGS
+    anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
+    anime-game-launcher-source.inputs.flake-compat.follows = "";
     anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
     lightly-source.url = "github:Bali10050/Darkly";
 
