@@ -149,7 +149,7 @@ in
           };
           completionTypes =
             let
-              enableComp = n: lib.optional config.programs.${n}.enable [ n ];
+              enableComp = n: lib.optionals config.programs.${n}.enable [ n ];
             in
             [
               "bat"
