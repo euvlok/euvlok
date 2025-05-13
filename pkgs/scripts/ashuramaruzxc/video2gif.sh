@@ -1,7 +1,6 @@
 #! /usr/bin/env nix-shell
 #! nix-shell --pure -i bash -p gifski ffmpeg_7-full parallel fd rename
 # shellcheck shell=bash
-# FUCK YOU FOR MAKING IT A SHELL SCRIPT, THATS COOL I CANT FUCKING INSTALL WITHOUT --impure flag
 
 set -euo pipefail
 

@@ -28,7 +28,7 @@ in
             };
           }
 
-          # ../../../hm/ashuramaruzxc/aliases.nix
+          ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
