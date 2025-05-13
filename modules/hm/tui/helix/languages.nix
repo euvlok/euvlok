@@ -59,7 +59,7 @@ let
     };
     taplo = {
       command = "taplo";
-      args = lib.splitString " " "lsp" "stdio";
+      args = lib.splitString " " "lsp stdio";
       config.formatter.alignEntries = true;
       config.formatter.columnWidth = 100;
     };
