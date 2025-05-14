@@ -94,6 +94,9 @@
     nvf-source.inputs.nil.follows = "nil-source";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nvf-source.url = "github:NotAShelf/nvf";
+    yazi-source.inputs.flake-utils.follows = "flake-utils";
+    yazi-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    yazi-source.url = "github:sxyazi/yazi";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
