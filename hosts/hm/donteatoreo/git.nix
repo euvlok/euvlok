@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  config,
   osConfig,
   ...
 }:
@@ -15,8 +14,6 @@ in
   home.file.".ssh/allowed_signers".text = ''
     ${userEmail} ${key}
   '';
-
-  home.packages = builtins.attrValues { inherit (pkgs) watchman; };
 
   programs = {
     gitui.enable = true;
@@ -32,25 +29,6 @@ in
             (lib.getExe' pkgs._1password-gui "op-ssh-sign")
           else
             "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-      };
-    };
-    jujutsu = {
-      settings = {
-        user.email = userEmail;
-        user.name = userName;
-        git.sign-on-push = true;
-        git.push-bookmark-prefix = "donteatoreo/push-";
-        signing = {
-          behavior = "drop";
-          backend = "ssh";
-          inherit key;
-          backends.ssh.program =
-            if osConfig.nixpkgs.hostPlatform.isLinux then
-              (lib.getExe' pkgs._1password-gui "op-ssh-sign")
-            else
-              "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-          backends.ssh.allowed-signers = "${config.home.homeDirectory}/.ssh/allowed_signers";
-        };
       };
     };
   };

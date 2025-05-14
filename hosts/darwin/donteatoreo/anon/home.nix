@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   config,
   ...
 }:
@@ -13,75 +14,86 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.anon =
-      { config, ... }:
-      {
-        imports = [
-          { home.stateVersion = "24.11"; }
-          inputs.catppuccin-trivial.homeModules.catppuccin
-          {
-            catppuccin = {
-              enable = true;
-              flavor = "frappe";
-              accent = "teal";
-            };
-          }
-
-          ../../../hm/donteatoreo/aliases.nix
-          ../../../hm/donteatoreo/ghostty.nix
-          ../../../hm/donteatoreo/git.nix
-          ../../../hm/donteatoreo/helix.nix
-          ../../../hm/donteatoreo/nixcord.nix
-          ../../../hm/donteatoreo/nushell.nix
-          ../../../hm/donteatoreo/ssh.nix
-          ../../../hm/donteatoreo/starship.nix
-          ../../../hm/donteatoreo/yazi.nix
-
-          inputs.sops-nix-trivial.homeManagerModules.sops
-          {
-            sops = {
-              age.keyFile = "/home/nyx/.config/sops/age/keys.txt";
-              defaultSopsFile = ../../../../secrets/donteatoreo.yaml;
-              secrets.github_ssh = { };
-            };
-          }
-
-          ../../../../modules/hm
-          {
-            hm = {
-              bash.enable = true;
-              fastfetch.enable = true;
-              fzf.enable = true;
-              ghostty.altKeyBehavior = true;
-              ghostty.enable = true;
-              helix.enable = true;
-              jujutsu.enable = true;
-              nixcord.enable = true;
-              nushell.enable = true;
-              ssh.enable = true;
-              vscode.enable = true;
-              yazi.enable = true;
-              zellij.enable = true;
-            };
-          }
-
-          # Misc
-          {
-            home = {
-              file.".warp/themes".source =
-                (pkgs.callPackage ../../../../pkgs/warp-terminal-catppuccin.nix {
-                  inherit (config.catppuccin) accent;
-                }).outPath
-                + "/share/warp/themes";
-              file."Documents/catppuccin-userstyles.json".source =
-                (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
-                  inherit (config.catppuccin) accent flavor;
-                }).outPath
-                + "/dist/import.json";
-            };
-          }
-        ];
-      };
     extraSpecialArgs = { inherit inputs release; };
   };
+
+  home-manager.users.anon =
+    { config, ... }:
+    {
+      imports =
+        let
+          config =
+            [ { home.stateVersion = "24.11"; } ]
+            ++ [
+              inputs.sops-nix-trivial.homeManagerModules.sops
+              {
+                sops = {
+                  age.keyFile = "/Users/anon/sops/age/keys.txt";
+                  defaultSopsFile = ../../../../secrets/donteatoreo.yaml;
+                  secrets.github_ssh = { };
+                };
+              }
+            ]
+            ++ [
+              {
+                home.file.".warp/themes".source =
+                  (pkgs.callPackage ../../../../pkgs/warp-terminal-catppuccin.nix {
+                    inherit (config.catppuccin) accent;
+                  }).outPath
+                  + "/share/warp/themes";
+                home.file."Documents/catppuccin-userstyles.json".source =
+                  (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+                    inherit (config.catppuccin) accent flavor;
+                  }).outPath
+                  + "/dist/import.json";
+              }
+              inputs.catppuccin-trivial.homeModules.catppuccin
+              {
+                catppuccin = {
+                  enable = true;
+                  flavor = "frappe";
+                  accent = "teal";
+                };
+              }
+            ]
+            ++ [
+              ../../../hm/donteatoreo/aliases.nix
+              ../../../../modules/hm
+              {
+                hm = {
+                  bash.enable = true;
+                  fastfetch.enable = true;
+                  fzf.enable = true;
+                  ghostty.altKeyBehavior = true;
+                  ghostty.enable = true;
+                  helix.enable = true;
+                  jujutsu.enable = true;
+                  nixcord.enable = true;
+                  nushell.enable = true;
+                  ssh.enable = true;
+                  vscode.enable = true;
+                  yazi.enable = true;
+                  zellij.enable = true;
+                };
+              }
+            ]
+            ++ (
+              let
+                hmExtraConfigModules = [
+                  "ghostty"
+                  "helix"
+                  "jujutsu"
+                  "nixcord"
+                  "nushell"
+                  "ssh"
+                  "starship"
+                  "vscode"
+                  "yazi"
+                ];
+              in
+              lib.flatten (map (n: [ ../../../hm/donteatoreo/${n}.nix ]) hmExtraConfigModules)
+            );
+        in
+        config;
+    };
 }
