@@ -1,4 +1,10 @@
-{ lib, config, ... }:
+{
+  inputs,
+  lib,
+  config,
+  osConfig,
+  ...
+}:
 {
   imports = [
     ./languages.nix
@@ -9,5 +15,7 @@
 
   config = lib.mkIf config.hm.helix.enable {
     programs.helix.enable = true;
+    programs.helix.package =
+      inputs.helix-source.packages.${osConfig.nixpkgs.hostPlatform.system}.default;
   };
 }

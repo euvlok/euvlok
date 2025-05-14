@@ -826,6 +826,27 @@
         "type": "github"
       }
     },
+    "helix-source": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1747230720,
+        "narHash": "sha256-Q6cNfZ+uGJ8gE0yerwwljnXCH1qcCaUJeUeNV0jBoVs=",
+        "owner": "helix-editor",
+        "repo": "helix",
+        "rev": "6be38642f4f352a44bc6aabc5f0af6a0d941eecc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "helix-editor",
+        "repo": "helix",
+        "type": "github"
+      }
+    },
     "home-manager-2husecondary": {
       "inputs": {
         "nixpkgs": [
@@ -1365,7 +1386,7 @@
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay_2"
       },
       "locked": {
         "lastModified": 1741118843,
@@ -2219,6 +2240,7 @@
         "flake-parts": "flake-parts_4",
         "flake-utils": "flake-utils_2",
         "flatpak-declerative-trivial": "flatpak-declerative-trivial",
+        "helix-source": "helix-source",
         "home-manager-2husecondary": "home-manager-2husecondary",
         "home-manager-ashuramaruzxc": "home-manager-ashuramaruzxc",
         "home-manager-bigshaq9999": "home-manager-bigshaq9999",
@@ -2262,6 +2284,27 @@
     "rust-overlay": {
       "inputs": {
         "nixpkgs": [
+          "helix-source",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1740623427,
+        "narHash": "sha256-3SdPQrZoa4odlScFDUHd4CUPQ/R1gtH4Mq9u8CBiK8M=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "d342e8b5fd88421ff982f383c853f0fc78a847ab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
           "nil-source",
           "nixpkgs"
         ]
@@ -2280,7 +2323,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_2": {
+    "rust-overlay_3": {
       "inputs": {
         "nixpkgs": [
           "yazi-source",
@@ -2709,7 +2752,7 @@
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay_3"
       },
       "locked": {
         "lastModified": 1747211481,
