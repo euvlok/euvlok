@@ -83,6 +83,8 @@
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     dis-source.url = "github:DontEatOreo/dis/develop";
+    helix-source.inputs.nixpkgs.follows = "nixpkgs";
+    helix-source.url = "github:helix-editor/helix";
     hyprland-source.url = "github:hyprwm/Hyprland";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
@@ -97,8 +99,6 @@
     yazi-source.inputs.flake-utils.follows = "flake-utils";
     yazi-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     yazi-source.url = "github:sxyazi/yazi";
-    helix-source.inputs.nixpkgs.follows = "nixpkgs";
-    helix-source.url = "github:helix-editor/helix";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
