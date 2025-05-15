@@ -86,6 +86,9 @@
     helix-source.inputs.nixpkgs.follows = "nixpkgs";
     helix-source.url = "github:helix-editor/helix";
     hyprland-source.url = "github:hyprwm/Hyprland";
+    jj-vcs-source.inputs.flake-utils.follows = "flake-utils";
+    jj-vcs-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    jj-vcs-source.url = "github:jj-vcs/jj";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
     nil-source.inputs.flake-utils.follows = "flake-utils";

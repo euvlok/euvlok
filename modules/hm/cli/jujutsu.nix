@@ -1,7 +1,9 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
+  osConfig,
   ...
 }:
 {
@@ -11,6 +13,7 @@
     home.packages = builtins.attrValues { inherit (pkgs) watchman; };
     programs.jujutsu = {
       enable = true;
+      package = inputs.jj-vcs-source.packages.${osConfig.nixpkgs.hostPlatform.system}.default;
       settings = {
         core.fsmonitor = "watchman";
         core.watchman.register-snapshot-trigger = true;

@@ -1248,6 +1248,30 @@
         "type": "github"
       }
     },
+    "jj-vcs-source": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ],
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1747300087,
+        "narHash": "sha256-+FwgjxhQisbOlJJGgSBHSPn4VIcywOvAzFY5dBlNSUI=",
+        "owner": "jj-vcs",
+        "repo": "jj",
+        "rev": "dd33f9ae08286e566e2603fa910f1f0f078be6ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jj-vcs",
+        "repo": "jj",
+        "type": "github"
+      }
+    },
     "libgit2": {
       "flake": false,
       "locked": {
@@ -1386,7 +1410,7 @@
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay_3"
       },
       "locked": {
         "lastModified": 1741118843,
@@ -2249,6 +2273,7 @@
         "home-manager-stable": "home-manager-stable",
         "home-manager-unstable": "home-manager-unstable",
         "hyprland-source": "hyprland-source",
+        "jj-vcs-source": "jj-vcs-source",
         "lightly-source": "lightly-source",
         "lix-module-source": "lix-module-source",
         "mk-shell-bin": "mk-shell-bin_2",
@@ -2305,6 +2330,27 @@
     "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
+          "jj-vcs-source",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1746585402,
+        "narHash": "sha256-Pf+ufu6bYNA1+KQKHnGMNEfTwpD9ZIcAeLoE2yPWIP0=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "72dd969389583664f87aa348b3458f2813693617",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_3": {
+      "inputs": {
+        "nixpkgs": [
           "nil-source",
           "nixpkgs"
         ]
@@ -2323,7 +2369,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_3": {
+    "rust-overlay_4": {
       "inputs": {
         "nixpkgs": [
           "yazi-source",
@@ -2752,7 +2798,7 @@
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "rust-overlay": "rust-overlay_3"
+        "rust-overlay": "rust-overlay_4"
       },
       "locked": {
         "lastModified": 1747211481,
