@@ -50,11 +50,11 @@ let
 
     # Nix Aliases
     nix-build-file = ''
-      f() {
+      __02fda1f0() {
         file="$1"
         args="''${2:-{}}"
-        nix-build -E "with import (builtins.getFlake 'nixpkgs') {}; callPackage ./$file $args"
-      }; f
+        nix-build -E "with import <nixpkgs> {}; callPackage ./$file $args"
+      }; __02fda1f0
     '';
 
     rebuild = if osConfig.nixpkgs.hostPlatform.isLinux then "nh os switch" else "nh darwin switch";
@@ -62,9 +62,8 @@ let
     update = ''
       __nixos_flake_update_func() {
         nix_user="$(whoami)"
-        nix_host="$(hostname | sed 's/\.local$//')"
-        flake_path="/etc/nixos"
-        flake_eval_path="/etc/nixos"
+        nix_host="$(hostname | sd '\\.local$' \'\')"
+        flake_eval_path="$(perl -MCwd -e 'print Cwd::abs_path(shift)' "/etc/nixos")"
         if [[ "$(uname -s)" == "Darwin" ]]; then
           flake_attr="darwinConfigurations"
         else

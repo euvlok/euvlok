@@ -66,6 +66,7 @@ in
                   fzf.enable = true;
                   ghostty.altKeyBehavior = true;
                   ghostty.enable = true;
+                  git.enable = true;
                   helix.enable = true;
                   jujutsu.enable = true;
                   nixcord.enable = true;
@@ -81,6 +82,7 @@ in
               let
                 hmExtraConfigModules = [
                   "ghostty"
+                  "git"
                   "helix"
                   "jujutsu"
                   "nixcord"
