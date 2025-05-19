@@ -48,15 +48,16 @@ in
 
           ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/chrome.nix
+          ../../../hm/ashuramaruzxc/dconf.nix
           ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/git.nix
+          ../../../hm/ashuramaruzxc/graphics.nix
           ../../../hm/ashuramaruzxc/nixcord.nix
+          ../../../hm/ashuramaruzxc/nushell.nix
           ../../../hm/ashuramaruzxc/ssh.nix
           ../../../hm/ashuramaruzxc/starship.nix
           ../../../hm/ashuramaruzxc/vscode.nix
-          ../../../hm/ashuramaruzxc/dconf.nix
-          ../../../hm/ashuramaruzxc/nushell.nix
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
@@ -96,7 +97,6 @@ in
           }
           ../../../linux/shared/protonmail-bridge.nix
           {
-            services.easyeffects.enable = true;
             services.protonmail-bridge.enable = true;
           }
 
@@ -112,7 +112,9 @@ in
                 # Multimedia
                 inherit (pkgs)
                   nicotine-plus
+                  qbittorrent
                   quodlibet-full
+                  tenacity # Audio recording/editing
                   vlc
                   youtube-music
                   ;
@@ -121,25 +123,16 @@ in
                   kamera
                   ktorrent
                   ;
-                # Graphics & Design
-                inherit (pkgs)
-                  blender # 3D creation suite
-                  gimp # Image editing
-                  godot3 # Game engine
-                  inkscape # Vector graphics
-                  krita # Digital painting
-                  obs-studio # Streaming and recording
-                  tenacity # Audio recording/editing
-                  ;
-                inherit (pkgs.kdePackages)
-                  kdenlive # Video editing
-                  ;
                 # Productivity
                 inherit (pkgs)
                   anki # Flashcard app
-                  libreoffice-fresh
-                  obsidian
+                  francis
                   gImageReader
+                  libreoffice-qt6-fresh
+                  obsidian
+                  octaveFull
+                  pdftk
+                  treesheets
                   ;
                 # Social & Communication
                 inherit (pkgs)
@@ -147,11 +140,13 @@ in
                   element-desktop # matrix client
                   materialgram # tg client but better
                   nextcloud-client # nextcloud client
-                  signal-desktop # Signal desktop client
                   protonmail-bridge-gui
+                  signal-desktop # Signal desktop client
+                  zoom-us
                   ;
                 # Networking
                 inherit (pkgs)
+                  mullvad-vpn
                   nekoray
                   openvpn
                   protonvpn-cli
@@ -175,7 +170,7 @@ in
 
                   # Misc
                   flycast # Sega Dreamcast emulator
-                  #! np2kai # PC-98 emulator
+                  # np2kai # PC-98 emulator
                   prismlauncher # Minecraft launcher
                   xemu # Xbox emulator
 
@@ -186,18 +181,17 @@ in
                   ryujinx # Nintendo Switch emulator
 
                   # PlayStation
-                  # chiaki # PS4 Remote Play
+                  chiaki # PS4 Remote Play
                   duckstation # PlayStation 1 emulator
                   pcsx2 # PlayStation 2 emulator
                   ppsspp # PlayStation Portable emulator
-                  #! rpcs3 # PlayStation 3 emulator
+                  # rpcs3 # PlayStation 3 emulator
                   shadps4 # PlayStation 4 emulator
 
                   # Stores
                   gogdl # GOG Galaxy downloader
                   heroic # Epic Games Store client
                   ;
-
                 # Development Tools
                 inherit (pkgs) android-studio nixd;
                 inherit (pkgs.jetbrains) dataspell datagrip;
@@ -299,6 +293,7 @@ in
             home.sessionVariables = {
               GTK_CSD = "0";
             };
+            services.easyeffects.enable = true;
           }
         ];
       };

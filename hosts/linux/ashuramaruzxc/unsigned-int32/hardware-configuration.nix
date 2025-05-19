@@ -305,17 +305,12 @@
   };
   ### ---------------/dev/sdc2-------------------- ###
 
-  ### ---------------/dev/md/nvmepool0-------------------- ###
-  # fileSystems."/Shared/games" = {
-  #   device = "/dev/nvmepool0/media";
-  #   fsType = "btrfs";
-  #   options = [
-  #     "subvol=games"
-  #     "noatime"
-  #     "autodefrag"
-  #   ];
-  # };
-  ### ---------------/dev/md/nvmepool0-------------------- ###
+  ### ---------------/dev/nvme2n1p1-------------------- ###
+  fileSystems."/Shared/games" = {
+    device = "/dev/disk/by-uuid/5053def6-e6f1-499f-93b2-d1d639644690";
+    fsType = "ext4";
+  };
+  ### ---------------/dev/nvme2n1p1-------------------- ###
 
   ### ---------------/dev/md/hddpool0-------------------- ###
   fileSystems."/var/lib/backup/unsigned-int32" = {
@@ -358,10 +353,10 @@
   };
   ### ---------------/dev/md/hddpool0-------------------- ###
 
-  ### --------------- /dev/nvme0n1p4 --------------- ###
+  ### --------------- /dev/nvme0n1p3 --------------- ###
   fileSystems."/Shared/windows" = {
-    device = "/dev/disk/by-uuid/8E34B63434B61EE1";
-    fsType = "ntfs3";
+    device = "/dev/disk/by-uuid/468CC3228CC30B7F";
+    fsType = "ntfs-3g";
     options = [
       "acl"
       "noatime"
@@ -373,14 +368,13 @@
       "gid=100"
     ];
   };
-  ### --------------- /dev/nvme0n1p4 (windows) --------------- ###
+  ### --------------- /dev/nvme0n1p3 (windows) --------------- ###
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";
     fileSystems = [
       "/"
       "/var/lib/backup"
-      # "/Shared/games"
     ];
   };
   services.fstrim = {

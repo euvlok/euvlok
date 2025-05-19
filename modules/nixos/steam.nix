@@ -8,6 +8,8 @@
   options.nixos.steam.enable = lib.mkEnableOption "Steam";
 
   config = lib.mkIf config.nixos.steam.enable {
+
+    hardware.steam-hardware.enable = true;
     nixpkgs.overlays = [
       (_: super: {
         steam = super.steam.override {
@@ -60,6 +62,7 @@
     programs = {
       steam = {
         enable = true;
+        extest.enable = true;
         protontricks.enable = true;
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;

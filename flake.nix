@@ -8,15 +8,15 @@
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     # --- ashuramaruzxc ---
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-25.05";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nix-darwin-ashuramaruzxc.url = "github:LnL7/nix-darwin";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
 
     # --- bigshaq9999 ---
-    nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-24.11";
-    home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-24.11";
+    nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-25.05";
     home-manager-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
     nix-darwin-bigshaq9999.url = "github:LnL7/nix-darwin";
     nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
@@ -35,12 +35,12 @@
 
     # --- Unstable/Stable Shared ---
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager-stable.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
     home-manager-unstable.url = "github:nix-community/home-manager";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     # --- Trivial ---
     base16-trivial.url = "github:SenchoPens/base16.nix";
@@ -71,8 +71,9 @@
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
-    stylix-trivial.inputs.flake-utils.follows = "flake-utils";
-    stylix-trivial.inputs.git-hooks.follows = "";
+    #! Don't override stylix utilities inputs
+    # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
+    # stylix-trivial.inputs.flake-parts.follows = "";
     stylix-trivial.inputs.home-manager.follows = "home-manager-unstable";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     stylix-trivial.url = "github:danth/stylix";
@@ -159,7 +160,7 @@
               nix.enable = true;
               shell.enable = true;
             };
-            pre-commit = {
+            git-hooks = {
               excludes = [
                 ".direnv"
                 ".devenv"
