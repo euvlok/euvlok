@@ -14,6 +14,9 @@
       };
     }
   ];
+
+  system.primaryUser = "faputa";
+
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
   networking = {
@@ -62,8 +65,6 @@
       android-tools
       scrcpy
 
-      # fine lol
-      pinentry_mac
       gnupg
       ;
   };

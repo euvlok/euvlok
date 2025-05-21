@@ -3,34 +3,34 @@
 
   inputs = {
     # --- 2husecondary ---
-    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager-2husecondary.url = "github:nix-community/home-manager";
+    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-2husecondary.url = "github:nix-community/home-manager/release-25.05";
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     # --- ashuramaruzxc ---
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/release-25.05";
     home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-25.05";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
-    nix-darwin-ashuramaruzxc.url = "github:LnL7/nix-darwin";
+    nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
 
     # --- bigshaq9999 ---
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-25.05";
     home-manager-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
-    nix-darwin-bigshaq9999.url = "github:LnL7/nix-darwin";
-    nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
+    nix-darwin-bigshaq9999.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
 
     # --- donteatoreo ---
-    nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    home-manager-donteatoreo.url = "github:nix-community/home-manager";
+    nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-donteatoreo.url = "github:nix-community/home-manager/release-25.05";
     home-manager-donteatoreo.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
-    nix-darwin-donteatoreo.url = "github:LnL7/nix-darwin";
+    nix-darwin-donteatoreo.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-donteatoreo.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
 
     # --- lay-by ---
-    nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager-lay-by.url = "github:nix-community/home-manager";
+    nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-lay-by.url = "github:nix-community/home-manager/release-25.05";
     home-manager-lay-by.inputs.nixpkgs.follows = "nixpkgs-lay-by";
 
     # --- Unstable/Stable Shared ---
@@ -71,7 +71,7 @@
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
-    #! Don't override stylix utilities inputs
+    # DO NOT override stylix utilities inputs
     # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
     # stylix-trivial.inputs.flake-parts.follows = "";
     stylix-trivial.inputs.home-manager.follows = "home-manager-unstable";

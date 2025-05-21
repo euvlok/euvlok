@@ -50,9 +50,10 @@
                 set args "$argv[2]"
             end
 
-            # Construct the Nix expression string. Use double quotes for variable expansion.
-            # Be careful with nested quotes and escaping if the args string itself contains special chars.
-            set nix_expr "with import (builtins.getFlake 'nixpkgs') {}; callPackage ./$file $args"
+            # Construct the Nix expression string. Use double quotes for
+            # variable expansion. Be careful with nested quotes and escaping if
+            # the args string itself contains special chars.
+            set nix_expr "with import <nixpkgs> {}; callPackage ./$file $args"
             nix-build -E "$nix_expr"
         end
       '';

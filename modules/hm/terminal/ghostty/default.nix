@@ -3,7 +3,6 @@
   lib,
   config,
   osConfig,
-  release,
   ...
 }:
 let
@@ -101,7 +100,7 @@ in
     altKeyBehavior = lib.mkEnableOption "Make Alt jump between words and Ctrl jump to start/end of sentences";
   };
 
-  config = lib.mkIf (config.hm.ghostty.enable && release > 25) {
+  config = lib.mkIf config.hm.ghostty.enable {
     programs.ghostty = {
       enable = true;
       package = if osConfig.nixpkgs.hostPlatform.isDarwin then null else pkgs.ghostty;

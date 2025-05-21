@@ -1,7 +1,5 @@
 {
-  pkgs,
   lib,
-  osConfig,
   ...
 }:
 # steal sarco's code

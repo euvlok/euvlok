@@ -40,7 +40,7 @@ in
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
-              age.keyFile = "${config.home.homeDirectory}/Library/Application\ Support/sops/age/keys.txt";
+              age.keyFile = ''/Users/ashuramaruzxc/Library/Application Support/sops/age/keys.txt'';
               defaultSopsFile = ../../../../secrets/unsigned-int8.yaml;
             };
           }
@@ -90,55 +90,40 @@ in
                   hidden-bar
                   rectangle
                   raycast
-                  iina # frontend for ffmpeg
-                  iterm2 # default iterm but if it was better
+                  iina
+                  iterm2
                   ;
 
                 # SNS
                 inherit (pkgs)
-                  signal-desktop-bin # just in case
+                  signal-desktop-bin
                   materialgram
                   ;
 
                 # Utilities
                 inherit (pkgs)
-                  # blender # 3D creation suite
                   # Graphics
-                  #! qbittorrent @ashuramaruzxc: for some reason only works on nixos-unstable
-                  #! kdenlive brew
-                  #! krita brew
-                  #! obs-studio brew
-                  anki-bin # Japenis
+                  qbittorrent
+                  anki-bin # Japanese
                   audacity
-                  gimp # Image editing
-                  inkscape # Vector graphics
+                  gimp
+                  inkscape
                   yubikey-manager # OTP
+                  # nicotine-plus; # Broken?
                   ;
-                /**
-                  * NOOOOOOO ❗❗❗ 🙀 😾 BUT LE PIRACY LE BAD HOW WILL SONY AND OTHER
-                  * MULTIBILLION CORPORATIONS MAKE MONEY OF COPYRIGHTED SONGS WHAT ABOUT THE
-                  * SHARE HOLDERS VALUE ❗❗❗ 🙀
-                */
-                inherit (pkgs) nicotine-plus;
 
                 # Gaming
                 inherit (pkgs)
                   winetricks
                   # Misc
-                  #! xemu brew
                   # flycast
-                  # prismlauncher
                   # Nintendo
-                  #! mgba brew
                   # dolphin-emu
-                  #! cemu
                   ryubing
+                  prismlauncher
                   # Playstation
                   chiaki # remote-play
                   duckstation-bin # PlayStation 1 emulator
-                  #! ppsspp # PlayStation PSP emulator BREW
-                  #! rpcs3
-                  #! shadps4
                   ;
                 inherit (pkgs.nixpkgs_x86_64-darwin)
                   # misc
@@ -146,7 +131,6 @@ in
                   # Playstation
                   pcsx2-bin
                   ;
-                inherit (pkgs.unstable-small) prismlauncher qbittorrent;
                 inherit (pkgs.jetbrains) dataspell datagrip;
               }
               ++ (

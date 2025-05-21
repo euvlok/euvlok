@@ -20,6 +20,9 @@
       };
     }
   ];
+
+  system.primaryUser = "ashuramaru";
+
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
   security.pam.services.sudo_local.touchIdAuth = true;

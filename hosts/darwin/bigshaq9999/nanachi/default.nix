@@ -1,10 +1,9 @@
 { inputs, ... }:
 {
-  faputa = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
+  faputa = inputs.nix-darwin-bigshaq9999.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       ../../shared/system.nix
-      # ./brew.nix
       ./configuration.nix
       ./home.nix
       ./system.nix

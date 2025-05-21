@@ -11,7 +11,7 @@ let
     };
   };
   add-x86_64-darwin-packages = final: _: {
-    nixpkgs_x86_64-darwin = import inputs.nixpkgs-donteatoreo {
+    nixpkgs_x86_64-darwin = import inputs.nixpkgs-ashuramaruzxc {
       system = "x86_64-darwin";
       inherit (final) config;
     };

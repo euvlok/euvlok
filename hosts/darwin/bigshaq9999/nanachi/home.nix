@@ -8,7 +8,7 @@ let
   release = builtins.fromJSON (config.system.darwinRelease);
 in
 {
-  imports = [ inputs.home-manager-donteatoreo.darwinModules.home-manager ];
+  imports = [ inputs.home-manager-bigshaq9999.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -18,7 +18,7 @@ in
       { config, ... }:
       {
         imports = [
-          { home.stateVersion = "24.11"; }
+          { home.stateVersion = "25.05"; }
           inputs.catppuccin-trivial.homeModules.catppuccin
           {
             catppuccin = {
@@ -36,7 +36,7 @@ in
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
-              age.keyFile = "${config.home.homeDirectory}/Library/Application\ Support/sops/age/keys.txt";
+              age.keyFile = ''/Users/faputa/Library/Application Support/sops/age/keys.txt'';
               defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
             };
           }
@@ -75,37 +75,30 @@ in
               inherit (pkgs)
                 # Make macos useful
                 alt-tab-macos
-                ice-bar # The hands of a person of roma descent packaged this
-                rectangle
+                ice-bar
+                iina
+                iterm2
                 raycast
-                iina # frontend for ffmpeg
-                iterm2 # default iterm but if it was better
+                rectangle
                 ;
 
               # SNS
-              inherit (pkgs)
-                signal-desktop-bin # just in case
-                ;
+              inherit (pkgs) signal-desktop-bin;
 
               # Utilities
               inherit (pkgs)
-                # blender # 3D creation suite
-                # Graphics
-                #! qbittorrent @ashuramaruzxc: for some reason only works on nixos-unstable
-                #! obs-studio brew
+                qbittorrent
                 anki-bin # Japenis
                 audacity
                 gimp # Image editing
                 inkscape # Vector graphics
                 yubikey-manager # OTP
                 ;
-              /**
-                * NOOOOOOO ❗❗❗ 🙀 😾 BUT LE PIRACY LE BAD HOW WILL SONY AND OTHER
-                * MULTIBILLION CORPORATIONS MAKE MONEY OF COPYRIGHTED SONGS WHAT ABOUT THE
-                * SHARE HOLDERS VALUE ❗❗❗ 🙀
-              */
-              inherit (pkgs) nicotine-plus;
-              inherit (pkgs.unstable-small) prismlauncher;
+
+              inherit (pkgs)
+                # nicotine-plus # Broken?
+                prismlauncher
+                ;
             };
             programs = {
               rbw = {

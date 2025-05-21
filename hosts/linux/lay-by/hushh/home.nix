@@ -16,7 +16,7 @@ in
       { osConfig, ... }:
       {
         imports = [
-          { home.stateVersion = "24.11"; }
+          { home.stateVersion = "25.05"; }
           inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 

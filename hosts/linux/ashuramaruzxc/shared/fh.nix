@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+_: {
   sops.secrets.foldingathome_passkey = { };
   sops.secrets.foldingathome_token = { };
 

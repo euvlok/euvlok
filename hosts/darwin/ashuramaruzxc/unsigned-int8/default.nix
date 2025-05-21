@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  unsigned-int8 = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
+  unsigned-int8 = inputs.nix-darwin-ashuramaruzxc.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       ../../../hm/ashuramaruzxc/fonts.nix

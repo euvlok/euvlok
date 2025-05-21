@@ -6,7 +6,6 @@
 }:
 let
   release = builtins.fromJSON (config.system.nixos.release);
-
 in
 {
   imports = [ inputs.home-manager-donteatoreo.nixosModules.home-manager ];
@@ -18,12 +17,12 @@ in
   };
 
   home-manager.users.nyx =
-    { config, osConfig, ... }:
+    { osConfig, ... }:
     {
       imports =
         let
           config =
-            [ { home.stateVersion = "24.11"; } ]
+            [ { home.stateVersion = "25.05"; } ]
             ++ [
               inputs.sops-nix-trivial.homeManagerModules.sops
               {
