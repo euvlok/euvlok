@@ -108,7 +108,10 @@ in
               file: string,
               args: string = "{}"
           ] {
-              nix-build -E $"with import <nixpkgs> {}; callPackage ./$file $args"
+            let prefix = "with import <nixpkgs> {}; callPackage " + (readlink -f $file)
+            let suffix = " " + $args
+            let expr   = $prefix + $suffix
+            nix-build -E $expr
           }
         ''
         + ''
@@ -117,33 +120,29 @@ in
               let raw_host = (hostname)
               let is_darwin = (sys host | get name | str downcase | str contains "darwin")
               let nix_host = if $is_darwin {
-                  # Only strip .local if present on macOS
-                  $raw_host | str replace -r '\.local$' \'\'
+                  $raw_host | str replace -r '\.local$' ""
               } else {
                   $raw_host
               }
-              let flake_path = "/etc/nixos"
-              let flake_eval_path = "/etc/nixos"
+              let flake_path = (readlink -f "/etc/nixos")
               let flake_attr = if $is_darwin {
                   "darwinConfigurations"
               } else {
                   "nixosConfigurations"
               }
-              let nix_user_escaped = ($nix_user | str replace '"' '\\"')
-              let nix_host_escaped = ($nix_host | str replace '"' '\\"')
               let github_username = (
                   nix eval --raw --impure --expr (
                       'let
-                        flake = builtins.getFlake "' + $flake_eval_path + '";
-                        host = flake.' + $flake_attr + '."' + $nix_host_escaped + '";
-                        user = "' + $nix_user_escaped + '";
+                        flake = builtins.getFlake "' + $flake_path + '";
+                        host = flake.' + $flake_attr + '."' + $nix_host + '";
+                        user = "' + $nix_user + '";
                       in
                         host.config.home-manager.users.''${user}.programs.git.userName'
                   ) | str downcase | str trim
               )
               let matching_inputs = (
                   nix eval --json --impure --expr (
-                      '(builtins.attrNames (builtins.getFlake "' + $flake_eval_path + '").inputs)'
+                      '(builtins.attrNames (builtins.getFlake "' + $flake_path + '").inputs)'
                   )
                   | from json
                   | filter {|x| $x | str ends-with ("-" + $github_username)}
