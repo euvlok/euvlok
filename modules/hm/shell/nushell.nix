@@ -19,23 +19,19 @@ in
       enable = true;
       package =
         inputs.nixpkgs-unstable-small.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.nushell;
-      plugins = builtins.attrValues { inherit (pkgs.nushellPlugins) formats highlight query; };
       shellAliases = {
         # CD
-        cd = "z";
-        dc = "z";
+        cd = "__zoxide_z";
+        dc = "__zoxide_z";
 
         # List Files
-        lt = "ls --all | sort-by size -r";
+        lt = "ls --all | sort-by size | reverse";
         ll = "ls --all";
-        llf = ''ls --all | where type == "file"'';
-        ld = ''ls --all | find --regex "^\\."'';
+        llf = ''ls --all | where type == file;'';
+        ld = ''ls --all | where name =~ "^\\."'';
 
         # Time
-        now = ''date now | format date "%H:%M:%S"'';
         nowtime = "date now";
-        nowdate = ''date now | format date "%d-%m-%Y"'';
-        nowunix = "date now | format date '%s'";
 
         # File Operations
         mv = "mv -iv";
@@ -55,11 +51,14 @@ in
 
         # Misc
         myip = "http get 'https://ipinfo.io/ip'";
-        mount = ''df -h | str replace "Mounted on" Mounted_On | detect columns'';
-        xdg-data-dirs = ''echo $env.XDG_DATA_DIRS | str replace -a ":" "\n" | lines | enumerate'';
+        mount = "df -h | detect columns | select Filesystem Mounted on";
         path = ''echo $env.PATH'';
 
-        rebuild = if osConfig.nixpkgs.hostPlatform.isLinux then "nh os switch" else "nh darwin switch";
+        rebuild =
+          if osConfig.nixpkgs.hostPlatform.isLinux then
+            "nixos-rebuild switch --flake (readlink -f /etc/nixos) --use-remote-sudo"
+          else
+            "sudo nix-darwin switch --flake (readlink -f /etc/nixos)";
       };
 
       configFile.text = ''
@@ -110,10 +109,11 @@ in
           ] {
             let prefix = "with import <nixpkgs> {}; callPackage " + (readlink -f $file)
             let suffix = " " + $args
-            let expr   = $prefix + $suffix
+            let expr = $prefix + $suffix
             nix-build -E $expr
           }
         ''
+        + "\n"
         + ''
           def update [] {
               let nix_user = (whoami)
@@ -150,6 +150,13 @@ in
               )
               nix flake update $matching_inputs --flake $flake_path
           }
+        ''
+        + "\n"
+        + ''
+          def now [] { date now | format date "%H:%M:%S" }
+          def nowdate [] { date now | format date "%d-%m-%Y" }
+          def nowunix [] { date now | format date "%s" }
+          def xdg-data-dirs [] { echo $env.XDG_DATA_DIRS | str replace -a : "\n" | lines | enumerate }
         '';
     };
   };
