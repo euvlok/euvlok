@@ -17,14 +17,7 @@ in
 {
   programs.helix.defaultEditor = true;
   programs.helix.settings = {
-    rulers = [
-      72
-      80
-      100
-      120
-    ];
-    normal = repeatedBinds // {
-      select = repeatedBinds;
-    };
+    keys.normal = repeatedBinds;
+    keys.select = repeatedBinds;
   };
 }
