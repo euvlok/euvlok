@@ -22,6 +22,7 @@ in
           inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
           ../../../hm/ashuramaruzxc/starship.nix
+          ../shared/aliases.nix
 
           ../../../../modules/hm
           {
@@ -46,6 +47,7 @@ in
           inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
 
+          ../shared/aliases.nix
           ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/dconf.nix

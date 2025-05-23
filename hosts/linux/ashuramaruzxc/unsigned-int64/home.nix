@@ -1,8 +1,4 @@
-{
-  inputs,
-  config,
-  ...
-}:
+{ inputs, config, ... }:
 let
   release = builtins.fromJSON (config.system.nixos.release);
 
@@ -11,6 +7,7 @@ let
     ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix
+    ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
     inputs.sops-nix-trivial.homeManagerModules.sops
     {
