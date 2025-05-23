@@ -3,7 +3,7 @@ _: {
     ./aliases.nix
     ./bash.nix
     ./fish.nix
-    ./nushell.nix
+    ./nushell
     ./zsh.nix
   ];
 }
