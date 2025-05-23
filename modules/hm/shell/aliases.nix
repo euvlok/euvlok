@@ -57,7 +57,11 @@ let
       }; __02fda1f0
     '';
 
-    rebuild = if osConfig.nixpkgs.hostPlatform.isLinux then "nh os switch" else "nh darwin switch";
+    rebuild =
+      if osConfig.nixpkgs.hostPlatform.isLinux then
+        "nixos-rebuild switch --use-remote-sudo --flake $(readlink -f /etc/nixos)"
+      else
+        "sudo nix-darwin switch --flake $(readlink -f /etc/nixos)";
 
     update = ''
       __nixos_flake_update_func() {
