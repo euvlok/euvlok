@@ -16,7 +16,9 @@
         allowUnfree = true;
         inherit (config.cross.nixpkgs) cudaSupport;
       };
-      overlays = [ inputs.nur-trivial.overlays.default ];
+      overlays = [
+        inputs.nur-trivial.overlays.default
+      ] ++ [ (final: prev: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; }) ];
     };
   };
 }
