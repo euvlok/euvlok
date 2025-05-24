@@ -1,4 +1,9 @@
-{ inputs, config, ... }:
+{
+  inputs,
+  config,
+  lib,
+  ...
+}:
 let
   release = builtins.fromJSON (config.system.nixos.release);
 
@@ -37,6 +42,23 @@ let
       };
     }
   ];
+
+  mkUser =
+    extraImports:
+    { osConfig, ... }:
+    {
+      imports =
+        [ { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; } ]
+        ++ extraImports
+        ++ commonUsers;
+    };
+
+  userConfigs = {
+    root = [ ];
+    ashuramaru = [ ];
+    fumono = [ ../../../hm/2husecondary/git.nix ];
+    minecraft = [ ];
+  };
 in
 {
   imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
@@ -45,36 +67,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    users.root =
-      { osConfig, ... }:
-      {
-        imports = [
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-        ] ++ commonUsers;
-      };
-    users.ashuramaru =
-      { osConfig, ... }:
-      {
-        imports = [
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-        ] ++ commonUsers;
-      };
-    users.fumono =
-      { osConfig, ... }:
-      {
-        imports = [
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-          ../../../hm/2husecondary/git.nix
-        ] ++ commonUsers;
-      };
-    users.minecraft =
-      { osConfig, ... }:
-      {
-        imports = [
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-        ] ++ commonUsers;
-      };
-
     extraSpecialArgs = { inherit inputs release; };
+    users = lib.mapAttrs (name: extraImports: mkUser extraImports) userConfigs;
   };
 }
