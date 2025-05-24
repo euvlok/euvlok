@@ -105,12 +105,12 @@ jobs:
 
           # Push with retry logic
           for i in {1..5}; do
-            if git push origin main; then
+            if git push origin master; then
               echo "Successfully pushed changes"
               break
             elif [[ $i -lt 5 ]]; then
               echo "Push failed, attempting rebase and retry..."
-              git pull --rebase origin main
+              git pull --rebase origin master
             else
               echo "Failed to push after 5 attempts"
               exit 1

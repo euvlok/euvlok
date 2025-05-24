@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       
       - name: Run Flake Checker
         uses: DeterminateSystems/flake-checker-action@main
@@ -40,12 +40,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.blind-faith --show-trace
+          nixos-rebuild check --flake .#blind-faith
 
   check-nanachi:
     name: Check nanachi (Linux)
@@ -54,12 +54,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.nanachi --show-trace
+          nixos-rebuild check --flake .#nanachi
 
   check-nyx:
     name: Check nyx (Linux)
@@ -68,12 +68,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.nyx --show-trace
+          nixos-rebuild check --flake .#nyx
 
   check-signed-int16:
     name: Check signed-int16 (Linux)
@@ -82,12 +82,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.signed-int16 --show-trace
+          nixos-rebuild check --flake .#signed-int16
 
   check-unsigned-int32:
     name: Check unsigned-int32 (Linux)
@@ -96,12 +96,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.unsigned-int32 --show-trace
+          nixos-rebuild check --flake .#unsigned-int32
 
   check-unsigned-int64:
     name: Check unsigned-int64 (Linux)
@@ -110,12 +110,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#nixosConfigurations.unsigned-int64 --show-trace
+          nixos-rebuild check --flake .#unsigned-int64
 
   # Darwin Configurations
   check-anons-mac-mini:
@@ -125,14 +125,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: cachix/install-nix-action@master
-        with:
-          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#darwinConfigurations.anons-Mac-mini --show-trace
+          darwin-rebuild check --flake .#anons-Mac-mini
 
   check-faputa:
     name: Check faputa (Darwin)
@@ -141,14 +139,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: cachix/install-nix-action@master
-        with:
-          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#darwinConfigurations.faputa --show-trace
+          darwin-rebuild check --flake .#faputa
 
   check-unsigned-int8:
     name: Check unsigned-int8 (Darwin)
@@ -157,11 +153,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
       - name: Install Nix
-        uses: cachix/install-nix-action@master
-        with:
-          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check .#darwinConfigurations.unsigned-int8 --show-trace
+          darwin-rebuild check --flake .#unsigned-int8
