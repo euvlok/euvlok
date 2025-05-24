@@ -79,7 +79,7 @@ jobs:
             repo="${repo_info[$input]}"
             if [[ "$repo" != "unknown/unknown" ]]; then
               github_url="https://github.com/$repo/compare/$old_commit...$new_commit"
-              formatted_inputs+="- $input ($old_commit...$new_commit) - [$repo]($github_url)"$'\n'
+              formatted_inputs+="- $input ($old_commit...$new_commit) - ($github_url)"$'\n'
             else
               formatted_inputs+="- $input ($old_commit...$new_commit)"$'\n'
             fi
