@@ -37,9 +37,10 @@ jobs:
 
             if nix eval --impure --raw --expr \
               "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).type" 2>/dev/null | grep -qx "derivation"; then
+              echo "$nixfile is a derivation, proceeding with update."
             else
-                echo "$nixfile is NOT a derivation, skipping."
-                continue
+              echo "$nixfile is NOT a derivation, skipping."
+              continue
             fi
 
             OLD_REV=$(nix eval --impure --raw --expr \
