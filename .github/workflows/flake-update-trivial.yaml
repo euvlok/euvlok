@@ -1,0 +1,118 @@
+name: Update Trivial Flake Inputs
+on:
+  schedule:
+    # Run every 2 days at midnight UTC
+    - cron: "0 0 */2 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-trivial-inputs:
+    name: Update Trivial Inputs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v17
+
+      - name: Find and update trivial inputs
+        id: find-inputs
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+
+          # Check if flake.lock exists
+          if [[ ! -f flake.lock ]]; then
+            echo "flake.lock not found"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Find all inputs ending in "-trivial" from flake.lock
+          mapfile -t trivial_inputs < <(jq -r '.nodes.root.inputs | keys[] | select(test("-trivial$"))' flake.lock)
+
+          if [[ ${#trivial_inputs[@]} -eq 0 ]]; then
+            echo "No trivial inputs found"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Found ${#trivial_inputs[@]} trivial inputs: ${trivial_inputs[*]}"
+
+          # Store old commit info before update
+          declare -A old_commits repo_info
+          for input in "${trivial_inputs[@]}"; do
+            old_commits["$input"]=$(jq -r ".nodes[\"$input\"].locked.rev // \"unknown\"" flake.lock)
+            repo_owner=$(jq -r ".nodes[\"$input\"].locked.owner // \"unknown\"" flake.lock)
+            repo_name=$(jq -r ".nodes[\"$input\"].locked.repo // \"unknown\"" flake.lock)
+            repo_info["$input"]="$repo_owner/$repo_name"
+          done
+
+          # Update all trivial inputs at once
+          nix flake update "${trivial_inputs[@]}"
+
+          # Check if anything _actually_ changed
+          if git diff --quiet flake.lock; then
+            echo "No changes after flake update"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Start building up the message
+          formatted_inputs=""
+          for input in "${trivial_inputs[@]}"; do
+            old_commit="${old_commits[$input]:0:7}"
+            new_commit=$(jq -r ".nodes[\"$input\"].locked.rev // \"unknown\"" flake.lock)
+            new_commit="${new_commit:0:7}"
+
+            # Skip if no actual change
+            [[ "$old_commit" == "$new_commit" ]] && continue
+
+            repo="${repo_info[$input]}"
+            if [[ "$repo" != "unknown/unknown" ]]; then
+              github_url="https://github.com/$repo/compare/$old_commit...$new_commit"
+              formatted_inputs+="- $input ($old_commit...$new_commit) - [$repo]($github_url)"$'\n'
+            else
+              formatted_inputs+="- $input ($old_commit...$new_commit)"$'\n'
+            fi
+          done
+
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          {
+            echo "formatted_inputs<<EOF"
+            echo "$formatted_inputs"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        if: steps.find-inputs.outputs.has_changes == 'true'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add flake.lock
+          git commit -m "chore: update trivial flake inputs
+
+          ${{ steps.find-inputs.outputs.formatted_inputs }}"
+
+          # Push with retry logic
+          for i in {1..5}; do
+            if git push origin main; then
+              echo "Successfully pushed changes"
+              break
+            elif [[ $i -lt 5 ]]; then
+              echo "Push failed, attempting rebase and retry..."
+              git pull --rebase origin main
+            else
+              echo "Failed to push after 5 attempts"
+              exit 1
+            fi
+          done
