@@ -25,7 +25,7 @@ jobs:
       - name: Update & Commit each package (recursively, graceful)
         run: |
           set -e
-          gt config user.name "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           changes=0
