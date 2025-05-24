@@ -16,12 +16,14 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v17
+        with:
+          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
       - name: Run Nix Flake Check
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          nix flake check --show-trace
+          nix flake check --show-trace --no-pure-eval
 
   # Linux NixOS Configurations
   check-blind-faith:
