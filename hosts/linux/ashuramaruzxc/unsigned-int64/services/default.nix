@@ -15,7 +15,7 @@ _: {
 
     # db
     ./postgresql.nix
-    eeeee./redis.nix
+    ./redis.nix
 
     # Misc
     ./vaultwarden.nix

@@ -47,8 +47,7 @@ let
               ];
             }
           ];
-          icon = "https://duckduckgo.com/favicon.ico";
-          updateInterval = 24 * 60 * 60 * 1000;
+          iconMapObj."16" = "https://duckduckgo.com/favicon.ico";
           definedAliases = [ "@ddg" ];
         };
         "GitHub" = {
@@ -63,8 +62,7 @@ let
               ];
             }
           ];
-          icon = "https://github.com/favicon.ico";
-          updateInterval = 24 * 60 * 60 * 1000;
+          iconMapObj."16" = "https://github.com/favicon.ico";
           definedAliases = [ "@gh" ];
         };
         "google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
@@ -90,8 +88,7 @@ let
               type = "application/x-suggestions+json";
             }
           ];
-          icon = "https://assets.kagi.com/v2/apple-touch-icon.png";
-          updateInterval = 24 * 60 * 60 * 1000;
+          iconMapObj."16" = "https://kagi.com/favicon.ico";
           definedAliases = [ "@kagi" ];
         };
         "NixOS Wiki" = {
@@ -106,7 +103,7 @@ let
               ];
             }
           ];
-          icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+          iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
           definedAliases = [ "@nw" ];
         };
         "Nix Packages" = {
@@ -182,8 +179,7 @@ let
               ];
             }
           ];
-          icon = "https://youtube.com/favicon.ico";
-          updateInterval = 24 * 60 * 60 * 1000;
+          iconMapObj."16" = "https://youtube.com/favicon.ico";
           definedAliases = [ "@yt" ];
         };
       };

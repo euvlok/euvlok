@@ -17,7 +17,7 @@
         catppuccin = {
           enable = true;
           flavor = "mocha";
-          accent = "rosewater";
+          accent = "flamingo";
         };
       }
       ../../../../modules/nixos

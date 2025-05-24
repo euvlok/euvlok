@@ -42,8 +42,7 @@ let
             ];
           }
         ];
-        icon = "https://steamdb.info/static/logos/512px.png";
-        updateInterval = 7 * 24 * 60 * 60 * 1000;
+        iconMapObj."16" = "https://steamdb.info/favicon.ico";
         definedAliases = [ "@steamdb" ];
       };
       "ProtonDB" = {
@@ -58,8 +57,7 @@ let
             ];
           }
         ];
-        icon = "https://www.protondb.com/sites/protondb/images/favicon.ico";
-        updateInterval = 7 * 24 * 60 * 60 * 1000;
+        iconMapObj."16" = "https://www.protondb.com/sites/protondb/images/favicon.ico";
         definedAliases = [ "@protondb" ];
       };
       "YoutubeMusic" = {
@@ -74,12 +72,8 @@ let
             ];
           }
         ];
-        icon = "https://www.youtube.com/s/desktop/5d5de6d9/img/favicon.ico";
-        updateInterval = 7 * 24 * 60 * 60 * 1000;
-        definedAliases = [
-          "@ytm"
-          "@ym"
-        ];
+        iconMapObj."16" = "https://music.youtube.com/favicon.ico";
+        definedAliases = [ "@ytm" ];
       };
     };
   };

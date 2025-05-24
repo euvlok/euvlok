@@ -51,7 +51,7 @@ in
           ../../../hm/ashuramaruzxc/aliases.nix
           ../../../hm/ashuramaruzxc/chrome.nix
           ../../../hm/ashuramaruzxc/dconf.nix
-          ../../../hm/ashuramaruzxc/firefox.nix
+          # ../../../hm/ashuramaruzxc/firefox.nix
           ../../../hm/ashuramaruzxc/flatpak.nix
           ../../../hm/ashuramaruzxc/git.nix
           ../../../hm/ashuramaruzxc/graphics.nix
