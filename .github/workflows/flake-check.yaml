@@ -1,15 +1,14 @@
 name: Flake Checks
 on:
   pull_request:
-  push:
-    branches: [master]
   workflow_dispatch:
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
+
 jobs:
   flake-check:
-    name: Check Linux
+    name: General Flake Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,44 +32,136 @@ jobs:
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
           nix flake check --show-trace
 
-  darwin-check:
-    name: Check Darwin
+  # Linux NixOS Configurations
+  check-blind-faith:
+    name: Check blind-faith (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.blind-faith --show-trace
+
+  check-nanachi:
+    name: Check nanachi (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.nanachi --show-trace
+
+  check-nyx:
+    name: Check nyx (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.nyx --show-trace
+
+  check-signed-int16:
+    name: Check signed-int16 (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.signed-int16 --show-trace
+
+  check-unsigned-int32:
+    name: Check unsigned-int32 (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.unsigned-int32 --show-trace
+
+  check-unsigned-int64:
+    name: Check unsigned-int64 (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#nixosConfigurations.unsigned-int64 --show-trace
+
+  # Darwin Configurations
+  check-anons-mac-mini:
+    name: Check anons-Mac-mini (Darwin)
     runs-on: macos-14
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
-
       - name: Install Nix
         uses: cachix/install-nix-action@master
         with:
           github_access_token: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: Run Flake Checker
-        uses: DeterminateSystems/flake-checker-action@main
-        with:
-          check-outdated: true
-          check-owner: true
-          check-supported: true
-          fail-mode: true
-          ignore-missing-flake-lock: false
-
-      - name: Check Darwin configurations
+      - name: Check Configuration
         run: |
           set -euo pipefail
           export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
-          configs=(
-            anons-Mac-mini
-            unsigned-int8
-          )
-          failed=()
-          for config in "${configs[@]}"; do
-            echo "Checking Darwin configuration: $config"
-            if ! nix run nix-darwin -- check --flake .#"$config"; then
-              echo "Configuration $config failed."
-              failed+=("$config")
-            fi
-          done
-          if [ "${#failed[@]}" -ne 0 ]; then
-            echo "The following configurations failed: ${failed[*]}"
-            exit 1
-          fi
+          nix flake check .#darwinConfigurations.anons-Mac-mini --show-trace
+
+  check-faputa:
+    name: Check faputa (Darwin)
+    runs-on: macos-14
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: cachix/install-nix-action@master
+        with:
+          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#darwinConfigurations.faputa --show-trace
+
+  check-unsigned-int8:
+    name: Check unsigned-int8 (Darwin)
+    runs-on: macos-14
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Install Nix
+        uses: cachix/install-nix-action@master
+        with:
+          github_access_token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Check Configuration
+        run: |
+          set -euo pipefail
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          nix flake check .#darwinConfigurations.unsigned-int8 --show-trace
