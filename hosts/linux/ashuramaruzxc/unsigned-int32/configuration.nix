@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -17,7 +18,7 @@
     ../shared/fh.nix
     ./hardware-configuration.nix
     ./networking.nix
-    # ./samba.nix
+    ./samba.nix
     ./users.nix
   ];
 
@@ -96,11 +97,7 @@
     xserver.wacom.enable = true;
   };
 
-  programs = {
-    anime-game-launcher.enable = true;
-    honkers-railway-launcher.enable = true;
-    zsh.enable = true;
-  };
+  programs.zsh.enable = true;
 
   security = {
     wrappers = {
@@ -240,6 +237,47 @@
       TZ = "${config.time.timeZone}";
     };
   };
+
+  # flatpak
+  system.fsPackages = [ pkgs.bindfs ];
+  fileSystems =
+    let
+      mkRoSymBind = path: {
+        device = path;
+        fsType = "fuse.bindfs";
+        options = [
+          "ro"
+          "resolve-symlinks"
+          "x-gvfs-hide"
+        ];
+      };
+      aggregatedIcons = pkgs.buildEnv {
+        name = "system-icons";
+        paths =
+          builtins.attrValues {
+            inherit (pkgs.kdePackages) breeze;
+            inherit (inputs.anime-cursors-source.packages.${config.nixpkgs.hostPlatform.system}) cursors;
+          }
+          ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
+            catppuccin-gtk = pkgs.catppuccin-gtk.override {
+              accents = [ config.catppuccin.accent ];
+              size = "standard";
+              tweaks = config.home-manager.users.ashuramaru.catppuccin.gtk.tweaks;
+              variant = config.catppuccin.flavor;
+            };
+          };
+        pathsToLink = [ "/share/icons" ];
+      };
+      aggregatedFonts = pkgs.buildEnv {
+        name = "system-fonts";
+        paths = config.fonts.packages;
+        pathsToLink = [ "/share/fonts" ];
+      };
+    in
+    {
+      "/usr/share/icons" = mkRoSymBind "${aggregatedIcons}/share/icons";
+      "/usr/local/share/fonts" = mkRoSymBind "${aggregatedFonts}/share/fonts";
+    };
 
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

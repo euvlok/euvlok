@@ -21,19 +21,12 @@
     overrides = {
       "global" = {
         filesystems = [
-          "${config.home.homeDirectory}/.icons"
-          "${config.home.homeDirectory}/gtkrc-2.0:ro"
-          "xdg-config/gtk-3.0:ro"
-          "xdg-config/gtk-4.0:ro"
-          "xdg-data/icons"
           "xdg-download:rw"
           "xdg-pictures:rw"
           "xdg-run/app/com.discordapp.Discord:create"
         ];
         environment = {
           "GTK_CSD" = 0;
-          "XCURSOR_NAME" = "${config.home.pointerCursor.name}";
-          "XCURSOR_SIZE" = 32;
         };
       };
       "com.usebottles.bottles" = {

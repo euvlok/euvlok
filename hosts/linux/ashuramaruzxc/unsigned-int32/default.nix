@@ -40,6 +40,8 @@
       inputs.anime-game-launcher-source.nixosModules.default
       {
         programs.anime-game-launcher.enable = true;
+        programs.honkers-railway-launcher.enable = true;
+        aagl.enableNixpkgsReleaseBranchCheck = false;
       }
       inputs.flatpak-declerative-trivial.nixosModule
       {

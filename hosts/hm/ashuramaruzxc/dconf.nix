@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}:
+{ lib, ... }:
 # steal sarco's code
 let
   generateKeybindings =
@@ -25,13 +22,17 @@ in
     "org/gnome/shell/app-switcher".current-workspace-only = true;
     "org/gnome/settings-daemon/peripherals/keyboard".bell-mode = "off";
     "org/gnome/desktop/interface" = {
+      clock-format = "24h";
       clock-show-date = true;
       clock-show-seconds = true;
-      clock-format = "24h";
+      document-font-name = "Noto Sans 11";
+      font-hinting = "slight";
+      monospace-font-name = "Hack Nerd Font Mono Regular 11";
     };
     "org/gnome/desktop/sound".allow-volume-above-100-percent = true;
     "org.gnome.desktop.peripherals/mouse".accel-profile = "flat";
     "org/gnome/desktop/wm/preferences" = {
+      titlebar-font = "Noto Sans Medium, 11";
       num-workspaces = 6;
       resize-with-right-button = true;
       audible-bell = false;

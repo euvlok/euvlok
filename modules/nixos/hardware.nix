@@ -93,7 +93,7 @@
         open = true;
         modesetting.enable = true;
         package = pkgs.nvidia-patch.patch-nvenc (
-          pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.latest
+          pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.beta
         );
         powerManagement.enable = true;
         powerManagement.finegrained = false;
