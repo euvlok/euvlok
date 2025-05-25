@@ -8,7 +8,24 @@
 }:
 let
   yt-dlp-script = lib.getExe (
-    pkgs.writeScriptBin "yt-dlp-script" (builtins.readFile ../../../../modules/scripts/yt-dlp-script.sh)
+    pkgs.writeShellApplication {
+      name = "yt-dlp-script";
+      text = builtins.readFile ../../../modules/scripts/yt-dlp-script.sh;
+      runtimeInputs = builtins.attrValues {
+        inherit (pkgs)
+          bc
+          cacert
+          choose
+          dust
+          fd
+          ffmpeg_7-full
+          gum
+          jq
+          sd
+          yt-dlp
+          ;
+      };
+    }
   );
 in
 {

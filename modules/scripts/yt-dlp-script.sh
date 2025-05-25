@@ -1,17 +1,4 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bc cacert choose dust fd ffmpeg_7-full gum jq sd
 # shellcheck shell=bash
-
-# We use our own custom `yt-dlp` package, which updates every 12 hours and
-# incorporates the latest master commit. We do this because `yt-dlp` targets
-# move _fast_ , and waiting for the nixpkgs PR to be merged and for Hydra to
-# build it _IS NOT AN OPTION_
-
-if ! command -v yt-dlp &>/dev/null; then
-	echo "yt-dlp is not installed."
-fi
-
-set -euo pipefail
 
 BRIGHT_RED="${BRIGHT_RED:-131}"
 ORANGE="${ORANGE:-215}"
