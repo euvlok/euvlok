@@ -1399,13 +1399,16 @@
       "locked": {
         "lastModified": 1746838955,
         "narHash": "sha256-11R4K3iAx4tLXjUs+hQ5K90JwDABD/XHhsM9nkeS5N8=",
+        "ref": "2.93.0",
         "rev": "cd2a9c028df820a83ca2807dc6c6e7abc3dfa7fc",
-        "type": "tarball",
-        "url": "https://git.lix.systems/api/v1/repos/lix-project/nixos-module/archive/cd2a9c028df820a83ca2807dc6c6e7abc3dfa7fc.tar.gz?rev=cd2a9c028df820a83ca2807dc6c6e7abc3dfa7fc"
+        "revCount": 140,
+        "type": "git",
+        "url": "https://git.lix.systems/lix-project/nixos-module"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz"
+        "ref": "2.93.0",
+        "type": "git",
+        "url": "https://git.lix.systems/lix-project/nixos-module"
       }
     },
     "mk-shell-bin": {
