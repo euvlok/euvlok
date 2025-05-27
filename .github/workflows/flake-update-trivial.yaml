@@ -29,7 +29,7 @@ jobs:
         id: find-inputs
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
 
           # Check if flake.lock exists
           if [[ ! -f flake.lock ]]; then

@@ -22,7 +22,7 @@ jobs:
       - name: Run Nix Flake Check
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix flake check --show-trace --no-pure-eval
 
   # Linux NixOS Configurations
@@ -37,7 +37,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.blind-faith.config.system.build.toplevel
 
   check-nanachi:
@@ -51,7 +51,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.nanachi.config.system.build.toplevel
 
   check-nyx:
@@ -65,7 +65,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.nyx.config.system.build.toplevel
 
   check-signed-int16:
@@ -79,7 +79,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.signed-int16.config.system.build.toplevel
 
   check-unsigned-int32:
@@ -93,7 +93,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.unsigned-int32.config.system.build.toplevel
 
   check-unsigned-int64:
@@ -107,7 +107,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           nix build .#nixosConfigurations.unsigned-int64.config.system.build.toplevel
 
   # Darwin Configurations
@@ -122,7 +122,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           sudo nix run nix-darwin -- check --flake .#anons-Mac-mini
 
   check-faputa:
@@ -136,7 +136,7 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           sudo nix run nix-darwin -- check --flake .#faputa
 
   check-unsigned-int8:
@@ -150,5 +150,5 @@ jobs:
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operators"
+          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
           sudo nix run nix-darwin -- check --flake .#unsigned-int8
