@@ -12,6 +12,7 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
 
     cursor = {
+      size = 24;
       package = pkgs.kdePackages.breeze;
       name = "Breeze-Dark";
     };

@@ -51,10 +51,6 @@
           prefix = "Mod+";
           action = focus-workspace;
         })
-        (mkBinds {
-          prefix = "Mod+Ctrl+";
-          action = move-column-to-workspace;
-        })
 
         # Workspace navigation
         {
