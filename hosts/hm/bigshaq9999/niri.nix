@@ -137,14 +137,11 @@
       sh = spawn "sh" "-c";
     in
     {
-      "Mod+Shift+Slash".action = show-hotkey-overlay;
       "Mod+T".action = spawn "kitty";
       "Mod+D".action = spawn "fuzzel";
       "Super+Alt+L".action =
         spawn "swaylock" "-i"
           "./Downloads/Media/wallpapers/scaled_16-9-IMG_7584.png";
-
-      "Mod+Ctrl+F".action = expand-column-to-available-width;
 
       "Mod+Shift+P".action = power-off-monitors;
       "Mod+Apostrophe".action = spawn "wlogout";
