@@ -30,7 +30,7 @@ in
             programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
           }
 
-          inputs.stylix-trivial.homeManagerModules.stylix
+          inputs.stylix-trivial.homeModules.stylix
           ../../../hm/lay-by/stylix.nix
 
           {
