@@ -33,14 +33,11 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v17
         with:
           source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
-          extra-conf: |
-            extra-experimental-features = nix-command flakes pipe-operator
 
       - name: Check Configuration
         run: |
           set -euo pipefail
-          nix build --extra-experimental-features "nix-command flakes pipe-operator" \
-            .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
 
   check-darwin:
     name: Check ${{ matrix.user }} (${{ matrix.config }}) - (Darwin)
@@ -62,12 +59,8 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v17
         with:
           source-url: https://install.lix.systems/lix/lix-installer-aarch64-darwin
-          extra-conf: |
-            extra-experimental-features = nix-command flakes pipe-operator
 
       - name: Check Configuration
         run: |
           set -euo pipefail
-          # For nix run, you pass the flags to nix itself
-          sudo nix --extra-experimental-features "nix-command flakes pipe-operator" \
-            run nix-darwin -- check --flake .#${{ matrix.config }}
+          sudo nix run nix-darwin -- check --flake .#${{ matrix.config }}

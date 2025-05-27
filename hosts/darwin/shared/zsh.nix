@@ -15,11 +15,14 @@ let
     // lib.optionalAttrs (hmConfig.home.username == "anon") (
       (pkgs.callPackage ../../hm/donteatoreo/aliases.nix { }).programs.zsh.shellAliases
     );
-  shellAliasesStr =
-    builtins.attrNames shellAliases
-    |> builtins.filter (an: builtins.isString shellAliases.${an})
-    |> map (an: "alias ${an}=${lib.escapeShellArg shellAliases.${an}}")
-    |> builtins.concatStringsSep "\n";
+  shellAliasesStr = lib.pipe shellAliases [
+    (attrs: lib.filterAttrs (name: value: builtins.isString value) attrs)
+    (
+      filteredAttrs:
+      lib.mapAttrsToList (name: value: "alias ${name}=${lib.escapeShellArg value}") filteredAttrs
+    )
+    (builtins.concatStringsSep "\n")
+  ];
 
   omzPlugins =
     let
@@ -52,7 +55,10 @@ let
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
       }
     ];
-  customPluginsStr = customPlugins |> lib.concatMapStringsSep "\n" (p: "source ${p.src}");
+  customPluginsStr = lib.pipe customPlugins [
+    (pluginsList: builtins.map (p: "source ${p.src}") pluginsList)
+    (builtins.concatStringsSep "\n")
+  ];
   omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
 
   interactiveShellInit = lib.concatStringsSep "\n" [

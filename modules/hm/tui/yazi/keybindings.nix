@@ -41,13 +41,10 @@ let
 
   tabManagementKeymap =
     # Switch to Tab n
-    (
-      builtins.genList (n: n) 9
-      |> map (
-        n:
-        genKeyBind "Switch to Tab ${toString (n + 1)}" [ "${toString (n + 1)}" ] "tab_switch ${toString n}"
-      )
-    )
+    (builtins.map (
+      n:
+      genKeyBind "Switch to Tab ${toString (n + 1)}" [ "${toString (n + 1)}" ] "tab_switch ${toString n}"
+    ))
     ++ [
       (genKeyBind "Close current tab" [ (if isDarwin then "<D-q>" else "<C-q>") ] "close")
       (genKeyBind "Create a new tab using the current path" [ "t" ] "tab_create --current")

@@ -9,14 +9,15 @@
           action,
           range ? lib.range 1 9,
         }:
-        range
-        |> map (num: {
-          name = "${prefix}${toString num}";
-          value = {
-            action = action num;
-          };
-        })
-        |> lib.listToAttrs;
+        lib.pipe range [
+          (builtins.map (num: {
+            name = "${prefix}${toString num}";
+            value = {
+              action = action num;
+            };
+          }))
+          lib.listToAttrs
+        ];
 
       mkDirectionalBinds =
         { prefix, actions }:
