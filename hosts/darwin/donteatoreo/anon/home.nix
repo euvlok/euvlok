@@ -21,6 +21,7 @@ in
     imports =
       let
         config =
+          { config, ... }:
           [ { home.stateVersion = "25.05"; } ]
           ++ [
             inputs.sops-nix-trivial.homeManagerModules.sops
