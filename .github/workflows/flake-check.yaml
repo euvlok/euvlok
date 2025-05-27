@@ -7,9 +7,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  flake-check:
-    name: General Flake Check
+  check-nixos:
+    name: Check ${{ matrix.user }} (${{ matrix.config }}) - (Linux)
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - config: blind-faith
+            user: lay-by
+          - config: nanachi
+            user: bigshaq9999
+          - config: nyx
+            user: donteatoreo
+          - config: signed-int16
+            user: 2husecondary
+          - config: unsigned-int32
+            user: ashuramaruzxc
+          - config: unsigned-int64
+            user: ashuramaruzxc
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -18,137 +33,41 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v17
         with:
           source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
+          extra-conf: |
+            extra-experimental-features = nix-command flakes pipe-operator
 
-      - name: Run Nix Flake Check
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix flake check --show-trace --no-pure-eval
-
-  # Linux NixOS Configurations
-  check-blind-faith:
-    name: Check lay-by (blind-faith) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.blind-faith.config.system.build.toplevel
+          nix build --extra-experimental-features "nix-command flakes pipe-operator" \
+            .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
 
-  check-nanachi:
-    name: Check bigshaq9999 (nanachi) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.nanachi.config.system.build.toplevel
-
-  check-nyx:
-    name: Check donteatoreo (nyx) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.nyx.config.system.build.toplevel
-
-  check-signed-int16:
-    name: Check 2husecondary (signed-int16) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.signed-int16.config.system.build.toplevel
-
-  check-unsigned-int32:
-    name: Check ashuramaruzxc (unsigned-int32) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.unsigned-int32.config.system.build.toplevel
-
-  check-unsigned-int64:
-    name: Check ashuramaruzxc (unsigned-int64) - (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          nix build .#nixosConfigurations.unsigned-int64.config.system.build.toplevel
-
-  # Darwin Configurations
-  check-anons-mac-mini:
-    name: Check donteatoreo (anons-Mac-mini) - (Darwin)
+  check-darwin:
+    name: Check ${{ matrix.user }} (${{ matrix.config }}) - (Darwin)
     runs-on: macos-14
+    strategy:
+      matrix:
+        include:
+          - config: anons-Mac-mini
+            user: donteatoreo
+          - config: faputa
+            user: bigshaq9999
+          - config: unsigned-int8
+            user: ashuramaruzxc
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          sudo nix run nix-darwin -- check --flake .#anons-Mac-mini
 
-  check-faputa:
-    name: Check bigshaq9999 (faputa) - (Darwin)
-    runs-on: macos-14
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v17
-      - name: Check Configuration
-        run: |
-          set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          sudo nix run nix-darwin -- check --flake .#faputa
+        with:
+          source-url: https://install.lix.systems/lix/lix-installer-aarch64-darwin
+          extra-conf: |
+            extra-experimental-features = nix-command flakes pipe-operator
 
-  check-unsigned-int8:
-    name: Check ashuramaruzxc (unsigned-int8) - (Darwin)
-    runs-on: macos-14
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
       - name: Check Configuration
         run: |
           set -euo pipefail
-          export NIX_CONFIG="extra-experimental-features = nix-command flakes pipe-operator"
-          sudo nix run nix-darwin -- check --flake .#unsigned-int8
+          # For nix run, you pass the flags to nix itself
+          sudo nix --extra-experimental-features "nix-command flakes pipe-operator" \
+            run nix-darwin -- check --flake .#${{ matrix.config }}
