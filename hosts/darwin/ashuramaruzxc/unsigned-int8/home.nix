@@ -8,64 +8,52 @@
 let
   release = builtins.fromJSON (config.system.darwinRelease);
 
-  commonImports =
-    [
-      { home.stateVersion = "25.05"; }
-    ]
-    ++ [
-      inputs.sops-nix-trivial.homeManagerModules.sops
-      {
-        sops = {
-          age.keyFile = ''/Users/ashuramaruzxc/Library/Application Support/sops/age/keys.txt'';
-          defaultSopsFile = ../../../../secrets/unsigned-int8.yaml;
-        };
-      }
-    ]
-    ++ [
-      inputs.catppuccin-trivial.homeModules.catppuccin
-      {
-        catppuccin = {
-          enable = true;
-          flavor = "mocha";
-          accent = "flamingo";
-        };
-      }
-    ]
-    ++ [
-      [
-        ../../../hm/ashuramaruzxc/aliases.nix
-        ../../../hm/ashuramaruzxc/firefox.nix
-        ../../../hm/ashuramaruzxc/git.nix
-        ../../../hm/ashuramaruzxc/nixcord.nix
-        ../../../hm/ashuramaruzxc/ssh.nix
-        ../../../hm/ashuramaruzxc/nushell.nix
-        ../../../hm/ashuramaruzxc/starship.nix
-        ../../../hm/ashuramaruzxc/vscode.nix
-        ../../../../modules/hm
-        {
-          hm = {
-            bash.enable = true;
-            direnv.enable = true;
-            fastfetch.enable = true;
-            firefox.defaultSearchEngine = "kagi";
-            firefox.enable = true;
-            firefox.floorp.enable = true;
-            firefox.zen.enable = true;
-            fzf.enable = true;
-            git.enable = true;
-            helix.enable = true;
-            mpv.enable = true;
-            nh.enable = true;
-            nixcord.enable = true;
-            nvf.enable = true;
-            ssh.enable = true;
-            vscode.enable = true;
-            yazi.enable = true;
-            zellij.enable = true;
-          };
-        }
-      ]
-    ];
+  commonImports = [
+    { home.stateVersion = "25.05"; }
+    inputs.catppuccin-trivial.homeModules.catppuccin
+    ../../../../modules/hm
+    ../../../hm/ashuramaruzxc/starship.nix
+    ../../../hm/ashuramaruzxc/aliases.nix
+  ];
+
+  catppuccinConfig = {
+    catppuccin = {
+      enable = true;
+      flavor = "mocha";
+      accent = "flamingo";
+    };
+  };
+
+  ashuramaruHmConfig = {
+    hm = {
+      bash.enable = true;
+      direnv.enable = true;
+      fastfetch.enable = true;
+      firefox.defaultSearchEngine = "kagi";
+      firefox.enable = true;
+      firefox.floorp.enable = true;
+      fzf.enable = true;
+      git.enable = true;
+      helix.enable = true;
+      mpv.enable = true;
+      nh.enable = true;
+      nixcord.enable = true;
+      nvf.enable = true;
+      ssh.enable = true;
+      vscode.enable = true;
+      # yazi.enable = true;
+      zellij.enable = true;
+    };
+  };
+
+  ashuramaruImports = [
+    ../../../hm/ashuramaruzxc/firefox.nix
+    ../../../hm/ashuramaruzxc/git.nix
+    ../../../hm/ashuramaruzxc/nixcord.nix
+    ../../../hm/ashuramaruzxc/ssh.nix
+    ../../../hm/ashuramaruzxc/nushell.nix
+    ../../../hm/ashuramaruzxc/vscode.nix
+  ];
 
   macosPackages = builtins.attrValues {
     inherit (pkgs)
@@ -78,11 +66,11 @@ let
       ;
   };
 
-  snsPackages = builtins.attrValues {
+  socialPackages = builtins.attrValues {
     inherit (pkgs) signal-desktop-bin materialgram;
   };
 
-  utilityPackages = builtins.attrValues {
+  multimediaPackages = builtins.attrValues {
     inherit (pkgs)
       qbittorrent
       anki-bin
@@ -129,39 +117,17 @@ let
       ideaUltimateWithPlugins = addPlugins idea-ultimate (
         commonPlugins
         ++ [
-          "rust"
           "go"
+          "minecraft-development"
+          "python"
+          "rust"
+          "scala"
         ]
       );
     };
 
-  homeConfig =
-    { config, ... }:
-    {
-      home = {
-        packages = macosPackages ++ snsPackages ++ utilityPackages ++ gamingPackages ++ jetbrainsPackages;
-        file."Documents/development/catppuccin/catppuccin-userstyles.json".source =
-          (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
-            inherit (config.catppuccin) accent flavor;
-          }).outPath
-          + "/dist/import.json";
-      };
-    };
-
-  programsConfig = {
-    programs = {
-      rbw = {
-        enable = true;
-        settings = {
-          email = "ashuramaru@tenjin-dk.com";
-          base_url = "https://bitwarden.tenjin-dk.com";
-          lock_timeout = 600;
-          pinentry = pkgs.pinentry_mac;
-        };
-      };
-      btop.enable = true;
-    };
-  };
+  allPackages =
+    macosPackages ++ socialPackages ++ multimediaPackages ++ gamingPackages ++ jetbrainsPackages;
 in
 {
   imports = [ inputs.home-manager-ashuramaruzxc.darwinModules.home-manager ];
@@ -169,11 +135,49 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs release; };
   };
 
-  home-manager.users.ashuramaru.imports = commonImports ++ [
-    homeConfig
-    programsConfig
-  ];
+  home-manager.users.ashuramaru.imports =
+    commonImports
+    ++ [
+      catppuccinConfig
+      inputs.sops-nix-trivial.homeManagerModules.sops
+      {
+        sops = {
+          age.keyFile = "$HOME/.config/sops/age/keys.txt";
+          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+        };
+      }
+    ]
+    ++ ashuramaruImports
+    ++ [
+      ashuramaruHmConfig
+      { home.packages = allPackages; }
+      (
+        { config, ... }:
+        {
+          home.file."Documents/development/catppuccin/catppuccin-userstyles.json".source =
+            (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+              inherit (config.catppuccin) accent flavor;
+            }).outPath
+            + "/dist/import.json";
+        }
+      )
+      {
+        programs = {
+          rbw = {
+            enable = true;
+            settings = {
+              email = "ashuramaru@tenjin-dk.com";
+              base_url = "https://bitwarden.tenjin-dk.com";
+              lock_timeout = 600;
+              pinentry = pkgs.pinentry_mac;
+            };
+          };
+          btop.enable = true;
+        };
+      }
+    ];
 }

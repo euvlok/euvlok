@@ -45,7 +45,7 @@
 
   users.users = {
     ashuramaru = {
-      home = "/Users/ashuramaru";
+      home = "/Volumes/Media/Users/ashuramaru";
       description = "Mariè Levjéwa";
       openssh.authorizedKeys.keys = [
         "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBNR1p1OviZgAkv5xQ10NTLOusPT8pQUG2qCTpO3AhmxaZM2mWNePVNqPnjxNHjWN+a/FcZ5on74QZQJtwXI5m80AAAAOc3NoOnJlbW90ZS1kc2E= email:ashuramaru@tenjin-dk.com id:ashuramaru@unsigned-int32"
