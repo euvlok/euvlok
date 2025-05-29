@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
@@ -24,12 +25,12 @@
                 mangohud
                 mesa-demos
                 source-han-sans
-                steamtinkerlaunch
+                steamtinkerlaunch # just in case compattools doesn't works
+                thcrap-steam-proton-wrapper # preferably should be optional since only @ashuramaruxzc plays touhou games
                 vkBasalt
                 vulkan-validation-layers
                 wqy_zenhei
                 yad
-                zenity
                 ;
               inherit (pkgs)
                 libgdiplus
@@ -42,7 +43,6 @@
                 vulkan-caps-viewer
                 vulkan-extension-layer
                 vulkan-headers
-                vulkan-loader
                 vulkan-tools
                 ;
               inherit (steamSuper.xorg)
@@ -58,6 +58,10 @@
               inherit (steamSuper) thcrap-steam-proton-wrapper;
             });
         };
+        # for people that want non official bottles
+        bottles = super.bottles.override {
+          removeWarningPopup = true;
+        };
       })
     ];
 
@@ -69,10 +73,14 @@
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
         # https://github.com/NixOS/nixpkgs/blob/3730d8a308f94996a9ba7c7138ede69c1b9ac4ae/nixos/modules/programs/steam.nix#L12C3-L12C92
-        # Steam added a proper search for steamcompattools in your ~/.steam so
-        # variable should not be needed anymore don't forget to periodically
-        # change steam's compatibility layer
-        extraCompatPackages = builtins.attrValues { inherit (pkgs) proton-ge-bin; };
+        # steam added a proper search for steamcompattools in your ~/.steam so variable should not be needed anymore
+        # don't forget to periodically change steam's compatibility layer
+        extraCompatPackages = builtins.attrValues {
+          inherit (inputs.nixpkgs-unstable-small.legacyPackages.${config.nixpkgs.hostPlatform.system})
+            proton-ge-bin
+            steamtinkerlaunch
+            ;
+        };
       };
       gamemode = {
         enable = true;

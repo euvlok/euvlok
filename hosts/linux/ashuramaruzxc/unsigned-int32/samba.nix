@@ -76,19 +76,6 @@
           "force group" = "ashuramaru";
         };
 
-        alex = {
-          comment = "Alex's personal directory";
-          path = "/Users/alex";
-          browseable = "yes";
-          "read only" = "no";
-          writeable = "yes";
-          "create mask" = "0644";
-          "directory mask" = "0775";
-          "valid users" = "meanrin";
-          "force user" = "meanrin";
-          "force group" = "meanrin";
-        };
-
         "Marie's public directory" = {
           path = "/Users/marie/Public";
           browseable = "yes";
@@ -103,32 +90,18 @@
           "force directory mode" = "3770";
         };
 
-        "Alex's public directory" = {
-          path = "/Users/alex/Public";
+        timemachine = {
+          comment = "Apple's Timemachine backups";
+          path = "/var/lib/backup/timemachine";
           browseable = "yes";
           writeable = "yes";
           "inherit permissions" = "yes";
           "read only" = "no";
-          "guest ok" = "yes";
-          "guest only" = "no";
-          "force user" = "meanrin";
-          "force group" = "meanrin";
-          "directory mode" = "3770";
-          "force directory mode" = "3770";
-        };
-
-        timemachine = {
-          comment = "Apple's Timemachine backups";
-          path = "/var/lib/backup/tm-backup";
-          public = "no";
-          writeable = "yes";
-          "read only" = "no";
-          "security mask" = "0775";
-          "create mask" = "0775";
-          "directory mask" = "0775";
-          "valid users" = "ashuramaru meanrin";
-          "force user" = "backup";
-          "force group" = "users";
+          "create mask" = "0644";
+          "directory mask" = "0770";
+          "valid users" = "ashuramaru";
+          "force user" = "ashuramaru";
+          "force group" = "ashuramaru";
           "fruit:aapl" = "yes";
           "fruit:time machine" = "yes";
           "vfs objects" = "catia fruit streams_xattr";

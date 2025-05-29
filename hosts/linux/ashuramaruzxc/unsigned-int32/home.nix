@@ -147,25 +147,24 @@ let
   gamingPackages = builtins.attrValues {
     inherit (pkgs.unstable) osu-lazer-bin;
     inherit (pkgs)
-      goverlay
-      mangohud
-      flycast
-      prismlauncher
-      xemu
       cemu
-      dolphin-emu
-      mgba
-      ryujinx
       chiaki
+      dolphin-emu
       duckstation
+      flycast
+      gogdl
+      goverlay
+      heroic
+      mangohud
+      mgba
       pcsx2
       ppsspp
+      prismlauncher
+      ryujinx
       shadps4
-      gogdl
-      heroic
+      xemu
       ;
   };
-
   developmentPackages = builtins.attrValues {
     inherit (pkgs) android-studio nixd;
     inherit (pkgs.jetbrains) dataspell datagrip;
@@ -245,6 +244,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs release; };
   };
 
@@ -271,8 +271,12 @@ in
       { services.protonmail-bridge.enable = true; }
       { home.packages = allPackages; }
       (
-        { osConfig, ... }:
+        { inputs, osConfig, ... }:
         {
+          # doesn't work with cudaEnable = true;
+          home.packages = builtins.attrValues {
+            inherit (inputs.nixpkgs.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}) rpcs3;
+          };
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";

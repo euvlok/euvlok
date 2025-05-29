@@ -1,6 +1,7 @@
 { inputs, config, ... }:
 {
   imports = [ inputs.flatpak-declerative-trivial.homeModule ];
+
   services.flatpak = {
     enable = true;
     remotes = {
@@ -10,8 +11,8 @@
     };
     packages = [
       # Desktop
-      # "flathub:app/com.github.tchx84.Flatseal//stable" # Easier permission manager
-      "flathub:app/com.usebottles.bottles//stable"
+      "flathub:app/com.github.tchx84.Flatseal//stable" # Easier permission manager
+      # "flathub:app/com.usebottles.bottles//stable"
       #
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.gamescope/x86_64/24.08"
@@ -21,12 +22,17 @@
     overrides = {
       "global" = {
         filesystems = [
+          "xdg-config/flatpak-gtk:ro"
+          "xdg-data/icons:ro"
+          "xdg-data/themes:ro"
           "xdg-download:rw"
           "xdg-pictures:rw"
           "xdg-run/app/com.discordapp.Discord:create"
         ];
         environment = {
           "GTK_CSD" = 0;
+          "GTK_THEME" = config.gtk.theme.name or "catppuccin-mocha-flamingo-standard+rimless,normal";
+          "GTK2_RC_FILES" = "${config.home.homeDirectory}/.gtkrc-2.0";
         };
       };
       "com.usebottles.bottles" = {

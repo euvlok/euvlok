@@ -340,6 +340,16 @@
       "compress=zstd"
     ];
   };
+  fileSystems."/var/lib/backup/timemachine" = {
+    device = "/dev/hddpool0/backup";
+    fsType = "btrfs";
+    options = [
+      "subvol=timemachine"
+      "noatime"
+      "autodefrag"
+      "compress=zstd"
+    ];
+  };
   fileSystems."/Shared/archive" = {
     device = "/dev/hddpool0/archive";
     fsType = "ext4";
