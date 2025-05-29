@@ -13,6 +13,7 @@
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
+    nixos-raspberrypi-ashuramaruzxc.url = "github:nvmd/nixos-raspberrypi";
 
     # --- bigshaq9999 ---
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -41,6 +42,7 @@
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
 
     # --- Trivial ---
     base16-trivial.url = "github:SenchoPens/base16.nix";
@@ -64,16 +66,13 @@
     nur-trivial.inputs.flake-parts.follows = "flake-parts";
     nur-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nur-trivial.url = "github:nix-community/NUR";
-    nvidia-patch-trivial.inputs.utils.follows = "flake-utils";
     nvidia-patch-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nvidia-patch-trivial.inputs.utils.follows = "flake-utils";
     nvidia-patch-trivial.url = "github:icewind1991/nvidia-patch-nixos";
     sops-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
-    # DO NOT override stylix utilities inputs
-    # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
-    # stylix-trivial.inputs.flake-parts.follows = "";
     stylix-trivial.inputs.home-manager.follows = "home-manager-unstable";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     stylix-trivial.url = "github:danth/stylix";
@@ -110,6 +109,11 @@
     anime-game-launcher-source.inputs.flake-compat.follows = "";
     anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
     lightly-source.url = "github:Bali10050/Darkly";
+    # DO NOT override stylix utilities inputs
+    # stylix-trivial.inputs.flake-parts.follows = "";
+    # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
+    # DO NOT override nixpkgs, it uses it's own fork
+    # nixos-raspberrypi.inputs.nixpkgs = "nixpkgs-unstable";
 
     # Infra / Shared / Core Inputs
     flake-parts.url = "github:hercules-ci/flake-parts";

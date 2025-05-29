@@ -12,6 +12,9 @@
 
   config = lib.mkIf config.hm.nvf.enable {
     programs.vim.defaultEditor = true;
+    home.sessionVariables = {
+      EDITOR = lib.mkForce "nvim";
+    };
     programs.nvf.enable = true;
     programs.nvf.settings.vim = {
       package = pkgs.neovim-unwrapped;
