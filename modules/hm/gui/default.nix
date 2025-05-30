@@ -5,5 +5,6 @@ _: {
     ./mpv.nix
     ./nixcord.nix
     ./vscode
+    ./zed.nix
   ];
 }

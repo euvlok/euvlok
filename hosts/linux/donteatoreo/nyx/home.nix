@@ -61,6 +61,7 @@ in
                   ssh.enable = true;
                   vscode.enable = true;
                   yazi.enable = true;
+                  zed.enable = true;
                   zellij.enable = true;
                   zsh.enable = true;
                 };
@@ -79,6 +80,7 @@ in
                   "starship"
                   "vscode"
                   "yazi"
+                  "zed"
                 ];
               in
               lib.flatten (map (n: [ ../../../hm/donteatoreo/${n}.nix ]) hmExtraConfigModules)
