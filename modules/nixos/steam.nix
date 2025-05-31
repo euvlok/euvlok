@@ -26,7 +26,6 @@
                 mesa-demos
                 source-han-sans
                 steamtinkerlaunch # just in case compattools doesn't works
-                thcrap-steam-proton-wrapper # preferably should be optional since only @ashuramaruxzc plays touhou games
                 vkBasalt
                 vulkan-validation-layers
                 wqy_zenhei
