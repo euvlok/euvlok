@@ -1,9 +1,13 @@
-{ pkgs, ... }:
 {
-  fonts.packages = builtins.attrValues {
-    UbuntuMono = pkgs.nerd-fonts.ubuntu-mono;
-    FiraCode = pkgs.nerd-fonts.fira-code;
-    Monaspace = pkgs.nerd-fonts.monaspace;
-    Noto = pkgs.nerd-fonts.noto;
-  };
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  fonts.packages =
+    builtins.attrValues { inherit (pkgs.nerd-fonts) monaspace noto; }
+    ++ lib.optionals config.nixos.gnome.enable (
+      builtins.attrValues { inherit (pkgs.nerd-fonts) adwaita-mono; }
+    );
 }

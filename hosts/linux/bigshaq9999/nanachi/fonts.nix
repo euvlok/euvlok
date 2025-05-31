@@ -2,6 +2,7 @@
 {
   fonts = {
     fontDir.enable = true;
+    enableDefaultPackages = true;
     fontconfig = {
       enable = true;
       defaultFonts = {

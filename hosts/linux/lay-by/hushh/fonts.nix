@@ -2,6 +2,7 @@
 {
   fonts = {
     enableDefaultPackages = true;
+    fontDir.enable = true;
     packages = builtins.attrValues {
       inherit (pkgs)
         dina-font
@@ -12,7 +13,6 @@
         twemoji-color-font
         vegur
         ;
-
       inherit (pkgs.nerd-fonts)
         fira-code
         fira-mono
@@ -24,10 +24,7 @@
         proggy-clean-tt
         victor-mono
         ;
-    };
-    fontconfig = {
-      enable = true;
-      defaultFonts = {
+      fontconfig.defaultFonts = {
         monospace = [
           "Iosevka Nerd Font Mono"
           "Noto Color Emoji"

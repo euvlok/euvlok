@@ -10,6 +10,7 @@
     ./networking.nix
     ./programs.nix
     ./services.nix
+    ./fonts.nix
     ./systemd.nix
 
     inputs.nur-trivial.modules.nixos.default
@@ -75,27 +76,6 @@
     "volume-sync" = {
       "bluez5.enable-absolute-volume" = true;
     };
-  };
-
-  fonts.fontconfig.defaultFonts = {
-    monospace = [ "Monaspice Kr Nerd Font" ];
-    sansSerif = [ "Noto Nerd Font" ];
-    serif = [ "Noto Nerd Font" ];
-    emoji = [ "Twitter Color Emoji" ];
-  };
-  fonts.packages = builtins.attrValues {
-    Ubuntu = pkgs.nerd-fonts.ubuntu;
-    UbuntuMono = pkgs.nerd-fonts.ubuntu-mono;
-    UbuntuSans = pkgs.nerd-fonts.ubuntu-sans;
-    FiraCode = pkgs.nerd-fonts.fira-code;
-    Monaspace = pkgs.nerd-fonts.monaspace;
-    Noto = pkgs.nerd-fonts.noto;
-
-    inherit (pkgs)
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      twemoji-color-font
-      ;
   };
 
   # https://wiki.nixos.org/wiki/FAQ#When_do_I_update_stateVersion
