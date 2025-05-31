@@ -91,6 +91,11 @@
     jj-vcs-source.url = "github:jj-vcs/jj";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     lix-module-source.url = "git+https://git.lix.systems/lix-project/nixos-module?ref=2.93.0";
+    lix-soruce.inputs.flake-compat.follows = "";
+    lix-soruce.inputs.nix2container.follows = "";
+    lix-soruce.inputs.nixpkgs.follows = "nixpkgs";
+    lix-soruce.inputs.pre-commit-hooks.follows = "";
+    lix-soruce.url = "https://git.lix.systems/lix-project/lix/archive/2.93.0.tar.gz";
     nil-source.inputs.flake-utils.follows = "flake-utils";
     nil-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nil-source.url = "github:oxalica/nil";

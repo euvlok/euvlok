@@ -18,7 +18,23 @@
       };
       overlays = [
         inputs.nur-trivial.overlays.default
-      ] ++ [ (final: prev: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; }) ];
+        (final: prev: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; })
+        (final: prev: {
+          lix =
+            (inputs.lix-soruce.packages.${config.nixpkgs.hostPlatform.system}.default.override {
+              aws-sdk-cpp = null;
+            }).overrideAttrs
+              (args: {
+                postPatch =
+                  (args.postPatch or "")
+                  + ''
+                    substituteInPlace lix/libmain/shared.cc \
+                      --replace-fail "(Lix, like Nix)" "(Lix, like Nix with disabled aws-sdk-cpp)"        
+                  '';
+                doCheck = false;
+              });
+        })
+      ];
     };
   };
 }
