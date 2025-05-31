@@ -59,6 +59,7 @@
     nix-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils";
     nix-vscode-server-trivial.url = "github:nix-community/nixos-vscode-server";
     nixcord-trivial.inputs.flake-compat.follows = "";
+    nixcord-trivial.inputs.flake-parts.follows = "flake-parts";
     nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nixcord-trivial.url = "github:KaylorBen/nixcord";
     nixos-hardware-trivial.url = "github:NixOS/nixos-hardware";

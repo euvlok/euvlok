@@ -6,52 +6,22 @@
   osConfig,
   ...
 }:
-let
-  # krisp-patcher ~/.config/discord/x.x.xx/modules/discord_krisp/discord_krisp.node
-  #TODO: write a systemd service that will patch discord automatically assigned to: ashuramaruzxc
-  krisp-patcher =
-    pkgs.writers.writePython3Bin "krisp-patcher"
-      {
-        libraries = builtins.attrValues { inherit (pkgs.python3Packages) capstone pyelftools; };
-        flakeIgnore = [
-          "E501" # line too long (82 > 79 characters)
-          "F403" # 'from module import *' used; unable to detect undefined names
-          "F405" # name may be undefined, or defined from star imports: module
-          "W391" # blank line at end of file
-        ];
-      }
-      (
-        builtins.readFile (
-          pkgs.fetchurl {
-            url = "https://pastebin.com/raw/USp9dsxQ";
-            sha256 = "sha256-2rUTAqV6kaEETFQFEjQ/T43Vurlh/QGh7d76T7n2jzU=";
-          }
-        )
-      );
-in
 {
   imports = [ inputs.nixcord-trivial.homeModules.nixcord ];
 
-  options.hm.nixcord.enable = lib.mkEnableOption "NixCord";
+  options.hm.nixcord.enable = lib.mkEnableOption "Nixcord";
 
   config = lib.mkIf config.hm.nixcord.enable {
-    home.packages = builtins.attrValues { inherit krisp-patcher; };
     programs.nixcord = {
       enable = true;
-      discord.package =
-        let
-          discordPkg = import inputs.nixpkgs-unstable {
-            system = osConfig.nixpkgs.hostPlatform.system;
-            config = osConfig.nixpkgs.config;
-          };
-        in
-        lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
-          discordPkg.discord.overrideAttrs (oldAttrs: {
+      discord.package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
+        inputs.nixcord-trivial.packages.${osConfig.nixpkgs.hostPlatform.system}.discord.overrideAttrs
+          (oldAttrs: {
             installPhase =
               oldAttrs.installPhase
               + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
           })
-        );
+      );
       discord.vencord.unstable = true;
       discord.openASAR.enable = false;
       config = {
