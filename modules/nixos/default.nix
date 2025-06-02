@@ -5,6 +5,7 @@ _: {
     ./hardware.nix
     ./kanata
     ./networking.nix
+    ./nix.nix
     ./plasma.nix
     ./security.nix
     ./services.nix

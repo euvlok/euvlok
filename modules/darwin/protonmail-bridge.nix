@@ -1,7 +1,8 @@
 {
+  inputs,
+  pkgs,
   lib,
   config,
-  pkgs,
   ...
 }:
 let
@@ -37,7 +38,6 @@ in
   };
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
-
     # LaunchAgent configuration for macOS
     launchd.user.agents."protonmail-bridge" = {
       command = "${lib.getExe cfg.package} --noninteractive --log-level ${cfg.logLevel}";
@@ -47,7 +47,7 @@ in
         EnvironmentVariables = {
           PATH = lib.makeBinPath [
             cfg.package
-            pkgs.coreutils
+            inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-coreutils-noprefix
           ];
         };
       };

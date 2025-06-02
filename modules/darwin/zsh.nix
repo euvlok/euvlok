@@ -2,18 +2,18 @@
   pkgs,
   lib,
   config,
-  hmConfig,
-  extraAliases ? "",
+  hmConfig ? config.home-manager.users.${config.system.primaryUser},
   extraInteractiveInit ? "",
   ...
 }:
 let
+  userAliasesPath = ../../hm/${hmConfig.programs.git.userName}/aliases.nix;
   shellAliases =
     ((pkgs.callPackage ../../../modules/hm/shell/aliases.nix { osConfig = config; })
       .programs.zsh.shellAliases
     )
-    // lib.optionalAttrs (hmConfig.home.username == "anon") (
-      (pkgs.callPackage ../../hm/donteatoreo/aliases.nix { }).programs.zsh.shellAliases
+    // lib.optionalAttrs (builtins.pathExists userAliasesPath) (
+      (pkgs.callPackage userAliasesPath { }).programs.zsh.shellAliases
     );
   shellAliasesStr = lib.pipe shellAliases [
     (attrs: lib.filterAttrs (name: value: builtins.isString value) attrs)
@@ -68,7 +68,6 @@ let
 
     "# Aliases"
     shellAliasesStr
-    extraAliases
 
     "# autocd"
     "setopt autocd"
@@ -110,6 +109,16 @@ let
     ''))
     (lib.optionalString (hmConfig.programs.zoxide.enable) (''eval "$(zoxide init zsh)"''))
   ];
+
+  launchd.user.agents."symlink-zsh-config" = {
+    script = ''
+      ln -sfn "/etc/zprofile" "/Users/${config.system.primaryUser}/.zprofile"
+      ln -sfn "/etc/zshenv" "/Users/${config.system.primaryUser}/.zshenv"
+      ln -sfn "/etc/zshrc" "/Users/${config.system.primaryUser}/.zshrc"
+    '';
+    serviceConfig.RunAtLoad = true;
+    serviceConfig.StartInterval = 0;
+  };
 in
 {
   programs.zsh = { inherit promptInit interactiveShellInit; };

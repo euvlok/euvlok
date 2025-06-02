@@ -2,13 +2,26 @@
   inputs,
   lib,
   config,
+  pkgs,
   ...
 }:
 let
   inherit (config.nixpkgs.hostPlatform) isLinux isDarwin;
+
   registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
+
+  buildCores =
+    lib.pipe
+      (pkgs.runCommand "cpu-cores" { } ''
+        ${pkgs.writeShellScript "get-cpu-cores" ''${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count())"''} > $out
+      '')
+      [
+        lib.fileContents
+        lib.toInt
+        (x: x - 2) # Max Cores - 2
+      ];
 in
 {
   imports = [ inputs.lix-module-source.nixosModules.default ];
@@ -16,8 +29,8 @@ in
   options.cross.nix.enable = lib.mkEnableOption "Nix";
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
-      (lib.mkIf config.nixpkgs.hostPlatform.isLinux {
-        # # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
+      (lib.mkIf isLinux {
+        # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
         environment.etc = lib.optionalAttrs isLinux (
           lib.mapAttrs' (name: value: {
             name = "nix/path/${name}";
@@ -35,13 +48,14 @@ in
         */
         environment.variables.FREETYPE_PROPERTIES = lib.optionalString isLinux "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
       })
-      (lib.mkIf isDarwin { nix.registry = lib.mkForce registry; })
       (lib.mkIf (!isDarwin) { nix.registry = lib.mkForce registry; })
       {
         nix = {
           settings =
             {
               experimental-features = "nix-command flakes pipe-operator";
+              cores = buildCores;
+
               substituters = [
                 "https://devenv.cachix.org"
                 "https://helix.cachix.org"

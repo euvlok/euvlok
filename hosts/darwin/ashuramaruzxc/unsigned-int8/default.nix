@@ -3,18 +3,14 @@
   unsigned-int8 = inputs.nix-darwin-ashuramaruzxc.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      ../../../../modules/darwin
       ../../../hm/ashuramaruzxc/fonts.nix
-      ../../shared/system.nix
       ./brew.nix
       ./configuration.nix
       ./home.nix
       ./system.nix
-      ./zsh.nix
+      { services.protonmail-bridge.enable = true; }
 
-      ../../shared/protonmail-bridge.nix
-      {
-        services.protonmail-bridge.enable = true;
-      }
       ../../../../modules/cross
       {
         cross = {

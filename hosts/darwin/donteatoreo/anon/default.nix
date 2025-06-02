@@ -3,12 +3,11 @@
   anons-Mac-mini = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      ../../shared/system.nix
+      ../../../../modules/darwin
       ./configuration.nix
       ./fonts.nix
       ./home.nix
       ./system.nix
-      ./zsh.nix
 
       ../../../../modules/cross
       {
