@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   lib,
   config,
   osConfig,
@@ -16,9 +17,6 @@
       discord.package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
         inputs.nixcord-trivial.packages.${osConfig.nixpkgs.hostPlatform.system}.discord.overrideAttrs
           (oldAttrs: {
-            meta = oldAttrs.meta // {
-              license = lib.licenses.free;
-            };
             installPhase =
               oldAttrs.installPhase
               + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
