@@ -53,9 +53,11 @@
                 ;
               inherit (steamSuper.stdenv.cc.cc) lib;
             })
-            ++ (lib.optionals (config.users.users ? "ashuramaruxzc") builtins.attrValues {
-              inherit (steamSuper) thcrap-steam-proton-wrapper;
-            });
+            ++ (lib.optionals (config.users.users ? "ashuramaruzxc") (
+              builtins.attrValues {
+                inherit (steamSuper) thcrap-steam-proton-wrapper;
+              }
+            ));
         };
         # for people that want non official bottles
         bottles = super.bottles.override {
