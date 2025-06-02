@@ -57,7 +57,9 @@
             {
                 "file_format_version" : "1.0.0",
                 "ICD" : {
-                    "library_path" : "${pkgs.unstable.egl-wayland}/lib/libnvidia-egl-wayland.so"
+                    "library_path" : "${
+                      inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.egl-wayland
+                    }/lib/libnvidia-egl-wayland.so"
                 }
             }
           '';
