@@ -160,6 +160,14 @@ let
         editor.defaultFormatter = "tamasfe.even-better-toml";
         editor.formatOnSave = true;
       };
+      "[yaml]" = {
+        editor.defaultFormatter = "esbenp.prettier-vscode";
+        editor.formatOnSave = true;
+      };
+      "[yml]" = {
+        editor.defaultFormatter = "esbenp.prettier-vscode";
+        editor.formatOnSave = true;
+      };
       "[shellscript]" = {
         editor.formatOnSave = true;
       };
@@ -234,16 +242,6 @@ let
     // lib.optionalAttrs config.hm.languages.lua {
       "[lua]" = {
         editor.defaultFormatter = "sumneko.lua";
-        editor.formatOnSave = true;
-      };
-    }
-    // lib.optionalAttrs config.hm.languages.yaml {
-      "[yaml]" = {
-        editor.defaultFormatter = "esbenp.prettier-vscode";
-        editor.formatOnSave = true;
-      };
-      "[yml]" = {
-        editor.defaultFormatter = "esbenp.prettier-vscode";
         editor.formatOnSave = true;
       };
     }
