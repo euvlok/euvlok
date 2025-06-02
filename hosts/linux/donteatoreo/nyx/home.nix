@@ -61,7 +61,7 @@ in
                   ssh.enable = true;
                   vscode.enable = true;
                   yazi.enable = true;
-                  zed.enable = true;
+                  zed-editor.enable = true;
                   zellij.enable = true;
                   zsh.enable = true;
                 };
