@@ -26,7 +26,7 @@
         "http"
       ]
       ++ lib.optionals config.programs.fish.enable [ "fish" ]
-      ++ lib.optionals config.programs.nu.enable [ "nu" ]
+      ++ lib.optionals config.programs.nushell.enable [ "nu" ]
       ++ (lib.optionals config.hm.languages.csharp [ "csharp" ])
       ++ (lib.optionals config.hm.languages.clojure [ "clojure" ])
       ++ (lib.optionals config.hm.languages.dart [
