@@ -132,7 +132,12 @@
       # JavaScript
       ++ lib.optionals config.hm.languages.javascript (
         builtins.attrValues {
-          inherit (pkgs) nodejs bun deno;
+          inherit (pkgs)
+            nodejs
+            bun
+            deno
+            yarn
+            ;
           inherit (pkgs.nodePackages)
             npm
             pnpm
@@ -140,8 +145,8 @@
             prettier
             typescript-language-server
             ;
-          inherit (pkgs) yarn;
         }
+
       )
       # Kotlin
       ++ lib.optionals config.hm.languages.kotlin (
@@ -224,20 +229,6 @@
       # Swift
       ++ lib.optionals config.hm.languages.swift (
         builtins.attrValues { inherit (pkgs) swift swift-format sourcekit-lsp; }
-      )
-      # TypeScript
-      ++ lib.optionals config.hm.languages.typescript (
-        builtins.attrValues {
-          inherit (pkgs) nodejs bun yarn;
-          inherit (pkgs.nodePackages)
-            npm
-            pnpm
-            typescript
-            typescript-language-server
-            eslint
-            prettier
-            ;
-        }
       )
       ++ lib.optionals config.hm.languages.zig (builtins.attrValues { inherit (pkgs) zig zls; });
   };
