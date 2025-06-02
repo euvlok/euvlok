@@ -41,8 +41,8 @@
           pluginsRepo = pkgs.fetchFromGitHub {
             owner = "yazi-rs";
             repo = "plugins";
-            rev = "55bf6996ada3df4cbad331ce3be0c1090769fc7c";
-            hash = "sha256-v/C+ZBrF1ghDt1SXpZcDELmHMVAqfr44iWxzUWynyRk=";
+            rev = "63f9650e522336e0010261dcd0ffb0bf114cf912";
+            hash = "sha256-ZCLJ6BjMAj64/zM606qxnmzl2la4dvO/F5QFicBEYfU=";
           };
         in
         {
@@ -63,8 +63,8 @@
           starship = pkgs.fetchFromGitHub {
             owner = "Rolv-Apneseth";
             repo = "starship.yazi";
-            rev = "c0707544f1d526f704dab2da15f379ec90d613c2";
-            hash = "sha256-H8j+9jcdcpPFXVO/XQZL3zq1l5f/WiOm4YUxAMduSRs=";
+            rev = "6a0f3f788971b155cbc7cec47f6f11aebbc148c9";
+            hash = "sha256-q1G0Y4JAuAv8+zckImzbRvozVn489qiYVGFQbdCxC98=";
           };
         };
       initLua = builtins.concatStringsSep "\n" (
