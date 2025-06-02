@@ -239,7 +239,7 @@ let
         auto-format = true;
         indent.tab-width = 4;
         indent.unit = "    ";
-        language-servers = config.hm.languages.typescript [ "deno" ];
+        language-servers = [ "deno" ];
       }
     ]
     ++ lib.optionals config.hm.languages.clojure [
