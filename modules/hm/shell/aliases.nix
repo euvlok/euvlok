@@ -74,6 +74,14 @@ let
       }; __02fda1f0
     '';
 
+    clean-roots = ''
+      nix-store --gc --print-roots \
+      | grep -v -E '^(/nix/var|/run/\w+-system|\{|/proc)' \
+      | grep -v -E 'home-manager|flake-registry\.json' \
+      | grep -o -E '^\S+' \
+      | xargs -L1 unlink
+    '';
+
     rebuild =
       if osConfig.nixpkgs.hostPlatform.isLinux then
         "nixos-rebuild switch --use-remote-sudo --flake $(readlink -f /etc/nixos)"

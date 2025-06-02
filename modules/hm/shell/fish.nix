@@ -42,21 +42,51 @@
       nix-build-file = ''
         function nix-build-file --description 'Build a Nix file using callPackage'
             set file "$argv[1]"
-            # Default args to an empty attribute set string
             set args "{}"
-
-            # Check if args argument is provided
+            
             if test -n "$argv[2]"
                 set args "$argv[2]"
             end
-
-            # Construct the Nix expression string. Use double quotes for
-            # variable expansion. Be careful with nested quotes and escaping if
-            # the args string itself contains special chars.
-            set nix_expr "with import <nixpkgs> {}; callPackage ./$file $args"
-            nix-build -E "$nix_expr"
+            
+            set expanded_file (realpath "$file")
+            nix-build -E "with import <nixpkgs> {}; callPackage $expanded_file $args"
         end
       '';
+
+      clean-roots = ''
+        function clean-roots --description 'Clean up nix store roots'
+            nix-store --gc --print-roots \
+            | grep -v -E '^(/nix/var|/run/\w+-system|\{|/proc)' \
+            | grep -v -E 'home-manager|flake-registry\.json' \
+            | grep -o -E '^\S+' \
+            | xargs -L1 unlink
+        end
+      '';
+
+      now = ''
+        function now --description 'Current time in HH:MM:SS format'
+            date '+%H:%M:%S'
+        end
+      '';
+
+      nowdate = ''
+        function nowdate --description 'Current date in DD-MM-YYYY format'
+            date '+%d-%m-%Y'
+        end
+      '';
+
+      nowunix = ''
+        function nowunix --description 'Current Unix timestamp'
+            date '+%s'
+        end
+      '';
+
+      xdg-data-dirs = ''
+        function xdg-data-dirs --description 'List XDG data directories with indices'
+            echo "$XDG_DATA_DIRS" | tr ':' '\n' | nl -v 0
+        end
+      '';
+
       rebuild = ''
         function rebuild --description 'Rebuild system configuration (NixOS or Darwin)'
             set uname_str (uname -s)
@@ -67,35 +97,30 @@
             end
         end
       '';
+
       update = ''
         function update --description 'Update personal inputs'
             set nix_user (whoami)
             set raw_host (hostname)
             set uname_str (uname -s)
-            if test (string match -r -i darwin $uname_str)
-                set nix_host (string replace -r '\.local$' \'\' -- $raw_host)
+            
+            if string match -q -i "*darwin*" -- "$uname_str"
+                set nix_host (string replace -r '\.local$' "" -- "$raw_host")
                 set flake_attr "darwinConfigurations"
             else
-                set nix_host $raw_host
+                set nix_host "$raw_host"
                 set flake_attr "nixosConfigurations"
             end
-            set flake_path /etc/nixos
-            set flake_eval_path /etc/nixos
-            set nix_user_escaped (string replace '"' '\\"' -- $nix_user)
-            set nix_host_escaped (string replace '"' '\\"' -- $nix_host)
-            set nix_expr "let
-          flake = builtins.getFlake \"$flake_eval_path\";
-          host = flake.$flake_attr.\"$nix_host_escaped\";
-          user = \"$nix_user_escaped\";
-        in
-          host.config.home-manager.users.\''${user}.programs.git.userName"
-            set github_username (
-                nix eval --raw --impure --expr "$nix_expr" | tr '[:upper:]' '[:lower:]' | string trim
-            )
-            set matching_inputs (
-                nix eval --json --impure --expr "(builtins.attrNames (builtins.getFlake \"$flake_eval_path\").inputs)" \
-                | jq -r --arg pattern "-$github_username" '.[] | select(endswith($pattern))' | string join ' '
-            )
+            
+            set flake_path (readlink -f "/etc/nixos")
+            set nix_user_escaped (string replace '"' '\\"' -- "$nix_user")
+            set nix_host_escaped (string replace '"' '\\"' -- "$nix_host")
+            
+            set nix_expr "let flake = builtins.getFlake \"$flake_path\"; host = flake.$flake_attr.\"$nix_host_escaped\"; user = \"$nix_user_escaped\"; in host.config.home-manager.users.\''${user}.programs.git.userName"
+            
+            set github_username (nix eval --raw --impure --expr "$nix_expr" | string lower | string trim)
+            
+            set matching_inputs (nix eval --json --impure --expr "(builtins.attrNames (builtins.getFlake \"$flake_path\").inputs)" | jq -r --arg pattern "-$github_username" '.[] | select(endswith($pattern))' | string join ' ')
             nix flake update $matching_inputs --flake "$flake_path"
         end
       '';

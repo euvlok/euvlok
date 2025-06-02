@@ -5,6 +5,14 @@ def nix-build-file [
     nix-build -E $"with import <nixpkgs> {}; callPackage ($file | path expand) ($args)"
 }
 
+def clean-roots [] {
+  nix-store --gc --print-roots
+  | rg --no-filename -v '^(/nix/var|/run/\w+-system|\{|/proc)'
+  | rg --no-filename -v 'home-manager|flake-registry\.json'
+  | rg --no-filename -o -r '$1' '^(\S+)'
+  | xargs -L1 unlink
+}
+
 def now [] { date now | format date "%H:%M:%S" }
 def nowdate [] { date now | format date "%d-%m-%Y" }
 def nowunix [] { date now | format date "%s" }
