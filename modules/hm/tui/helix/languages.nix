@@ -71,6 +71,10 @@ let
       };
     }
     // lib.optionalAttrs config.hm.languages.javascript {
+      typescript-language-server = {
+        command = "typescript-language-server";
+        args = [ "--stdio" ];
+      };
       deno = {
         command = "deno";
         args = [ "lsp" ];
@@ -169,12 +173,6 @@ let
     // lib.optionalAttrs config.hm.languages.swift {
       sourcekit-lsp = {
         command = "sourcekit-lsp";
-      };
-    }
-    // lib.optionalAttrs config.hm.languages.typescript {
-      typescript-language-server = {
-        command = "typescript-language-server";
-        args = [ "--stdio" ];
       };
     }
     // lib.optionalAttrs config.hm.languages.zig {
