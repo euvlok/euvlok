@@ -53,7 +53,10 @@ in
         nix = {
           settings =
             {
-              experimental-features = "nix-command flakes pipe-operator";
+              experimental-features =
+                "nix-command flakes "
+                + lib.optionalString (config.nix.package.pname == "lix") "pipe-operator"
+                + lib.optionalString (config.nix.package.pname == "nix") "pipe-operators";
               cores = buildCores;
 
               substituters = [

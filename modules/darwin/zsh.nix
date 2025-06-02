@@ -2,14 +2,14 @@
   pkgs,
   lib,
   config,
-  hmConfig ? config.home-manager.users.${config.system.primaryUser},
-  extraInteractiveInit ? "",
   ...
 }:
 let
+  hmConfig = config.home-manager.users.${config.system.primaryUser};
+
   userAliasesPath = ../../hm/${hmConfig.programs.git.userName}/aliases.nix;
   shellAliases =
-    ((pkgs.callPackage ../../../modules/hm/shell/aliases.nix { osConfig = config; })
+    ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { osConfig = config; })
       .programs.zsh.shellAliases
     )
     // lib.optionalAttrs (builtins.pathExists userAliasesPath) (
@@ -84,7 +84,6 @@ let
 
     "# Custom plugins"
     customPluginsStr
-    extraInteractiveInit
   ];
   promptInit = lib.mkMerge [
     (lib.optionalString (hmConfig.programs.ghostty.enable) (''
@@ -109,7 +108,9 @@ let
     ''))
     (lib.optionalString (hmConfig.programs.zoxide.enable) (''eval "$(zoxide init zsh)"''))
   ];
-
+in
+{
+  programs.zsh = { inherit promptInit interactiveShellInit; };
   launchd.user.agents."symlink-zsh-config" = {
     script = ''
       ln -sfn "/etc/zprofile" "/Users/${config.system.primaryUser}/.zprofile"
@@ -119,7 +120,4 @@ let
     serviceConfig.RunAtLoad = true;
     serviceConfig.StartInterval = 0;
   };
-in
-{
-  programs.zsh = { inherit promptInit interactiveShellInit; };
 }

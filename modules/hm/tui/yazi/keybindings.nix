@@ -1,4 +1,9 @@
-{ pkgs, osConfig, ... }:
+{
+  pkgs,
+  lib,
+  osConfig,
+  ...
+}:
 let
   inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
   genKeyBind = (pkgs.callPackage ./lib.nix { }).genKeyBind;
@@ -44,7 +49,7 @@ let
     (builtins.map (
       n:
       genKeyBind "Switch to Tab ${toString (n + 1)}" [ "${toString (n + 1)}" ] "tab_switch ${toString n}"
-    ))
+    ) (lib.range 0 8))
     ++ [
       (genKeyBind "Close current tab" [ (if isDarwin then "<D-q>" else "<C-q>") ] "close")
       (genKeyBind "Create a new tab using the current path" [ "t" ] "tab_create --current")
