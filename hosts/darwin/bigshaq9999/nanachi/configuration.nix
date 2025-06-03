@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  euvlok,
   ...
 }:
 {

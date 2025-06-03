@@ -1,139 +1,142 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
   osConfig,
+  euvlok,
   ...
 }:
 let
-  mkExt = (pkgs.callPackage ./lib.nix { inherit inputs osConfig; }).mkExt;
+  vscodeSystem = { inherit (osConfig.nixpkgs.hostPlatform) system; };
+  inherit (euvlok) mkExt;
 
   extensions =
     [
       # Nix
-      (mkExt "bbenoist" "nix")
-      (mkExt "jnoortheen" "nix-ide")
-      (mkExt "kamadorueda" "alejandra")
+      (mkExt vscodeSystem "bbenoist" "nix")
+      (mkExt vscodeSystem "jnoortheen" "nix-ide")
+      (mkExt vscodeSystem "kamadorueda" "alejandra")
 
       # Shells
-      (mkExt "bmalehorn" "shell-syntax")
-      (mkExt "mads-hartmann" "bash-ide-vscode")
-      (mkExt "rogalmic" "bash-debug")
-      (mkExt "timonwong" "shellcheck")
+      (mkExt vscodeSystem "bmalehorn" "shell-syntax")
+      (mkExt vscodeSystem "mads-hartmann" "bash-ide-vscode")
+      (mkExt vscodeSystem "rogalmic" "bash-debug")
+      (mkExt vscodeSystem "timonwong" "shellcheck")
 
       # Code Quality
-      (mkExt "streetsidesoftware" "code-spell-checker")
-      (mkExt "usernamehw" "errorlens")
+      (mkExt vscodeSystem "streetsidesoftware" "code-spell-checker")
+      (mkExt vscodeSystem "usernamehw" "errorlens")
 
       # Markup languages
-      (mkExt "davidanson" "vscode-markdownlint")
-      (mkExt "redhat" "vscode-xml")
-      (mkExt "redhat" "vscode-yaml")
-      (mkExt "tamasfe" "even-better-toml")
-      (mkExt "yzhang" "markdown-all-in-one")
-      (mkExt "zainchen" "json")
+      (mkExt vscodeSystem "davidanson" "vscode-markdownlint")
+      (mkExt vscodeSystem "redhat" "vscode-xml")
+      (mkExt vscodeSystem "redhat" "vscode-yaml")
+      (mkExt vscodeSystem "tamasfe" "even-better-toml")
+      (mkExt vscodeSystem "yzhang" "markdown-all-in-one")
+      (mkExt vscodeSystem "zainchen" "json")
 
       # Programming Languages
-      (mkExt "dbaeumer" "vscode-eslint")
-      (mkExt "mgmcdermott" "vscode-language-babel")
+      (mkExt vscodeSystem "dbaeumer" "vscode-eslint")
+      (mkExt vscodeSystem "mgmcdermott" "vscode-language-babel")
 
       # Misc
-      (mkExt "editorconfig" "editorconfig")
-      (mkExt "oderwat" "indent-rainbow")
-      (mkExt "visualstudioexptteam" "vscodeintellicode")
+      (mkExt vscodeSystem "editorconfig" "editorconfig")
+      (mkExt vscodeSystem "oderwat" "indent-rainbow")
+      (mkExt vscodeSystem "visualstudioexptteam" "vscodeintellicode")
     ]
-    ++ lib.optionals config.programs.direnv.enable [ (mkExt "mkhl" "direnv") ]
-    ++ lib.optionals config.programs.fish.enable [ (mkExt "bmalehorn" "vscode-fish") ]
+    ++ lib.optionals config.programs.direnv.enable [ (mkExt vscodeSystem "mkhl" "direnv") ]
+    ++ lib.optionals config.programs.fish.enable [ (mkExt vscodeSystem "bmalehorn" "vscode-fish") ]
     ++ lib.optionals config.programs.nushell.enable [
-      (mkExt "thenuprojectcontributors" "vscode-nushell-lang")
+      (mkExt vscodeSystem "thenuprojectcontributors" "vscode-nushell-lang")
     ]
 
     # Language-specific extensions
     ++ lib.optionals config.hm.languages.csharp [
-      (mkExt "ms-dotnettools" "csharp")
-      (mkExt "ms-dotnettools" "vscode-dotnet-runtime")
+      (mkExt vscodeSystem "ms-dotnettools" "csharp")
+      (mkExt vscodeSystem "ms-dotnettools" "vscode-dotnet-runtime")
     ]
     ++ lib.optionals config.hm.languages.cpp [
-      (mkExt "ms-vscode" "cmake-tools")
-      (mkExt "ms-vscode" "cpptools")
-      (mkExt "ms-vscode" "cpptools-extension-pack")
-      (mkExt "twxs" "cmake")
+      (mkExt vscodeSystem "ms-vscode" "cmake-tools")
+      (mkExt vscodeSystem "ms-vscode" "cpptools")
+      (mkExt vscodeSystem "ms-vscode" "cpptools-extension-pack")
+      (mkExt vscodeSystem "twxs" "cmake")
     ]
     ++ lib.optionals config.hm.languages.rust [
-      (mkExt "fill-labs" "dependi")
-      (mkExt "rust-lang" "rust-analyzer")
-      (mkExt "vadimcn" "vscode-lldb")
+      (mkExt vscodeSystem "fill-labs" "dependi")
+      (mkExt vscodeSystem "rust-lang" "rust-analyzer")
+      (mkExt vscodeSystem "vadimcn" "vscode-lldb")
     ]
     ++ lib.optionals config.hm.languages.lua [
-      (mkExt "keyring" "lua")
-      (mkExt "sumneko" "lua")
+      (mkExt vscodeSystem "keyring" "lua")
+      (mkExt vscodeSystem "sumneko" "lua")
     ]
     ++ lib.optionals config.hm.languages.javascript [
-      (mkExt "bradlc" "vscode-tailwindcss")
-      (mkExt "christian-kohler" "npm-intellisense")
-      (mkExt "denoland" "vscode-deno")
-      (mkExt "esbenp" "prettier-vscode")
-      (mkExt "esbenp" "prettier-vscode")
-      (mkExt "ms-vscode" "vscode-typescript-next")
-      (mkExt "syler" "sass-indented")
+      (mkExt vscodeSystem "bradlc" "vscode-tailwindcss")
+      (mkExt vscodeSystem "christian-kohler" "npm-intellisense")
+      (mkExt vscodeSystem "denoland" "vscode-deno")
+      (mkExt vscodeSystem "esbenp" "prettier-vscode")
+      (mkExt vscodeSystem "esbenp" "prettier-vscode")
+      (mkExt vscodeSystem "ms-vscode" "vscode-typescript-next")
+      (mkExt vscodeSystem "syler" "sass-indented")
     ]
     ++ lib.optionals config.hm.languages.nim [
-      (mkExt "nimLang" "nimlang")
-      (mkExt "nimsaem" "nimvscode")
+      (mkExt vscodeSystem "nimLang" "nimlang")
+      (mkExt vscodeSystem "nimsaem" "nimvscode")
     ]
     ++ lib.optionals config.hm.languages.go [
-      (mkExt "golang" "go")
-      (mkExt "premparihar" "gotestexplorer")
+      (mkExt vscodeSystem "golang" "go")
+      (mkExt vscodeSystem "premparihar" "gotestexplorer")
     ]
     ++ lib.optionals config.hm.languages.swift [
-      (mkExt "swift-server" "swift")
-      (mkExt "vknabel" "swift-coverage")
+      (mkExt vscodeSystem "swift-server" "swift")
+      (mkExt vscodeSystem "vknabel" "swift-coverage")
     ]
     ++ lib.optionals config.hm.languages.ruby [
-      (mkExt "rebornix" "ruby")
-      (mkExt "shopify" "ruby-lsp")
-      (mkExt "sorbet" "sorbet-vscode-extension")
-      (mkExt "wingrunr21" "vscode-ruby")
+      (mkExt vscodeSystem "rebornix" "ruby")
+      (mkExt vscodeSystem "shopify" "ruby-lsp")
+      (mkExt vscodeSystem "sorbet" "sorbet-vscode-extension")
+      (mkExt vscodeSystem "wingrunr21" "vscode-ruby")
     ]
     ++ lib.optionals config.hm.languages.python [
-      (mkExt "charliermarsh" "ruff")
-      (mkExt "ms-python" "debugpy")
-      (mkExt "ms-python" "python")
-      (mkExt "ms-python" "vscode-pylance")
-      (mkExt "ms-toolsai" "jupyter")
+      (mkExt vscodeSystem "charliermarsh" "ruff")
+      (mkExt vscodeSystem "ms-python" "debugpy")
+      (mkExt vscodeSystem "ms-python" "python")
+      (mkExt vscodeSystem "ms-python" "vscode-pylance")
+      (mkExt vscodeSystem "ms-toolsai" "jupyter")
     ]
     ++ lib.optionals config.hm.languages.php [
-      (mkExt "devsense" "phptools-vscode")
-      (mkExt "bmewburn" "vscode-intelephense-client")
-      (mkExt "xdebug" "php-debug")
+      (mkExt vscodeSystem "devsense" "phptools-vscode")
+      (mkExt vscodeSystem "bmewburn" "vscode-intelephense-client")
+      (mkExt vscodeSystem "xdebug" "php-debug")
     ]
-    ++ lib.optionals config.hm.languages.kotlin [ (mkExt "fwcd" "kotlin") ]
-    ++ lib.optionals config.hm.languages.elixir [ (mkExt "jakebecker" "elixir-ls") ]
+    ++ lib.optionals config.hm.languages.kotlin [ (mkExt vscodeSystem "fwcd" "kotlin") ]
+    ++ lib.optionals config.hm.languages.elixir [ (mkExt vscodeSystem "jakebecker" "elixir-ls") ]
     ++ lib.optionals config.hm.languages.java [
-      (mkExt "oracle" "oracle-java")
-      (mkExt "redhat" "java")
-      (mkExt "vscjava" "vscode-gradle")
-      (mkExt "vscjava" "vscode-java-debug")
-      (mkExt "vscjava" "vscode-java-dependency")
-      (mkExt "vscjava" "vscode-java-test")
-      (mkExt "vscjava" "vscode-maven")
+      (mkExt vscodeSystem "oracle" "oracle-java")
+      (mkExt vscodeSystem "redhat" "java")
+      (mkExt vscodeSystem "vscjava" "vscode-gradle")
+      (mkExt vscodeSystem "vscjava" "vscode-java-debug")
+      (mkExt vscodeSystem "vscjava" "vscode-java-dependency")
+      (mkExt vscodeSystem "vscjava" "vscode-java-test")
+      (mkExt vscodeSystem "vscjava" "vscode-maven")
     ]
     ++ lib.optionals config.hm.languages.haskell [
-      (mkExt "haskell" "haskell")
-      (mkExt "justusadam" "language-haskell")
+      (mkExt vscodeSystem "haskell" "haskell")
+      (mkExt vscodeSystem "justusadam" "language-haskell")
     ]
-    ++ lib.optionals config.hm.languages.scala [ (mkExt "scalameta" "metals") ]
-    ++ lib.optionals config.hm.languages.ocaml [ (mkExt "ocamllabs" "vscode-ocaml-platform") ]
-    ++ lib.optionals config.hm.languages.perl [ (mkExt "richterger" "perl") ]
+    ++ lib.optionals config.hm.languages.scala [ (mkExt vscodeSystem "scalameta" "metals") ]
+    ++ lib.optionals config.hm.languages.ocaml [
+      (mkExt vscodeSystem "ocamllabs" "vscode-ocaml-platform")
+    ]
+    ++ lib.optionals config.hm.languages.perl [ (mkExt vscodeSystem "richterger" "perl") ]
     ++ lib.optionals config.hm.languages.dart [
-      (mkExt "dart-code" "dart-code")
-      (mkExt "dart-code" "flutter")
+      (mkExt vscodeSystem "dart-code" "dart-code")
+      (mkExt vscodeSystem "dart-code" "flutter")
     ]
-    ++ lib.optionals config.hm.languages.clojure [ (mkExt "betterthantomorrow" "calva") ]
-    ++ lib.optionals config.hm.languages.fsharp [ (mkExt "ionide" "ionide-fsharp") ]
-    ++ lib.optionals config.hm.languages.lisp [ (mkExt "mattn" "lisp") ]
-    ++ lib.optionals config.hm.languages.zig [ (mkExt "ziglang" "vscode-zig") ];
+    ++ lib.optionals config.hm.languages.clojure [ (mkExt vscodeSystem "betterthantomorrow" "calva") ]
+    ++ lib.optionals config.hm.languages.fsharp [ (mkExt vscodeSystem "ionide" "ionide-fsharp") ]
+    ++ lib.optionals config.hm.languages.lisp [ (mkExt vscodeSystem "mattn" "lisp") ]
+    ++ lib.optionals config.hm.languages.zig [ (mkExt vscodeSystem "ziglang" "vscode-zig") ];
 
   settings =
     {

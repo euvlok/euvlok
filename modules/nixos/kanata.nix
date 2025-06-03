@@ -2,18 +2,17 @@
   pkgs,
   lib,
   config,
+  euvlok,
   ...
 }:
 let
-  funcs = pkgs.callPackage ./lib.nix { };
-  inherit (funcs)
-    mkConfig
+  inherit (euvlok)
     mkTapHold
     mkTapHoldReleaseKeys
     mkMultiMod
     mkChord
+    mkConfig
     ;
-
   inherit (lib)
     mkEnableOption
     mkOption

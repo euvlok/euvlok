@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ inputs, euvlok, ... }:
 {
   unsigned-int8 = inputs.nix-darwin-ashuramaruzxc.lib.darwinSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs euvlok; };
     modules = [
       ../../../../modules/darwin
       ../../../hm/ashuramaruzxc/fonts.nix

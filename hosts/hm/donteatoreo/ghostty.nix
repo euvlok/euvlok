@@ -1,7 +1,11 @@
-{ pkgs, lib, ... }:
+{
+  lib,
+  euvlok,
+  ...
+}:
 let
-  libFuncs = pkgs.callPackage ../../../modules/hm/terminal/ghostty/lib.nix { superKey = "super"; };
-  inherit (libFuncs)
+  superKey = "super";
+  inherit (euvlok)
     mkSuper
     mkSuperShift
     mkSuperShiftNested
@@ -17,15 +21,15 @@ let
   splits =
     let
       mkSplitCommands = k: v: [
-        (mkSuperShiftNested "s" k "new_split:${k}")
-        (mkSuperShiftNested "r" k "resize_split:${k},30")
-        (mkSuperShift k "goto_split:${v}")
+        (mkSuperShiftNested superKey "s" k "new_split:${k}")
+        (mkSuperShiftNested superKey "r" k "resize_split:${k},30")
+        (mkSuperShift superKey k "goto_split:${v}")
       ];
     in
     lib.flatten (lib.mapAttrsToList mkSplitCommands directions)
     ++ [
-      (mkSuper "t" "new_tab")
-      (mkSuper "e" "equalize_splits")
+      (mkSuper superKey "t" "new_tab")
+      (mkSuper superKey "e" "equalize_splits")
     ];
 in
 {

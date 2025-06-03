@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ inputs, euvlok, ... }:
 {
   blind-faith = inputs.nixpkgs-lay-by.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs euvlok; };
     modules = [
       ./configuration.nix
       ./home.nix

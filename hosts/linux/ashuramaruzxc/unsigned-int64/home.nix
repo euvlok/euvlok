@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  euvlok,
   ...
 }:
 let
@@ -67,7 +68,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
     users = lib.mapAttrs (_: extraImports: mkUser extraImports) userConfigs;
   };
 }

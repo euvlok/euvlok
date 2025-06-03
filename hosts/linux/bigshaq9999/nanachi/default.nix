@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ inputs, euvlok, ... }:
 {
   nanachi = inputs.nixpkgs-bigshaq9999.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs euvlok; };
     modules = [
       ./configuration.nix
       ./home.nix

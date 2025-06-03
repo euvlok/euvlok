@@ -136,6 +136,9 @@
 
   outputs =
     inputs:
+    let
+      euvlok = inputs.nixpkgs.lib.extend (import ./lib inputs);
+    in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ inputs.devenv.flakeModule ];
       systems = [
@@ -193,8 +196,9 @@
         };
 
       flake = {
-        nixosConfigurations = import ./hosts/linux { inherit inputs; };
-        darwinConfigurations = import ./hosts/darwin { inherit inputs; };
+        inherit euvlok;
+        nixosConfigurations = import ./hosts/linux { inherit inputs euvlok; };
+        darwinConfigurations = import ./hosts/darwin { inherit inputs euvlok; };
       };
     };
 }

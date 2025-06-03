@@ -3,12 +3,12 @@
   lib,
   config,
   osConfig,
+  euvlok,
   ...
 }:
 let
   superKey = if osConfig.nixpkgs.hostPlatform.isLinux then "super" else "ctrl";
-  libFuncs = pkgs.callPackage ./lib.nix { inherit superKey; };
-  inherit (libFuncs)
+  inherit (euvlok)
     mkSuper
     mkSuperPerf
     mkSuperShift
@@ -34,37 +34,37 @@ let
 
   mkKeybindings = {
     cursor = [
-      (mkSuper "left" "text:${ctrl.SOH}")
-      (mkSuper "right" "text:${ctrl.ENQ}")
+      (mkSuper superKey "left" "text:${ctrl.SOH}")
+      (mkSuper superKey "right" "text:${ctrl.ENQ}")
     ];
 
     screen = [
-      (mkSuper "k" "clear_screen")
-      (mkSuper "g" "write_screen_file:open")
-      (mkSuperShift "left" "scroll_page_up")
-      (mkSuperShift "right" "scroll_page_down")
+      (mkSuper superKey "k" "clear_screen")
+      (mkSuper superKey "g" "write_screen_file:open")
+      (mkSuperShift superKey "left" "scroll_page_up")
+      (mkSuperShift superKey "right" "scroll_page_down")
     ];
 
     font = [
-      (mkSuper "0" "reset_font_size")
-      (mkSuper "equal" "increase_font_size:1")
+      (mkSuper superKey "0" "reset_font_size")
+      (mkSuper superKey "equal" "increase_font_size:1")
       "${superKey}+shift+equal=increase_font_size:1"
-      (mkSuper "minus" "decrease_font_size:1")
+      (mkSuper superKey "minus" "decrease_font_size:1")
       "${superKey}+shift+minus=decrease_font_size:1"
     ];
 
     clipboard = [
-      (mkSuperPerf "c" "copy_to_clipboard")
-      (mkSuperPerf "v" "paste_from_clipboard")
+      (mkSuperPerf superKey "c" "copy_to_clipboard")
+      (mkSuperPerf superKey "v" "paste_from_clipboard")
     ];
 
     misc = [
-      (mkSuper "a" "select_all")
-      (mkSuper "," "reload_config")
-      (mkSuperShift "backspace" "close_window")
+      (mkSuper superKey "a" "select_all")
+      (mkSuper superKey "," "reload_config")
+      (mkSuperShift superKey "backspace" "close_window")
     ];
 
-    tabs = map (n: mkSuper (toString n) "goto_tab:${toString n}") (lib.range 1 9);
+    tabs = map (n: mkSuper superKey (toString n) "goto_tab:${toString n}") (lib.range 1 9);
   };
 
   # When altKeyBehavior is false the Alt mappings are omitted and the Ctrl keys are used
@@ -104,7 +104,6 @@ in
     programs.ghostty = {
       enable = true;
       package = if osConfig.nixpkgs.hostPlatform.isDarwin then null else pkgs.ghostty;
-      clearDefaultKeybinds = true;
       settings = {
         ## Scroll
         scrollback-limit =

@@ -1,12 +1,12 @@
 {
-  pkgs,
   lib,
+  euvlok,
   osConfig,
   ...
 }:
 let
   inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
-  genKeyBind = (pkgs.callPackage ./lib.nix { }).genKeyBind;
+  inherit (euvlok) genKeyBind;
 
   keymap = [
     (genKeyBind "Open help" [ "~" ] "help")

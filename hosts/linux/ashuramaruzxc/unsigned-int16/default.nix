@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ inputs, euvlok, ... }:
 let
   inherit (inputs.nixos-raspberrypi-ashuramaruzxc) raspberry-pi-5;
 in
 {
   unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs euvlok; };
     modules = [
       ./configuration.nix
       ./home.nix

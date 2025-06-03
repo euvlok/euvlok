@@ -3,7 +3,7 @@ _: {
     ./audio.nix
     ./gnome.nix
     ./hardware.nix
-    ./kanata
+    ./kanata.nix
     ./networking.nix
     ./nix.nix
     ./plasma.nix

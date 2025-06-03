@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ inputs, euvlok, ... }:
 {
   signed-int16 = inputs.nixpkgs-2husecondary.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs euvlok; };
     modules = [
       ./configuration.nix
       ./home.nix

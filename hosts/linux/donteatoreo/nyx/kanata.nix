@@ -1,7 +1,6 @@
-{ pkgs, ... }:
+{ lib, ... }:
 let
-  kanataLib = pkgs.callPackage ../../../../modules/nixos/kanata/lib.nix { };
-  inherit (kanataLib)
+  inherit (lib)
     mkHomeRowModConfig
     mkLayerSwitch
     mkLayerWhileHeld

@@ -1,7 +1,9 @@
 {
   inputs,
   config,
+  lib,
   pkgs,
+  euvlok,
   ...
 }:
 let
@@ -245,7 +247,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
   };
 
   home-manager.users.root.imports = commonImports ++ [

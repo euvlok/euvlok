@@ -3,6 +3,7 @@
   pkgs,
   lib,
   config,
+  euvlok,
   ...
 }:
 let
@@ -136,7 +137,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
   };
 
   home-manager.users.ashuramaru.imports =

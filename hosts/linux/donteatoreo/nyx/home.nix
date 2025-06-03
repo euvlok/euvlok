@@ -2,6 +2,7 @@
   inputs,
   lib,
   config,
+  euvlok,
   ...
 }:
 let
@@ -13,7 +14,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
   };
 
   home-manager.users.nyx =

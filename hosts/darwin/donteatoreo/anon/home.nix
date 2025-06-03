@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   lib,
+  euvlok,
   config,
   ...
 }:
@@ -14,7 +15,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
   };
 
   home-manager.users.anon =

@@ -1,18 +1,18 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
   osConfig,
+  euvlok,
   ...
 }:
 let
-  mkExt =
-    (pkgs.callPackage ../../../modules/hm/gui/vscode/lib.nix { inherit inputs osConfig; }).mkExt;
+  vscodeSystem = { inherit (osConfig.nixpkgs.hostPlatform) system; };
+  inherit (euvlok) mkExt;
 
   languages = {
     extensions = [
-      (mkExt "james-yu" "latex-workshop")
+      (mkExt vscodeSystem "james-yu" "latex-workshop")
     ];
     settings = {
       latex-workshop.latex = {
@@ -52,7 +52,7 @@ let
   };
 
   themes = {
-    extensions = [ (mkExt "catppuccin" "catppuccin-vsc-icons") ];
+    extensions = [ (mkExt vscodeSystem "catppuccin" "catppuccin-vsc-icons") ];
     settings = {
       workbench.iconTheme = "catppuccin-${config.catppuccin.flavor}";
     };

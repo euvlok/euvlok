@@ -1,6 +1,6 @@
-{ lib }:
+inputs: self: super:
 let
-  inherit (lib)
+  inherit (super)
     concatMapStringsSep
     concatStringsSep
     isInt
@@ -11,12 +11,7 @@ let
     trim
     ;
 
-  formatSchemeList =
-    keysList:
-    pipe keysList [
-      (concatStringsSep " ")
-      (s: "(${s})")
-    ];
+  formatSchemeList = keysList: "(${concatStringsSep " " keysList})";
 
   formatKeyList = concatStringsSep " ";
 
@@ -43,7 +38,6 @@ let
     aliasName: tapKey: holdAction: timeoutHold: timeoutTap: releaseKeysList:
     mkAlias aliasName "(tap-hold-release-keys ${toString timeoutHold} ${toString timeoutTap} ${tapKey} ${holdAction} ${formatSchemeList releaseKeysList})";
 
-  # Layer switching functions using function composition
   mkLayerSwitch =
     aliasName: tapKey: layerName: timeoutHold: timeoutTap:
     mkTapHold aliasName tapKey "(layer-switch ${layerName})" timeoutHold timeoutTap;
@@ -64,16 +58,9 @@ let
 
   mkChord =
     keys: action: timeoutVar: behavior: disabledLayers:
-    pipe
-      [ keys action timeoutVar behavior disabledLayers ]
-      [
-        (
-          parts:
-          "${formatSchemeList (builtins.head parts)} ${builtins.elemAt parts 1} ${builtins.elemAt parts 2} ${builtins.elemAt parts 3} ${formatSchemeList (builtins.elemAt parts 4)}"
-        )
-      ];
+    "${formatSchemeList keys} ${action} ${timeoutVar} ${behavior} ${formatSchemeList disabledLayers}";
 
-  mapKeys = keyList: mappingFn: lib.map mappingFn keyList;
+  mapKeys = keyList: mappingFn: super.map mappingFn keyList;
 
   mapKey =
     key: mapping:
@@ -89,17 +76,13 @@ let
     else
       key;
 
-  mkLocalKeys =
-    localKeyDefs:
-    pipe localKeyDefs [
-      (mapAttrsToList (name: keycode: "${name} ${toString keycode}"))
-      (concatStringsSep "\n  ")
-      (content: ''
-        (deflocalkeys-linux
-          ${content}
-        )
-      '')
-    ];
+  mkLocalKeys = localKeyDefs: ''
+    (deflocalkeys-linux
+      ${concatStringsSep "\n  " (
+        mapAttrsToList (name: keycode: "${name} ${toString keycode}") localKeyDefs
+      )}
+    )
+  '';
 
   mkConfig =
     {
@@ -112,63 +95,46 @@ let
       extraDefCfg ? [ ],
     }:
     let
-      varsSection = lib.mapAttrsToList mkVariable variables;
+      varsSection = super.mapAttrsToList mkVariable variables;
       localKeysSection = if localKeys == { } then "" else mkLocalKeys localKeys;
-      aliasesSection = pipe aliases [
-        (aliases: if aliases == [ ] then "" else aliases)
-        (
-          aliases:
-          if aliases == "" then
-            ""
-          else
-            ''
-              (defalias
-                ${concatMapStringsSep "\n  " trim aliases}
-              )
-            ''
-        )
-      ];
-      layersSection = pipe layers [
-        (mapAttrsToList mkLayer)
-      ];
-      chordsSection = pipe chords [
-        (
-          chords:
-          if chords == [ ] then
-            ""
-          else
-            ''
-              (defchordsv2
-                ${concatStringsSep "\n  " chords}
-              )
-            ''
-        )
-      ];
-      configSections =
-        pipe
-          [
-            [ ";; Generated Kanata config by Nix" ]
-            (optional (localKeysSection != "") localKeysSection)
-            [
-              ''
-                (defsrc
-                  ${formatKeyList sourceKeys}
-                )
-              ''
-            ]
-            varsSection
-            (optional (chordsSection != "") chordsSection)
-            layersSection
-            (optional (aliasesSection != "") aliasesSection)
-          ]
-          [
-            (builtins.concatLists)
-            (concatStringsSep "\n")
-          ];
+      aliasesSection =
+        if aliases == [ ] then
+          ""
+        else
+          ''
+            (defalias
+              ${concatMapStringsSep "\n  " trim aliases}
+            )
+          '';
+      layersSection = mapAttrsToList mkLayer layers;
+      chordsSection =
+        if chords == [ ] then
+          ""
+        else
+          ''
+            (defchordsv2
+              ${concatStringsSep "\n  " chords}
+            )
+          '';
     in
-    configSections;
+    concatStringsSep "\n" (
+      builtins.concatLists [
+        [ ";; Generated Kanata config by Nix" ]
+        (optional (localKeysSection != "") localKeysSection)
+        [
+          ''
+            (defsrc
+              ${formatKeyList sourceKeys}
+            )
+          ''
+        ]
+        varsSection
+        (optional (chordsSection != "") chordsSection)
+        layersSection
+        (optional (aliasesSection != "") aliasesSection)
+      ]
+    );
 
-  # Create a home row mod configuration helper
   mkHomeRowModConfig =
     {
       keys,
@@ -179,10 +145,10 @@ let
       releaseKeys ? [ ],
     }:
     let
-      keyModPairs = lib.zipLists keys mods;
+      keyModPairs = super.zipLists keys mods;
     in
-    pipe keyModPairs [
-      (lib.map (
+    super.foldl' super.recursiveUpdate { } (
+      super.map (
         { fst, snd }:
         {
           ${fst} = {
@@ -195,11 +161,9 @@ let
               ;
           };
         }
-      ))
-      (lib.foldl' lib.recursiveUpdate { })
-    ];
+      ) keyModPairs
+    );
 
-  # Helper for common layer patterns
   mkNavigationLayer =
     {
       name ? "nav",
@@ -219,51 +183,35 @@ let
     }:
     let
       totalKeys = 16; # Common layout size
-      navMap = lib.listToAttrs (
-        lib.zipListsWith (pos: key: {
+      navMap = super.listToAttrs (
+        super.zipListsWith (pos: key: {
           name = toString pos;
           value = key;
         }) positions keys
       );
     in
     {
-      ${name} = lib.genList (i: navMap.${toString i} or fillWith) totalKeys;
+      ${name} = super.genList (i: navMap.${toString i} or fillWith) totalKeys;
     };
 in
 {
   inherit
     formatKeyList
     formatSchemeList
-
-    # Variables
-    mkVariable
-
-    # Aliases
+    mapKey
+    mapKeys
     mkAlias
-    mkTapHold
-    mkTapHoldReleaseKeys
+    mkChord
+    mkConfig
+    mkHomeRowModConfig
+    mkLayer
     mkLayerSwitch
     mkLayerWhileHeld
-    mkMultiMod
-
-    # Local keys
     mkLocalKeys
-
-    # Layers
-    mkLayer
-
-    # Chords
-    mkChord
-
-    # Key mapping
-    mapKeys
-    mapKey
-
-    # Config assembly
-    mkConfig
-
-    # Enhanced helpers
-    mkHomeRowModConfig
+    mkMultiMod
     mkNavigationLayer
+    mkTapHold
+    mkTapHoldReleaseKeys
+    mkVariable
     ;
 }

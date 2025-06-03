@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, euvlok, ... }:
 let
-  genKeyBind = (pkgs.callPackage ../../../modules/hm/tui/yazi/lib.nix { }).genKeyBind;
+  inherit (euvlok) genKeyBind;
 
   keymap = [
     (genKeyBind "Go to a directory interactively" [

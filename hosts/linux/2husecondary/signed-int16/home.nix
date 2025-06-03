@@ -1,7 +1,9 @@
 {
   inputs,
+  lib,
   pkgs,
   config,
+  euvlok,
   ...
 }:
 let
@@ -110,6 +112,6 @@ in
           }
         ];
       };
-    extraSpecialArgs = { inherit inputs release; };
+    extraSpecialArgs = { inherit inputs release euvlok; };
   };
 }
