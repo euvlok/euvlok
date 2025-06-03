@@ -65,8 +65,10 @@
             gcc
             gdb
             cmake
+            gnumake
             ninja
             ccls
+            clang
             clang-tools
             valgrind
             pkg-config

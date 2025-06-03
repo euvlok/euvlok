@@ -30,7 +30,7 @@ let
         which
         ;
 
-      # Modern Rust/Go/Zig Replacements
+      # Modern UNIX CLI Replacements
       inherit (pkgs)
         bat # cat
         bottom # htop & btop
@@ -101,17 +101,8 @@ let
         yt-dlp
         ;
 
-      # Development Tools
-      inherit (pkgs)
-        # Build Tools & Compilers
-        clang
-        cmake
-        gcc
-        gnumake
-        # Dev Utilities
-        hyperfine # CLI benchmarking tool
-        tokei # Counts lines of code
-        ;
+      # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
+      inherit (pkgs) hyperfine tokei;
     }
   );
 
