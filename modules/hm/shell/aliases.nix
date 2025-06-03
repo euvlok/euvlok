@@ -76,9 +76,9 @@ let
 
     clean-roots = ''
       nix-store --gc --print-roots \
-      | grep -v -E '^(/nix/var|/run/\w+-system|\{|/proc)' \
-      | grep -v -E 'home-manager|flake-registry\.json' \
-      | grep -o -E '^\S+' \
+      | rg --no-filename -v '^(/nix/var|/run/\w+-system|\{|/proc)' \
+      | rg --no-filename -v 'home-manager|flake-registry\.json' \
+      | rg --no-filename -o -r '$1' '^(\S+)' \
       | xargs -L1 unlink
     '';
 
