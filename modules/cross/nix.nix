@@ -27,8 +27,21 @@ in
   imports = [ inputs.lix-module-source.nixosModules.default ];
 
   options.cross.nix.enable = lib.mkEnableOption "Nix";
+  options.nixos.determinate.enable = lib.mkEnableOption "Determinate Nix";
+  options.nixos.lix.enable = lib.mkEnableOption "Lix" // {
+    default = true;
+  };
+
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
+      {
+        assertions = [
+          {
+            assertion = !(config.nixos.lix.enable && config.nixos.determinate.enable);
+            message = "You cannot use Determinate Nix & Lix at the same time";
+          }
+        ];
+      }
       (lib.mkIf isLinux {
         # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
         environment.etc = lib.optionalAttrs isLinux (
@@ -93,6 +106,13 @@ in
           );
         };
       }
+      # (lib.mkIf config.nixos.determinate.enable {
+      #   determinate.enable = true;
+      #   nix.settings.lazy-trees = true;
+      # })
+      (lib.mkIf config.nixos.lix.enable {
+        lix.enable = lib.mkDefault config.nixos.lix.enable;
+      })
     ]
   );
 }

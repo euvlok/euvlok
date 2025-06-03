@@ -113,6 +113,7 @@
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
     anime-game-launcher-source.inputs.flake-compat.follows = "";
     anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     lightly-source.url = "github:Bali10050/Darkly";
     # DO NOT override stylix utilities inputs
     # stylix-trivial.inputs.flake-parts.follows = "";

@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 let
   getCpuCores = pkgs.writeShellScript "get-cpu-cores" ''
     ${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count() or 4)"
@@ -35,6 +40,7 @@ let
   );
 in
 {
+  imports = [ inputs.determinate.darwinModules.default ];
   launchd.daemons.nix-daemon.serviceConfig = {
     SoftResourceLimits = {
       NumberOfProcesses = buildCores * 512;
