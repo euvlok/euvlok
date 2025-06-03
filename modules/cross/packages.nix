@@ -12,12 +12,22 @@ let
       inherit (inputs.nil-source.packages.${config.nixpkgs.hostPlatform.system}) nil;
       inherit (pkgs) nixfmt-rfc-style;
 
+      uutils-coreutils-noprefix = (
+        lib.hiPrio
+          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-coreutils-noprefix
+      );
+      uutils-diffutils = (
+        lib.hiPrio
+          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-diffutils
+      );
+      uutils-findutils = (
+        lib.hiPrio
+          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-findutils
+      );
+
       # Core Utilities (Shell essentials, replacements, process management)
       inherit (pkgs)
         bc
-        coreutils # Basic file, shell and text manipulation utilities
-        diffutils
-        findutils
         gawk
         gnugrep
         gnused
