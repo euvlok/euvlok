@@ -109,10 +109,10 @@
         source = "${lib.getExe pkgs.doas}";
       };
     };
-    sudo = {
-      enable = true;
-      wheelNeedsPassword = true;
-    };
+    # sudo = {
+    #   enable = true;
+    #   wheelNeedsPassword = true;
+    # };
     doas = {
       enable = true;
       wheelNeedsPassword = true;
