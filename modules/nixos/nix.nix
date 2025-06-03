@@ -1,6 +1,4 @@
-{ inputs, ... }:
-{
-  imports = [ inputs.determinate.nixosModules.default ];
+_: {
   systemd.services.nix-daemon.serviceConfig = {
     CPUQuota = "90%";
     MemoryHigh = "70%";
