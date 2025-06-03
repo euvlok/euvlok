@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ pkgs, ... }:
 {
   fonts.packages = builtins.attrValues { inherit (pkgs.nerd-fonts) monaspace noto; };
 }

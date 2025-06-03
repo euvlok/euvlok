@@ -1,9 +1,4 @@
-{
-  inputs,
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, lib, ... }:
 let
   getCpuCores = pkgs.writeShellScript "get-cpu-cores" ''
     ${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count() or 4)"

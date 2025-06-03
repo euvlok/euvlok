@@ -19,10 +19,10 @@
       overlays =
         [
           inputs.nur-trivial.overlays.default
-          (final: prev: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; })
+          (final: _: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; })
         ]
         ++ lib.optionals config.nixos.lix.enable [
-          (final: prev: {
+          (_: _: {
             lix =
               (inputs.lix-soruce.packages.${config.nixpkgs.hostPlatform.system}.default.override {
                 aws-sdk-cpp = null;

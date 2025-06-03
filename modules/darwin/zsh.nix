@@ -16,7 +16,7 @@ let
       (pkgs.callPackage userAliasesPath { }).programs.zsh.shellAliases
     );
   shellAliasesStr = lib.pipe shellAliases [
-    (attrs: lib.filterAttrs (name: value: builtins.isString value) attrs)
+    (attrs: lib.filterAttrs (_: value: builtins.isString value) attrs)
     (
       filteredAttrs:
       lib.mapAttrsToList (name: value: "alias ${name}=${lib.escapeShellArg value}") filteredAttrs

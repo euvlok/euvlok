@@ -68,6 +68,6 @@ in
     useUserPackages = true;
     backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs release; };
-    users = lib.mapAttrs (name: extraImports: mkUser extraImports) userConfigs;
+    users = lib.mapAttrs (_: extraImports: mkUser extraImports) userConfigs;
   };
 }
