@@ -21,7 +21,7 @@
           inputs.nur-trivial.overlays.default
           (final: prev: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; })
         ]
-        // lib.optionals config.nixos.lix.enable [
+        ++ lib.optionals config.nixos.lix.enable [
           (final: prev: {
             lix =
               (inputs.lix-soruce.packages.${config.nixpkgs.hostPlatform.system}.default.override {
