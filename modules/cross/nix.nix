@@ -27,7 +27,6 @@ in
   imports = [ inputs.lix-module-source.nixosModules.default ];
 
   options.cross.nix.enable = lib.mkEnableOption "Nix";
-  options.nixos.determinate.enable = lib.mkEnableOption "Determinate Nix";
   options.nixos.lix.enable = lib.mkEnableOption "Lix" // {
     default = true;
   };
@@ -106,10 +105,6 @@ in
           );
         };
       }
-      # (lib.mkIf config.nixos.determinate.enable {
-      #   determinate.enable = true;
-      #   nix.settings.lazy-trees = true;
-      # })
       (lib.mkIf config.nixos.lix.enable {
         lix.enable = lib.mkDefault config.nixos.lix.enable;
       })

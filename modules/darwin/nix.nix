@@ -40,7 +40,6 @@ let
   );
 in
 {
-  imports = [ inputs.determinate.darwinModules.default ];
   launchd.daemons.nix-daemon.serviceConfig = {
     SoftResourceLimits = {
       NumberOfProcesses = buildCores * 512;
