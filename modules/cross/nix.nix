@@ -33,14 +33,6 @@ in
 
   config = lib.mkIf config.cross.nix.enable (
     lib.mkMerge [
-      {
-        assertions = [
-          {
-            assertion = !(config.nixos.lix.enable && config.nixos.determinate.enable);
-            message = "You cannot use Determinate Nix & Lix at the same time";
-          }
-        ];
-      }
       (lib.mkIf isLinux {
         # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
         environment.etc = lib.optionalAttrs isLinux (
