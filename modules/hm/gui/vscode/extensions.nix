@@ -52,7 +52,7 @@ let
 
     # Language-specific extensions
     ++ (lib.optionals (config.hm.languages.cpp or config.hm.languages.rust or config.hm.languages.swift
-    ) [ (mkExt "vadimcn" "vscode-lldb") ])
+    ) [ (mkExt vscodeSystem "vadimcn" "vscode-lldb") ])
     ++ lib.optionals config.hm.languages.csharp [
       (mkExt vscodeSystem "ms-dotnettools" "csharp")
       (mkExt vscodeSystem "ms-dotnettools" "vscode-dotnet-runtime")
