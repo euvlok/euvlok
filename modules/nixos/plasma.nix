@@ -45,10 +45,9 @@
             ark
             filelight
             kclock
-            konsole # NOOOOO USE GHOSTTYYYY PLEAAAAASEEEEE
+            konsole
             merkuro # Calendar
 
-            # for some reason not in by default
             dolphin
             dolphin-plugins
             kio
@@ -60,24 +59,24 @@
             kio-zeroconf
 
             # Formats
-            kdegraphics-thumbnailers # blender etc
-            kdesdk-thumbnailers # test
-            kimageformats # gimp
-            qtimageformats # webp etc
-            qtsvg # svg
+            kdegraphics-thumbnailers # Thumbnails
+            kdesdk-thumbnailers # Thumbnailers
+            kimageformats # Gimp
+            qtimageformats # Webp
+            qtsvg # Svg
 
             discover
             flatpak-kcm
             kcmutils
             packagekit-qt
 
-            # Somehwat working support accounts support
+            # Accounts
             accounts-qt
             kaccounts-integration
             kaccounts-providers
             signond
 
-            # mail
+            # Mail
             akonadi
             akonadi-calendar
             akonadi-contacts
