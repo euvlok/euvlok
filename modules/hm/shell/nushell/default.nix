@@ -112,7 +112,7 @@ in
         ''
           ${builtins.concatStringsSep "\n" sourceCommands}
           ${builtins.readFile ./aliases.nu}
-          ${builtins.readFile ./jj-completions.nu}
+          ${lib.optionalString config.programs.jujutsu.enable (builtins.readFile ./jj-completions.nu)}
           ${lib.optionalString (lib.any (pkg: pkg == pkgs.github-copilot-cli) (
             osConfig.environment.systemPackages
           )) (builtins.readFile ./github-copilot-cli.nu)}
