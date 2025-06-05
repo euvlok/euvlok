@@ -20,6 +20,24 @@ def nowdate [] { date now | format date "%d-%m-%Y" }
 def nowunix [] { date now | format date "%s" }
 def xdg-data-dirs [] { echo $env.XDG_DATA_DIRS | str replace -a : "\n" | lines | enumerate }
 
+def to-mp4 [path: path] { 
+    let stem = ($path | path parse | get stem); 
+    let output = $"($stem).mp4";
+    ffmpeg -i $path -c:v copy -c:a copy -c:s copy -loglevel error $output
+}
+
+def to-png [path: path] {
+    let stem = ($path | path parse | get stem);
+    let output = $"($stem).png";
+    magick $path $output
+}
+
+def to-jpg [path: path] {
+    let stem = ($path | path parse | get stem);
+    let output = $"($stem).jpg";
+    magick $path $output
+}
+
 def update [] {
     let nix_user = (whoami)
     let raw_host = (hostname)
