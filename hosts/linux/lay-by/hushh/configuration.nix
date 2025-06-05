@@ -94,15 +94,6 @@
       ''
     );
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      inputs.hyprland-source.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-    ];
-  };
-
   virtualisation.libvirtd.enable = true;
 
   system.stateVersion = "25.05";

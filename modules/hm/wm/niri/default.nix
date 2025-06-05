@@ -33,15 +33,6 @@
             "org.freedesktop.impl.portal.RemoteDesktop" = "gnome";
           };
         };
-        extraPortals = builtins.attrValues {
-          inherit (pkgs)
-            xdg-desktop-portal
-            xdg-desktop-portal-gtk
-            xdg-desktop-portal-gnome
-            xdg-desktop-portal-shana
-            xdg-desktop-portal-wlr
-            ;
-        };
         configPackages = builtins.attrValues { inherit (pkgs) gnome-session; };
       };
       mime.enable = true;
