@@ -1,4 +1,5 @@
-_: {
+{ config, ... }:
+{
   homebrew = {
     enable = true;
     onActivation = {
@@ -7,7 +8,7 @@ _: {
       cleanup = "uninstall";
     };
     caskArgs = {
-      appdir = "/Applications";
+      appdir = "${config.users.users.ashuramaru.home}/Applications";
       no_quarantine = true;
       require_sha = false;
     };
