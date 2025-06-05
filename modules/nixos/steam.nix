@@ -9,7 +9,6 @@
   options.nixos.steam.enable = lib.mkEnableOption "Steam";
 
   config = lib.mkIf config.nixos.steam.enable {
-
     hardware.steam-hardware.enable = true;
     nixpkgs.overlays = [
       (_: super: {
@@ -60,9 +59,7 @@
             ));
         };
         # for people that want non official bottles
-        bottles = super.bottles.override {
-          removeWarningPopup = true;
-        };
+        bottles = super.bottles.override { removeWarningPopup = true; };
       })
     ];
 
@@ -101,9 +98,7 @@
           inherit (pkgs.wineWowPackages) stagingFull;
         })
         ++ (lib.optionals config.services.xserver.desktopManager.gnome.enable (
-          builtins.attrValues {
-            inherit (pkgs) adwsteamgtk;
-          }
+          builtins.attrValues { inherit (pkgs) adwsteamgtk; }
         ));
     };
   };
