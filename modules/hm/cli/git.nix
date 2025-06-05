@@ -7,7 +7,9 @@
 }:
 
 {
-  options.hm.git.enable = lib.mkEnableOption "Git";
+  options.hm.git.enable = lib.mkEnableOption "Git" // {
+    default = true;
+  };
 
   config = lib.mkMerge [
     (lib.mkIf config.hm.git.enable {

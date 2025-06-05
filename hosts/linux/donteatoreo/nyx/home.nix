@@ -43,28 +43,22 @@ in
               ../../../../modules/hm
               {
                 hm = {
-                  bash.enable = true;
                   chromium.browser = "brave";
                   chromium.enable = true;
-                  direnv.enable = true;
                   fastfetch.enable = true;
                   firefox.enable = true;
                   firefox.zen-browser.enable = true;
-                  fzf.enable = true;
                   ghostty.altKeyBehavior = true;
                   ghostty.enable = true;
-                  git.enable = true;
                   helix.enable = true;
                   jujutsu.enable = true;
                   mpv.enable = true;
                   nixcord.enable = true;
                   nushell.enable = true;
-                  ssh.enable = true;
                   vscode.enable = true;
                   yazi.enable = true;
                   zed-editor.enable = true;
                   zellij.enable = true;
-                  zsh.enable = true;
                 };
               }
             ]

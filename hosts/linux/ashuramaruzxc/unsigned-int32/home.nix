@@ -38,9 +38,7 @@ let
 
   ashuramaruHmConfig = {
     hm = {
-      bash.enable = true;
       chromium.enable = true;
-      direnv.enable = true;
       fastfetch.enable = true;
       firefox = {
         enable = true;
@@ -48,20 +46,16 @@ let
         zen-browser.enable = true;
         defaultSearchEngine = "kagi";
       };
-      fzf.enable = true;
       ghostty.enable = true;
-      git.enable = true;
       helix.enable = true;
       mpv.enable = true;
       nh.enable = true;
       nixcord.enable = true;
       nushell.enable = true;
       nvf.enable = true;
-      ssh.enable = true;
       vscode.enable = true;
       yazi.enable = true;
       zellij.enable = true;
-      zsh.enable = true;
     };
   };
 

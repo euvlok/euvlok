@@ -46,13 +46,9 @@ in
           ../../../../modules/hm
           {
             hm = {
-              bash.enable = true;
-              direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
               firefox.floorp.enable = true;
-              fzf.enable = true;
-              git.enable = true;
               nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;

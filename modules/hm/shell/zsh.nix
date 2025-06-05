@@ -6,15 +6,13 @@
   ...
 }:
 {
-  options.hm.zsh.enable = lib.mkEnableOption "Declerative Zsh";
+  options.hm.zsh.enable =
+    lib.mkEnableOption "Declerative Zsh"
+    // lib.optionalAttrs (osConfig.nixpkgs.hostPlatform.isLinux) {
+      default = true;
+    };
 
   config = lib.mkIf config.hm.zsh.enable {
-    assertions = [
-      {
-        assertion = osConfig.nixpkgs.hostPlatform.isLinux;
-        message = "Declerative Zsh is only available on Linux";
-      }
-    ];
     programs.zsh = {
       enable = true;
       autosuggestion.enable = true;

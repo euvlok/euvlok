@@ -41,22 +41,15 @@ in
           ../../../../modules/hm
           {
             hm = {
-              bash.enable = true;
               chromium.enable = true;
-              direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
-              fzf.enable = true;
               ghostty.enable = true;
-              git.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              #nushell.enable = true;
               nvf.enable = true;
-              ssh.enable = true;
               vscode.enable = true;
               zellij.enable = true;
-              zsh.enable = true;
             };
           }
 

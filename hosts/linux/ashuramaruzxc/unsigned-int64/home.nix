@@ -25,21 +25,15 @@ let
     ../../../../modules/hm
     {
       hm = {
-        bash.enable = true;
-        direnv.enable = true;
         fastfetch.enable = true;
-        fzf.enable = true;
         ghostty.enable = true;
-        git.enable = true;
         helix.enable = true;
         nh.enable = true;
         nushell.enable = true;
         nvf.enable = true;
-        ssh.enable = true;
         vscode.enable = true;
         yazi.enable = true;
         zellij.enable = true;
-        zsh.enable = true;
       };
     }
   ];

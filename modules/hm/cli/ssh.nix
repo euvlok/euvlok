@@ -5,7 +5,9 @@
   ...
 }:
 {
-  options.hm.ssh.enable = lib.mkEnableOption "SSH";
+  options.hm.ssh.enable = lib.mkEnableOption "SSH" // {
+    default = true;
+  };
 
   config = lib.mkIf config.hm.ssh.enable {
     programs.ssh = {

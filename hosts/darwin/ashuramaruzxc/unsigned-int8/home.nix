@@ -27,20 +27,15 @@ let
 
   ashuramaruHmConfig = {
     hm = {
-      bash.enable = true;
-      direnv.enable = true;
       fastfetch.enable = true;
       firefox.defaultSearchEngine = "kagi";
       firefox.enable = true;
       firefox.floorp.enable = true;
-      fzf.enable = true;
-      git.enable = true;
       helix.enable = true;
       mpv.enable = true;
       nh.enable = true;
       nixcord.enable = true;
       nvf.enable = true;
-      ssh.enable = true;
       vscode.enable = true;
       # yazi.enable = true;
       zellij.enable = true;

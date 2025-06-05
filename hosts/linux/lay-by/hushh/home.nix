@@ -47,25 +47,19 @@ in
           {
             home.shell.enableShellIntegration = true;
             hm = {
-              bash.enable = true;
               chromium.enable = true;
-              direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
               firefox.zen-browser.enable = true;
               fish.enable = true;
-              fzf.enable = true;
               ghostty.altKeyBehavior = true;
               ghostty.enable = true;
-              git.enable = true;
               helix.enable = true;
               hyprland.enable = true;
               mpv.enable = true;
               nixcord.enable = true;
-              ssh.enable = true;
               vscode.enable = true;
               yazi.enable = true;
-              zsh.enable = true;
             };
           }
 

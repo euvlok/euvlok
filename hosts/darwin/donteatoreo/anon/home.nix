@@ -62,12 +62,9 @@ in
           ../../../../modules/hm
           {
             hm = {
-              bash.enable = true;
               fastfetch.enable = true;
-              fzf.enable = true;
               ghostty.altKeyBehavior = true;
               ghostty.enable = true;
-              git.enable = true;
               helix.enable = true;
               jujutsu.enable = true;
               nixcord.enable = true;

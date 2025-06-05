@@ -35,26 +35,20 @@ in
           ../../../../modules/hm/wm/niri
           {
             hm = {
-              bash.enable = true;
               chromium.browser = "brave";
               chromium.enable = true;
-              direnv.enable = true;
               fastfetch.enable = true;
               firefox.enable = true;
               firefox.floorp.enable = true;
-              fzf.enable = true;
               ghostty.enable = true;
-              git.enable = true;
               helix.enable = true;
               mpv.enable = true;
               niri.enable = true;
               nixcord.enable = true;
               nushell.enable = true;
               nvf.enable = true;
-              ssh.enable = true;
               vscode.enable = true;
               yazi.enable = true;
-              zsh.enable = true;
             };
           }
 
