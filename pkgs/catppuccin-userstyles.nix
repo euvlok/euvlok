@@ -36,8 +36,8 @@ pkgs.stdenvNoCC.mkDerivation (_: {
   src = pkgs.fetchFromGitHub {
     owner = "catppuccin";
     repo = "userstyles";
-    rev = "05b4196d7999e04e55004a0f350a7c2a93133142";
-    hash = "sha256-knt5WvcRTSiGCu92YqxP4TQ1CtNKQ2nu9jS2I9XHTAA=";
+    rev = "7c6808df984c2a51108c35259ecf0676c012e5ff";
+    hash = "sha256-DTf9qf37RU+ktWHgzUnxAjqBW4lodJ1SbddXRL0zt2A=";
   };
 
   buildInputs = builtins.attrValues { inherit (pkgs) deno; };
