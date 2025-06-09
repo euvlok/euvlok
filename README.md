@@ -106,7 +106,6 @@ nix resources
 (<https://github.com/NixOS/nixpkgs/tree/master/doc>)
 - [Nixpkgs 25.05 Release Notes](https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md) (<https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md>)
 
-- [Home Manager 24.11 Options](https://home-manager-options.extranix.com/?query=&release=release-24.11) (<https://home-manager-options.extranix.com/?query=&release=release-24.11>)
 - [Home Manager Unstable Options](https://home-manager-options.extranix.com/?query=&release=master) (<https://home-manager-options.extranix.com/?query=&release=master>)
 
 ### Nix & Nix Adjacent YouTube Channels
