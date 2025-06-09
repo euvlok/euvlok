@@ -121,6 +121,10 @@ nix resources
 - [Pinning NixOS with npins, or how to kill channels forever without flakes](https://jade.fyi/blog/pinning-nixos-with-npins/) (<https://jade.fyi/blog/pinning-nixos-with-npins/>)
 - [Stop Using nix-env](https://stop-using-nix-env.privatevoid.net/) (<https://stop-using-nix-env.privatevoid.net/>)
 - [The wonders of Nix remotebuilders](https://heitorpb.github.io/bla/wonders-of-nix-remote-builders/) (<https://heitorpb.github.io/bla/wonders-of-nix-remote-builders/>)
+- [Nix vanity store paths ](https://fzakaria.com/2025/03/27/nix-vanity-store-paths)
+- [What's in a Nix store path](https://fzakaria.com/2025/03/28/what-s-in-a-nix-store-path)
+- [Chaining Nix stores for fun](https://fzakaria.com/2025/05/07/chaining-nix-stores-for-fun)
+- [Nix derivations by hand](https://fzakaria.com/2025/03/23/nix-derivations-by-hand)
 
 ## Credits
 
