@@ -6,11 +6,13 @@ def nix-build-file [
 }
 
 def clean-roots [] {
-  nix-store --gc --print-roots
-  | rg --no-filename -v '^(/nix/var|/run/\w+-system|\{|/proc)'
-  | rg --no-filename -v 'home-manager|flake-registry\.json'
-  | rg --no-filename -o -r '$1' '^(\S+)'
-  | xargs -L1 unlink
+    nix-store --gc --print-roots
+    | lines
+    | where { |line| $line !~ '^(/nix/var|/run/\w+-system|\{|/proc)' }
+    | where { |line| $line !~ '\b(home-manager|flake-registry\.json)\b' }
+    | parse --regex '^(?P<path>\S+)'
+    | get path
+    | each { |path| ^unlink $path }
 }
 
 def now [] { date now | format date "%H:%M:%S" }
