@@ -1,6 +1,6 @@
 { pkgs, config, ... }:
 {
-  # sops.secrets.ashuramaru.neededForUsers = true;
+  sops.secrets.ashuramaru.neededForUsers = true;
   users = {
     mutableUsers = false;
     groups = {
@@ -19,7 +19,7 @@
         description = "Mariè Levjéwa";
         home = "/Users/marie";
         uid = 1000;
-        # hashedPasswordFile = config.sops.secrets.ashuramaru.path;
+        hashedPasswordFile = config.sops.secrets.ashuramaru.path;
         extraGroups = [
           "wheel"
           "networkmanager"

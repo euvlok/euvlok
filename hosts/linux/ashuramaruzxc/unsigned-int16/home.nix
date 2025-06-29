@@ -9,7 +9,7 @@ let
   release = builtins.fromJSON (config.system.nixos.release);
 
   commonUsers = [
-    { home.stateVersion = "25.05"; }
+    { home.stateVersion = "25.11"; }
     ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix

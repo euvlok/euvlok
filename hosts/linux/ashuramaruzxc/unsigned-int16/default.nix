@@ -6,12 +6,15 @@ in
   unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs euvlok; };
     modules = [
+      ./config-txt.nix # move to hardware-configuration.nix
       ./configuration.nix
       ./home.nix
       raspberry-pi-5.base
       raspberry-pi-5.display-vc4
       raspberry-pi-5.bluetooth
-      # inputs.sops-nix-trivial.nixosModules.sops
+      inputs.sops-nix-trivial.nixosModules.sops
+      inputs.disko.nixosModules.disko
+      ./temp.nix
       # {
       #   sops = {
       #     age.keyFile = "/var/lib/sops/age/keys.txt";
