@@ -29,8 +29,8 @@ pkgs.python3Packages.buildPythonApplication {
   src = pkgs.fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "b5bd057fe86550f3aa67f2fc8790d1c6a251c57b";
-    hash = "sha256-RAGn/hQiPumvZAwN9ArH7sf4dj5oUCMdCHZPHq3F6Uo=";
+    rev = "7e2504f941a11ea2b0dba00de3f0295cdc253e79";
+    hash = "sha256-VgEip0ptnr6MeZBy5qciUFr73V+8oVIi4hbhWmfJ0rU=";
   };
 
   build-system = builtins.attrValues { inherit (pkgs.pkgs.python3Packages) hatchling; };
