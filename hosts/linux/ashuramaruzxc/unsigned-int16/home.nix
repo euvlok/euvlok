@@ -12,7 +12,7 @@ let
     { home.stateVersion = "25.11"; }
     ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/starship.nix
-    ../../../hm/ashuramaruzxc/vscode.nix
+    # ../../../hm/ashuramaruzxc/vscode.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
     inputs.sops-nix-trivial.homeManagerModules.sops
@@ -25,13 +25,18 @@ let
     ../../../../modules/hm
     {
       hm = {
+        bash.enable = true;
+        direnv.enable = true;
         fastfetch.enable = true;
+        fzf.enable = true;
+        ghossty.enable = true;
         helix.enable = true;
         nushell.enable = true;
-        nvf.enable = true;
-        vscode.enable = true;
+        # nvf.enable = true;
+        # vscode.enable = true;
         yazi.enable = true;
         zellij.enable = true;
+        zsh.enable = true;
       };
     }
   ];
@@ -48,7 +53,21 @@ let
 
   userConfigs = {
     root = [ ];
-    ashuramaru = [ ];
+    ashuramaru = [
+      {
+        hm = {
+          chromium.enable = true;
+          fastfetch.enable = true;
+          firefox = {
+            enable = true;
+            floorp.enable = true;
+            zen-browser.enable = true;
+            defaultSearchEngine = "kagi";
+          };
+          mpv.enable = true;
+        };
+      }
+    ];
   };
 in
 {
