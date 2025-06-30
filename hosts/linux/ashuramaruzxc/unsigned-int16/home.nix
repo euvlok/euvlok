@@ -10,9 +10,13 @@ let
 
   commonUsers = [
     { home.stateVersion = "25.11"; }
+    ../../../hm/ashuramaruzxc/aliases.nix
+    ../../../hm/ashuramaruzxc/dconf.nix
+    ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/nushell.nix
+    ../../../hm/ashuramaruzxc/ssh.nix
     ../../../hm/ashuramaruzxc/starship.nix
-    # ../../../hm/ashuramaruzxc/vscode.nix
+    ../../../hm/ashuramaruzxc/vscode.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
     inputs.sops-nix-trivial.homeManagerModules.sops
@@ -43,7 +47,7 @@ let
 
   mkUser =
     extraImports:
-    { osConfig, ... }:
+    { inputs, osConfig, ... }:
     {
       imports =
         [ { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; } ]
