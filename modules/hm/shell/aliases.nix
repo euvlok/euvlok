@@ -91,7 +91,7 @@ let
     update = ''
       __nixos_flake_update_func() {
         nix_user="$(whoami)"
-        nix_host="$(hostname | sd '\\.local$' \'\')"
+        nix_host="$(hostname | sed 's/\.local$//')"
         flake_eval_path="$(perl -MCwd -e 'print Cwd::abs_path(shift)' "/etc/nixos")"
         if [[ "$(uname -s)" == "Darwin" ]]; then
           flake_attr="darwinConfigurations"
@@ -110,7 +110,7 @@ let
         matching_inputs=$(nix eval --json --impure \
           --expr '(builtins.attrNames (builtins.getFlake "'"$flake_eval_path"'").inputs)' \
           | jq -r --arg pattern "-''${github_username}" '.[] | select(endswith($pattern))')
-        nix flake update $matching_inputs --flake "$flake_path"
+        nix flake update $matching_inputs --flake "$flake_eval_path"
       }; __nixos_flake_update_func
     '';
   };
