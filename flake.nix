@@ -14,8 +14,6 @@
     nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nixos-raspberrypi-ashuramaruzxc.url = "github:nvmd/nixos-raspberrypi";
-    nixos-raspberrypi.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    nixos-raspberrypi-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # --- bigshaq9999 ---
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -125,7 +123,6 @@
     devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
     devenv.url = "github:cachix/devenv";
     disko-rpi.url = "github:nvmd/disko/gpt-attrs";
-    # disco-rpi.inputs.nixpkgs.follows = "";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";

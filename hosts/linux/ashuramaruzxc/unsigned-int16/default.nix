@@ -4,7 +4,7 @@ let
   inherit (inputs.nixos-raspberrypi-ashuramaruzxc.nixosModules) raspberry-pi-5;
 in
 {
-  unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
+  unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystemFull {
     specialArgs = { inherit inputs nixos-raspberrypi euvlok; };
     modules = [
       ./configuration.nix

@@ -33,7 +33,7 @@ let
         direnv.enable = true;
         fastfetch.enable = true;
         fzf.enable = true;
-        ghossty.enable = true;
+        ghostty.enable = true;
         helix.enable = true;
         nushell.enable = true;
         # nvf.enable = true;

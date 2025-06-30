@@ -46,15 +46,16 @@ let
         zen-browser.enable = true;
         defaultSearchEngine = "kagi";
       };
+      # nvf.enable = true;
       ghostty.enable = true;
       helix.enable = true;
       mpv.enable = true;
       nh.enable = true;
       nixcord.enable = true;
       nushell.enable = true;
-      # nvf.enable = true;
       vscode.enable = true;
       yazi.enable = true;
+      zed-editor.enable = true;
       zellij.enable = true;
     };
   };

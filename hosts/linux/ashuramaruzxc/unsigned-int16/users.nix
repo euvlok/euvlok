@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 {
   # sops.secrets.ashuramaru.neededForUsers = true;
   users = {
@@ -12,6 +17,9 @@
     users = {
       root = {
         initialHashedPassword = "";
+        openssh.authorizedKeys.keys = lib.flatten [
+          config.users.users.ashuramaru.openssh.authorizedKeys.keys
+        ];
         shell = pkgs.zsh;
       };
       ashuramaru = {
@@ -19,7 +27,7 @@
         description = "Mariè Levjéwa";
         home = "/Users/marie";
         uid = 1000;
-        # hashedPasswordFile = config.sops.secrets.ashuramaru.path;
+        hashedPassword = "$6$iXZJ4YJJOJzZGxtA$/yRjc8GzrPCZwMvgZHOGZuoxeuYyXBZIljomhqLI6yN3tJ5cxNPvZCZk7tB1VprmFW0r6WXRgHPqy2pXQNqbe0";
         extraGroups = [
           "wheel"
           "networkmanager"

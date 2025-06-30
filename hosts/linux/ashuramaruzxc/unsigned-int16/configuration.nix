@@ -28,7 +28,7 @@
       pinentryPackage = pkgs.pinentry-curses;
     };
   };
-  environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
+  programs.zsh.enable = true;
 
   time.timeZone = "Europe/Warsaw";
   i18n.defaultLocale = "en_US.UTF-8";
