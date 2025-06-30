@@ -65,21 +65,21 @@
         }
       ];
     };
-    services.wg-netmanager.enable = true;
-    networking.wireguard.enable = true;
-    services.mullvad-vpn = {
-      enable = true;
-      enableExcludeWrapper = false;
-    };
-    services.v2raya.enable = true;
-    # services.tailscale = {
-    #   enable = true;
-    #   useRoutingFeatures = "both";
-    #   openFirewall = true;
-    #   authKeyFile = config.sops.secrets.tailscale_auth.path;
-    # };
-    vnstat.enable = true;
-    systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
-    systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
   };
+  services.wg-netmanager.enable = true;
+  networking.wireguard.enable = true;
+  services.mullvad-vpn = {
+    enable = true;
+    enableExcludeWrapper = false;
+  };
+  services.v2raya.enable = true;
+  # services.tailscale = {
+  #   enable = true;
+  #   useRoutingFeatures = "both";
+  #   openFirewall = true;
+  #   authKeyFile = config.sops.secrets.tailscale_auth.path;
+  # };
+  vnstat.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
 }
