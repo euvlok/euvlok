@@ -14,6 +14,8 @@
     nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nixos-raspberrypi-ashuramaruzxc.url = "github:nvmd/nixos-raspberrypi";
+    nixos-raspberrypi.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nixos-raspberrypi-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # --- bigshaq9999 ---
     nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -118,27 +120,20 @@
     # stylix-trivial.inputs.flake-parts.follows = "";
     # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
     # DO NOT override nixpkgs, it uses it's own fork
-    # nixos-raspberrypi.inputs.nixpkgs = "nixpkgs-unstable";
 
     # Infra / Shared / Core Inputs
+    devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    devenv.url = "github:cachix/devenv";
+    disko.url = "github:nix-community/disko";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    pre-commit-hooks.inputs.flake-compat.follows = "";
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
-    nix2container.url = "github:nlewo/nix2container";
     nix2container.inputs.flake-utils.follows = "flake-utils";
     nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    disko = {
-      # the fork is needed for partition attributes support
-      url = "github:nvmd/disko/gpt-attrs";
-      # url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixos-raspberrypi/nixpkgs";
-    };
-
+    nix2container.url = "github:nlewo/nix2container";
+    pre-commit-hooks.inputs.flake-compat.follows = "";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
   };
 
   outputs =

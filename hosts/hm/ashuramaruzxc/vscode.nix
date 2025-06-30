@@ -284,7 +284,6 @@ in
         (mkExt vscodeSystem "eamodio" "gitlens")
         (mkExt vscodeSystem "ms-vscode" "hexeditor")
         (mkExt vscodeSystem "ms-vsliveshare" "vsliveshare")
-        (mkExt vscodeSystem "streetsidesoftware" "code-spell-checker")
         (mkExt vscodeSystem "visualstudioexptteam" "intellicode-api-usage-examples")
         (mkExt vscodeSystem "visualstudioexptteam" "vscodeintellicode")
         pkgs.vscode-extensions.github.vscode-pull-request-github
