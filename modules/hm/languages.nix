@@ -1,7 +1,9 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
+  osConfig,
   ...
 }:
 {
@@ -140,7 +142,7 @@
             deno
             yarn
             ;
-          inherit (pkgs.nodePackages)
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system})
             npm
             pnpm
             eslint
