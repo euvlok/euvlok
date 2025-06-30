@@ -30,7 +30,7 @@ let
         helix.enable = true;
         nh.enable = true;
         nushell.enable = true;
-        nvf.enable = true;
+        # nvf.enable = true;
         vscode.enable = true;
         yazi.enable = true;
         zellij.enable = true;

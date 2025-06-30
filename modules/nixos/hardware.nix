@@ -10,15 +10,15 @@
   options.nixos.amd.enable = lib.mkEnableOption "AMD drivers";
 
   config = lib.mkMerge [
-    (lib.optionalAttrs config.nixpkgs.hostPlatform.isX86 {
+    (lib.mkIf config.nixpkgs.hostPlatform.isx86_64 {
       hardware.graphics.enable32Bit = true;
     })
-    (lib.optionalAttrs config.nixpkgs.hostPlatform.isX86 {
+    (lib.mkIf config.nixpkgs.hostPlatform.isx86_64 {
       hardware.graphics.extraPackages32 = builtins.attrValues {
         inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
       };
     })
-    (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isX86) {
+    (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isx86_64) {
       hardware.graphics.extraPackages32 = builtins.attrValues {
         inherit (pkgs.driversi686Linux) libva-vdpau-driver libvdpau-va-gl;
       };
@@ -137,7 +137,7 @@
         }) browsers)
         ++ [ inputs.nvidia-patch-trivial.overlays.default ];
     })
-    ((lib.mkIf config.nixos.amd.enable && config.nixpkgs.hostPlatform.isX86) {
+    ((lib.mkIf (config.nixos.amd.enable && config.nixpkgs.hostPlatform.isx86_64)) {
       hardware.graphics.extraPackages32 = builtins.attrValues {
         inherit (pkgs.driversi686Linux) amdvlk;
       };
