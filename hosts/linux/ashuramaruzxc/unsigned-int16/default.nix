@@ -1,7 +1,7 @@
 { inputs, euvlok, ... }:
 let
   nixos-raspberrypi = inputs.nixos-raspberrypi-ashuramaruzxc;
-  inherit (inputs.nixos-raspberrypi-ashuramaruzxc) raspberry-pi-5;
+  inherit (inputs.nixos-raspberrypi-ashuramaruzxc.nixosModules) raspberry-pi-5;
 in
 {
   unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
