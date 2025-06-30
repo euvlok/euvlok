@@ -12,7 +12,7 @@ in
       raspberry-pi-5.base
       raspberry-pi-5.display-vc4
       raspberry-pi-5.bluetooth
-      inputs.disko.nixosModules.disko
+      inputs.disko-rpi.nixosModules.disko
       inputs.sops-nix-trivial.nixosModules.sops
       # {
       #   sops = {

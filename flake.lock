@@ -399,20 +399,21 @@
         "type": "github"
       }
     },
-    "disko": {
+    "disko-rpi": {
       "inputs": {
         "nixpkgs": "nixpkgs_10"
       },
       "locked": {
-        "lastModified": 1750903843,
-        "narHash": "sha256-Ng9+f0H5/dW+mq/XOKvB9uwvGbsuiiO6HrPdAcVglCs=",
-        "owner": "nix-community",
+        "lastModified": 1742690494,
+        "narHash": "sha256-SFacEbSRMoTyWG5VXh4ieofJGge+cLq9lH8ifB+zjBg=",
+        "owner": "nvmd",
         "repo": "disko",
-        "rev": "83c4da299c1d7d300f8c6fd3a72ac46cb0d59aae",
+        "rev": "9dc58d4d49c9f74623a06e2fc20cdfd8bb3cbe8b",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
+        "owner": "nvmd",
+        "ref": "gpt-attrs",
         "repo": "disko",
         "type": "github"
       }
@@ -2765,7 +2766,7 @@
         "catppuccin-trivial": "catppuccin-trivial",
         "devenv": "devenv_2",
         "dis-source": "dis-source",
-        "disko": "disko",
+        "disko-rpi": "disko-rpi",
         "firefox-addons-trivial": "firefox-addons-trivial",
         "flake-parts": "flake-parts_5",
         "flake-utils": "flake-utils_2",

@@ -124,7 +124,8 @@
     # Infra / Shared / Core Inputs
     devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
     devenv.url = "github:cachix/devenv";
-    disko.url = "github:nix-community/disko";
+    disko-rpi.url = "github:nvmd/disko/gpt-attrs";
+    # disco-rpi.inputs.nixpkgs.follows = "";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
