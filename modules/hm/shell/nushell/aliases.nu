@@ -18,7 +18,7 @@ def clean-roots [] {
 def now [] { date now | format date "%H:%M:%S" }
 def nowdate [] { date now | format date "%d-%m-%Y" }
 def nowunix [] { date now | format date "%s" }
-def xdg-data-dirs [] { echo $env.XDG_DATA_DIRS | str replace -a : "\n" | lines | enumerate }
+def xdg-data-dirs [] { echo $env.XDG_DATA_DIRS | str replace -a : "\n" | lines }
 
 def to-mp4 [path: path] { 
     let stem = ($path | path parse | get stem); 
