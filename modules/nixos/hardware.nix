@@ -10,22 +10,31 @@
   options.nixos.amd.enable = lib.mkEnableOption "AMD drivers";
 
   config = lib.mkMerge [
+    (lib.optionalAttrs config.nixpkgs.hostPlatform.isX86 {
+      hardware.graphics.enable32Bit = true;
+    })
+    (lib.optionalAttrs config.nixpkgs.hostPlatform.isX86 {
+      hardware.graphics.extraPackages32 = builtins.attrValues {
+        inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
+      };
+    })
+    (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isX86) {
+      hardware.graphics.extraPackages32 = builtins.attrValues {
+        inherit (pkgs.driversi686Linux) libva-vdpau-driver libvdpau-va-gl;
+      };
+    })
     ({
       environment.systemPackages = builtins.attrValues { inherit (pkgs) libva-utils; };
 
       hardware = {
         graphics = {
           enable = true;
-          enable32Bit = true;
           extraPackages = builtins.attrValues {
             inherit (pkgs)
               libva
               mesa
               vulkan-loader
               ;
-          };
-          extraPackages32 = builtins.attrValues {
-            inherit (pkgs.pkgsi686Linux) mesa;
           };
         };
 
@@ -106,9 +115,6 @@
         extraPackages = builtins.attrValues {
           inherit (pkgs) libva-vdpau-driver libvdpau-va-gl nv-codec-headers-12;
         };
-        extraPackages32 = builtins.attrValues {
-          inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
-        };
       };
 
       environment.systemPackages = builtins.attrValues {
@@ -131,13 +137,15 @@
         }) browsers)
         ++ [ inputs.nvidia-patch-trivial.overlays.default ];
     })
+    ((lib.mkIf config.nixos.amd.enable && config.nixpkgs.hostPlatform.isX86) {
+      hardware.graphics.extraPackages32 = builtins.attrValues {
+        inherit (pkgs.driversi686Linux) amdvlk;
+      };
+    })
     (lib.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {
         inherit (pkgs) amdvlk clinfo;
         inherit (pkgs.rocmPackages.clr) icd;
-      };
-      hardware.graphics.extraPackages32 = builtins.attrValues {
-        inherit (pkgs.driversi686Linux) amdvlk;
       };
       environment.systemPackages = builtins.attrValues { inherit (pkgs) lact; };
       systemd = {
