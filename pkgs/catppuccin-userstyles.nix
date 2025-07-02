@@ -31,13 +31,13 @@ assert
 assert lib.strings.toLower accent == lib.strings.toLower normalizedAccent;
 pkgs.stdenvNoCC.mkDerivation (_: {
   pname = "catppuccin-userstyles";
-  version = "all-userstyles-export-unstable-2025-06-13";
+  version = "all-userstyles-export-unstable-2025-07-01";
 
   src = pkgs.fetchFromGitHub {
     owner = "catppuccin";
     repo = "userstyles";
-    rev = "714b153c7022c362a37ab8530286a87e4484a828";
-    hash = "sha256-lftRs+pfcOrqHDtDWX/Vd/CQvDJguCRxlhI/aIkIB/k=";
+    rev = "11fd3b1c875a46b765ad5a4f8b4716b0df0d1624";
+    hash = "sha256-1p35ecASe3yfI6XR5HOGdKe4pUJB9p1x4p6TYXembS0=";
   };
 
   buildInputs = builtins.attrValues { inherit (pkgs) deno; };
