@@ -1629,18 +1629,19 @@
         "type": "github"
       }
     },
-    "nil-source": {
+    "nil": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nvf-source",
+          "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1751141511,
-        "narHash": "sha256-89z1bdfGxY5sqMyvqNCgqiChfkcHlYZUuAkDjY0JVgw=",
+        "lastModified": 1751341694,
+        "narHash": "sha256-zXag1+8iZC3H5yVFP7KhIi4ps9z8xKrFIkyaeXlZ7Uo=",
         "owner": "oxalica",
         "repo": "nil",
-        "rev": "704192a3aa4653efecd7aa45147e1a32abcb4b97",
+        "rev": "b043bfe1f3f4c4be4b688e24c5ae96e81f525805",
         "type": "github"
       },
       "original": {
@@ -2633,9 +2634,7 @@
           "flake-utils"
         ],
         "mnw": "mnw",
-        "nil": [
-          "nil-source"
-        ],
+        "nil": "nil",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
@@ -2775,7 +2774,6 @@
         "lix-module-source": "lix-module-source",
         "lix-soruce": "lix-soruce",
         "mk-shell-bin": "mk-shell-bin_2",
-        "nil-source": "nil-source",
         "niri-flake-trivial": "niri-flake-trivial",
         "nix-darwin-ashuramaruzxc": "nix-darwin-ashuramaruzxc",
         "nix-darwin-bigshaq9999": "nix-darwin-bigshaq9999",

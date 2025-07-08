@@ -73,7 +73,6 @@
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
-    stylix-trivial.inputs.home-manager.follows = "home-manager-unstable";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     stylix-trivial.url = "github:danth/stylix";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager-unstable";
@@ -96,12 +95,8 @@
     lix-soruce.inputs.nixpkgs.follows = "nixpkgs";
     lix-soruce.inputs.pre-commit-hooks.follows = "";
     lix-soruce.url = "https://git.lix.systems/lix-project/lix/archive/2.93.1.tar.gz";
-    nil-source.inputs.flake-utils.follows = "flake-utils";
-    nil-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    nil-source.url = "github:oxalica/nil";
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.flake-utils.follows = "flake-utils";
-    nvf-source.inputs.nil.follows = "nil-source";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nvf-source.url = "github:NotAShelf/nvf";
     yazi-source.inputs.flake-utils.follows = "flake-utils";

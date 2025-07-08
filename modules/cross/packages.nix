@@ -9,8 +9,7 @@ let
   commonPkgs = (
     builtins.attrValues {
       # Nix Related
-      inherit (inputs.nil-source.packages.${config.nixpkgs.hostPlatform.system}) nil;
-      inherit (pkgs) nixfmt-rfc-style;
+      inherit (pkgs) nixfmt-rfc-style nil;
 
       uutils-coreutils-noprefix = (
         lib.hiPrio

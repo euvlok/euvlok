@@ -298,5 +298,4 @@ in
   home.sessionVariables = {
     GO_PATH = "${config.home.homeDirectory}/.go";
   };
-  home.packages = [ pkgs.nil ];
 }
