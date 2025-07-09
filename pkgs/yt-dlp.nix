@@ -1,44 +1,76 @@
-{ pkgs, lib }:
+{
+  lib,
+  python3Packages,
+  fetchFromGitHub,
+  ffmpeg-headless,
+  rtmpdump,
+  atomicparsley,
+  pandoc,
+  installShellFiles,
+  atomicparsleySupport ? true,
+  ffmpegSupport ? true,
+  rtmpSupport ? true,
+  withAlias ? false, # Provides bin/youtube-dl for backcompat
+}:
 let
   optional-dependencies = {
-    default = builtins.attrValues {
-      inherit (pkgs.python3Packages)
-        brotli
-        certifi
-        mutagen
-        pycryptodomex
-        requests
-        urllib3
-        websockets
-        ;
-    };
-    curl-cffi = builtins.attrValues { inherit (pkgs.python3Packages) curl-cffi; };
-    secretstorage = builtins.attrValues {
-      inherit (pkgs.python3Packages) cffi secretstorage;
-    };
+    default = with python3Packages; [
+      brotli
+      certifi
+      mutagen
+      pycryptodomex
+      requests
+      urllib3
+      websockets
+    ];
+    curl-cffi = [ python3Packages.curl-cffi ];
+    secretstorage = with python3Packages; [
+      cffi
+      secretstorage
+    ];
   };
 in
-pkgs.python3Packages.buildPythonApplication {
+python3Packages.buildPythonApplication {
   pname = "yt-dlp";
   # The websites yt-dlp deals with are a very moving target. That means that
   # downloads break constantly. Because of that, updates should always be backported
   # to the latest stable release.
-  version = "2025.06.30-unstable-2025-07-09";
+  version = "2025.06.30-unstable-2025-07-08";
   pyproject = true;
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "aa9f1f4d577e99897ac16cd19d4e217d688ea75d";
-    hash = "sha256-iKJXhyfrAnxqYQEGitrwuEC5I4ukNa41ITmsA6WgBZw=";
+    rev = "fd36b8f31bafbd8096bdb92a446a0c9c6081209c";
+    hash = "sha256-IpOfOQf9r5wCCwoYqGyOtJQAn/yvMJjL6F9jJ3x9IKw=";
   };
 
-  build-system = builtins.attrValues { inherit (pkgs.pkgs.python3Packages) hatchling; };
+  build-system = with python3Packages; [ hatchling ];
+
+  nativeBuildInputs = [
+    installShellFiles
+    pandoc
+  ];
 
   # expose optional-dependencies, but provide all features
   dependencies = lib.flatten (lib.attrValues optional-dependencies);
 
   pythonRelaxDeps = [ "websockets" ];
+
+  preBuild = ''
+    python devscripts/make_lazy_extractors.py
+  '';
+
+  postBuild = ''
+    python devscripts/prepare_manpage.py yt-dlp.1.temp.md
+    pandoc -s -f markdown-smart -t man yt-dlp.1.temp.md -o yt-dlp.1
+    rm yt-dlp.1.temp.md
+
+    mkdir -p completions/{bash,fish,zsh}
+    python devscripts/bash-completion.py completions/bash/yt-dlp
+    python devscripts/zsh-completion.py completions/zsh/_yt-dlp
+    python devscripts/fish-completion.py completions/fish/yt-dlp.fish
+  '';
 
   # Ensure these utilities are available in $PATH:
   # - ffmpeg: post-processing & transcoding support
@@ -46,42 +78,37 @@ pkgs.python3Packages.buildPythonApplication {
   # - atomicparsley: embedding thumbnails
   makeWrapperArgs =
     let
-      packagesToBinPath = builtins.attrValues {
-        inherit (pkgs)
-          atomicparsley
-          ffmpeg-headless
-          rtmpdump
-          ;
-      };
+      packagesToBinPath =
+        [ ]
+        ++ lib.optional atomicparsleySupport atomicparsley
+        ++ lib.optional ffmpegSupport ffmpeg-headless
+        ++ lib.optional rtmpSupport rtmpdump;
     in
     lib.optionals (packagesToBinPath != [ ]) [
       ''--prefix PATH : "${lib.makeBinPath packagesToBinPath}"''
     ];
 
-  setupPyBuildFlags = [ "build_lazy_extractors" ];
-
   # Requires network
   doCheck = false;
 
-  postInstall = ''
-    ln -s "$out/bin/yt-dlp" "$out/bin/youtube-dl"
-  '';
+  postInstall =
+    ''
+      installManPage yt-dlp.1
 
-  meta = with lib; {
-    changelog = "https://github.com/yt-dlp/yt-dlp/blob/HEAD/Changelog.md";
-    description = "Command-line tool to download videos from YouTube.com and other sites (youtube-dl fork)";
-    homepage = "https://github.com/yt-dlp/yt-dlp/";
-    license = licenses.unlicense;
-    longDescription = ''
-      yt-dlp is a youtube-dl fork based on the now inactive youtube-dlc.
+      installShellCompletion \
+        --bash completions/bash/yt-dlp \
+        --fish completions/fish/yt-dlp.fish \
+        --zsh completions/zsh/_yt-dlp
 
-      youtube-dl is a small, Python-based command-line program
-      to download videos from YouTube.com and a few more sites.
-      youtube-dl is released to the public domain, which means
-      you can modify it, redistribute it or use it however you like.
+      install -Dm644 Changelog.md README.md -t "$out/share/doc/yt-dlp"
+    ''
+    + lib.optionalString withAlias ''
+      ln -s "$out/bin/yt-dlp" "$out/bin/youtube-dl"
     '';
+
+  meta = {
     mainProgram = "yt-dlp";
-    maintainers = with maintainers; [
+    maintainers = with lib.maintainers; [
       SuperSandro2000
       donteatoreo
     ];
