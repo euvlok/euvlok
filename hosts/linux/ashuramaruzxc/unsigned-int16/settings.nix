@@ -79,7 +79,7 @@
   #   openFirewall = true;
   #   authKeyFile = config.sops.secrets.tailscale_auth.path;
   # };
-  vnstat.enable = true;
+  services.vnstat.enable = true;
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
 }

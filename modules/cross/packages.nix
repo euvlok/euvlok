@@ -57,7 +57,7 @@ let
 
       # File Management & Archiving
       inherit (pkgs)
-        rar
+        # rar #!todo
         unrar
         unzip
         zip

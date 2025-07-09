@@ -33,7 +33,6 @@
     };
     printing = {
       enable = true;
-      drivers = builtins.attrValues { inherit (pkgs) gutenprintBin; };
       browsing = true;
     };
     avahi = {

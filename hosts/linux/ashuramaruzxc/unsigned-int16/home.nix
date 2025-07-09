@@ -9,7 +9,7 @@ let
   release = builtins.fromJSON (config.system.nixos.release);
 
   commonUsers = [
-    { home.stateVersion = "25.11"; }
+    { home.stateVersion = "25.05"; }
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/dconf.nix
     ../../../hm/ashuramaruzxc/git.nix
@@ -38,7 +38,7 @@ let
         nushell.enable = true;
         # nvf.enable = true;
         # vscode.enable = true;
-        yazi.enable = true;
+        # yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
       };
