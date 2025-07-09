@@ -2,12 +2,13 @@
   pkgs,
   lib,
   config,
+  pkgsUnstable,
   ...
 }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   boot = {
-    kernelPackages = pkgs.unstable.linuxPackages_xanmod;
+    kernelPackages = pkgsUnstable.linuxPackages_xanmod;
     kernelModules = [
       # dkms
       "kvm-amd"

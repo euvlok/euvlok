@@ -4,6 +4,7 @@
   lib,
   config,
   osConfig,
+  pkgsUnstable,
   ...
 }:
 let
@@ -251,7 +252,7 @@ in
     (lib.mkIf config.hm.firefox.enable {
       programs.firefox = {
         enable = true;
-        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.firefox;
+        package = pkgsUnstable.firefox;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
@@ -259,7 +260,7 @@ in
     (lib.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
-        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.floorp;
+        package = pkgsUnstable.floorp;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
@@ -267,7 +268,7 @@ in
     (lib.mkIf config.hm.firefox.librewolf.enable {
       programs.librewolf = {
         enable = true;
-        package = inputs.nixpkgs-unstable.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.librewolf;
+        package = pkgsUnstable.librewolf;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };

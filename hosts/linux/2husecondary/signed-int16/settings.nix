@@ -3,13 +3,6 @@
   pkgs,
   ...
 }:
-let
-  addUnstablePackages = final: _: {
-    unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system config;
-    };
-  };
-in
 {
   services.kmscon = {
     enable = true;
@@ -69,10 +62,8 @@ in
   };
   hardware.opentabletdriver = {
     enable = true;
-    package = pkgs.unstable.opentabletdriver;
+    package = pkgsUnstable.opentabletdriver;
     daemon.enable = true;
   };
   services.ratbagd.enable = true;
-
-  nixpkgs.overlays = [ addUnstablePackages ];
 }

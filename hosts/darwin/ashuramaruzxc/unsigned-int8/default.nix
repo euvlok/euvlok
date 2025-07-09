@@ -18,6 +18,15 @@
           nixpkgs.enable = true;
         };
       }
+      (
+        { config, ... }:
+        {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+            system = "aarch64-darwin";
+            config = config.nixpkgs.config;
+          };
+        }
+      )
     ];
   };
 }

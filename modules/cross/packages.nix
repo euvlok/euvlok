@@ -3,6 +3,7 @@
   pkgs,
   lib,
   config,
+  pkgsUnstable,
   ...
 }:
 let
@@ -11,18 +12,9 @@ let
       # Nix Related
       inherit (pkgs) nixfmt-rfc-style nil;
 
-      uutils-coreutils-noprefix = (
-        lib.hiPrio
-          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-coreutils-noprefix
-      );
-      uutils-diffutils = (
-        lib.hiPrio
-          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-diffutils
-      );
-      uutils-findutils = (
-        lib.hiPrio
-          inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-findutils
-      );
+      uutils-coreutils-noprefix = (lib.hiPrio pkgsUnstable.uutils-coreutils-noprefix);
+      uutils-diffutils = (lib.hiPrio pkgsUnstable.uutils-diffutils);
+      uutils-findutils = (lib.hiPrio pkgsUnstable.uutils-findutils);
 
       # Core Utilities (Shell essentials, replacements, process management)
       inherit (pkgs)

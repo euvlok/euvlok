@@ -4,6 +4,7 @@
   pkgs,
   config,
   euvlok,
+  pkgsUnstable,
   ...
 }:
 let
@@ -89,7 +90,7 @@ in
                 fsearch
                 obsidian
                 ;
-              inherit (pkgs.unstable) tdesktop;
+              inherit (pkgsUnstable) tdesktop;
             };
             programs = {
               gpg = {
@@ -105,6 +106,13 @@ in
           }
         ];
       };
-    extraSpecialArgs = { inherit inputs release euvlok; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
   };
 }

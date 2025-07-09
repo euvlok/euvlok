@@ -3,7 +3,7 @@
   pkgs,
   lib,
   config,
-  unstable,
+  pkgsUnstable,
   ...
 }:
 {
@@ -43,7 +43,7 @@
     };
     opentabletdriver = {
       enable = true;
-      package = pkgs.unstable.opentabletdriver;
+      package = pkgsUnstable.opentabletdriver;
       daemon.enable = true;
     };
   };
@@ -66,7 +66,7 @@
           via # qmk/via
           yubikey-personalization
           ;
-        inherit (pkgs.unstable) opentabletdriver;
+        inherit (pkgsUnstable) opentabletdriver;
       };
       extraRules = ''
         # XP-Pen CT1060

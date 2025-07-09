@@ -3,6 +3,7 @@
   config,
   pkgs,
   lib,
+  pkgsUnstable,
   ...
 }:
 # GNOME Stuff
@@ -25,8 +26,7 @@
       pop-launcher
       ;
 
-    inherit
-      (inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.gnomeExtensions)
+    inherit (pkgsUnstable.gnomeExtensions)
       arcmenu
       blur-my-shell
       dash-to-dock

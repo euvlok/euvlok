@@ -2,12 +2,13 @@
   pkgs,
   lib,
   config,
+  pkgsUnstable,
   ...
 }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   boot = {
-    kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
+    kernelPackages = pkgsUnstable.linuxPackages_xanmod_latest;
     kernelModules = [
       # dkms
       "v4l2loopback" # scrcpy

@@ -4,6 +4,7 @@
   lib,
   config,
   osConfig,
+  pkgsUnstable,
   ...
 }:
 let
@@ -34,8 +35,7 @@ in
   config = lib.mkIf config.hm.nushell.enable {
     programs.nushell = {
       enable = true;
-      package =
-        inputs.nixpkgs-unstable-small.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.nushell;
+      package = pkgsUnstable.nushell;
       shellAliases = {
         # CD
         cd = "__zoxide_z";

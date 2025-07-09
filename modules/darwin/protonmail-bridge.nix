@@ -3,6 +3,7 @@
   pkgs,
   lib,
   config,
+  pkgsUnstable,
   ...
 }:
 let
@@ -47,7 +48,7 @@ in
         EnvironmentVariables = {
           PATH = lib.makeBinPath [
             cfg.package
-            inputs.nixpkgs-unstable.legacyPackages.${config.nixpkgs.hostPlatform.system}.uutils-coreutils-noprefix
+            pkgsUnstable.uutils-coreutils-noprefix
           ];
         };
       };

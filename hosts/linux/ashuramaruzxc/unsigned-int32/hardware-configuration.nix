@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  pkgsUnstable,
   ...
 }:
 {
@@ -10,7 +11,7 @@
   nix.settings.extra-platforms = [ "aarch64-linux" ];
 
   boot = {
-    kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
+    kernelPackages = pkgsUnstable.linuxPackages_xanmod_latest;
     kernelModules = [
       # dkms
       "kvm-amd"

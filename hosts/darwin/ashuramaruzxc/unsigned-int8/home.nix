@@ -4,6 +4,7 @@
   lib,
   config,
   euvlok,
+  pkgsUnstable,
   ...
 }:
 let
@@ -87,9 +88,7 @@ let
       ;
     inherit (pkgs.jetbrains) dataspell datagrip;
     pcsx2-bin = pkgs.pcsx2-bin.overrideAttrs (oldAttrs: {
-      meta = lib.recursiveUpdate oldAttrs.meta {
-        platforms = lib.platforms.darwin;
-      };
+      meta = lib.recursiveUpdate oldAttrs.meta { platforms = lib.platforms.darwin; };
     });
   };
 
@@ -132,7 +131,14 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release euvlok; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
   };
 
   home-manager.users.ashuramaru.imports =

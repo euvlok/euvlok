@@ -3,6 +3,7 @@
   config,
   pkgs,
   euvlok,
+  pkgsUnstable,
   ...
 }:
 let
@@ -140,7 +141,7 @@ let
   };
 
   gamingPackages = builtins.attrValues {
-    inherit (pkgs.unstable) osu-lazer-bin;
+    inherit (pkgsUnstable) osu-lazer-bin;
     inherit (pkgs)
       cemu
       chiaki
@@ -240,7 +241,14 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release euvlok; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
   };
 
   home-manager.users.root.imports = commonImports ++ [

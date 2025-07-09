@@ -3,6 +3,7 @@
   config,
   lib,
   euvlok,
+  pkgsUnstable,
   ...
 }:
 let
@@ -61,6 +62,13 @@ in
           }
         ];
       };
-    extraSpecialArgs = { inherit inputs release euvlok; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
   };
 }

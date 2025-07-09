@@ -51,10 +51,15 @@ in
           };
         };
       }
-      {
-        _module.args.unstable = inputs.nixpkgs-unstable;
-        _module.args.unstable-small = inputs.nixpkgs-unstable-small;
-      }
+      (
+        { config, ... }:
+        {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+            system = "aarch64-linux";
+            config = config.nixpkgs.config;
+          };
+        }
+      )
     ];
   };
 }

@@ -3,6 +3,7 @@
   config,
   lib,
   euvlok,
+  pkgsUnstable,
   ...
 }:
 let
@@ -62,7 +63,14 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs release euvlok; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
     users = lib.mapAttrs (_: extraImports: mkUser extraImports) userConfigs;
   };
 }
