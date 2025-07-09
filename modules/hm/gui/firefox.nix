@@ -23,6 +23,7 @@ let
       ]
       ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ])
       ++ (lib.optionals (supportPlasma) [ pkgs.nur.repos.rycee.firefox-addons.plasma-integration ]);
+    extensions.force = true;
     search = {
       force = true;
       default = config.hm.firefox.defaultSearchEngine;
