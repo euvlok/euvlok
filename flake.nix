@@ -121,7 +121,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
-    nix2container.inputs.flake-utils.follows = "flake-utils";
     nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nix2container.url = "github:nlewo/nix2container";
     pre-commit-hooks.inputs.flake-compat.follows = "";
