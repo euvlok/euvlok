@@ -6,6 +6,9 @@
 }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.config.crossSystem.config = "aarch64-linux";
+  nix.settings.extra-platforms = [ "aarch64-linux" ];
+
   boot = {
     kernelPackages = pkgs.unstable.linuxPackages_xanmod_latest;
     kernelModules = [
@@ -71,6 +74,7 @@
       xfs = true;
       ntfs = true;
     };
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   boot.loader = {
     grub = {

@@ -3,12 +3,15 @@
   lib,
   config,
   pkgs,
-  modulesPath,
   ...
 }:
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.config.crossSystem.config = "aarch64-linux";
+  nix.settings.extra-platforms = [ "aarch64-linux" ];
+
   sops.secrets.ssh-initrd-key = { };
+
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod;
     kernelModules = [
@@ -271,6 +274,4 @@
   };
   system.fsPackages = [ pkgs.sshfs ];
   environment.systemPackages = [ pkgs.cifs-utils ];
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
