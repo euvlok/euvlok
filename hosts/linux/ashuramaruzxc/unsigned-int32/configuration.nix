@@ -35,7 +35,6 @@
     gpgSmartcards.enable = true;
     keyboard.qmk.enable = true;
     bluetooth = {
-      powerOnBoot = true;
       settings.General = {
         ControllerMode = "bredr";
         AutoEnable = true;
