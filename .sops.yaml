@@ -1,10 +1,10 @@
 keys:
   - &2husecondary age13v0c9ys9hjq7ccsxftkmnx9ht8ff6sf2f0j2lrcfqjz4ljvppqys6nv9r8 # @2husecondary
-  - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
   - &ashuramaruzxc_unsigned-int64 age1a4cshc8aq9v9ez57r4mljddls3wfzchpc2uhmvjvnzk4wvr2mdequaej6d # @ashuramaruzxc server
+  - &ashuramaruzxc_unsigned-int16 age1s664sfqtfysayzhrpdcj56swq2x2cekjl6v6x4jfm59pglh60vhspquumu # @ashuramaruzxc rpi5
+  - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
   - &ashuramaruzxc_unsigned-int8 age1z5xkrf7tpcs58c53nzjgm7tegv9jk3z73zeyec0q7sjzuvth2dxqz6znnj # @ashuramaruzxc macos
   # - &float-pointer32 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @ashuramaruzxc
-  # - &unsigned-int16 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @ashuramaruzxc
   # - &bigshaq9999 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @bigshaq9999
   - &donteatoreo age1kc4gmk6jztv6schw3mhwwea7nn8emce4uwqufawfwapv9tlgdazqz7fc2w # @DontEatOreo machines
   # - &lay-by age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @lay-by
@@ -13,11 +13,11 @@ creation_rules:
     key_groups:
       - age:
           - *2husecondary
-          - *ashuramaruzxc_unsigned-int32
           - *ashuramaruzxc_unsigned-int64
+          - *ashuramaruzxc_unsigned-int32
+          - *unsigned-int16
           - *ashuramaruzxc_unsigned-int8
           # - *float-pointer32
-          # - *unsigned-int16
           # - *bigshaq9999
           - *donteatoreo
           # - *lay-by

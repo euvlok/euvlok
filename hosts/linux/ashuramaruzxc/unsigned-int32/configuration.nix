@@ -103,22 +103,6 @@
   programs.zsh.enable = true;
 
   security = {
-    wrappers = {
-      doas = {
-        setuid = true;
-        owner = "root";
-        group = "root";
-        source = "${lib.getExe pkgs.doas}";
-      };
-    };
-    # sudo = {
-    #   enable = true;
-    #   wheelNeedsPassword = true;
-    # };
-    doas = {
-      enable = true;
-      wheelNeedsPassword = true;
-    };
     polkit = {
       enable = true;
       adminIdentities = [ "unix-group:wheel" ];

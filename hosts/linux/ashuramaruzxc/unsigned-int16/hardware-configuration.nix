@@ -183,14 +183,14 @@ in
   boot = {
     tmp.useTmpfs = true;
     loader.raspberryPi = {
-      bootloader = "uboot";
+      bootloader = "kernelboot";
       firmwarePackage = pkgs.linuxAndFirmware.v6_12_25.raspberrypifw;
     };
     kernelPackages = pkgs.linuxAndFirmware.v6_12_25.linuxPackages_rpi5;
   };
 
   console.earlySetup = true;
-  console.font = lib.mkDefault "${pkgs.terminus_font}/share/consolefonts/ter-u16n.psf.gz";
+  console.font = lib.mkDefault "${pkgs.terminus_font}/share/consolefonts/ter-u24n.psf.gz";
 
   system.fsPackages = [ pkgs.sshfs ];
   environment.systemPackages = [ pkgs.cifs-utils ];

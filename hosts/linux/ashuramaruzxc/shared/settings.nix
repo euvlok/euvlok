@@ -4,13 +4,6 @@
   config,
   ...
 }:
-let
-  addUnstablePackages = final: _: {
-    unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system config;
-    };
-  };
-in
 {
   # services.kmscon = {
   #   enable = true;
@@ -61,8 +54,4 @@ in
     nix-index.enableZshIntegration = true;
     dconf.enable = config.services.xserver.enable;
   };
-
-  nixpkgs.overlays = [
-    addUnstablePackages
-  ];
 }

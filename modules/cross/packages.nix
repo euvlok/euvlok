@@ -57,7 +57,6 @@ let
 
       # File Management & Archiving
       inherit (pkgs)
-        # rar #!todo
         unrar
         unzip
         zip
@@ -113,6 +112,12 @@ let
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
       inherit (pkgs) hyperfine tokei;
     }
+    ++ lib.optionalAttrs (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+      builtins.attrValues {
+        # possibly other packages that won't work on aarch64-linux
+        inherit (pkgs) rar;
+      }
+    )
   );
 
   linuxOnlyPkgs = (
@@ -154,7 +159,6 @@ let
 
         inherit (pkgs.kdePackages) ffmpegthumbs;
         inherit (pkgs) nufraw-thumbnailer;
-
         inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
       }
     )

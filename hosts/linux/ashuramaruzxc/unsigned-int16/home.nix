@@ -20,12 +20,12 @@ let
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
     inputs.sops-nix-trivial.homeManagerModules.sops
-    # {
-    #   sops = {
-    #     age.keyFile = "$HOME/.config/sops/age/keys.txt";
-    #     defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
-    #   };
-    # }
+    {
+      sops = {
+        age.keyFile = "$HOME/.config/sops/age/keys.txt";
+        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
+      };
+    }
     ../../../../modules/hm
     {
       hm = {
@@ -36,9 +36,9 @@ let
         ghostty.enable = true;
         helix.enable = true;
         nushell.enable = true;
-        # nvf.enable = true;
+        nvf.enable = true;
         # vscode.enable = true;
-        # yazi.enable = true;
+        yazi.enable = true;
         zellij.enable = true;
         zsh.enable = true;
       };

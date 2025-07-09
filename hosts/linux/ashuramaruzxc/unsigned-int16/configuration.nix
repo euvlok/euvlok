@@ -2,7 +2,14 @@
 {
   imports = [
     ../../../hm/ashuramaruzxc/fonts.nix
+    ../shared/android.nix
+    ../shared/containers.nix
+    ../shared/firmware.nix
+    ../shared/hyperv.nix
+    ../shared/lxc.nix
+    ../shared/plasma.nix
     ../shared/settings.nix
+    ../shared/fh.nix
     ./hardware-configuration.nix
     ./settings.nix
     ./users.nix
@@ -18,6 +25,7 @@
 
   hardware = {
     gpgSmartcards.enable = true;
+    keyboard.qmk.enable = true;
     bluetooth = {
       settings.General = {
         ControllerMode = "bredr";
@@ -25,11 +33,40 @@
         Experimental = true;
       };
     };
+    opentabletdriver = {
+      enable = true;
+      package = pkgs.unstable.opentabletdriver;
+      daemon.enable = true;
+    };
   };
 
   services = {
+    xserver = {
+      enable = true;
+      xkb.layout = "us";
+      xkb.model = "evdev";
+    };
     udev = {
-      packages = builtins.attrValues { inherit (pkgs) yubikey-personalization; };
+      packages = builtins.attrValues {
+        inherit (pkgs)
+          libwacom
+          via # qmk/via
+          yubikey-personalization
+          ;
+        inherit (pkgs.unstable) opentabletdriver;
+      };
+      extraRules = ''
+        # XP-Pen CT1060
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", MODE="0644"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", MODE="0644"
+        SUBSYSTEM=="input", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+
+        # Wacom PTH-460
+        KERNEL=="hidraw*", ATTRS{idVendor}=="056a", ATTRS{idProduct}=="03dc", MODE="0777", TAG+="uaccess", TAG+="udev-acl"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="056a", ATTRS{idProduct}=="03dc", MODE="0777", TAG+="uaccess", TAG+="udev-acl"
+      '';
     };
     printing = {
       enable = true;
@@ -44,6 +81,8 @@
       nssmdns4 = true;
       openFirewall = true;
     };
+    pcscd.enable = true;
+    xserver.wacom.enable = true;
   };
 
   programs.zsh.enable = true;
@@ -91,16 +130,31 @@
     gnupg.agent = {
       enable = true;
       enableExtraSocket = true;
-      pinentryPackage = pkgs.pinentry-curses;
+    };
+    android-development = {
+      enable = true;
+      users = [ "${config.users.users.ashuramaru.name}" ];
+      waydroid.enable = true;
     };
     appimage = {
       enable = true;
       binfmt = true;
     };
-    dconf.enable = config.services.xserver.enable;
     gphoto2.enable = true;
-    nix-index.enableBashIntegration = true;
-    nix-index.enableZshIntegration = true;
+  };
+
+  environment = {
+    systemPackages = builtins.attrValues {
+      inherit (pkgs)
+        # yubico
+        yubioath-flutter
+
+        apfsprogs
+        fcitx5-gtk
+        gpgme
+        ;
+      inherit (pkgs.kdePackages) bluedevil;
+    };
   };
 
   time.timeZone = "Europe/Warsaw";
@@ -121,6 +175,17 @@
       LC_TELEPHONE = "pl_PL.UTF-8";
       LC_NUMERIC = "pl_PL.UTF-8";
     };
+    inputMethod = {
+      enable = true;
+      type = "fcitx5";
+      fcitx5 = {
+        plasma6Support = true;
+        waylandFrontend = true;
+        addons = builtins.attrValues {
+          inherit (pkgs) fcitx5-gtk fcitx5-mozc;
+        };
+      };
+    };
   };
   fonts.fontconfig.defaultFonts = {
     monospace = [ "Hack Nerd Font Mono" ];
@@ -128,11 +193,11 @@
     serif = [ "Noto Nerd Font" ];
     emoji = [ "Twitter Color Emoji" ];
   };
-  # sops.secrets.gh_token = { };
-  # sops.secrets.netrc_creds = { };
+  sops.secrets.gh_token = { };
+  sops.secrets.netrc_creds = { };
 
-  # nix.settings.access-tokens = config.sops.secrets.gh_token.path;
-  # nix.settings.netrc-file = config.sops.secrets.netrc_creds.path;
+  nix.settings.access-tokens = config.sops.secrets.gh_token.path;
+  nix.settings.netrc-file = config.sops.secrets.netrc_creds.path;
 
   nix.gc.automatic = true;
   nix.gc.options = "--delete-older-than 14d";

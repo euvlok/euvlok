@@ -5,7 +5,7 @@
   ...
 }:
 {
-  # sops.secrets.ashuramaru.neededForUsers = true;
+  sops.secrets.ashuramaru.neededForUsers = true;
   users = {
     mutableUsers = false;
     groups = {
@@ -27,7 +27,7 @@
         description = "Mariè Levjéwa";
         home = "/Users/marie";
         uid = 1000;
-        hashedPassword = "$6$iXZJ4YJJOJzZGxtA$/yRjc8GzrPCZwMvgZHOGZuoxeuYyXBZIljomhqLI6yN3tJ5cxNPvZCZk7tB1VprmFW0r6WXRgHPqy2pXQNqbe0";
+        hashedPasswordFile = config.sops.secrets.ashuramaru.path;
         extraGroups = [
           "wheel"
           "networkmanager"
