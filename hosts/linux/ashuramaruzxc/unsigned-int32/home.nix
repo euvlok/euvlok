@@ -1,7 +1,6 @@
 {
   inputs,
   config,
-  lib,
   pkgs,
   euvlok,
   ...
@@ -53,7 +52,7 @@ let
       nh.enable = true;
       nixcord.enable = true;
       nushell.enable = true;
-      vscode.enable = true;
+      # vscode.enable = true;
       yazi.enable = true;
       zed-editor.enable = true;
       zellij.enable = true;
@@ -91,7 +90,6 @@ let
     inherit (pkgs.kdePackages)
       k3b
       kamera
-      ktorrent
       ;
   };
 
