@@ -52,7 +52,6 @@
   qt.platformTheme = "kde";
 
   programs = {
-    calls.enable = true;
     gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
     kdeconnect.enable = true;
     ssh.startAgent = true;

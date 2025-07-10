@@ -80,15 +80,15 @@ let
 
   bypass-paywalls-clean =
     let
-      version = "4.1.0.0";
+      version = "4.1.5.5";
     in
     inputs.firefox-addons-trivial.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
       inherit version;
       addonId = "magnolia@12.34";
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi&inline=false&commit=b5a2bf54181be5d93476d83b42ec32044b3131e1";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi";
       name = "bypass-paywall-clean-${version}";
-      sha256 = "sha256-VIcHif8gA+11oL5AsADaHA6qfWT8+S0A8msaYE2ivns=";
+      sha256 = "sha256-+JC1vOqooChnT6PmERwBuCxe2h152SWLRSlpgFWqVlY=";
       meta = {
         homepage = "https://twitter.com/Magnolia1234B";
         description = "Bypass Paywalls of (custom) news sites";

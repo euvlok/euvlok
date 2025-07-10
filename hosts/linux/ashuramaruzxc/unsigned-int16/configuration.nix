@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 {
   imports = [
     ../../../hm/ashuramaruzxc/fonts.nix
@@ -27,6 +32,7 @@
     gpgSmartcards.enable = true;
     keyboard.qmk.enable = true;
     bluetooth = {
+      powerOnBoot = lib.mkForce true;
       settings.General = {
         ControllerMode = "bredr";
         AutoEnable = true;
