@@ -25,7 +25,7 @@
         ++ lib.optionals config.nixos.lix.enable [
           (_: _: {
             lix =
-              (inputs.lix-soruce.packages.${config.nixpkgs.hostPlatform.system}.default.override {
+              (inputs.lix-source.packages.${config.nixpkgs.hostPlatform.system}.default.override {
                 aws-sdk-cpp = null;
               }).overrideAttrs
                 (args: {

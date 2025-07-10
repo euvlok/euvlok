@@ -385,7 +385,7 @@
         "devenv": "devenv_3",
         "flake-parts": "flake-parts_4",
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs-source"
         ]
       },
       "locked": {
@@ -1439,7 +1439,7 @@
           "flake-utils"
         ],
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs-source"
         ],
         "rust-overlay": "rust-overlay_2"
       },
@@ -1527,7 +1527,7 @@
         "flakey-profile": "flakey-profile",
         "lix": "lix",
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs-source"
         ]
       },
       "locked": {
@@ -1545,7 +1545,7 @@
         "url": "https://git.lix.systems/lix-project/nixos-module"
       }
     },
-    "lix-soruce": {
+    "lix-source": {
       "inputs": {
         "flake-compat": [],
         "nix2container": [],
@@ -1912,13 +1912,13 @@
     "nix_2_18": {
       "inputs": {
         "flake-compat": [
-          "lix-soruce",
+          "lix-source",
           "flake-compat"
         ],
         "lowdown-src": "lowdown-src",
         "nixpkgs": "nixpkgs_13",
         "nixpkgs-regression": [
-          "lix-soruce",
+          "lix-source",
           "nixpkgs-regression"
         ]
       },
@@ -2269,6 +2269,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-source": {
+      "locked": {
+        "lastModified": 1751984180,
+        "narHash": "sha256-LwWRsENAZJKUdD3SpLluwDmdXY9F45ZEgCb0X+xgOL0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9807714d6944a957c2e036f84b0ff8caf9930bc0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1751949589,
@@ -2613,7 +2629,7 @@
         ],
         "mnw": "mnw",
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs-source"
         ],
         "systems": "systems_5"
       },
@@ -2749,7 +2765,7 @@
         "jj-vcs-source": "jj-vcs-source",
         "lightly-source": "lightly-source",
         "lix-module-source": "lix-module-source",
-        "lix-soruce": "lix-soruce",
+        "lix-source": "lix-source",
         "mk-shell-bin": "mk-shell-bin_2",
         "niri-flake-trivial": "niri-flake-trivial",
         "nix-darwin-ashuramaruzxc": "nix-darwin-ashuramaruzxc",
@@ -2768,6 +2784,7 @@
         "nixpkgs-bigshaq9999": "nixpkgs-bigshaq9999",
         "nixpkgs-donteatoreo": "nixpkgs-donteatoreo",
         "nixpkgs-lay-by": "nixpkgs-lay-by",
+        "nixpkgs-source": "nixpkgs-source",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixpkgs-unstable-small": "nixpkgs-unstable-small",
         "nur-trivial": "nur-trivial",
@@ -3185,7 +3202,7 @@
           "flake-utils"
         ],
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs-source"
         ],
         "rust-overlay": "rust-overlay_3"
       },

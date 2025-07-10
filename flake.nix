@@ -2,6 +2,19 @@
   description = "EUVlok Communal Dotfiles";
 
   inputs = {
+    # --- Shared ---
+    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager-unstable.url = "github:nix-community/home-manager";
+    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
+    # This input is meant to be used for `-source` inputs and is rarely updated
+    # to not cause constant rebuilds when updating generic unstable
+    nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     # --- 2husecondary ---
     nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager-2husecondary.url = "github:nix-community/home-manager/release-25.05";
@@ -33,16 +46,6 @@
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager-lay-by.url = "github:nix-community/home-manager/release-25.05";
     home-manager-lay-by.inputs.nixpkgs.follows = "nixpkgs-lay-by";
-
-    # --- Unstable/Stable Shared ---
-    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
-    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    home-manager-unstable.url = "github:nix-community/home-manager";
-    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
 
     # --- Trivial ---
     base16-trivial.url = "github:SenchoPens/base16.nix";
@@ -80,27 +83,27 @@
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
 
     # ---- Source ----
-    dis-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:DontEatOreo/dis/develop";
     helix-source.inputs.nixpkgs.follows = "nixpkgs";
     helix-source.url = "github:helix-editor/helix";
     hyprland-source.url = "github:hyprwm/Hyprland";
     jj-vcs-source.inputs.flake-utils.follows = "flake-utils";
-    jj-vcs-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    jj-vcs-source.inputs.nixpkgs.follows = "nixpkgs-source";
     jj-vcs-source.url = "github:jj-vcs/jj";
-    lix-module-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
     lix-module-source.url = "git+https://git.lix.systems/lix-project/nixos-module?ref=2.93.1";
-    lix-soruce.inputs.flake-compat.follows = "";
-    lix-soruce.inputs.nix2container.follows = "";
-    lix-soruce.inputs.nixpkgs.follows = "nixpkgs";
-    lix-soruce.inputs.pre-commit-hooks.follows = "";
-    lix-soruce.url = "https://git.lix.systems/lix-project/lix/archive/2.93.1.tar.gz";
+    lix-source.inputs.flake-compat.follows = "";
+    lix-source.inputs.nix2container.follows = "";
+    lix-source.inputs.nixpkgs.follows = "nixpkgs";
+    lix-source.inputs.pre-commit-hooks.follows = "";
+    lix-source.url = "https://git.lix.systems/lix-project/lix/archive/2.93.1.tar.gz";
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.flake-utils.follows = "flake-utils";
-    nvf-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";
     yazi-source.inputs.flake-utils.follows = "flake-utils";
-    yazi-source.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    yazi-source.inputs.nixpkgs.follows = "nixpkgs-source";
     yazi-source.url = "github:sxyazi/yazi";
 
     # DO NOT OVERRIDE NIXPKGS
