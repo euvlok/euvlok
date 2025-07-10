@@ -2,7 +2,6 @@
   inputs,
   lib,
   config,
-  pkgs,
   ...
 }:
 let
@@ -11,17 +10,6 @@ let
   registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
-
-  buildCores =
-    lib.pipe
-      (pkgs.runCommand "cpu-cores" { } ''
-        ${pkgs.writeShellScript "get-cpu-cores" ''${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count())"''} > $out
-      '')
-      [
-        lib.fileContents
-        lib.toInt
-        (x: x - 2) # Max Cores - 2
-      ];
 in
 {
   imports = [ inputs.lix-module-source.nixosModules.default ];
@@ -61,7 +49,6 @@ in
                 "nix-command flakes "
                 + lib.optionalString (config.nix.package.pname == "lix") "pipe-operator"
                 + lib.optionalString (config.nix.package.pname == "nix") "pipe-operators";
-              cores = buildCores;
 
               substituters = [
                 "https://devenv.cachix.org"
