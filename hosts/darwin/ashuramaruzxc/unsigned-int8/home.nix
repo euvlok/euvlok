@@ -14,8 +14,9 @@ let
     { home.stateVersion = "25.05"; }
     inputs.catppuccin-trivial.homeModules.catppuccin
     ../../../../modules/hm
-    ../../../hm/ashuramaruzxc/starship.nix
+    ../../../hm/ashuramaruzxc/helix.nix
     ../../../hm/ashuramaruzxc/aliases.nix
+    ../../../hm/ashuramaruzxc/starship.nix
   ];
 
   catppuccinConfig = {

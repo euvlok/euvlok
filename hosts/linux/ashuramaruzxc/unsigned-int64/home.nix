@@ -11,7 +11,8 @@ let
 
   commonUsers = [
     { home.stateVersion = "25.05"; }
-    ../../../hm/ashuramaruzxc/nushell.nix
+    ../../../hm/ashuramaruzxc/helix.nix
+    ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../../../hm/ashuramaruzxc/vscode.nix
     ../shared/aliases.nix

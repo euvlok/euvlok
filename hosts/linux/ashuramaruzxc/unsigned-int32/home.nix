@@ -12,6 +12,8 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../modules/hm
+    ../../../hm/ashuramaruzxc/helix.nix
+    ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/starship.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
@@ -60,7 +62,6 @@ let
   };
 
   ashuramaruImports = [
-    ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/chrome.nix
     ../../../hm/ashuramaruzxc/dconf.nix
     ../../../hm/ashuramaruzxc/firefox.nix

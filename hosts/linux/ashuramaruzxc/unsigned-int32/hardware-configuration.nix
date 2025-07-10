@@ -75,7 +75,7 @@
       xfs = true;
       ntfs = true;
     };
-    # binfmt.emulatedSystems = [ "aarch64-linux" ];
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   boot.loader = {
     grub = {
@@ -388,10 +388,6 @@
       "/"
       "/var/lib/backup"
     ];
-  };
-  services.fstrim = {
-    enable = true;
-    interval = "weekly";
   };
   system.fsPackages = [ pkgs.sshfs ];
 }

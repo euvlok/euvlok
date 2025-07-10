@@ -8,6 +8,7 @@ in
     specialArgs = { inherit inputs nixos-raspberrypi euvlok; };
     modules = [
       ./configuration.nix
+      ./firmware.nix
       ./home.nix
       raspberry-pi-5.base
       raspberry-pi-5.display-vc4
@@ -55,6 +56,10 @@ in
         { config, ... }:
         {
           _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+            system = "aarch64-linux";
+            config = config.nixpkgs.config;
+          };
+          _module.args.pkgsRpi = import inputs.nixos-raspberrypi {
             system = "aarch64-linux";
             config = config.nixpkgs.config;
           };
