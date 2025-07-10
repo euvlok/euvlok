@@ -19,11 +19,12 @@
         inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
       };
     })
-    (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isx86_64) {
-      hardware.graphics.extraPackages32 = builtins.attrValues {
-        inherit (pkgs.driversi686Linux) libva-vdpau-driver libvdpau-va-gl;
-      };
-    })
+    #! no longer needed for nvidia gpus
+    # (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isx86_64) {
+    #   hardware.graphics.extraPackages32 = builtins.attrValues {
+    #     inherit (pkgs.driversi686Linux) libva-vdpau-driver libvdpau-va-gl;
+    #   };
+    # })
     ({
       environment.systemPackages = builtins.attrValues { inherit (pkgs) libva-utils; };
 
