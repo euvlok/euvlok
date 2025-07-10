@@ -98,6 +98,7 @@ in
               "vscode"
               "yazi"
               "zed"
+              "zellij"
             ];
           in
           lib.flatten (map (n: [ ../../../hm/donteatoreo/${n}.nix ]) hmExtraConfigModules)
