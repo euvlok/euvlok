@@ -53,7 +53,6 @@ in
               firefox.enable = true;
               firefox.zen-browser.enable = true;
               fish.enable = true;
-              ghostty.altKeyBehavior = true;
               ghostty.enable = true;
               helix.enable = true;
               hyprland.enable = true;

@@ -71,7 +71,6 @@ in
           {
             hm = {
               fastfetch.enable = true;
-              ghostty.altKeyBehavior = true;
               ghostty.enable = true;
               helix.enable = true;
               jujutsu.enable = true;
