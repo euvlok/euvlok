@@ -30,7 +30,6 @@ let
       fzf.enable = true;
       helix.enable = true;
       nh.enable = true;
-      # nvf.enable = true;
       zellij.enable = true;
       zsh.enable = true;
     };
@@ -46,17 +45,17 @@ let
         zen-browser.enable = true;
         defaultSearchEngine = "kagi";
       };
-      # nvf.enable = true;
       ghostty.enable = true;
       helix.enable = true;
       mpv.enable = true;
       nh.enable = true;
       nixcord.enable = true;
       nushell.enable = true;
-      # vscode.enable = true;
+      # vscode.enable = true; #TODO:fix later
       yazi.enable = true;
       zed-editor.enable = true;
       zellij.enable = true;
+      zsh.enable = true;
     };
   };
 

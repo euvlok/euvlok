@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   config,
   ...
 }:
@@ -21,6 +22,10 @@
   services = {
     fstrim.enable = true;
     fstrim.interval = "weekly";
+  };
+
+  environment.sessionVariables = {
+    EDITOR = lib.mkDefault "hx";
   };
 
   environment.systemPackages = builtins.attrValues {
