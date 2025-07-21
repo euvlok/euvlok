@@ -35,14 +35,14 @@ python3Packages.buildPythonApplication {
   # The websites yt-dlp deals with are a very moving target. That means that
   # downloads break constantly. Because of that, updates should always be backported
   # to the latest stable release.
-  version = "2025.06.30-unstable-2025-07-18";
+  version = "2025.06.30-unstable-2025-07-20";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "1a8474c3ca6dbe51bb153b2b8eef7b9a61fa7dc3";
-    hash = "sha256-J8ozvK5sc10GAXCZsyaHrQgr8aVOqXLmrmZQNKa0bgQ=";
+    rev = "8820101aa3152e5f4811541c645f8b5de231ba8c";
+    hash = "sha256-6nOJGI+s8Np8uCaumKvr1ptDtpdvdIcA2zBym7KVuAY=";
   };
 
   build-system = with python3Packages; [ hatchling ];
