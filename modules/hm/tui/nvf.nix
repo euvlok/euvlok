@@ -55,7 +55,7 @@
         bash.enable = true;
         html.enable = true;
         yaml.enable = true;
-        css.enable = true;
+        # css.enable = true;
 
         clang.enable = config.hm.languages.cpp; # It handles both C/C++
         clojure.enable = config.hm.languages.clojure;

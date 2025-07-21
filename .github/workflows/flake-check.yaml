@@ -3,7 +3,7 @@ on:
   pull_request:
   workflow_dispatch:
 concurrency:
-  group: '${{ github.workflow }}-${{ github.ref }}'
+  group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
         include:
           - config: anons-Mac-mini
             user: donteatoreo
-          - config: faputa
+          - config: faputas.Mac-mini
             user: bigshaq9999
           - config: unsigned-int8
             user: ashuramaruzxc

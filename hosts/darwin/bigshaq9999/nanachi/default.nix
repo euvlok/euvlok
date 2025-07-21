@@ -7,6 +7,7 @@
       ./configuration.nix
       ./home.nix
       ./system.nix
+      ./fonts.nix
 
       ../../../../modules/cross
       {

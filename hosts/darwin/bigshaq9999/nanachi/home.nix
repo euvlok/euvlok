@@ -31,10 +31,39 @@ in
             };
           }
 
+          {
+            programs.nixcord.discord.vencord.unstable = lib.mkForce false;
+            programs.nixcord.discord.vencord.package = lib.mkForce (
+              (inputs.nixcord-trivial.packages.aarch64-darwin.vencord.override {
+                unstable = true;
+              }).overrideAttrs
+                (oldAttrs: {
+                  pnpmDeps = pkgs.pnpm_10.fetchDeps {
+                    inherit (oldAttrs) pname src;
+                    hash = "sha256-QiD4qTRtz5vz0EEc6Q08ej6dbVGMlPLU2v0GVKNBQyc=";
+                    fetcherVersion = 9;
+                  };
+                })
+            );
+          }
+
           ../../../hm/ashuramaruzxc/nixcord.nix
           ../../../hm/ashuramaruzxc/vscode.nix
+          {
+            programs.vscode = {
+              profiles.default = {
+                userSettings = {
+                  "editor.fontSize" = lib.mkForce 13;
+                  "editor.tabSize" = lib.mkForce 4;
+                  "editor.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
+                  "terminal.integrated.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
+                };
+              };
+            };
+          }
           ../../../hm/donteatoreo/nushell.nix
           ../../../hm/donteatoreo/starship.nix
+          ../../../hm/bigshaq9999/git.nix
 
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
@@ -92,6 +121,7 @@ in
                 gimp # Image editing
                 inkscape # Vector graphics
                 yubikey-manager # OTP
+                notion-app # Productivity
                 ;
 
               inherit (pkgs)

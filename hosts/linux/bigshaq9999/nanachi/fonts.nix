@@ -19,6 +19,7 @@
         ;
       inherit (pkgs.nerd-fonts)
         jetbrains-mono
+        hack
         ;
     };
   };
