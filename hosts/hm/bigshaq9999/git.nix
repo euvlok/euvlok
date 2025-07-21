@@ -1,6 +1,7 @@
 _:
 let
   userName = "bigshaq9999";
+  userEmail = "97749920+bigshaq9999@users.noreply.github.com";
 in
 {
   # home.packages = builtins.attrValues { inherit (pkgs) watchman; };
@@ -11,9 +12,9 @@ in
     gitui.enable = true;
     gh.enable = true;
     git = {
-      inherit userName;
+      inherit userName userEmail;
       lfs.enable = true;
     };
-    git-credential-oauth.enable = true;
+    # git-credential-oauth.enable = true;
   };
 }
