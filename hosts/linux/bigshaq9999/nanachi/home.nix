@@ -1,7 +1,6 @@
 {
   inputs,
   config,
-  lib,
   euvlok,
   pkgsUnstable,
   ...
@@ -15,23 +14,35 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.nanachi =
-      { osConfig, ... }:
-      {
-        imports = [
-          { home.stateVersion = "25.05"; }
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
+  };
+
+  home-manager.users.nanachi =
+    { osConfig, ... }:
+    {
+      imports =
+        [ { home.stateVersion = "25.05"; } ]
+        ++ [
           inputs.catppuccin-trivial.homeModules.catppuccin
           { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-
+        ]
+        ++ [
           ../../../hm/bigshaq9999/niri.nix
           ../../../hm/bigshaq9999/taskwarrior.nix
           ../../../hm/bigshaq9999/waybar.nix
-
           ../../../hm/donteatoreo/mpv.nix
           ../../../hm/donteatoreo/nixcord.nix
           ../../../hm/donteatoreo/starship.nix
           ../../../hm/donteatoreo/yazi.nix
-
+        ]
+        ++ [
           ../../../../modules/hm
           ../../../../modules/hm/wm/niri
           {
@@ -52,7 +63,8 @@ in
               yazi.enable = true;
             };
           }
-
+        ]
+        ++ [
           {
             services.macos-remap-keys.enable = true;
             services.macos-remap-keys.keyboard = {
@@ -61,14 +73,5 @@ in
             };
           }
         ];
-      };
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        euvlok
-        pkgsUnstable
-        ;
     };
-  };
 }

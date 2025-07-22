@@ -16,12 +16,27 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    backupFileExtension = ".bak";
-    users.faputa =
-      { config, ... }:
-      {
-        imports = [
-          { home.stateVersion = "25.05"; }
+    extraSpecialArgs = {
+      inherit
+        inputs
+        release
+        euvlok
+        pkgsUnstable
+        ;
+    };
+  };
+
+  home-manager.users.faputa =
+    { config, ... }:
+    {
+      imports =
+        [ { home.stateVersion = "25.05"; } ]
+        ++ [
+          ../../../hm/donteatoreo/nushell.nix
+          ../../../hm/donteatoreo/starship.nix
+          ../../../hm/bigshaq9999/git.nix
+        ]
+        ++ [
           inputs.catppuccin-trivial.homeModules.catppuccin
           {
             catppuccin = {
@@ -29,8 +44,17 @@ in
               flavor = "frappe";
               accent = "rosewater";
             };
+            home = {
+              file."Documents/development/catppuccin/catppuccin-userstyles.json".source =
+                (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+                  inherit (config.catppuccin) accent flavor;
+                }).outPath
+                + "/dist/import.json";
+            };
           }
-
+        ]
+        ++ [
+          ../../../hm/ashuramaruzxc/nixcord.nix
           {
             programs.nixcord.discord.vencord.unstable = lib.mkForce false;
             programs.nixcord.discord.vencord.package = lib.mkForce (
@@ -46,8 +70,8 @@ in
                 })
             );
           }
-
-          ../../../hm/ashuramaruzxc/nixcord.nix
+        ]
+        ++ [
           ../../../hm/ashuramaruzxc/vscode.nix
           {
             programs.vscode = {
@@ -61,10 +85,8 @@ in
               };
             };
           }
-          ../../../hm/donteatoreo/nushell.nix
-          ../../../hm/donteatoreo/starship.nix
-          ../../../hm/bigshaq9999/git.nix
-
+        ]
+        ++ [
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {
@@ -72,7 +94,8 @@ in
               defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
             };
           }
-
+        ]
+        ++ [
           ../../../../modules/hm
           {
             hm = {
@@ -87,17 +110,8 @@ in
               zellij.enable = true;
             };
           }
-
-          # Misc
-          {
-            home = {
-              file."Documents/development/catppuccin/catppuccin-userstyles.json".source =
-                (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
-                  inherit (config.catppuccin) accent flavor;
-                }).outPath
-                + "/dist/import.json";
-            };
-          }
+        ]
+        ++ [
           {
             home.packages = builtins.attrValues {
               inherit (pkgs)
@@ -129,6 +143,10 @@ in
                 prismlauncher
                 ;
             };
+          }
+        ]
+        ++ [
+          {
             programs = {
               rbw = {
                 enable = true;
@@ -143,14 +161,5 @@ in
             };
           }
         ];
-      };
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        euvlok
-        pkgsUnstable
-        ;
     };
-  };
 }
