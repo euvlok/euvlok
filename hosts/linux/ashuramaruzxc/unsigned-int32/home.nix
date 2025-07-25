@@ -274,7 +274,12 @@ in
       { services.protonmail-bridge.enable = true; }
       { home.packages = allPackages; }
       (
-        { inputs, osConfig, ... }:
+        {
+          inputs,
+          osConfig,
+          lib,
+          ...
+        }:
         {
           # doesn't work with cudaEnable = true;
           home.packages = builtins.attrValues {
@@ -291,6 +296,19 @@ in
               defaultCursor = "touhou-reimu";
             };
           };
+          programs.nixcord.discord.vencord.unstable = lib.mkForce false;
+          programs.nixcord.discord.vencord.package = lib.mkForce (
+            (inputs.nixcord-trivial.packages.${osConfig.nixpkgs.hostPlatform.system}.vencord.override {
+              unstable = true;
+            }).overrideAttrs
+              (oldAttrs: {
+                pnpmDeps = pkgs.pnpm_10.fetchDeps {
+                  inherit (oldAttrs) pname src;
+                  hash = "sha256-QiD4qTRtz5vz0EEc6Q08ej6dbVGMlPLU2v0GVKNBQyc=";
+                  fetcherVersion = 9;
+                };
+              })
+          );
         }
       )
       {

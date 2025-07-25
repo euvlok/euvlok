@@ -30,18 +30,18 @@
       nvme-cli
       ;
 
-    inherit (pkgs.gst_all_1)
-      gst-devtools
-      gst-editing-services
-      gst-plugins-bad
-      gst-plugins-base
-      gst-plugins-good
-      gst-plugins-ugly
-      gst-rtsp-server
-      gst-vaapi
-      gstreamer
-      gstreamermm
-      ;
+    # inherit (pkgs.gst_all_1)
+    #   gst-devtools
+    #   gst-editing-services
+    #   gst-plugins-bad
+    #   gst-plugins-base
+    #   gst-plugins-good
+    #   gst-plugins-ugly
+    #   gst-rtsp-server
+    #   gst-vaapi
+    #   gstreamer
+    #   gstreamermm
+    #   ;
   };
 
   programs = {

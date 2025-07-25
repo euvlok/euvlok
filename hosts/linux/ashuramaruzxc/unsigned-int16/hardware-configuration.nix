@@ -1,7 +1,6 @@
 { pkgs, lib, ... }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
-
   boot = {
     kernelPackages = pkgs.linuxAndFirmware.v6_12_25.linuxPackages_rpi5;
     loader.raspberryPi = {

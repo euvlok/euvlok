@@ -51,11 +51,8 @@ let
       helix.enable = true;
       mpv.enable = true;
       nh.enable = true;
-      nixcord.enable = true;
       nushell.enable = true;
-      # vscode.enable = true; #TODO:fix later
       yazi.enable = true;
-      zed-editor.enable = true;
       zellij.enable = true;
       zsh.enable = true;
     };
@@ -70,7 +67,6 @@ let
     ../../../hm/ashuramaruzxc/nixcord.nix
     ../../../hm/ashuramaruzxc/nushell.nix
     ../../../hm/ashuramaruzxc/ssh.nix
-    # ../../../hm/ashuramaruzxc/vscode.nix
     ../../../linux/shared/protonmail-bridge.nix
   ];
 
@@ -96,11 +92,8 @@ let
   productivityPackages = builtins.attrValues {
     inherit (pkgs)
       anki
-      francis
       gImageReader
       libreoffice-qt6-fresh
-      obsidian
-      octaveFull
       pdftk
       treesheets
       ;
@@ -114,7 +107,6 @@ let
       nextcloud-client
       protonmail-bridge-gui
       signal-desktop
-      zoom-us
       ;
   };
 
@@ -138,12 +130,6 @@ let
       qpwgraph
       ;
   };
-
-  developmentPackages = builtins.attrValues {
-    inherit (pkgs) android-studio nixd;
-    inherit (pkgs.jetbrains) dataspell datagrip;
-  };
-
   jetbrainsPackages =
     let
       inherit (pkgs.jetbrains.plugins) addPlugins;
@@ -207,13 +193,11 @@ let
     ++ socialPackages
     ++ networkingPackages
     ++ audioPackages
-    ++ developmentPackages
-    ++ jetbrainsPackages
+    # ++ jetbrainsPackages
     ++ nemoPackage;
 in
 {
   imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -238,12 +222,12 @@ in
     ++ [
       catppuccinConfig
       inputs.sops-nix-trivial.homeManagerModules.sops
-      {
-        sops = {
-          age.keyFile = "$HOME/.config/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        };
-      }
+      # {
+      #   sops = {
+      #     age.keyFile = "$HOME/.config/sops/age/keys.txt";
+      #     defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+      #   };
+      # }
     ]
     ++ ashuramaruImports
     ++ [
@@ -254,9 +238,6 @@ in
         { inputs, osConfig, ... }:
         {
           # doesn't work with cudaEnable = true;
-          home.packages = builtins.attrValues {
-            inherit (inputs.nixpkgs.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}) rpcs3;
-          };
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";

@@ -80,7 +80,7 @@ let
 
   bypass-paywalls-clean =
     let
-      version = "4.1.5.5";
+      version = "latest";
     in
     inputs.firefox-addons-trivial.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
@@ -88,7 +88,7 @@ let
       addonId = "magnolia@12.34";
       url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi";
       name = "bypass-paywall-clean-${version}";
-      sha256 = "sha256-+JC1vOqooChnT6PmERwBuCxe2h152SWLRSlpgFWqVlY=";
+      sha256 = "sha256-x+9+rf0evyVqMkWrabmyktyFiuT5reXN04cVuE2PK7c=";
       meta = {
         homepage = "https://twitter.com/Magnolia1234B";
         description = "Bypass Paywalls of (custom) news sites";
@@ -159,6 +159,36 @@ let
 in
 {
   programs.floorp = {
+    enable = true;
+    profiles.default = {
+      settings = {
+        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+      };
+      extensions.packages = defaultExtensionsList;
+      inherit search;
+    };
+    profiles.backup = {
+      id = 1;
+      settings = {
+        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+      };
+      extensions.packages = defaultExtensionsList;
+      inherit search;
+    };
+    #! keep an eye on
+    #! https://github.com/NixOS/nixpkgs/pull/374068
+    #! https://github.com/NixOS/nixpkgs/issues/347350
+    nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
+      builtins.attrValues { inherit (pkgs) firefoxpwa; }
+    );
+    languagePacks = [
+      "en-CA"
+      "en-GB"
+      "en-US"
+      "ja"
+    ];
+  };
+  programs.zen-browser = {
     enable = true;
     profiles.default = {
       settings = {

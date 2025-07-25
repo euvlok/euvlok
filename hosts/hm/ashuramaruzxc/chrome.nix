@@ -3,10 +3,10 @@
   programs.chromium = {
     extensions =
       let
-        bpc-version = "4.1.5.5";
+        bpc-version = "latest";
         bpc-src = pkgs.fetchurl {
           url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-${bpc-version}.crx";
-          sha256 = "sha256-GaQM/hdg95xXC/QMM7pPcYnqCOjYpMISpOaKCUHOvFw=";
+          sha256 = "sha256-DC/7bCB5oAY7bkUHIyEfQ5+9x/OrCQ9SLghpKyKXiyA=";
         };
       in
       [

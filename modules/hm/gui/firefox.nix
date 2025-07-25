@@ -260,7 +260,7 @@ in
     (lib.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
-        package = pkgsUnstable.floorp;
+        package = pkgs.floorp;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };

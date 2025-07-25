@@ -104,7 +104,7 @@ let
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
       inherit (pkgs) hyperfine tokei;
     }
-    ++ lib.optionalAttrs (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+    ++ lib.optionals (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
       builtins.attrValues {
         # possibly other packages that won't work on aarch64-linux
         inherit (pkgs) rar;

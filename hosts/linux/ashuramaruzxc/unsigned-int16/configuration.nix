@@ -7,14 +7,11 @@
 {
   imports = [
     ../../../hm/ashuramaruzxc/fonts.nix
-    ../shared/android.nix
     ../shared/containers.nix
-    ../shared/firmware.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
     ../shared/plasma.nix
     ../shared/settings.nix
-    ../shared/fh.nix
     ./hardware-configuration.nix
     ./settings.nix
     ./users.nix
@@ -30,19 +27,12 @@
 
   hardware = {
     gpgSmartcards.enable = true;
-    keyboard.qmk.enable = true;
     bluetooth = {
       powerOnBoot = lib.mkForce true;
       settings.General = {
-        ControllerMode = "bredr";
         AutoEnable = true;
         Experimental = true;
       };
-    };
-    opentabletdriver = {
-      enable = true;
-      package = pkgs.unstable.opentabletdriver;
-      daemon.enable = true;
     };
   };
 
@@ -54,41 +44,10 @@
     };
     udev = {
       packages = builtins.attrValues {
-        inherit (pkgs)
-          libwacom
-          via # qmk/via
-          yubikey-personalization
-          ;
-        inherit (pkgs.unstable) opentabletdriver;
+        inherit (pkgs) yubikey-personalization;
       };
-      extraRules = ''
-        # XP-Pen CT1060
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", MODE="0644"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", MODE="0644"
-        SUBSYSTEM=="input", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="5201", ENV{LIBINPUT_IGNORE_DEVICE}="1"
-
-        # Wacom PTH-460
-        KERNEL=="hidraw*", ATTRS{idVendor}=="056a", ATTRS{idProduct}=="03dc", MODE="0777", TAG+="uaccess", TAG+="udev-acl"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="056a", ATTRS{idProduct}=="03dc", MODE="0777", TAG+="uaccess", TAG+="udev-acl"
-      '';
-    };
-    printing = {
-      enable = true;
-      browsing = true;
-    };
-    avahi = {
-      enable = true;
-      publish = {
-        enable = true;
-        userServices = true;
-      };
-      nssmdns4 = true;
-      openFirewall = true;
     };
     pcscd.enable = true;
-    xserver.wacom.enable = true;
   };
 
   programs.zsh.enable = true;
@@ -121,13 +80,6 @@
           googleAuthenticator.enable = true;
         };
       };
-      # u2f = {
-      # enable = true;
-      # settings = {
-      # cue = true;
-      # };
-      # control = "required";
-      # };
     };
   };
 
@@ -136,11 +88,6 @@
     gnupg.agent = {
       enable = true;
       enableExtraSocket = true;
-    };
-    android-development = {
-      enable = true;
-      users = [ "${config.users.users.ashuramaru.name}" ];
-      waydroid.enable = true;
     };
     appimage = {
       enable = true;
@@ -151,14 +98,7 @@
 
   environment = {
     systemPackages = builtins.attrValues {
-      inherit (pkgs)
-        # yubico
-        yubioath-flutter
-
-        apfsprogs
-        fcitx5-gtk
-        gpgme
-        ;
+      inherit (pkgs) fcitx5-gtk;
       inherit (pkgs.kdePackages) bluedevil;
     };
   };

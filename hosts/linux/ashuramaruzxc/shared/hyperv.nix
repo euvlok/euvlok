@@ -1,14 +1,9 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
-let
-  admins = [
-    "ashuramaru"
-    "meanrin"
-  ];
-in
 {
   imports = [ ./kvmfr.nix ];
   boot.extraModprobeConfig = "options kvm_intel kvm_amd nested=1";
@@ -52,26 +47,30 @@ in
   };
 
   users.groups = {
-    kvm.members = admins;
-    libvirtd.members = admins;
-    qemu.members = admins;
+    kvm.members = [ "ashuramaru" ];
+    libvirtd.members = [ "ashuramaru" ];
+    qemu.members = [ "ashuramaru" ];
   };
 
-  environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
-      virt-manager
-      virt-viewer
-      virt-top
-      spice
-      spice-gtk
-      spice-protocol
-      virtio-win
-      virtiofsd
-      win-spice
-      swtpm
-      looking-glass-client
-      ;
-  };
+  environment.systemPackages = (
+    builtins.attrValues {
+      inherit (pkgs)
+        virt-manager
+        virt-viewer
+        virt-top
+        spice
+        spice-gtk
+        spice-protocol
+        virtio-win
+        virtiofsd
+        win-spice
+        swtpm
+        ;
+    }
+    ++ lib.optionals (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+      builtins.attrValues { inherit (pkgs) looking-glass-client; }
+    )
+  );
   environment.etc = {
     "ovmf/edk2-x86_64-code.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-code.fd";
@@ -96,7 +95,7 @@ in
     };
   };
   #! wait until the next lts kernel
-  virtualisation.kvmfr = {
+  virtualisation.kvmfr = lib.optionalAttrs (config.nixpkgs.hostPlatform.system != "aarch64-linux") {
     enable = true;
     shm = {
       enable = true;
@@ -106,13 +105,17 @@ in
       mode = "0600";
     };
   };
-  systemd.services.libvirtd.path = builtins.attrValues {
-    inherit (pkgs)
-      virtiofsd
-      virtio-win
-      mdevctl
-      swtpm
-      looking-glass-client
-      ;
-  };
+  systemd.services.libvirtd.path = (
+    builtins.attrValues {
+      inherit (pkgs)
+        virtiofsd
+        virtio-win
+        mdevctl
+        swtpm
+        ;
+    }
+    ++ lib.optionals (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+      builtins.attrValues { inherit (pkgs) looking-glass-client; }
+    )
+  );
 }
