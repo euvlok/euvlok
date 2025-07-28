@@ -92,12 +92,12 @@
     jj-vcs-source.inputs.nixpkgs.follows = "nixpkgs-source";
     jj-vcs-source.url = "github:jj-vcs/jj";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    lix-module-source.url = "git+https://git.lix.systems/lix-project/nixos-module?ref=2.93.1";
+    lix-module-source.url = "git+https://git.lix.systems/lix-project/nixos-module?ref=2.93.3-1";
     lix-source.inputs.flake-compat.follows = "";
     lix-source.inputs.nix2container.follows = "";
     lix-source.inputs.nixpkgs.follows = "nixpkgs";
     lix-source.inputs.pre-commit-hooks.follows = "";
-    lix-source.url = "https://git.lix.systems/lix-project/lix/archive/2.93.1.tar.gz";
+    lix-source.url = "https://git.lix.systems/lix-project/lix/archive/2.93.3.tar.gz";
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.flake-utils.follows = "flake-utils";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
