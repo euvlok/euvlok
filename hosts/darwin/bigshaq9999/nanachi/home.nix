@@ -65,7 +65,7 @@ in
               (oldAttrs: {
                 pnpmDeps = pkgs.pnpm_10.fetchDeps {
                   inherit (oldAttrs) pname src;
-                  hash = "sha256-QiD4qTRtz5vz0EEc6Q08ej6dbVGMlPLU2v0GVKNBQyc=";
+                  hash = "sha256-XK3YCM7jzd7OvodC4lvHF/jDULNLFC0sMct97oBCEjc=";
                   fetcherVersion = 9;
                 };
               })
@@ -78,7 +78,7 @@ in
           programs.vscode = {
             profiles.default = {
               userSettings = {
-                "editor.fontSize" = lib.mkForce 13;
+                "editor.fontSize" = lib.mkForce 15;
                 "editor.tabSize" = lib.mkForce 4;
                 "editor.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
                 "terminal.integrated.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
