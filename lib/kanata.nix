@@ -378,10 +378,10 @@ let
             mod = snd;
             inherit
               behavior
-              tapTimeout
-              holdTimeout
               releaseKeys
               ;
+            timeoutTap = tapTimeout;
+            timeoutHold = holdTimeout;
           };
         }
       ) keyModPairs

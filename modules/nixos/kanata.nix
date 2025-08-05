@@ -63,6 +63,16 @@ in
         description = "List of source keys to map from.";
       };
 
+      localKeys = mkOption {
+        default = { };
+        type = attrsOf int;
+        description = "Custom keycode definitions for keys not in the standard set.";
+        example = {
+          my_side_button = 275;
+          my_extra_button = 276;
+        };
+      };
+
       variables = mkOption {
         default = {
           tap-timeout = 220;
@@ -197,12 +207,7 @@ in
         (mapAttrsToList (key: hrmCfg: mkHomeRowModAlias key hrmCfg kcfg.variables))
       ];
 
-      allAliases =
-        pipe
-          [ kcfg.aliases hrmAliases ]
-          [
-            (builtins.concatLists)
-          ];
+      allAliases = pipe [ kcfg.aliases hrmAliases ] [ (builtins.concatLists) ];
 
       baseLayers =
         lib.optionalAttrs (kcfg.layers.base == [ ]) {
@@ -213,20 +218,20 @@ in
         };
 
       allLayers = pipe kcfg.layers [
-        (removeAttrs [ "base" ])
+        (layers: removeAttrs layers [ "base" ])
         (lib.recursiveUpdate baseLayers)
       ];
 
-      kanataConfig =
-        pipe
-          {
-            inherit (kcfg) sourceKeys variables chords;
-            aliases = allAliases;
-            layers = allLayers;
-          }
-          [
-            mkConfig
-          ];
+      kanataConfig = pipe {
+        inherit (kcfg)
+          sourceKeys
+          variables
+          chords
+          localKeys
+          ;
+        aliases = allAliases;
+        layers = allLayers;
+      } [ mkConfig ];
     in
     {
       services.kanata = {

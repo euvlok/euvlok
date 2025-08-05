@@ -1,6 +1,6 @@
-{ lib, ... }:
+{ euvlok, ... }:
 let
-  inherit (lib)
+  inherit (euvlok)
     mkHomeRowModConfig
     mkLayerSwitch
     mkLayerWhileHeld
@@ -35,7 +35,7 @@ let
     "j"
     "k"
     "l"
-    ";"
+    "scln"
     "n"
     "m"
     ","
@@ -65,7 +65,7 @@ let
         "j"
         "k"
         "l"
-        ";"
+        "scln"
       ];
       mods = [
         "rsft"
@@ -108,7 +108,7 @@ in
         "j"
         "k"
         "l"
-        ";"
+        "scln"
         "o"
         "spc"
         "my_side_button"
@@ -164,13 +164,14 @@ in
           "j"
           "k"
           "l"
-          ";"
+          "scln"
           "@o-mods-off"
           "@spc-nav"
           "vold"
           "volu"
         ];
-      } // navLayer;
+      }
+      // navLayer;
 
       helpers.mkHomeRowMods = homeRowMods;
 
