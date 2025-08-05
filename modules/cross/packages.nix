@@ -157,6 +157,5 @@ let
 in
 {
   environment.systemPackages =
-    commonPkgs
-    ++ lib.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
+    commonPkgs ++ lib.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
 }

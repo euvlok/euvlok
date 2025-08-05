@@ -43,10 +43,11 @@ let
     extraImports:
     { osConfig, ... }:
     {
-      imports =
-        [ { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; } ]
-        ++ extraImports
-        ++ commonUsers;
+      imports = [
+        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+      ]
+      ++ extraImports
+      ++ commonUsers;
     };
 
   userConfigs = {

@@ -27,51 +27,52 @@ in
   home-manager.users.nanachi =
     { osConfig, ... }:
     {
-      imports =
-        [ { home.stateVersion = "25.05"; } ]
-        ++ [
-          inputs.catppuccin-trivial.homeModules.catppuccin
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-        ]
-        ++ [
-          ../../../hm/bigshaq9999/niri.nix
-          ../../../hm/bigshaq9999/taskwarrior.nix
-          ../../../hm/bigshaq9999/waybar.nix
-          ../../../hm/donteatoreo/mpv.nix
-          ../../../hm/donteatoreo/nixcord.nix
-          ../../../hm/donteatoreo/starship.nix
-          ../../../hm/donteatoreo/yazi.nix
-        ]
-        ++ [
-          ../../../../modules/hm
-          ../../../../modules/hm/wm/niri
-          {
-            hm = {
-              chromium.browser = "brave";
-              chromium.enable = true;
-              fastfetch.enable = true;
-              firefox.enable = true;
-              firefox.floorp.enable = true;
-              ghostty.enable = true;
-              helix.enable = true;
-              mpv.enable = true;
-              niri.enable = true;
-              nixcord.enable = true;
-              nushell.enable = true;
-              nvf.enable = true;
-              vscode.enable = true;
-              yazi.enable = true;
-            };
-          }
-        ]
-        ++ [
-          {
-            services.macos-remap-keys.enable = true;
-            services.macos-remap-keys.keyboard = {
-              Capslock = "Escape";
-              Escape = "Capslock";
-            };
-          }
-        ];
+      imports = [
+        { home.stateVersion = "25.05"; }
+      ]
+      ++ [
+        inputs.catppuccin-trivial.homeModules.catppuccin
+        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+      ]
+      ++ [
+        ../../../hm/bigshaq9999/niri.nix
+        ../../../hm/bigshaq9999/taskwarrior.nix
+        ../../../hm/bigshaq9999/waybar.nix
+        ../../../hm/donteatoreo/mpv.nix
+        ../../../hm/donteatoreo/nixcord.nix
+        ../../../hm/donteatoreo/starship.nix
+        ../../../hm/donteatoreo/yazi.nix
+      ]
+      ++ [
+        ../../../../modules/hm
+        ../../../../modules/hm/wm/niri
+        {
+          hm = {
+            chromium.browser = "brave";
+            chromium.enable = true;
+            fastfetch.enable = true;
+            firefox.enable = true;
+            firefox.floorp.enable = true;
+            ghostty.enable = true;
+            helix.enable = true;
+            mpv.enable = true;
+            niri.enable = true;
+            nixcord.enable = true;
+            nushell.enable = true;
+            nvf.enable = true;
+            vscode.enable = true;
+            yazi.enable = true;
+          };
+        }
+      ]
+      ++ [
+        {
+          services.macos-remap-keys.enable = true;
+          services.macos-remap-keys.keyboard = {
+            Capslock = "Escape";
+            Escape = "Capslock";
+          };
+        }
+      ];
     };
 }

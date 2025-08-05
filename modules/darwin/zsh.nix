@@ -38,23 +38,22 @@ let
     ++ enablePlugin "git"
     ++ enablePlugin "direnv"
     ++ enablePlugin "vscode";
-  customPlugins =
-    [
-      {
-        name = "fast-syntax-highlighting";
-        src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
-      }
-      {
-        name = "nix-shell";
-        src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
-      }
-    ]
-    ++ lib.optionals hmConfig.programs.fzf.enable [
-      {
-        name = "fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
-      }
-    ];
+  customPlugins = [
+    {
+      name = "fast-syntax-highlighting";
+      src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+    }
+    {
+      name = "nix-shell";
+      src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
+    }
+  ]
+  ++ lib.optionals hmConfig.programs.fzf.enable [
+    {
+      name = "fzf-tab";
+      src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
+    }
+  ];
   customPluginsStr = lib.pipe customPlugins [
     (pluginsList: builtins.map (p: "source ${p.src}") pluginsList)
     (builtins.concatStringsSep "\n")

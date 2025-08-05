@@ -21,17 +21,16 @@
         "--single-instance"
         "--directory=/tmp/my-dir"
       ];
-      settings =
-        {
-          scrollback_lines = 10000000;
-          repaint_delay = 10;
-          tab_bar_style = "powerline";
-          notify_on_cmd_finish = "unfocused 5.0";
-        }
-        // lib.optionalAttrs osConfig.nixpkgs.hostPlatform.isDarwin {
-          macos_option_as_alt = "yes";
-          macos_quit_when_last_window_closed = "yes";
-        };
+      settings = {
+        scrollback_lines = 10000000;
+        repaint_delay = 10;
+        tab_bar_style = "powerline";
+        notify_on_cmd_finish = "unfocused 5.0";
+      }
+      // lib.optionalAttrs osConfig.nixpkgs.hostPlatform.isDarwin {
+        macos_option_as_alt = "yes";
+        macos_quit_when_last_window_closed = "yes";
+      };
     };
   };
 }

@@ -166,5 +166,6 @@ in
         };
       };
     };
-  } // mergeFrom "settings";
+  }
+  // mergeFrom "settings";
 }

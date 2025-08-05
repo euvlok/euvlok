@@ -175,7 +175,8 @@ in
         #JS
         "javascript.suggest.paths" = false;
         "typescript.suggest.paths" = false;
-      } // mergeFrom "settings";
+      }
+      // mergeFrom "settings";
       extensions = [
         ## -- Programming languages/lsp support -- ##
         (mkExt vscodeSystem "ms-vscode" "cpptools-extension-pack")
@@ -292,7 +293,8 @@ in
         ## -- Dictionary/Languages support -- ##
         pkgs.vscode-extensions.ms-ceintl.vscode-language-pack-ja
         ## -- Dictionary/Languages support -- ##
-      ] ++ mergeFrom "extensions";
+      ]
+      ++ mergeFrom "extensions";
     };
   };
   home.sessionVariables = {

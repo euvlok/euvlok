@@ -56,7 +56,8 @@
         { id = "lckanjgmijmafbedllaakclkaicjfmnk"; } # ClearURLs
         { id = "mnjggcdmjocbbbhaepdhchncahnbgone"; } # Sponsor Block
         #TODO: preferably having bypass paywal by default
-      ] ++ lib.optionals (config.catppuccin.enable) [ { id = "lnjaiaapbakfhlbjenjkhffcdpoompki"; } ];
+      ]
+      ++ lib.optionals (config.catppuccin.enable) [ { id = "lnjaiaapbakfhlbjenjkhffcdpoompki"; } ];
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
