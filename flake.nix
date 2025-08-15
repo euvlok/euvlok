@@ -99,7 +99,6 @@
     lix-source.inputs.pre-commit-hooks.follows = "";
     lix-source.url = "https://git.lix.systems/lix-project/lix/archive/2.93.3.tar.gz";
     nvf-source.inputs.flake-parts.follows = "flake-parts";
-    nvf-source.inputs.flake-utils.follows = "flake-utils";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";
     yazi-source.inputs.flake-utils.follows = "flake-utils";

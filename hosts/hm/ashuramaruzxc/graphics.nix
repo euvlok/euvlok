@@ -9,7 +9,7 @@
       blender # 3D creation suite
       godot # Game engine
       krita # Digital painting
-      ansel # RAW image viewer
+      # ansel # RAW image viewer
       ;
     inkscape = pkgs.inkscape-with-extensions.override {
       inkscapeExtensions = builtins.attrValues {
@@ -21,8 +21,6 @@
       plugins = builtins.attrValues {
         inherit (pkgs.gimp3Plugins)
           gmic
-          #! bimp
-          #! fourier
           ;
       };
     };

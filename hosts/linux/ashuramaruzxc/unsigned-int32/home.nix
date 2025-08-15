@@ -304,11 +304,29 @@ in
               (oldAttrs: {
                 pnpmDeps = pkgs.pnpm_10.fetchDeps {
                   inherit (oldAttrs) pname src;
-                  hash = "sha256-QiD4qTRtz5vz0EEc6Q08ej6dbVGMlPLU2v0GVKNBQyc=";
+                  hash = "sha256-XK3YCM7jzd7OvodC4lvHF/jDULNLFC0sMct97oBCEjc=";
                   fetcherVersion = 9;
                 };
               })
           );
+          gtk = {
+            enable = true;
+            iconTheme = {
+              name = lib.mkForce "breeze-dark";
+              package = lib.mkForce pkgs.kdePackages.breeze-icons;
+            };
+          };
+          #! Press F :sob: :pensive:
+          # catppuccin.gtk.enable = true;
+          # catppuccin.gtk.gnomeShellTheme = true;
+          # catppuccin.gtk.tweaks = [
+          #   "rimless"
+          #   "normal"
+          # ];
+          home.sessionVariables = {
+            GTK_CSD = "0";
+          };
+          services.easyeffects.enable = true;
         }
       )
       {
@@ -324,25 +342,6 @@ in
           };
           btop.enable = true;
         };
-      }
-      {
-        gtk = {
-          enable = true;
-          iconTheme = {
-            name = "breeze-dark";
-            package = pkgs.kdePackages.breeze-icons;
-          };
-        };
-        catppuccin.gtk.enable = true;
-        catppuccin.gtk.gnomeShellTheme = true;
-        catppuccin.gtk.tweaks = [
-          "rimless"
-          "normal"
-        ];
-        home.sessionVariables = {
-          GTK_CSD = "0";
-        };
-        services.easyeffects.enable = true;
       }
     ];
 }

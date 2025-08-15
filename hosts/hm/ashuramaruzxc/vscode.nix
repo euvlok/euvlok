@@ -51,16 +51,6 @@ let
     };
   };
 
-  themes = {
-    extensions = [
-      (mkExt vscodeSystem "catppuccin" "catppuccin-vsc-icons")
-      (mkExt vscodeSystem "catppuccin" "catppuccin-vsc")
-    ];
-    settings = {
-      workbench.iconTheme = "catppuccin-${config.catppuccin.flavor}";
-    };
-  };
-
   flattenAttrs =
     attrs: excludePaths:
     let
@@ -100,7 +90,6 @@ let
     let
       modules = [
         languages
-        themes
       ];
       excludePaths = [
         "[javascript]"

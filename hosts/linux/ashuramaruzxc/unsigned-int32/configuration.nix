@@ -240,19 +240,10 @@
       };
       aggregatedIcons = pkgs.buildEnv {
         name = "system-icons";
-        paths =
-          builtins.attrValues {
-            inherit (pkgs.kdePackages) breeze;
-            inherit (inputs.anime-cursors-source.packages.${config.nixpkgs.hostPlatform.system}) cursors;
-          }
-          ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
-            catppuccin-gtk = pkgs.catppuccin-gtk.override {
-              accents = [ config.catppuccin.accent ];
-              size = "standard";
-              tweaks = config.home-manager.users.ashuramaru.catppuccin.gtk.tweaks;
-              variant = config.catppuccin.flavor;
-            };
-          };
+        paths = builtins.attrValues {
+          inherit (pkgs.kdePackages) breeze;
+          inherit (inputs.anime-cursors-source.packages.${config.nixpkgs.hostPlatform.system}) cursors;
+        };
         pathsToLink = [ "/share/icons" ];
       };
       aggregatedFonts = pkgs.buildEnv {

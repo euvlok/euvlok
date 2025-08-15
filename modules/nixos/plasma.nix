@@ -86,12 +86,6 @@
             ;
         }
         ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
-          catppuccin-gtk = pkgs.catppuccin-gtk.override {
-            accents = [ config.catppuccin.accent ];
-            size = "compact";
-            tweaks = [ "rimless" ];
-            variant = config.catppuccin.flavor;
-          };
           catppuccin-kde = pkgs.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];

@@ -1,22 +1,9 @@
 {
-  inputs,
   pkgs,
+  pkgsUnstable,
   ...
 }:
 {
-  services.kmscon = {
-    enable = true;
-    extraOptions = "--term xterm-256color";
-    extraConfig = "font-size=18";
-    hwRender = true;
-    fonts = [
-      {
-        name = "MesloLGL Nerd Font";
-        package = pkgs.nerd-fonts.meslo-lg;
-      }
-    ];
-  };
-
   programs.adb.enable = true;
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)

@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, ... }:
 {
   sops.secrets.tailscale_auth = { };
   networking = {
@@ -56,12 +56,12 @@
     enableExcludeWrapper = false;
   };
   services.v2raya.enable = true;
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-    openFirewall = true;
-    authKeyFile = config.sops.secrets.tailscale_auth.path;
-  };
+  # services.tailscale = {
+  #   enable = true;
+  #   useRoutingFeatures = "both";
+  #   openFirewall = true;
+  #   authKeyFile = config.sops.secrets.tailscale_auth.path;
+  # };
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
 }

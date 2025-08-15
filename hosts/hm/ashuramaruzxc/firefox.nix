@@ -88,7 +88,7 @@ let
       addonId = "magnolia@12.34";
       url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi";
       name = "bypass-paywall-clean-${version}";
-      sha256 = "sha256-x+9+rf0evyVqMkWrabmyktyFiuT5reXN04cVuE2PK7c=";
+      sha256 = "sha256-dQyc+h8rZbRsstVP0BiankQoItXdn1owFuYHeP9ShyA=";
       meta = {
         homepage = "https://twitter.com/Magnolia1234B";
         description = "Bypass Paywalls of (custom) news sites";
@@ -165,6 +165,7 @@ in
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
       extensions.packages = defaultExtensionsList;
+      extensions.force = true;
       inherit search;
     };
     profiles.backup = {
@@ -173,6 +174,7 @@ in
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
       extensions.packages = defaultExtensionsList;
+      extensions.force = true;
       inherit search;
     };
     #! keep an eye on
@@ -195,6 +197,7 @@ in
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
       extensions.packages = defaultExtensionsList;
+      extensions.force = true;
       inherit search;
     };
     profiles.backup = {
@@ -203,6 +206,7 @@ in
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
       };
       extensions.packages = defaultExtensionsList;
+      extensions.force = true;
       inherit search;
     };
     #! keep an eye on

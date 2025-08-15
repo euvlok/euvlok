@@ -6,7 +6,7 @@
         bpc-version = "latest";
         bpc-src = pkgs.fetchurl {
           url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-${bpc-version}.crx";
-          sha256 = "sha256-DC/7bCB5oAY7bkUHIyEfQ5+9x/OrCQ9SLghpKyKXiyA=";
+          sha256 = "sha256-ye46mxoNv1blUwczJ2HDBS7+9uGm69ntv430YUkWTj4=";
         };
       in
       [
