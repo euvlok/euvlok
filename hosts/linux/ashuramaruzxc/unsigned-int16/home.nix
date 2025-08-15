@@ -12,6 +12,7 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../modules/hm
+    ../../../../pkgs/catppuccin-gtk.nix
     ../../../hm/ashuramaruzxc/helix.nix
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/starship.nix
