@@ -290,6 +290,27 @@
         "type": "github"
       }
     },
+    "catppuccin-gtk": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1737579274,
+        "narHash": "sha256-8kBIYfn8TI9jbffhDNS12SdbQHb9ITXflwcgIJBeGqw=",
+        "owner": "catppuccin",
+        "repo": "nix",
+        "rev": "06f0ea19334bcc8112e6d671fd53e61f9e3ad63a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "nix",
+        "rev": "06f0ea19334bcc8112e6d671fd53e61f9e3ad63a",
+        "type": "github"
+      }
+    },
     "catppuccin-trivial": {
       "inputs": {
         "nixpkgs": [
@@ -297,11 +318,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754950929,
-        "narHash": "sha256-75hsUMshZ5ZlO/X2JWfZqKHPM66uhUNsDG/Zozwh/xs=",
+        "lastModified": 1755247639,
+        "narHash": "sha256-YBjSqGgNAejwIIqUv+NTYpm+peXLro79qNBi0SF1JqM=",
         "owner": "catppuccin",
         "repo": "nix",
-        "rev": "45512611f1537c75e439d508409efc6901286645",
+        "rev": "bd14b47481c996e2a5d5e5704d55092edf18e892",
         "type": "github"
       },
       "original": {
@@ -429,11 +450,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1755002386,
-        "narHash": "sha256-5Q7o8nv1EQi7oYD1k1F8/d+3WUiNDg9JOH8KWgP/6WQ=",
+        "lastModified": 1755246238,
+        "narHash": "sha256-KVPjWo/RVQBQe6N03cNbSVM/xNCv2506wE4A8wL73sk=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "170f218715e93fc36a9077a926eb8516d789138b",
+        "rev": "e6c2e889b34f5f623a7749a46e2aa5ea6e7256a0",
         "type": "gitlab"
       },
       "original": {
@@ -1463,11 +1484,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1755239192,
-        "narHash": "sha256-na/U+BWjSbulaDFOi40tGPAW8FxJY52uUGa6sSpNGaA=",
+        "lastModified": 1755249335,
+        "narHash": "sha256-L0007MndJhiLcKNjXQ4rbUxHwYORQA3wh5V4ESrVz3M=",
         "owner": "jj-vcs",
         "repo": "jj",
-        "rev": "1898b133d54ceda653ac0054e7425c2ebedcfada",
+        "rev": "db0e43608d1e2ae9cb7283f55cdd2eb85f9272fd",
         "type": "github"
       },
       "original": {
@@ -2158,11 +2179,11 @@
     },
     "nixpkgs-ashuramaruzxc": {
       "locked": {
-        "lastModified": 1755243528,
-        "narHash": "sha256-YGBq/8D3gWuwLmDZb63h4a21GOMquBH8JcZsrJFL43Y=",
+        "lastModified": 1755251402,
+        "narHash": "sha256-XeJtvAsgJgJQ+ZAejAEqIpC54EhcfHXfZauf3EsQP9Q=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c3a6f30dea7d1e58267488a687db1a6f07ff6063",
+        "rev": "4ffcd86d04c911b530ab52885ddd811dde9e8bc7",
         "type": "github"
       },
       "original": {
@@ -2762,6 +2783,7 @@
         "anime-cursors-source": "anime-cursors-source",
         "anime-game-launcher-source": "anime-game-launcher-source",
         "base16-trivial": "base16-trivial",
+        "catppuccin-gtk": "catppuccin-gtk",
         "catppuccin-trivial": "catppuccin-trivial",
         "devenv": "devenv_2",
         "dis-source": "dis-source",

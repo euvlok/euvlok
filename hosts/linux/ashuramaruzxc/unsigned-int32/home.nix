@@ -12,6 +12,7 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../modules/hm
+    ../../../../pkgs/catppuccin-gtk.nix
     ../../../hm/ashuramaruzxc/helix.nix
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/starship.nix
@@ -316,13 +317,15 @@ in
               package = lib.mkForce pkgs.kdePackages.breeze-icons;
             };
           };
-          #! Press F :sob: :pensive:
-          # catppuccin.gtk.enable = true;
-          # catppuccin.gtk.gnomeShellTheme = true;
-          # catppuccin.gtk.tweaks = [
-          #   "rimless"
-          #   "normal"
-          # ];
+          catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
+            enable = true;
+            inherit (osConfig.catppuccin) accent flavor;
+            size = "standard";
+            tweaks = [
+              "rimless"
+              "normal"
+            ];
+          };
           home.sessionVariables = {
             GTK_CSD = "0";
           };

@@ -51,6 +51,8 @@
     base16-trivial.url = "github:SenchoPens/base16.nix";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
     catppuccin-trivial.url = "github:catppuccin/nix";
+    catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     firefox-addons-trivial.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
