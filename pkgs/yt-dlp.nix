@@ -41,8 +41,8 @@ python3Packages.buildPythonApplication {
   src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "6ae3543d5a1feea0c546571fd2782b024c108eac";
-    hash = "sha256-Gad2YCIUt55/PLhV4ugULCQRc8ftbKFOnodsagi33OI=";
+    rev = "404bd889d0e0b62ad72b7281e3fefdc0497080b3";
+    hash = "sha256-V74rssJP06UpFXVQVK6sYDlH4wPVxP67EDKUYos1+TI=";
   };
 
   build-system = with python3Packages; [ hatchling ];
