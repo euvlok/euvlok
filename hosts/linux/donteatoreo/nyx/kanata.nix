@@ -1,11 +1,6 @@
 { euvlok, ... }:
 let
-  inherit (euvlok)
-    mkHomeRowModConfig
-    mkLayerSwitch
-    mkLayerWhileHeld
-    mkNavigationLayer
-    ;
+  inherit (euvlok) mkHomeRowModConfig mkLayerSwitch;
 
   leftHandKeys = [
     "q"
@@ -75,18 +70,19 @@ let
       ];
       behavior = "tap-hold";
     };
-
-  navLayer = mkNavigationLayer {
-    name = "arrow-layer";
-    positions = [
-      7
-      8
-      9
-      10
-    ]; # hjkl positions
-  };
 in
 {
+  services.kanata.keyboards.main.devices = [
+    # Laptop built-in keyboard
+    "/dev/input/by-id/usb-ITE_Tech._Inc._ITE_Device_8910_-event-kbd"
+    # External Keyboard (Ducky One 2 Mini Black)
+    "/dev/input/by-id/usb-Ducky_Ducky_One2_Mini_RGB_DK-V1.09-201006-event-if03"
+    "/dev/input/by-id/usb-Ducky_Ducky_One2_Mini_RGB_DK-V1.09-201006-event-kbd"
+    # External Mouse (Logitech Lift)
+    "/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse"
+    "/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd"
+  ];
+
   nixos.kanata = {
     enable = true;
     config = {
@@ -124,30 +120,28 @@ in
       };
 
       aliases = [
-        # Space navigation
-        (mkLayerWhileHeld "spc-nav" "spc" "arrow-layer" 240 220)
-
         # Toggle modifiers on/off with 'o' key
         (mkLayerSwitch "o-mods-on" "o" "base-no-mods" 500 220)
         (mkLayerSwitch "o-mods-off" "o" "base" 500 220)
       ];
 
       layers = {
+        # Base layer with home-row mods active.
         base = [
-          "caps"
-          "esc"
-          "@a"
-          "@s"
-          "@d"
-          "@f"
+          "caps" # Swapped with esc
+          "esc" # Swapped with caps
+          "@a" # HRM
+          "@s" # HRM
+          "@d" # HRM
+          "@f" # HRM
           "e"
           "h"
-          "@j"
-          "@k"
-          "@l"
-          "@;"
+          "@j" # HRM
+          "@k" # HRM
+          "@l" # HRM
+          "@scln" # HRM
           "@o-mods-on"
-          "@spc-nav"
+          "spc" # Normal space
           "vold"
           "volu"
         ];
@@ -155,23 +149,22 @@ in
         base-no-mods = [
           "caps"
           "esc"
-          "a"
-          "s"
-          "d"
-          "f"
+          "a" # Normal key
+          "s" # Normal key
+          "d" # Normal key
+          "f" # Normal key
           "e"
           "h"
-          "j"
-          "k"
-          "l"
-          "scln"
+          "j" # Normal key
+          "k" # Normal key
+          "l" # Normal key
+          "scln" # Normal key
           "@o-mods-off"
-          "@spc-nav"
+          "spc"
           "vold"
           "volu"
         ];
-      }
-      // navLayer;
+      };
 
       helpers.mkHomeRowMods = homeRowMods;
 

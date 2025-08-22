@@ -58,7 +58,7 @@ in
 
     config = {
       sourceKeys = mkOption {
-        default = splitString " " "esc caps a s d f e h j k l ; o spc bksl";
+        default = splitString " " "esc caps a s d f e h j k l scln o spc bksl";
         type = listOf str;
         description = "List of source keys to map from.";
       };
