@@ -103,10 +103,14 @@
       hardware.nvidia = {
         open = true;
         modesetting.enable = true;
-        package = config.boot.kernelPackages.nvidiaPackages.latest;
-        # pkgs.nvidia-patch.patch-nvenc (
-        #   pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.beta
-        # );
+        package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+          version = "580.76.05";
+          sha256_64bit = "sha256-IZvmNrYJMbAhsujB4O/4hzY8cx+KlAyqh7zAVNBdl/0=";
+          sha256_aarch64 = lib.fakeSha256;
+          openSha256 = "sha256-IZvmNrYJMbAhsujB4O/4hzY8cx+KlAyqh7zAVNBdl/0=";
+          settingsSha256 = "sha256-ll7HD7dVPHKUyp5+zvLeNqAb6hCpxfwuSyi+SAXapoQ=";
+          persistencedSha256 = lib.fakeSha256;
+        };
         powerManagement.enable = true;
         powerManagement.finegrained = false;
       };
