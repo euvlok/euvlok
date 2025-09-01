@@ -2,7 +2,6 @@
   pkgs,
   lib,
   euvlok,
-  config,
   osConfig,
   ...
 }:
