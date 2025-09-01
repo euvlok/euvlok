@@ -19,13 +19,11 @@ let
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
   ];
-
   catppuccinConfig =
     { osConfig, ... }:
     {
       catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; };
     };
-
   rootHmConfig = {
     hm = {
       bash.enable = true;
@@ -53,7 +51,7 @@ let
       mpv.enable = true;
       nh.enable = true;
       nushell.enable = true;
-      yazi.enable = true;
+      # yazi.enable = true;
       zellij.enable = true;
       zsh.enable = true;
     };
@@ -194,7 +192,6 @@ let
     ++ socialPackages
     ++ networkingPackages
     ++ audioPackages
-    # ++ jetbrainsPackages
     ++ nemoPackage;
 in
 {
@@ -236,7 +233,13 @@ in
       { services.protonmail-bridge.enable = true; }
       { home.packages = allPackages; }
       (
-        { inputs, osConfig, ... }:
+        {
+          inputs,
+          config,
+          lib,
+          osConfig,
+          ...
+        }:
         {
           # doesn't work with cudaEnable = true;
           home.pointerCursor = {
@@ -250,6 +253,29 @@ in
               defaultCursor = "touhou-reimu";
             };
           };
+          gtk = {
+            enable = true;
+            iconTheme = {
+              name = lib.mkForce "breeze-dark";
+              package = lib.mkForce pkgs.kdePackages.breeze-icons;
+            };
+          };
+          catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
+            enable = true;
+            inherit (osConfig.catppuccin) accent flavor;
+            size = "standard";
+            tweaks = [
+              "rimless"
+              "normal"
+            ];
+          };
+          home.sessionVariables = {
+            GTK_CSD = "0";
+            GO_PATH = "${config.home.homeDirectory}/.go";
+            GEM_HOME = "${config.home.homeDirectory}/.gems";
+            GEM_PATH = "${config.home.homeDirectory}/.gems";
+          };
+          services.easyeffects.enable = true;
         }
       )
       {
@@ -265,25 +291,6 @@ in
           };
           btop.enable = true;
         };
-      }
-      {
-        gtk = {
-          enable = true;
-          iconTheme = {
-            name = "breeze-dark";
-            package = pkgs.kdePackages.breeze-icons;
-          };
-        };
-        catppuccin.gtk.enable = true;
-        catppuccin.gtk.gnomeShellTheme = true;
-        catppuccin.gtk.tweaks = [
-          "rimless"
-          "normal"
-        ];
-        home.sessionVariables = {
-          GTK_CSD = "0";
-        };
-        services.easyeffects.enable = true;
       }
     ];
 }

@@ -111,6 +111,8 @@ in
       userSettings = {
         "search.followSymlinks" = false;
         "files.autoSave" = "afterDelay";
+
+        # Editor basics
         "editor.bracketPairColorization.enabled" = true;
         "editor.bracketPairColorization.independentColorPoolPerBracketType" = true;
         "editor.cursorBlinking" = "blink";
@@ -123,12 +125,16 @@ in
         "editor.semanticHighlighting.enabled" = true;
         "editor.tabSize" = 2;
         "editor.wordWrap" = "on";
+
         "editor.quickSuggestions" = {
           "other" = "on";
           "comments" = "on";
           "strings" = "off";
         };
+
+        # Diff
         "diffEditor.maxFileSize" = 0;
+
         # Terminal
         "terminal.integrated.minimumContrastRatio" = 1;
         "terminal.integrated.fontFamily" = "'Hack Nerd Font'";
@@ -136,10 +142,13 @@ in
         "terminal.integrated.cursorBlinking" = true;
         "terminal.integrated.inheritEnv" = true;
 
+        # Workbench
         "workbench.editor.showIcons" = true;
         "workbench.sideBar.location" = "right";
         "window.titleBarStyle" = "native";
         "telemetry.telemetryLevel" = "off";
+
+        # Unicode highlight exceptions
         "editor.unicodeHighlight.allowedLocales" = {
           "ja" = true;
           "　" = true;
@@ -147,84 +156,168 @@ in
 
         # Python
         "[python]" = {
-          "editor.defaultFormatter" = "ms-python.black-formatter";
+          "editor.defaultFormatter" = "charliermarsh.ruff";
           "editor.formatOnSave" = true;
           "editor.insertSpaces" = true;
           "languageServer" = "Pylance";
-          "formatting.provider" = "black";
-          "formatting.blackArgs" = [
-            "--line-length"
-            "120"
-          ];
+          "editor.codeActionsOnSave" = {
+            "source.fixAll.ruff" = "explicit";
+            "source.organizeImports.ruff" = "explicit";
+          };
         };
         "isort.args" = [
           "--profile"
           "black"
         ];
-        #JS
+        "ruff.format.args" = [
+          "--line-length=120"
+        ];
+
+        # JS / TS
         "javascript.suggest.paths" = false;
         "typescript.suggest.paths" = false;
+
+        "[javascript]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnPaste" = true;
+          "editor.formatOnSave" = true;
+          "editor.formatOnType" = true;
+        };
+        "[typescript]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnPaste" = true;
+          "editor.formatOnSave" = true;
+        };
+
+        # C / C++
+        "[cpp]" = {
+          "editor.defaultFormatter" = "ms-vscode.cpptools";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.fixAll" = "explicit";
+          };
+        };
+        "[c]" = {
+          "editor.defaultFormatter" = "ms-vscode.cpptools";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.fixAll" = "explicit";
+          };
+        };
+
+        "C_Cpp.default.cppStandard" = "c++23";
+        "C_Cpp.default.cStandard" = "c23";
+        "C_Cpp.default.intelliSenseMode" = "linux-gcc-x64";
+
+        # C#
+        "[csharp]" = {
+          "editor.defaultFormatter" = "ms-dotnettools.csharp";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.fixAll" = "explicit";
+            "source.organizeImports" = "explicit";
+          };
+        };
+
+        # Dart
+        "[dart]" = {
+          "editor.defaultFormatter" = "dart-code.dart-code";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.fixAll" = "explicit";
+            "source.organizeImports" = "explicit";
+          };
+        };
+
+        # Go
+        "[go]" = {
+          "editor.defaultFormatter" = "golang.go";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.organizeImports" = "explicit";
+          };
+        };
+
+        # Haskell
+        "[haskell]" = {
+          "editor.defaultFormatter" = "haskell.haskell";
+          "editor.formatOnSave" = true;
+        };
+
+        # Java
+        "[java]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnPaste" = true;
+          "editor.formatOnSave" = true;
+        };
+
+        # Kotlin
+        "[kotlin]" = {
+          "editor.defaultFormatter" = "fwcd.kotlin";
+          "editor.formatOnSave" = true;
+        };
+
+        # Lisp
+        "[lisp]" = {
+          "editor.formatOnSave" = true;
+        };
+
+        # Lua
+        "[lua]" = {
+          "editor.defaultFormatter" = "sumneko.lua";
+          "editor.formatOnSave" = true;
+        };
+
+        # Ruby
+        "[ruby]" = {
+          "editor.formatOnSave" = true;
+        };
+
+        # Rust
+        "[rust]" = {
+          "editor.defaultFormatter" = "rust-lang.rust-analyzer";
+          "editor.formatOnSave" = true;
+          "editor.codeActionsOnSave" = {
+            "source.fixAll" = "explicit";
+            "source.organizeImports" = "explicit";
+          };
+        };
       }
       // mergeFrom "settings";
       extensions = [
         ## -- Programming languages/lsp support -- ##
-        (mkExt vscodeSystem "ms-vscode" "cpptools-extension-pack")
         (mkExt vscodeSystem "josetr" "cmake-language-support-vscode")
-        (mkExt vscodeSystem "rust-lang" "rust-analyzer")
-        (mkExt vscodeSystem "golang" "go")
         (mkExt vscodeSystem "scala-lang" "scala")
         (mkExt vscodeSystem "mathiasfrohlich" "kotlin")
-        (mkExt vscodeSystem "fwcd" "kotlin")
-        (mkExt vscodeSystem "shopify" "ruby-lsp")
-        (mkExt vscodeSystem "dart-code" "flutter")
         (mkExt vscodeSystem "ms-azuretools" "vscode-docker")
         (mkExt vscodeSystem "ms-kubernetes-tools" "vscode-kubernetes-tools")
-        (mkExt vscodeSystem "yzhang" "markdown-all-in-one")
-        (mkExt vscodeSystem "redhat" "vscode-yaml")
         (mkExt vscodeSystem "dotjoshjohnson" "xml")
-        (mkExt vscodeSystem "tamasfe" "even-better-toml")
-        (mkExt vscodeSystem "editorconfig" "editorconfig")
         (mkExt vscodeSystem "graphql" "vscode-graphql")
         (mkExt vscodeSystem "graphql" "vscode-graphql-syntax")
-        (mkExt vscodeSystem "bbenoist" "nix")
         (mkExt vscodeSystem "pinage404" "bash-extension-pack")
+
+        # Gay
+        (mkExt vscodeSystem "biud436" "rgss-script-compiler") # VX
+        (mkExt vscodeSystem "mjmcreativeworksandidea" "rmmvpluginsnippet") # MV
+        (mkExt vscodeSystem "snowszn" "rgss-script-editor")
         ## -- Programming languages/lsp support -- ##
+
         ## -- git -- ##
-        pkgs.vscode-extensions.github.vscode-pull-request-github
         (mkExt vscodeSystem "github" "vscode-github-actions")
         ## -- Misc Utils -- ##
-        (mkExt vscodeSystem "esbenp" "prettier-vscode")
-        (mkExt vscodeSystem "davidanson" "vscode-markdownlint")
         (mkExt vscodeSystem "njpwerner" "autodocstring")
         (mkExt vscodeSystem "mikestead" "dotenv")
-        (mkExt vscodeSystem "humao" "rest-client")
+        (mkExt vscodeSystem "humao" "rest-client") # Alternative REST client
+        (mkExt vscodeSystem "rangav" "vscode-thunder-client") # Thunder Client
         ## -- Misc Utils -- ##
 
-        ## -- Nix Utils -- ##
-        (mkExt vscodeSystem "jnoortheen" "nix-ide")
-        (mkExt vscodeSystem "mkhl" "direnv")
-        (mkExt vscodeSystem "rubymaniac" "vscode-direnv")
-        (mkExt vscodeSystem "brettm12345" "nixfmt-vscode")
-        ## -- Nix Utils -- ##
-
-        ## -- Java Utils -- ##
-        (mkExt vscodeSystem "redhat" "java")
-        (mkExt vscodeSystem "vscjava" "vscode-gradle")
-        (mkExt vscodeSystem "vscjava" "vscode-java-debug")
-        (mkExt vscodeSystem "vscjava" "vscode-java-pack")
-        ## -- Java Utils -- ##
-
         ## -- C/C++ Utils -- ##
-        (mkExt vscodeSystem "ms-vscode" "cpptools-extension-pack")
         (mkExt vscodeSystem "formulahendry" "code-runner")
         (mkExt vscodeSystem "danielpinto8zz6" "c-cpp-compile-run")
         (mkExt vscodeSystem "ms-vscode" "makefile-tools")
         (mkExt vscodeSystem "cschlosser" "doxdocgen")
+        (mkExt vscodeSystem "jeff-hykin" "better-cpp-syntax") # Better syntax highlighting
         ## -- C/C++ Utils -- ##
-
-        ## -- Dotnet Utils -- ##
-        (mkExt vscodeSystem "ms-dotnettools" "vscode-dotnet-pack")
-        ## -- Dotnet Utils -- ##
 
         ## -- Python Utils -- ##
         # Fuck you sarco
@@ -236,22 +329,15 @@ in
         (mkExt vscodeSystem "ms-python" "flake8")
         (mkExt vscodeSystem "ms-python" "gather")
         (mkExt vscodeSystem "ms-python" "isort")
-        (mkExt vscodeSystem "ms-python" "debugpy")
         (mkExt vscodeSystem "ms-python" "mypy-type-checker")
         (mkExt vscodeSystem "ms-python" "pylint")
         (mkExt vscodeSystem "wholroyd" "jinja")
-        (mkExt vscodeSystem "ms-python" "python")
-        (mkExt vscodeSystem "ms-toolsai" "jupyter")
         ## -- Python Utils -- ##
 
         ## -- JavaScript/Typescript Utils -- ##
         (mkExt vscodeSystem "angular" "ng-template")
-        (mkExt vscodeSystem "bradlc" "vscode-tailwindcss")
-        (mkExt vscodeSystem "christian-kohler" "npm-intellisense")
-        (mkExt vscodeSystem "dbaeumer" "vscode-eslint")
         (mkExt vscodeSystem "dsznajder" "es7-react-js-snippets")
         (mkExt vscodeSystem "ecmel" "vscode-html-css")
-        (mkExt vscodeSystem "firefox-devtools" "vscode-firefox-debug")
         (mkExt vscodeSystem "formulahendry" "auto-close-tag")
         (mkExt vscodeSystem "formulahendry" "auto-rename-tag")
         (mkExt vscodeSystem "hollowtree" "vue-snippets")
@@ -264,6 +350,8 @@ in
         (mkExt vscodeSystem "steoates" "autoimport")
         (mkExt vscodeSystem "vue" "volar")
         (mkExt vscodeSystem "wix" "vscode-import-cost")
+        (mkExt vscodeSystem "styled-components" "vscode-styled-components") # styled-components
+        (mkExt vscodeSystem "graphql" "vscode-graphql-execution") # GraphQL execution
         ## -- JavaScript/Typescript Utils -- ##
 
         ## -- Vscode specific -- ##
@@ -275,8 +363,6 @@ in
         (mkExt vscodeSystem "ms-vscode" "hexeditor")
         (mkExt vscodeSystem "ms-vsliveshare" "vsliveshare")
         (mkExt vscodeSystem "visualstudioexptteam" "intellicode-api-usage-examples")
-        (mkExt vscodeSystem "visualstudioexptteam" "vscodeintellicode")
-        pkgs.vscode-extensions.github.vscode-pull-request-github
         ## -- Vscode specific -- ##
 
         ## -- Dictionary/Languages support -- ##
@@ -285,8 +371,5 @@ in
       ]
       ++ mergeFrom "extensions";
     };
-  };
-  home.sessionVariables = {
-    GO_PATH = "${config.home.homeDirectory}/.go";
   };
 }

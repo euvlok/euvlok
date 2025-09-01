@@ -59,6 +59,23 @@ let
       zed-editor.enable = true;
       zellij.enable = true;
       zsh.enable = true;
+      languages = {
+        cpp.enable = true;
+        # csharp.enable = true;
+        # csharp.version = "8";
+        go.enable = true;
+        haskell.enable = true;
+        java.enable = true;
+        java.version = "17";
+        javascript.enable = true;
+        kotlin.enable = true;
+        lisp.enable = true;
+        lua.enable = true;
+        python.enable = true;
+        ruby.enable = true;
+        rust.enable = true;
+        scala.enable = true;
+      };
     };
   };
 
@@ -144,6 +161,7 @@ let
   gamingPackages = builtins.attrValues {
     inherit (pkgsUnstable) osu-lazer-bin;
     inherit (pkgs)
+      bottles
       cemu
       chiaki
       dolphin-emu
@@ -152,6 +170,7 @@ let
       gogdl
       goverlay
       heroic
+      lutris
       mangohud
       mgba
       pcsx2
@@ -163,14 +182,14 @@ let
       ;
   };
   developmentPackages = builtins.attrValues {
-    inherit (pkgs) android-studio nixd;
-    inherit (pkgs.jetbrains) dataspell datagrip;
+    inherit (pkgsUnstable) android-studio nixd;
+    inherit (pkgsUnstable.jetbrains) dataspell datagrip;
   };
 
   jetbrainsPackages =
     let
-      inherit (pkgs.jetbrains.plugins) addPlugins;
-      inherit (pkgs.jetbrains) rider clion idea-ultimate;
+      inherit (pkgsUnstable.jetbrains.plugins) addPlugins;
+      inherit (pkgsUnstable.jetbrains) rider clion idea-ultimate;
       commonPlugins = [
         "better-direnv"
         "catppuccin-icons"
@@ -277,8 +296,9 @@ in
       (
         {
           inputs,
-          osConfig,
+          config,
           lib,
+          osConfig,
           ...
         }:
         {
@@ -297,19 +317,6 @@ in
               defaultCursor = "touhou-reimu";
             };
           };
-          programs.nixcord.discord.vencord.unstable = lib.mkForce false;
-          programs.nixcord.discord.vencord.package = lib.mkForce (
-            (inputs.nixcord-trivial.packages.${osConfig.nixpkgs.hostPlatform.system}.vencord.override {
-              unstable = true;
-            }).overrideAttrs
-              (oldAttrs: {
-                pnpmDeps = pkgs.pnpm_10.fetchDeps {
-                  inherit (oldAttrs) pname src;
-                  hash = "sha256-XK3YCM7jzd7OvodC4lvHF/jDULNLFC0sMct97oBCEjc=";
-                  fetcherVersion = 9;
-                };
-              })
-          );
           gtk = {
             enable = true;
             iconTheme = {
@@ -328,6 +335,9 @@ in
           };
           home.sessionVariables = {
             GTK_CSD = "0";
+            GO_PATH = "${config.home.homeDirectory}/.go";
+            GEM_HOME = "${config.home.homeDirectory}/.gems";
+            GEM_PATH = "${config.home.homeDirectory}/.gems";
           };
           services.easyeffects.enable = true;
         }

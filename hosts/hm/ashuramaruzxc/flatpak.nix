@@ -12,7 +12,7 @@
     packages = [
       # Desktop
       "flathub:app/com.github.tchx84.Flatseal//stable" # Easier permission manager
-      # "flathub:app/com.usebottles.bottles//stable"
+      "flathub:app/com.usebottles.bottles//stable"
       #
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.gamescope/x86_64/24.08"
@@ -25,6 +25,8 @@
           "xdg-config/flatpak-gtk:ro"
           "xdg-data/icons:ro"
           "xdg-data/themes:ro"
+          "xdg-config/gtk-3.0"
+          "xdg-config/gtk-4.0"
           "xdg-download:rw"
           "xdg-pictures:rw"
           "xdg-run/app/com.discordapp.Discord:create"
@@ -41,7 +43,11 @@
           "xdg-data/Steam:rw"
           "xdg-data/games:rw"
           "xdg-config/MangoHud:ro"
+          "/Shared/games"
         ];
+        environment = {
+          "GTK_USE_PORTAL" = 0;
+        };
       };
       "sh.ppy.osu" = {
         filesystems = [
