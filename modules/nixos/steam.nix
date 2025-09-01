@@ -30,6 +30,7 @@
                 vulkan-validation-layers
                 wqy_zenhei
                 yad
+                nwjs # who knew that i would need that for rpg maker games
                 ;
               inherit (pkgs)
                 libgdiplus
