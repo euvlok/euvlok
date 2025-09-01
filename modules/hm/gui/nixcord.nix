@@ -16,9 +16,10 @@
       discord.package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
         inputs.nixcord-trivial.packages.${osConfig.nixpkgs.hostPlatform.system}.discord.overrideAttrs
           (oldAttrs: {
-            installPhase =
-              oldAttrs.installPhase
-              + ''wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--enable-wayland-ime --wayland-text-input-version=3"'';
+            installPhase = oldAttrs.installPhase + ''
+              wrapProgramShell "$out/opt/Discord/Discord" --add-flags "--ignore-gpu-blocklist --enable-features=VaapiVideoDecoder,VaapiVideoEncoder
+              --enable-features=AcceleratedVideoEncode,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoDecodeLinuxGL,VaapiIgnoreDriverChecks --ozone-platform-hint=wayland --enable-wayland-ime --wayland-text-input-version=3"
+            '';
           })
       );
       discord.vencord.unstable = true;
