@@ -26,26 +26,26 @@
     ]
     ++ lib.optionals config.programs.fish.enable [ "fish" ]
     ++ lib.optionals config.programs.nushell.enable [ "nu" ]
-    ++ (lib.optionals config.hm.languages.csharp [ "csharp" ])
-    ++ (lib.optionals config.hm.languages.clojure [ "clojure" ])
-    ++ (lib.optionals config.hm.languages.dart [
+    ++ (lib.optionals config.hm.languages.csharp.enable [ "csharp" ])
+    ++ (lib.optionals config.hm.languages.clojure.enable [ "clojure" ])
+    ++ (lib.optionals config.hm.languages.dart.enable [
       "dart"
       "flutter-snippets"
     ])
-    ++ (lib.optionals config.hm.languages.elixir [ "elixir" ])
-    ++ (lib.optionals config.hm.languages.fsharp [ "fsharp" ])
-    ++ (lib.optionals config.hm.languages.go [
+    ++ (lib.optionals config.hm.languages.elixir.enable [ "elixir" ])
+    ++ (lib.optionals config.hm.languages.fsharp.enable [ "fsharp" ])
+    ++ (lib.optionals config.hm.languages.go.enable [
       "go-snippets"
       "golangci-lint"
       "gosum"
       "templ"
     ])
-    ++ (lib.optionals config.hm.languages.haskell [ "haskell" ])
-    ++ (lib.optionals config.hm.languages.java [
+    ++ (lib.optionals config.hm.languages.haskell.enable [ "haskell" ])
+    ++ (lib.optionals config.hm.languages.java.enable [
       "java"
       "java-eclipse-jdtls"
     ])
-    ++ (lib.optionals config.hm.languages.javascript [
+    ++ (lib.optionals config.hm.languages.javascript.enable [
       "astro"
       "css-modules-kit"
       "ejs"
@@ -63,24 +63,24 @@
       "vue"
       "vue-snippets"
     ])
-    ++ (lib.optionals config.hm.languages.kotlin [ "kotlin" ])
-    ++ (lib.optionals config.hm.languages.lisp [
+    ++ (lib.optionals config.hm.languages.kotlin.enable [ "kotlin" ])
+    ++ (lib.optionals config.hm.languages.lisp.enable [
       "scheme"
       "elisp"
     ])
-    ++ (lib.optionals config.hm.languages.lua [
+    ++ (lib.optionals config.hm.languages.lua.enable [
       "lua"
       "luau"
     ])
-    ++ (lib.optionals config.hm.languages.nim [ "nim" ])
-    ++ (lib.optionals config.hm.languages.ocaml [ "ocaml" ])
-    ++ (lib.optionals config.hm.languages.perl [ "perl" ])
-    ++ (lib.optionals config.hm.languages.php [
+    ++ (lib.optionals config.hm.languages.nim.enable [ "nim" ])
+    ++ (lib.optionals config.hm.languages.ocaml.enable [ "ocaml" ])
+    ++ (lib.optionals config.hm.languages.perl.enable [ "perl" ])
+    ++ (lib.optionals config.hm.languages.php.enable [
       "php"
       "blade"
       "twig"
     ])
-    ++ (lib.optionals config.hm.languages.python [
+    ++ (lib.optionals config.hm.languages.python.enable [
       "python-snippets"
       "python-requirements"
       "python-refactoring"
@@ -88,21 +88,21 @@
       "django-snippets"
       "flask-snippets"
     ])
-    ++ (lib.optionals config.hm.languages.ruby [
+    ++ (lib.optionals config.hm.languages.ruby.enable [
       "ruby"
       "thrift"
       "haml"
     ])
-    ++ (lib.optionals config.hm.languages.rust [
+    ++ (lib.optionals config.hm.languages.rust.enable [
       "cargo-appraiser"
       "crates-lsp"
     ])
-    ++ (lib.optionals config.hm.languages.scala [ "scala" ])
-    ++ (lib.optionals config.hm.languages.swift [
+    ++ (lib.optionals config.hm.languages.scala.enable [ "scala" ])
+    ++ (lib.optionals config.hm.languages.swift.enable [
       "swift"
       "package-swift-lsp"
     ])
-    ++ (lib.optionals config.hm.languages.zig [
+    ++ (lib.optionals config.hm.languages.zig.enable [
       "zig"
       "ziggy"
     ]);
@@ -185,7 +185,7 @@
       };
     }
     # C/C++
-    // (lib.optionalAttrs config.hm.languages.cpp {
+    // (lib.optionalAttrs config.hm.languages.cpp.enable {
       "C" = {
         language_servers = [ "clangd" ];
         formatter = {
@@ -204,52 +204,52 @@
       };
     })
     # Csharp
-    // (lib.optionalAttrs config.hm.languages.csharp {
+    // (lib.optionalAttrs config.hm.languages.csharp.enable {
       "CSharp" = {
         language_servers = [ "omnisharp" ];
       };
     })
     # Clojure
-    // (lib.optionalAttrs config.hm.languages.clojure {
+    // (lib.optionalAttrs config.hm.languages.clojure.enable {
       "Clojure" = {
       };
     })
     # Dart
-    // (lib.optionalAttrs config.hm.languages.dart {
+    // (lib.optionalAttrs config.hm.languages.dart.enable {
       "Dart" = {
         language_servers = [ "dart" ];
         formatter = "language_server";
       };
     })
     # Elixir
-    // (lib.optionalAttrs config.hm.languages.elixir {
+    // (lib.optionalAttrs config.hm.languages.elixir.enable {
       "Elixir" = {
         language_servers = [ "elixir-ls" ];
         formatter = "language_server";
       };
     })
     # F#
-    // (lib.optionalAttrs config.hm.languages.fsharp {
+    // (lib.optionalAttrs config.hm.languages.fsharp.enable {
       "F#" = {
         language_servers = [ "fsautocomplete" ];
       };
     })
     # Go
-    // (lib.optionalAttrs config.hm.languages.go {
+    // (lib.optionalAttrs config.hm.languages.go.enable {
       "Go" = {
         language_servers = [ "gopls" ];
         formatter = "language_server";
       };
     })
     # Haskell
-    // (lib.optionalAttrs config.hm.languages.haskell {
+    // (lib.optionalAttrs config.hm.languages.haskell.enable {
       "Haskell" = {
         language_servers = [ "haskell-language-server" ];
         formatter = "language_server";
       };
     })
     # Java
-    // (lib.optionalAttrs config.hm.languages.java {
+    // (lib.optionalAttrs config.hm.languages.java.enable {
       "Java" = {
         language_servers = [ "jdtls" ];
         formatter = "language_server";
@@ -257,7 +257,7 @@
       };
     })
     # JavaScript/TypeScript
-    // (lib.optionalAttrs config.hm.languages.javascript {
+    // (lib.optionalAttrs config.hm.languages.javascript.enable {
       "JavaScript" = {
         language_servers = [
           "typescript-language-server"
@@ -328,14 +328,14 @@
       };
     })
     # Kotlin
-    // (lib.optionalAttrs config.hm.languages.kotlin {
+    // (lib.optionalAttrs config.hm.languages.kotlin.enable {
       "Kotlin" = {
         language_servers = [ "kotlin-language-server" ];
         formatter = "language_server";
       };
     })
     # Lua
-    // (lib.optionalAttrs config.hm.languages.lua {
+    // (lib.optionalAttrs config.hm.languages.lua.enable {
       "Lua" = {
         language_servers = [ "lua-language-server" ];
         formatter = {
@@ -351,13 +351,13 @@
       };
     })
     # Nim
-    // (lib.optionalAttrs config.hm.languages.nim {
+    // (lib.optionalAttrs config.hm.languages.nim.enable {
       "Nim" = {
         language_servers = [ "nimlsp" ];
       };
     })
     # OCaml
-    // (lib.optionalAttrs config.hm.languages.ocaml {
+    // (lib.optionalAttrs config.hm.languages.ocaml.enable {
       "OCaml" = {
         language_servers = [ "ocamllsp" ];
         formatter = {
@@ -373,13 +373,13 @@
       };
     })
     # Perl
-    // (lib.optionalAttrs config.hm.languages.perl {
+    // (lib.optionalAttrs config.hm.languages.perl.enable {
       "Perl" = {
         language_servers = [ "perlnavigator" ];
       };
     })
     # PHP
-    // (lib.optionalAttrs config.hm.languages.php {
+    // (lib.optionalAttrs config.hm.languages.php.enable {
       "PHP" = {
         language_servers = [ "intelephense" ];
         formatter = "language_server";
@@ -387,7 +387,7 @@
       };
     })
     # Python
-    // (lib.optionalAttrs config.hm.languages.python {
+    // (lib.optionalAttrs config.hm.languages.python.enable {
       "Python" = {
         language_servers = [
           "ruff"
@@ -407,35 +407,35 @@
       };
     })
     # Ruby
-    // (lib.optionalAttrs config.hm.languages.ruby {
+    // (lib.optionalAttrs config.hm.languages.ruby.enable {
       "Ruby" = {
         language_servers = [ "ruby-lsp" ];
         formatter = "language_server";
       };
     })
     # Rust
-    // (lib.optionalAttrs config.hm.languages.rust {
+    // (lib.optionalAttrs config.hm.languages.rust.enable {
       "Rust" = {
         language_servers = [ "rust-analyzer" ];
         formatter = "language_server";
       };
     })
     # Scala
-    // (lib.optionalAttrs config.hm.languages.scala {
+    // (lib.optionalAttrs config.hm.languages.scala.enable {
       "Scala" = {
         language_servers = [ "metals" ];
         formatter = "language_server";
       };
     })
     # Swift
-    // (lib.optionalAttrs config.hm.languages.swift {
+    // (lib.optionalAttrs config.hm.languages.swift.enable {
       "Swift" = {
         language_servers = [ "sourcekit-lsp" ];
         formatter = "language_server";
       };
     })
     # Zig
-    // (lib.optionalAttrs config.hm.languages.zig {
+    // (lib.optionalAttrs config.hm.languages.zig.enable {
       "Zig" = {
         language_servers = [ "zls" ];
         formatter = "language_server";
@@ -444,7 +444,7 @@
 
     programs.zed-editor.userSettings.lsp =
       # C/C++
-      (lib.optionalAttrs config.hm.languages.cpp {
+      (lib.optionalAttrs config.hm.languages.cpp.enable {
         clangd = {
           binary = {
             path = "clangd";
@@ -457,7 +457,7 @@
         };
       })
       # CSharp
-      // (lib.optionalAttrs config.hm.languages.csharp {
+      // (lib.optionalAttrs config.hm.languages.csharp.enable {
         omnisharp = {
           binary = {
             path = "omnisharp";
@@ -466,7 +466,7 @@
         };
       })
       # Dart
-      // (lib.optionalAttrs config.hm.languages.dart {
+      // (lib.optionalAttrs config.hm.languages.dart.enable {
         dart = {
           binary = {
             path = "dart";
@@ -478,7 +478,7 @@
         };
       })
       # Elixir
-      // (lib.optionalAttrs config.hm.languages.elixir {
+      // (lib.optionalAttrs config.hm.languages.elixir.enable {
         "elixir-ls" = {
           binary = {
             path = "elixir-ls";
@@ -486,7 +486,7 @@
         };
       })
       # F#
-      // (lib.optionalAttrs config.hm.languages.fsharp {
+      // (lib.optionalAttrs config.hm.languages.fsharp.enable {
         fsautocomplete = {
           binary = {
             path = "fsautocomplete";
@@ -495,7 +495,7 @@
         };
       })
       # Go
-      // (lib.optionalAttrs config.hm.languages.go {
+      // (lib.optionalAttrs config.hm.languages.go.enable {
         gopls = {
           binary = {
             path = "gopls";
@@ -517,7 +517,7 @@
         };
       })
       # Haskell
-      // (lib.optionalAttrs config.hm.languages.haskell {
+      // (lib.optionalAttrs config.hm.languages.haskell.enable {
         "haskell-language-server" = {
           binary = {
             path = "haskell-language-server-wrapper"; # Or haskell-language-server
@@ -526,7 +526,7 @@
         };
       })
       # Java
-      // (lib.optionalAttrs config.hm.languages.java {
+      // (lib.optionalAttrs config.hm.languages.java.enable {
         jdtls = {
           binary = {
             path = "jdtls";
@@ -534,7 +534,7 @@
         };
       })
       # JavaScript/TypeScript
-      // (lib.optionalAttrs config.hm.languages.javascript {
+      // (lib.optionalAttrs config.hm.languages.javascript.enable {
         "typescript-language-server" = {
           # Or vtsls if preferred
           binary = {
@@ -549,7 +549,7 @@
         };
       })
       # Kotlin
-      // (lib.optionalAttrs config.hm.languages.kotlin {
+      // (lib.optionalAttrs config.hm.languages.kotlin.enable {
         "kotlin-language-server" = {
           binary = {
             path = "kotlin-language-server";
@@ -557,7 +557,7 @@
         };
       })
       # Lua
-      // (lib.optionalAttrs config.hm.languages.lua {
+      // (lib.optionalAttrs config.hm.languages.lua.enable {
         "lua-language-server" = {
           binary = {
             path = "lua-language-server";
@@ -569,7 +569,7 @@
         };
       })
       # Nim
-      // (lib.optionalAttrs config.hm.languages.nim {
+      // (lib.optionalAttrs config.hm.languages.nim.enable {
         nimlsp = {
           binary = {
             path = "nimlsp";
@@ -577,7 +577,7 @@
         };
       })
       # OCaml
-      // (lib.optionalAttrs config.hm.languages.ocaml {
+      // (lib.optionalAttrs config.hm.languages.ocaml.enable {
         ocamllsp = {
           binary = {
             path = "ocamllsp";
@@ -585,7 +585,7 @@
         };
       })
       # Perl
-      // (lib.optionalAttrs config.hm.languages.perl {
+      // (lib.optionalAttrs config.hm.languages.perl.enable {
         perlnavigator = {
           binary = {
             path = "perlnavigator";
@@ -593,7 +593,7 @@
         };
       })
       # PHP
-      // (lib.optionalAttrs config.hm.languages.php {
+      // (lib.optionalAttrs config.hm.languages.php.enable {
         intelephense = {
           binary = {
             path = "intelephense";
@@ -602,7 +602,7 @@
         };
       })
       # Python
-      // (lib.optionalAttrs config.hm.languages.python {
+      // (lib.optionalAttrs config.hm.languages.python.enable {
         pyright = {
           initialization_options = {
             python = {
@@ -623,7 +623,7 @@
         };
       })
       # Rust
-      // (lib.optionalAttrs config.hm.languages.rust {
+      // (lib.optionalAttrs config.hm.languages.rust.enable {
         "rust-analyzer" = {
           binary = {
             path = "rust-analyzer";
@@ -640,7 +640,7 @@
         };
       })
       # Scala
-      // (lib.optionalAttrs config.hm.languages.scala {
+      // (lib.optionalAttrs config.hm.languages.scala.enable {
         metals = {
           binary = {
             path = "metals";
@@ -648,7 +648,7 @@
         };
       })
       # Swift
-      // (lib.optionalAttrs config.hm.languages.swift {
+      // (lib.optionalAttrs config.hm.languages.swift.enable {
         "sourcekit-lsp" = {
           binary = {
             path = "sourcekit-lsp";
@@ -656,7 +656,7 @@
         };
       })
       # Zig
-      // (lib.optionalAttrs config.hm.languages.zig {
+      // (lib.optionalAttrs config.hm.languages.zig.enable {
         zls = {
           binary = {
             path = "zls";

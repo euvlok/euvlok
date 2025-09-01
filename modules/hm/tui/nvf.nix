@@ -57,25 +57,25 @@
         yaml.enable = true;
         # css.enable = true;
 
-        clang.enable = config.hm.languages.cpp; # It handles both C/C++
-        clojure.enable = config.hm.languages.clojure;
-        csharp.enable = config.hm.languages.csharp;
-        dart.enable = config.hm.languages.dart;
-        elixir.enable = config.hm.languages.elixir;
-        fsharp.enable = config.hm.languages.fsharp;
-        go.enable = config.hm.languages.go;
-        haskell.enable = config.hm.languages.haskell;
-        kotlin.enable = config.hm.languages.kotlin;
-        lua.enable = config.hm.languages.lua;
-        nim.enable = config.hm.languages.nim;
+        clang.enable = config.hm.languages.cpp.enable; # It handles both C/C++
+        clojure.enable = config.hm.languages.clojure.enable;
+        csharp.enable = config.hm.languages.csharp.enable;
+        dart.enable = config.hm.languages.dart.enable;
+        elixir.enable = config.hm.languages.elixir.enable;
+        fsharp.enable = config.hm.languages.fsharp.enable;
+        go.enable = config.hm.languages.go.enable;
+        haskell.enable = config.hm.languages.haskell.enable;
+        kotlin.enable = config.hm.languages.kotlin.enable;
+        lua.enable = config.hm.languages.lua.enable;
+        nim.enable = config.hm.languages.nim.enable;
         nu.enable = config.programs.nushell.enable;
-        ocaml.enable = config.hm.languages.ocaml;
-        php.enable = config.hm.languages.php;
-        python.enable = config.hm.languages.python;
-        ruby.enable = config.hm.languages.ruby;
-        rust.enable = config.hm.languages.rust;
-        scala.enable = config.hm.languages.scala;
-        ts.enable = config.hm.languages.javascript; # It handles both JS/TS
+        ocaml.enable = config.hm.languages.ocaml.enable;
+        php.enable = config.hm.languages.php.enable;
+        python.enable = config.hm.languages.python.enable;
+        ruby.enable = config.hm.languages.ruby.enable;
+        rust.enable = config.hm.languages.rust.enable;
+        scala.enable = config.hm.languages.scala.enable;
+        ts.enable = config.hm.languages.javascript.enable; # It handles both JS/TS
       };
 
       visuals = {

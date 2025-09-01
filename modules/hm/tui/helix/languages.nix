@@ -28,17 +28,17 @@ let
       config.formatter.columnWidth = 100;
     };
   }
-  // lib.optionalAttrs config.hm.languages.clojure {
+  // lib.optionalAttrs config.hm.languages.clojure.enable {
     clojure-lsp = {
       command = "clojure-lsp";
     };
   }
-  // lib.optionalAttrs config.hm.languages.cpp {
+  // lib.optionalAttrs config.hm.languages.cpp.enable {
     clangd = {
       command = "clangd";
     };
   }
-  // lib.optionalAttrs config.hm.languages.dart {
+  // lib.optionalAttrs config.hm.languages.dart.enable {
     dart = {
       command = "dart";
       args = [
@@ -47,29 +47,29 @@ let
       ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.elixir {
+  // lib.optionalAttrs config.hm.languages.elixir.enable {
     elixir-ls = {
       command = "elixir-ls";
     };
   }
-  // lib.optionalAttrs config.hm.languages.fsharp {
+  // lib.optionalAttrs config.hm.languages.fsharp.enable {
     fsautocomplete = {
       command = "fsautocomplete";
       args = [ "--background-service-enabled" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.go {
+  // lib.optionalAttrs config.hm.languages.go.enable {
     gopls = {
       command = "gopls";
     };
   }
-  // lib.optionalAttrs config.hm.languages.haskell {
+  // lib.optionalAttrs config.hm.languages.haskell.enable {
     haskell-language-server = {
       command = "haskell-language-server-wrapper";
       args = [ "--lsp" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.javascript {
+  // lib.optionalAttrs config.hm.languages.javascript.enable {
     typescript-language-server = {
       command = "typescript-language-server";
       args = [ "--stdio" ];
@@ -105,44 +105,44 @@ let
       };
     };
   }
-  // lib.optionalAttrs config.hm.languages.kotlin {
+  // lib.optionalAttrs config.hm.languages.kotlin.enable {
     kotlin-language-server = {
       command = "kotlin-language-server";
     };
   }
-  // lib.optionalAttrs config.hm.languages.lisp {
+  // lib.optionalAttrs config.hm.languages.lisp.enable {
     cl-lsp = {
       command = "cl-lsp";
     };
   }
-  // lib.optionalAttrs config.hm.languages.lua {
+  // lib.optionalAttrs config.hm.languages.lua.enable {
     lua-language-server = {
       command = "lua-language-server";
     };
   }
-  // lib.optionalAttrs config.hm.languages.nim {
+  // lib.optionalAttrs config.hm.languages.nim.enable {
     nimlangserver = {
       command = "nimlangserver";
     };
   }
-  // lib.optionalAttrs config.hm.languages.ocaml {
+  // lib.optionalAttrs config.hm.languages.ocaml.enable {
     ocamllsp = {
       command = "ocamllsp";
     };
   }
-  // lib.optionalAttrs config.hm.languages.perl {
+  // lib.optionalAttrs config.hm.languages.perl.enable {
     perlnavigator = {
       command = "perlnavigator";
       args = [ "--stdio" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.php {
+  // lib.optionalAttrs config.hm.languages.php.enable {
     intelephense = {
       command = "intelephense";
       args = [ "--stdio" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.python {
+  // lib.optionalAttrs config.hm.languages.python.enable {
     ruff = {
       command = "ruff";
       args = lib.splitString " " "server --preview";
@@ -150,7 +150,7 @@ let
       config.lint.extendSelect = [ "I" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.ruby {
+  // lib.optionalAttrs config.hm.languages.ruby.enable {
     ruby-lsp = {
       command = "ruby-lsp";
     };
@@ -159,22 +159,22 @@ let
       args = [ "stdio" ];
     };
   }
-  // lib.optionalAttrs config.hm.languages.rust {
+  // lib.optionalAttrs config.hm.languages.rust.enable {
     rust-analyzer = {
       command = "rust-analyzer";
     };
   }
-  // lib.optionalAttrs config.hm.languages.scala {
+  // lib.optionalAttrs config.hm.languages.scala.enable {
     metals = {
       command = "metals";
     };
   }
-  // lib.optionalAttrs config.hm.languages.swift {
+  // lib.optionalAttrs config.hm.languages.swift.enable {
     sourcekit-lsp = {
       command = "sourcekit-lsp";
     };
   }
-  // lib.optionalAttrs config.hm.languages.zig {
+  // lib.optionalAttrs config.hm.languages.zig.enable {
     zls = {
       command = "zls";
     };
@@ -205,20 +205,20 @@ let
       language-servers = [ "taplo" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.python [
+  ++ lib.optionals config.hm.languages.python.enable [
     {
       name = "python";
       auto-format = true;
       language-servers = [ "ruff" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.javascript [
+  ++ lib.optionals config.hm.languages.javascript.enable [
     {
       name = "javascript";
       auto-format = true;
       indent.tab-width = 4;
       indent.unit = "    ";
-      language-servers = config.hm.languages.javascript [ "deno" ];
+      language-servers = [ "deno" ];
     }
     {
       name = "css";
@@ -240,14 +240,14 @@ let
       language-servers = [ "deno" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.clojure [
+  ++ lib.optionals config.hm.languages.clojure.enable [
     {
       name = "clojure";
       auto-format = true;
       language-servers = [ "clojure-lsp" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.cpp [
+  ++ lib.optionals config.hm.languages.cpp.enable [
     {
       name = "c";
       auto-format = true;
@@ -259,91 +259,91 @@ let
       language-servers = [ "clangd" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.dart [
+  ++ lib.optionals config.hm.languages.dart.enable [
     {
       name = "dart";
       auto-format = true;
       language-servers = [ "dart" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.elixir [
+  ++ lib.optionals config.hm.languages.elixir.enable [
     {
       name = "elixir";
       auto-format = true;
       language-servers = [ "elixir-ls" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.fsharp [
+  ++ lib.optionals config.hm.languages.fsharp.enable [
     {
       name = "fsharp";
       auto-format = true;
       language-servers = [ "fsautocomplete" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.go [
+  ++ lib.optionals config.hm.languages.go.enable [
     {
       name = "go";
       auto-format = true;
       language-servers = [ "gopls" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.haskell [
+  ++ lib.optionals config.hm.languages.haskell.enable [
     {
       name = "haskell";
       auto-format = true;
       language-servers = [ "haskell-language-server" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.kotlin [
+  ++ lib.optionals config.hm.languages.kotlin.enable [
     {
       name = "kotlin";
       auto-format = true;
       language-servers = [ "kotlin-language-server" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.lisp [
+  ++ lib.optionals config.hm.languages.lisp.enable [
     {
       name = "common-lisp";
       auto-format = true;
       language-servers = [ "cl-lsp" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.lua [
+  ++ lib.optionals config.hm.languages.lua.enable [
     {
       name = "lua";
       auto-format = true;
       language-servers = [ "lua-language-server" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.nim [
+  ++ lib.optionals config.hm.languages.nim.enable [
     {
       name = "nim";
       auto-format = true;
       language-servers = [ "nimlangserver" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.ocaml [
+  ++ lib.optionals config.hm.languages.ocaml.enable [
     {
       name = "ocaml";
       auto-format = true;
       language-servers = [ "ocamllsp" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.perl [
+  ++ lib.optionals config.hm.languages.perl.enable [
     {
       name = "perl";
       auto-format = true;
       language-servers = [ "perlnavigator" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.php [
+  ++ lib.optionals config.hm.languages.php.enable [
     {
       name = "php";
       auto-format = true;
       language-servers = [ "intelephense" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.ruby [
+  ++ lib.optionals config.hm.languages.ruby.enable [
     {
       name = "ruby";
       auto-format = true;
@@ -353,28 +353,28 @@ let
       ];
     }
   ]
-  ++ lib.optionals config.hm.languages.rust [
+  ++ lib.optionals config.hm.languages.rust.enable [
     {
       name = "rust";
       auto-format = true;
       language-servers = [ "rust-analyzer" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.scala [
+  ++ lib.optionals config.hm.languages.scala.enable [
     {
       name = "scala";
       auto-format = true;
       language-servers = [ "metals" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.swift [
+  ++ lib.optionals config.hm.languages.swift.enable [
     {
       name = "swift";
       auto-format = true;
       language-servers = [ "sourcekit-lsp" ];
     }
   ]
-  ++ lib.optionals config.hm.languages.zig [
+  ++ lib.optionals config.hm.languages.zig.enable [
     {
       name = "zig";
       auto-format = true;
