@@ -33,7 +33,6 @@
             enable = true;
             format = "human";
           };
-          consoleJanitor.disableNoisyLoggers = true;
           consoleJanitor.enable = true;
           crashHandler.enable = true;
           fakeNitro.enable = true;
@@ -44,7 +43,6 @@
           mutualGroupDMs.enable = true;
           noDevtoolsWarning.enable = true;
           noF1.enable = true;
-          noMaskedUrlPaste.enable = true;
           noUnblockToJump.enable = true;
           onePingPerDM.enable = true;
           readAllNotificationsButton.enable = true;
