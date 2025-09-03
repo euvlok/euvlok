@@ -1,4 +1,4 @@
-inputs: self: super:
+_: _: _:
 let
   /**
     # Type: String -> String -> String -> String
