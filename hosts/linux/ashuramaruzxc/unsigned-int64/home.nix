@@ -2,7 +2,7 @@
   inputs,
   config,
   lib,
-  euvlok,
+  eulib,
   pkgsUnstable,
   ...
 }:
@@ -68,7 +68,7 @@ in
       inherit
         inputs
         release
-        euvlok
+        eulib
         pkgsUnstable
         ;
     };

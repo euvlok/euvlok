@@ -1,14 +1,14 @@
 {
   pkgs,
   lib,
-  euvlok,
+  eulib,
   config,
   osConfig,
   ...
 }:
 let
   inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
-  inherit (euvlok) mkSuper mkSuperShift;
+  inherit (eulib) mkSuper mkSuperShift;
 
   superKey = if isDarwin then "super" else "ctrl";
 

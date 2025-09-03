@@ -1,7 +1,7 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 {
   nyx = inputs.nixpkgs-donteatoreo.lib.nixosSystem {
-    specialArgs = { inherit inputs euvlok; };
+    specialArgs = { inherit inputs eulib; };
     modules = [
       ./configuration.nix
       ./home.nix

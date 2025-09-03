@@ -3,13 +3,13 @@
   lib,
   config,
   osConfig,
-  euvlok,
+  eulib,
   pkgsUnstable,
   ...
 }:
 let
   vscodeSystem = { inherit (osConfig.nixpkgs.hostPlatform) system; };
-  inherit (euvlok) mkExt;
+  inherit (eulib) mkExt;
 
   extensions = [
     # Nix

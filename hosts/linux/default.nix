@@ -1,6 +1,6 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 let
-  imports = { inherit inputs euvlok; };
+  imports = { inherit inputs eulib; };
 in
 {
   blind-faith = (import ./lay-by/hushh imports).blind-faith;

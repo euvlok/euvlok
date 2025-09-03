@@ -1,6 +1,6 @@
-{ euvlok, ... }:
+{ eulib, ... }:
 let
-  inherit (euvlok) mkHomeRowModConfig mkLayerSwitch;
+  inherit (eulib) mkHomeRowModConfig mkLayerSwitch;
 
   leftHandKeys = [
     "q"

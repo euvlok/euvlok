@@ -3,12 +3,12 @@
   lib,
   config,
   osConfig,
-  euvlok,
+  eulib,
   ...
 }:
 let
   inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
-  inherit (euvlok)
+  inherit (eulib)
     mkBind
     mkShiftBind
     mkSimpleBind

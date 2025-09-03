@@ -1,7 +1,7 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 {
   faputa = inputs.nix-darwin-bigshaq9999.lib.darwinSystem {
-    specialArgs = { inherit inputs euvlok; };
+    specialArgs = { inherit inputs eulib; };
     modules = [
       ../../../../modules/darwin
       ./configuration.nix

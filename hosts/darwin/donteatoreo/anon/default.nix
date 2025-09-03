@@ -1,7 +1,7 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 {
   anons-Mac-mini = inputs.nix-darwin-donteatoreo.lib.darwinSystem {
-    specialArgs = { inherit inputs euvlok; };
+    specialArgs = { inherit inputs eulib; };
     modules = [
       ../../../../modules/darwin
       ./configuration.nix

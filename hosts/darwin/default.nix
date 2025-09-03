@@ -1,6 +1,6 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 let
-  imports = { inherit inputs euvlok; };
+  imports = { inherit inputs eulib; };
 in
 {
   anons-Mac-mini = (import ./donteatoreo/anon imports).anons-Mac-mini;

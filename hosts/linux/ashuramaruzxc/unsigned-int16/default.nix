@@ -1,11 +1,11 @@
-{ inputs, euvlok, ... }:
+{ inputs, eulib, ... }:
 let
   nixos-raspberrypi = inputs.nixos-raspberrypi-ashuramaruzxc;
   inherit (inputs.nixos-raspberrypi-ashuramaruzxc.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
 in
 {
   unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs nixos-raspberrypi euvlok; };
+    specialArgs = { inherit inputs nixos-raspberrypi eulib; };
     modules = [
       ./configuration.nix
       ./firmware.nix

@@ -1,11 +1,11 @@
 {
   lib,
-  euvlok,
+  eulib,
   ...
 }:
 let
   superKey = "super";
-  inherit (euvlok)
+  inherit (eulib)
     mkSuper
     mkSuperShift
     mkSuperShiftNested

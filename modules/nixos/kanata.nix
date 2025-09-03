@@ -2,11 +2,11 @@
   pkgs,
   lib,
   config,
-  euvlok,
+  eulib,
   ...
 }:
 let
-  inherit (euvlok)
+  inherit (eulib)
     mkTapHold
     mkTapHoldReleaseKeys
     mkMultiMod
