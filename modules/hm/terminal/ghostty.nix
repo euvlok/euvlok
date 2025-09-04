@@ -1,19 +1,16 @@
 {
   pkgs,
   lib,
+  euvlok,
   config,
   osConfig,
-  euvlok,
   ...
 }:
 let
   inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
-  superKey = if isDarwin then "Super" else "Ctrl";
-  inherit (euvlok)
-    mkSuper
-    mkSuperPerf
-    mkSuperShift
-    ;
+  inherit (euvlok) mkSuper mkSuperShift;
+
+  superKey = if isDarwin then "super" else "ctrl";
 
   # Source: https://vt100.net/docs/vt100-ug/chapter3.html
   # Converter: https://www.rapidtables.com/convert/number/hex-to-octal.html
@@ -32,13 +29,6 @@ let
       # "6 →" Key on Physical Keypad Keyboard
       WORD_FORWARD = "${x}66"; # f
     };
-
-  directions = {
-    up = "top";
-    down = "bottom";
-    left = "left";
-    right = "right";
-  };
 
   mkKeybindings = {
     cursor = [
@@ -62,8 +52,8 @@ let
     ];
 
     clipboard = [
-      (mkSuperPerf superKey "c" "copy_to_clipboard")
-      (mkSuperPerf superKey "v" "paste_from_clipboard")
+      (mkSuperShift superKey "c" "copy_to_clipboard")
+      (mkSuperShift superKey "v" "paste_from_clipboard")
     ];
 
     misc = [
@@ -82,7 +72,6 @@ in
       settings = lib.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
         adjust-underline-position = 4;
         clipboard-paste-protection = false;
-        command = "bash";
         confirm-close-surface = false;
         cursor-style-blink = false;
         font-size = 18;
