@@ -45,14 +45,17 @@
             ;
           inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
         }
-        ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
-          catppuccin-gtk = pkgs.catppuccin-gtk.override {
-            accents = [ config.catppuccin.accent ];
-            size = "compact";
-            tweaks = [ "normal" ];
-            variant = config.catppuccin.flavor;
-          };
-        };
+        ++ lib.optionals config.catppuccin.enable (
+          builtins.attrValues {
+            catppuccin-gtk = pkgs.catppuccin-gtk.override {
+              accents = [ config.catppuccin.accent ];
+              size = "compact";
+              tweaks = [ "normal" ];
+              variant = config.catppuccin.flavor;
+            };
+          }
+        );
+
       gnome.excludePackages = builtins.attrValues {
         inherit (pkgs)
           epiphany # Browser

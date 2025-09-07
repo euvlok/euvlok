@@ -10,4 +10,5 @@ in
   unsigned-int16 = (import ./ashuramaruzxc/unsigned-int16 imports).unsigned-int16;
   unsigned-int32 = (import ./ashuramaruzxc/unsigned-int32 imports).unsigned-int32;
   unsigned-int64 = (import ./ashuramaruzxc/unsigned-int64 imports).unsigned-int64;
+  "null" = (import ./sm-idk/null imports).null;
 }

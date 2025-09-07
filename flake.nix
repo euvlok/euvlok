@@ -47,12 +47,20 @@
     home-manager-lay-by.url = "github:nix-community/home-manager/release-25.05";
     home-manager-lay-by.inputs.nixpkgs.follows = "nixpkgs-lay-by";
 
+    # --- sm-idk ---
+    nixpkgs-sm-idk.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-sm-idk.url = "github:nix-community/home-manager/release-25.05";
+    home-manager-sm-idk.inputs.nixpkgs.follows = "nixpkgs-sm-idk";
+
     # --- Trivial ---
     base16-trivial.url = "github:SenchoPens/base16.nix";
-    catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    catppuccin-trivial.url = "github:catppuccin/nix";
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
+    catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    catppuccin-trivial.url = "github:catppuccin/nix";
+    chaotic.inputs.home-manager.follows = "home-manager-unstable";
+    chaotic.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     firefox-addons-trivial.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
