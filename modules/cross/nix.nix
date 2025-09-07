@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   lib,
   config,
   ...
@@ -84,7 +85,18 @@ in
         };
       }
       (lib.mkIf config.nixos.lix.enable {
-        lix.enable = lib.mkDefault config.nixos.lix.enable;
+        nixpkgs.overlays = [
+          (final: prev: {
+            inherit (prev.lixPackageSets.latest)
+              nixpkgs-review
+              nix-direnv
+              nix-eval-jobs
+              nix-fast-build
+              colmena
+              ;
+          })
+        ];
+        nix.package = pkgs.lixPackageSets.latest.lix;
       })
     ]
   );
