@@ -24,8 +24,11 @@
       gnome-tweaks
       gparted
       pop-launcher
+      polonium
       ;
-
+    inherit (pkgsUnstable.kdePackages)
+      krohnkite
+      ;
     inherit (pkgsUnstable.gnomeExtensions)
       arcmenu
       blur-my-shell

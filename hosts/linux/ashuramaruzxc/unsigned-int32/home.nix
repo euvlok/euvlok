@@ -354,6 +354,7 @@ in
             };
           };
           btop.enable = true;
+          direnv.nix-direnv.package = pkgsUnstable.nix-direnv;
         };
       }
     ];

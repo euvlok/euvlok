@@ -7,6 +7,7 @@
     @import url("https://catppuccin.github.io/discord/dist/catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}.theme.css")
       (prefers-color-scheme: light);
   '';
+  programs.nixcord.config.enableReactDevtools = true;
   programs.nixcord.config.plugins = {
     alwaysExpandRoles.enable = true;
     betterGifPicker.enable = true;
