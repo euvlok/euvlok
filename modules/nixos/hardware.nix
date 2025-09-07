@@ -19,12 +19,6 @@
         inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
       };
     })
-    #! no longer needed for nvidia gpus
-    # (lib.mkIf (config.nixos.nvidia.enable && config.nixpkgs.hostPlatform.isx86_64) {
-    #   hardware.graphics.extraPackages32 = builtins.attrValues {
-    #     inherit (pkgs.driversi686Linux) libva-vdpau-driver libvdpau-va-gl;
-    #   };
-    # })
     ({
       environment.systemPackages = builtins.attrValues { inherit (pkgs) libva-utils; };
 
@@ -98,20 +92,23 @@
 
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
-        GSK_RENDERER = "ngl"; # temp solution until nvidia fixes wayland vulkan backend for gtk apps
       };
 
       hardware.nvidia = {
         open = true;
         modesetting.enable = true;
-        # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-        #   version = "580.76.05";
-        #   sha256_64bit = "sha256-IZvmNrYJMbAhsujB4O/4hzY8cx+KlAyqh7zAVNBdl/0=";
-        #   sha256_aarch64 = lib.fakeSha256;
-        #   openSha256 = "sha256-xEPJ9nskN1kISnSbfBigVaO6Mw03wyHebqQOQmUg/eQ=";
-        #   settingsSha256 = "sha256-ll7HD7dVPHKUyp5+zvLeNqAb6hCpxfwuSyi+SAXapoQ=";
-        #   persistencedSha256 = lib.fakeSha256;
-        # };
+        # Temporary until at the very least https://github.com/NixOS/nixpkgs/pull/439793 merged
+        # package = pkgs.nvidia-patch.patch-nvenc (
+        #   pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.beta\
+        # );
+        package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+          version = "580.82.07";
+          sha256_64bit = "sha256-Bh5I4R/lUiMglYEdCxzqm3GLolQNYFB0/yJ/zgYoeYw=";
+          sha256_aarch64 = "sha256-or3//aV4TQcPDgcLxFB75H/kB8n+3RzwTO1C2ZbJAJI=";
+          openSha256 = "sha256-8/7ZrcwBMgrBtxebYtCcH5A51u3lAxXTCY00LElZz08=";
+          settingsSha256 = "sha256-lx1WZHsW7eKFXvi03dAML6BoC5glEn63Tuiz3T867nY=";
+          persistencedSha256 = "sha256-1JCk2T3H5NNFQum0gA9cnio31jc0pGvfGIn2KkAz9kA=";
+        };
         powerManagement.enable = true;
         powerManagement.finegrained = false;
       };
