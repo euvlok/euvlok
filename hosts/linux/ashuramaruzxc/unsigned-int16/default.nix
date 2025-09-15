@@ -8,7 +8,6 @@ in
     specialArgs = { inherit inputs nixos-raspberrypi eulib; };
     modules = [
       ./configuration.nix
-      ./firmware.nix
       ./home.nix
       raspberry-pi-5.base
       raspberry-pi-5.display-vc4

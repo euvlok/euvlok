@@ -2,16 +2,13 @@
   pkgs,
   lib,
   config,
-  pkgsUnstable,
   ...
 }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  # nixpkgs.config.crossSystem.config = "aarch64-linux";
-  # nix.settings.extra-platforms = [ "aarch64-linux" ];
 
   boot = {
-    kernelPackages = pkgsUnstable.linuxPackages_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_xanmod_latest;
     kernelModules = [
       # dkms
       "kvm-amd"
@@ -153,17 +150,17 @@
 
     network.enable = true;
     availableKernelModules = [
-      "nvme"
-      "thunderbolt"
       "xhci_pci"
-      "ahci"
-      "usbhid"
-      "usb_storage"
+      "thunderbolt"
+      "nvme"
       "uas"
+      "usb_storage"
+      "usbhid"
       "sd_mod"
+      "ahci"
       # network
-      "igc"
       "atlantic"
+      "igc"
     ];
     kernelModules = [
       # modules

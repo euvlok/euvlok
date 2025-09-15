@@ -4,7 +4,6 @@
   lib,
   config,
   osConfig,
-  pkgsUnstable,
   ...
 }:
 let
@@ -251,7 +250,7 @@ in
     (lib.mkIf config.hm.firefox.enable {
       programs.firefox = {
         enable = true;
-        package = pkgsUnstable.firefox;
+        package = pkgs.firefox;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
@@ -267,7 +266,7 @@ in
     (lib.mkIf config.hm.firefox.librewolf.enable {
       programs.librewolf = {
         enable = true;
-        package = pkgsUnstable.librewolf;
+        package = pkgs.librewolf;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };

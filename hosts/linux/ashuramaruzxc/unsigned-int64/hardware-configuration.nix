@@ -7,8 +7,6 @@
 }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  nixpkgs.config.crossSystem.config = "aarch64-linux";
-  nix.settings.extra-platforms = [ "aarch64-linux" ];
 
   sops.secrets.ssh-initrd-key = { };
 

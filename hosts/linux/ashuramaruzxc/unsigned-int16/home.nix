@@ -84,7 +84,6 @@ let
       ;
     inherit (pkgs.kdePackages)
       k3b
-      kamera
       ;
   };
 

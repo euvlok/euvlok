@@ -1,14 +1,16 @@
 { pkgs, lib, ... }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
+
   boot = {
-    kernelPackages = pkgs.linuxAndFirmware.v6_12_25.linuxPackages_rpi5;
+    kernelPackages = pkgs.linuxAndFirmware.v6_12_44.linuxPackages_rpi5;
     loader.raspberryPi = {
-      bootloader = "kernelboot";
-      firmwarePackage = pkgs.linuxAndFirmware.v6_12_25.raspberrypifw;
+      bootloader = "kernel";
     };
     tmp.useTmpfs = true;
     supportedFilesystems = [ "zfs" ];
+
+    kernelParams = [ "zfs.zfs_arc_max=1610612736" ];
   };
 
   disko.devices = {

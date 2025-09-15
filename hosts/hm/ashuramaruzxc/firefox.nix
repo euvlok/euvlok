@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgsUnstable,
   lib,
   osConfig,
   ...
@@ -88,7 +89,7 @@ let
       addonId = "magnolia@12.34";
       url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi";
       name = "bypass-paywall-clean-${version}";
-      sha256 = "sha256-dQyc+h8rZbRsstVP0BiankQoItXdn1owFuYHeP9ShyA=";
+      sha256 = "sha256-sFcIlR0wgmXiJovqw+10Mh+qaMl5heIvHntk6DeC3TU=";
       meta = {
         homepage = "https://twitter.com/Magnolia1234B";
         description = "Bypass Paywalls of (custom) news sites";
@@ -222,6 +223,7 @@ in
       "ja"
     ];
   };
+  programs.floorp.package = lib.mkForce pkgsUnstable.floorp-bin;
   home.packages = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
     builtins.attrValues {
       inherit (pkgs) firefoxpwa;
