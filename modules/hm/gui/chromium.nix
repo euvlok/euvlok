@@ -72,6 +72,9 @@
         "--enable-wayland-ime"
         "--wayland-text-input-version=3"
         "--enable-features=TouchpadOverscrollHistoryNavigation"
+
+        # enable mv2 while its still possible
+        "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
       ];
     };
   };
