@@ -90,12 +90,34 @@
             fastfetch.enable = true;
             firefox.enable = true;
             firefox.floorp.enable = true;
+            ghostty.enable = true;
+            helix.enable = true;
+            mpv.enable = true;
+            nh.enable = true;
             nixcord.enable = true;
-            nushell.enable = true;
-            nvf.enable = true;
+            # nushell.enable = true;
             vscode.enable = true;
             yazi.enable = true;
+            zed-editor.enable = true;
             zellij.enable = true;
+            zsh.enable = true;
+            languages = {
+              # cpp.enable = true;
+              # csharp.enable = true;
+              # csharp.version = "8";
+              go.enable = true;
+              haskell.enable = true;
+              java.enable = true;
+              java.version = "17";
+              javascript.enable = true;
+              kotlin.enable = true;
+              lisp.enable = true;
+              lua.enable = true;
+              python.enable = true;
+              ruby.enable = true;
+              rust.enable = true;
+              scala.enable = true;
+            };
           };
         }
       ]
