@@ -1,19 +1,16 @@
 {
-  inputs,
-  pkgs,
+  pkgsUnstable,
   lib,
   config,
-  osConfig,
   ...
 }:
 {
   options.hm.jujutsu.enable = lib.mkEnableOption "Jujutsu";
 
   config = lib.mkIf config.hm.jujutsu.enable {
-    home.packages = builtins.attrValues { inherit (pkgs) watchman; };
+    home.packages = builtins.attrValues { inherit (pkgsUnstable) watchman; };
     programs.jujutsu = {
       enable = true;
-      package = inputs.jj-vcs-source.packages.${osConfig.nixpkgs.hostPlatform.system}.default;
       settings = {
         core.fsmonitor = "watchman";
         core.watchman.register-snapshot-trigger = true;

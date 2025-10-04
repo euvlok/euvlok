@@ -1,7 +1,7 @@
-{ inputs, eulib, ... }:
+{ inputs, ... }:
 {
   unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs eulib; };
+    specialArgs = { inherit inputs; };
     modules = [
       ./configuration.nix
       ./home.nix
@@ -56,7 +56,7 @@
       (
         { config, ... }:
         {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
             system = "x86_64-linux";
             config = config.nixpkgs.config;
           };

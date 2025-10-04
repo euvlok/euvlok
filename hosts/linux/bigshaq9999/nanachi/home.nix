@@ -38,10 +38,10 @@ in
         ../../../hm/bigshaq9999/niri.nix
         ../../../hm/bigshaq9999/taskwarrior.nix
         ../../../hm/bigshaq9999/waybar.nix
-        ../../../hm/donteatoreo/mpv.nix
-        ../../../hm/donteatoreo/nixcord.nix
-        ../../../hm/donteatoreo/starship.nix
-        ../../../hm/donteatoreo/yazi.nix
+        ../../../hm/flameflag/mpv.nix
+        ../../../hm/flameflag/nixcord.nix
+        ../../../hm/flameflag/starship.nix
+        ../../../hm/flameflag/yazi.nix
       ]
       ++ [
         ../../../../modules/hm

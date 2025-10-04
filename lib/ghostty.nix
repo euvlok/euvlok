@@ -1,9 +1,9 @@
-_: _: _:
-let
+_: _: _: {
   /**
     # Type: String -> String -> String -> String
 
     # Example
+
     ```nix
     mkSuper "super" "t" "new_tab"
     # => "super+t=new_tab"
@@ -54,12 +54,4 @@ let
   mkSuperShiftNested =
     superKey: p: k: c:
     "${superKey}+shift+${p}>${k}=${c}";
-in
-{
-  inherit
-    mkSuper
-    mkSuperPerf
-    mkSuperShift
-    mkSuperShiftNested
-    ;
 }

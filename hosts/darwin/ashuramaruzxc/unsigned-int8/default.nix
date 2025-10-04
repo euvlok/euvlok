@@ -1,7 +1,7 @@
-{ inputs, eulib, ... }:
+{ inputs, ... }:
 {
   unsigned-int8 = inputs.nix-darwin-ashuramaruzxc.lib.darwinSystem {
-    specialArgs = { inherit inputs eulib; };
+    specialArgs = { inherit inputs; };
     modules = [
       ../../../../modules/darwin
       ../../../hm/ashuramaruzxc/fonts.nix
@@ -21,7 +21,7 @@
       (
         { config, ... }:
         {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
             system = "aarch64-darwin";
             config = config.nixpkgs.config;
           };

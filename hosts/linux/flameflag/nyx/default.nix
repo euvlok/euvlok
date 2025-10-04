@@ -1,7 +1,7 @@
-{ inputs, eulib, ... }:
+{ inputs, ... }:
 {
-  nyx = inputs.nixpkgs-donteatoreo.lib.nixosSystem {
-    specialArgs = { inherit inputs eulib; };
+  nyx = inputs.nixpkgs-flameflag.lib.nixosSystem {
+    specialArgs = { inherit inputs; };
     modules = [
       ./configuration.nix
       ./home.nix
@@ -33,7 +33,7 @@
       (
         { config, ... }:
         {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
             system = "x86_64-linux";
             config = config.nixpkgs.config;
           };

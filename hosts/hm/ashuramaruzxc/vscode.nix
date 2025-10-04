@@ -2,16 +2,16 @@
   pkgs,
   lib,
   eulib,
-  osConfig,
+  config,
   ...
 }:
 let
-  vscodeSystem = { inherit (osConfig.nixpkgs.hostPlatform) system; };
-  inherit (eulib) mkExt;
+  inherit (config.programs.vscode.package) version;
+  mkExt = eulib.mkExt version;
 
   languages = {
     extensions = [
-      (mkExt vscodeSystem "james-yu" "latex-workshop")
+      (mkExt "james-yu" "latex-workshop")
     ];
     settings = {
       latex-workshop.latex = {
@@ -285,83 +285,83 @@ in
       // mergeFrom "settings";
       extensions = [
         ## -- Programming languages/lsp support -- ##
-        (mkExt vscodeSystem "josetr" "cmake-language-support-vscode")
-        (mkExt vscodeSystem "scala-lang" "scala")
-        (mkExt vscodeSystem "mathiasfrohlich" "kotlin")
-        (mkExt vscodeSystem "ms-azuretools" "vscode-docker")
-        (mkExt vscodeSystem "ms-kubernetes-tools" "vscode-kubernetes-tools")
-        (mkExt vscodeSystem "dotjoshjohnson" "xml")
-        (mkExt vscodeSystem "graphql" "vscode-graphql")
-        (mkExt vscodeSystem "graphql" "vscode-graphql-syntax")
-        (mkExt vscodeSystem "pinage404" "bash-extension-pack")
+        (mkExt "josetr" "cmake-language-support-vscode")
+        (mkExt "scala-lang" "scala")
+        (mkExt "mathiasfrohlich" "kotlin")
+        (mkExt "ms-azuretools" "vscode-docker")
+        (mkExt "ms-kubernetes-tools" "vscode-kubernetes-tools")
+        (mkExt "dotjoshjohnson" "xml")
+        (mkExt "graphql" "vscode-graphql")
+        (mkExt "graphql" "vscode-graphql-syntax")
+        (mkExt "pinage404" "bash-extension-pack")
 
         # Gay
-        (mkExt vscodeSystem "biud436" "rgss-script-compiler") # VX
-        (mkExt vscodeSystem "mjmcreativeworksandidea" "rmmvpluginsnippet") # MV
-        (mkExt vscodeSystem "snowszn" "rgss-script-editor")
+        (mkExt "biud436" "rgss-script-compiler") # VX
+        (mkExt "mjmcreativeworksandidea" "rmmvpluginsnippet") # MV
+        (mkExt "snowszn" "rgss-script-editor")
         ## -- Programming languages/lsp support -- ##
 
         ## -- git -- ##
-        (mkExt vscodeSystem "github" "vscode-github-actions")
+        (mkExt "github" "vscode-github-actions")
         ## -- Misc Utils -- ##
-        (mkExt vscodeSystem "njpwerner" "autodocstring")
-        (mkExt vscodeSystem "mikestead" "dotenv")
-        (mkExt vscodeSystem "humao" "rest-client") # Alternative REST client
-        (mkExt vscodeSystem "rangav" "vscode-thunder-client") # Thunder Client
+        (mkExt "njpwerner" "autodocstring")
+        (mkExt "mikestead" "dotenv")
+        (mkExt "humao" "rest-client") # Alternative REST client
+        (mkExt "rangav" "vscode-thunder-client") # Thunder Client
         ## -- Misc Utils -- ##
 
         ## -- C/C++ Utils -- ##
-        (mkExt vscodeSystem "formulahendry" "code-runner")
-        (mkExt vscodeSystem "danielpinto8zz6" "c-cpp-compile-run")
-        (mkExt vscodeSystem "ms-vscode" "makefile-tools")
-        (mkExt vscodeSystem "cschlosser" "doxdocgen")
-        (mkExt vscodeSystem "jeff-hykin" "better-cpp-syntax") # Better syntax highlighting
+        (mkExt "formulahendry" "code-runner")
+        (mkExt "danielpinto8zz6" "c-cpp-compile-run")
+        (mkExt "ms-vscode" "makefile-tools")
+        (mkExt "cschlosser" "doxdocgen")
+        (mkExt "jeff-hykin" "better-cpp-syntax") # Better syntax highlighting
         ## -- C/C++ Utils -- ##
 
         ## -- Python Utils -- ##
         # Fuck you sarco
-        (mkExt vscodeSystem "batisteo" "vscode-django")
-        (mkExt vscodeSystem "donjayamanne" "python-environment-manager")
-        (mkExt vscodeSystem "kaih2o" "python-resource-monitor")
-        (mkExt vscodeSystem "kevinrose" "vsc-python-indent")
-        (mkExt vscodeSystem "ms-python" "black-formatter")
-        (mkExt vscodeSystem "ms-python" "flake8")
-        (mkExt vscodeSystem "ms-python" "gather")
-        (mkExt vscodeSystem "ms-python" "isort")
-        (mkExt vscodeSystem "ms-python" "mypy-type-checker")
-        (mkExt vscodeSystem "ms-python" "pylint")
-        (mkExt vscodeSystem "wholroyd" "jinja")
+        (mkExt "batisteo" "vscode-django")
+        (mkExt "donjayamanne" "python-environment-manager")
+        (mkExt "kaih2o" "python-resource-monitor")
+        (mkExt "kevinrose" "vsc-python-indent")
+        (mkExt "ms-python" "black-formatter")
+        (mkExt "ms-python" "flake8")
+        (mkExt "ms-python" "gather")
+        (mkExt "ms-python" "isort")
+        (mkExt "ms-python" "mypy-type-checker")
+        (mkExt "ms-python" "pylint")
+        (mkExt "wholroyd" "jinja")
         ## -- Python Utils -- ##
 
         ## -- JavaScript/Typescript Utils -- ##
-        (mkExt vscodeSystem "angular" "ng-template")
-        (mkExt vscodeSystem "dsznajder" "es7-react-js-snippets")
-        (mkExt vscodeSystem "ecmel" "vscode-html-css")
-        (mkExt vscodeSystem "formulahendry" "auto-close-tag")
-        (mkExt vscodeSystem "formulahendry" "auto-rename-tag")
-        (mkExt vscodeSystem "hollowtree" "vue-snippets")
-        (mkExt vscodeSystem "jasonnutter" "search-node-modules")
-        (mkExt vscodeSystem "johnpapa" "angular2")
-        (mkExt vscodeSystem "msjsdiag" "vscode-react-native")
-        (mkExt vscodeSystem "octref" "vetur")
-        (mkExt vscodeSystem "prisma" "prisma")
-        (mkExt vscodeSystem "ritwickdey" "liveserver")
-        (mkExt vscodeSystem "steoates" "autoimport")
-        (mkExt vscodeSystem "vue" "volar")
-        (mkExt vscodeSystem "wix" "vscode-import-cost")
-        (mkExt vscodeSystem "styled-components" "vscode-styled-components") # styled-components
-        (mkExt vscodeSystem "graphql" "vscode-graphql-execution") # GraphQL execution
+        (mkExt "angular" "ng-template")
+        (mkExt "dsznajder" "es7-react-js-snippets")
+        (mkExt "ecmel" "vscode-html-css")
+        (mkExt "formulahendry" "auto-close-tag")
+        (mkExt "formulahendry" "auto-rename-tag")
+        (mkExt "hollowtree" "vue-snippets")
+        (mkExt "jasonnutter" "search-node-modules")
+        (mkExt "johnpapa" "angular2")
+        (mkExt "msjsdiag" "vscode-react-native")
+        (mkExt "octref" "vetur")
+        (mkExt "prisma" "prisma")
+        (mkExt "ritwickdey" "liveserver")
+        (mkExt "steoates" "autoimport")
+        (mkExt "vue" "volar")
+        (mkExt "wix" "vscode-import-cost")
+        (mkExt "styled-components" "vscode-styled-components") # styled-components
+        (mkExt "graphql" "vscode-graphql-execution") # GraphQL execution
         ## -- JavaScript/Typescript Utils -- ##
 
         ## -- Vscode specific -- ##
-        (mkExt vscodeSystem "aaron-bond" "better-comments")
-        (mkExt vscodeSystem "christian-kohler" "path-intellisense")
-        (mkExt vscodeSystem "donjayamanne" "githistory")
-        (mkExt vscodeSystem "donjayamanne" "git-extension-pack")
-        (mkExt vscodeSystem "eamodio" "gitlens")
-        (mkExt vscodeSystem "ms-vscode" "hexeditor")
-        (mkExt vscodeSystem "ms-vsliveshare" "vsliveshare")
-        (mkExt vscodeSystem "visualstudioexptteam" "intellicode-api-usage-examples")
+        (mkExt "aaron-bond" "better-comments")
+        (mkExt "christian-kohler" "path-intellisense")
+        (mkExt "donjayamanne" "githistory")
+        (mkExt "donjayamanne" "git-extension-pack")
+        (mkExt "eamodio" "gitlens")
+        (mkExt "ms-vscode" "hexeditor")
+        (mkExt "ms-vsliveshare" "vsliveshare")
+        (mkExt "visualstudioexptteam" "intellicode-api-usage-examples")
         ## -- Vscode specific -- ##
 
         ## -- Dictionary/Languages support -- ##

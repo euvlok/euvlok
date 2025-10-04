@@ -97,10 +97,7 @@
       hardware.nvidia = {
         open = true;
         modesetting.enable = true;
-        # Temporary until at the very least https://github.com/NixOS/nixpkgs/pull/439793 merged
-        # package = pkgs.nvidia-patch.patch-nvenc (
-        #   pkgs.nvidia-patch.patch-fbc config.boot.kernelPackages.nvidiaPackages.beta\
-        # );
+        # package = config.boot.kernelPackages.nvidiaPackages.latest;
         package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
           version = "580.82.09";
           sha256_64bit = "sha256-Puz4MtouFeDgmsNMKdLHoDgDGC+QRXh6NVysvltWlbc=";

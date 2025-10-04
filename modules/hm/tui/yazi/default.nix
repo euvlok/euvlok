@@ -41,8 +41,8 @@
           pluginsRepo = pkgs.fetchFromGitHub {
             owner = "yazi-rs";
             repo = "plugins";
-            rev = "63f9650e522336e0010261dcd0ffb0bf114cf912";
-            hash = "sha256-ZCLJ6BjMAj64/zM606qxnmzl2la4dvO/F5QFicBEYfU=";
+            rev = "d1c8baab86100afb708694d22b13901b9f9baf00";
+            hash = "sha256-52Zn6OSSsuNNAeqqZidjOvfCSB7qPqUeizYq/gO+UbE=";
           };
         in
         {
@@ -51,11 +51,29 @@
           hide-preview = "${pluginsRepo}/hide-preview.yazi";
           max-preview = "${pluginsRepo}/max-preview.yazi";
           smart-enter = "${pluginsRepo}/smart-enter.yazi";
-          system-clipboard = pkgs.fetchFromGitHub {
-            owner = "orhnk";
-            repo = "system-clipboard.yazi";
-            rev = "efb8f03e632adcdc6677fd5f471c74f4c71fdf9a";
-            hash = "sha256-zOQQvbkXq71t2E4x45oM4MzVRlZ4hhe6RkvgcP8tdYE=";
+          system-clipboard = pkgs.applyPatches {
+            src = pkgs.fetchFromGitHub {
+              owner = "orhnk";
+              repo = "system-clipboard.yazi";
+              rev = "4f6942dd5f0e143586ab347d82dfd6c1f7f9c894";
+              hash = "sha256-M7zKUlLcQA3ihpCAZyOkAy/SzLu31eqHGLkCSQPX1dY=";
+            };
+            patches = [
+              (pkgs.writeText "system-clipboard-fix.patch" ''
+                diff --git a/main.lua b/main.lua
+                index 0e77f6a7bd..666604668d 100644
+                --- a/main.lua
+                +++ b/main.lua
+                @@ -13,7 +13,7 @@
+                 
+                 return {
+                 	entry = function()
+                -		ya.manager_emit("escape", { visual = true })
+                +		ya.mgr_emit("escape", { visual = true })
+                 
+                 		local urls = selected_or_hovered()
+              '')
+            ];
           };
         }
         // lib.optionalAttrs config.programs.git.enable { git = "${pluginsRepo}/git.yazi"; }

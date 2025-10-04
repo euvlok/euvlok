@@ -1,7 +1,7 @@
-{ inputs, eulib, ... }:
+{ inputs, ... }:
 {
   unsigned-int64 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs eulib; };
+    specialArgs = { inherit inputs; };
     modules = [
       ./configuration.nix
       ./home.nix

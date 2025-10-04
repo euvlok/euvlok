@@ -2,17 +2,16 @@
   pkgs,
   lib,
   config,
-  osConfig,
   eulib,
   ...
 }:
 let
-  vscodeSystem = { inherit (osConfig.nixpkgs.hostPlatform) system; };
-  inherit (eulib) mkExt;
+  inherit (config.programs.vscode.package) version;
+  mkExt = eulib.mkExt version;
 
   languages = {
     extensions = [
-      (mkExt vscodeSystem "james-yu" "latex-workshop")
+      (mkExt "james-yu" "latex-workshop")
     ];
     settings = {
       latex-workshop.latex = {
@@ -48,13 +47,6 @@ let
             (mkLatexTool "pdflatex" "pdflatex" commonLatexArgs)
           ];
       };
-    };
-  };
-
-  themes = {
-    extensions = [ (mkExt vscodeSystem "catppuccin" "catppuccin-vsc-icons") ];
-    settings = {
-      workbench.iconTheme = "catppuccin-${config.catppuccin.flavor}";
     };
   };
 
@@ -106,7 +98,6 @@ let
     let
       modules = [
         languages
-        themes
         utils
       ];
       excludePaths = [

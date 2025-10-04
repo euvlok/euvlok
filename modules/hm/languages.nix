@@ -1,4 +1,5 @@
 {
+  pkgs,
   pkgsUnstable,
   lib,
   config,
@@ -254,8 +255,8 @@ let
     };
     rust = {
       packages = builtins.attrValues {
+        inherit (pkgs.rust-bin.stable.latest) default;
         inherit (pkgsUnstable)
-          rustc
           cargo
           rustfmt
           rust-analyzer

@@ -30,7 +30,7 @@ in
           ../../../hm/ashuramaruzxc/nixcord.nix
           ../../../hm/ashuramaruzxc/vscode.nix
           ../../../hm/ashuramaruzxc/starship.nix
-          #../../../hm/donteatoreo/nushell.nix
+          #../../../hm/flameflag/nushell.nix
           inputs.sops-nix-trivial.homeManagerModules.sops
           {
             sops = {

@@ -18,7 +18,7 @@ in
     user.email = userEmail;
     user.name = userName;
     git.sign-on-push = true;
-    git.push-bookmark-prefix = "donteatoreo/push-";
+    git.push-bookmark-prefix = "flameflag/push-";
     signing = {
       behavior = "drop";
       backend = format;

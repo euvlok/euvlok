@@ -19,6 +19,7 @@
       overlays = [
         inputs.nur-trivial.overlays.default
         inputs.nix-vscode-extensions-trivial.overlays.default
+        inputs.rust-overlay-source.overlays.default
         (final: _: { yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { }; })
       ];
     };

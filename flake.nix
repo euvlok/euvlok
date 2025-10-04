@@ -5,10 +5,9 @@
     # --- Shared ---
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
     home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
-    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     home-manager-unstable.url = "github:nix-community/home-manager";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
     # This input is meant to be used for `-source` inputs and is rarely updated
@@ -35,12 +34,12 @@
     nix-darwin-bigshaq9999.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
 
-    # --- donteatoreo ---
-    nixpkgs-donteatoreo.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-donteatoreo.url = "github:nix-community/home-manager/release-25.05";
-    home-manager-donteatoreo.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
-    nix-darwin-donteatoreo.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
-    nix-darwin-donteatoreo.inputs.nixpkgs.follows = "nixpkgs-donteatoreo";
+    # --- flameflag ---
+    nixpkgs-flameflag.url = "github:NixOS/nixpkgs/nixos-25.05";
+    home-manager-flameflag.url = "github:nix-community/home-manager/release-25.05";
+    home-manager-flameflag.inputs.nixpkgs.follows = "nixpkgs-flameflag";
+    nix-darwin-flameflag.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin-flameflag.inputs.nixpkgs.follows = "nixpkgs-flameflag";
 
     # --- lay-by ---
     nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -54,55 +53,50 @@
 
     # --- Trivial ---
     base16-trivial.url = "github:SenchoPens/base16.nix";
-    catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
-    catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    catppuccin-trivial.url = "github:catppuccin/nix";
+    catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    catppuccin-trivial.url = "github:catppuccin/nix/release-25.05";
     chaotic.inputs.home-manager.follows = "home-manager-unstable";
-    chaotic.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    chaotic.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     firefox-addons-trivial.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
-    niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
     nix-vscode-extensions-trivial.inputs.flake-utils.follows = "flake-utils";
-    nix-vscode-extensions-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-vscode-extensions-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix-vscode-extensions-trivial.url = "github:nix-community/nix-vscode-extensions";
     nix-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils";
     nix-vscode-server-trivial.url = "github:nix-community/nixos-vscode-server";
     nixcord-trivial.inputs.flake-compat.follows = "";
     nixcord-trivial.inputs.flake-parts.follows = "flake-parts";
-    nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixcord-trivial.url = "github:KaylorBen/nixcord";
     nixos-hardware-trivial.url = "github:NixOS/nixos-hardware";
     nur-trivial.inputs.flake-parts.follows = "flake-parts";
-    nur-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nur-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nur-trivial.url = "github:nix-community/NUR";
-    nvidia-patch-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nvidia-patch-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nvidia-patch-trivial.inputs.utils.follows = "flake-utils";
     nvidia-patch-trivial.url = "github:icewind1991/nvidia-patch-nixos";
-    sops-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    sops-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix-trivial.url = "github:Mic92/sops-nix";
-    spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
-    stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    stylix-trivial.url = "github:danth/stylix";
+    stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    stylix-trivial.url = "github:danth/stylix/release-25.05";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager-unstable";
-    zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
 
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    dis-source.url = "github:DontEatOreo/dis/develop";
-    helix-source.inputs.nixpkgs.follows = "nixpkgs";
-    helix-source.url = "github:helix-editor/helix";
+    dis-source.url = "github:FlameFlag/dis";
     hyprland-source.url = "github:hyprwm/Hyprland";
-    jj-vcs-source.inputs.flake-utils.follows = "flake-utils";
-    jj-vcs-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    jj-vcs-source.url = "github:jj-vcs/jj";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-1.tar.gz";
+    lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
     lix-source.inputs.flake-compat.follows = "";
     lix-source.inputs.nix2container.follows = "";
     lix-source.inputs.nixpkgs.follows = "nixpkgs";
@@ -111,6 +105,8 @@
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";
+    rust-overlay-source.inputs.nixpkgs.follows = "nixpkgs-source";
+    rust-overlay-source.url = "github:oxalica/rust-overlay";
     yazi-source.inputs.flake-utils.follows = "flake-utils";
     yazi-source.inputs.nixpkgs.follows = "nixpkgs-source";
     yazi-source.url = "github:sxyazi/yazi";
@@ -127,24 +123,21 @@
     # DO NOT override nixpkgs, it uses it's own fork
 
     # Infra / Shared / Core Inputs
-    devenv.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    devenv.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     devenv.url = "github:cachix/devenv";
     disko-rpi.url = "github:nvmd/disko/gpt-attrs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
-    nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix2container.url = "github:nlewo/nix2container";
     pre-commit-hooks.inputs.flake-compat.follows = "";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
   };
 
   outputs =
     inputs:
-    let
-      eulib = inputs.nixpkgs.lib.extend (import ./lib inputs);
-    in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ inputs.devenv.flakeModule ];
       systems = [
@@ -202,9 +195,8 @@
         };
 
       flake = {
-        inherit eulib;
-        nixosConfigurations = import ./hosts/linux { inherit inputs eulib; };
-        darwinConfigurations = import ./hosts/darwin { inherit inputs eulib; };
+        nixosConfigurations = import ./hosts/linux { inherit inputs; };
+        darwinConfigurations = import ./hosts/darwin { inherit inputs; };
       };
     };
 }

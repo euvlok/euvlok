@@ -18,7 +18,7 @@ jobs:
           - config: nanachi
             user: bigshaq9999
           - config: nyx
-            user: donteatoreo
+            user: flameflag
           - config: signed-int16
             user: 2husecondary
           - config: unsigned-int32
@@ -46,7 +46,7 @@ jobs:
       matrix:
         include:
           - config: anons-Mac-mini
-            user: donteatoreo
+            user: flameflag
           - config: faputas.Mac-mini
             user: bigshaq9999
           - config: unsigned-int8

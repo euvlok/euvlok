@@ -5,7 +5,7 @@ keys:
   - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
   - &ashuramaruzxc_unsigned-int8 age1z5xkrf7tpcs58c53nzjgm7tegv9jk3z73zeyec0q7sjzuvth2dxqz6znnj # @ashuramaruzxc macos
   # - &bigshaq9999 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @bigshaq9999
-  - &donteatoreo age1kc4gmk6jztv6schw3mhwwea7nn8emce4uwqufawfwapv9tlgdazqz7fc2w # @DontEatOreo machines
+  - &flameflag age1kc4gmk6jztv6schw3mhwwea7nn8emce4uwqufawfwapv9tlgdazqz7fc2w # @FlameFlag machines
   # - &lay-by age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @lay-by
 creation_rules:
   - path_regex: secrets/.*\.ya?ml$
@@ -18,5 +18,5 @@ creation_rules:
           - *ashuramaruzxc_unsigned-int8
           # - *float-pointer32
           # - *bigshaq9999
-          - *donteatoreo
+          - *flameflag
           # - *lay-by

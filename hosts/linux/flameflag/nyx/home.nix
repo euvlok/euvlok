@@ -10,7 +10,7 @@ let
   release = builtins.fromJSON (config.system.nixos.release);
 in
 {
-  imports = [ inputs.home-manager-donteatoreo.nixosModules.home-manager ];
+  imports = [ inputs.home-manager-flameflag.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -38,7 +38,7 @@ in
             {
               sops = {
                 age.keyFile = "/home/nyx/.config/sops/age/keys.txt";
-                defaultSopsFile = ../../../../secrets/donteatoreo.yaml;
+                defaultSopsFile = ../../../../secrets/flameflag.yaml;
                 secrets.github_ssh = { };
               };
             }
@@ -48,7 +48,7 @@ in
             { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
           ]
           ++ [
-            ../../../hm/donteatoreo/aliases.nix
+            ../../../hm/flameflag/aliases.nix
             ../../../../modules/hm
             {
               hm = {
@@ -86,10 +86,10 @@ in
                 "zed"
               ];
             in
-            lib.flatten (map (n: [ ../../../hm/donteatoreo/${n}.nix ]) hmExtraConfigModules)
+            lib.flatten (map (n: [ ../../../hm/flameflag/${n}.nix ]) hmExtraConfigModules)
           )
           ++ lib.optionals osConfig.services.xserver.desktopManager.gnome.enable [
-            ../../../hm/donteatoreo/dconf.nix
+            ../../../hm/flameflag/dconf.nix
           ];
         in
         config;

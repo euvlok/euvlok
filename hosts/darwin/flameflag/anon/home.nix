@@ -11,7 +11,7 @@ let
   release = builtins.fromJSON (config.system.darwinRelease);
 in
 {
-  imports = [ inputs.home-manager-donteatoreo.darwinModules.home-manager ];
+  imports = [ inputs.home-manager-flameflag.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -37,7 +37,7 @@ in
         {
           sops = {
             age.keyFile = "/Users/anon/sops/age/keys.txt";
-            defaultSopsFile = ../../../../secrets/donteatoreo.yaml;
+            defaultSopsFile = ../../../../secrets/flameflag.yaml;
             secrets.github_ssh = { };
           };
         }
@@ -67,7 +67,7 @@ in
         }
       ]
       ++ [
-        ../../../hm/donteatoreo/aliases.nix
+        ../../../hm/flameflag/aliases.nix
         ../../../../modules/hm
         {
           hm = {
@@ -102,7 +102,7 @@ in
             "zellij"
           ];
         in
-        lib.flatten (map (n: [ ../../../hm/donteatoreo/${n}.nix ]) hmExtraConfigModules)
+        lib.flatten (map (n: [ ../../../hm/flameflag/${n}.nix ]) hmExtraConfigModules)
       );
     };
 }

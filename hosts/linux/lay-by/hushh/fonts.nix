@@ -24,21 +24,22 @@
         proggy-clean-tt
         victor-mono
         ;
-      fontconfig.defaultFonts = {
-        monospace = [
-          "Iosevka Nerd Font Mono"
-          "Noto Color Emoji"
-        ];
-        sansSerif = [
-          "Vegur"
-          "Noto Color Emoji"
-        ];
-        serif = [
-          "Vegur"
-          "Noto Color Emoji"
-        ];
-        emoji = [ "Twitter Color Emoji" ];
-      };
+    };
+
+    fontconfig.defaultFonts = {
+      monospace = [
+        "Iosevka Nerd Font Mono"
+        "Noto Color Emoji"
+      ];
+      sansSerif = [
+        "Vegur"
+        "Noto Color Emoji"
+      ];
+      serif = [
+        "Vegur"
+        "Noto Color Emoji"
+      ];
+      emoji = [ "Twitter Color Emoji" ];
     };
   };
 }

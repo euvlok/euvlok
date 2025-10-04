@@ -33,8 +33,8 @@ in
         { home.stateVersion = "25.05"; }
       ]
       ++ [
-        ../../../hm/donteatoreo/nushell.nix
-        ../../../hm/donteatoreo/starship.nix
+        ../../../hm/flameflag/nushell.nix
+        ../../../hm/flameflag/starship.nix
         ../../../hm/bigshaq9999/git.nix
       ]
       ++ [
