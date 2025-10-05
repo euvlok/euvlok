@@ -9,7 +9,7 @@
       enable = true;
       # capSysNice = true;
     };
-    steam = {
+    steam = { 
       enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
@@ -34,9 +34,8 @@
 
     wireshark.enable = true;
     partition-manager.enable = true;
-
     gpu-screen-recorder.enable = true;
-
     virt-manager.enable = true;
+    
   };
 }

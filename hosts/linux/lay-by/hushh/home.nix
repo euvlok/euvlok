@@ -54,11 +54,12 @@ in
             hm = {
               fastfetch.enable = true;
               firefox.zen-browser.enable = true;
+              bash.enable = true;
               fish.enable = true;
               helix.enable = true;
               hyprland.enable = true;
               mpv.enable = true;
-              #vscode.enable = true;
+              vscode.enable = true;
             };
           }
 
@@ -69,6 +70,9 @@ in
                 fps_limit = 200;
                 no_display = true;
               };
+            };
+            programs.alacritty = {
+              enable = true;
             };
             services.easyeffects.enable = true;
             fonts.fontconfig.enable = true;

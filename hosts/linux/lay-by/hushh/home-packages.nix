@@ -19,7 +19,6 @@
       hyprshot
       hyprcursor
       htop
-      alac
       # Gaming
       protontricks
       libnvidia-container
