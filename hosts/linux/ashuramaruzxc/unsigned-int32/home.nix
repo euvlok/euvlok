@@ -1,13 +1,11 @@
 {
   inputs,
-  config,
   pkgs,
   eulib,
   pkgsUnstable,
   ...
 }:
 let
-  release = builtins.fromJSON (config.system.nixos.release);
 
   commonImports = [
     { home.stateVersion = "25.05"; }
@@ -261,14 +259,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
   home-manager.users.root.imports = commonImports ++ [

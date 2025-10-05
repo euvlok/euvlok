@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  anons-Mac-mini = inputs.nix-darwin-flameflag.lib.darwinSystem {
+  FlameFlags-Mac-mini = inputs.nix-darwin-flameflag.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       ../../../../modules/darwin
@@ -8,7 +8,8 @@
       ./fonts.nix
       ./home.nix
       ./system.nix
-
+    ]
+    ++ [
       ../../../../modules/cross
       {
         cross = {
@@ -16,15 +17,6 @@
           nixpkgs.enable = true;
         };
       }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
-            system = "aarch64-darwin";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

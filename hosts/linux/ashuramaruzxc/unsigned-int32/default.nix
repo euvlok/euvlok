@@ -5,6 +5,8 @@
     modules = [
       ./configuration.nix
       ./home.nix
+    ]
+    ++ [
       inputs.sops-nix-trivial.nixosModules.sops
       {
         sops = {
@@ -12,6 +14,8 @@
           defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
         };
       }
+    ]
+    ++ [
       inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
@@ -20,6 +24,28 @@
           accent = "flamingo";
         };
       }
+    ]
+    ++ [
+      inputs.anime-game-launcher-source.nixosModules.default
+      {
+        programs.anime-game-launcher.enable = true;
+        programs.honkers-railway-launcher.enable = true;
+        aagl.enableNixpkgsReleaseBranchCheck = false;
+      }
+    ]
+    ++ [
+      inputs.flatpak-declerative-trivial.nixosModule
+      {
+        services.flatpak = {
+          enable = true;
+          remotes = {
+            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
+          };
+        };
+      }
+    ]
+    ++ [
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -37,31 +63,6 @@
           };
         };
       }
-      inputs.anime-game-launcher-source.nixosModules.default
-      {
-        programs.anime-game-launcher.enable = true;
-        programs.honkers-railway-launcher.enable = true;
-        aagl.enableNixpkgsReleaseBranchCheck = false;
-      }
-      inputs.flatpak-declerative-trivial.nixosModule
-      {
-        services.flatpak = {
-          enable = true;
-          remotes = {
-            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
-          };
-        };
-      }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
-            system = "x86_64-linux";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

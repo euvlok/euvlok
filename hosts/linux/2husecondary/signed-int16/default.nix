@@ -5,6 +5,10 @@
     modules = [
       ./configuration.nix
       ./home.nix
+      inputs.anime-game-launcher-source.nixosModules.default
+      { programs.anime-game-launcher.enable = true; }
+    ]
+    ++ [
       inputs.sops-nix-trivial.nixosModules.sops
       {
         sops = {
@@ -12,6 +16,8 @@
           defaultSopsFile = ../../../../secrets/2husecondary.yaml;
         };
       }
+    ]
+    ++ [
       inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
@@ -20,6 +26,8 @@
           accent = "sky";
         };
       }
+    ]
+    ++ [
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -37,19 +45,6 @@
           };
         };
       }
-      inputs.anime-game-launcher-source.nixosModules.default
-      {
-        programs.anime-game-launcher.enable = true;
-      }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
-            system = "x86_64-linux";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

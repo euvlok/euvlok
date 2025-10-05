@@ -1,14 +1,11 @@
 {
   inputs,
-  config,
   lib,
   eulib,
   pkgsUnstable,
   ...
 }:
 let
-  release = builtins.fromJSON (config.system.nixos.release);
-
   commonUsers = [
     { home.stateVersion = "25.05"; }
     ../../../hm/ashuramaruzxc/helix.nix
@@ -64,14 +61,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
     users = lib.mapAttrs (_: extraImports: mkUser extraImports) userConfigs;
   };
 }

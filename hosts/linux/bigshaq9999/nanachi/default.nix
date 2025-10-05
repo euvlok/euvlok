@@ -5,6 +5,8 @@
     modules = [
       ./configuration.nix
       ./home.nix
+    ]
+    ++ [
       inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
@@ -13,7 +15,8 @@
           accent = "blue";
         };
       }
-
+    ]
+    ++ [
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -23,15 +26,6 @@
           nixpkgs.enable = true;
         };
       }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
-            system = "x86_64-linux";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

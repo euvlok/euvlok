@@ -5,6 +5,10 @@
     modules = [
       ./configuration.nix
       ./home.nix
+      inputs.nix-vscode-server-trivial.nixosModules.default
+      { services.vscode-server.enable = true; }
+    ]
+    ++ [
       inputs.sops-nix-trivial.nixosModules.sops
       {
         sops = {
@@ -12,6 +16,8 @@
           defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
         };
       }
+    ]
+    ++ [
       inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
@@ -20,11 +26,8 @@
           accent = "rosewater";
         };
       }
-      inputs.nix-vscode-server-trivial.nixosModules.default
-      {
-        services.vscode-server.enable = true;
-      }
-
+    ]
+    ++ [
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -37,15 +40,6 @@
           nixpkgs.enable = true;
         };
       }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
-            system = "x86_64-linux";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

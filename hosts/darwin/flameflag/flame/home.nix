@@ -7,26 +7,16 @@
   pkgsUnstable,
   ...
 }:
-let
-  release = builtins.fromJSON (config.system.darwinRelease);
-in
 {
   imports = [ inputs.home-manager-flameflag.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
-  home-manager.users.anon =
+  home-manager.users.${config.system.primaryUser} =
     { config, ... }:
     {
       imports = [
@@ -36,7 +26,7 @@ in
         inputs.sops-nix-trivial.homeManagerModules.sops
         {
           sops = {
-            age.keyFile = "/Users/anon/sops/age/keys.txt";
+            age.keyFile = "${config.home.homeDirectory}/sops/age/keys.txt";
             defaultSopsFile = ../../../../secrets/flameflag.yaml;
             secrets.github_ssh = { };
           };

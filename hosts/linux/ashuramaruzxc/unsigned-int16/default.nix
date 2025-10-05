@@ -9,11 +9,15 @@ in
     modules = [
       ./configuration.nix
       ./home.nix
+      inputs.disko-rpi.nixosModules.disko
+    ]
+    ++ [
+      usb-gadget-ethernet
       raspberry-pi-5.base
       raspberry-pi-5.display-vc4
       raspberry-pi-5.bluetooth
-      usb-gadget-ethernet
-      inputs.disko-rpi.nixosModules.disko
+    ]
+    ++ [
       inputs.sops-nix-trivial.nixosModules.sops
       {
         sops = {
@@ -21,6 +25,8 @@ in
           defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
         };
       }
+    ]
+    ++ [
       inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
@@ -29,6 +35,20 @@ in
           accent = "flamingo";
         };
       }
+    ]
+    ++ [
+      inputs.flatpak-declerative-trivial.nixosModule
+      {
+        services.flatpak = {
+          enable = true;
+          remotes = {
+            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
+          };
+        };
+      }
+    ]
+    ++ [
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -41,29 +61,6 @@ in
           nixpkgs.enable = true;
         };
       }
-      inputs.flatpak-declerative-trivial.nixosModule
-      {
-        services.flatpak = {
-          enable = true;
-          remotes = {
-            "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-            "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
-          };
-        };
-      }
-      (
-        { config, ... }:
-        {
-          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
-            system = "aarch64-linux";
-            config = config.nixpkgs.config;
-          };
-          _module.args.pkgsRpi = import inputs.nixos-raspberrypi {
-            system = "aarch64-linux";
-            config = config.nixpkgs.config;
-          };
-        }
-      )
     ];
   };
 }

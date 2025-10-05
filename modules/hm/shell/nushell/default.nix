@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
@@ -8,30 +7,12 @@
   ...
 }:
 let
-  yt-dlp-script = lib.getExe (
-    pkgs.writeShellApplication {
-      name = "yt-dlp-script";
-      text = builtins.readFile ../../../../modules/scripts/yt-dlp-script.sh;
-      runtimeInputs = builtins.attrValues {
-        inherit (pkgs)
-          bc
-          cacert
-          choose
-          dust
-          fd
-          ffmpeg_7-full
-          gum
-          jq
-          sd
-          yt-dlp
-          ;
-      };
-    }
-  );
-
   jj-completions = pkgs.runCommand "jj-completions.nu" {
     buildInputs = builtins.attrValues { inherit (pkgsUnstable) jujutsu; };
   } ''jj util completion nushell > "$out"'';
+  atuin-completions = pkgs.runCommand "atuin-completions.nu" {
+    buildInputs = builtins.attrValues { inherit (pkgsUnstable) atuin; };
+  } ''atuin gen-completions -s nushell > "$out"'';
 in
 {
   options.hm.nushell.enable = lib.mkEnableOption "Nushell";
@@ -63,16 +44,15 @@ in
         targz = "tar -cvzf";
 
         # Video
-        m4a = "${yt-dlp-script} m4a";
-        m4a-cut = "${yt-dlp-script} m4a-cut";
-        mp3 = "${yt-dlp-script} mp3";
-        mp3-cut = "${yt-dlp-script} mp3-cut";
-        mp4 = "${yt-dlp-script} mp4";
-        mp4-cut = "${yt-dlp-script} mp4-cut";
+        m4a = "yt-dlp-script m4a";
+        "m4a-cut" = "yt-dlp-script m4a-cut";
+        mp3 = "yt-dlp-script mp3";
+        "mp3-cut" = "yt-dlp-script mp3-cut";
+        mp4 = "yt-dlp-script mp4";
+        "mp4-cut" = "yt-dlp-script mp4-cut";
 
         # Misc
         myip = "http get 'https://ipinfo.io/ip'";
-        mount = "df -h | detect columns | select Filesystem Mounted on";
         path = ''echo $env.PATH'';
 
         rebuild =
@@ -117,9 +97,7 @@ in
           ${builtins.concatStringsSep "\n" sourceCommands}
           ${builtins.readFile ./aliases.nu}
           ${lib.optionalString config.programs.jujutsu.enable "source ${jj-completions}"}
-          ${lib.optionalString (lib.any (pkg: pkg == pkgs.github-copilot-cli) (
-            osConfig.environment.systemPackages
-          )) (builtins.readFile ./github-copilot-cli.nu)}
+          ${lib.optionalString config.programs.atuin.enable "source ${atuin-completions}"}
         '';
     };
   };

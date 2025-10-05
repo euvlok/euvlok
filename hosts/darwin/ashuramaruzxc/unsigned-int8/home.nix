@@ -2,14 +2,11 @@
   inputs,
   pkgs,
   lib,
-  config,
   eulib,
   pkgsUnstable,
   ...
 }:
 let
-  release = builtins.fromJSON (config.system.darwinRelease);
-
   commonImports = [
     { home.stateVersion = "25.05"; }
     inputs.catppuccin-trivial.homeModules.catppuccin
@@ -132,14 +129,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
   home-manager.users.ashuramaru.imports =

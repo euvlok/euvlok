@@ -1,28 +1,17 @@
 {
   inputs,
   lib,
-  config,
   eulib,
   pkgsUnstable,
   ...
 }:
-let
-  release = builtins.fromJSON (config.system.nixos.release);
-in
 {
   imports = [ inputs.home-manager-flameflag.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
   home-manager.users.nyx =

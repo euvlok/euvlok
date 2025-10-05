@@ -98,6 +98,7 @@ let
         imagemagick
         mediainfo
         yt-dlp
+        yt-dlp-script
         ;
 
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.

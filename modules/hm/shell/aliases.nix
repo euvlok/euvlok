@@ -1,31 +1,5 @@
-{
-  pkgs,
-  lib,
-  osConfig,
-  ...
-}:
+{ osConfig, ... }:
 let
-  yt-dlp-script = lib.getExe (
-    pkgs.writeShellApplication {
-      name = "yt-dlp-script";
-      text = builtins.readFile ../../../modules/scripts/yt-dlp-script.sh;
-      runtimeInputs = builtins.attrValues {
-        inherit (pkgs)
-          bc
-          cacert
-          choose
-          dust
-          fd
-          ffmpeg_7-full
-          gum
-          jq
-          sd
-          yt-dlp
-          ;
-      };
-    }
-  );
-
   aliases = {
     # Navigate
     ".." = "../";
@@ -55,12 +29,13 @@ let
     untar = "tar -zxvf";
 
     # Video
-    m4a = "${yt-dlp-script} m4a";
-    m4a-cut = "${yt-dlp-script} m4a-cut";
-    mp3 = "${yt-dlp-script} mp3";
-    mp3-cut = "${yt-dlp-script} mp3-cut";
-    mp4 = "${yt-dlp-script} mp4";
-    mp4-cut = "${yt-dlp-script} mp4-cut";
+    # yt-dlp-script is our own custom package
+    m4a = "yt-dlp-script m4a";
+    m4a-cut = "yt-dlp-script m4a-cut";
+    mp3 = "yt-dlp-script mp3";
+    mp3-cut = "yt-dlp-script mp3-cut";
+    mp4 = "yt-dlp-script mp4";
+    mp4-cut = "yt-dlp-script mp4-cut";
 
     # Misc
     myip = "curl 'https://ipinfo.io/ip'";
