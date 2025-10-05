@@ -32,33 +32,30 @@ let
 
   mkKeybindings = {
     cursor = [
-      (mkSuper superKey "left" "text:${ctrl.SOH}")
-      (mkSuper superKey "right" "text:${ctrl.ENQ}")
+      (mkSuper "left" "text:${ctrl.SOH}")
+      (mkSuper "right" "text:${ctrl.ENQ}")
 
       "alt+left=text:${ctrl.ESC}${ctrl.WORD_BACK}"
       "alt+right=text:${ctrl.ESC}${ctrl.WORD_FORWARD}"
     ];
 
-    screen = [ (mkSuper superKey "g" "write_screen_file:open") ];
+    screen = [ (mkSuper "g" "write_screen_file:open") ];
 
     font = [
-      (mkSuper superKey "0" "reset_font_size")
+      (mkSuper "0" "reset_font_size")
 
-      (mkSuper superKey "equal" "increase_font_size:1")
+      (mkSuper "equal" "increase_font_size:1")
       "${superKey}+shift+equal=increase_font_size:1"
 
-      (mkSuper superKey "minus" "decrease_font_size:1")
+      (mkSuper "minus" "decrease_font_size:1")
       "${superKey}+shift+minus=decrease_font_size:1"
     ];
 
-    clipboard = [
-      (mkSuperShift superKey "c" "copy_to_clipboard")
-      (mkSuperShift superKey "v" "paste_from_clipboard")
-    ];
+    clipboard = [ (mkSuperShift "v" "paste_from_clipboard") ];
 
     misc = [
-      (mkSuper superKey "a" "select_all")
-      (mkSuper superKey "," "reload_config")
+      (mkSuper "a" "select_all")
+      (mkSuper "," "reload_config")
     ];
   };
 in
@@ -74,9 +71,7 @@ in
         clipboard-paste-protection = false;
         confirm-close-surface = false;
         cursor-style-blink = false;
-        font-size = 18;
         keybind = lib.flatten (lib.attrValues mkKeybindings);
-        mouse-scroll-multiplier = 3;
         quit-after-last-window-closed = true;
         scrollback-limit = 10 * 10000000;
       };

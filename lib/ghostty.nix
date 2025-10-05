@@ -1,31 +1,43 @@
-_: _: _: {
+{ pkgs, ... }:
+_: super:
+let
+  superKey = if pkgs.stdenvNoCC.isDarwin then "super" else "ctrl";
+in
+{
   /**
-    # Type: String -> String -> String -> String
+    # Type: String -> String -> String
 
     # Example
-
     ```nix
-    mkSuper "super" "t" "new_tab"
+    mkSuper "t" "new_tab"
     # => "super+t=new_tab"
     ```
   */
-  mkSuper =
-    superKey: k: c:
-    "${superKey}+${k}=${c}";
+  mkSuper = k: c: "${superKey}+${k}=${c}";
 
   /**
-    # Type: String -> String -> String -> String
+    # Type: String -> String -> String
 
     # Example
 
     ```nix
-    mkSuperPerf "super" "r" "reload_config"
+    mkSuperPerf "r" "reload_config"
     # => "performable:super+r=reload_config"
     ```
   */
-  mkSuperPerf =
-    superKey: k: c:
-    "performable:${superKey}+${k}=${c}";
+  mkSuperPerf = k: c: "performable:${superKey}+${k}=${c}";
+
+  /**
+    # Type: String -> String -> String
+
+    # Example
+
+    ```nix
+    mkSuperShift "t" "new_window"
+    # => "super+shift+t=new_window"
+    ```
+  */
+  mkSuperShift = k: c: "${superKey}+shift+${k}=${c}";
 
   /**
     # Type: String -> String -> String -> String
@@ -33,25 +45,11 @@ _: _: _: {
     # Example
 
     ```nix
-    mkSuperShift "super" "t" "new_window"
-    # => "super+shift+t=new_window"
-    ```
-  */
-  mkSuperShift =
-    superKey: k: c:
-    "${superKey}+shift+${k}=${c}";
-
-  /**
-    # Type: String -> String -> String -> String -> String
-
-    # Example
-
-    ```nix
-    mkSuperShiftNested "super" "w" "h" "split_horizontal"
+    mkSuperShiftNested "w" "h" "split_horizontal"
     # => "super+shift+w>h=split_horizontal"
     ```
   */
   mkSuperShiftNested =
-    superKey: p: k: c:
+    p: k: c:
     "${superKey}+shift+${p}>${k}=${c}";
 }
