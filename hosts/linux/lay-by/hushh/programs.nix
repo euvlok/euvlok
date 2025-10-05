@@ -15,14 +15,8 @@
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
     };
-    hyprland = {
-      enable = true;
-      # set the flake package
-      package = inputs.hyprland-source.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-      # make sure to also set the portal package, so that they are in sync
-      portalPackage =
-        inputs.hyprland-source.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    };
+
+    hyprland.enable = true;
 
     kdeconnect.enable = true;
 

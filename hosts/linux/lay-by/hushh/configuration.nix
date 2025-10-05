@@ -62,37 +62,7 @@
     TERMINAL = "alacritty";
     EDITOR = "nvim";
     TERM = "alacritty";
-    __GL_VRR_ALLOWED = "0";
   };
-
-  # Ugly hack to fix a bug in egl-wayland, see
-  #! https://github.com/NixOS/nixpkgs/issues/202454
-  environment.etc."egl/egl_external_platform.d".source =
-    let
-      nvidia_wayland = pkgs.writeText "10_nvidia_wayland.json" ''
-        {
-            "file_format_version" : "1.0.0",
-            "ICD" : {
-                "library_path" : "${pkgs.egl-wayland}/lib/libnvidia-egl-wayland.so"
-            }
-        }
-      '';
-      nvidia_gbm = pkgs.writeText "15_nvidia_gbm.json" ''
-        {
-            "file_format_version" : "1.0.0",
-            "ICD" : {
-                "library_path" : "${config.hardware.nvidia.package}/lib/libnvidia-egl-gbm.so.1"
-            }
-        }
-      '';
-    in
-    lib.mkForce (
-      pkgs.runCommandLocal "nvidia-egl-hack" { } ''
-        mkdir -p "$out"
-        cp ${nvidia_wayland} "$out/10_nvidia_wayland.json"
-        cp ${nvidia_gbm} "$out/15_nvidia_gbm.json"
-      ''
-    );
 
   virtualisation.libvirtd.enable = true;
 

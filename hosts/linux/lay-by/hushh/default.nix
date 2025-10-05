@@ -1,13 +1,12 @@
-{ inputs, ... }:
+{ inputs, eulib, ... }:
 {
   blind-faith = inputs.nixpkgs-lay-by.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs eulib; };
     modules = [
       ./configuration.nix
       ./home.nix
       inputs.catppuccin-trivial.nixosModules.catppuccin
-    ]
-    ++ [
+
       ../../../../modules/nixos
       ../../../../modules/cross
       {
@@ -23,6 +22,15 @@
           };
         };
       }
+      (
+        { config, ... }:
+        {
+          _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+            system = "x86_64-linux";
+            config = config.nixpkgs.config;
+          };
+        }
+      )
     ];
   };
 }

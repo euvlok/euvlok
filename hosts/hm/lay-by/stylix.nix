@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+
 {
   stylix = {
     enable = true;
@@ -7,26 +8,28 @@
 
     targets.hyprlock.enable = false;
     targets.spicetify.enable = false;
-    targets.firefox.profileNames = "default";
+    #targets.hyprpaper.enable = false;
 
-    image = "/home/hushh/Pictures/papes/city.jpg";
+    image = /home/hushh/Pictures/papes/city.jpg;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
 
     cursor = {
-      size = 24;
       package = pkgs.kdePackages.breeze;
       name = "Breeze-Dark";
+      size = 24;
     };
 
     fonts = {
       monospace = {
-        name = "Iosevka Nerd Font Mono";
         package = pkgs.nerd-fonts.iosevka;
+        name = "Iosevka Nerd Font Mono";
       };
+
       emoji = {
-        name = "Twitter Color Emoji";
         package = pkgs.twemoji-color-font;
+        name = "Twitter Color Emoji";
       };
+
       serif = config.stylix.fonts.monospace;
       sansSerif = config.stylix.fonts.monospace;
     };
