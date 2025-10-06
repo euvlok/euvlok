@@ -195,6 +195,11 @@
         };
 
       flake = {
+        nixosModules = import ./modules/nixos;
+        darwinModules = import ./modules/darwin;
+        homeModules = import ./modules/hm;
+        crossModules = import ./modules/cross;
+
         nixosConfigurations = import ./hosts/linux { inherit inputs; };
         darwinConfigurations = import ./hosts/darwin { inherit inputs; };
       };
