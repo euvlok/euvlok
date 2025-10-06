@@ -22,11 +22,6 @@
         { home.stateVersion = "25.05"; }
       ]
       ++ [
-        ../../../hm/flameflag/nushell.nix
-        ../../../hm/flameflag/starship.nix
-        ../../../hm/bigshaq9999/git.nix
-      ]
-      ++ [
         inputs.catppuccin-trivial.homeModules.catppuccin
         {
           catppuccin = {
@@ -86,7 +81,10 @@
         }
       ]
       ++ [
-        ../../../../modules/hm
+        inputs.self.homeModules
+        inputs.self.homeProfiles.bigshaq9999
+        ../../../hm/flameflag/nushell.nix
+        ../../../hm/flameflag/starship.nix
         {
           hm = {
             fastfetch.enable = true;

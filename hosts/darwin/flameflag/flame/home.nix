@@ -1,10 +1,9 @@
 {
   inputs,
   pkgs,
-  lib,
+  pkgsUnstable,
   eulib,
   config,
-  pkgsUnstable,
   ...
 }:
 {
@@ -17,7 +16,7 @@
   };
 
   home-manager.users.${config.system.primaryUser} =
-    { config, ... }:
+    { config, osConfig, ... }:
     {
       imports = [
         { home.stateVersion = "25.05"; }
@@ -34,16 +33,9 @@
       ]
       ++ [
         {
-          home.file.".warp/themes".source =
-            (pkgs.callPackage ../../../../pkgs/warp-terminal-catppuccin.nix {
-              inherit (config.catppuccin) accent;
-            }).outPath
-            + "/share/warp/themes";
+          home.file."warp/themes".source = "${pkgs.warp-terminal-catppuccin.outPath}/share/warp/themes";
           home.file."Documents/catppuccin-userstyles.json".source =
-            (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
-              inherit (config.catppuccin) accent flavor;
-            }).outPath
-            + "/dist/import.json";
+            "${pkgs.catppuccin-userstyles.outPath}/dist/import.json";
         }
       ]
       ++ [
@@ -52,13 +44,13 @@
           catppuccin = {
             enable = true;
             flavor = "frappe";
-            accent = "teal";
+            accent = "blue";
           };
         }
       ]
       ++ [
-        ../../../hm/flameflag/aliases.nix
-        ../../../../modules/hm
+        inputs.self.homeModules
+        inputs.self.homeProfiles.flameflag
         {
           hm = {
             fastfetch.enable = true;
@@ -74,25 +66,6 @@
             zellij.enable = true;
           };
         }
-      ]
-      ++ (
-        let
-          hmExtraConfigModules = [
-            "ghostty"
-            "git"
-            "helix"
-            "jujutsu"
-            "nixcord"
-            "nushell"
-            "ssh"
-            "starship"
-            "vscode"
-            "yazi"
-            "zed"
-            "zellij"
-          ];
-        in
-        lib.flatten (map (n: [ ../../../hm/flameflag/${n}.nix ]) hmExtraConfigModules)
-      );
+      ];
     };
 }

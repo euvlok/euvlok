@@ -1,110 +1,84 @@
 {
   inputs,
-  lib,
-  config,
   eulib,
   pkgsUnstable,
   ...
 }:
-let
-  release = builtins.fromJSON (config.system.nixos.release);
-in
 {
-  imports = [ inputs.home-manager-lay-by.nixosModules.home-manager ];
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.hushh =
-      { osConfig, ... }:
-      {
-        imports = [
-          { home.stateVersion = "25.05"; }
-          inputs.catppuccin-trivial.homeModules.catppuccin
-          { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-
-          ./home-packages.nix
-
-          ../../../hm/lay-by/hyprland/dunst.nix
-          ../../../hm/lay-by/hyprland/hypridle.nix
-          ../../../hm/lay-by/hyprland/hyprland.nix
-          ../../../hm/lay-by/hyprland/hyprlock.nix
-          ../../../hm/lay-by/hyprland/waybar.nix
-          
-          {
-            programs.rofi.enable = true;
-            programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
-          }
-
-          inputs.stylix-trivial.homeModules.stylix
-          ../../../hm/lay-by/stylix.nix
-
-          {
-            home.sessionVariables = {
-              DEFAULT_BROWSER = "${inputs.zen-browser-trivial.packages.x86_64-linux.default}/bin/zen";
-            };
-          }
-
-          ../../../hm/lay-by/git.nix
-          ../../../hm/lay-by/systemd-slice.nix
-
-          ../../../../modules/hm
-          {
-            home.shell.enableShellIntegration = true;
-            hm = {
-              fastfetch.enable = true;
-              firefox.zen-browser.enable = true;
-              bash.enable = true;
-              fish.enable = true;
-              helix.enable = true;
-              hyprland.enable = true;
-              mpv.enable = true;
-              vscode.enable = true;
-            };
-          }
-
-          {
-            programs.mangohud = {
-              enable = true;
-              settings = {
-                fps_limit = 200;
-                no_display = true;
-              };
-            };
-            programs.alacritty = {
-              enable = true;
-            };
-            services.easyeffects.enable = true;
-            fonts.fontconfig.enable = true;
-            xsession.numlock.enable = true;
-          }
-
-          inputs.spicetify-nix-trivial.homeManagerModules.default
-          {
-            programs.spicetify.enable = true;
-            programs.spicetify.enabledExtensions = builtins.attrValues {
-              inherit (inputs.spicetify-nix-trivial.legacyPackages.x86_64-linux.extensions)
-                # NO❗❗❗ 🙀 😾 HOW WILL SPOTIFY MAKE MONEY FROM THEIR
-                # AI-GENERATED SONGS AND KEEP ALL THE PROFITS FOR THEMSELVES?!
-                # *(Allegedly)*
-                adblock
-                beautifulLyrics # Apple Music like Lyrics
-                copyLyrics
-                fullAlbumDate
-                popupLyrics # Popup window with the current song's lyrics scrolling across it
-                shuffle # Shuffle properly, using Fisher-Yates with zero bias
-                ;
-            };
-          }
-        ];
-      };
-    extraSpecialArgs = {
-      inherit
-        inputs
-        release
-        eulib
-        pkgsUnstable
-        ;
-    };
+    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
+
+  home-manager.users.hushh =
+    { osConfig, ... }:
+    {
+      imports = [
+        {
+          home.stateVersion = "25.05";
+          home.sessionVariables = {
+            DEFAULT_BROWSER = "${inputs.zen-browser-trivial.packages.x86_64-linux.default}/bin/zen";
+          };
+        }
+      ]
+      ++ [
+        inputs.stylix-trivial.homeModules.stylix
+        ../../../hm/lay-by/stylix.nix
+      ]
+      ++ [
+        {
+          programs.mangohud.enable = true;
+          programs.mangohud.settings = {
+            fps_limit = 200;
+            no_display = true;
+          };
+          programs.alacritty.enable = true;
+          programs.rofi.enable = true;
+          programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
+          services.easyeffects.enable = true;
+          fonts.fontconfig.enable = true;
+          xsession.numlock.enable = true;
+        }
+      ]
+      ++ [
+        ./home-packages.nix
+        inputs.self.homeModules
+        inputs.self.homeProfiles.lay-by
+        {
+          home.shell.enableShellIntegration = true;
+          hm = {
+            fastfetch.enable = true;
+            firefox.zen-browser.enable = true;
+            bash.enable = true;
+            fish.enable = true;
+            helix.enable = true;
+            hyprland.enable = true;
+            mpv.enable = true;
+            vscode.enable = true;
+          };
+        }
+      ]
+      ++ [
+        inputs.spicetify-nix-trivial.homeManagerModules.default
+        {
+          programs.spicetify.enable = true;
+          programs.spicetify.enabledExtensions = builtins.attrValues {
+            inherit
+              (inputs.spicetify-nix-trivial.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.extensions)
+              adblock
+              beautifulLyrics # Apple Music like Lyrics
+              copyLyrics
+              fullAlbumDate
+              popupLyrics # Popup window with the current song's lyrics scrolling across it
+              shuffle # Shuffle properly, using Fisher-Yates with zero bias
+              ;
+          };
+        }
+      ]
+      ++ [
+        inputs.catppuccin-trivial.homeModules.catppuccin
+        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
+      ];
+    };
 }

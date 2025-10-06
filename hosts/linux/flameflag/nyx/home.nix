@@ -38,7 +38,7 @@
           ]
           ++ [
             ../../../hm/flameflag/aliases.nix
-            ../../../../modules/hm
+            inputs.self.homeModules
             {
               hm = {
                 chromium.browser = "brave";

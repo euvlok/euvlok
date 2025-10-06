@@ -7,7 +7,7 @@
   ...
 }:
 {
-  options.nixos.nvidia.enable = lib.mkEnableOption "Enable NVIDIA drivers & Env Variables";
+  options.nixos.nvidia.enable = lib.mkEnableOption "NVIDIA drivers & Env Variables";
   options.nixos.amd.enable = lib.mkEnableOption "AMD drivers";
 
   config = lib.mkMerge [
@@ -39,6 +39,8 @@
       };
     })
     (lib.mkIf config.nixos.nvidia.enable {
+      nixpkgs.config.cudaSupport = true;
+
       services.xserver.videoDrivers = [ "nvidia" ];
 
       boot.extraModprobeConfig =
@@ -126,8 +128,10 @@
           commandLineArgs = lib.concatStringsSep " " config.programs.chromium.commandLineArgs;
           browsers = [
             "brave"
+            "chromium"
             "google-chrome"
             "microsoft-edge"
+            "ungoogled-chromium"
             "vivaldi"
           ];
         in
@@ -137,9 +141,7 @@
         ++ [ inputs.nvidia-patch-trivial.overlays.default ];
     })
     ((lib.mkIf (config.nixos.amd.enable && config.nixpkgs.hostPlatform.isx86_64)) {
-      hardware.graphics.extraPackages32 = builtins.attrValues {
-        inherit (pkgs.driversi686Linux) amdvlk;
-      };
+      hardware.graphics.extraPackages32 = builtins.attrValues { inherit (pkgs.driversi686Linux) amdvlk; };
     })
     (lib.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {
@@ -163,9 +165,7 @@
               };
             };
           in
-          [
-            "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
-          ];
+          [ "L+    /opt/rocm   -    -    -     -    ${rocmEnv}" ];
       };
     })
   ];

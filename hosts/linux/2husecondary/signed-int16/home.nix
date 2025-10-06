@@ -20,7 +20,6 @@
     {
       imports = [
         { home.stateVersion = "25.05"; }
-
         {
           home.packages = builtins.attrValues {
             inherit (pkgs)
@@ -59,6 +58,10 @@
               ;
             inherit (pkgsUnstable) tdesktop;
           };
+        }
+      ]
+      ++ [
+        {
           programs = {
             gpg = {
               enable = true;
@@ -86,13 +89,8 @@
         }
       ]
       ++ [
-        ../../../hm/2husecondary/firefox.nix
-        ../../../hm/2husecondary/flatpak.nix
-        ../../../hm/2husecondary/git.nix
-        ../../../hm/ashuramaruzxc/nixcord.nix
-        ../../../hm/ashuramaruzxc/vscode.nix
-        ../../../hm/ashuramaruzxc/starship.nix
-        ../../../../modules/hm
+        inputs.self.homeModules
+        inputs.self.homeProfiles._2husecondary
         {
           hm = {
             chromium.enable = true;

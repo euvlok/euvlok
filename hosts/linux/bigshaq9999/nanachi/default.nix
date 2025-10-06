@@ -3,6 +3,7 @@
   nanachi = inputs.nixpkgs-bigshaq9999.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      inputs.self.nixosModules
       ./configuration.nix
       ./home.nix
     ]
@@ -17,8 +18,7 @@
       }
     ]
     ++ [
-      ../../../../modules/nixos
-      ../../../../modules/cross
+      inputs.self.crossModules
       {
         nixos.gnome.enable = true;
         cross = {

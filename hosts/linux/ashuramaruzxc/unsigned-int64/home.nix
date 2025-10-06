@@ -8,10 +8,6 @@
 let
   commonUsers = [
     { home.stateVersion = "25.05"; }
-    ../../../hm/ashuramaruzxc/helix.nix
-    ../../../hm/ashuramaruzxc/aliases.nix
-    ../../../hm/ashuramaruzxc/starship.nix
-    ../../../hm/ashuramaruzxc/vscode.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
     inputs.sops-nix-trivial.homeManagerModules.sops
@@ -21,7 +17,11 @@ let
         defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
       };
     }
-    ../../../../modules/hm
+  ];
+
+  commonHmConfig = [
+    inputs.self.homeModules
+    inputs.self.homeProfiles.ashuramaruzxc
     {
       hm = {
         fastfetch.enable = true;
@@ -44,7 +44,8 @@ let
         { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
       ]
       ++ extraImports
-      ++ commonUsers;
+      ++ commonUsers
+      ++ commonHmConfig;
     };
 
   userConfigs = {

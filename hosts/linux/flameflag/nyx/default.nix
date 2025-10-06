@@ -3,6 +3,7 @@
   nyx = inputs.nixpkgs-flameflag.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      inputs.self.nixosModules
       ./configuration.nix
       ./home.nix
     ]
@@ -17,20 +18,12 @@
       }
     ]
     ++ [
-      ../../../../modules/nixos
-      ../../../../modules/cross
+      inputs.self.crossModules
       {
         nixos = {
           amd.enable = true;
           nvidia.enable = true;
           gnome.enable = true;
-        };
-        cross = {
-          nix.enable = true;
-          nixpkgs = {
-            enable = true;
-            cudaSupport = true;
-          };
         };
       }
     ];

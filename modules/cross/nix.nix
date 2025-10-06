@@ -15,12 +15,11 @@ in
 {
   imports = [ inputs.lix-module-source.nixosModules.default ];
 
-  options.cross.nix.enable = lib.mkEnableOption "Nix";
-  options.nixos.lix.enable = lib.mkEnableOption "Lix" // {
+  options.cross.lix.enable = lib.mkEnableOption "Lix" // {
     default = true;
   };
 
-  config = lib.mkIf config.cross.nix.enable (
+  config = (
     lib.mkMerge [
       (lib.mkIf isLinux {
         # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
@@ -75,7 +74,7 @@ in
           );
         };
       }
-      (lib.mkIf config.nixos.lix.enable {
+      (lib.mkIf config.cross.lix.enable {
         nixpkgs.overlays = [
           (final: prev: {
             inherit (prev.lixPackageSets.latest)

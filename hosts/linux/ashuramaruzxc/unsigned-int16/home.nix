@@ -8,11 +8,7 @@
 let
   commonImports = [
     { home.stateVersion = "25.05"; }
-    ../../../../modules/hm
     ../../../../pkgs/catppuccin-gtk.nix
-    ../../../hm/ashuramaruzxc/helix.nix
-    ../../../hm/ashuramaruzxc/aliases.nix
-    ../../../hm/ashuramaruzxc/starship.nix
     ../shared/aliases.nix
     ./packages.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
@@ -22,6 +18,7 @@ let
     {
       catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; };
     };
+
   rootHmConfig = {
     hm = {
       bash.enable = true;
@@ -34,41 +31,35 @@ let
     };
   };
 
-  ashuramaruHmConfig = {
-    hm = {
-      chromium.enable = true;
-      fastfetch.enable = true;
-      firefox = {
-        enable = true;
-        floorp.enable = true;
-        zen-browser.enable = true;
-        defaultSearchEngine = "kagi";
-      };
-      ghostty.enable = true;
-      helix.enable = true;
-      mpv.enable = true;
-      nh.enable = true;
-      nushell.enable = true;
-      # yazi.enable = true;
-      zellij.enable = true;
-      zsh.enable = true;
-    };
-  };
-
-  ashuramaruImports = [
-    ../../../hm/ashuramaruzxc/chrome.nix
-    ../../../hm/ashuramaruzxc/dconf.nix
-    ../../../hm/ashuramaruzxc/firefox.nix
-    ../../../hm/ashuramaruzxc/flatpak.nix
-    ../../../hm/ashuramaruzxc/git.nix
-    ../../../hm/ashuramaruzxc/nixcord.nix
-    ../../../hm/ashuramaruzxc/nushell.nix
-    ../../../hm/ashuramaruzxc/ssh.nix
+  ashuramaruHmConfig = [
     ../../../linux/shared/protonmail-bridge.nix
+    inputs.self.homeModules
+    inputs.self.homeProfiles.ashuramaruzxc
+    {
+      hm = {
+        chromium.enable = true;
+        fastfetch.enable = true;
+        firefox = {
+          enable = true;
+          floorp.enable = true;
+          zen-browser.enable = true;
+          defaultSearchEngine = "kagi";
+        };
+        ghostty.enable = true;
+        helix.enable = true;
+        mpv.enable = true;
+        nh.enable = true;
+        nushell.enable = true;
+        # yazi.enable = true;
+        zellij.enable = true;
+        zsh.enable = true;
+      };
+    }
   ];
 in
 {
   imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -93,9 +84,8 @@ in
       #   };
       # }
     ]
-    ++ ashuramaruImports
+    ++ ashuramaruHmConfig
     ++ [
-      ashuramaruHmConfig
       { services.protonmail-bridge.enable = true; }
       (
         {

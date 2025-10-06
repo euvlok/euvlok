@@ -3,6 +3,7 @@
   signed-int16 = inputs.nixpkgs-2husecondary.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
+      inputs.self.nixosModules
       ./configuration.nix
       ./home.nix
       inputs.anime-game-launcher-source.nixosModules.default
@@ -28,21 +29,13 @@
       }
     ]
     ++ [
-      ../../../../modules/nixos
-      ../../../../modules/cross
+      inputs.self.crossModules
       {
         nixos = {
           nvidia.enable = true;
           plasma.enable = true;
           steam.enable = true;
           zram.enable = true;
-        };
-        cross = {
-          nix.enable = true;
-          nixpkgs = {
-            enable = true;
-            cudaSupport = true;
-          };
         };
       }
     ];

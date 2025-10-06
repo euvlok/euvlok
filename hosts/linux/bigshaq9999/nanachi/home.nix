@@ -33,7 +33,7 @@
         ../../../hm/flameflag/yazi.nix
       ]
       ++ [
-        ../../../../modules/hm
+        inputs.self.homeModules
         ../../../../modules/hm/wm/niri
         {
           hm = {

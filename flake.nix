@@ -199,6 +199,14 @@
         darwinModules = import ./modules/darwin;
         homeModules = import ./modules/hm;
         crossModules = import ./modules/cross;
+        homeProfiles = {
+          _2husecondary = import ./hosts/hm/2husecondary;
+          ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
+          bigshaq9999 = import ./hosts/hm/bigshaq9999;
+          flameflag = import ./hosts/hm/flameflag;
+          lay-by = import ./hosts/hm/lay-by;
+          sm-idk = import ./hosts/hm/sm-idk;
+        };
 
         nixosConfigurations = import ./hosts/linux { inherit inputs; };
         darwinConfigurations = import ./hosts/darwin { inherit inputs; };

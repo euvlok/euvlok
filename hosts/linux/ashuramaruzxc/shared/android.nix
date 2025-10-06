@@ -9,7 +9,7 @@ let
 in
 {
   options.programs.android-development = {
-    enable = lib.mkEnableOption "Enable adb";
+    enable = lib.mkEnableOption "adb";
     users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];

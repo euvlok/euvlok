@@ -9,7 +9,6 @@ let
 
   commonImports = [
     { home.stateVersion = "25.05"; }
-    ../../../../modules/hm
     ../../../../pkgs/catppuccin-gtk.nix
     ../../../hm/ashuramaruzxc/helix.nix
     ../../../hm/ashuramaruzxc/aliases.nix
@@ -36,64 +35,53 @@ let
     };
   };
 
-  ashuramaruHmConfig = {
-    hm = {
-      chromium.enable = true;
-      fastfetch.enable = true;
-      firefox = {
-        enable = true;
-        floorp.enable = true;
-        zen-browser.enable = true;
-        defaultSearchEngine = "kagi";
-      };
-      ghostty.enable = true;
-      helix.enable = true;
-      mpv.enable = true;
-      nh.enable = true;
-      nixcord.enable = true;
-      nushell.enable = true;
-      vscode.enable = true;
-      yazi.enable = true;
-      zed-editor.enable = true;
-      zellij.enable = true;
-      zsh.enable = true;
-      languages = {
-        cpp.enable = true;
-        # csharp.enable = true;
-        # csharp.version = "8";
-        go.enable = true;
-        haskell.enable = true;
-        java.enable = true;
-        java.version = "17";
-        javascript.enable = true;
-        kotlin.enable = true;
-        lisp.enable = true;
-        lua.enable = true;
-        python.enable = true;
-        ruby.enable = true;
-        rust.enable = true;
-        scala.enable = true;
-      };
-    };
-  };
-
-  ashuramaruImports = [
-    ../../../hm/ashuramaruzxc/chrome.nix
-    ../../../hm/ashuramaruzxc/dconf.nix
-    ../../../hm/ashuramaruzxc/firefox.nix
-    ../../../hm/ashuramaruzxc/flatpak.nix
-    ../../../hm/ashuramaruzxc/git.nix
-    ../../../hm/ashuramaruzxc/graphics.nix
-    ../../../hm/ashuramaruzxc/nixcord.nix
-    ../../../hm/ashuramaruzxc/nushell.nix
-    ../../../hm/ashuramaruzxc/ssh.nix
-    ../../../hm/ashuramaruzxc/vscode.nix
+  ashuramaruHmConfig = [
+    inputs.self.homeModules
+    inputs.self.homeProfiles.ashuramaruzxc
     ../../../linux/shared/protonmail-bridge.nix
+    {
+      hm = {
+        chromium.enable = true;
+        fastfetch.enable = true;
+        firefox = {
+          enable = true;
+          floorp.enable = true;
+          zen-browser.enable = true;
+          defaultSearchEngine = "kagi";
+        };
+        ghostty.enable = true;
+        helix.enable = true;
+        mpv.enable = true;
+        nh.enable = true;
+        nixcord.enable = true;
+        nushell.enable = true;
+        vscode.enable = true;
+        yazi.enable = true;
+        zed-editor.enable = true;
+        zellij.enable = true;
+        zsh.enable = true;
+        languages = {
+          cpp.enable = true;
+          # csharp.enable = true;
+          # csharp.version = "8";
+          go.enable = true;
+          haskell.enable = true;
+          java.enable = true;
+          java.version = "17";
+          javascript.enable = true;
+          kotlin.enable = true;
+          lisp.enable = true;
+          lua.enable = true;
+          python.enable = true;
+          ruby.enable = true;
+          rust.enable = true;
+          scala.enable = true;
+        };
+      };
+    }
   ];
 
-  importantPackages = builtins.attrValues {
-    inherit (pkgs) keepassxc bitwarden thunderbird;
-  };
+  importantPackages = builtins.attrValues { inherit (pkgs) keepassxc bitwarden thunderbird; };
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)
@@ -104,10 +92,7 @@ let
       vlc
       youtube-music
       ;
-    inherit (pkgs.kdePackages)
-      k3b
-      kamera
-      ;
+    inherit (pkgs.kdePackages) k3bkamera;
   };
 
   productivityPackages = builtins.attrValues {
@@ -147,14 +132,7 @@ let
       ;
   };
 
-  audioPackages = builtins.attrValues {
-    inherit (pkgs)
-      feather
-      helvum
-      pavucontrol
-      qpwgraph
-      ;
-  };
+  audioPackages = builtins.attrValues { inherit (pkgs) featherhelvumpavucontrolqpwgraph; };
 
   gamingPackages = builtins.attrValues {
     inherit (pkgsUnstable) osu-lazer-bin;
@@ -279,9 +257,8 @@ in
         };
       }
     ]
-    ++ ashuramaruImports
+    ++ ashuramaruHmConfig
     ++ [
-      ashuramaruHmConfig
       { services.protonmail-bridge.enable = true; }
       { home.packages = allPackages; }
       (

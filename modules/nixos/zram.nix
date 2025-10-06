@@ -1,6 +1,6 @@
 { lib, config, ... }:
 {
-  options.nixos.zram.enable = lib.mkEnableOption "Enable zram swap";
+  options.nixos.zram.enable = lib.mkEnableOption "ZRAM Swap";
 
   config = lib.mkIf config.nixos.zram.enable {
     zramSwap.enable = true;
