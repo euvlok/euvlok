@@ -1,39 +1,44 @@
 {
-  pkgs,
+  pkgsUnstable,
   lib,
   config,
-  pkgsUnstable,
   ...
 }:
 let
   commonPkgs = (
     builtins.attrValues {
       # Nix Related
-      inherit (pkgs) nixfmt-rfc-style nil;
+      inherit (pkgsUnstable) nixfmt-rfc-style nil nixd;
 
       uutils-coreutils-noprefix = (lib.hiPrio pkgsUnstable.uutils-coreutils-noprefix);
       uutils-diffutils = (lib.hiPrio pkgsUnstable.uutils-diffutils);
       uutils-findutils = (lib.hiPrio pkgsUnstable.uutils-findutils);
 
-      # Core Utilities (Shell essentials, replacements, process management)
-      inherit (pkgs)
-        bc
+      # GNU
+      inherit (pkgsUnstable)
         gawk
         gnugrep
         gnused
         gnutar
+        ;
+
+      # Core Utilities
+      inherit (pkgsUnstable)
+        bc
         moreutils # Collection of handy Unix tools (parallel, sponge, ts, ...)
         patch
         procps # Utilities for monitoring system processes (ps, top, kill...)
         tldr # Simplified man pages
+        tree
         util-linux # Essential Linux utilities (dmesg, fdisk, mount...)
         which
         ;
 
-      # Modern UNIX CLI Replacements
-      inherit (pkgs)
+      # Modern UNIX
+      inherit (pkgsUnstable)
         bat # cat
         bottom # htop & btop
+        btop # top
         broot # tree
         delta # difff
         duf # df
@@ -46,55 +51,33 @@ let
         xh # curl
         ;
 
-      # File Management & Archiving
-      inherit (pkgs)
-        unrar
-        unzip
-        zip
-        ;
-      inherit (pkgs)
+      # Compression
+      inherit (pkgsUnstable) unrar unzip zip;
+      inherit (pkgsUnstable)
         lz4
         ncdu
         p7zip
         pandoc
         rsync
-        tree
         xz
         ;
 
-      # Text Processing & Viewing
-      inherit (pkgs)
+      inherit (pkgsUnstable)
         hexyl # CLI hex viewer
         jq # CLI JSON processor
         less
         ;
 
       # Networking
-      inherit (pkgs)
+      inherit (pkgsUnstable)
         curl
         dnsutils # `dig`, `nslookup`, etc.
-        netcat-gnu # GNU netcat
-        nmap
         openssh_hpn # SSH client/server (High Performance Networking patches)
         wget
         ;
 
-      # System Information & Monitoring
-      inherit (pkgs)
-        file
-        lsof # List open files
-        pciutils # lspci
-        smartmontools # S.M.A.R.T. disk health monitoring tools
-        ;
-
-      # Modern System Info/Monitoring Replacements
-      inherit (pkgs)
-        btop # TUI resource monitor (C++)
-        ;
-
-      # Media
-      inherit (pkgs)
-        ffmpeg-full
+      inherit (pkgsUnstable)
+        ffmpeg_8-full
         imagemagick
         mediainfo
         yt-dlp
@@ -102,13 +85,13 @@ let
         ;
 
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
-      inherit (pkgs) hyperfine tokei;
+      inherit (pkgsUnstable) hyperfine tokei;
     }
   );
   linuxOnlyPkgs = (
     builtins.attrValues {
       # Networking
-      inherit (pkgs)
+      inherit (pkgsUnstable)
         iftop # TUI display of bandwidth usage on an interface
         iputils
         mtr # Network diagnostic tool (traceroute + ping)
@@ -117,34 +100,33 @@ let
         ;
 
       # System / Hardware
-      inherit (pkgs)
+      inherit (pkgsUnstable)
         hdparm
         lm_sensors # Tools for monitoring hardware sensors
         psmisc
         ;
 
-      # Clipboard Tools
-      inherit (pkgs)
+      inherit (pkgsUnstable)
         xclip # X11 clipboard CLI utility
         wl-clipboard-rs # Wayland clipboard utilities (wl-copy/wl-paste)
         clipcat # Clipboard manager (X11/Wayland)
         ;
 
       # Misc
-      inherit (pkgs) sysstat;
+      inherit (pkgsUnstable) sysstat;
     }
     # Pacakges only meant for Desktops
     ++ lib.optionals (config.nixos.amd.enable or config.nixos.nvidia.enable) (
       builtins.attrValues {
-        inherit (pkgs)
+        inherit (pkgsUnstable)
           networkmanagerapplet
           pavucontrol # PulseAudio Volume Control GUI
           playerctl # Control media players via MPRIS (CLI)
           ;
 
-        inherit (pkgs.kdePackages) ffmpegthumbs;
-        inherit (pkgs) nufraw-thumbnailer;
-        inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
+        inherit (pkgsUnstable.kdePackages) ffmpegthumbs;
+        inherit (pkgsUnstable) nufraw-thumbnailer;
+        inherit (pkgsUnstable.kdePackages) breeze breeze-gtk breeze-icons;
       }
     )
   );
