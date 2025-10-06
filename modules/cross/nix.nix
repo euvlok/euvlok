@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgs,
   lib,
   config,
   ...
@@ -13,7 +12,10 @@ let
   );
 in
 {
-  imports = [ inputs.lix-module-source.nixosModules.default ];
+  imports = [
+    inputs.lix-module-source.nixosModules.default
+    inputs.lix-module-source.nixosModules.lixFromNixpkgs
+  ];
 
   options.cross.lix.enable = lib.mkEnableOption "Lix" // {
     default = true;
@@ -74,20 +76,6 @@ in
           );
         };
       }
-      (lib.mkIf config.cross.lix.enable {
-        nixpkgs.overlays = [
-          (final: prev: {
-            inherit (prev.lixPackageSets.latest)
-              nixpkgs-review
-              # nix-direnv
-              nix-eval-jobs
-              nix-fast-build
-              colmena
-              ;
-          })
-        ];
-        nix.package = pkgs.lixPackageSets.latest.lix;
-      })
     ]
   );
 }
