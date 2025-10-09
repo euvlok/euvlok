@@ -89,7 +89,7 @@
         }
       ]
       ++ [
-        inputs.self.homeModules
+        inputs.self.homeModules.default
         inputs.self.homeProfiles._2husecondary
         {
           hm = {

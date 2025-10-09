@@ -3,7 +3,7 @@
   unsigned-int64 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      inputs.self.nixosModules
+      inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
       inputs.nix-vscode-server-trivial.nixosModules.default
@@ -29,7 +29,7 @@
       }
     ]
     ++ [
-      inputs.self.crossModules
+      inputs.self.crossModules.default
       {
         nixos = {
           gnome.enable = true;

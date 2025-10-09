@@ -12,14 +12,7 @@ let
   );
 in
 {
-  imports = [
-    inputs.lix-module-source.nixosModules.default
-    inputs.lix-module-source.nixosModules.lixFromNixpkgs
-  ];
-
-  options.cross.lix.enable = lib.mkEnableOption "Lix" // {
-    default = true;
-  };
+  imports = [ inputs.lix-module-source.nixosModules.lixFromNixpkgs ];
 
   config = (
     lib.mkMerge [

@@ -81,7 +81,7 @@
         }
       ]
       ++ [
-        inputs.self.homeModules
+        inputs.self.homeModules.default
         inputs.self.homeProfiles.bigshaq9999
         ../../../hm/flameflag/nushell.nix
         ../../../hm/flameflag/starship.nix

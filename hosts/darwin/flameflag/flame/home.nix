@@ -49,7 +49,7 @@
         }
       ]
       ++ [
-        inputs.self.homeModules
+        inputs.self.homeModules.default
         inputs.self.homeProfiles.flameflag
         {
           hm = {

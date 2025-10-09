@@ -3,7 +3,7 @@
   unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      inputs.self.nixosModules
+      inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
     ]
@@ -47,7 +47,7 @@
       }
     ]
     ++ [
-      inputs.self.crossModules
+      inputs.self.crossModules.default
       {
         nixos = {
           plasma.enable = true;

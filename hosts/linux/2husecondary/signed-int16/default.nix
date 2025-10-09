@@ -3,7 +3,7 @@
   signed-int16 = inputs.nixpkgs-2husecondary.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      inputs.self.nixosModules
+      inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
       inputs.anime-game-launcher-source.nixosModules.default
@@ -29,7 +29,7 @@
       }
     ]
     ++ [
-      inputs.self.crossModules
+      inputs.self.crossModules.default
       {
         nixos = {
           nvidia.enable = true;

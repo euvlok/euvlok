@@ -43,7 +43,7 @@
       ]
       ++ [
         ./home-packages.nix
-        inputs.self.homeModules
+        inputs.self.homeModules.default
         inputs.self.homeProfiles.lay-by
         {
           home.shell.enableShellIntegration = true;

@@ -195,10 +195,19 @@
         };
 
       flake = {
-        nixosModules = import ./modules/nixos;
-        darwinModules = import ./modules/darwin;
-        homeModules = import ./modules/hm;
-        crossModules = import ./modules/cross;
+        nixosModules = {
+          default = import ./modules/nixos;
+        };
+        darwinModules = {
+          default = ./modules/darwin;
+        };
+        homeModules = {
+          default = ./modules/hm;
+        };
+        crossModules = {
+          default = ./modules/cross;
+        };
+
         homeProfiles = {
           _2husecondary = import ./hosts/hm/2husecondary;
           ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;

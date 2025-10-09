@@ -3,8 +3,8 @@
   faputa = inputs.nix-darwin-bigshaq9999.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
-      inputs.self.darwinModules
-      inputs.self.crossModules
+      inputs.self.darwinModules.default
+      inputs.self.crossModules.default
       ./configuration.nix
       ./home.nix
       ./system.nix

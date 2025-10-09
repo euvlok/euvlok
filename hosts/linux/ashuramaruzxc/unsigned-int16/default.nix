@@ -7,7 +7,7 @@ in
   unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs nixos-raspberrypi; };
     modules = [
-      inputs.self.nixosModules
+      inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
       inputs.disko-rpi.nixosModules.disko
@@ -50,7 +50,7 @@ in
       }
     ]
     ++ [
-      inputs.self.crossModules
+      inputs.self.crossModules.default
       {
         nixos = {
           plasma.enable = true;

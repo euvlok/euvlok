@@ -36,7 +36,7 @@ let
   };
 
   ashuramaruHmConfig = [
-    inputs.self.homeModules
+    inputs.self.homeModules.default
     inputs.self.homeProfiles.ashuramaruzxc
     ../../../linux/shared/protonmail-bridge.nix
     {
