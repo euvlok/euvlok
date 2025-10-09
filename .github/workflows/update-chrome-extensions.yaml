@@ -1,0 +1,75 @@
+name: Update Chromium Extensions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */12 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update-extensions:
+    name: Update and Commit Chromium Extensions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Run extensions update script
+        id: update_script
+        run: |
+          set -euo pipefail
+
+          UPDATE_SCRIPT="./modules/hm/gui/chromium/update.sh"
+          EXTENSIONS_FILE="./modules/hm/gui/chromium/extensions.nix"
+
+          chmod +x "$UPDATE_SCRIPT"
+
+          echo "Running the update script..."
+          "$UPDATE_SCRIPT"
+
+          if git diff --quiet "$EXTENSIONS_FILE"; then
+            echo "No changes detected in ${EXTENSIONS_FILE}."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in ${EXTENSIONS_FILE}."
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            
+            CHANGES_SUMMARY=$(git diff --shortstat "$EXTENSIONS_FILE" || true)
+            
+            echo "changes_summary<<EOF" >> $GITHUB_OUTPUT
+            echo "The following changes were detected:" >> $GITHUB_OUTPUT
+            echo "$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.update_script.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add ./modules/hm/gui/chromium/extensions.nix
+
+          COMMIT_TITLE="chore(chromium): update extensions"
+          COMMIT_BODY="${{ steps.update_script.outputs.changes_summary }}"
+          git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
+
+          for i in {1..5}; do
+            if git push origin HEAD:${{ github.ref_name }}; then
+              echo "Successfully pushed changes on attempt $i."
+              break
+            elif [[ $i -lt 5 ]]; then
+              echo "Push failed on attempt $i, attempting rebase and retry..."
+              git pull --rebase origin ${{ github.ref_name }}
+            else
+              echo "Failed to push after 5 attempts."
+              exit 1
+            fi
+          done

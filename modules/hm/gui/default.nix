@@ -1,6 +1,6 @@
 _: {
   imports = [
-    ./chromium.nix
+    ./chromium
     ./firefox.nix
     ./mpv.nix
     ./nixcord.nix
