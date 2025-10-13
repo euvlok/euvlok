@@ -85,6 +85,8 @@ let
         ;
       inherit (pkgs) yt-dlp-script;
 
+      inherit (pkgs) yt-dlp-script;
+
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
       inherit (pkgsUnstable) hyperfine tokei;
     }
