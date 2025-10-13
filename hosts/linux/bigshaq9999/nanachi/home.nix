@@ -38,7 +38,7 @@
         {
           hm = {
             chromium.browser = "brave";
-            chromium.ungoogled-chromium.enable = true;
+            chromium.enable = true;
             fastfetch.enable = true;
             firefox.enable = true;
             firefox.floorp.enable = true;

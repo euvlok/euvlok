@@ -31,7 +31,7 @@
         {
           hm = {
             git.enable = true;
-            chromium.ungoogled-chromium.enable = true;
+            chromium.enable = true;
             zed-editor.enable = true;
             ghostty.enable = true;
             bash.enable = true;

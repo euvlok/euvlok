@@ -41,7 +41,7 @@ let
     ../../../linux/shared/protonmail-bridge.nix
     {
       hm = {
-        chromium.chromium.enable = true;
+        chromium.enable = true;
         fastfetch.enable = true;
         firefox = {
           enable = true;

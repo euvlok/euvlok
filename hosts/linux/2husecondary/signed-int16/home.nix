@@ -93,7 +93,7 @@
         inputs.self.homeProfiles._2husecondary
         {
           hm = {
-            chromium.ungoogled-chromium.enable = true;
+            chromium.enable = true;
             fastfetch.enable = true;
             firefox.enable = true;
             ghostty.enable = true;

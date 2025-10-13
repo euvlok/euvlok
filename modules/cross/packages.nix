@@ -1,5 +1,4 @@
 {
-  pkgs,
   pkgsUnstable,
   lib,
   config,
@@ -82,8 +81,8 @@ let
         imagemagick
         mediainfo
         yt-dlp
+        yt-dlp-script
         ;
-      inherit (pkgs) yt-dlp-script;
 
       inherit (pkgs) yt-dlp-script;
 
