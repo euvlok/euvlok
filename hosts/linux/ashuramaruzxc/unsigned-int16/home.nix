@@ -37,7 +37,7 @@ let
     inputs.self.homeProfiles.ashuramaruzxc
     {
       hm = {
-        chromium.enable = true;
+        chromium.chromium.enable = true;
         fastfetch.enable = true;
         firefox = {
           enable = true;

@@ -42,7 +42,7 @@
             {
               hm = {
                 chromium.browser = "brave";
-                chromium.enable = true;
+                chromium.ungoogled-chromium.enable = true;
                 fastfetch.enable = true;
                 firefox.enable = true;
                 firefox.zen-browser.enable = true;
