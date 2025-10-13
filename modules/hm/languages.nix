@@ -172,6 +172,9 @@ let
           pip.mypy
           pip.pylint
           pip.ruff
+          pip.jedi
+          pip.ty
+          pip.python-lsp-server
         ]);
       in
       {

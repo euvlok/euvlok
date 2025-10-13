@@ -149,6 +149,16 @@ let
       config.lineLength = 100;
       config.lint.extendSelect = [ "I" ];
     };
+    pylsp = {
+      command = "pylsp";
+    };
+    jedi = {
+      command = "jedi-language-server";
+    };
+    ty = {
+      command = "ty";
+      args = [ "server" ];
+    };
   }
   // lib.optionalAttrs config.hm.languages.ruby.enable {
     ruby-lsp = {
@@ -209,7 +219,12 @@ let
     {
       name = "python";
       auto-format = true;
-      language-servers = [ "ruff" ];
+      language-servers = [
+        "ruff"
+        "pylsp"
+        "ty"
+        "jedi"
+      ];
     }
   ]
   ++ lib.optionals config.hm.languages.javascript.enable [
