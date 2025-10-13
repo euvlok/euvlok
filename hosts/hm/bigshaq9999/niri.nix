@@ -2,9 +2,13 @@
   pkgs,
   lib,
   config,
+  # inputs,
   ...
 }:
 {
+  # imports = [
+  #   inputs.niri-flake-trivial.homeModules.niri
+  # ];
   home.pointerCursor = {
     enable = true;
     name = "phinger-cursors-light";

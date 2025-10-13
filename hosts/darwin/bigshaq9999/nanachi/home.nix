@@ -46,21 +46,6 @@
       ]
       ++ [
         ../../../hm/ashuramaruzxc/nixcord.nix
-        {
-          programs.nixcord.discord.vencord.unstable = lib.mkForce false;
-          programs.nixcord.discord.vencord.package = lib.mkForce (
-            (inputs.nixcord-trivial.packages.aarch64-darwin.vencord.override {
-              unstable = true;
-            }).overrideAttrs
-              (oldAttrs: {
-                pnpmDeps = pkgs.pnpm_10.fetchDeps {
-                  inherit (oldAttrs) pname src;
-                  hash = "sha256-XK3YCM7jzd7OvodC4lvHF/jDULNLFC0sMct97oBCEjc=";
-                  fetcherVersion = 9;
-                };
-              })
-          );
-        }
       ]
       ++ [
         ../../../hm/ashuramaruzxc/vscode.nix
@@ -112,7 +97,7 @@
               # csharp.enable = true;
               # csharp.version = "8";
               go.enable = true;
-              haskell.enable = true;
+              # haskell.enable = true;
               java.enable = true;
               java.version = "17";
               javascript.enable = true;
@@ -121,7 +106,7 @@
               lua.enable = true;
               python.enable = true;
               ruby.enable = true;
-              rust.enable = true;
+              # rust.enable = true;
               scala.enable = true;
             };
           };
