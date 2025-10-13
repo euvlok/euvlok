@@ -1,6 +1,6 @@
 { inputs, config, ... }:
 {
-  imports = [ inputs.flatpak-declerative-trivial.homeModule ];
+  imports = [ inputs.flatpak-declerative-trivial.homeModules.default ];
 
   services.flatpak = {
     enable = true;
@@ -20,41 +20,29 @@
       "flathub:runtime/org.freedesktop.Platform.VulkanLayer.OBSVkCapture/x86_64/24.08"
     ];
     overrides = {
-      "global" = {
-        filesystems = [
-          "xdg-config/flatpak-gtk:ro"
-          "xdg-data/icons:ro"
-          "xdg-data/themes:ro"
-          "xdg-config/gtk-3.0"
-          "xdg-config/gtk-4.0"
-          "xdg-download:rw"
-          "xdg-pictures:rw"
-          "xdg-run/app/com.discordapp.Discord:create"
-        ];
+      global = {
+        # filesystems = [
+        #   # "/Shared/games"
+        #   # "xdg-config/flatpak-gtk:ro"
+        #   # "xdg-config/gtk-3.0"
+        #   # "xdg-config/gtk-4.0"
+        #   # "xdg-config/MangoHud:ro"
+        #   # "xdg-data/games:rw"
+        #   # "xdg-data/icons:ro"
+        #   # "xdg-data/Steam:rw"
+        #   # "xdg-data/themes:ro"
+        #   # "xdg-download:rw"
+        #   # "xdg-pictures:rw"
+        #   # "xdg-run/app/com.discordapp.Discord:create"
+        #   # "xdg-run/discord-ipc-0"
+        # ];
         environment = {
           "GTK_CSD" = 0;
           "GTK_THEME" = config.gtk.theme.name or "catppuccin-mocha-flamingo-standard+rimless,normal";
-          "GTK2_RC_FILES" = "${config.home.homeDirectory}/.gtkrc-2.0";
-        };
-      };
-      "com.usebottles.bottles" = {
-        sockets = [ "pcsc" ];
-        filesystems = [
-          "xdg-data/Steam:rw"
-          "xdg-data/games:rw"
-          "xdg-config/MangoHud:ro"
-          "/Shared/games"
-        ];
-        environment = {
           "GTK_USE_PORTAL" = 0;
+          "GTK2_RC_FILES" = "${config.home.homeDirectory}/.gtkrc-2.0";
+          "XCURSOR_PATH" = "/run/host/user-share/icons:/run/host/share/icons";
         };
-      };
-      "sh.ppy.osu" = {
-        filesystems = [
-          "xdg-data/Steam:rw"
-          "xdg-data/games:rw"
-          "xdg-config/MangoHud:ro"
-        ];
       };
     };
   };

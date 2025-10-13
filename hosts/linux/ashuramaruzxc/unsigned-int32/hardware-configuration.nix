@@ -10,10 +10,8 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
     kernelModules = [
-      # dkms
       "kvm-amd"
       "zenpower"
-      "v4l2loopback" # scrcpy
       # lvm2
       "dm-cache"
       "dm-cache-smq"
@@ -24,8 +22,10 @@
       "dm-writecache"
       "dm-mirror"
       "dm-snapshot"
-      "hid_playstation" # for some reason dualsense acts as a mouse if it's not loaded early on
+      # misc
       "hid_apple"
+      "hid_playstation" # for some reason dualsense acts as a mouse if it's not loaded early on
+      "v4l2loopback" # scrcpy
     ];
     extraModulePackages = builtins.attrValues {
       inherit (config.boot.kernelPackages) zenpower v4l2loopback;

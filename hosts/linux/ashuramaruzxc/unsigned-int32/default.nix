@@ -35,7 +35,7 @@
       }
     ]
     ++ [
-      inputs.flatpak-declerative-trivial.nixosModule
+      inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
           enable = true;

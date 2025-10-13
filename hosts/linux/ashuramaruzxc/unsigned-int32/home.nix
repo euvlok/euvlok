@@ -81,7 +81,14 @@ let
     }
   ];
 
-  importantPackages = builtins.attrValues { inherit (pkgs) keepassxc bitwarden thunderbird; };
+  importantPackages = builtins.attrValues {
+    inherit (pkgs)
+      keepassxc
+      bitwarden
+      thunderbird
+      piper # mouse control
+      ;
+  };
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)

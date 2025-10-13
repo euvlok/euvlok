@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  imports = [ inputs.flatpak-declerative-trivial.homeModule ];
+  imports = [ inputs.flatpak-declerative-trivial.homeModules.default ];
 
   services.flatpak = {
     enable = true;

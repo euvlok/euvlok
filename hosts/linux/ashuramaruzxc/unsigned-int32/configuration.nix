@@ -46,12 +46,14 @@
       package = pkgsUnstable.opentabletdriver;
       daemon.enable = true;
     };
+    i2c.enable = true;
   };
 
   services = {
     hardware.openrgb = {
       enable = true;
       motherboard = "amd";
+      package = pkgsUnstable.openrgb-with-all-plugins;
     };
     hardware.bolt.enable = true;
     xserver = {
@@ -83,7 +85,14 @@
     };
     printing = {
       enable = true;
-      drivers = builtins.attrValues { inherit (pkgs) gutenprintBin; };
+      drivers = builtins.attrValues {
+        inherit (pkgs)
+          cups-browsed
+          cups-filters
+          gutenprint
+          gutenprintBin
+          ;
+      };
       browsing = true;
     };
     avahi = {
@@ -97,6 +106,7 @@
     };
     lvm.boot.thin.enable = true;
     pcscd.enable = true;
+    ratbagd.enable = true;
     xserver.wacom.enable = true;
   };
 
@@ -172,7 +182,12 @@
         fcitx5-gtk
         gpgme
         ;
-      inherit (pkgs.kdePackages) bluedevil;
+      inherit (pkgs.kdePackages)
+        bluedevil
+        ;
+      inherit (pkgsUnstable)
+        openrgb-with-all-plugins
+        ;
     };
   };
 
