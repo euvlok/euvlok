@@ -22,6 +22,12 @@
         { home.stateVersion = "25.05"; }
       ]
       ++ [
+        ../../../hm/flameflag/nushell.nix
+        ../../../hm/flameflag/starship.nix
+        ../../../hm/bigshaq9999/git.nix
+        ../../../hm/bigshaq9999/helix.nix
+      ]
+      ++ [
         inputs.catppuccin-trivial.homeModules.catppuccin
         {
           catppuccin = {
