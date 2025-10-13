@@ -1,7 +1,7 @@
 _: {
   imports = [
     ./aliases.nix
-    ./chromium
+    ./chrome.nix
     ./dconf.nix
     ./firefox.nix
     ./flatpak.nix
