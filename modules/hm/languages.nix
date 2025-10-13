@@ -89,18 +89,17 @@ let
       };
     };
     haskell = {
-      packages =
-        builtins.attrValues {
-          inherit (pkgsUnstable)
-            ghc
-            cabal-install
-            stack
-            haskell-language-server
-            hlint
-            ormolu
-            ;
-        }
-        ++ lib.optionals isDarwin builtins.attrValues { inherit (pkgsUnstable.haskellPackages) ghcup; };
+      packages = builtins.attrValues {
+        inherit (pkgsUnstable)
+          ghc
+          cabal-install
+          stack
+          haskell-language-server
+          hlint
+          ormolu
+          ;
+      };
+      # ++ lib.optionals isDarwin builtins.attrValues { inherit (pkgsUnstable.haskellPackages) ghcup; };
     };
     java = {
       packages = builtins.attrValues { inherit (pkgsUnstable) jdt-language-server gradle maven; };
@@ -184,8 +183,8 @@ let
         inherit (pkgsUnstable) ruby_3_4 solargraph rubocop;
         inherit (pkgsUnstable.rubyPackages)
           rails
-          rails-dom-testing
-          rails-html-sanitizer
+          # rails-dom-testing
+          # rails-html-sanitizer
           ruby-lsp
           ;
       };
