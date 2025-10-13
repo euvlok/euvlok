@@ -95,7 +95,7 @@
           hm = {
             fastfetch.enable = true;
             firefox.enable = true;
-            firefox.floorp.enable = true;
+            firefox.zen-browser.enable = true;
             ghostty.enable = true;
             helix.enable = true;
             mpv.enable = true;
