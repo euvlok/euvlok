@@ -20,13 +20,21 @@ let
     "ungoogled-chromium"
   ];
 
-  getProgramName = name: if lib.elem name chromiumProgramUsers then "chromium" else name;
+  getProgramName =
+    name:
+    if lib.elem name chromiumProgramUsers then
+      "chromium"
+    else if name == "brave" then
+      "brave"
+    else if name == "vivaldi" then
+      "vivaldi"
+    else
+      throw "Unknown browser name: ${name}";
 
-  commonConfig = {
+  commonArgs = {
     dictionaries = builtins.attrValues {
       inherit (pkgsUnstable.hunspellDictsChromium) en_US de_DE fr_FR;
     };
-    extensions = (pkgsUnstable.callPackage ./extensions.nix { inherit config; });
     commandLineArgs = [
       # Debug
       "--enable-logging=stderr"
@@ -43,12 +51,15 @@ let
       "--enable-features=TouchpadOverscrollHistoryNavigation"
     ];
   };
-
+  commonExtensions = (pkgsUnstable.callPackage ./extensions.nix { inherit config; });
 in
 {
   options.hm.chromium = lib.mkOption {
     type = lib.types.attrsOf (
       lib.types.submodule (
+        # The arguments `name` and `config` are provided to the submodule function.
+        # `name` is the attribute name (e.g., "brave")
+        # `config` is the set of resolved options for *this specific browser instance*
         { name, config, ... }:
         {
           options = {
@@ -76,13 +87,13 @@ in
           };
 
           config = lib.mkIf (config.enable && osConfig.nixpkgs.hostPlatform.isLinux) {
-            programs.${getProgramName name} = {
+            "programs.${getProgramName name}" = {
               enable = true;
-              package = config.package;
-              dictionaries = commonConfig.dictionaries;
-              extensions = commonConfig.extensions ++ config.extraExtensions;
+              package = config.package; # `config` here is local to the submodule
+              dictionaries = commonArgs.dictionaries;
+              extensions = commonExtensions ++ config.extraExtensions;
               commandLineArgs =
-                commonConfig.commandLineArgs
+                commonArgs.commandLineArgs
                 ++ (lib.optionals (lib.elem name chromiumProgramUsers) [
                   "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
                 ])
@@ -96,41 +107,36 @@ in
     description = "Configuration for one or more Chromium-based browsers";
     example = lib.literalExpression ''
       {
-        ungoogled-chromium = {
-          enable = true;
-        };
-
-        brave = {
-          enable = true;
-          extraCommandLineArgs = [ "--incognito" ];
-        };
-
-        vivaldi = {
-          enable = true;
-          extraExtensions = [ pkgs.ublock-origin ];
-        };
+        ungoogled-chromium = { enable = true; };
+        brave = { enable = true; extraCommandLineArgs = [ "--incognito" ]; };
+        vivaldi = { enable = true; extraExtensions = lib.flatten [ (pkgs.callPackage ./extensions.nix { inherit config; }) ]; };
       }
     '';
   };
 
   config = {
     assertions = [
-      (
-        let
-          enabledBrowsers = lib.attrNames (
-            lib.filterAttrs (_: browserCfg: browserCfg.enable) config.hm.chromium
-          );
-          enabledChromiumProgramUsers = lib.intersectLists chromiumProgramUsers enabledBrowsers;
-        in
-        {
-          assertion = lib.length enabledChromiumProgramUsers <= 1;
-          message = ''
-            You have enabled multiple browsers that all use the 'programs.chromium' home-manager module:
-              ${lib.concatStringsSep ", " enabledChromiumProgramUsers}
-            Please enable only one of them at a time.
-          '';
-        }
-      )
+      {
+        assertion =
+          let
+            enabledBrowsers = lib.filterAttrs (_: browserCfg: browserCfg.enable) config.hm.chromium;
+            enabledChromiumProgramUsers = lib.intersectLists chromiumProgramUsers (
+              lib.attrNames enabledBrowsers
+            );
+          in
+          lib.length enabledChromiumProgramUsers <= 1;
+
+        message = ''
+          You have enabled multiple browsers that all use the 'programs.chromium' home-manager module:
+            ${lib.concatStringsSep ", " (
+              let
+                enabledBrowsers = lib.filterAttrs (_: browserCfg: browserCfg.enable) config.hm.chromium;
+              in
+              lib.intersectLists chromiumProgramUsers (lib.attrNames enabledBrowsers)
+            )}
+          Please enable only one of them at a time.
+        '';
+      }
     ];
   };
 }
