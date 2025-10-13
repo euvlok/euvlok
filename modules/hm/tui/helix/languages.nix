@@ -151,13 +151,11 @@ let
     };
     pylsp = {
       command = "pylsp";
+      plugins.pylsp_mypy.enable = true;
+      plugins.pylsp_mypy.live_mode = true;
     };
     jedi = {
       command = "jedi-language-server";
-    };
-    ty = {
-      command = "ty";
-      args = [ "server" ];
     };
   }
   // lib.optionalAttrs config.hm.languages.ruby.enable {
@@ -222,7 +220,6 @@ let
       language-servers = [
         "ruff"
         "pylsp"
-        "ty"
         "jedi"
       ];
     }
