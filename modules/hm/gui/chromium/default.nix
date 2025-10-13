@@ -48,7 +48,7 @@
       dictionaries = builtins.attrValues {
         inherit (pkgsUnstable.hunspellDictsChromium) en_US de_DE fr_FR;
       };
-      extensions = [ (pkgsUnstable.callPackage ./extensions.nix { }) ];
+      extensions = (pkgsUnstable.callPackage ./extensions.nix { inherit config; });
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"

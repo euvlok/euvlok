@@ -139,7 +139,7 @@ let
       ;
   };
 
-  audioPackages = builtins.attrValues { inherit (pkgs) featherhelvumpavucontrolqpwgraph; };
+  audioPackages = builtins.attrValues { inherit (pkgs) helvum pavucontrol qpwgraph; };
 
   gamingPackages = builtins.attrValues {
     inherit (pkgsUnstable) osu-lazer-bin;
@@ -247,10 +247,13 @@ in
     extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
-  home-manager.users.root.imports = commonImports ++ [
-    catppuccinConfig
-    rootHmConfig
-  ];
+  home-manager.users.root.imports =
+    commonImports
+    ++ [
+      catppuccinConfig
+      rootHmConfig
+    ]
+    ++ ashuramaruHmConfig;
 
   home-manager.users.ashuramaru.imports =
     commonImports
