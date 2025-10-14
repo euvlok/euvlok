@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nixcordia/euvlok/refs/heads/master/.github/assets/eu-stars.png" width="400" height="400" />
+  <!-- <img src="https://raw.githubusercontent.com/nixcordia/euvlok/refs/heads/master/.github/assets/eu-stars.png" width="400" height="400" /> -->
 </p>
 
 <p align="center">
