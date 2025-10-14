@@ -14,7 +14,6 @@
       inputs.chaotic.nixosModules.nyx-registry
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         nixos = {
           nvidia.enable = true;

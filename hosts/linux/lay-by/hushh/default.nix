@@ -9,7 +9,6 @@
       inputs.catppuccin-trivial.nixosModules.catppuccin
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         nixos = {
           nvidia.enable = true;

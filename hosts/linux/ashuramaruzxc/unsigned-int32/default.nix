@@ -47,7 +47,6 @@
       }
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         nixos = {
           plasma.enable = true;

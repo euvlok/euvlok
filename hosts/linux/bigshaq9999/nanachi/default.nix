@@ -18,7 +18,6 @@
       }
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         nixos.gnome.enable = true;
         cross = {

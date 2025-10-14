@@ -1,5 +1,6 @@
 _: {
   imports = [
+    ../cross
     ./audio.nix
     ./gnome.nix
     ./hardware.nix

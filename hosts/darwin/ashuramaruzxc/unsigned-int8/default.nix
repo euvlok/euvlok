@@ -12,7 +12,6 @@
       { services.protonmail-bridge.enable = true; }
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         cross = {
           nix.enable = true;

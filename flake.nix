@@ -198,7 +198,6 @@
         nixosModules.default = import ./modules/nixos;
         darwinModules.default = ./modules/darwin;
         homeModules.default = ./modules/hm;
-        crossModules.default = ./modules/cross;
 
         homeProfiles = {
           _2husecondary = import ./hosts/hm/2husecondary;

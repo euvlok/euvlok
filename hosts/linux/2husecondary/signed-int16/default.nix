@@ -29,7 +29,6 @@
       }
     ]
     ++ [
-      inputs.self.crossModules.default
       {
         nixos = {
           nvidia.enable = true;
