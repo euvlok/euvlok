@@ -19,9 +19,10 @@ let
     (attrs: lib.filterAttrs (_: value: builtins.isString value) attrs)
     (
       filteredAttrs:
-      lib.mapAttrsToList (name: value: "alias ${name}=${lib.escapeShellArg value}") filteredAttrs
+      lib.generators.toKeyValue {
+        mkKeyValue = name: value: "alias ${name}=${lib.escapeShellArg value}";
+      } filteredAttrs
     )
-    (builtins.concatStringsSep "\n")
   ];
 
   omzPlugins =
