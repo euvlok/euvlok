@@ -1,6 +1,6 @@
 {
   inputs,
-  pkgs,
+  pkgsUnstable,
   lib,
   config,
   ...
@@ -17,7 +17,7 @@
     };
     programs.nvf.enable = true;
     programs.nvf.settings.vim = {
-      package = pkgs.neovim-unwrapped;
+      package = pkgsUnstable.neovim-unwrapped;
       viAlias = true;
       vimAlias = true;
 

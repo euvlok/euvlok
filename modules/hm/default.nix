@@ -2,7 +2,7 @@ _: {
   imports = [
     ./cli
     ./gui
-    ./languages.nix
+    ./languages
     ./shell
     ./terminal
     ./tui

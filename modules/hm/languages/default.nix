@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
+  inherit (osConfig.nixpkgs.hostPlatform) isLinux;
 
   versionMappings = {
     java =
@@ -92,6 +92,7 @@ let
       packages = builtins.attrValues {
         inherit (pkgsUnstable)
           ghc
+          ghcup
           cabal-install
           stack
           haskell-language-server
@@ -99,7 +100,6 @@ let
           ormolu
           ;
       };
-      # ++ lib.optionals isDarwin builtins.attrValues { inherit (pkgsUnstable.haskellPackages) ghcup; };
     };
     java = {
       packages = builtins.attrValues { inherit (pkgsUnstable) jdt-language-server gradle maven; };
@@ -222,6 +222,12 @@ let
   };
 in
 {
+  imports = [
+    ./helix.nix
+    ./vscode.nix
+    ./zed.nix
+  ];
+
   options.hm.languages = lib.mapAttrs (
     name: def:
     lib.mkOption {
@@ -295,6 +301,13 @@ in
       ) enabledLanguages;
     in
     {
+      assertions = [
+        {
+          assertion = (config.hm.languages.haskell.enable && isLinux);
+          message = "Haskell is currently not supported on macOS (Darwin)";
+        }
+      ];
+
       home.packages =
         (builtins.attrValues {
           inherit (pkgsUnstable)
