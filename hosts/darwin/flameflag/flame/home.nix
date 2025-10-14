@@ -50,7 +50,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
-        inputs.self.homeProfiles.flameflag
+        inputs.self.homeConfigurations.flameflag
         {
           hm = {
             fastfetch.enable = true;

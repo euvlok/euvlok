@@ -37,7 +37,7 @@ let
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
-    inputs.self.homeProfiles.ashuramaruzxc
+    inputs.self.homeConfigurations.ashuramaruzxc
     ../../../linux/shared/protonmail-bridge.nix
     {
       hm = {

@@ -26,7 +26,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
-        inputs.self.homeProfiles.sm-idk
+        inputs.self.homeConfigurations.sm-idk
         ../../../../modules/hm/wm/niri
         {
           hm = {

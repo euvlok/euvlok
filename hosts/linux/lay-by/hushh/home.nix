@@ -44,7 +44,7 @@
       ++ [
         ./home-packages.nix
         inputs.self.homeModules.default
-        inputs.self.homeProfiles.lay-by
+        inputs.self.homeConfigurations.lay-by
         {
           home.shell.enableShellIntegration = true;
           hm = {

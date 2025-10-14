@@ -90,7 +90,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
-        inputs.self.homeProfiles._2husecondary
+        inputs.self.homeConfigurations._2husecondary
         {
           hm = {
             chromium.enable = true;

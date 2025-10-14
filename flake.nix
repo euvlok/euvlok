@@ -199,7 +199,7 @@
         darwinModules.default = ./modules/darwin;
         homeModules.default = ./modules/hm;
 
-        homeProfiles = {
+        homeConfigurations = {
           _2husecondary = import ./hosts/hm/2husecondary;
           ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
           bigshaq9999 = import ./hosts/hm/bigshaq9999;

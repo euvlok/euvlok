@@ -34,7 +34,7 @@ let
   ashuramaruHmConfig = [
     ../../../linux/shared/protonmail-bridge.nix
     inputs.self.homeModules.default
-    inputs.self.homeProfiles.ashuramaruzxc
+    inputs.self.homeConfigurations.ashuramaruzxc
     {
       hm = {
         chromium.enable = true;
