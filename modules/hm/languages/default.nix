@@ -92,13 +92,13 @@ let
       packages = builtins.attrValues {
         inherit (pkgsUnstable)
           ghc
-          ghcup
           cabal-install
           stack
           haskell-language-server
           hlint
           ormolu
           ;
+        inherit (pkgsUnstable.haskellPackages) ghcup;
       };
     };
     java = {
