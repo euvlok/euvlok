@@ -101,7 +101,7 @@ in
       ++ lib.optionals config.hm.languages.lisp.enable [ (mkExt "mattn" "lisp") ]
       ++ lib.optionals config.hm.languages.zig.enable [ (mkExt "ziglang" "vscode-zig") ];
 
-    programs.vscode.profiles.default.settings =
+    programs.vscode.profiles.default.userSettings =
       lib.optionalAttrs config.hm.languages.java.enable {
         "[java]" = {
           editor.formatOnPaste = true;
