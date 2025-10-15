@@ -193,10 +193,10 @@ let
       packages = builtins.attrValues {
         inherit (pkgs.rust-bin.stable.latest) default;
         inherit (pkgsUnstable)
-          cargo
-          rustfmt
+          # cargo
+          # rustfmt
           rust-analyzer
-          clippy
+          # clippy
           cargo-watch
           cargo-edit
           cargo-outdated
