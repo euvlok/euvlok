@@ -5,7 +5,6 @@ _: {
     ./dconf.nix
     ./firefox.nix
     ./flatpak.nix
-    # ./fonts.nix
     ./git.nix
     ./graphics.nix
     ./helix.nix

@@ -33,6 +33,7 @@
         { id = "cnojnbdhbhnkbcieeekonklommdnndci"; } # search by image
         { id = "aapbdbdomjkkjkaonfhkkikfgjllcleb"; } # google translate
         { id = "jgejdcdoeeabklepnkdbglgccjpdgpmf"; } # old twitter layout
+        { id = "lmkeolibdeeglfglnncmfleojmakecjb"; } # youtube no auto translate
         {
           id = "lkbebcjgcmobigpeffafkodonchffocl";
           version = bpc-version;

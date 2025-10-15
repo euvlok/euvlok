@@ -136,6 +136,7 @@ let
       reduxdevtools
       vue-js-devtools
 
+      youtube-no-translation
       bitwarden
       firefox-color
       floccus
@@ -196,6 +197,7 @@ in
     profiles.default = {
       settings = {
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+        "zen.urlbar.replace-newtab" = false;
       };
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
@@ -205,6 +207,8 @@ in
       id = 1;
       settings = {
         "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "zen.urlbar.replace-newtab" = false;
       };
       extensions.packages = defaultExtensionsList;
       extensions.force = true;

@@ -7,15 +7,15 @@
 }:
 {
   imports = [
-    ../../../hm/ashuramaruzxc/fonts.nix
     ../shared/android.nix
     ../shared/containers.nix
+    ../shared/fh.nix
     ../shared/firmware.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
     ../shared/plasma.nix
     ../shared/settings.nix
-    ../shared/fh.nix
+    ../shared/fonts.nix
     ./hardware-configuration.nix
     ./networking.nix
     ./samba.nix

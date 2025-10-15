@@ -42,9 +42,9 @@ let
     {
       hm = {
         chromium.enable = true;
+        chromium.browser = "chromium";
         fastfetch.enable = true;
         firefox = {
-          enable = true;
           floorp.enable = true;
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
@@ -99,7 +99,7 @@ let
       vlc
       youtube-music
       ;
-    inherit (pkgs.kdePackages) k3bkamera;
+    inherit (pkgs.kdePackages) k3b kamera;
   };
 
   productivityPackages = builtins.attrValues {
