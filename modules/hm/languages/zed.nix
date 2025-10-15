@@ -1,6 +1,6 @@
 { lib, config, ... }:
 {
-  config = lib.mkIf config.hm.zed.enable {
+  config = lib.mkIf config.hm.zed-editor.enable {
     programs.zed-editor.extensions =
       lib.optionals config.programs.fish.enable [ "fish" ]
       ++ lib.optionals config.programs.nushell.enable [ "nu" ]
