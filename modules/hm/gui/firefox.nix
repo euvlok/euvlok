@@ -7,6 +7,16 @@
   ...
 }:
 let
+  inherit (lib.strings) toSentenceCase;
+  catppuccinZen = pkgs.fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "zen-browser";
+    rev = "main";
+    sha256 = "sha256-5A57Lyctq497SSph7B+ucuEyF1gGVTsuI3zuBItGfg4=";
+  };
+  themeDir = "${catppuccinZen}/themes/${toSentenceCase config.catppuccin.flavor}/${toSentenceCase config.catppuccin.accent}";
+  profilesPath = config.programs.zen-browser.profilesPath;
+
   default = {
     extensions.packages =
       builtins.attrValues {
@@ -201,11 +211,9 @@ let
   policies = {
     DisableAppUpdate = true;
     DisableTelemetry = true;
-    # OfferToSaveLogins = false;
-    # OfferToSaveLoginsDefault = false;
-    # asswordManagerEnabled = false;
+    OfferToSaveLogins = false;
+    OfferToSaveLoginsDefault = false;
     NoDefaultBookmarks = true;
-    # DisableFirefoxAccounts = true;
     DisableFeedbackCommands = true;
     DisableFirefoxStudies = true;
     DisableMasterPasswordCreation = true;
@@ -276,6 +284,16 @@ in
         enable = true;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
+      };
+    })
+    (lib.mkIf (config.catppuccin.enable && config.hm.firefox.zen-browser.enable) {
+      programs.zen-browser.profiles.default.settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      };
+      home.file = {
+        "${profilesPath}/default/chrome/userChrome.css".source = "${themeDir}/userChrome.css";
+        "${profilesPath}/default/chrome/userContent.css".source = "${themeDir}/userContent.css";
+        "${profilesPath}/default/chrome/zen-logo.svg".source = "${themeDir}/zen-logo.svg";
       };
     })
     {
