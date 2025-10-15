@@ -1,5 +1,4 @@
 { lib, ... }:
-# steal sarco's code
 let
   generateKeybindings =
     prefix: super: modifiers: range:
