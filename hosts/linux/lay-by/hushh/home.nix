@@ -19,12 +19,16 @@
           home.stateVersion = "25.05";
           home.sessionVariables = {
             DEFAULT_BROWSER = "${inputs.zen-browser-trivial.packages.x86_64-linux.default}/bin/zen";
+            SHELL = "fish";
+            TERM = "alacritty";
           };
         }
       ]
       ++ [
         inputs.stylix-trivial.homeModules.stylix
         ../../../hm/lay-by/stylix.nix
+        ../../../hm/lay-by/systemd-slice.nix
+        ../../../hm/lay-by/alacritty.nix
       ]
       ++ [
         {
@@ -33,7 +37,6 @@
             fps_limit = 200;
             no_display = true;
           };
-          programs.alacritty.enable = true;
           programs.rofi.enable = true;
           programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
           services.easyeffects.enable = true;
