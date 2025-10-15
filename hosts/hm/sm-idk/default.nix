@@ -1,1 +1,1 @@
-_: { import = [ ./git.nix ]; }
+_: { imports = [ ./git.nix ]; }

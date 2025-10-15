@@ -1,11 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  eulib,
-  pkgsUnstable,
-  ...
-}:
+{ pkgsUnstable, ... }:
 {
   home.packages = builtins.attrValues {
     inherit (pkgsUnstable)

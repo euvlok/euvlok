@@ -5,6 +5,8 @@
   ...
 }:
 {
+  imports = [ inputs.home-manager-lay-by.nixosModules.home-manager ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

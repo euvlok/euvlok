@@ -1,5 +1,5 @@
 _: {
-  import = [
+  imports = [
     ./firefox.nix
     ./flatpak.nix
     ./git.nix

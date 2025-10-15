@@ -1,12 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-
-{
+_: {
   imports = [
     ./fonts.nix
     ./hardware-configuration.nix

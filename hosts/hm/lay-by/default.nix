@@ -1,5 +1,5 @@
 _: {
-  import = [
+  imports = [
     ./git.nix
     ./hyprland
     ./stylix.nix

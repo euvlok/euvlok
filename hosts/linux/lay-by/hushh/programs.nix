@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
   programs = {
     thunar = {
@@ -9,7 +9,7 @@
       enable = true;
       # capSysNice = true;
     };
-    steam = { 
+    steam = {
       enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
@@ -36,6 +36,5 @@
     partition-manager.enable = true;
     gpu-screen-recorder.enable = true;
     virt-manager.enable = true;
-    
   };
 }
