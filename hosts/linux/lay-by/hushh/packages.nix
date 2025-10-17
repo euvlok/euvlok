@@ -7,6 +7,7 @@
       git
       libsecret
       ffmpeg
+      hyprpolkitagent
 
       # Desktop
       wayland-protocols
@@ -40,7 +41,6 @@
       gpu-screen-recorder-gtk
 
       ;
-
     # Theme stuff
     inherit (pkgs.kdePackages)
       breeze

@@ -28,6 +28,11 @@ _: {
     LC_TIME = "en_US.UTF-8";
   };
 
+  security.polkit = {
+    enable = true;
+    adminIdentities = [ "unix-group:wheel" ];
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.hushh = {
     isNormalUser = true;

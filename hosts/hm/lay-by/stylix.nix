@@ -7,10 +7,10 @@
     autoEnable = true;
 
     targets.hyprlock.enable = false;
-    targets.spicetify.enable = false;
+    targets.spicetify.enable = true;
     #targets.hyprpaper.enable = false;
 
-    image = /home/hushh/Pictures/papes/city.jpg;
+    image = /home/hushh/Pictures/papes/starfighter2.png;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
 
     cursor = {

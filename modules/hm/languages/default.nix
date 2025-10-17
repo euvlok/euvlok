@@ -301,12 +301,12 @@ in
       ) enabledLanguages;
     in
     {
-      assertions = [
-        {
-          assertion = (config.hm.languages.haskell.enable && isLinux);
-          message = "Haskell is currently not supported on macOS (Darwin)";
-        }
-      ];
+      # assertions = [
+      #   {
+      #     assertion = (config.hm.languages.haskell.enable && isLinux);
+      #     message = "Haskell is currently not supported on macOS (Darwin)";
+      #   }
+      # ];
 
       home.packages =
         (builtins.attrValues {

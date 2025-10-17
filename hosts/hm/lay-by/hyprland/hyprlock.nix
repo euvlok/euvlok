@@ -10,7 +10,7 @@ _: {
         no_fade_in = true;
       };
 
-      background = [ { path = "~/Pictures/papes/river.jpg"; } ];
+      background = [ { path = "~/Pictures/papes/starfighter2.png"; } ];
 
       input-field = [
         {
