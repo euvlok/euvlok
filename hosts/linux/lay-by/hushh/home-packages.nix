@@ -4,7 +4,6 @@
     inherit (pkgsUnstable)
       # Base apps
       pavucontrol
-      vesktop
       networkmanagerapplet
       desktop-file-utils
       unzip

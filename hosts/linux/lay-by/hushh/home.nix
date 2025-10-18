@@ -28,9 +28,6 @@
       ]
       ++ [
         inputs.stylix-trivial.homeModules.stylix
-        ../../../hm/lay-by/stylix.nix
-        ../../../hm/lay-by/systemd-slice.nix
-        ../../../hm/lay-by/alacritty.nix
       ]
       ++ [
         {
@@ -61,6 +58,7 @@
             hyprland.enable = true;
             mpv.enable = true;
             vscode.enable = true;
+            nixcord.enable = true;
           };
         }
       ]

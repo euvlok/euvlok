@@ -87,6 +87,8 @@
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     stylix-trivial.url = "github:danth/stylix/release-25.05";
+    stylix-git.url = "github:nix-community/stylix";
+    stylix-git.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager-unstable";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";

@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   stylix = {
@@ -8,9 +13,21 @@
 
     targets.hyprlock.enable = false;
     targets.spicetify.enable = true;
+    targets.anki.enable = false;
+
+    #targets.zen-browser = {
+    #enable = true;
+
+    #profileNames = [
+    #"default"
+    #];
+    #};
     #targets.hyprpaper.enable = false;
 
-    image = /home/hushh/Pictures/papes/starfighter2.png;
+    image = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/lay-by/wallpapers/refs/heads/main/starfighter2.png";
+      hash = "sha256-eDeJpTVmEt6Ty0HL7KVKe+O6Sgcv8lKX2FlLQwm+v+I";
+    };
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
 
     cursor = {
