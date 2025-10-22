@@ -10,6 +10,12 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     inputs.catppuccin-trivial.homeModules.catppuccin
+    ../../../hm/ashuramaruzxc/aliases.nix
+    ../../../hm/ashuramaruzxc/git.nix
+    ../../../hm/ashuramaruzxc/helix.nix
+    ../../../hm/ashuramaruzxc/nushell.nix
+    ../../../hm/ashuramaruzxc/ssh.nix
+    ../../../hm/ashuramaruzxc/starship.nix
   ];
 
   catppuccinConfig = {
@@ -26,16 +32,17 @@ let
     {
       hm = {
         fastfetch.enable = true;
-        firefox.defaultSearchEngine = "kagi";
-        firefox.enable = true;
-        firefox.floorp.enable = true;
+        firefox = {
+          defaultSearchEngine = "kagi";
+          floorp.enable = true;
+          zen-browser = true;
+        };
         helix.enable = true;
         mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
         nvf.enable = true;
         vscode.enable = true;
-        # yazi.enable = true;
         zellij.enable = true;
       };
     }

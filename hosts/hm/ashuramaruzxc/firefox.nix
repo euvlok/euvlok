@@ -78,7 +78,14 @@ let
       };
     };
   };
-
+  settings = {
+    "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+    "gfx.webrender.all" = true;
+    "media.av1.enabled" = true;
+  };
+  zenSettings = settings // {
+    "zen.urlbar.replace-newtab" = false;
+  };
   bypass-paywalls-clean =
     let
       version = "latest";
@@ -160,28 +167,20 @@ let
   };
 in
 {
+  #! bitwarden is still broken
   programs.floorp = {
     enable = true;
     profiles.default = {
-      settings = {
-        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
-      };
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
-      inherit search;
+      inherit search settings;
     };
     profiles.backup = {
       id = 1;
-      settings = {
-        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
-      };
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
-      inherit search;
+      inherit search settings;
     };
-    #! keep an eye on
-    #! https://github.com/NixOS/nixpkgs/pull/374068
-    #! https://github.com/NixOS/nixpkgs/issues/347350
     nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
       builtins.attrValues { inherit (pkgs) firefoxpwa; }
     );
@@ -195,30 +194,19 @@ in
   programs.zen-browser = {
     enable = true;
     profiles.default = {
-      settings = {
-        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
-        "zen.urlbar.replace-newtab" = false;
-      };
+      settings = zenSettings;
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
       inherit search;
     };
     profiles.backup = {
       id = 1;
-      settings = {
-        "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        "zen.urlbar.replace-newtab" = false;
-      };
+      settings = zenSettings;
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
-      inherit search;
     };
-    #! keep an eye on
-    #! https://github.com/NixOS/nixpkgs/pull/374068
-    #! https://github.com/NixOS/nixpkgs/issues/347350
     nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
-      builtins.attrValues { inherit (pkgs) firefoxpwa; }
+      builtins.attrValues { inherit (pkgsUnstable) firefoxpwa; }
     );
     languagePacks = [
       "en-CA"
@@ -227,7 +215,6 @@ in
       "ja"
     ];
   };
-  programs.floorp.package = lib.mkForce pkgsUnstable.floorp-bin;
   home.packages = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
     builtins.attrValues {
       inherit (pkgs) firefoxpwa;

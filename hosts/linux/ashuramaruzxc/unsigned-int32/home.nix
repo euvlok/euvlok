@@ -10,9 +10,6 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../pkgs/catppuccin-gtk.nix
-    ../../../hm/ashuramaruzxc/helix.nix
-    ../../../hm/ashuramaruzxc/aliases.nix
-    ../../../hm/ashuramaruzxc/starship.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
   ];
@@ -38,7 +35,6 @@ let
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
     inputs.self.homeConfigurations.ashuramaruzxc
-    ../../../linux/shared/protonmail-bridge.nix
     {
       hm = {
         chromium.enable = true;
@@ -82,7 +78,7 @@ let
   ];
 
   importantPackages = builtins.attrValues {
-    inherit (pkgs)
+    inherit (pkgsUnstable)
       keepassxc
       bitwarden
       thunderbird
@@ -146,7 +142,7 @@ let
     inherit (pkgs)
       bottles
       cemu
-      chiaki
+      # chiaki
       dolphin-emu
       duckstation
       flycast
@@ -155,11 +151,11 @@ let
       heroic
       lutris
       mangohud
-      mgba
+      # mgba
       pcsx2
       ppsspp
       prismlauncher
-      ryujinx
+      ryubing
       shadps4
       xemu
       ;

@@ -6,11 +6,11 @@
 }:
 {
   imports = [
-    ../../../hm/ashuramaruzxc/fonts.nix
     ../shared/containers.nix
+    ../shared/fonts.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
-    ../shared/plasma.nix
+    ../shared/desktop.nix
     ../shared/settings.nix
     ./hardware-configuration.nix
     ./settings.nix

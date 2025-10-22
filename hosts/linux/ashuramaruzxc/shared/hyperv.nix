@@ -18,10 +18,6 @@
     extraOptions = [ "--verbose" ];
   };
   virtualisation.libvirtd.qemu = {
-    ovmf = {
-      enable = true;
-      packages = [ pkgs.OVMFFull.fd ];
-    };
     verbatimConfig = ''
       cgroup_device_acl = [
         "/dev/null",

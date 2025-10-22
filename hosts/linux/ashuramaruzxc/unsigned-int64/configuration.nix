@@ -6,10 +6,10 @@
 }:
 {
   imports = [
-    ../../../hm/ashuramaruzxc/fonts.nix
     ../shared/android.nix
     ../shared/containers.nix
     ../shared/firmware.nix
+    ../shared/fonts.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
     ../shared/settings.nix
@@ -59,7 +59,7 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.avahi.enable = lib.mkForce false;
-  services.xserver.displayManager.gdm.autoSuspend = false;
+  services.displayManager.gdm.autoSuspend = false;
 
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

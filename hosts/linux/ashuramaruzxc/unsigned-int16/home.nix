@@ -6,13 +6,13 @@
   ...
 }:
 let
+
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../pkgs/catppuccin-gtk.nix
-    ../shared/aliases.nix
-    ./packages.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
   ];
+
   catppuccinConfig =
     { osConfig, ... }:
     {
@@ -32,15 +32,14 @@ let
   };
 
   ashuramaruHmConfig = [
-    ../../../linux/shared/protonmail-bridge.nix
     inputs.self.homeModules.default
     inputs.self.homeConfigurations.ashuramaruzxc
     {
       hm = {
         chromium.enable = true;
+        chromium.browser = "chromium";
         fastfetch.enable = true;
         firefox = {
-          enable = true;
           floorp.enable = true;
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
@@ -49,13 +48,110 @@ let
         helix.enable = true;
         mpv.enable = true;
         nh.enable = true;
-        nushell.enable = true;
-        # yazi.enable = true;
+        vscode.enable = true;
         zellij.enable = true;
         zsh.enable = true;
+        languages = {
+          cpp.enable = true;
+          # csharp.enable = true;
+          # csharp.version = "8";
+          go.enable = true;
+          haskell.enable = true;
+          java.enable = true;
+          java.version = "17";
+          javascript.enable = true;
+          kotlin.enable = true;
+          lisp.enable = true;
+          lua.enable = true;
+          python.enable = true;
+          ruby.enable = true;
+          rust.enable = true;
+          scala.enable = true;
+        };
       };
     }
   ];
+
+  importantPackages = builtins.attrValues {
+    inherit (pkgsUnstable)
+      keepassxc
+      bitwarden
+      thunderbird
+      ;
+  };
+
+  multimediaPackages = builtins.attrValues {
+    inherit (pkgs)
+      nicotine-plus
+      qbittorrent
+      quodlibet-full
+      tenacity
+      vlc
+      youtube-music
+      ;
+    inherit (pkgs.kdePackages) k3b kamera;
+  };
+
+  productivityPackages = builtins.attrValues {
+    inherit (pkgs)
+      anki
+      francis
+      gImageReader
+      libreoffice-qt6-fresh
+      obsidian
+      octaveFull
+      pdftk
+      treesheets
+      ;
+  };
+
+  socialPackages = builtins.attrValues {
+    inherit (pkgs)
+      dino
+      element-desktop
+      materialgram
+      nextcloud-client
+      protonmail-bridge-gui
+      signal-desktop
+      ;
+  };
+
+  networkingPackages = builtins.attrValues {
+    inherit (pkgs)
+      mullvad-vpn
+      nekoray
+      openvpn
+      protonvpn-cli
+      protonvpn-gui
+      udptunnel
+      v2raya
+      ;
+  };
+
+  audioPackages = builtins.attrValues { inherit (pkgs) helvum pavucontrol qpwgraph; };
+
+  nemoPackage = [
+    (pkgs.nemo-with-extensions.override {
+      extensions = builtins.attrValues {
+        inherit (pkgs)
+          folder-color-switcher
+          nemo-emblems
+          nemo-fileroller
+          nemo-python
+          nemo-qml-plugin-dbus
+          ;
+      };
+    })
+  ];
+
+  allPackages =
+    importantPackages
+    ++ multimediaPackages
+    ++ productivityPackages
+    ++ socialPackages
+    ++ networkingPackages
+    ++ audioPackages
+    ++ nemoPackage;
 in
 {
   imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
@@ -67,10 +163,13 @@ in
     extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
   };
 
-  home-manager.users.root.imports = commonImports ++ [
-    catppuccinConfig
-    rootHmConfig
-  ];
+  home-manager.users.root.imports =
+    commonImports
+    ++ [
+      catppuccinConfig
+      rootHmConfig
+    ]
+    ++ ashuramaruHmConfig;
 
   home-manager.users.ashuramaru.imports =
     commonImports
@@ -87,6 +186,7 @@ in
     ++ ashuramaruHmConfig
     ++ [
       { services.protonmail-bridge.enable = true; }
+      { home.packages = allPackages; }
       (
         {
           inputs,
@@ -96,7 +196,6 @@ in
           ...
         }:
         {
-          # doesn't work with cudaEnable = true;
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";
@@ -145,6 +244,7 @@ in
             };
           };
           btop.enable = true;
+          direnv.nix-direnv.package = pkgsUnstable.nix-direnv;
         };
       }
     ];

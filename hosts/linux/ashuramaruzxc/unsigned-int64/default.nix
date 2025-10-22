@@ -34,10 +34,6 @@
           gnome.enable = true;
           amd.enable = true;
         };
-        cross = {
-          nix.enable = true;
-          nixpkgs.enable = true;
-        };
       }
     ];
   };

@@ -1,17 +1,31 @@
-_: {
+{ osConfig, lib, ... }:
+{
   imports = [
     ./aliases.nix
-    ./chrome.nix
-    ./dconf.nix
-    ./firefox.nix
-    ./flatpak.nix
     ./git.nix
-    ./graphics.nix
     ./helix.nix
-    ./nixcord.nix
     ./nushell.nix
     ./ssh.nix
     ./starship.nix
-    ./vscode.nix
-  ];
+  ]
+  ++
+    lib.optionals
+      (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable or osConfig.nixpkgs.hostPlatform.isDarwin
+      )
+      [
+        ./firefox.nix
+        ./nixcord.nix
+        ./vscode.nix
+      ]
+  ++
+    lib.optionals
+      (
+        (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable) && osConfig.nixpkgs.hostPlatform.isLinux
+      )
+      [
+        ./chrome.nix
+        ./dconf.nix
+        ./flatpak.nix
+        ./graphics.nix
+      ];
 }

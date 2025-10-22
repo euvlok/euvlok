@@ -31,6 +31,7 @@
       ;
     inherit (pkgsUnstable.gnomeExtensions)
       arcmenu
+      auto-move-windows
       blur-my-shell
       dash-to-dock
       dual-monitor-toggle
@@ -40,6 +41,7 @@
       rounded-corners
       smart-auto-move
       system-monitor
+      user-themes
       ;
   };
 }
@@ -52,12 +54,10 @@
   };
 
   qt.enable = true;
-  qt.platformTheme = "kde";
+  qt.platformTheme = "qt5ct";
 
-  programs = {
-    gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
-    kdeconnect.enable = true;
-    ssh.startAgent = true;
-    ssh.askPassword = lib.mkForce (lib.getExe pkgs.seahorse);
-  };
+  programs.gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
+  programs.kdeconnect.enable = true;
+  programs.ssh.askPassword = lib.mkForce (lib.getExe pkgs.seahorse);
+
 }

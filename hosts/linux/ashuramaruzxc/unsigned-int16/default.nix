@@ -15,8 +15,9 @@ in
     ++ [
       usb-gadget-ethernet
       raspberry-pi-5.base
-      raspberry-pi-5.display-vc4
       raspberry-pi-5.bluetooth
+      raspberry-pi-5.display-vc4
+      raspberry-pi-5.page-size-16k
     ]
     ++ [
       inputs.sops-nix-trivial.nixosModules.sops
@@ -38,7 +39,7 @@ in
       }
     ]
     ++ [
-      inputs.flatpak-declerative-trivial.nixosModule
+      inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
           enable = true;
@@ -54,10 +55,6 @@ in
         nixos = {
           plasma.enable = true;
           gnome.enable = true;
-        };
-        cross = {
-          nix.enable = true;
-          nixpkgs.enable = true;
         };
       }
     ];

@@ -51,7 +51,7 @@ let
   userConfigs = {
     root = [ ];
     ashuramaru = [ ];
-    fumono = [ ../../../hm/2husecondary/git.nix ];
+    fumono = [ ];
     minecraft = [ ];
   };
 in

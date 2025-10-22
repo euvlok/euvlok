@@ -13,12 +13,12 @@
     ../shared/firmware.nix
     ../shared/hyperv.nix
     ../shared/lxc.nix
-    ../shared/plasma.nix
+    ../shared/desktop.nix
     ../shared/settings.nix
     ../shared/fonts.nix
     ./hardware-configuration.nix
     ./networking.nix
-    ./samba.nix
+    # ./samba.nix
     ./users.nix
   ];
 
@@ -213,7 +213,7 @@
       enable = true;
       type = "fcitx5";
       fcitx5 = {
-        plasma6Support = true;
+        # plasma6Support = true;
         waylandFrontend = true;
         addons = builtins.attrValues {
           inherit (pkgs) fcitx5-gtk fcitx5-mozc;
