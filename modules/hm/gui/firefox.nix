@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgsUnstable,
   lib,
   config,
   osConfig,
@@ -206,6 +207,10 @@ let
     // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
       "media.ffmpeg.vaapi.enabled" = true;
       "media.gpu-process.enabled" = true;
+    })
+    // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable)) {
+      "media.hardware-video-decoding.force-enabled" = true;
+      "media.rdd-ffmpeg.enabled" = true; # It's default but just in case
     });
   };
   policies = {
@@ -222,12 +227,12 @@ let
   };
   nativeMessagingHosts = lib.mkIf isLinux (
     builtins.attrValues (
-      lib.optionalAttrs supportGnome { inherit (pkgs) gnome-browser-connector; }
-      // lib.optionalAttrs supportPlasma { inherit (pkgs.kdePackages) plasma-integration; }
+      lib.optionalAttrs supportGnome { inherit (pkgsUnstable) gnome-browser-connector; }
+      // lib.optionalAttrs supportPlasma { inherit (pkgsUnstable.kdePackages) plasma-integration; }
     )
   );
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
-  supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
+  supportGnome = isLinux && osConfig.services.desktopManager.gnome.enable;
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
@@ -266,7 +271,7 @@ in
     (lib.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
-        package = pkgs.floorp;
+        package = pkgsUnstable.floorp-bin;
         profiles.default = default;
         inherit policies nativeMessagingHosts;
       };
@@ -297,8 +302,9 @@ in
       };
     })
     {
-      home.packages = (lib.optionals (supportGnome) [ pkgs.gnome-browser-connector ]);
-      # ++ (lib.optionals (supportPlasma) [ pkgs.kdePackages.plasma-integration ]);
+      home.packages =
+        (lib.optionals (supportGnome) [ pkgsUnstable.gnome-browser-connector ])
+        ++ (lib.optionals (supportPlasma) [ pkgsUnstable.kdePackages.plasma-integration ]);
     }
   ];
 }
