@@ -46,17 +46,9 @@
       boot.extraModprobeConfig =
         "options nvidia "
         + lib.concatStringsSep " " [
-          # NVIDIA assumes that by default your CPU doesn't support `PAT`, but this
-          # is effectively never the case in 2023
           "NVreg_UsePageAttributeTable=1"
-          # This is sometimes needed for ddc/ci support, see
-          # https://www.ddcutil.com/nvidia/
-          #
-          # Current monitor does not support it, but this is useful for
-          # the future
           "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
         ];
-
       # Credit: https://github.com/NixOS/nixpkgs/issues/202454#issuecomment-1579609974
       environment.etc."egl/egl_external_platform.d".source =
         let
@@ -86,14 +78,10 @@
         );
 
       environment.sessionVariables = {
-        # Required to run the correct GBM backend for NVIDIA GPUs on Wayland
-        GBM_BACKEND = "nvidia-drm";
-        # Apparently, without this NOUVEAU may attempt to be used instead
-        # (despite it being blacklisted)
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-
-        NVD_BACKEND = "direct";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia"; # without this NOUVEAU may attempt to be used instead
+        GBM_BACKEND = "nvidia-drm"; # Required to run the correct GBM backend for NVIDIA GPUs on Wayland
         LIBVA_DRIVER_NAME = "nvidia";
+        NVD_BACKEND = "direct";
       };
 
       hardware.nvidia = {
@@ -142,11 +130,11 @@
         ++ [ inputs.nvidia-patch-trivial.overlays.default ];
     })
     ((lib.mkIf (config.nixos.amd.enable && config.nixpkgs.hostPlatform.isx86_64)) {
-      hardware.graphics.extraPackages32 = builtins.attrValues { inherit (pkgs.driversi686Linux) amdvlk; };
+      hardware.graphics.extraPackages32 = builtins.attrValues { inherit (pkgs.driversi686Linux) ; };
     })
     (lib.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {
-        inherit (pkgs) amdvlk clinfo;
+        inherit (pkgs) clinfo;
         inherit (pkgs.rocmPackages.clr) icd;
       };
       environment.systemPackages = builtins.attrValues { inherit (pkgs) lact; };
