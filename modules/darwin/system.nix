@@ -9,6 +9,7 @@ _: {
       };
       LaunchServices.LSQuarantine = false; # Disable Quarantine for Downloaded Applications
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
+      SwiftUI.DisableSolarium = true; # Disable liquid ass
       NSGlobalDomain = {
         # Apple menu > System Preferences > Keyboard
         KeyRepeat = 2;
