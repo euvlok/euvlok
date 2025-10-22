@@ -17,7 +17,6 @@ let
           "11"
           "17"
           "21"
-          "23"
           "24"
         ];
       in
@@ -98,7 +97,6 @@ let
           hlint
           ormolu
           ;
-        inherit (pkgsUnstable.haskellPackages) ghcup;
       };
     };
     java = {
