@@ -58,7 +58,7 @@ pkgs.stdenvNoCC.mkDerivation (_: {
       rm -rf "./styles/$style/"
     done
 
-    deno run --allow-read --allow-write --allow-net ./scripts/stylus-import/main.ts
+    deno run --allow-read --allow-write --allow-net --allow-env ./scripts/stylus-import/main.ts
     sed -i \
       -e 's/"default":"mocha"/"default":"'"${flavor}"'"/g' \
       -e 's/"default":"mauve"/"default":"'"${accent}"'"/g' \

@@ -6,10 +6,10 @@ _: {
         "FeatureFlags/Domain/UIKit".redesigned_text_cursor.enable = false;
         "com.colliderli.iina".enableThumbnailForRemoteFiles = true;
         ".GlobalPreferences".TSMLanguageIndicatorEnabled = 0;
+        "com.apple.SwiftUI".DisableSolarium = true;
       };
       LaunchServices.LSQuarantine = false; # Disable Quarantine for Downloaded Applications
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
-      SwiftUI.DisableSolarium = true; # Disable liquid ass
       NSGlobalDomain = {
         # Apple menu > System Preferences > Keyboard
         KeyRepeat = 2;

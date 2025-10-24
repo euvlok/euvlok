@@ -9,15 +9,6 @@
       ./configuration.nix
       ./home.nix
       ./system.nix
-      { services.protonmail-bridge.enable = true; }
-    ]
-    ++ [
-      {
-        cross = {
-          nix.enable = true;
-          nixpkgs.enable = true;
-        };
-      }
     ];
   };
 }

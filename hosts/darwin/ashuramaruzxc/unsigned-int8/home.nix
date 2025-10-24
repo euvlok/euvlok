@@ -33,15 +33,13 @@ let
       hm = {
         fastfetch.enable = true;
         firefox = {
+          zen-browser.enable = true;
           defaultSearchEngine = "kagi";
-          floorp.enable = true;
-          zen-browser = true;
         };
         helix.enable = true;
         mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
-        nvf.enable = true;
         vscode.enable = true;
         zellij.enable = true;
       };
@@ -68,7 +66,7 @@ let
       qbittorrent
       anki-bin
       audacity
-      gimp
+      # gimp
       inkscape
       yubikey-manager
       ;
@@ -80,7 +78,6 @@ let
       ryubing
       prismlauncher
       chiaki
-      duckstation-bin
       ;
     inherit (pkgs.jetbrains) dataspell datagrip;
     pcsx2-bin = pkgs.pcsx2-bin.overrideAttrs (oldAttrs: {
@@ -105,16 +102,16 @@ let
     builtins.attrValues {
       riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
       clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
-      ideaUltimateWithPlugins = addPlugins idea-ultimate (
-        commonPlugins
-        ++ [
-          "go"
-          "minecraft-development"
-          "python"
-          "rust"
-          "scala"
-        ]
-      );
+      # ideaUltimateWithPlugins = addPlugins idea-ultimate (
+      #   commonPlugins
+      #   ++ [
+      #     "go"
+      #     "minecraft-development"
+      #     "python"
+      #     "rust"
+      #     "scala"
+      #   ]
+      # );
     };
 
   allPackages =
@@ -147,9 +144,14 @@ in
       { home.packages = allPackages; }
       (
         { config, ... }:
+        let
+          catppuccin-userstyles = pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+            inherit (config.catppuccin) accent flavor;
+          };
+        in
         {
           home.file."Documents/catppuccin-userstyles.json".source =
-            "${pkgs.catppuccin-userstyles.outPath}/dist/import.json";
+            "${catppuccin-userstyles.outPath}/dist/import.json";
         }
       )
       {

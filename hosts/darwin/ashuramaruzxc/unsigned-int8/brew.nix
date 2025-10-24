@@ -26,7 +26,7 @@
       "heroic"
       "steam" # Gayming
       "xemu"
-      "ppsspp"
+      "ppsspp-emulator"
       "cemu"
       ### --- Gayming --- ###
       ### --- Graphics --- ###
