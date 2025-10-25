@@ -1,8 +1,17 @@
-{ config, lib, ... }:
 {
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  home.packages = builtins.attrValues { inherit (pkgs) grim slurp sway; };
+
   programs.niri.settings.binds =
     with config.lib.niri.actions;
     let
+      sh = spawn "sh" "-c";
+
       mkBinds =
         {
           prefix,
@@ -162,18 +171,24 @@
         "Mod+W".action = toggle-column-tabbed-display;
       };
 
-      systemControls = {
-        "Print".action = screenshot;
-        "Ctrl+Print".action = {
-          screenshot-screen = {
-            write-to-disk = true;
-          };
+      systemControls =
+        let
+          screenshotDir = ''"$(xdg-user-dir PICTURES)/Screenshots"'';
+          fileName = ''"$(date +'%Y-%m-%d-%H%M%S_grim.png')"'';
+        in
+        {
+          # Screenshot the entire screen output
+          "Print".action = sh "grim ${screenshotDir}/${fileName}";
+          # Screenshot a selected region/window
+          "Ctrl+Print".action = sh ''grim -g "$(slurp)" ${screenshotDir}/${fileName}'';
+          # Screenshot the active output/monitor
+          "Alt+Print".action =
+            sh ''grim -o "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')" ${screenshotDir}/${fileName}'';
+
+          "Mod+Escape".action = toggle-keyboard-shortcuts-inhibit;
+          "Mod+Shift+E".action = quit;
+          "Ctrl+Alt+Delete".action = quit;
         };
-        "Alt+Print".action = screenshot-window;
-        "Mod+Escape".action = toggle-keyboard-shortcuts-inhibit;
-        "Mod+Shift+E".action = quit;
-        "Ctrl+Alt+Delete".action = quit;
-      };
 
       misc = {
         "Mod+Shift+Slash".action = show-hotkey-overlay;

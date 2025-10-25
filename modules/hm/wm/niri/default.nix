@@ -16,6 +16,7 @@
 
   config = lib.mkIf config.hm.niri.enable {
     programs.niri.enable = true;
+    programs.niri.package = pkgs.niri-unstable;
     xdg = {
       enable = true;
       portal = {

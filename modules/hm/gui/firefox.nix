@@ -232,7 +232,7 @@ let
     )
   );
   isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
-  supportGnome = isLinux && osConfig.services.desktopManager.gnome.enable;
+  supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
   supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {

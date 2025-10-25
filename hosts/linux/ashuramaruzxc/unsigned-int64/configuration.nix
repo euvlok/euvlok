@@ -59,7 +59,7 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.avahi.enable = lib.mkForce false;
-  services.displayManager.gdm.autoSuspend = false;
+  services.xserver.displayManager.gdm.autoSuspend = false;
 
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

@@ -53,10 +53,11 @@
         # Debug
         "--enable-logging=stderr"
       ]
-      ++ lib.optionals (config.hm.chromium.browser == "chromium" || "google-chrome" || "microsoft-edge") [
-        # Enable mv2 while its still possible
-        "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
-      ]
+      ++ lib.optionals (lib.elem config.hm.chromium.browser [
+        "chromium"
+        "google-chrome"
+        "microsoft-edge"
+      ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while its still possible
       ++ lib.optionals osConfig.nixpkgs.hostPlatform.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"

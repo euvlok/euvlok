@@ -16,15 +16,6 @@
           accent = "blue";
         };
       }
-    ]
-    ++ [
-      {
-        nixos.gnome.enable = true;
-        cross = {
-          nix.enable = true;
-          nixpkgs.enable = true;
-        };
-      }
     ];
   };
 }

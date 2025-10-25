@@ -13,16 +13,16 @@
 
     targets.hyprlock.enable = false;
     targets.spicetify.enable = true;
-    targets.anki.enable = false;
+    # targets.anki.enable = false;
 
-    #targets.zen-browser = {
-    #enable = true;
+    # targets.zen-browser = {
+    # enable = true;
 
-    #profileNames = [
-    #"default"
-    #];
-    #};
-    #targets.hyprpaper.enable = false;
+    # profileNames = [
+    # "default"
+    # ];
+    # };
+    # targets.hyprpaper.enable = false;
 
     image = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/lay-by/wallpapers/refs/heads/main/starfighter2.png";
