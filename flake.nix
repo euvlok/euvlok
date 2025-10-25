@@ -96,7 +96,6 @@
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:FlameFlag/dis";
-    hyprland-source.url = "github:hyprwm/Hyprland";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
     lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
     lix-source.inputs.flake-compat.follows = "";
