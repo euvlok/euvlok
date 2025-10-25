@@ -65,7 +65,6 @@
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
-    nix-vscode-extensions-trivial.inputs.flake-utils.follows = "flake-utils";
     nix-vscode-extensions-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix-vscode-extensions-trivial.url = "github:nix-community/nix-vscode-extensions";
     nix-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils";
@@ -110,7 +109,7 @@
     rust-overlay-source.url = "github:oxalica/rust-overlay";
     yazi-source.inputs.flake-utils.follows = "flake-utils";
     yazi-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    yazi-source.url = "github:sxyazi/yazi";
+    yazi-source.url = "github:sxyazi/yazi/157156b5b8f36db15b2ba425c7d15589039a9e1e";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
