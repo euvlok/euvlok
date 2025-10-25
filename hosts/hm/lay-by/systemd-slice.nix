@@ -1,5 +1,5 @@
 _: {
-    systemd.user.slices."no-swap" = {
+  systemd.user.slices."no-swap" = {
     Unit = {
       Description = "Disable swap for slice";
     };

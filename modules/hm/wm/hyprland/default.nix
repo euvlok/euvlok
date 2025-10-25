@@ -17,9 +17,9 @@
       #"$killActiveWindow" = ''
       #  hyprctl activewindow | \
       #  grep -oP --color=never 'pid:\s+\K\d+' | \
-      #  while read -r pid; do 
-      #      if kill "$pid"; then 
-      #          for i in {1..5}; do 
+      #  while read -r pid; do
+      #      if kill "$pid"; then
+      #          for i in {1..5}; do
       #              sleep 0.5
       #              kill -0 "$pid" 2>/dev/null || exit
       #              [ "$i" -eq 5 ] && kill -9 "$pid"
