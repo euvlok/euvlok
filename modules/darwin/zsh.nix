@@ -39,6 +39,7 @@ let
     ++ enablePlugin "git"
     ++ enablePlugin "direnv"
     ++ enablePlugin "vscode";
+
   customPlugins = [
     {
       name = "fast-syntax-highlighting";
@@ -49,7 +50,7 @@ let
       src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
     }
   ]
-  ++ lib.optionals hmConfig.programs.fzf.enable [
+  ++ lib.optionals hmConfig.hm.fzf.enable [
     {
       name = "fzf-tab";
       src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
@@ -59,9 +60,11 @@ let
     (pluginsList: builtins.map (p: "source ${p.src}") pluginsList)
     (builtins.concatStringsSep "\n")
   ];
-  omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
 
-  interactiveShellInit = lib.concatStringsSep "\n" [
+  omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
+in
+{
+  programs.zsh.interactiveShellInit = lib.concatStringsSep "\n" [
     "# Oh My Zsh"
     omzPluginsStr
     "source ${pkgs.oh-my-zsh}/share/oh-my-zsh/oh-my-zsh.sh"
@@ -69,7 +72,6 @@ let
     "# Aliases"
     shellAliasesStr
 
-    "# autocd"
     "setopt autocd"
 
     "# Autosuggestions"
@@ -85,18 +87,19 @@ let
     "# Custom plugins"
     customPluginsStr
   ];
-  promptInit = lib.mkMerge [
-    (lib.optionalString (hmConfig.programs.ghostty.enable) (''
+
+  programs.zsh.promptInit = [
+    (lib.optionalString (hmConfig.hm.ghostty.enable) (''
       if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
         source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
       fi
     ''))
-    (lib.optionalString (hmConfig.programs.starship.enable) (''
+    (lib.optionalString (hmConfig.hm.starship.enable) (''
       if [[ $TERM != "dumb" ]]; then
         eval "$(starship init zsh)"
       fi
     ''))
-    (lib.optionalString (hmConfig.programs.yazi.enable) (''
+    (lib.optionalString (hmConfig.hm.yazi.enable) (''
       function yy() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
         yazi "$@" --cwd-file="$tmp"
@@ -106,11 +109,9 @@ let
         rm -f -- "$tmp"
       }
     ''))
-    (lib.optionalString (hmConfig.programs.zoxide.enable) (''eval "$(zoxide init zsh)"''))
+    (lib.optionalString (hmConfig.hm.zoxide.enable) (''eval "$(zoxide init zsh)"''))
   ];
-in
-{
-  programs.zsh = { inherit promptInit interactiveShellInit; };
+
   launchd.user.agents."symlink-zsh-config" = {
     script = ''
       ln -sfn "/etc/zprofile" "/Users/${config.system.primaryUser}/.zprofile"
