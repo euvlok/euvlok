@@ -21,7 +21,7 @@
 
     # --- ashuramaruzxc ---
     nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager";
+    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-25.05";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
