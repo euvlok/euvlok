@@ -14,7 +14,6 @@
     targets.hyprlock.enable = false;
     targets.spicetify.enable = true;
     # targets.anki.enable = false;
-
     # targets.zen-browser = {
     # enable = true;
 
