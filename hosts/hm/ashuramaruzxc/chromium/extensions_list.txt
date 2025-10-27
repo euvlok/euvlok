@@ -1,0 +1,40 @@
+# Run `./modules/hm/gui/chromium/update.sh -i $(realpath ./hosts/hm/ashuramaruzxc/chromium/extensions_list.txt) -o $(realpath ./hosts/hm/ashuramaruzxc/chromium/extensions.nix)` to regenerate.
+
+# dark reader
+eimadpbcbfnmbkopoojfekhnkhdbieeh
+# kagi search
+cdglnehniifkbagbbombnjghhcihifij
+# web archives
+hkligngkgcpcolhcnkgccglchdafcnao
+
+# react devtools
+fmkadmapgofadopljbjfkapdkoienihi
+# redux devtools
+lmhkpmbekcpmknklioeibfkpmmfibljd
+# vuejs devtools
+nhdogjmejiglipccpnnnanhbledajbpd
+# angular
+ienfalfjdbdpebioblfackkekamfmbnh
+# solidjs
+kmcfjchnmmaeeagadbhoofajiopoceel
+
+# user agent
+bhchdcejhohfmigjafbampogmaanbfkg
+# Picture in Picture
+hkgfoiooedgoejojocmhlaklaeopbecg
+# tabliss
+hipekcciheckooncpjeljhnekcoolahp
+# stylus
+clngdbkpkpeebahjckkjfobafhncgmne
+# foxyproxy
+gcknhkkoolaabfmlnjonogaaifnjlfnp
+# bitwarden
+nngceckbapebfimnlniiiahkandclblb
+# reddit enhancment
+kbmfpngjjgdllneeigpgjifpgocmfgmb
+# old reddit
+dneaehbmnbhcippjikoajpoabadpodje
+# search by image
+cnojnbdhbhnkbcieeekonklommdnndci
+# minimal theme for twitter / x
+pobhoodpcipjmedfenaigbeloiidbflp

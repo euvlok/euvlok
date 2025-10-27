@@ -3,48 +3,63 @@ name: Update Chromium Extensions
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 */8 * * *'
 
 permissions:
   contents: write
 
 jobs:
   update-extensions:
-    name: Update and Commit Chromium Extensions
+    name: Update Chromium Extensions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v20
+        with:
+          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
-      - name: Run extensions update script
+      - name: Run extensions update scripts
         id: update_script
         run: |
           set -euo pipefail
 
           UPDATE_SCRIPT="./modules/hm/gui/chromium/update.sh"
-          EXTENSIONS_FILE="./modules/hm/gui/chromium/extensions.nix"
-
           chmod +x "$UPDATE_SCRIPT"
 
-          echo "Running the update script..."
-          "$UPDATE_SCRIPT"
+          mapfile -t LIST_FILES < <(find ./modules/hm/gui/chromium ./hosts/hm -name "extensions_list.txt")
 
-          if git diff --quiet "$EXTENSIONS_FILE"; then
-            echo "No changes detected in ${EXTENSIONS_FILE}."
+          echo "::notice::Found ${#LIST_FILES[@]} extension lists to process."
+
+          for list_file in "${LIST_FILES[@]}"; do
+            output_file="$(dirname "$list_file")/extensions.nix"
+            echo "::group::Processing ${list_file} -> ${output_file}"
+            "$UPDATE_SCRIPT" -i "$list_file" -o "$output_file"
+            echo "::endgroup::"
+          done
+
+          if git diff --quiet; then
+            echo "::notice::No changes detected in any extension files."
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
-            echo "Changes detected in ${EXTENSIONS_FILE}."
+            echo "::warning::Changes detected in one or more extension files."
             echo "has_changes=true" >> $GITHUB_OUTPUT
             
-            CHANGES_SUMMARY=$(git diff --shortstat "$EXTENSIONS_FILE" || true)
+            # Add all potential changes to staging to generate a complete summary
+            git add modules/ hosts/
+
+            CHANGES_SUMMARY=$(git diff --staged --shortstat || true)
             
-            echo "changes_summary<<EOF" >> $GITHUB_OUTPUT
-            echo "The following changes were detected:" >> $GITHUB_OUTPUT
-            echo "$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            {
+              echo "changes_summary<<EOF"
+              echo "The following changes were detected:"
+              echo "$CHANGES_SUMMARY"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
           fi
 
       - name: Commit and push changes
@@ -55,21 +70,26 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add ./modules/hm/gui/chromium/extensions.nix
-
+          # 'git add' was performed in the previous step
           COMMIT_TITLE="chore(chromium): update extensions"
           COMMIT_BODY="${{ steps.update_script.outputs.changes_summary }}"
           git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 
-          for i in {1..5}; do
+          MAX_ATTEMPTS=5
+          for i in $(seq 1 $MAX_ATTEMPTS); do
             if git push origin HEAD:${{ github.ref_name }}; then
-              echo "Successfully pushed changes on attempt $i."
-              break
-            elif [[ $i -lt 5 ]]; then
-              echo "Push failed on attempt $i, attempting rebase and retry..."
-              git pull --rebase origin ${{ github.ref_name }}
-            else
-              echo "Failed to push after 5 attempts."
-              exit 1
+              echo "::notice::Successfully pushed changes on attempt $i."
+              exit 0 # Success
             fi
+
+            if [[ $i -eq $MAX_ATTEMPTS ]]; then
+              echo "::error::Failed to push after $MAX_ATTEMPTS attempts."
+              exit 1 # All attempts failed
+            fi
+
+            wait_time=$((5 * i))
+            echo "::warning::Push failed on attempt $i. Waiting ${wait_time}s and retrying after rebase..."
+            sleep $wait_time
+
+            git pull --rebase origin ${{ github.ref_name }}
           done

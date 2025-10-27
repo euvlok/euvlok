@@ -1,63 +1,69 @@
 {
+  pkgs,
   pkgsUnstable,
   lib,
   config,
   ...
 }:
+let
+  cfg = config.hm.chromium;
+
+  browserPackages = {
+    chromium = pkgsUnstable.chromium.override { enableWideVine = true; };
+    inherit (pkgsUnstable)
+      brave
+      google-chrome
+      ungoogled-chromium
+      ;
+  };
+in
 {
   options.hm.chromium = {
-    enable = lib.mkEnableOption "Chromium";
+    enable = lib.mkEnableOption "Chromium-based browsers";
+
     browser = lib.mkOption {
+      type = lib.types.enum (lib.attrNames browserPackages);
       default = "ungoogled-chromium";
-      description = "Select the Chromium browser variant";
-      type = lib.types.enum [
-        "brave"
-        "chromium"
-        "google-chrome"
-        "microsoft-edge"
-        "ungoogled-chromium"
-        "vivaldi"
-      ];
+      description = "The browser package to use.";
+    };
+
+    extraExtensions = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [ ];
+      description = "A list of extra extensions to append to the base list.";
+      example = ''
+        (pkgs.callPackage ./my-extensions.nix { })
+      '';
     };
   };
 
-  config = lib.mkIf config.hm.chromium.enable {
+  config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = pkgsUnstable.stdenvNoCC.isLinux;
-        message = "Chromium is only available on Linux";
+        assertion = pkgs.stdenv.isLinux;
+        message = "hm.chromium is only available on Linux";
       }
     ];
     programs.chromium = {
       enable = true;
-      package =
-        let
-          browserPackages = {
-            chromium = pkgsUnstable.chromium.override { enableWideVine = true; };
-            inherit (pkgsUnstable)
-              brave
-              google-chrome
-              microsoft-edge
-              ungoogled-chromium
-              vivaldi
-              ;
-          };
-        in
-        browserPackages.${config.hm.chromium.browser};
+      package = browserPackages.${cfg.browser};
       dictionaries = builtins.attrValues {
         inherit (pkgsUnstable.hunspellDictsChromium) en_US de_DE fr_FR;
       };
-      extensions = (pkgsUnstable.callPackage ./extensions.nix { inherit config; });
+
+      extensions = lib.unique (
+        (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
+      );
+
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
       ]
-      ++ lib.optionals (lib.elem config.hm.chromium.browser [
+      ++ lib.optionals (lib.elem cfg.browser [
         "chromium"
         "google-chrome"
-        "microsoft-edge"
-      ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while its still possible
-      ++ lib.optionals pkgsUnstable.stdenvNoCC.isLinux [
+      ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while it's still possible
+      ++ lib.optionals pkgs.stdenv.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 

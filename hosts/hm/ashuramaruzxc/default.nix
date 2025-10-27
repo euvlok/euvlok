@@ -1,17 +1,17 @@
 _: {
   imports = [
     ./aliases.nix
+    ./chromium
+    ./dconf.nix
+    ./firefox.nix
+    ./flatpak.nix
     ./git.nix
+    ./graphics.nix
     ./helix.nix
+    ./nixcord.nix
     ./nushell.nix
     ./ssh.nix
     ./starship.nix
-    ./firefox.nix
-    ./nixcord.nix
     ./vscode.nix
-    ./chrome.nix
-    ./dconf.nix
-    ./flatpak.nix
-    ./graphics.nix
   ];
 }
