@@ -18,7 +18,7 @@
     home.packages = builtins.attrValues { inherit (pkgs) mediainfo exiftool clipboard-jh; };
     programs.yazi = {
       enable = true;
-      package = inputs.yazi-source.packages.${osConfig.nixpkgs.hostPlatform.system}.default;
+      package = inputs.yazi-source.packages.${pkgs.system}.default;
       plugins =
         let
           pluginsRepo = pkgs.fetchFromGitHub {

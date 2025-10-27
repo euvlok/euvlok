@@ -2,7 +2,6 @@
   pkgsUnstable,
   lib,
   config,
-  osConfig,
   ...
 }:
 {
@@ -13,7 +12,7 @@
   config = lib.mkIf config.hm.vscode.enable {
     programs.vscode = {
       enable = true;
-      package = lib.mkIf (osConfig.nixpkgs.hostPlatform.isLinux) (
+      package = lib.mkIf (pkgsUnstable.stdenvNoCC.isLinux) (
         pkgsUnstable.vscode.override {
           commandLineArgs = "--wayland-text-input-version=3 --enable-wayland-ime";
         }

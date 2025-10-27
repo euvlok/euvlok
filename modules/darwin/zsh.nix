@@ -9,9 +9,7 @@ let
 
   userAliasesPath = ../../hm/${hmConfig.programs.git.userName}/aliases.nix;
   shellAliases =
-    ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { osConfig = config; })
-      .programs.zsh.shellAliases
-    )
+    ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { }).programs.zsh.shellAliases)
     // lib.optionalAttrs (builtins.pathExists userAliasesPath) (
       (pkgs.callPackage userAliasesPath { }).programs.zsh.shellAliases
     );
@@ -88,7 +86,7 @@ in
     customPluginsStr
   ];
 
-  programs.zsh.promptInit = [
+  programs.zsh.promptInit = lib.mkMerge [
     (lib.optionalString (hmConfig.hm.ghostty.enable) (''
       if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
         source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration

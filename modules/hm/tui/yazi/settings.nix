@@ -1,4 +1,4 @@
-{ lib, osConfig, ... }:
+{ pkgs, lib, ... }:
 {
   programs.yazi.settings = {
     mgr = {
@@ -52,8 +52,8 @@
         {
           mime = "{audio,video}/*";
           use = [
-            (if osConfig.nixpkgs.hostPlatform.isDarwin then "open" else "")
-            (lib.mkIf osConfig.nixpkgs.hostPlatform.isDarwin "open")
+            (if pkgs.stdenvNoCC.isDarwin then "open" else "")
+            (lib.mkIf pkgs.stdenvNoCC.isDarwin "open")
             "reveal"
           ];
         }

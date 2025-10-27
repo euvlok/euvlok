@@ -278,12 +278,12 @@ in
         {
           # doesn't work with cudaEnable = true;
           home.packages = builtins.attrValues {
-            inherit (inputs.nixpkgs.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}) rpcs3;
+            inherit (inputs.nixpkgs.legacyPackages.${pkgs.system}) rpcs3;
           };
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";
-            package = inputs.anime-cursors-source.packages.${osConfig.nixpkgs.hostPlatform.system}.cursors;
+            package = inputs.anime-cursors-source.packages.${pkgs.system}.cursors;
             size = 32;
             gtk.enable = true;
             x11 = {

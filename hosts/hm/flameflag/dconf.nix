@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  osConfig,
+  pkgs,
   ...
 }:
 let
@@ -20,7 +20,7 @@ let
         }
       ) range
     );
-  inherit (osConfig.nixpkgs.hostPlatform) isLinux;
+  inherit (pkgs.stdenvNoCC) isLinux;
 in
 {
   options.hm.dconf.enable = lib.mkEnableOption "Dconf";

@@ -24,7 +24,7 @@ in
       backend = format;
       inherit key;
       backends.ssh.program =
-        if osConfig.nixpkgs.hostPlatform.isLinux then
+        if pkgs.stdenvNoCC.isLinux then
           (lib.getExe' pkgs._1password-gui "op-ssh-sign")
         else
           "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";

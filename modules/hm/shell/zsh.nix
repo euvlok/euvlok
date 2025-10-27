@@ -2,17 +2,22 @@
   pkgs,
   lib,
   config,
-  osConfig,
   ...
 }:
 {
   options.hm.zsh.enable =
     lib.mkEnableOption "Declerative Zsh"
-    // lib.optionalAttrs (osConfig.nixpkgs.hostPlatform.isLinux) {
+    // lib.optionalAttrs (pkgs.stdenvNoCC.isLinux) {
       default = true;
     };
 
   config = lib.mkIf config.hm.zsh.enable {
+    assertions = [
+      {
+        message = "You cannot use Home-Manager Zsh on Darwin";
+        assertion = pkgs.stdenvNoCC.isLinux;
+      }
+    ];
     programs.zsh = {
       enable = true;
       autosuggestion.enable = true;
@@ -43,10 +48,6 @@
           name = "fast-syntax-highlighting";
           src = pkgs.zsh-fast-syntax-highlighting;
         }
-        # {
-        #   name = "fzf-tab";
-        #   src = pkgs.zsh-fzf-tab;
-        # }
         {
           name = "nix-shell";
           src = pkgs.zsh-nix-shell;

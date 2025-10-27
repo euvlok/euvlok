@@ -1,4 +1,4 @@
-{ lib, osConfig, ... }:
+{ pkgs, lib, ... }:
 let
   aliases = {
     v = "hx";
@@ -10,7 +10,7 @@ let
     htop = "btop";
     neofetch = "fastfetch";
   }
-  // lib.optionalAttrs (osConfig.nixpkgs.hostPlatform.isDarwin) {
+  // lib.optionalAttrs (pkgs.stdenvNoCC.isDarwin) {
     micfix = "sudo killall coreaudiod";
   };
 in

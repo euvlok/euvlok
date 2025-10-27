@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   eulib,
   pkgsUnstable,
   ...
@@ -67,8 +68,7 @@
         {
           programs.spicetify.enable = true;
           programs.spicetify.enabledExtensions = builtins.attrValues {
-            inherit
-              (inputs.spicetify-nix-trivial.legacyPackages.${osConfig.nixpkgs.hostPlatform.system}.extensions)
+            inherit (inputs.spicetify-nix-trivial.legacyPackages.${pkgs.system}.extensions)
               adblock
               beautifulLyrics # Apple Music like Lyrics
               copyLyrics

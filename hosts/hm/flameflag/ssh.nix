@@ -1,8 +1,8 @@
-{ config, osConfig, ... }:
+{ pkgs, config, ... }:
 let
   home = config.home.homeDirectory;
   sockPath =
-    if osConfig.nixpkgs.hostPlatform.isDarwin then
+    if pkgs.stdenvNoCC.isDarwin then
       "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     else
       ".1password/agent.sock";

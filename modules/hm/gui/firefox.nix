@@ -4,7 +4,6 @@
   pkgsUnstable,
   lib,
   config,
-  osConfig,
   ...
 }:
 let
@@ -31,9 +30,8 @@ let
       }
       ++ lib.optionals config.catppuccin.enable [
         pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons
-      ]
-      ++ (lib.optionals (supportGnome) [ pkgs.nur.repos.rycee.firefox-addons.gnome-shell-integration ])
-      ++ (lib.optionals (supportPlasma) [ pkgs.nur.repos.rycee.firefox-addons.plasma-integration ]);
+      ];
+
     extensions.force = true;
     search = {
       force = true;
@@ -200,18 +198,18 @@ let
     settings = {
       "browser.urlbar.suggest.calculator" = true;
       "browser.urlbar.update2.engineAliasRefresh" = true;
-    }
-    // lib.optionalAttrs (isLinux && osConfig.xdg.portal.xdgOpenUsePortal == true) {
-      "widget.use-xdg-desktop-portal.file-picker" = 1;
-    }
-    // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
-      "media.ffmpeg.vaapi.enabled" = true;
-      "media.gpu-process.enabled" = true;
-    })
-    // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable)) {
-      "media.hardware-video-decoding.force-enabled" = true;
-      "media.rdd-ffmpeg.enabled" = true; # It's default but just in case
-    });
+    };
+    # // lib.optionalAttrs (isLinux && osConfig.xdg.portal.xdgOpenUsePortal == true) {
+    #   "widget.use-xdg-desktop-portal.file-picker" = 1;
+    # }
+    # // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
+    #   "media.ffmpeg.vaapi.enabled" = true;
+    #   "media.gpu-process.enabled" = true;
+    # })
+    # // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable)) {
+    #   "media.hardware-video-decoding.force-enabled" = true;
+    #   "media.rdd-ffmpeg.enabled" = true; # It's default but just in case
+    # });
   };
   policies = {
     DisableAppUpdate = true;
@@ -225,15 +223,6 @@ let
     DisablePocket = true;
     DisableSetDesktopBackground = true;
   };
-  nativeMessagingHosts = lib.mkIf isLinux (
-    builtins.attrValues (
-      lib.optionalAttrs supportGnome { inherit (pkgsUnstable) gnome-browser-connector; }
-      // lib.optionalAttrs supportPlasma { inherit (pkgsUnstable.kdePackages) plasma-integration; }
-    )
-  );
-  isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
-  supportGnome = isLinux && osConfig.services.xserver.desktopManager.gnome.enable;
-  supportPlasma = isLinux && osConfig.services.desktopManager.plasma6.enable;
 in
 {
   imports = [ inputs.zen-browser-trivial.homeModules.twilight ];
@@ -265,7 +254,7 @@ in
         enable = true;
         package = pkgs.firefox;
         profiles.default = default;
-        inherit policies nativeMessagingHosts;
+        inherit policies;
       };
     })
     (lib.mkIf config.hm.firefox.floorp.enable {
@@ -273,7 +262,7 @@ in
         enable = true;
         package = pkgsUnstable.floorp-bin;
         profiles.default = default;
-        inherit policies nativeMessagingHosts;
+        inherit policies;
       };
     })
     (lib.mkIf config.hm.firefox.librewolf.enable {
@@ -281,14 +270,14 @@ in
         enable = true;
         package = pkgs.librewolf;
         profiles.default = default;
-        inherit policies nativeMessagingHosts;
+        inherit policies;
       };
     })
     (lib.mkIf config.hm.firefox.zen-browser.enable {
       programs.zen-browser = {
         enable = true;
         profiles.default = default;
-        inherit policies nativeMessagingHosts;
+        inherit policies;
       };
     })
     (lib.mkIf (config.catppuccin.enable && config.hm.firefox.zen-browser.enable) {
@@ -301,10 +290,5 @@ in
         "${profilesPath}/default/chrome/zen-logo.svg".source = "${themeDir}/zen-logo.svg";
       };
     })
-    {
-      home.packages =
-        (lib.optionals (supportGnome) [ pkgsUnstable.gnome-browser-connector ])
-        ++ (lib.optionals (supportPlasma) [ pkgsUnstable.kdePackages.plasma-integration ]);
-    }
   ];
 }

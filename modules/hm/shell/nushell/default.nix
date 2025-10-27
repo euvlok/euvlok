@@ -56,7 +56,7 @@ in
         path = ''echo $env.PATH'';
 
         rebuild =
-          if osConfig.nixpkgs.hostPlatform.isLinux then
+          if pkgs.stdenvNoCC.isLinux then
             "nixos-rebuild switch --flake (readlink -f /etc/nixos) --use-remote-sudo"
           else
             "sudo nix-darwin switch --flake (readlink -f /etc/nixos)";

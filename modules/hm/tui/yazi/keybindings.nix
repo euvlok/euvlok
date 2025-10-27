@@ -1,7 +1,7 @@
-{ eulib, osConfig, ... }:
+{ pkgs, eulib, ... }:
 let
   inherit (eulib) genKeyBind genModBind genGoBind;
-  inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
+  inherit (pkgs.stdenvNoCC) isDarwin;
 
   keymap = [
     (genKeyBind "Open help" [ "~" ] "help")

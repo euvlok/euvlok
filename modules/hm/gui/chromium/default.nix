@@ -2,7 +2,6 @@
   pkgsUnstable,
   lib,
   config,
-  osConfig,
   ...
 }:
 {
@@ -25,7 +24,7 @@
   config = lib.mkIf config.hm.chromium.enable {
     assertions = [
       {
-        assertion = osConfig.nixpkgs.hostPlatform.isLinux;
+        assertion = pkgsUnstable.stdenvNoCC.isLinux;
         message = "Chromium is only available on Linux";
       }
     ];
@@ -58,7 +57,7 @@
         "google-chrome"
         "microsoft-edge"
       ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while its still possible
-      ++ lib.optionals osConfig.nixpkgs.hostPlatform.isLinux [
+      ++ lib.optionals pkgsUnstable.stdenvNoCC.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 

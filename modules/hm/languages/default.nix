@@ -3,12 +3,9 @@
   pkgsUnstable,
   lib,
   config,
-  osConfig,
   ...
 }:
 let
-  inherit (osConfig.nixpkgs.hostPlatform) isLinux;
-
   versionMappings = {
     java =
       let

@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  osConfig,
   ...
 }:
 
@@ -62,7 +61,7 @@
         };
       };
     })
-    (lib.mkIf (osConfig.nixpkgs.hostPlatform.isDarwin) {
+    (lib.mkIf (pkgs.stdenvNoCC.isDarwin) {
       home.file.".gitconfig".source =
         config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/.gitconfig";
     })

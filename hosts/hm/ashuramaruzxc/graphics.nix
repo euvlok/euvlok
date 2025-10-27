@@ -1,11 +1,10 @@
 {
   pkgs,
   lib,
-  osConfig,
   ...
 }:
 {
-  config = lib.mkIf osConfig.nixpkgs.hostPlatform.isx86 {
+  config = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86) {
     home.packages = builtins.attrValues {
       inherit (pkgs.kdePackages) kdenlive;
       # Graphics & Design

@@ -4,7 +4,6 @@
   config,
   pkgs,
   pkgsUnstable,
-  osConfig,
   ...
 }:
 let
@@ -20,7 +19,7 @@ let
     mkSimpleAction
     ;
 
-  copy_command = if osConfig.nixpkgs.hostPlatform.isDarwin then "pbcopy" else "wl-copy";
+  copy_command = if pkgs.stdenvNoCC.isDarwin then "pbcopy" else "wl-copy";
 
   useHelixKeys = config.programs.helix.enable;
 in

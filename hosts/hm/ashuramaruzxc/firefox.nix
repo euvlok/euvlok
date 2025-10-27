@@ -3,7 +3,6 @@
   pkgs,
   pkgsUnstable,
   lib,
-  osConfig,
   ...
 }:
 let
@@ -90,7 +89,7 @@ let
     let
       version = "latest";
     in
-    inputs.firefox-addons-trivial.lib.${osConfig.nixpkgs.hostPlatform.system}.buildFirefoxXpiAddon {
+    inputs.firefox-addons-trivial.lib.${pkgs.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
       inherit version;
       addonId = "magnolia@12.34";
@@ -168,56 +167,59 @@ let
 in
 {
   #! bitwarden is still broken
-  programs.floorp = {
-    enable = true;
-    profiles.default = {
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
-      inherit search settings;
+
+  config = lib.mkIf pkgs.stdenvNoCC.isDarwin {
+    programs.floorp = {
+      enable = true;
+      profiles.default = {
+        extensions.packages = defaultExtensionsList;
+        extensions.force = true;
+        inherit search settings;
+      };
+      profiles.backup = {
+        id = 1;
+        extensions.packages = defaultExtensionsList;
+        extensions.force = true;
+        inherit search settings;
+      };
+      nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
+        builtins.attrValues { inherit (pkgs) firefoxpwa; }
+      );
+      languagePacks = [
+        "en-CA"
+        "en-GB"
+        "en-US"
+        "ja"
+      ];
     };
-    profiles.backup = {
-      id = 1;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
-      inherit search settings;
+    programs.zen-browser = {
+      enable = true;
+      profiles.default = {
+        settings = zenSettings;
+        extensions.packages = defaultExtensionsList;
+        extensions.force = true;
+        inherit search;
+      };
+      profiles.backup = {
+        id = 1;
+        settings = zenSettings;
+        extensions.packages = defaultExtensionsList;
+        extensions.force = true;
+      };
+      nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
+        builtins.attrValues { inherit (pkgsUnstable) firefoxpwa; }
+      );
+      languagePacks = [
+        "en-CA"
+        "en-GB"
+        "en-US"
+        "ja"
+      ];
     };
-    nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
-      builtins.attrValues { inherit (pkgs) firefoxpwa; }
+    home.packages = lib.mkIf pkgs.stdenvNoCC.isLinux (
+      builtins.attrValues {
+        inherit (pkgs) firefoxpwa;
+      }
     );
-    languagePacks = [
-      "en-CA"
-      "en-GB"
-      "en-US"
-      "ja"
-    ];
   };
-  programs.zen-browser = {
-    enable = true;
-    profiles.default = {
-      settings = zenSettings;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
-      inherit search;
-    };
-    profiles.backup = {
-      id = 1;
-      settings = zenSettings;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
-    };
-    nativeMessagingHosts = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
-      builtins.attrValues { inherit (pkgsUnstable) firefoxpwa; }
-    );
-    languagePacks = [
-      "en-CA"
-      "en-GB"
-      "en-US"
-      "ja"
-    ];
-  };
-  home.packages = lib.mkIf osConfig.nixpkgs.hostPlatform.isLinux (
-    builtins.attrValues {
-      inherit (pkgs) firefoxpwa;
-    }
-  );
 }

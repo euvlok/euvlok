@@ -1,4 +1,4 @@
-{ osConfig, ... }:
+{ pkgs, ... }:
 let
   aliases = {
     # Navigate
@@ -58,7 +58,7 @@ let
     '';
 
     rebuild =
-      if osConfig.nixpkgs.hostPlatform.isLinux then
+      if pkgs.stdenvNoCC.isLinux then
         "nixos-rebuild switch --use-remote-sudo --flake $(readlink -f /etc/nixos)"
       else
         "sudo nix-darwin switch --flake $(readlink -f /etc/nixos)";

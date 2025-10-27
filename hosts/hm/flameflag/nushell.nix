@@ -1,11 +1,10 @@
 {
   pkgs,
   lib,
-  osConfig,
   ...
 }:
 let
-  inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
+  inherit (pkgs.stdenvNoCC) isDarwin;
 in
 {
   programs.nushell.shellAliases = {
@@ -35,8 +34,5 @@ in
     $env.config.edit_mode = "vi";
     $env.config.cursor_shape.vi_insert = "line"
     $env.config.cursor_shape.vi_normal = "block"
-  ''
-  + lib.optionalString (lib.any (pkg: pkg == pkgs.github-copilot-cli) (
-    osConfig.environment.systemPackages
-  )) "source ${../../../modules/scripts/github-copilot-cli.nu}";
+  '';
 }

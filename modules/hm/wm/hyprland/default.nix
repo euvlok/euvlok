@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  osConfig,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.hm.hyprland.enable = lib.mkEnableOption "Hyprland";
 
@@ -55,18 +49,10 @@
         ) 10
       ));
 
-      windowrulev2 =
-        let
-          hasPkg = pkg: lib.any (p: p == pkg) (osConfig.environment.systemPackages or config.home.packages);
-          mkRule = cls: cond: lib.optionals cond [ "float, class:^(${cls})$" ];
-        in
-        [
-          "suppressevent maximize, class:.*"
-          "immediate, class:^(*.exe)$"
-        ]
-        ++ mkRule "1Password" (osConfig.programs._1password-gui.enable)
-        ++ mkRule "Bitwarden" (hasPkg pkgs.bitwarden)
-        ++ mkRule "KeePassXC" (hasPkg pkgs.keepassxc);
+      windowrulev2 = [
+        "suppressevent maximize, class:.*"
+        "immediate, class:^(*.exe)$"
+      ];
 
       cursor.no_hardware_cursors = 1;
     };

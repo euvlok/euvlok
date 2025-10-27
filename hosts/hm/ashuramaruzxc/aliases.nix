@@ -1,9 +1,4 @@
-{
-  osConfig,
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, lib, ... }:
 let
   mkScript = name: path: lib.getExe (pkgs.writeScriptBin name (builtins.readFile path));
 
@@ -63,12 +58,12 @@ let
     video2gif = mkScript "video2gif" ./scripts/video2gif.sh;
   };
 
-  darwin = lib.optionalAttrs (osConfig.nixpkgs.hostPlatform.isDarwin) {
+  darwin = lib.optionalAttrs (pkgs.stdenvNoCC.isDarwin) {
     micfix = "sudo killall coreaudiod";
     flushdns = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
   };
 
-  linux = lib.optionalAttrs (osConfig.nixpkgs.hostPlatform.isLinux) {
+  linux = lib.optionalAttrs (pkgs.stdenvNoCC.isLinux) {
     pbcopy = "xclip -selection clipboard";
     pbpaste = "xclip -selection clipboard -o";
     open = "xdg-open";

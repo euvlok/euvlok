@@ -3,11 +3,10 @@
   lib,
   eulib,
   config,
-  osConfig,
   ...
 }:
 let
-  inherit (osConfig.nixpkgs.hostPlatform) isDarwin;
+  inherit (pkgs.stdenvNoCC) isDarwin;
   inherit (eulib) mkSuper mkSuperShift;
 
   superKey = if isDarwin then "super" else "ctrl";
