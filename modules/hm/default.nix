@@ -1,5 +1,6 @@
 _: {
   imports = [
+    ./catppuccin.nix
     ./cli
     ./gui
     ./languages
