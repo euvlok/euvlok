@@ -1,13 +1,13 @@
 name: Update Trivial Flake Inputs
+
 on:
+  workflow_dispatch:
   schedule:
     # Run every 2 days at midnight UTC
     - cron: "0 0 */2 * *"
-  workflow_dispatch:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   update-trivial-inputs:
@@ -15,13 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
+        uses: DeterminateSystems/nix-installer-action@v20
         with:
           source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
@@ -33,7 +32,7 @@ jobs:
 
           # Check if flake.lock exists
           if [[ ! -f flake.lock ]]; then
-            echo "flake.lock not found"
+            echo "::warning::flake.lock not found, skipping."
             echo "has_changes=false" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -42,12 +41,12 @@ jobs:
           mapfile -t trivial_inputs < <(jq -r '.nodes.root.inputs | keys[] | select(test("-trivial$"))' flake.lock)
 
           if [[ ${#trivial_inputs[@]} -eq 0 ]]; then
-            echo "No trivial inputs found"
+            echo "::notice::No trivial inputs found to update."
             echo "has_changes=false" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          echo "Found ${#trivial_inputs[@]} trivial inputs: ${trivial_inputs[*]}"
+          echo "::notice::Found ${#trivial_inputs[@]} trivial inputs: ${trivial_inputs[*]}"
 
           # Store old commit info before update
           declare -A old_commits repo_info
@@ -59,11 +58,13 @@ jobs:
           done
 
           # Update all trivial inputs at once
+          echo "::group::Updating trivial inputs"
           nix flake update "${trivial_inputs[@]}"
+          echo "::endgroup::"
 
           # Check if anything _actually_ changed
           if git diff --quiet flake.lock; then
-            echo "No changes after flake update"
+            echo "::notice::No changes detected in flake.lock after update."
             echo "has_changes=false" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -97,24 +98,33 @@ jobs:
       - name: Commit and push changes
         if: steps.find-inputs.outputs.has_changes == 'true'
         run: |
+          set -euo pipefail
+
           git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add flake.lock
-          git commit -m "chore: update trivial flake inputs
+          
+          COMMIT_TITLE="chore: update trivial flake inputs"
+          COMMIT_BODY="${{ steps.find-inputs.outputs.formatted_inputs }}"
+          
+          git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 
-          ${{ steps.find-inputs.outputs.formatted_inputs }}"
+          MAX_ATTEMPTS=5
+          for i in $(seq 1 $MAX_ATTEMPTS); do
+            if git push origin HEAD:${{ github.ref_name }}; then
+              echo "::notice::Successfully pushed changes on attempt $i."
+              exit 0
+            fi
 
-          # Push with retry logic
-          for i in {1..5}; do
-            if git push origin master; then
-              echo "Successfully pushed changes"
-              break
-            elif [[ $i -lt 5 ]]; then
-              echo "Push failed, attempting rebase and retry..."
-              git pull --rebase origin master
-            else
-              echo "Failed to push after 5 attempts"
+            if [[ $i -eq $MAX_ATTEMPTS ]]; then
+              echo "::error::Failed to push after $MAX_ATTEMPTS attempts."
               exit 1
             fi
+
+            wait_time=$((5 * i))
+            echo "::warning::Push failed on attempt $i. Waiting ${wait_time}s and retrying after rebase..."
+            sleep $wait_time
+            
+            git pull --rebase origin ${{ github.ref_name }}
           done

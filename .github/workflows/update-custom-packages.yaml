@@ -1,81 +1,113 @@
-name: Update All Nix Packages in ./pkgs
+name: Update Custom Packages
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * *'
+    - cron: '0 8 * * *'
 
 permissions:
   contents: write
 
 jobs:
   update-packages:
-    name: Recursively update & Commit all Nix packages
+    name: Update Custom Packages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v17
+        uses: DeterminateSystems/nix-installer-action@v20
         with:
           source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
       - name: Grant perms to update script
         run: chmod +x ./pkgs/update.sh
 
-      - name: Update & Commit each package (recursively, graceful)
+      - name: Update Packages
+        id: package_updater
         run: |
-          set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
 
-          changes=0
-
-          find ./pkgs -type f -name '*.nix' | while read -r nixfile; do
+          while read -r nixfile; do
             name=$(basename "$nixfile" .nix)
             abs_path=$(realpath "$nixfile")
-            echo "Processing $nixfile"
+            echo "::group::Processing $nixfile"
 
-            if nix eval --impure --raw --expr \
-              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).type" 2>/dev/null | grep -qx "derivation"; then
-              echo "$nixfile is a derivation, proceeding with update."
-            else
-              echo "$nixfile is NOT a derivation, skipping."
+            # Check 1: Is the file a valid derivation?
+            if ! (nix eval --impure --raw --expr \
+              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).type" 2>/dev/null | grep -qx "derivation"); then
+              echo "::warning::$nixfile is NOT a derivation, skipping."
+              echo "::endgroup::"
               continue
             fi
 
-            OLD_REV=$(nix eval --impure --raw --expr \
-              "with import <nixpkgs> {}; builtins.substring 0 7 ((callPackage \"$abs_path\" {}).src.rev or \"\")" 2>/dev/null || echo "")
-            echo "Old revision for $name: $OLD_REV"
+            # Check 2: Does the derivation have a .src attribute?
+            # We redirect all output to /dev/null and check only the exit code.
+            # If '.src' is missing, nix eval will fail with a non-zero exit code.
+            if ! nix eval --impure --raw --expr \
+              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).src" &> /dev/null; then
+              echo "::notice::$nixfile does not have a .src attribute, skipping update."
+              echo "::endgroup::"
+              continue
+            fi
+            
+            echo "::notice::$nixfile is a fetchable derivation, proceeding with update."
 
             if ./pkgs/update.sh "$nixfile"; then
-              echo "Update script succeeded for $nixfile"
+              echo "::notice::Update script succeeded for $nixfile"
             else
-              echo "Update script failed for $nixfile, skipping commit."
-              continue
+              echo "::error::Update script failed for $nixfile, skipping."
             fi
+            echo "::endgroup::"
+          done < <(find ./pkgs -type f -name '*.nix')
 
-            NEW_REV=$(nix eval --impure --raw --expr \
-              "with import <nixpkgs> {}; builtins.substring 0 7 ((callPackage \"$abs_path\" {}).src.rev or \"\")" 2>/dev/null || echo "")
-            echo "New revision for $name: $NEW_REV"
-
-            if git diff --quiet "$nixfile"; then
-              echo "No changes detected in $nixfile."
-            else
-              echo "$nixfile has changed."
-              git add "$nixfile"
-              COMMIT_MSG="$name: $OLD_REV -> $NEW_REV"
-              echo "Committing: $COMMIT_MSG"
-              git commit -m "$COMMIT_MSG"
-              # Rebase and push after each commit to avoid conflicts
-              git fetch origin master
-              git pull origin master --rebase
-              git push origin master
-              changes=1
-            fi
-          done
-
-          if [ "$changes" -eq 0 ]; then
-            echo "No updates needed for pkgs."
+          if git diff --quiet; then
+            echo "::notice::No changes detected in any packages."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "::warning::Changes detected in one or more packages."
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
+          
+      - name: Commit and Push Changes
+        if: steps.package_updater.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add pkgs/
+          CHANGES_SUMMARY=$(git diff --staged --shortstat | sed 's/^/    /')
+          COMMIT_TITLE="chore(pkgs): update custom packages"
+          COMMIT_BODY=$(cat <<EOF
+          The following package updates were applied:
+
+          ${CHANGES_SUMMARY}
+          EOF
+          )
+          
+          git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
+
+          MAX_ATTEMPTS=5
+          for i in $(seq 1 $MAX_ATTEMPTS); do
+            # Attempt to push to the remote branch
+            if git push origin HEAD:${{ github.ref_name }}; then
+              echo "::notice::Successfully pushed changes on attempt $i."
+              exit 0 # Success
+            fi
+
+            if [[ $i -eq $MAX_ATTEMPTS ]]; then
+              echo "::error::Failed to push after $MAX_ATTEMPTS attempts."
+              exit 1 # All attempts failed
+            fi
+
+            wait_time=$((5 * i))
+            echo "::warning::Push failed on attempt $i. Waiting ${wait_time}s and retrying after rebase..."
+            sleep $wait_time
+
+            git pull --rebase origin ${{ github.ref_name }}
+          done
