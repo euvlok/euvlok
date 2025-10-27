@@ -326,8 +326,20 @@ fetch_json_metadata() {
 	log_info "Fetching metadata with: ${metadata_cmd[*]}"
 
 	while ((attempt <= max_attempts)); do
-		if error_output=$(yt-dlp "$url" -j "${final_args[@]}" 2>&1); then
-			json_metadata="$error_output"
+		local stderr_file
+		stderr_file=$(mktemp)
+
+		json_metadata=$(yt-dlp "$url" -j "${final_args[@]}" 2> "$stderr_file")
+		local exit_code=$?
+
+		error_output=$(<"$stderr_file")
+		rm "$stderr_file"
+
+		if [[ $exit_code -eq 0 ]]; then
+			# If there were non-fatal warnings on stderr, print them for context
+			if [[ -n "$error_output" ]]; then
+				printf "%s\n" "$error_output" >&2
+			fi
 			return 0
 		fi
 
