@@ -92,7 +92,7 @@ in
         source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
       fi
     ''))
-    (lib.optionalString (hmConfig.hm.starship.enable) (''
+    (lib.optionalString (hmConfig.programs.starship.enable) (''
       if [[ $TERM != "dumb" ]]; then
         eval "$(starship init zsh)"
       fi

@@ -13,7 +13,7 @@
   config = lib.mkIf config.hm.nixcord.enable {
     assertions = [
       {
-        assertion = pkgs.stdenvNoCC.isx86 || pkgs.stdenvNoCC.isDarwin;
+        assertion = pkgs.stdenvNoCC.isx86_64 || pkgs.stdenvNoCC.isDarwin;
         message = "You cannot use Nixcord (Discord) on aarch64-linux";
       }
     ];
