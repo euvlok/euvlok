@@ -1,105 +1,105 @@
 {
+  pkgs,
   pkgsUnstable,
-  eulib,
   config,
   lib,
   ...
 }:
 let
-  inherit (config.programs.vscode.package) version;
-  mkExt = eulib.mkExt version;
+  extensionStrings =
+    (lib.optionals (config.hm.languages.cpp.enable or config.hm.languages.rust.enable
+      or config.hm.languages.swift.enable
+    ) [ "vadimcn.vscode-lldb" ])
+    ++ lib.optionals config.hm.languages.csharp.enable [
+      "ms-dotnettools.csharp"
+      "ms-dotnettools.vscode-dotnet-runtime"
+    ]
+    ++ lib.optionals config.hm.languages.cpp.enable [
+      "ms-vscode.cmake-tools"
+      "ms-vscode.cpptools"
+      "ms-vscode.cpptools-extension-pack"
+      "twxs.cmake"
+    ]
+    ++ lib.optionals config.hm.languages.rust.enable [
+      "fill-labs.dependi"
+      "rust-lang.rust-analyzer"
+    ]
+    ++ lib.optionals config.hm.languages.lua.enable [
+      "keyring.lua"
+      "sumneko.lua"
+    ]
+    ++ lib.optionals config.hm.languages.javascript.enable [
+      "bradlc.vscode-tailwindcss"
+      "christian-kohler.npm-intellisense"
+      "denoland.vscode-deno"
+      "esbenp.prettier-vscode"
+      "ms-vscode.vscode-typescript-next"
+      "syler.sass-indented"
+    ]
+    ++ lib.optionals config.hm.languages.nim.enable [
+      "nimLang.nimlang"
+      "nimsaem.nimvscode"
+    ]
+    ++ lib.optionals config.hm.languages.go.enable [
+      "golang.go"
+      "premparihar.gotestexplorer"
+    ]
+    ++ lib.optionals config.hm.languages.swift.enable [
+      "swift-server.swift"
+      "vknabel.swift-coverage"
+    ]
+    ++ lib.optionals config.hm.languages.ruby.enable [
+      "shopify.ruby-lsp"
+      "sorbet.sorbet-vscode-extension"
+    ]
+    ++ lib.optionals config.hm.languages.python.enable [
+      "charliermarsh.ruff"
+      "ms-python.debugpy"
+      "ms-python.python"
+      "ms-python.vscode-pylance"
+      "ms-toolsai.jupyter"
+    ]
+    ++ lib.optionals config.hm.languages.php.enable [
+      "devsense.phptools-vscode"
+      "bmewburn.vscode-intelephense-client"
+      "xdebug.php-debug"
+    ]
+    ++ lib.optionals config.hm.languages.kotlin.enable [ "fwcd.kotlin" ]
+    ++ lib.optionals config.hm.languages.elixir.enable [ "jakebecker.elixir-ls" ]
+    ++ lib.optionals config.hm.languages.java.enable [
+      "oracle.oracle-java"
+      "redhat.java"
+      "vscjava.vscode-gradle"
+      "vscjava.vscode-java-debug"
+      "vscjava.vscode-java-dependency"
+      "vscjava.vscode-java-test"
+      "vscjava.vscode-maven"
+      "vscjava.vscode-spring-initializr"
+    ]
+    ++ lib.optionals config.hm.languages.haskell.enable [
+      "haskell.haskell"
+      "justusadam.language-haskell"
+    ]
+    ++ lib.optionals config.hm.languages.scala.enable [ "scalameta.metals" ]
+    ++ lib.optionals config.hm.languages.ocaml.enable [
+      "ocamllabs.vscode-ocaml-platform"
+    ]
+    ++ lib.optionals config.hm.languages.perl.enable [ "richterger.perl" ]
+    ++ lib.optionals config.hm.languages.dart.enable [
+      "dart-code.dart-code"
+      "dart-code.flutter"
+    ]
+    ++ lib.optionals config.hm.languages.clojure.enable [
+      "betterthantomorrow.calva"
+    ]
+    ++ lib.optionals config.hm.languages.fsharp.enable [ "ionide.ionide-fsharp" ]
+    ++ lib.optionals config.hm.languages.lisp.enable [ "mattn.lisp" ]
+    ++ lib.optionals config.hm.languages.zig.enable [ "ziglang.vscode-zig" ];
 in
 {
   config = lib.mkIf config.hm.vscode.enable {
     programs.vscode.profiles.default.extensions =
-      (lib.optionals (config.hm.languages.cpp.enable or config.hm.languages.rust.enable
-        or config.hm.languages.swift.enable
-      ) [ pkgsUnstable.vscode-extensions.vadimcn.vscode-lldb ])
-      ++ lib.optionals config.hm.languages.csharp.enable [
-        (mkExt "ms-dotnettools" "csharp")
-        (mkExt "ms-dotnettools" "vscode-dotnet-runtime")
-      ]
-      ++ lib.optionals config.hm.languages.cpp.enable [
-        (mkExt "ms-vscode" "cmake-tools")
-        (mkExt "ms-vscode" "cpptools")
-        (mkExt "ms-vscode" "cpptools-extension-pack")
-        (mkExt "twxs" "cmake")
-      ]
-      ++ lib.optionals config.hm.languages.rust.enable [
-        (mkExt "fill-labs" "dependi")
-        (mkExt "rust-lang" "rust-analyzer")
-      ]
-      ++ lib.optionals config.hm.languages.lua.enable [
-        (mkExt "keyring" "lua")
-        (mkExt "sumneko" "lua")
-      ]
-      ++ lib.optionals config.hm.languages.javascript.enable [
-        (mkExt "bradlc" "vscode-tailwindcss")
-        (mkExt "christian-kohler" "npm-intellisense")
-        (mkExt "denoland" "vscode-deno")
-        (mkExt "esbenp" "prettier-vscode")
-        (mkExt "ms-vscode" "vscode-typescript-next")
-        (mkExt "syler" "sass-indented")
-      ]
-      ++ lib.optionals config.hm.languages.nim.enable [
-        (mkExt "nimLang" "nimlang")
-        (mkExt "nimsaem" "nimvscode")
-      ]
-      ++ lib.optionals config.hm.languages.go.enable [
-        (mkExt "golang" "go")
-        (mkExt "premparihar" "gotestexplorer")
-      ]
-      ++ lib.optionals config.hm.languages.swift.enable [
-        (mkExt "swift-server" "swift")
-        (mkExt "vknabel" "swift-coverage")
-      ]
-      ++ lib.optionals config.hm.languages.ruby.enable [
-        (mkExt "shopify" "ruby-lsp")
-        (mkExt "sorbet" "sorbet-vscode-extension")
-      ]
-      ++ lib.optionals config.hm.languages.python.enable [
-        (mkExt "charliermarsh" "ruff")
-        (mkExt "ms-python" "debugpy")
-        (mkExt "ms-python" "python")
-        (mkExt "ms-python" "vscode-pylance")
-        (mkExt "ms-toolsai" "jupyter")
-      ]
-      ++ lib.optionals config.hm.languages.php.enable [
-        (mkExt "devsense" "phptools-vscode")
-        (mkExt "bmewburn" "vscode-intelephense-client")
-        (mkExt "xdebug" "php-debug")
-      ]
-      ++ lib.optionals config.hm.languages.kotlin.enable [ (mkExt "fwcd" "kotlin") ]
-      ++ lib.optionals config.hm.languages.elixir.enable [ (mkExt "jakebecker" "elixir-ls") ]
-      ++ lib.optionals config.hm.languages.java.enable [
-        (mkExt "oracle" "oracle-java")
-        (mkExt "redhat" "java")
-        (mkExt "vscjava" "vscode-gradle")
-        (mkExt "vscjava" "vscode-java-debug")
-        (mkExt "vscjava" "vscode-java-dependency")
-        (mkExt "vscjava" "vscode-java-test")
-        (mkExt "vscjava" "vscode-maven")
-        (mkExt "vscjava" "vscode-spring-initializr")
-      ]
-      ++ lib.optionals config.hm.languages.haskell.enable [
-        (mkExt "haskell" "haskell")
-        (mkExt "justusadam" "language-haskell")
-      ]
-      ++ lib.optionals config.hm.languages.scala.enable [ (mkExt "scalameta" "metals") ]
-      ++ lib.optionals config.hm.languages.ocaml.enable [
-        (mkExt "ocamllabs" "vscode-ocaml-platform")
-      ]
-      ++ lib.optionals config.hm.languages.perl.enable [ (mkExt "richterger" "perl") ]
-      ++ lib.optionals config.hm.languages.dart.enable [
-        (mkExt "dart-code" "dart-code")
-        (mkExt "dart-code" "flutter")
-      ]
-      ++ lib.optionals config.hm.languages.clojure.enable [
-        (mkExt "betterthantomorrow" "calva")
-      ]
-      ++ lib.optionals config.hm.languages.fsharp.enable [ (mkExt "ionide" "ionide-fsharp") ]
-      ++ lib.optionals config.hm.languages.lisp.enable [ (mkExt "mattn" "lisp") ]
-      ++ lib.optionals config.hm.languages.zig.enable [ (mkExt "ziglang" "vscode-zig") ];
+      pkgs.nix4vscode.forVscodeVersion config.programs.vscode.package.version extensionStrings;
 
     programs.vscode.profiles.default.userSettings =
       lib.optionalAttrs config.hm.languages.java.enable {

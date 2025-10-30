@@ -1,108 +1,90 @@
-{
-  pkgs,
-  lib,
-  eulib,
-  config,
-  ...
-}:
+{ pkgs, config, ... }:
 let
-  inherit (config.programs.vscode.package) version;
-  mkExt = eulib.mkExt version;
+  extensionStrings = [
+    ## -- Programming languages/lsp support -- ##
+    "josetr.cmake-language-support-vscode"
+    "scala-lang.scala"
+    "mathiasfrohlich.kotlin"
+    "ms-azuretools.vscode-docker"
+    "ms-kubernetes-tools.vscode-kubernetes-tools"
+    "dotjoshjohnson.xml"
+    "graphql.vscode-graphql"
+    "graphql.vscode-graphql-syntax"
+    "pinage404.bash-extension-pack"
 
-  languages = {
-    extensions = [
-      (mkExt "james-yu" "latex-workshop")
-    ];
-    settings = {
-      latex-workshop.latex = {
-        outDir = "./output";
-        recipes = [
-          {
-            name = "xeLaTeX -> Biber -> xeLaTeX";
-            tools = [
-              "xelatex"
-              "biber"
-              "xelatex"
-            ];
-          }
-          {
-            name = "xeLaTeX -> pdflatex";
-            tools = [
-              "xelatex"
-              "pdflatex"
-            ];
-          }
-        ];
-        tools =
-          let
-            commonLatexArgs = lib.splitString " " "-synctex=1 -interaction=nonstopmode -file-line-error -shell-escape -output-directory=output %DOC%";
-            mkLatexTool = name: command: args: { inherit name command args; };
-          in
-          [
-            (mkLatexTool "xelatex" "xelatex" commonLatexArgs)
-            (mkLatexTool "biber" "biber" [
-              "--output-directory=output"
-              "%DOCFILE%"
-            ])
-            (mkLatexTool "pdflatex" "pdflatex" commonLatexArgs)
-          ];
-      };
-    };
-  };
+    # Gay
+    "biud436.rgss-script-compiler" # VX
+    "mjmcreativeworksandidea.rmmvpluginsnippet" # MV
+    "snowszn.rgss-script-editor"
+    ## -- Programming languages/lsp support -- ##
 
-  flattenAttrs =
-    attrs: excludePaths:
-    let
-      isAttrSet = v: builtins.isAttrs v && !builtins.isList v;
-      isExcluded = path: lib.any (excludePath: path == excludePath) excludePaths;
+    ## -- git -- ##
+    "github.vscode-github-actions"
+    ## -- Misc Utils -- ##
+    "njpwerner.autodocstring"
+    "mikestead.dotenv"
+    "humao.rest-client" # Alternative REST client
+    "rangav.vscode-thunder-client" # Thunder Client
+    ## -- Misc Utils -- ##
 
-      # Convert nested set to flat dot-notation
-      go =
-        prefix: set:
-        lib.concatMap (
-          name:
-          let
-            value = set.${name};
-            newPrefix = if prefix == "" then name else "${prefix}.${name}";
-          in
-          if isExcluded newPrefix then
-            [
-              {
-                name = newPrefix;
-                value = value;
-              }
-            ]
-          else if isAttrSet value then
-            go newPrefix value
-          else
-            [
-              {
-                name = newPrefix;
-                value = value;
-              }
-            ]
-        ) (builtins.attrNames set);
-    in
-    builtins.listToAttrs (go "" attrs);
+    ## -- C/C++ Utils -- ##
+    "formulahendry.code-runner"
+    "danielpinto8zz6.c-cpp-compile-run"
+    "ms-vscode.makefile-tools"
+    "cschlosser.doxdocgen"
+    "jeff-hykin.better-cpp-syntax" # Better syntax highlighting
+    ## -- C/C++ Utils -- ##
 
-  mergeFrom =
-    let
-      modules = [
-        languages
-      ];
-      excludePaths = [
-        "[javascript]"
-        "[nix]"
-        "[typescript]"
-      ];
-    in
-    p:
-    if p == "extensions" then
-      lib.concatLists (map (module: module.${p}) modules)
-    else
-      flattenAttrs (lib.foldl' (
-        acc: module: lib.recursiveUpdate acc module.${p}
-      ) { } modules) excludePaths;
+    ## -- Python Utils -- ##
+    # Fuck you sarco
+    "batisteo.vscode-django"
+    "donjayamanne.python-environment-manager"
+    "kaih2o.python-resource-monitor"
+    "kevinrose.vsc-python-indent"
+    "ms-python.black-formatter"
+    "ms-python.flake8"
+    "ms-python.gather"
+    "ms-python.isort"
+    "ms-python.mypy-type-checker"
+    "ms-python.pylint"
+    "wholroyd.jinja"
+    ## -- Python Utils -- ##
+
+    ## -- JavaScript/Typescript Utils -- ##
+    "angular.ng-template"
+    "dsznajder.es7-react-js-snippets"
+    "ecmel.vscode-html-css"
+    "formulahendry.auto-close-tag"
+    "formulahendry.auto-rename-tag"
+    "hollowtree.vue-snippets"
+    "jasonnutter.search-node-modules"
+    "johnpapa.angular2"
+    "msjsdiag.vscode-react-native"
+    "octref.vetur"
+    "prisma.prisma"
+    "ritwickdey.liveserver"
+    "steoates.autoimport"
+    "vue.volar"
+    "wix.vscode-import-cost"
+    "styled-components.vscode-styled-components" # styled-components
+    "graphql.vscode-graphql-execution" # GraphQL execution
+    ## -- JavaScript/Typescript Utils -- ##
+
+    ## -- Vscode specific -- ##
+    "aaron-bond.better-comments"
+    "christian-kohler.path-intellisense"
+    "donjayamanne.githistory"
+    "donjayamanne.git-extension-pack"
+    "eamodio.gitlens"
+    "ms-vscode.hexeditor"
+    "ms-vsliveshare.vsliveshare"
+    "visualstudioexptteam.intellicode-api-usage-examples"
+    ## -- Vscode specific -- ##
+
+    ## -- Dictionary/Languages support -- ##
+    "ms-ceintl.vscode-language-pack-ja"
+    ## -- Dictionary/Languages support -- ##
+  ];
 in
 {
   programs.vscode = {
@@ -281,94 +263,8 @@ in
             "source.organizeImports" = "explicit";
           };
         };
-      }
-      // mergeFrom "settings";
-      extensions = [
-        ## -- Programming languages/lsp support -- ##
-        (mkExt "josetr" "cmake-language-support-vscode")
-        (mkExt "scala-lang" "scala")
-        (mkExt "mathiasfrohlich" "kotlin")
-        (mkExt "ms-azuretools" "vscode-docker")
-        (mkExt "ms-kubernetes-tools" "vscode-kubernetes-tools")
-        (mkExt "dotjoshjohnson" "xml")
-        (mkExt "graphql" "vscode-graphql")
-        (mkExt "graphql" "vscode-graphql-syntax")
-        (mkExt "pinage404" "bash-extension-pack")
-
-        # Gay
-        (mkExt "biud436" "rgss-script-compiler") # VX
-        (mkExt "mjmcreativeworksandidea" "rmmvpluginsnippet") # MV
-        (mkExt "snowszn" "rgss-script-editor")
-        ## -- Programming languages/lsp support -- ##
-
-        ## -- git -- ##
-        (mkExt "github" "vscode-github-actions")
-        ## -- Misc Utils -- ##
-        (mkExt "njpwerner" "autodocstring")
-        (mkExt "mikestead" "dotenv")
-        (mkExt "humao" "rest-client") # Alternative REST client
-        (mkExt "rangav" "vscode-thunder-client") # Thunder Client
-        ## -- Misc Utils -- ##
-
-        ## -- C/C++ Utils -- ##
-        (mkExt "formulahendry" "code-runner")
-        (mkExt "danielpinto8zz6" "c-cpp-compile-run")
-        (mkExt "ms-vscode" "makefile-tools")
-        (mkExt "cschlosser" "doxdocgen")
-        (mkExt "jeff-hykin" "better-cpp-syntax") # Better syntax highlighting
-        ## -- C/C++ Utils -- ##
-
-        ## -- Python Utils -- ##
-        # Fuck you sarco
-        (mkExt "batisteo" "vscode-django")
-        (mkExt "donjayamanne" "python-environment-manager")
-        (mkExt "kaih2o" "python-resource-monitor")
-        (mkExt "kevinrose" "vsc-python-indent")
-        (mkExt "ms-python" "black-formatter")
-        (mkExt "ms-python" "flake8")
-        (mkExt "ms-python" "gather")
-        (mkExt "ms-python" "isort")
-        (mkExt "ms-python" "mypy-type-checker")
-        (mkExt "ms-python" "pylint")
-        (mkExt "wholroyd" "jinja")
-        ## -- Python Utils -- ##
-
-        ## -- JavaScript/Typescript Utils -- ##
-        (mkExt "angular" "ng-template")
-        (mkExt "dsznajder" "es7-react-js-snippets")
-        (mkExt "ecmel" "vscode-html-css")
-        (mkExt "formulahendry" "auto-close-tag")
-        (mkExt "formulahendry" "auto-rename-tag")
-        (mkExt "hollowtree" "vue-snippets")
-        (mkExt "jasonnutter" "search-node-modules")
-        (mkExt "johnpapa" "angular2")
-        (mkExt "msjsdiag" "vscode-react-native")
-        (mkExt "octref" "vetur")
-        (mkExt "prisma" "prisma")
-        (mkExt "ritwickdey" "liveserver")
-        (mkExt "steoates" "autoimport")
-        (mkExt "vue" "volar")
-        (mkExt "wix" "vscode-import-cost")
-        (mkExt "styled-components" "vscode-styled-components") # styled-components
-        (mkExt "graphql" "vscode-graphql-execution") # GraphQL execution
-        ## -- JavaScript/Typescript Utils -- ##
-
-        ## -- Vscode specific -- ##
-        (mkExt "aaron-bond" "better-comments")
-        (mkExt "christian-kohler" "path-intellisense")
-        (mkExt "donjayamanne" "githistory")
-        (mkExt "donjayamanne" "git-extension-pack")
-        (mkExt "eamodio" "gitlens")
-        (mkExt "ms-vscode" "hexeditor")
-        (mkExt "ms-vsliveshare" "vsliveshare")
-        (mkExt "visualstudioexptteam" "intellicode-api-usage-examples")
-        ## -- Vscode specific -- ##
-
-        ## -- Dictionary/Languages support -- ##
-        pkgs.vscode-extensions.ms-ceintl.vscode-language-pack-ja
-        ## -- Dictionary/Languages support -- ##
-      ]
-      ++ mergeFrom "extensions";
+      };
+      extensions = pkgs.nix4vscode.forVscodeVersion config.programs.vscode.package.version extensionStrings;
     };
   };
 }
