@@ -10,6 +10,7 @@ let
   commonImports = [
     { home.stateVersion = "25.05"; }
     ../../../../pkgs/catppuccin-gtk.nix
+    ../../../../hosts/linux/shared/protonmail-bridge.nix
     ../shared/aliases.nix
     inputs.catppuccin-trivial.homeModules.catppuccin
   ];
