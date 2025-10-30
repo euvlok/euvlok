@@ -4,6 +4,7 @@ _: {
     ./cli
     ./gui
     ./languages
+    ./services
     ./shell
     ./terminal
     ./tui
