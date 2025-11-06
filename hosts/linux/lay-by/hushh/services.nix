@@ -18,6 +18,11 @@ _: {
       };
     };
 
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+    };
+
     # Misc services
     gvfs.enable = true;
     tumbler.enable = true;

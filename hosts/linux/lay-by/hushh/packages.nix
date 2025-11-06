@@ -14,6 +14,7 @@
       wayland-utils
       wl-clipboard
       wlroots
+      xdg-utils
 
       # Development
       meson
