@@ -3,15 +3,14 @@
 #        (pass the driver version you want)
 
 # Yeah I know I didn't do this the proper nix way with #!/usr/bin/env nix-shell but I can't be bothered to fix it rn.
-# Uncomment sha256_aarch64 when the package releases
-# I had some weird issue with prefetch giving me the wrong hash for the .run files, which is why sri() exists.
+echo "Uncomment sha256_aarch64 when the package releases"
 
 set -euo pipefail
 
 VERSION="${1:-}"
 if [[ -z "$VERSION" ]]; then
   echo "Usage: $0 <driver-version>"
-  echo "Example: $0 560.35.03"
+  echo "Example: $0 580.105.08"
   exit 1
 fi
 
