@@ -35,6 +35,9 @@ let
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
     inputs.self.homeConfigurations.ashuramaruzxc
+    ../../../hm/ashuramaruzxc/graphics.nix
+    ../../../hm/ashuramaruzxc/chromium
+    # ../../../hm/ashuramaruzxc/flatpak.nix
     {
       hm = {
         chromium.enable = true;
@@ -52,18 +55,17 @@ let
         nixcord.enable = true;
         nushell.enable = true;
         vscode.enable = true;
-        yazi.enable = true;
         zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
           cpp.enable = true;
-          # csharp.enable = true;
-          # csharp.version = "8";
+          csharp.enable = true;
+          csharp.version = "10";
           go.enable = true;
           haskell.enable = true;
           java.enable = true;
-          java.version = "17";
+          java.version = "21";
           javascript.enable = true;
           kotlin.enable = true;
           lisp.enable = true;
@@ -80,7 +82,7 @@ let
   importantPackages = builtins.attrValues {
     inherit (pkgsUnstable)
       keepassxc
-      bitwarden
+      bitwarden-desktop
       thunderbird
       piper # mouse control
       ;
@@ -95,13 +97,16 @@ let
       vlc
       youtube-music
       ;
-    inherit (pkgs.kdePackages) k3b kamera;
+    inherit (pkgs.kdePackages)
+      k3b
+      kamera
+      # wallpaper-engine-plugin
+      ;
   };
 
   productivityPackages = builtins.attrValues {
     inherit (pkgs)
       anki
-      francis
       gImageReader
       libreoffice-qt6-fresh
       obsidian
@@ -109,17 +114,17 @@ let
       pdftk
       treesheets
       ;
+    inherit (pkgs.kdePackages)
+      francis
+      ;
   };
 
   socialPackages = builtins.attrValues {
     inherit (pkgs)
       dino
-      element-desktop
       materialgram
       nextcloud-client
-      protonmail-bridge-gui
       signal-desktop
-      zoom-us
       ;
   };
 
@@ -128,7 +133,6 @@ let
       mullvad-vpn
       nekoray
       openvpn
-      protonvpn-cli
       protonvpn-gui
       udptunnel
       v2raya
@@ -142,16 +146,16 @@ let
     inherit (pkgs)
       bottles
       cemu
-      # chiaki
+      chiaki
       dolphin-emu
-      duckstation
+      # duckstation
       flycast
       gogdl
       goverlay
       heroic
       lutris
       mangohud
-      # mgba
+      mgba
       pcsx2
       ppsspp
       prismlauncher
@@ -278,12 +282,12 @@ in
         {
           # doesn't work with cudaEnable = true;
           home.packages = builtins.attrValues {
-            inherit (inputs.nixpkgs.legacyPackages.${pkgs.system}) rpcs3;
+            inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}) rpcs3;
           };
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";
-            package = inputs.anime-cursors-source.packages.${pkgs.system}.cursors;
+            package = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
             size = 32;
             gtk.enable = true;
             x11 = {
@@ -326,6 +330,10 @@ in
               lock_timeout = 600;
               pinentry = pkgs.pinentry-qt;
             };
+          };
+          ghostty.settings = {
+            window-height = 40;
+            window-width = 140;
           };
           btop.enable = true;
           direnv.nix-direnv.package = pkgsUnstable.nix-direnv;

@@ -75,7 +75,7 @@ let
   importantPackages = builtins.attrValues {
     inherit (pkgsUnstable)
       keepassxc
-      bitwarden
+      bitwarden-desktop
       thunderbird
       ;
   };
@@ -108,10 +108,8 @@ let
   socialPackages = builtins.attrValues {
     inherit (pkgs)
       dino
-      element-desktop
       materialgram
       nextcloud-client
-      protonmail-bridge-gui
       signal-desktop
       ;
   };
@@ -199,7 +197,7 @@ in
           home.pointerCursor = {
             enable = true;
             name = "touhou-reimu";
-            package = inputs.anime-cursors-source.packages.${pkgs.system}.cursors;
+            package = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
             size = 32;
             gtk.enable = true;
             x11 = {

@@ -43,7 +43,6 @@
               libreoffice-fresh
 
               # Communication
-              element-desktop
               thunderbird
               keepassxc
 

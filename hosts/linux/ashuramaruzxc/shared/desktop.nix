@@ -54,7 +54,7 @@
   };
 
   qt.enable = true;
-  qt.platformTheme = "qt5ct";
+  qt.platformTheme = "kde";
 
   programs.gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
   programs.kdeconnect.enable = true;
