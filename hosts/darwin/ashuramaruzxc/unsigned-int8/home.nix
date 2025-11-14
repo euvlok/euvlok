@@ -101,8 +101,8 @@ let
       ];
     in
     builtins.attrValues {
-      riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
-      clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
+      # riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
+      # clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
       # ideaUltimateWithPlugins = addPlugins idea-ultimate (
       #   commonPlugins
       #   ++ [
@@ -167,6 +167,7 @@ in
             };
           };
           btop.enable = true;
+          gitui.enable = lib.mkForce false;
         };
       }
     ];

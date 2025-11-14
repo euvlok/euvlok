@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgsUnstable,
   config,
   ...
 }:
@@ -73,7 +74,6 @@
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
       # Literally should be bultin but apple being apple
-      soundsource
       # Utils
       wireguard-tools
       smartmontools
@@ -88,6 +88,7 @@
       pinentry_mac
       gnupg
       ;
+    inherit (pkgsUnstable) soundsource;
   };
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };
