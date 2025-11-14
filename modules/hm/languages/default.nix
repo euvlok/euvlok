@@ -14,7 +14,7 @@ let
           "11"
           "17"
           "21"
-          "24"
+          "25"
         ];
       in
       lib.genAttrs versions (version: pkgsUnstable."jdk${version}");
@@ -178,8 +178,6 @@ let
         inherit (pkgsUnstable) ruby_3_4 solargraph rubocop;
         inherit (pkgsUnstable.rubyPackages)
           rails
-          # rails-dom-testing
-          # rails-html-sanitizer
           ruby-lsp
           ;
       };
@@ -188,10 +186,7 @@ let
       packages = builtins.attrValues {
         inherit (pkgs.rust-bin.stable.latest) default;
         inherit (pkgsUnstable)
-          # cargo
-          # rustfmt
           rust-analyzer
-          # clippy
           cargo-watch
           cargo-edit
           cargo-outdated
