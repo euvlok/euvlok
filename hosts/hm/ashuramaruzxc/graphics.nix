@@ -7,11 +7,11 @@
       blender # 3D creation suite
       godot # Game engine
       krita # Digital painting
-      # ansel # RAW image viewer
+      ansel # RAW image viewer
       ;
     inkscape = pkgs.inkscape-with-extensions.override {
       inkscapeExtensions = builtins.attrValues {
-        inherit (pkgs.inkscape-extensions) textext silhouette applytransforms;
+        inherit (pkgs.inkscape-extensions) textext silhouette;
       };
     };
     # Photoshop but worse

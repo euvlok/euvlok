@@ -15,7 +15,7 @@
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       powerline-symbols
       recursive
       roboto
@@ -24,7 +24,7 @@
       source-han-sans
       terminus_font
       twemoji-color-font
-      ubuntu_font_family
+      ubuntu-classic
       wqy_zenhei
       ;
     mplus = pkgs.mplus-outline-fonts.githubRelease;

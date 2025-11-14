@@ -56,6 +56,7 @@ let
 
   scripts = {
     video2gif = mkScript "video2gif" ./scripts/video2gif.sh;
+    video2gif_simple = mkScript "video2gif_simple" ./scripts/video2gif_simple.sh;
   };
 
   darwin = lib.optionalAttrs (pkgs.stdenvNoCC.isDarwin) {
