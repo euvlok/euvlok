@@ -11,7 +11,7 @@ let
     extensions.packages = builtins.attrValues {
       inherit (pkgs.nur.repos.rycee.firefox-addons)
         clearurls
-        firemonkey
+        violentmonkey
         refined-github
         sponsorblock
         ublock-origin
