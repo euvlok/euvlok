@@ -8,6 +8,7 @@
       "vaultwarden"
       "grafana"
       "cvat"
+      "attic"
     ];
     ensureUsers = [
       {
@@ -28,6 +29,10 @@
       }
       {
         name = "cvat";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "atticd";
         ensureDBOwnership = true;
       }
     ];

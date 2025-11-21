@@ -1,0 +1,64 @@
+name: Build & Cache with Attic
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  ATTIC_CACHE: euvlok
+  ATTIC_SERVER: https://attic.tenjin.com
+  NIX_CONFIG: "extra-experimental-features = nix-command flakes pipe-operator"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v21
+
+      - name: Install Attic CLI
+        run: nix profile install "github:zhaofengli/attic#attic"
+
+      - name: Check Attic token
+        id: check-attic-token
+        shell: bash
+        env:
+          ATTIC_CI_TOKEN: ${{ secrets.ATTIC_CI_TOKEN }}
+        run: |
+          if [ -n "$ATTIC_CI_TOKEN" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure Attic cache
+        if: ${{ steps.check-attic-token.outputs.has_token == 'true' }}
+        env:
+          ATTIC_CI_TOKEN: ${{ secrets.ATTIC_CI_TOKEN }}
+        run: |
+          set -euo pipefail
+          attic login ci "${ATTIC_SERVER}" "${ATTIC_CI_TOKEN}"
+          attic use "ci:${ATTIC_CACHE}"
+
+      - name: Build flake checks
+        run: |
+          set -euo pipefail
+          nix build .#checks.x86_64-linux.pre-commit-check --override-input attic github:zhaofengli/attic
+
+      - name: Push build outputs to Attic
+        if: ${{ steps.check-attic-token.outputs.has_token == 'true' }}
+        run: |
+          set -euo pipefail
+          attic push "ci:${ATTIC_CACHE}" result
+
+      - name: Skip Attic upload (CI token missing)
+        if: ${{ steps.check-attic-token.outputs.has_token != 'true' }}
+        run: echo "ATTIC_CI_TOKEN secret is not configured; build results were not uploaded to Attic"

@@ -91,6 +91,10 @@
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
 
     # ---- Source ----
+    attic.url = "path:/Users/flame/Developer/attic";
+    attic.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
+    attic.inputs.nixpkgs-stable.follows = "nixpkgs";
+    attic.inputs.flake-parts.follows = "flake-parts";
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:FlameFlag/dis";
     lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
