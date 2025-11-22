@@ -96,14 +96,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1763725888,
-        "narHash": "sha256-kiv+RbeQfJ6ZD61d85O8JAAKdvQrdSRcxhg/LAHQJLQ=",
-        "path": "/Users/flame/Developer/attic",
-        "type": "path"
+        "lastModified": 1758711588,
+        "narHash": "sha256-0nZlCCDC5PfndsQJXXtcyrtrfW49I3KadGMDlutzaGU=",
+        "owner": "zhaofengli",
+        "repo": "attic",
+        "rev": "12cbeca141f46e1ade76728bce8adc447f2166c6",
+        "type": "github"
       },
       "original": {
-        "path": "/Users/flame/Developer/attic",
-        "type": "path"
+        "owner": "zhaofengli",
+        "repo": "attic",
+        "type": "github"
       }
     },
     "base16": {
