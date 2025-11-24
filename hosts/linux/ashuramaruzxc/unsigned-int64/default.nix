@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  unsigned-int64 = inputs.nixpkgs-ashuramaruzxc-server.lib.nixosSystem {
+  unsigned-int64 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default
