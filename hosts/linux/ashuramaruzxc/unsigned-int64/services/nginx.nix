@@ -90,8 +90,8 @@
       #   extraConfig = ''autoindex on;'';
       # };
     };
-    virtualHosts."attic.tenjin.com" = {
-      serverName = "attic.tenjin.com";
+    virtualHosts."attic.tenjin-dk.com" = {
+      serverName = "attic.tenjin-dk.com";
       forceSSL = true;
       enableACME = true;
       locations."/" = {

@@ -22,7 +22,7 @@
     environmentFile = config.sops.secrets.atticd-env.path;
     settings =
       let
-        atticHost = "attic.tenjin.com";
+        atticHost = "attic.tenjin-dk.com";
       in
       {
         listen = "[::]:${builtins.toString 8081}";

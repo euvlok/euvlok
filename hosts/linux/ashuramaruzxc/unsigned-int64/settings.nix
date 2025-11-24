@@ -59,7 +59,6 @@ _: {
         "ankisync.tenjin.com"
         "uptime.tenjin.com"
         "cvat.tenjin.com"
-        "attic.tenjin.com"
       ];
       "fd17:216b:31bc:1::1" = [
         "www.tenjin.com"
@@ -74,7 +73,6 @@ _: {
         "ankisync.tenjin.com"
         "uptime.tenjin.com"
         "cvat.tenjin.com"
-        "attic.tenjin.com"
       ];
     };
     firewall = {
@@ -252,7 +250,6 @@ _: {
             "\"ankisync.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # ankisyncing service
             "\"uptime.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # uptime check (should be outsourced)
             "\"cvat.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # CVAT instance
-            "\"attic.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # Attic binary cache
           ];
         };
         forward-zone = [

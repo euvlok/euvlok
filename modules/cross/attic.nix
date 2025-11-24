@@ -20,7 +20,7 @@ in
 
     baseUrl = mkOption {
       type = types.str;
-      default = "https://attic.tenjin.com";
+      default = "https://attic.tenjin-dk.com";
       example = "https://attic.example.com";
       description = ''
         Canonical HTTPS endpoint for the Attic server. This value should not end

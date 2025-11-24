@@ -11,7 +11,7 @@ permissions:
 
 env:
   ATTIC_CACHE: euvlok
-  ATTIC_SERVER: https://attic.tenjin.com
+  ATTIC_SERVER: https://attic.tenjin-dk.com
   NIX_CONFIG: "extra-experimental-features = nix-command flakes pipe-operator"
 
 jobs:
