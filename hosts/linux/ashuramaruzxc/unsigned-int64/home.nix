@@ -56,7 +56,7 @@ let
   };
 in
 {
-  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
+  imports = [ inputs.home-manager-ashuramaruzxc-server.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
