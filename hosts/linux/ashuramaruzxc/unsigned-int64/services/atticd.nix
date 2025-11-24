@@ -11,6 +11,15 @@
     group = "atticd";
   };
 
+  users = {
+    groups.atticd = { };
+    users.atticd = {
+      isSystemUser = true;
+      group = "atticd";
+      home = "/var/lib/atticd";
+    };
+  };
+
   systemd.tmpfiles.rules = [
     "d /var/lib/atticd 0750 atticd atticd -"
     "d /var/lib/atticd/storage 0750 atticd atticd -"
