@@ -33,7 +33,7 @@
           "attic.tenjin-dk.com"
         ];
         api-endpoint = "https://${atticHost}/";
-        database.url = "postgresql:///attic?host=/run/postgresql";
+        database.url = "postgresql:///atticd?host=/run/postgresql";
         storage = {
           type = "local";
           path = "/var/lib/atticd/storage";

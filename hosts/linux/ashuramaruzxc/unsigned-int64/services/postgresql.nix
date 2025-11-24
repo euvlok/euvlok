@@ -8,7 +8,7 @@
       "vaultwarden"
       "grafana"
       "cvat"
-      "attic"
+      "atticd"
     ];
     ensureUsers = [
       {
