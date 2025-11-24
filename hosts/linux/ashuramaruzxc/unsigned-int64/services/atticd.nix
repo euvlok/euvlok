@@ -18,7 +18,7 @@
 
   services.atticd = {
     enable = true;
-    package = inputs.attic.packages.${pkgs.stdenv.hostPlatform.system}.atticd;
+    package = inputs.attic.packages.${pkgs.stdenvNoCC.hostPlatform.system}.attic;
     environmentFile = config.sops.secrets.atticd-env.path;
     settings =
       let
