@@ -13,7 +13,10 @@
     programs.ssh = {
       enable = true;
       package = pkgs.openssh_hpn;
-      addKeysToAgent = "yes";
+      enableDefaultConfig = false;
+      matchBlocks."*" = {
+        addKeysToAgent = "yes";
+      };
     };
   };
 }

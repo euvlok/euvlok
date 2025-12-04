@@ -7,7 +7,7 @@
 let
   hmConfig = config.home-manager.users.${config.system.primaryUser};
 
-  userAliasesPath = ../../hm/${hmConfig.programs.git.userName}/aliases.nix;
+  userAliasesPath = ../../hm/${hmConfig.programs.git.settings.user.name}/aliases.nix;
   shellAliases =
     ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { }).programs.zsh.shellAliases)
     // lib.optionalAttrs (builtins.pathExists userAliasesPath) (

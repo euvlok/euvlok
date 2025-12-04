@@ -14,7 +14,7 @@
     betterNotesBox.enable = true;
     betterSessions.enable = true;
     biggerStreamPreview.enable = true;
-    clearURLs.enable = true;
+    clearUrLs.enable = true;
     consoleJanitor.disableSpotifyLogger = true;
     copyEmojiMarkdown.enable = true;
     disableCallIdle.enable = true;

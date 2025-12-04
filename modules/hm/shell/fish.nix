@@ -116,7 +116,7 @@
             set nix_user_escaped (string replace '"' '\\"' -- "$nix_user")
             set nix_host_escaped (string replace '"' '\\"' -- "$nix_host")
             
-            set nix_expr "let flake = builtins.getFlake \"$flake_path\"; host = flake.$flake_attr.\"$nix_host_escaped\"; user = \"$nix_user_escaped\"; in host.config.home-manager.users.\''${user}.programs.git.userName"
+            set nix_expr "let flake = builtins.getFlake \"$flake_path\"; host = flake.$flake_attr.\"$nix_host_escaped\"; user = \"$nix_user_escaped\"; in host.config.home-manager.users.\''${user}.programs.git.settings.user.name"
             
             set github_username (nix eval --raw --impure --expr "$nix_expr" | string lower | string trim)
             

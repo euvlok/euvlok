@@ -4,19 +4,19 @@
   inputs = {
     # --- Shared ---
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager-stable.url = "github:nix-community/home-manager/release-25.05";
+    home-manager-stable.url = "github:nix-community/home-manager/release-25.11";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     home-manager-unstable.url = "github:nix-community/home-manager";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
     # This input is meant to be used for `-source` inputs and is rarely updated
     # to not cause constant rebuilds when updating generic unstable
     nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # --- 2husecondary ---
-    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-2husecondary.url = "github:nix-community/home-manager/release-25.05";
+    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-2husecondary.url = "github:nix-community/home-manager/release-25.11";
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     # --- ashuramaruzxc ---
@@ -28,27 +28,27 @@
     nixos-raspberrypi-ashuramaruzxc.url = "github:nvmd/nixos-raspberrypi";
 
     # --- bigshaq9999 ---
-    nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-25.05";
+    nixpkgs-bigshaq9999.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-bigshaq9999.url = "github:nix-community/home-manager/release-25.11";
     home-manager-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
-    nix-darwin-bigshaq9999.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin-bigshaq9999.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nix-darwin-bigshaq9999.inputs.nixpkgs.follows = "nixpkgs-bigshaq9999";
 
     # --- flameflag ---
-    nixpkgs-flameflag.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-flameflag.url = "github:nix-community/home-manager/release-25.05";
+    nixpkgs-flameflag.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-flameflag.url = "github:nix-community/home-manager/release-25.11";
     home-manager-flameflag.inputs.nixpkgs.follows = "nixpkgs-flameflag";
-    nix-darwin-flameflag.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin-flameflag.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nix-darwin-flameflag.inputs.nixpkgs.follows = "nixpkgs-flameflag";
 
     # --- lay-by ---
-    nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-lay-by.url = "github:nix-community/home-manager/release-25.05";
+    nixpkgs-lay-by.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-lay-by.url = "github:nix-community/home-manager/release-25.11";
     home-manager-lay-by.inputs.nixpkgs.follows = "nixpkgs-lay-by";
 
     # --- sm-idk ---
-    nixpkgs-sm-idk.url = "github:NixOS/nixpkgs/nixos-25.05";
-    home-manager-sm-idk.url = "github:nix-community/home-manager/release-25.05";
+    nixpkgs-sm-idk.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-sm-idk.url = "github:nix-community/home-manager/release-25.11";
     home-manager-sm-idk.inputs.nixpkgs.follows = "nixpkgs-sm-idk";
 
     # --- Trivial ---
@@ -56,7 +56,7 @@
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    catppuccin-trivial.url = "github:catppuccin/nix/release-25.05";
+    catppuccin-trivial.url = "github:catppuccin/nix";
     chaotic.inputs.home-manager.follows = "home-manager-unstable";
     chaotic.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
@@ -70,7 +70,7 @@
     nixcord-trivial.inputs.flake-compat.follows = "";
     nixcord-trivial.inputs.flake-parts.follows = "flake-parts";
     nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nixcord-trivial.url = "github:KaylorBen/nixcord";
+    nixcord-trivial.url = "github:FlameFlag/nixcord";
     nixos-hardware-trivial.url = "github:NixOS/nixos-hardware";
     nur-trivial.inputs.flake-parts.follows = "flake-parts";
     nur-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -83,7 +83,7 @@
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    stylix-trivial.url = "github:danth/stylix/release-25.05";
+    stylix-trivial.url = "github:danth/stylix/release-25.11";
     stylix-git.url = "github:nix-community/stylix";
     stylix-git.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager-unstable";

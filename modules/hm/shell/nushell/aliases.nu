@@ -60,7 +60,7 @@ def update [] {
               host = flake.' + $flake_attr + '."' + $nix_host + '";
               user = "' + $nix_user + '";
             in
-              host.config.home-manager.users.''${user}.programs.git.userName'
+              host.config.home-manager.users.''${user}.programs.git.settings.user.name'
         ) | str downcase | str trim
     )
     let matching_inputs = (

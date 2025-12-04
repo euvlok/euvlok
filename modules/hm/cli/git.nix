@@ -26,11 +26,11 @@
             "result"
             "result*"
           ];
-          aliases = {
-            grep = "!sh -c 'rg --vimgrep --color=always --line-number --no-heading --smart-case \"$@\"' _";
-          };
           # Inspired by https://blog.gitbutler.com/how-git-core-devs-configure-git/
-          extraConfig = {
+          settings = {
+            alias = {
+              grep = "!sh -c 'rg --vimgrep --color=always --line-number --no-heading --smart-case \"$@\"' _";
+            };
             branch.sort = "-committerdate"; # Sort branches by most recent commit
             column.ui = "auto"; # Display branches, tags, etc. in columns
             commit.verbose = true; # Show diff of changes in commit message editor

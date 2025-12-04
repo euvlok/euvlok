@@ -80,7 +80,7 @@ let
               host = flake.''${flake_attr}.\"''${nix_host}\";
               user = \"''${nix_user}\";
             in
-              host.config.home-manager.users.\''${user}.programs.git.userName
+              host.config.home-manager.users.\''${user}.programs.git.settings.user.name
           " | tr '[:upper:]' '[:lower:]')
         matching_inputs=$(nix eval --json --impure \
           --expr '(builtins.attrNames (builtins.getFlake "'"$flake_eval_path"'").inputs)' \

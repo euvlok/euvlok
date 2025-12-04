@@ -20,7 +20,12 @@ in
     gh.enable = true;
     gh.settings.git_protocol = format;
     git = {
-      inherit userName userEmail;
+      settings = {
+        user = {
+          name = userName;
+          email = userEmail;
+        };
+      };
       signing = {
         inherit key format;
         signByDefault = true;

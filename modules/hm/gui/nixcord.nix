@@ -41,7 +41,7 @@
       noDevtoolsWarning.enable = true;
       noF1.enable = true;
       noUnblockToJump.enable = true;
-      onePingPerDM.enable = true;
+      onePingPerDm.enable = true;
       readAllNotificationsButton.enable = true;
       textReplace.enable = true;
       textReplace.regexRules = [

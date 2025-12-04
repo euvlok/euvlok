@@ -13,8 +13,8 @@
       alwaysExpandRoles.enable = true;
       betterGifPicker.enable = true;
       biggerStreamPreview.enable = true;
-      blurNSFW.enable = true;
-      clearURLs.enable = true;
+      blurNsfw.enable = true;
+      clearUrLs.enable = true;
       disableCallIdle.enable = true;
       dontRoundMyTimestamps.enable = true;
       fixCodeblockGap.enable = true;
@@ -46,7 +46,7 @@
       noMosaic.enable = true;
       noPendingCount.enable = true;
       noProfileThemes.enable = true;
-      noRPC.enable = true;
+      noRpc.enable = true;
       noTypingAnimation.enable = true;
       normalizeMessageLinks.enable = true;
       pauseInvitesForever.enable = true;

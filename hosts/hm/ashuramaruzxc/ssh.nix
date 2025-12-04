@@ -1,7 +1,11 @@
 { lib, config, ... }:
 {
-  programs.ssh.addKeysToAgent = lib.mkForce "no";
-  programs.ssh.extraConfig = ''
+  programs.ssh = {
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      addKeysToAgent = "no";
+    };
+    extraConfig = ''
     Host *
         IdentitiesOnly yes
         IdentityFile "${config.home.homeDirectory}/.ssh/id_ed25519-sk"
