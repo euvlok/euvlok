@@ -191,58 +191,61 @@
             };
           };
           formatter = pkgs.nixfmt-rfc-style;
-          apps.auto-rebase = {
-            type = "app";
-            program =
-              let
-                scriptFile = ./auto-rebase.sh;
-                script = pkgs.writeShellScriptBin "auto-rebase" ''
-                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
-                '';
-              in
-              "${script}/bin/auto-rebase";
+
+          apps = {
+            auto-rebase = {
+              type = "app";
+              program =
+                let
+                  scriptFile = ./auto-rebase.sh;
+                  script = pkgs.writeShellScriptBin "auto-rebase" ''
+                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                  '';
+                in
+                "${script}/bin/auto-rebase";
+            };
+            chromium-extension-update = {
+              type = "app";
+              program =
+                let
+                  scriptFile = ./modules/scripts/chromium-extensions-update.sh;
+                  script = pkgs.writeShellScriptBin "chromium-extension" ''
+                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                  '';
+                in
+                "${script}/bin/chromium-extension";
+            };
+            nvidia-prefetch = {
+              type = "app";
+              program =
+                let
+                  scriptFile = ./modules/scripts/nvidia-prefetch.sh;
+                  script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
+                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                  '';
+                in
+                "${script}/bin/nvidia-prefetch";
+            };
           };
-          apps.chromium-extension-update = {
-            type = "app";
-            program =
-              let
-                scriptFile = ./modules/scripts/chromium-extensions-update.sh;
-                script = pkgs.writeShellScriptBin "chromium-extension" ''
-                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
-                '';
-              in
-              "${script}/bin/chromium-extension";
-          };
-          apps.nvidia-prefetch = {
-            type = "app";
-            program =
-              let
-                scriptFile = ./modules/scripts/nvidia-prefetch.sh;
-                script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
-                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
-                '';
-              in
-              "${script}/bin/nvidia-prefetch";
+
+          flake = {
+            nixosModules.default = import ./modules/nixos;
+            darwinModules.default = ./modules/darwin;
+            homeModules.default = ./modules/hm;
+            homeModules.os = ./modules/hm/os;
+
+            homeConfigurations = {
+              _2husecondary = import ./hosts/hm/2husecondary;
+              ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
+              bigshaq9999 = import ./hosts/hm/bigshaq9999;
+              flameflag = import ./hosts/hm/flameflag;
+              lay-by = import ./hosts/hm/lay-by;
+              sm-idk = import ./hosts/hm/sm-idk;
+            };
+
+            nixosConfigurations = import ./hosts/linux { inherit inputs; };
+            darwinConfigurations = import ./hosts/darwin { inherit inputs; };
           };
         };
-
-      flake = {
-        nixosModules.default = import ./modules/nixos;
-        darwinModules.default = ./modules/darwin;
-        homeModules.default = ./modules/hm;
-        homeModules.os = ./modules/hm/os;
-
-        homeConfigurations = {
-          _2husecondary = import ./hosts/hm/2husecondary;
-          ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
-          bigshaq9999 = import ./hosts/hm/bigshaq9999;
-          flameflag = import ./hosts/hm/flameflag;
-          lay-by = import ./hosts/hm/lay-by;
-          sm-idk = import ./hosts/hm/sm-idk;
-        };
-
-        nixosConfigurations = import ./hosts/linux { inherit inputs; };
-        darwinConfigurations = import ./hosts/darwin { inherit inputs; };
-      };
     };
 }
