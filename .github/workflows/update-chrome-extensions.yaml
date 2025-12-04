@@ -28,10 +28,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          UPDATE_SCRIPT="./modules/hm/gui/chromium/update.sh"
+          UPDATE_SCRIPT="./modules/scripts/chromium-extensions-update.sh"
           chmod +x "$UPDATE_SCRIPT"
 
-          mapfile -t LIST_FILES < <(find ./modules/hm/gui/chromium ./hosts/hm -name "extensions_list.txt")
+          mapfile -t LIST_FILES < <(find ./modules/hm/gui/chromium ./hosts/hm -name "extensions.toml")
 
           echo "::notice::Found ${#LIST_FILES[@]} extension lists to process."
 

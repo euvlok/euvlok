@@ -1,0 +1,92 @@
+# Run `./modules/scripts/chromium-extensions-update.sh -i $(realpath ./hosts/hm/ashuramaruzxc/chromium/extensions.toml) -o $(realpath ./hosts/hm/ashuramaruzxc/chromium/extensions.nix)` to regenerate.
+
+[[extensions]]
+id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"
+name = "Dark Reader"
+source = "chrome-store"
+
+[[extensions]]
+id = "cdglnehniifkbagbbombnjghhcihifij"
+name = "Kagi Search"
+source = "chrome-store"
+
+[[extensions]]
+id = "hkligngkgcpcolhcnkgccglchdafcnao"
+name = "Web Archives"
+source = "chrome-store"
+
+[[extensions]]
+id = "fmkadmapgofadopljbjfkapdkoienihi"
+name = "React DevTools"
+source = "chrome-store"
+
+[[extensions]]
+id = "lmhkpmbekcpmknklioeibfkpmmfibljd"
+name = "Redux DevTools"
+source = "chrome-store"
+
+[[extensions]]
+id = "nhdogjmejiglipccpnnnanhbledajbpd"
+name = "Vue.js DevTools"
+source = "chrome-store"
+
+[[extensions]]
+id = "ienfalfjdbdpebioblfackkekamfmbnh"
+name = "Angular DevTools"
+source = "chrome-store"
+
+[[extensions]]
+id = "kmcfjchnmmaeeagadbhoofajiopoceel"
+name = "SolidJS DevTools"
+source = "chrome-store"
+
+[[extensions]]
+id = "bhchdcejhohfmigjafbampogmaanbfkg"
+name = "User Agent Switcher"
+source = "chrome-store"
+
+[[extensions]]
+id = "hkgfoiooedgoejojocmhlaklaeopbecg"
+name = "Picture in Picture"
+source = "chrome-store"
+
+[[extensions]]
+id = "hipekcciheckooncpjeljhnekcoolahp"
+name = "Tabliss"
+source = "chrome-store"
+
+[[extensions]]
+id = "clngdbkpkpeebahjckkjfobafhncgmne"
+name = "Stylus"
+source = "chrome-store"
+
+[[extensions]]
+id = "gcknhkkoolaabfmlnjonogaaifnjlfnp"
+name = "FoxyProxy"
+source = "chrome-store"
+
+[[extensions]]
+id = "nngceckbapebfimnlniiiahkandclblb"
+name = "Bitwarden"
+source = "chrome-store"
+
+[[extensions]]
+id = "kbmfpngjjgdllneeigpgjifpgocmfgmb"
+name = "Reddit Enhancement Suite"
+source = "chrome-store"
+
+[[extensions]]
+id = "dneaehbmnbhcippjikoajpoabadpodje"
+name = "Old Reddit Redirect"
+source = "chrome-store"
+
+[[extensions]]
+id = "cnojnbdhbhnkbcieeekonklommdnndci"
+name = "Search by Image"
+source = "chrome-store"
+
+[[extensions]]
+id = "pobhoodpcipjmedfenaigbeloiidbflp"
+name = "Minimal Theme for Twitter / X"
+source = "chrome-store"
+

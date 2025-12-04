@@ -1,0 +1,71 @@
+# This file lists Chromium extensions to be managed by Nix
+#
+# Format:
+# - id: Required 32-character extension ID
+# - name: Optional human-readable name (for documentation)
+# - source: One of "chrome-store", "bpc", "url", or "github-releases" (default: "chrome-store")
+# - url: Required if source is "url"
+# - condition: Optional Nix condition expression (e.g., "config.catppuccin.enable")
+#
+# For github-releases source:
+# - owner: GitHub repository owner (required, or set in [config.sources.github-releases])
+# - repo: GitHub repository name (required, or set in [config.sources.github-releases])
+# - pattern: URL pattern with placeholders {version}, {name}, {id} (optional, or set in config)
+# - version: Specific version tag, or "latest" to auto-detect (optional, defaults to "latest")
+#
+# Example config-level defaults:
+# [config.sources.github-releases]
+# owner = "some-org"
+# repo = "some-repo"
+# pattern = "releases/download/v{version}/{name}.crx"
+
+# --- From Chrome Web Store ---
+
+[[extensions]]
+id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"
+name = "uBlock Origin"
+source = "chrome-store"
+
+[[extensions]]
+id = "hlepfoohegkhhmjieoechaddaejaokhf"
+name = "Refined GitHub"
+source = "chrome-store"
+
+[[extensions]]
+id = "jinjaccalgkegednnccohejagnlnfdag"
+name = "Violentmonkey"
+source = "chrome-store"
+
+[[extensions]]
+id = "lckanjgmijmafbedllaakclkaicjfmnk"
+name = "ClearURLs"
+source = "chrome-store"
+
+[[extensions]]
+id = "mnjggcdmjocbbbhaepdhchncahnbgone"
+name = "Sponsor Block"
+source = "chrome-store"
+
+[[extensions]]
+id = "lmkeolibdeeglfglnncmfleojmakecjb"
+name = "YouTube No Translation"
+source = "chrome-store"
+
+# --- From Third-Party Sources ---
+
+[[extensions]]
+id = "lkbebcjgcmobigpeffafkodonchffocl"
+name = "Bypass Paywalls Chrome (BPC)"
+source = "bpc"
+
+[[extensions]]
+id = "kpaaapnegfaaoimjpagopchdbmenfngl"
+name = "TWP - Translate Web Pages"
+source = "url"
+url = "https://github.com/FilipePS/Traduzir-paginas-web/releases/download/v10.1.1.0/TWP_10.1.1.0_Chromium.crx"
+
+[[extensions]]
+id = "lnjaiaapbakfhlbjenjkhffcdpoompki"
+name = "Catppuccin for GitHub"
+source = "chrome-store"
+condition = "config.catppuccin.enable"

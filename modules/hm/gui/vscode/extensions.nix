@@ -28,6 +28,7 @@
         "editorconfig.editorconfig"
         "oderwat.indent-rainbow"
         "visualstudioexptteam.vscodeintellicode"
+        "tamasfe.even-better-toml"
       ];
       userSettings = {
         security.workspace.trust.enabled = false;
