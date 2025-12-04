@@ -109,13 +109,15 @@ get_default_output_file() {
 
 escape_nix_string() {
 	# shellcheck disable=SC1003
-	# Escape special characters for Nix string literals: backslash, double quote, dollar sign
-	# Single quotes in sd patterns are tool syntax, not bash string literals
+	# Escape special characters for Nix string literals: backslash (\), double quote ("), dollar sign ($)
+	# These characters have special meaning in Nix strings and must be escaped to prevent syntax errors
+	# Note: Single quotes in sd patterns are tool syntax, not bash string literals
 	printf '%s' "${1}" | sd '\\' '\\\\' | sd '"' '\\"' | sd '\$' '\\$'
 }
 
 get_chromium_major_version() {
 	# Get Chromium version from Nix and extract major version using lib.versions.major
+	# Chrome Web Store API requires major version for CRX download URLs (e.g., "143" for v143.x.x)
 	local chromium_version
 	local major_version
 	
@@ -184,7 +186,8 @@ fetch_github_release_url() {
 	
 	log_info "Processing GitHub release for ID: ${extension_id}" >&2
 	
-	# Extract GitHub release configuration from TOML (passed as parameters or read from TOML)
+	# Extract GitHub release configuration from TOML file
+	# Extension-level fields override config-level defaults for flexibility
 	local owner
 	local repo
 	local pattern
@@ -349,20 +352,22 @@ process_extension() {
 	local unzip_dir="${temp_dir}/unzipped-${id}"
 	mkdir -p "${unzip_dir}"
 
-	# CRX files are ZIP archives with a special header
-	# CRX3 format: starts with "Cr24" (0x43 0x72 0x32 0x34)
-	# The ZIP data starts after the header. Try to find ZIP magic bytes (PK) and extract from there
+	# CRX files are ZIP archives with a special header containing metadata and signatures
+	# CRX3 format: starts with "Cr24" (0x43 0x72 0x32 0x34) magic bytes, followed by version info
+	# The actual ZIP data starts after the header. We find ZIP magic bytes "PK" to locate the archive
 	local zip_path="${download_path}"
 	
-	# Check if it's CRX3 (starts with Cr24) - need to skip header
+	# Check if it's CRX3 format (starts with Cr24) - if so, we need to skip the header
+	# CRX3 headers contain version, public key, and signature data before the ZIP content
 	local crx_header
 	crx_header=$(head -c 4 "${download_path}" 2>/dev/null || echo "")
 	
 	# Check for CRX3 magic: "Cr24" (0x43 0x72 0x32 0x34)
 	if [[ "${crx_header}" == "Cr24" ]]; then
 		log_info "  -> Detected CRX3 format, finding ZIP offset..."
-		# Find ZIP magic bytes (PK) - ZIP files start with "PK" (0x50 0x4B)
-		# Use ripgrep (rg) which is already in dependencies, or fallback to grep
+		# Find ZIP magic bytes "PK" (0x50 0x4B 0x03 0x04) which mark the start of ZIP content
+		# CRX3 headers are variable-length, so we scan for the ZIP signature to find the exact offset
+		# Prefer ripgrep for speed, fallback to grep for compatibility
 		local zip_offset
 		if command -v rg &>/dev/null; then
 			# ripgrep -abo returns "offset:match", we need just the offset
@@ -373,7 +378,8 @@ process_extension() {
 		
 		if [[ -n "${zip_offset}" ]] && [[ "${zip_offset}" =~ ^[0-9]+$ ]] && [[ "${zip_offset}" -gt 0 ]]; then
 			log_info "  -> Found ZIP at offset ${zip_offset}, extracting ZIP portion..."
-			# Extract ZIP portion starting from PK (zip_offset is 0-based, tail -c is 1-based)
+			# Extract ZIP portion starting from PK. zip_offset is 0-based, but tail -c is 1-based
+			# So we add 1 to get the correct starting position for tail
 			zip_path="${temp_dir}/${id}.zip"
 			if ! tail -c +$((zip_offset + 1)) "${download_path}" > "${zip_path}" 2>/dev/null; then
 				log_error "Failed to extract ZIP portion from CRX file"
@@ -389,9 +395,9 @@ process_extension() {
 		fi
 	fi
 
-	# Try unzip first (handles CRX files even with extra bytes), fallback to 7z
-	# unzip may warn about extra bytes but will still extract successfully
-	# We check for manifest.json after to verify success
+	# Try unzip first - it can handle CRX files even with extra header bytes before ZIP content
+	# unzip may warn about "extra bytes" but will extract successfully. Fallback to 7z if unzip fails
+	# Verify success by checking for manifest.json, the required Chrome extension metadata file
 	log_info "  -> Extracting archive with unzip..."
 	local unzip_output
 	unzip_output=$(unzip -q -o "${zip_path}" -d "${unzip_dir}" 2>&1)
@@ -419,13 +425,15 @@ process_extension() {
 
 	local manifest_path="${unzip_dir}/manifest.json"
 	if [[ ! -f "${manifest_path}" ]]; then
-		log_error "manifest.json not found for '${id}'"
+		log_error "manifest.json not found for '${id}' - invalid extension archive"
 		return 1
 	fi
 
+	# Extract version from Chrome extension manifest (required field for Nix)
 	local version
 	version=$(jq -r ".version" < "${manifest_path}")
 	if [[ "${version}" == "null" ]]; then
+		# Some extensions use version_name instead of version
 		version=$(jq -r ".version_name" < "${manifest_path}")
 	fi
 	if [[ "${version}" == "null" ]]; then

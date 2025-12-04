@@ -195,6 +195,39 @@
             };
           };
           formatter = pkgs.nixfmt-rfc-style;
+          apps.auto-rebase = {
+            type = "app";
+            program =
+              let
+                scriptFile = ./auto-rebase.sh;
+                script = pkgs.writeShellScriptBin "auto-rebase" ''
+                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                '';
+              in
+              "${script}/bin/auto-rebase";
+          };
+          apps.chromium-extension-update = {
+            type = "app";
+            program =
+              let
+                scriptFile = ./modules/scripts/chromium-extensions-update.sh;
+                script = pkgs.writeShellScriptBin "chromium-extension" ''
+                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                '';
+              in
+              "${script}/bin/chromium-extension";
+          };
+          apps.nvidia-prefetch = {
+            type = "app";
+            program =
+              let
+                scriptFile = ./modules/scripts/nvidia-prefetch.sh;
+                script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
+                  ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                '';
+              in
+              "${script}/bin/nvidia-prefetch";
+          };
         };
 
       flake = {

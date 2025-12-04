@@ -28,9 +28,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          UPDATE_SCRIPT="./modules/scripts/chromium-extensions-update.sh"
-          chmod +x "$UPDATE_SCRIPT"
-
           mapfile -t LIST_FILES < <(find ./modules/hm/gui/chromium ./hosts/hm -name "extensions.toml")
 
           echo "::notice::Found ${#LIST_FILES[@]} extension lists to process."
@@ -38,7 +35,7 @@ jobs:
           for list_file in "${LIST_FILES[@]}"; do
             output_file="$(dirname "$list_file")/extensions.nix"
             echo "::group::Processing ${list_file} -> ${output_file}"
-            "$UPDATE_SCRIPT" -i "$list_file" -o "$output_file"
+            nix run .#chromium-extension -- -i "$list_file" -o "$output_file"
             echo "::endgroup::"
           done
 
