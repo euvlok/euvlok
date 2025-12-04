@@ -2,43 +2,26 @@
 let
   nixos-raspberrypi = inputs.nixos-raspberrypi-ashuramaruzxc;
   inherit (inputs.nixos-raspberrypi-ashuramaruzxc.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
+  inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
 in
 {
-  unsigned-int16 = inputs.nixos-raspberrypi-ashuramaruzxc.lib.nixosSystem {
+  unsigned-int16 = mkHostSystem {
+    systemLib = inputs.nixos-raspberrypi-ashuramaruzxc.lib;
     specialArgs = { inherit inputs nixos-raspberrypi; };
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
       inputs.disko-rpi.nixosModules.disko
-    ]
-    ++ [
       usb-gadget-ethernet
       raspberry-pi-5.base
       raspberry-pi-5.bluetooth
       raspberry-pi-5.display-vc4
       raspberry-pi-5.page-size-16k
-    ]
-    ++ [
-      inputs.sops-nix-trivial.nixosModules.sops
-      {
-        sops = {
-          age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
-        };
-      }
-    ]
-    ++ [
-      inputs.catppuccin-trivial.nixosModules.catppuccin
-      {
-        catppuccin = {
-          enable = true;
-          flavor = "mocha";
-          accent = "flamingo";
-        };
-      }
-    ]
-    ++ [
+    ];
+    sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
+    catppuccinAccent = "flamingo";
+    extraModules = [
       inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
@@ -49,8 +32,6 @@ in
           };
         };
       }
-    ]
-    ++ [
       {
         nixos = {
           plasma.enable = true;

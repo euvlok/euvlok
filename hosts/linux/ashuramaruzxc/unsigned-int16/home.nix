@@ -6,30 +6,20 @@
   ...
 }:
 let
-
-  commonImports = [
-    { home.stateVersion = "25.05"; }
-    ../../../../pkgs/catppuccin-gtk.nix
-    inputs.catppuccin-trivial.homeModules.catppuccin
-  ];
-
-  catppuccinConfig =
-    { osConfig, ... }:
-    {
-      catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; };
-    };
-
-  rootHmConfig = {
-    hm = {
-      bash.enable = true;
-      direnv.enable = true;
-      fzf.enable = true;
-      helix.enable = true;
-      nh.enable = true;
-      zellij.enable = true;
-      zsh.enable = true;
-    };
+  homeCommon = import ../shared/home/common.nix { inherit inputs eulib pkgsUnstable; };
+  homePackages = import ../shared/home/packages.nix { inherit pkgs pkgsUnstable; };
+  homeBaseUsers = import ../shared/home/base-users.nix {
+    inherit (homeCommon) baseImports baseHomeManager;
   };
+  cursorModule = import ../shared/home/cursor.nix {
+    cursorName = "touhou-reimu";
+    cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
+    iconPackage = pkgs.kdePackages.breeze-icons;
+  };
+  inherit (homeCommon)
+    catppuccinConfig
+    rootHmConfig
+    ;
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
@@ -72,106 +62,28 @@ let
     }
   ];
 
-  importantPackages = builtins.attrValues {
-    inherit (pkgsUnstable)
-      keepassxc
-      bitwarden-desktop
-      thunderbird
-      ;
-  };
-
-  multimediaPackages = builtins.attrValues {
-    inherit (pkgs)
-      nicotine-plus
-      qbittorrent
-      quodlibet-full
-      tenacity
-      vlc
-      youtube-music
-      ;
-    inherit (pkgs.kdePackages) k3b kamera;
-  };
-
-  productivityPackages = builtins.attrValues {
-    inherit (pkgs)
-      anki
-      francis
-      gImageReader
-      libreoffice-qt6-fresh
-      obsidian
-      octaveFull
-      pdftk
-      treesheets
-      ;
-  };
-
-  socialPackages = builtins.attrValues {
-    inherit (pkgs)
-      dino
-      materialgram
-      nextcloud-client
-      signal-desktop
-      ;
-  };
-
-  networkingPackages = builtins.attrValues {
-    inherit (pkgs)
-      mullvad-vpn
-      nekoray
-      openvpn
-      protonvpn-cli
-      protonvpn-gui
-      udptunnel
-      v2raya
-      ;
-  };
-
-  audioPackages = builtins.attrValues { inherit (pkgs) helvum pavucontrol qpwgraph; };
-
-  nemoPackage = [
-    (pkgs.nemo-with-extensions.override {
-      extensions = builtins.attrValues {
-        inherit (pkgs)
-          folder-color-switcher
-          nemo-emblems
-          nemo-fileroller
-          nemo-python
-          nemo-qml-plugin-dbus
-          ;
-      };
-    })
-  ];
-
   allPackages =
-    importantPackages
-    ++ multimediaPackages
-    ++ productivityPackages
-    ++ socialPackages
-    ++ networkingPackages
-    ++ audioPackages
-    ++ nemoPackage;
-in
-{
-  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
+    homePackages.mkPackages [
+      "important"
+      "multimedia"
+      "productivity"
+      "social"
+      "networking"
+      "audio"
+      "nemo"
+    ]
+    ++ [ pkgs.protonvpn-cli ];
 
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
-  };
+  globalImports = [ ];
 
-  home-manager.users.root.imports =
-    commonImports
-    ++ [
+  userImports = {
+    root = [
       catppuccinConfig
       rootHmConfig
     ]
     ++ ashuramaruHmConfig;
 
-  home-manager.users.ashuramaru.imports =
-    commonImports
-    ++ [
+    ashuramaru = [
       catppuccinConfig
       inputs.sops-nix-trivial.homeManagerModules.sops
       # {
@@ -188,47 +100,10 @@ in
       (
         {
           inputs,
-          config,
           lib,
-          osConfig,
           ...
         }:
-        {
-          home.pointerCursor = {
-            enable = true;
-            name = "touhou-reimu";
-            package = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
-            size = 32;
-            gtk.enable = true;
-            x11 = {
-              enable = true;
-              defaultCursor = "touhou-reimu";
-            };
-          };
-          gtk = {
-            enable = true;
-            iconTheme = {
-              name = lib.mkForce "breeze-dark";
-              package = lib.mkForce pkgs.kdePackages.breeze-icons;
-            };
-          };
-          catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
-            enable = true;
-            inherit (osConfig.catppuccin) accent flavor;
-            size = "standard";
-            tweaks = [
-              "rimless"
-              "normal"
-            ];
-          };
-          home.sessionVariables = {
-            GTK_CSD = "0";
-            GO_PATH = "${config.home.homeDirectory}/.go";
-            GEM_HOME = "${config.home.homeDirectory}/.gems";
-            GEM_PATH = "${config.home.homeDirectory}/.gems";
-          };
-          services.easyeffects.enable = true;
-        }
+        cursorModule { inherit lib pkgs; }
       )
       {
         programs = {
@@ -246,4 +121,9 @@ in
         };
       }
     ];
+  };
+
+in
+homeBaseUsers {
+  inherit userImports globalImports;
 }

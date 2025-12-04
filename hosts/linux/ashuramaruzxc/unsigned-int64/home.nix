@@ -1,23 +1,18 @@
 {
   inputs,
-  lib,
   eulib,
   pkgsUnstable,
   ...
 }:
 let
-  commonUsers = [
-    { home.stateVersion = "25.05"; }
-    ../shared/aliases.nix
-    inputs.catppuccin-trivial.homeModules.catppuccin
-    inputs.sops-nix-trivial.homeManagerModules.sops
-    {
-      sops = {
-        age.keyFile = "$HOME/.config/sops/age/keys.txt";
-        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
-      };
-    }
-  ];
+  homeCommon = import ../shared/home/common.nix { inherit inputs eulib pkgsUnstable; };
+  homeBaseUsers = import ../shared/home/base-users.nix {
+    inherit (homeCommon) baseImports baseHomeManager;
+  };
+  inherit (homeCommon)
+    catppuccinConfig
+    rootHmConfig
+    ;
 
   commonHmConfig = [
     inputs.self.homeModules.default
@@ -36,33 +31,26 @@ let
     }
   ];
 
-  mkUser =
-    extraImports:
-    { osConfig, ... }:
+  globalImports = [
+    ../shared/aliases.nix
+    catppuccinConfig
+    inputs.sops-nix-trivial.homeManagerModules.sops
     {
-      imports = [
-        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-      ]
-      ++ extraImports
-      ++ commonUsers
-      ++ commonHmConfig;
-    };
+      sops = {
+        age.keyFile = "$HOME/.config/sops/age/keys.txt";
+        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
+      };
+    }
+  ];
 
-  userConfigs = {
-    root = [ ];
-    ashuramaru = [ ];
-    fumono = [ ];
-    minecraft = [ ];
+  userImports = {
+    root = [ rootHmConfig ] ++ commonHmConfig;
+    ashuramaru = commonHmConfig;
+    fumono = commonHmConfig;
+    minecraft = commonHmConfig;
   };
+
 in
-{
-  imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
-    users = lib.mapAttrs (_: extraImports: mkUser extraImports) userConfigs;
-  };
+homeBaseUsers {
+  inherit userImports globalImports;
 }

@@ -1,40 +1,23 @@
 { inputs, ... }:
+let
+  inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
+in
 {
-  unsigned-int32 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+  unsigned-int32 = mkHostSystem {
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-    ]
-    ++ [
-      inputs.sops-nix-trivial.nixosModules.sops
-      {
-        sops = {
-          age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        };
-      }
-    ]
-    ++ [
-      inputs.catppuccin-trivial.nixosModules.catppuccin
-      {
-        catppuccin = {
-          enable = true;
-          flavor = "mocha";
-          accent = "flamingo";
-        };
-      }
-    ]
-    ++ [
+    ];
+    sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+    catppuccinAccent = "flamingo";
+    extraModules = [
       inputs.anime-game-launcher-source.nixosModules.default
       {
         programs.anime-game-launcher.enable = true;
         programs.honkers-railway-launcher.enable = true;
         aagl.enableNixpkgsReleaseBranchCheck = false;
       }
-    ]
-    ++ [
       inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
@@ -45,8 +28,6 @@
           };
         };
       }
-    ]
-    ++ [
       {
         nixos = {
           plasma.enable = true;

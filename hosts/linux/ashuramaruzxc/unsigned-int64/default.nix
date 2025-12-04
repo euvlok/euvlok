@@ -1,34 +1,19 @@
 { inputs, ... }:
+let
+  inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
+in
 {
-  unsigned-int64 = inputs.nixpkgs-ashuramaruzxc.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+  unsigned-int64 = mkHostSystem {
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
       inputs.nix-vscode-server-trivial.nixosModules.default
       { services.vscode-server.enable = true; }
-    ]
-    ++ [
-      inputs.sops-nix-trivial.nixosModules.sops
-      {
-        sops = {
-          age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
-        };
-      }
-    ]
-    ++ [
-      inputs.catppuccin-trivial.nixosModules.catppuccin
-      {
-        catppuccin = {
-          enable = true;
-          flavor = "mocha";
-          accent = "rosewater";
-        };
-      }
-    ]
-    ++ [
+    ];
+    sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
+    catppuccinAccent = "rosewater";
+    extraModules = [
       {
         nixos = {
           gnome.enable = true;

@@ -6,13 +6,13 @@
 }:
 {
   imports = [
-    ../shared/android.nix
-    ../shared/containers.nix
-    ../shared/firmware.nix
-    ../shared/fonts.nix
-    ../shared/hyperv.nix
-    ../shared/lxc.nix
-    ../shared/settings.nix
+    ../shared/system/android.nix
+    ../shared/system/containers.nix
+    ../shared/system/firmware.nix
+    ../shared/system/fonts.nix
+    ../shared/system/hyperv.nix
+    ../shared/system/lxc.nix
+    ../shared/system/settings.nix
     ./hardware-configuration.nix
     ./services/default.nix
     ./settings.nix

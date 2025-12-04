@@ -7,15 +7,15 @@
 }:
 {
   imports = [
-    ../shared/android.nix
-    ../shared/containers.nix
-    ../shared/fh.nix
-    ../shared/firmware.nix
-    ../shared/hyperv.nix
-    ../shared/lxc.nix
-    ../shared/desktop.nix
-    ../shared/settings.nix
-    ../shared/fonts.nix
+    ../shared/system/android.nix
+    ../shared/system/containers.nix
+    ../shared/system/fh.nix
+    ../shared/system/firmware.nix
+    ../shared/system/hyperv.nix
+    ../shared/system/lxc.nix
+    ../shared/system/desktop.nix
+    ../shared/system/settings.nix
+    ../shared/system/fonts.nix
     ./hardware-configuration.nix
     ./networking.nix
     # ./samba.nix

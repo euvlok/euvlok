@@ -6,12 +6,12 @@
 }:
 {
   imports = [
-    ../shared/containers.nix
-    ../shared/fonts.nix
-    ../shared/hyperv.nix
-    ../shared/lxc.nix
-    ../shared/desktop.nix
-    ../shared/settings.nix
+    ../shared/system/containers.nix
+    ../shared/system/fonts.nix
+    ../shared/system/hyperv.nix
+    ../shared/system/lxc.nix
+    ../shared/system/desktop.nix
+    ../shared/system/settings.nix
     ./hardware-configuration.nix
     ./settings.nix
     ./users.nix
