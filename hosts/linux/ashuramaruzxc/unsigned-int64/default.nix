@@ -4,7 +4,6 @@
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default
-      inputs.attic.nixosModules.atticd
       ./configuration.nix
       ./home.nix
       inputs.nix-vscode-server-trivial.nixosModules.default

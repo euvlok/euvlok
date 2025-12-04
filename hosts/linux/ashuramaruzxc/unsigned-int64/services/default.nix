@@ -2,7 +2,6 @@ _: {
   imports = [
     # Most important
     ./nginx.nix
-    ./atticd.nix
     ./grafana.nix
 
     # utils
