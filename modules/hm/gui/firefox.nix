@@ -184,17 +184,6 @@ let
       "browser.urlbar.suggest.calculator" = true;
       "browser.urlbar.update2.engineAliasRefresh" = true;
     };
-    # // lib.optionalAttrs (isLinux && osConfig.xdg.portal.xdgOpenUsePortal == true) {
-    #   "widget.use-xdg-desktop-portal.file-picker" = 1;
-    # }
-    # // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable or osConfig.nixos.amd.enable)) {
-    #   "media.ffmpeg.vaapi.enabled" = true;
-    #   "media.gpu-process.enabled" = true;
-    # })
-    # // (lib.optionalAttrs (isLinux && (osConfig.nixos.nvidia.enable)) {
-    #   "media.hardware-video-decoding.force-enabled" = true;
-    #   "media.rdd-ffmpeg.enabled" = true; # It's default but just in case
-    # });
   };
   policies = {
     DisableAppUpdate = true;

@@ -46,6 +46,7 @@
       ++ [
         ./home-packages.nix
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         inputs.self.homeConfigurations.lay-by
         {
           home.shell.enableShellIntegration = true;
@@ -79,8 +80,6 @@
         }
       ]
       ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
-        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
       ];
     };
 }

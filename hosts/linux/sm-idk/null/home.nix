@@ -25,6 +25,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         inputs.self.homeConfigurations.sm-idk
         ../../../../modules/hm/wm/niri
         {
@@ -39,10 +40,6 @@
             firefox.zen-browser.enable = true;
           };
         }
-      ]
-      ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
-        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
       ];
     };
 }

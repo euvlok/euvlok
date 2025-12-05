@@ -74,10 +74,6 @@
         }
       ]
       ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
-        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-      ]
-      ++ [
         inputs.sops-nix-trivial.homeManagerModules.sops
         {
           sops = {
@@ -88,6 +84,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         inputs.self.homeConfigurations._2husecondary
         {
           hm = {

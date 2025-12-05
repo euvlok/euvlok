@@ -15,6 +15,7 @@ let
 
   commonHmConfig = [
     inputs.self.homeModules.default
+    inputs.self.homeModules.os
     inputs.self.homeConfigurations.ashuramaruzxc
     {
       hm = {

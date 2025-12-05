@@ -230,6 +230,7 @@
         nixosModules.default = import ./modules/nixos;
         darwinModules.default = ./modules/darwin;
         homeModules.default = ./modules/hm;
+        homeModules.os = ./modules/hm/os;
 
         homeConfigurations = {
           _2husecondary = import ./hosts/hm/2husecondary;

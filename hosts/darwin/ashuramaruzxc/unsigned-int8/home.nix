@@ -8,7 +8,6 @@
 let
   commonImports = [
     { home.stateVersion = "25.05"; }
-    inputs.catppuccin-trivial.homeModules.catppuccin
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/helix.nix
@@ -27,6 +26,7 @@ let
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
+    inputs.self.homeModules.os
     inputs.self.homeConfigurations.ashuramaruzxc
     {
       hm = {

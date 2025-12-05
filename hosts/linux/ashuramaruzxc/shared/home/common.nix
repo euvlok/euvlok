@@ -6,7 +6,6 @@
   baseImports = [
     { home.stateVersion = "25.05"; }
     ../../../../pkgs/catppuccin-gtk.nix
-    inputs.catppuccin-trivial.homeModules.catppuccin
   ];
 
   catppuccinConfig =

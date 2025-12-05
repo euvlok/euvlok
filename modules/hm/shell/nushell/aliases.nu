@@ -47,7 +47,11 @@ def update [] {
     } else {
         $raw_host
     }
-    let flake_path = (readlink -f "/etc/nixos")
+    let flake_path_raw = ("/etc/nixos" | path expand)
+    if not ($flake_path_raw | path exists) {
+        error make { msg: $"system flake path not found: ($flake_path_raw)" }
+    }
+    let flake_path = (readlink -f $flake_path_raw | str trim)
     let flake_attr = if $is_darwin {
         "darwinConfigurations"
     } else {

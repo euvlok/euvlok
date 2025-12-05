@@ -19,10 +19,6 @@
         { home.stateVersion = "25.05"; }
       ]
       ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
-        { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-      ]
-      ++ [
         ../../../hm/bigshaq9999/niri.nix
         ../../../hm/bigshaq9999/taskwarrior.nix
         ../../../hm/bigshaq9999/waybar.nix
@@ -33,6 +29,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         ../../../../modules/hm/wm/niri
         {
           hm = {

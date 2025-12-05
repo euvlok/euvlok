@@ -32,12 +32,9 @@
             }
           ]
           ++ [
-            inputs.catppuccin-trivial.homeModules.catppuccin
-            { catppuccin = { inherit (osConfig.catppuccin) enable accent flavor; }; }
-          ]
-          ++ [
             ../../../hm/flameflag/aliases.nix
             inputs.self.homeModules.default
+            inputs.self.homeModules.os
             {
               hm = {
                 chromium.browser = "brave";

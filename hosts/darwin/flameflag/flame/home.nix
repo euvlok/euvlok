@@ -38,7 +38,6 @@
         }
       ]
       ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
         {
           catppuccin = {
             enable = true;
@@ -49,6 +48,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         inputs.self.homeConfigurations.flameflag
         {
           hm = {

@@ -27,7 +27,6 @@
         ../../../hm/bigshaq9999/helix.nix
       ]
       ++ [
-        inputs.catppuccin-trivial.homeModules.catppuccin
         {
           catppuccin = {
             enable = true;
@@ -72,6 +71,7 @@
       ]
       ++ [
         inputs.self.homeModules.default
+        inputs.self.homeModules.os
         inputs.self.homeConfigurations.bigshaq9999
         ../../../hm/flameflag/nushell.nix
         ../../../hm/flameflag/starship.nix
