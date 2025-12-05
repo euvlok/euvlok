@@ -2,12 +2,11 @@
   inputs,
   pkgs,
   eulib,
-  pkgsUnstable,
   ...
 }:
 let
-  homeCommon = import ../shared/home/common.nix { inherit inputs eulib pkgsUnstable; };
-  homePackages = import ../shared/home/packages.nix { inherit pkgs pkgsUnstable; };
+  homeCommon = import ../shared/home/common.nix { inherit inputs eulib; };
+  homePackages = import ../shared/home/packages.nix { inherit pkgs; };
   homeBaseUsers = import ../shared/home/base-users.nix {
     inherit (homeCommon) baseImports baseHomeManager;
   };
@@ -78,7 +77,7 @@ let
       "jetbrains"
       "nemo"
     ]
-    ++ [ pkgsUnstable.piper ];
+    ++ [ pkgs.unstable.piper ];
 
   globalImports = [ ../shared/aliases.nix ];
 
@@ -139,7 +138,7 @@ let
             window-width = 140;
           };
           btop.enable = true;
-          direnv.nix-direnv.package = pkgsUnstable.nix-direnv;
+          direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
         };
       }
     ];

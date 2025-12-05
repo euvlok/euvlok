@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   ...
 }:
 {
@@ -49,7 +48,7 @@
   };
   hardware.opentabletdriver = {
     enable = true;
-    package = pkgsUnstable.opentabletdriver;
+    package = pkgs.unstable.opentabletdriver;
     daemon.enable = true;
   };
   services.ratbagd.enable = true;

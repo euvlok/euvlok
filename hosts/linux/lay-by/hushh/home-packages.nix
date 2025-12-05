@@ -1,7 +1,7 @@
-{ pkgsUnstable, ... }:
+{ pkgs, ... }:
 {
   home.packages = builtins.attrValues {
-    inherit (pkgsUnstable)
+    inherit (pkgs.unstable)
       # Base apps
       pavucontrol
       networkmanagerapplet
@@ -64,7 +64,7 @@
       ghidra
       scanmem
       ;
-    inherit (pkgsUnstable.kdePackages)
+    inherit (pkgs.unstable.kdePackages)
       kalgebra
       kcalc
       ark

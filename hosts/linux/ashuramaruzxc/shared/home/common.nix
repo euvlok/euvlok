@@ -1,7 +1,6 @@
 {
   inputs,
   eulib,
-  pkgsUnstable,
 }:
 {
   baseImports = [
@@ -36,7 +35,7 @@
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "bak";
-      extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
+      extraSpecialArgs = { inherit inputs eulib; };
     };
   };
 }

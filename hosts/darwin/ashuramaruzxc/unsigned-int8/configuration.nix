@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  pkgsUnstable,
   config,
   ...
 }:
@@ -88,7 +87,7 @@
       pinentry_mac
       gnupg
       ;
-    inherit (pkgsUnstable) soundsource;
+    inherit (pkgs.unstable) soundsource;
   };
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

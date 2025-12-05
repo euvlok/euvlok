@@ -4,14 +4,15 @@
   ...
 }:
 {
-  _module.args.pkgsUnstable = import inputs.nixpkgs-unstable-small {
-    inherit (config.nixpkgs.hostPlatform) system;
-    inherit (config.nixpkgs) config;
-  };
-
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
+    (final: prev: {
+      unstable = import inputs.nixpkgs-unstable-small {
+        inherit (prev.stdenv.hostPlatform) system;
+        config = config.nixpkgs.config;
+      };
+    })
     inputs.nur-trivial.overlays.default
     inputs.rust-overlay-source.overlays.default
     inputs.niri-flake-trivial.overlays.niri

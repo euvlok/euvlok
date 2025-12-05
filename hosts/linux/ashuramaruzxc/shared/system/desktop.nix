@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  pkgsUnstable,
   ...
 }:
 # GNOME Stuff
@@ -26,10 +25,10 @@
       pop-launcher
       polonium
       ;
-    inherit (pkgsUnstable.kdePackages)
+    inherit (pkgs.unstable.kdePackages)
       krohnkite
       ;
-    inherit (pkgsUnstable.gnomeExtensions)
+    inherit (pkgs.unstable.gnomeExtensions)
       arcmenu
       auto-move-windows
       blur-my-shell

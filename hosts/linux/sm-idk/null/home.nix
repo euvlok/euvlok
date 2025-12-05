@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgsUnstable,
   eulib,
   ...
 }:
@@ -10,7 +9,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs pkgsUnstable eulib; };
+    extraSpecialArgs = { inherit inputs eulib; };
   };
 
   home-manager.users.bruno =

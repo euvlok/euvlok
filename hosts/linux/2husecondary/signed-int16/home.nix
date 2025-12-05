@@ -2,7 +2,6 @@
   inputs,
   pkgs,
   eulib,
-  pkgsUnstable,
   ...
 }:
 {
@@ -12,7 +11,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
+    extraSpecialArgs = { inherit inputs eulib; };
   };
 
   home-manager.users.reisen =
@@ -55,7 +54,7 @@
               fsearch
               obsidian
               ;
-            inherit (pkgsUnstable) tdesktop;
+            inherit (pkgs.unstable) tdesktop;
           };
         }
       ]

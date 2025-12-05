@@ -3,7 +3,6 @@
   lib,
   config,
   pkgs,
-  pkgsUnstable,
   ...
 }:
 {
@@ -75,7 +74,7 @@
         # steam added a proper search for steamcompattools in your ~/.steam so variable should not be needed anymore
         # don't forget to periodically change steam's compatibility layer
         extraCompatPackages = builtins.attrValues {
-          inherit (pkgsUnstable)
+          inherit (pkgs.unstable)
             proton-ge-bin
             steamtinkerlaunch
             ;

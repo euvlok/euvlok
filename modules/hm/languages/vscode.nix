@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   config,
   lib,
   ...
@@ -184,8 +183,8 @@ in
       }
       // lib.optionalAttrs config.hm.languages.ruby.enable {
         "rubyLsp.bundleGemfile" = "";
-        "rubyLsp.customRubyCommand" = "${pkgsUnstable.ruby_3_4}/bin/ruby";
-        "rubyLsp.lspPath" = "${pkgsUnstable.rubyPackages.ruby-lsp}/bin/ruby-lsp";
+        "rubyLsp.customRubyCommand" = "${pkgs.unstable.ruby_3_4}/bin/ruby";
+        "rubyLsp.lspPath" = "${pkgs.unstable.rubyPackages.ruby-lsp}/bin/ruby-lsp";
         "rubyLsp.pullDiagnosticsOn" = "save";
         "rubyLsp.rubyVersionManager" = "none";
         "[ruby]" = {

@@ -1,8 +1,8 @@
-{ pkgs, pkgsUnstable }:
+{ pkgs }:
 let
   categories = {
     important = builtins.attrValues {
-      inherit (pkgsUnstable)
+      inherit (pkgs.unstable)
         keepassxc
         bitwarden-desktop
         thunderbird
@@ -60,7 +60,7 @@ let
     audio = builtins.attrValues { inherit (pkgs) helvum pavucontrol qpwgraph; };
 
     gaming = builtins.attrValues {
-      inherit (pkgsUnstable) osu-lazer-bin;
+      inherit (pkgs.unstable) osu-lazer-bin;
       inherit (pkgs)
         bottles
         cemu
@@ -83,17 +83,17 @@ let
     };
 
     development = builtins.attrValues {
-      inherit (pkgsUnstable)
+      inherit (pkgs.unstable)
         android-studio
         nixd
         ;
-      inherit (pkgsUnstable.jetbrains) dataspell datagrip;
+      inherit (pkgs.unstable.jetbrains) dataspell datagrip;
     };
 
     jetbrains =
       let
-        inherit (pkgsUnstable.jetbrains.plugins) addPlugins;
-        inherit (pkgsUnstable.jetbrains) rider clion idea-ultimate;
+        inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
+        inherit (pkgs.unstable.jetbrains) rider clion idea-ultimate;
         commonPlugins = [
           "better-direnv"
           "catppuccin-icons"

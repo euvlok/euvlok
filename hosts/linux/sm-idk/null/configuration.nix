@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   ...
 }:
 
@@ -75,7 +74,7 @@
   services.tailscale = {
     enable = true;
     openFirewall = true;
-    package = pkgsUnstable.tailscale;
+    package = pkgs.unstable.tailscale;
   };
 
   services.create_ap = {

@@ -2,7 +2,6 @@
   inputs,
   pkgs,
   config,
-  pkgsUnstable,
   ...
 }:
 {
@@ -42,7 +41,7 @@
     };
     opentabletdriver = {
       enable = true;
-      package = pkgsUnstable.opentabletdriver;
+      package = pkgs.unstable.opentabletdriver;
       daemon.enable = true;
     };
     i2c.enable = true;
@@ -52,7 +51,7 @@
     hardware.openrgb = {
       enable = true;
       motherboard = "amd";
-      package = pkgsUnstable.openrgb-with-all-plugins;
+      package = pkgs.unstable.openrgb-with-all-plugins;
     };
     hardware.bolt.enable = true;
     xserver = {
@@ -67,7 +66,7 @@
           via # qmk/via
           yubikey-personalization
           ;
-        inherit (pkgsUnstable) opentabletdriver;
+        inherit (pkgs.unstable) opentabletdriver;
       };
       extraRules = ''
         # XP-Pen CT1060
@@ -184,7 +183,7 @@
       inherit (pkgs.kdePackages)
         bluedevil
         ;
-      inherit (pkgsUnstable)
+      inherit (pkgs.unstable)
         openrgb-with-all-plugins
         ;
     };

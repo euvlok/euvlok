@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  pkgsUnstable,
   lib,
   ...
 }:
@@ -204,7 +203,7 @@ in
     };
     #! bitwarden is still broken
     nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-      builtins.attrValues { inherit (pkgsUnstable) firefoxpwa; }
+      builtins.attrValues { inherit (pkgs.unstable) firefoxpwa; }
     );
     languagePacks = [
       "en-CA"

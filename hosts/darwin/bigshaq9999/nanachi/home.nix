@@ -3,7 +3,6 @@
   pkgs,
   lib,
   eulib,
-  pkgsUnstable,
   ...
 }:
 {
@@ -12,7 +11,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs eulib pkgsUnstable; };
+    extraSpecialArgs = { inherit inputs eulib; };
   };
 
   home-manager.users.faputa =

@@ -1,5 +1,5 @@
 {
-  pkgsUnstable,
+  pkgs,
   lib,
   config,
   ...
@@ -8,7 +8,7 @@
   options.hm.jujutsu.enable = lib.mkEnableOption "Jujutsu";
 
   config = lib.mkIf config.hm.jujutsu.enable {
-    home.packages = builtins.attrValues { inherit (pkgsUnstable) watchman; };
+    home.packages = builtins.attrValues { inherit (pkgs.unstable) watchman; };
     programs.jujutsu = {
       enable = true;
       settings = {

@@ -3,15 +3,14 @@
   lib,
   config,
   osConfig,
-  pkgsUnstable,
   ...
 }:
 let
   jj-completions = pkgs.runCommand "jj-completions.nu" {
-    buildInputs = builtins.attrValues { inherit (pkgsUnstable) jujutsu; };
+    buildInputs = builtins.attrValues { inherit (pkgs.unstable) jujutsu; };
   } ''jj util completion nushell > "$out"'';
   atuin-completions = pkgs.runCommand "atuin-completions.nu" {
-    buildInputs = builtins.attrValues { inherit (pkgsUnstable) atuin; };
+    buildInputs = builtins.attrValues { inherit (pkgs.unstable) atuin; };
   } ''atuin gen-completions -s nushell > "$out"'';
 in
 {
@@ -20,7 +19,7 @@ in
   config = lib.mkIf config.hm.nushell.enable {
     programs.nushell = {
       enable = true;
-      package = pkgsUnstable.nushell;
+      package = pkgs.unstable.nushell;
       shellAliases = {
         # CD
         cd = "__zoxide_z";

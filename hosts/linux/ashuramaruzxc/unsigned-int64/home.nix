@@ -1,11 +1,10 @@
 {
   inputs,
   eulib,
-  pkgsUnstable,
   ...
 }:
 let
-  homeCommon = import ../shared/home/common.nix { inherit inputs eulib pkgsUnstable; };
+  homeCommon = import ../shared/home/common.nix { inherit inputs eulib; };
   homeBaseUsers = import ../shared/home/base-users.nix {
     inherit (homeCommon) baseImports baseHomeManager;
   };

@@ -3,7 +3,6 @@
   eulib,
   config,
   pkgs,
-  pkgsUnstable,
   ...
 }:
 let
@@ -25,7 +24,7 @@ let
 in
 {
   config = lib.mkIf config.hm.zellij.enable {
-    programs.zellij.package = pkgsUnstable.zellij;
+    programs.zellij.package = pkgs.unstable.zellij;
     programs.zellij.settings = {
       default_shell = "${lib.getExe pkgs.nushell}";
       inherit copy_command;

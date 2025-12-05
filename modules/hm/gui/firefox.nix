@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  pkgsUnstable,
   lib,
   config,
   ...
@@ -246,7 +245,7 @@ in
     (lib.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
-        package = pkgsUnstable.floorp-bin;
+        package = pkgs.unstable.floorp-bin;
         profiles.default = default;
         inherit policies;
       };

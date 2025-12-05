@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgsUnstable,
   lib,
   config,
   ...
@@ -17,7 +16,7 @@ let
           "25"
         ];
       in
-      lib.genAttrs versions (version: pkgsUnstable."jdk${version}");
+      lib.genAttrs versions (version: pkgs.unstable."jdk${version}");
 
     dotnet =
       let
@@ -27,7 +26,7 @@ let
           "10"
         ];
       in
-      lib.genAttrs versions (version: pkgsUnstable.dotnetCorePackages."sdk_${version}_0-bin");
+      lib.genAttrs versions (version: pkgs.unstable.dotnetCorePackages."sdk_${version}_0-bin");
   };
 
   getLatestVersion = mapping: lib.last (lib.sort lib.versionOlder (lib.attrNames mapping));
@@ -35,7 +34,7 @@ let
   languageDefinitions = {
     clojure = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           clojure
           leiningen
           clj-kondo
@@ -45,7 +44,7 @@ let
     };
     cpp = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           ccls
           clang
           clang-tools
@@ -59,22 +58,22 @@ let
       };
     };
     csharp = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) omnisharp-roslyn netcoredbg; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) omnisharp-roslyn netcoredbg; };
       versionMap = versionMappings.dotnet;
       defaultVersion = getLatestVersion versionMappings.dotnet;
     };
     dart = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) flutter; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) flutter; };
     };
     elixir = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) elixir elixir-ls hex; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) elixir elixir-ls hex; };
     };
     fsharp = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) dotnet-sdk fsautocomplete; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) dotnet-sdk fsautocomplete; };
     };
     go = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           go
           gopls
           golangci-lint
@@ -86,7 +85,7 @@ let
     };
     haskell = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           ghc
           cabal-install
           stack
@@ -97,19 +96,19 @@ let
       };
     };
     java = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) jdt-language-server gradle maven; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) jdt-language-server gradle maven; };
       versionMap = versionMappings.java;
       defaultVersion = getLatestVersion versionMappings.java;
     };
     javascript = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           nodejs
           bun
           deno
           yarn
           ;
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           sass
           pnpm
           eslint
@@ -119,14 +118,14 @@ let
       };
     };
     kotlin = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) kotlin kotlin-language-server gradle; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) kotlin kotlin-language-server gradle; };
     };
     lisp = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) sbcl roswell; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) sbcl roswell; };
     };
     lua = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           lua
           luarocks
           lua-language-server
@@ -135,29 +134,29 @@ let
       };
     };
     nim = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) nim nimlsp; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) nim nimlsp; };
     };
     ocaml = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable) ocaml dune_3 opam;
-        inherit (pkgsUnstable.ocamlPackages) ocaml-lsp ocamlformat;
+        inherit (pkgs.unstable) ocaml dune_3 opam;
+        inherit (pkgs.unstable.ocamlPackages) ocaml-lsp ocamlformat;
       };
     };
     perl = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable) perl;
-        inherit (pkgsUnstable.perlPackages) PerlLanguageServer PerlCritic PerlTidy;
+        inherit (pkgs.unstable) perl;
+        inherit (pkgs.unstable.perlPackages) PerlLanguageServer PerlCritic PerlTidy;
       };
     };
     php = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable) php intelephense;
-        inherit (pkgsUnstable.phpPackages) composer psalm phpstan;
+        inherit (pkgs.unstable) php intelephense;
+        inherit (pkgs.unstable.phpPackages) composer psalm phpstan;
       };
     };
     python =
       let
-        python312 = pkgsUnstable.python312.withPackages (pip: [
+        python312 = pkgs.unstable.python312.withPackages (pip: [
           pip.black
           pip.flake8
           pip.ipython
@@ -175,8 +174,8 @@ let
       };
     ruby = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable) ruby_3_4 solargraph rubocop;
-        inherit (pkgsUnstable.rubyPackages)
+        inherit (pkgs.unstable) ruby_3_4 solargraph rubocop;
+        inherit (pkgs.unstable.rubyPackages)
           rails
           ruby-lsp
           ;
@@ -185,7 +184,7 @@ let
     rust = {
       packages = builtins.attrValues {
         inherit (pkgs.rust-bin.stable.latest) default;
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           rust-analyzer
           cargo-watch
           cargo-edit
@@ -195,7 +194,7 @@ let
     };
     scala = {
       packages = builtins.attrValues {
-        inherit (pkgsUnstable)
+        inherit (pkgs.unstable)
           scala
           sbt
           metals
@@ -204,10 +203,10 @@ let
       };
     };
     swift = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) swift swift-format sourcekit-lsp; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) swift swift-format sourcekit-lsp; };
     };
     zig = {
-      packages = builtins.attrValues { inherit (pkgsUnstable) zig zls; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) zig zls; };
     };
   };
 in
@@ -300,7 +299,7 @@ in
 
       home.packages =
         (builtins.attrValues {
-          inherit (pkgsUnstable)
+          inherit (pkgs.unstable)
             shellcheck
             shfmt
             bash-language-server
