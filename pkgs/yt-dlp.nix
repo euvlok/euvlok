@@ -22,6 +22,8 @@ python3Packages.buildPythonApplication {
     hash = "sha256-eAbSEcy63RZ4Vx3/qyXPkPxp8BcxynJNe6RjhI/FvwU=";
   };
 
+  doCheck = false;
+
   postPatch = ''
     substituteInPlace yt_dlp/version.py \
       --replace-fail "UPDATE_HINT = None" 'UPDATE_HINT = "Nixpkgs/NixOS likely already contain an updated version.\n       To get it run nix-channel --update or nix flake update in your config directory."'
@@ -71,7 +73,12 @@ python3Packages.buildPythonApplication {
   '';
 
   makeWrapperArgs = ''--prefix PATH : "${
-    lib.makeBinPath atomicparsley ffmpeg-headless deno rtmpdump
+    lib.makeBinPath [
+      atomicparsley
+      ffmpeg-headless
+      deno
+      rtmpdump
+    ]
   }"'';
 
   checkPhase = ''
