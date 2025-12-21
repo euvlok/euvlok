@@ -18,8 +18,8 @@ python3Packages.buildPythonApplication {
   src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "e9d4b22b9b09a30f31b557df740b01b09a8aefe8";
-    hash = "sha256-H2F6XsuHigXaJlSWyaZpobEeQamvCIaCn7y9mPjb4B8=";
+    rev = "15263d049cb3f47e921b414782490052feca3def";
+    hash = "sha256-eAbSEcy63RZ4Vx3/qyXPkPxp8BcxynJNe6RjhI/FvwU=";
   };
 
   postPatch = ''
