@@ -4,25 +4,22 @@
 }:
 
 {
-  # Imports
   imports = [
     ./home.nix
     ./hardware-configuration.nix
   ];
-  system.stateVersion = "25.05";
-  # Bootloader
+
+  system.stateVersion = "25.11";
+
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
   boot = {
     supportedFilesystems = [ "ntfs" ];
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
-    # kernelPackages = pkgs.linuxPackages_latest;
-    # kernelPackages = pkgs.linuxPackages_cachyos;
     consoleLogLevel = 0;
     initrd.verbose = false;
   };
 
-  # Hardware
   hardware = {
     bluetooth.enable = true;
     uinput.enable = true;
@@ -34,7 +31,6 @@
   users.groups.libvirtd.members = [ "bruno" ];
   virtualisation.libvirtd.enable = true;
 
-  # User
   users.users.bruno = {
     isNormalUser = true;
     description = "Bruno";
@@ -47,7 +43,6 @@
     ];
   };
 
-  # Services
   services = {
     udev.packages = with pkgs; [ game-devices-udev-rules ];
     power-profiles-daemon.enable = true;

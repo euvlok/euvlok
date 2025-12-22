@@ -18,8 +18,8 @@
       imports = [
         ./packages.nix
         {
-          home.stateVersion = "25.05";
-          programs.zed-editor.package = pkgs.zed-editor_git;
+          home.stateVersion = "25.11";
+          programs.zed-editor.package = pkgs.zed-editor;
 
         }
       ]

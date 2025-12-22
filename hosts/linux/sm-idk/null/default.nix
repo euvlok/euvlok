@@ -9,11 +9,6 @@
       inputs.catppuccin-trivial.nixosModules.catppuccin
     ]
     ++ [
-      inputs.chaotic.nixosModules.nyx-cache
-      inputs.chaotic.nixosModules.nyx-overlay
-      inputs.chaotic.nixosModules.nyx-registry
-    ]
-    ++ [
       {
         nixos = {
           nvidia.enable = true;
