@@ -2,7 +2,7 @@ _: {
   programs.nixcord.config.enableReactDevtools = true;
   programs.nixcord.config.plugins = {
     betterGifPicker.enable = true;
-    clearUrLs.enable = true;
+    ClearURLs.enable = true;
     consoleJanitor.disableSpotifyLogger = true;
     fixCodeblockGap.enable = true;
     forceOwnerCrown.enable = true;
