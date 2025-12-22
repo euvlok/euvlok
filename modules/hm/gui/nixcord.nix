@@ -37,11 +37,11 @@
       fixSpotifyEmbeds.enable = true;
       fixYoutubeEmbeds.enable = true;
       fullSearchContext.enable = true;
-      mutualGroupDMs.enable = true;
+      MutualGroupDMs.enable = true;
       noDevtoolsWarning.enable = true;
       noF1.enable = true;
       noUnblockToJump.enable = true;
-      onePingPerDm.enable = true;
+      OnePingPerDM.enable = true;
       readAllNotificationsButton.enable = true;
       textReplace.enable = true;
       textReplace.regexRules = [

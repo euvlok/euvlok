@@ -12,7 +12,6 @@ _: {
       ignoreSelf = true;
       ignoreBots = true;
     };
-    callTimer.enable = true;
     expressionCloner.enable = true;
     imageZoom.enable = true;
     implicitRelationships.enable = true;
