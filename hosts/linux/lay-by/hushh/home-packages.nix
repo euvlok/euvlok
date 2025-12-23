@@ -39,7 +39,7 @@
       slurp
       neofetch
       nitch
-      thunderbird
+      thunderbird-bin
       libreoffice
       p7zip
       #_7zz
