@@ -14,7 +14,6 @@
     betterNotesBox.enable = true;
     betterSessions.enable = true;
     biggerStreamPreview.enable = true;
-    clearUrLs.enable = true;
     consoleJanitor.disableSpotifyLogger = true;
     copyEmojiMarkdown.enable = true;
     disableCallIdle.enable = true;
@@ -23,8 +22,8 @@
     forceOwnerCrown.enable = true;
     friendsSince.enable = true;
     messageLinkEmbeds.enable = true;
-    moreCommands.enable = true;
-    moreKaomoji.enable = true;
+    # moreCommands.enable = true;
+    # moreKaomoji.enable = true;
     reverseImageSearch.enable = true;
     roleColorEverywhere.enable = true;
     serverInfo.enable = true;

@@ -47,6 +47,9 @@
       ### ------------------------------------ ###
       "iommu=pt"
       ### ------------------------------------ ###
+      "nvme_core.default_ps_max_latency_us=0"
+      "pcie_aspm=off"
+      "pcie_port_pm=off"
     ];
     extraModprobeConfig = ''
       options hid_apple fnmode=2

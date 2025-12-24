@@ -20,10 +20,10 @@
     home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
 
     # --- ashuramaruzxc ---
-    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager";
+    nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-25.11";
+    home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-25.11";
     home-manager-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
-    nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin";
+    nix-darwin-ashuramaruzxc.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nix-darwin-ashuramaruzxc.inputs.nixpkgs.follows = "nixpkgs-ashuramaruzxc";
     nixos-raspberrypi-ashuramaruzxc.url = "github:nvmd/nixos-raspberrypi";
 
@@ -105,6 +105,8 @@
     yazi-source.inputs.flake-utils.follows = "flake-utils";
     yazi-source.inputs.nixpkgs.follows = "nixpkgs-source";
     yazi-source.url = "github:sxyazi/yazi/157156b5b8f36db15b2ba425c7d15589039a9e1e";
+    vicinae-source.url = "github:vicinaehq/vicinae";
+    vicinae-source.inputs.nixpkgs.follows = "nixpkgs-source";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
@@ -224,25 +226,25 @@
                 "${script}/bin/nvidia-prefetch";
             };
           };
-
-          flake = {
-            nixosModules.default = import ./modules/nixos;
-            darwinModules.default = ./modules/darwin;
-            homeModules.default = ./modules/hm;
-            homeModules.os = ./modules/hm/os;
-
-            homeConfigurations = {
-              _2husecondary = import ./hosts/hm/2husecondary;
-              ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
-              bigshaq9999 = import ./hosts/hm/bigshaq9999;
-              flameflag = import ./hosts/hm/flameflag;
-              lay-by = import ./hosts/hm/lay-by;
-              sm-idk = import ./hosts/hm/sm-idk;
-            };
-
-            nixosConfigurations = import ./hosts/linux { inherit inputs; };
-            darwinConfigurations = import ./hosts/darwin { inherit inputs; };
-          };
         };
+
+      flake = {
+        nixosModules.default = import ./modules/nixos;
+        darwinModules.default = ./modules/darwin;
+        homeModules.default = ./modules/hm;
+        homeModules.os = ./modules/hm/os;
+
+        homeConfigurations = {
+          _2husecondary = import ./hosts/hm/2husecondary;
+          ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
+          bigshaq9999 = import ./hosts/hm/bigshaq9999;
+          flameflag = import ./hosts/hm/flameflag;
+          lay-by = import ./hosts/hm/lay-by;
+          sm-idk = import ./hosts/hm/sm-idk;
+        };
+
+        nixosConfigurations = import ./hosts/linux { inherit inputs; };
+        darwinConfigurations = import ./hosts/darwin { inherit inputs; };
+      };
     };
 }

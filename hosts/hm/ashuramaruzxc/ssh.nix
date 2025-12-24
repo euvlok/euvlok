@@ -1,33 +1,40 @@
-{ lib, config, ... }:
+{ config, ... }:
 {
   programs.ssh = {
     enableDefaultConfig = false;
-    matchBlocks."*" = {
-      addKeysToAgent = "no";
+    matchBlocks = {
+      "*" = {
+        identitiesOnly = true;
+        identityFile = [ "${config.home.homeDirectory}/.ssh/id_ed25519-sk" ];
+      };
+
+      "github.com" = {
+        hostname = "ssh.github.com";
+        port = 443;
+        user = "git";
+        identityFile = [ "${config.home.homeDirectory}/.ssh/id_ecdsa-sk_github" ];
+      };
+
+      "initrd.tenjin.com" = {
+        hostname = "www.tenjin-dk.com";
+        port = 2222;
+      };
+
+      "www.tenjin-dk.com" = {
+        hostname = "www.tenjin-dk.com";
+        port = 57255;
+      };
+
+      "tenjin-dk.com" = {
+        hostname = "www.tenjin-dk.com";
+        port = 57255;
+      };
+
+      "unsigned-int4.home.lan" = {
+        hostname = "192.168.50.15";
+        port = 22;
+        identityFile = [ "${config.home.homeDirectory}/.ssh/id_ecdsa-sk" ];
+      };
     };
-    extraConfig = ''
-    Host *
-        IdentitiesOnly yes
-        IdentityFile "${config.home.homeDirectory}/.ssh/id_ed25519-sk"
-      
-      Host github.com
-        Hostname ssh.github.com
-        Port 443
-        User git
-        IdentityFile "${config.home.homeDirectory}/.ssh/id_ecdsa-sk_github"
-      
-      Host initrd.tenjin.com
-        Hostname www.tenjin-dk.com
-        Port 2222
-      Host www.tenjin-dk.com
-        Hostname www.tenjin-dk.com
-        Port 57255
-      Host tenjin-dk.com
-        Hostname www.tenjin-dk.com
-        Port 57255
-      Host unsigned-int4.home.lan
-        Hostname 192.168.50.15
-        Port 22
-        IdentityFile "${config.home.homeDirectory}/.ssh/id_ecdsa-sk"
-  '';
+  };
 }

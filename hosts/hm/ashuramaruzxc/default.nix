@@ -11,5 +11,6 @@ _: {
     ./ssh.nix
     ./starship.nix
     ./vscode.nix
+    ./zed.nix
   ];
 }

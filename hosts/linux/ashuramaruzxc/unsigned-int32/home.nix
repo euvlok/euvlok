@@ -10,11 +10,13 @@ let
   homeBaseUsers = import ../shared/home/base-users.nix {
     inherit (homeCommon) baseImports baseHomeManager;
   };
+
   cursorModule = import ../shared/home/cursor.nix {
     cursorName = "touhou-reimu";
     cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
     iconPackage = pkgs.kdePackages.breeze-icons;
   };
+
   inherit (homeCommon) catppuccinConfig rootHmConfig;
 
   ashuramaruHmConfig = [
@@ -79,7 +81,7 @@ let
     ]
     ++ [ pkgs.unstable.piper ];
 
-  globalImports = [ ../shared/aliases.nix ];
+  # globalImports = [ ../shared/aliases.nix ];
 
   userImports = {
     root = [
@@ -145,5 +147,5 @@ let
   };
 in
 homeBaseUsers {
-  inherit userImports globalImports;
+  inherit userImports;
 }
