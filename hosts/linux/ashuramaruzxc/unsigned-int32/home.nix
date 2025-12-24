@@ -85,12 +85,14 @@ let
 
   userImports = {
     root = [
+      inputs.catppuccin-trivial.homeManagerModules.catppuccin
       catppuccinConfig
       rootHmConfig
     ]
     ++ ashuramaruHmConfig;
 
     ashuramaru = [
+      inputs.catppuccin-trivial.homeManagerModules.catppuccin
       catppuccinConfig
       inputs.sops-nix-trivial.homeManagerModules.sops
       {
@@ -117,13 +119,7 @@ let
           };
         }
       )
-      (
-        {
-          lib,
-          ...
-        }:
-        cursorModule { inherit lib pkgs; }
-      )
+      cursorModule
       {
         programs = {
           rbw = {

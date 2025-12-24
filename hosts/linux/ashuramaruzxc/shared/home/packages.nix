@@ -93,7 +93,7 @@ let
     jetbrains =
       let
         inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
-        inherit (pkgs.unstable.jetbrains) rider clion idea-ultimate;
+        inherit (pkgs.unstable.jetbrains) rider clion idea;
         commonPlugins = [
           "better-direnv"
           "catppuccin-icons"

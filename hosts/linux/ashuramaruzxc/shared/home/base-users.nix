@@ -20,6 +20,8 @@
   # };
 
   home-manager = baseHomeManager.home-manager // {
-    users = builtins.mapAttrs (_: extras: baseImports ++ globalImports ++ extras) userImports;
+    users = builtins.mapAttrs (_: extras: {
+      imports = baseImports ++ globalImports ++ extras;
+    }) userImports;
   };
 }

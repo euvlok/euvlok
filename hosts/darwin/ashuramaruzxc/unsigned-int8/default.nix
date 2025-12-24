@@ -4,7 +4,7 @@
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.darwinModules.default
-      ../../../linux/ashuramaruzxc/shared/fonts.nix
+      ../../../linux/ashuramaruzxc/shared/system/fonts.nix
       ./brew.nix
       ./configuration.nix
       ./home.nix

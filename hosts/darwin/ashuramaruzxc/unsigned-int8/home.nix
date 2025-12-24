@@ -88,7 +88,7 @@ let
   jetbrainsPackages =
     let
       inherit (pkgs.jetbrains.plugins) addPlugins;
-      inherit (pkgs.jetbrains) rider clion idea-ultimate;
+      inherit (pkgs.jetbrains) rider clion idea;
       commonPlugins = [
         "better-direnv"
         "catppuccin-icons"
