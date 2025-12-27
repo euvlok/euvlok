@@ -42,8 +42,7 @@
     ### utils
     appleMusicRichPresence = {
       enable = true;
-      activityType = "listening";
-      refreshInterval = 5;
+      activityType = 2;
       enableTimestamps = true;
       enableButtons = true;
     };

@@ -7,7 +7,7 @@
 }:
 let
   commonImports = [
-    { home.stateVersion = "25.05"; }
+    { home.stateVersion = "25.11"; }
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/helix.nix
@@ -32,6 +32,7 @@ let
       hm = {
         fastfetch.enable = true;
         firefox = {
+          floorp.enable = true;
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
@@ -40,8 +41,27 @@ let
         mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
+        nushell.enable = true;
         vscode.enable = true;
+        zed-editor.enable = true;
         zellij.enable = true;
+        languages = {
+          cpp.enable = true;
+          csharp.enable = true;
+          csharp.version = "10";
+          go.enable = true;
+          haskell.enable = true;
+          java.enable = true;
+          java.version = "21";
+          javascript.enable = true;
+          kotlin.enable = true;
+          lisp.enable = true;
+          lua.enable = true;
+          python.enable = true;
+          ruby.enable = true;
+          rust.enable = true;
+          scala.enable = true;
+        };
       };
     }
   ];

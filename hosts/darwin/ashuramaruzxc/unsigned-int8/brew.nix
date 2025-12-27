@@ -38,7 +38,6 @@
       "affinity-designer" # Proffessional soyjak designer program
       ### --- Graphics --- ###
       ### --- Utilities --- ###
-      "shottr"
       "forklift"
       "nextcloud-vfs"
       "yubico-authenticator"

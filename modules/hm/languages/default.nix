@@ -53,7 +53,7 @@ let
           gnumake
           ninja
           pkg-config
-          valgrind
+          # valgrind #!tbh quite useless
           ;
       };
     };

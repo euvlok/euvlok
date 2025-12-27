@@ -87,7 +87,7 @@
       pinentry_mac
       gnupg
       ;
-    inherit (pkgs.unstable) soundsource;
+    inherit (pkgs.unstable) soundsource shottr;
   };
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };
