@@ -14,11 +14,6 @@
     # to not cause constant rebuilds when updating generic unstable
     nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # --- 2husecondary ---
-    nixpkgs-2husecondary.url = "github:NixOS/nixpkgs/nixos-25.11";
-    home-manager-2husecondary.url = "github:nix-community/home-manager/release-25.11";
-    home-manager-2husecondary.inputs.nixpkgs.follows = "nixpkgs-2husecondary";
-
     # --- ashuramaruzxc ---
     nixpkgs-ashuramaruzxc.url = "github:NixOS/nixpkgs/nixos-25.11";
     home-manager-ashuramaruzxc.url = "github:nix-community/home-manager/release-25.11";
@@ -235,7 +230,6 @@
         homeModules.os = ./modules/hm/os;
 
         homeConfigurations = {
-          _2husecondary = import ./hosts/hm/2husecondary;
           ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
           bigshaq9999 = import ./hosts/hm/bigshaq9999;
           flameflag = import ./hosts/hm/flameflag;

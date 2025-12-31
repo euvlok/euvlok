@@ -1,5 +1,4 @@
 keys:
-  - &2husecondary age13v0c9ys9hjq7ccsxftkmnx9ht8ff6sf2f0j2lrcfqjz4ljvppqys6nv9r8 # @2husecondary
   - &ashuramaruzxc_unsigned-int64 age1a4cshc8aq9v9ez57r4mljddls3wfzchpc2uhmvjvnzk4wvr2mdequaej6d # @ashuramaruzxc server
   - &ashuramaruzxc_unsigned-int16 age13vhcu73jxnp8uc06fu6lzf0a0h3h8wd8hdzwc0v7u8zp0lrwk5ks9kcchc # @ashuramaruzxc rpi5
   - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
@@ -11,7 +10,6 @@ creation_rules:
   - path_regex: secrets/.*\.ya?ml$
     key_groups:
       - age:
-          - *2husecondary
           - *ashuramaruzxc_unsigned-int64
           - *ashuramaruzxc_unsigned-int32
           - *ashuramaruzxc_unsigned-int16

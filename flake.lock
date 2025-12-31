@@ -1151,27 +1151,6 @@
         "type": "gitlab"
       }
     },
-    "home-manager-2husecondary": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-2husecondary"
-        ]
-      },
-      "locked": {
-        "lastModified": 1766292113,
-        "narHash": "sha256-sWTtmkQujRpjWYCnZc8LWdDiCzrRlSBPrGovkZpLkBI=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "fdec8815a86db36f42fc9c8cb2931cd8485f5aed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "release-25.11",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "home-manager-ashuramaruzxc": {
       "inputs": {
         "nixpkgs": [
@@ -1982,22 +1961,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-2husecondary": {
-      "locked": {
-        "lastModified": 1766201043,
-        "narHash": "sha256-eplAP+rorKKd0gNjV3rA6+0WMzb1X1i16F5m5pASnjA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "b3aad468604d3e488d627c0b43984eb60e75e782",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-25.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-ashuramaruzxc": {
       "locked": {
         "lastModified": 1766473571,
@@ -2586,7 +2549,6 @@
         "flake-parts": "flake-parts_5",
         "flake-utils": "flake-utils_2",
         "flatpak-declerative-trivial": "flatpak-declerative-trivial",
-        "home-manager-2husecondary": "home-manager-2husecondary",
         "home-manager-ashuramaruzxc": "home-manager-ashuramaruzxc",
         "home-manager-bigshaq9999": "home-manager-bigshaq9999",
         "home-manager-flameflag": "home-manager-flameflag",
@@ -2609,7 +2571,6 @@
         "nixos-raspberrypi": "nixos-raspberrypi",
         "nixos-raspberrypi-ashuramaruzxc": "nixos-raspberrypi-ashuramaruzxc",
         "nixpkgs": "nixpkgs_14",
-        "nixpkgs-2husecondary": "nixpkgs-2husecondary",
         "nixpkgs-ashuramaruzxc": "nixpkgs-ashuramaruzxc",
         "nixpkgs-bigshaq9999": "nixpkgs-bigshaq9999",
         "nixpkgs-flameflag": "nixpkgs-flameflag",
