@@ -37,7 +37,7 @@
             no_display = true;
           };
           programs.rofi.enable = true;
-          programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi-wayland;
+          programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi;
           services.easyeffects.enable = true;
           fonts.fontconfig.enable = true;
           xsession.numlock.enable = true;
