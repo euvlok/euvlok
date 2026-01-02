@@ -25,6 +25,7 @@
         ../../../hm/flameflag/starship.nix
         ../../../hm/bigshaq9999/git.nix
         ../../../hm/bigshaq9999/helix.nix
+        ../../../hm/bigshaq9999/ghostty.nix
       ]
       ++ [
         {
@@ -98,7 +99,7 @@
               go.enable = true;
               # haskell.enable = true;
               java.enable = true;
-              java.version = "17";
+              java.version = "24";
               javascript.enable = true;
               kotlin.enable = true;
               lisp.enable = true;

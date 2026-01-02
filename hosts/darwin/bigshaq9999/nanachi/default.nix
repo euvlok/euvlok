@@ -9,6 +9,7 @@
       ./system.nix
       ./fonts.nix
       ./brew.nix
+      { services.tailscale.enable = true; }
     ];
   };
 }
