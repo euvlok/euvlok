@@ -64,7 +64,7 @@ in
   config = lib.mkIf config.hm.ghostty.enable {
     programs.ghostty = {
       enable = true;
-      package = if isDarwin then null else pkgs.ghostty;
+      package = if isDarwin then pkgs.unstable.ghostty-bin else pkgs.ghostty;
       settings = lib.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
         adjust-underline-position = 4;
         clipboard-paste-protection = false;
