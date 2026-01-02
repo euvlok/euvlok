@@ -1,7 +1,7 @@
-_:
+{ lib, ... }:
 let
-  userName = "bigshaq9999";
-  userEmail = "97749920+bigshaq9999@users.noreply.github.com";
+  name = "bigshaq9999";
+  email = "97749920+bigshaq9999@users.noreply.github.com";
 in
 {
   # home.packages = builtins.attrValues { inherit (pkgs) watchman; };
@@ -9,10 +9,11 @@ in
   programs = {
     gh.gitCredentialHelper.enable = true;
     # gh.settings.git_protocol = "ssh";
-    gitui.enable = true;
+    gitui.enable = lib.mkForce false;
     gh.enable = true;
     git = {
-      inherit userName userEmail;
+      settings.user.name = name;
+      settings.user.email = email;
       lfs.enable = true;
     };
     # git-credential-oauth.enable = true;

@@ -18,7 +18,7 @@
     { config, ... }:
     {
       imports = [
-        { home.stateVersion = "25.05"; }
+        { home.stateVersion = "25.11"; }
       ]
       ++ [
         ../../../hm/flameflag/nushell.nix
@@ -87,10 +87,10 @@
             nixcord.enable = true;
             # nushell.enable = true;
             vscode.enable = true;
-            yazi.enable = true;
+            # yazi.enable = true;
             zed-editor.enable = true;
             zellij.enable = true;
-            zsh.enable = true;
+            # zsh.enable = false;
             languages = {
               # cpp.enable = true;
               # csharp.enable = true;
@@ -114,14 +114,15 @@
       ++ [
         {
           home.packages = builtins.attrValues {
-            inherit (pkgs)
+            inherit (pkgs.unstable)
               # Make macos useful
               alt-tab-macos
               ice-bar
               iina
               iterm2
               raycast
-              rectangle
+              stats
+              shottr
               ;
 
             # SNS
@@ -132,10 +133,11 @@
               qbittorrent
               anki-bin # Japenis
               audacity
-              gimp # Image editing
+              # gimp # Image editing
               inkscape # Vector graphics
               yubikey-manager # OTP
               notion-app # Productivity
+              # mullvad-vpn
               ;
 
             inherit (pkgs)

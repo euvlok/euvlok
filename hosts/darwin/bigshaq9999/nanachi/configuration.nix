@@ -37,7 +37,7 @@
 
   users.users = {
     faputa = {
-      home = "/Users/faputa";
+      home = "/Volumes/Reg/Users/faputa";
       shell = pkgs.zsh;
     };
   };

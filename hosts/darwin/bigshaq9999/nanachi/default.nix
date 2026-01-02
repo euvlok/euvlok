@@ -8,6 +8,7 @@
       ./home.nix
       ./system.nix
       ./fonts.nix
+      ./brew.nix
     ];
   };
 }
