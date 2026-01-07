@@ -8,7 +8,7 @@
         dina-font
         fira-code-symbols
         noto-fonts-cjk-sans
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         sarasa-gothic
         twemoji-color-font
         vegur

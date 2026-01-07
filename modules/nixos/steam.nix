@@ -18,14 +18,13 @@
             (builtins.attrValues {
               inherit (steamSuper)
                 curl
-                glxinfo
                 imagemagick
                 keyutils
                 mangohud
                 mesa-demos
                 source-han-sans
                 steamtinkerlaunch # just in case compattools doesn't works
-                vkBasalt
+                vkbasalt
                 vulkan-validation-layers
                 wqy_zenhei
                 yad

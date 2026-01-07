@@ -47,8 +47,8 @@
       breeze
       breeze-gtk
       breeze-icons
+      kdeconnect-kde
       ;
-    inherit (pkgs.libsForQt5) kdeconnect-kde plasma-systemmonitor;
     inherit (pkgs) seahorse;
     inherit (inputs.zen-browser-trivial.packages.x86_64-linux) default;
   };
