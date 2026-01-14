@@ -1,4 +1,5 @@
-_: {
+{ pkgs, ... }:
+{
   imports = [
     ./fonts.nix
     ./hardware-configuration.nix
@@ -47,6 +48,7 @@ _: {
       "libvirtd"
       "wireshark"
     ];
+    shell = pkgs.fish;
   };
 
   networking.firewall.enable = false;
