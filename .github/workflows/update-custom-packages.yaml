@@ -3,7 +3,7 @@ name: Update Custom Packages
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: "0 8 * * *"
 
 permissions:
   contents: write
@@ -20,8 +20,6 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
-        with:
-          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
       - name: Grant perms to update script
         run: chmod +x ./pkgs/update.sh
@@ -53,7 +51,7 @@ jobs:
               echo "::endgroup::"
               continue
             fi
-            
+
             echo "::notice::$nixfile is a fetchable derivation, proceeding with update."
 
             if ./pkgs/update.sh "$nixfile"; then
@@ -71,7 +69,7 @@ jobs:
             echo "::warning::Changes detected in one or more packages."
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Commit and Push Changes
         if: steps.package_updater.outputs.has_changes == 'true'
         run: |
@@ -89,7 +87,7 @@ jobs:
           ${CHANGES_SUMMARY}
           EOF
           )
-          
+
           git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 
           MAX_ATTEMPTS=5

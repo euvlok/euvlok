@@ -12,8 +12,6 @@ let
   );
 in
 {
-  imports = [ inputs.lix-module-source.nixosModules.lixFromNixpkgs ];
-
   config = (
     lib.mkMerge [
       (lib.mkIf isLinux {

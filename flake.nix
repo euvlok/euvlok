@@ -85,13 +85,6 @@
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:FlameFlag/dis";
-    lix-module-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    lix-module-source.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
-    lix-source.inputs.flake-compat.follows = "";
-    lix-source.inputs.nix2container.follows = "";
-    lix-source.inputs.nixpkgs.follows = "nixpkgs";
-    lix-source.inputs.pre-commit-hooks.follows = "";
-    lix-source.url = "https://git.lix.systems/lix-project/lix/archive/2.93.3.tar.gz";
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";

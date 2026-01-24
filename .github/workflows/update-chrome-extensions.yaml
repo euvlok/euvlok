@@ -3,7 +3,7 @@ name: Update Chromium Extensions
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */8 * * *'
+    - cron: "0 */8 * * *"
 
 permissions:
   contents: write
@@ -20,8 +20,6 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
-        with:
-          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
       - name: Run extensions update scripts
         id: update_script
@@ -45,12 +43,12 @@ jobs:
           else
             echo "::warning::Changes detected in one or more extension files."
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            
+
             # Add all potential changes to staging to generate a complete summary
             git add modules/ hosts/
 
             CHANGES_SUMMARY=$(git diff --staged --shortstat || true)
-            
+
             {
               echo "changes_summary<<EOF"
               echo "The following changes were detected:"

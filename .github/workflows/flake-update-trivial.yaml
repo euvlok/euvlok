@@ -21,8 +21,6 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
-        with:
-          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
 
       - name: Find and update trivial inputs
         id: find-inputs
@@ -104,10 +102,10 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add flake.lock
-          
+
           COMMIT_TITLE="chore: update trivial flake inputs"
           COMMIT_BODY="${{ steps.find-inputs.outputs.formatted_inputs }}"
-          
+
           git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 
           MAX_ATTEMPTS=5
@@ -125,6 +123,6 @@ jobs:
             wait_time=$((5 * i))
             echo "::warning::Push failed on attempt $i. Waiting ${wait_time}s and retrying after rebase..."
             sleep $wait_time
-            
+
             git pull --rebase origin ${{ github.ref_name }}
           done
