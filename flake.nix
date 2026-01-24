@@ -18,7 +18,7 @@
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    catppuccin-trivial.url = "github:catppuccin/nix";
+    catppuccin-trivial.url = "github:catppuccin/nix/v25.11";
     firefox-addons-trivial.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
@@ -100,7 +100,7 @@
               hooks.shellcheck.enable = true;
               hooks.nixfmt-rfc-style = {
                 enable = true;
-                package = pkgs.nixfmt-rfc-style;
+                package = pkgs.nixfmt;
                 excludes = [
                   ".direnv"
                   ".devenv"
@@ -125,7 +125,7 @@
                   ".direnv"
                   ".devenv"
                 ];
-                package = pkgs.nixfmt-rfc-style;
+                package = pkgs.nixfmt;
               };
               hooks.shellcheck.enable = true;
             };
@@ -134,7 +134,7 @@
               inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
             };
           };
-          formatter = pkgs.nixfmt-rfc-style;
+          formatter = pkgs.nixfmt;
 
           apps = {
             auto-rebase = {

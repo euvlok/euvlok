@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p jq curl wget unzip nix git p7zip sd ripgrep yq-go nixfmt-rfc-style gnugrep
+#! nix-shell -i bash -p jq curl wget unzip nix git p7zip sd ripgrep yq-go nixfmt gnugrep
 # shellcheck shell=bash
 #
 # Author: FlameFlag
@@ -120,46 +120,46 @@ get_chromium_major_version() {
 	# Chrome Web Store API requires major version for CRX download URLs (e.g., "143" for v143.x.x)
 	local chromium_version
 	local major_version
-	
+
 	# Try to get chromium version from nixpkgs
 	chromium_version=$(nix eval --impure --expr '
 		with import <nixpkgs> {};
 		lib.getVersion chromium
 	' 2>/dev/null | tr -d '"' || echo "")
-	
+
 	if [[ -z "${chromium_version}" ]]; then
 		log_warning "Could not query Chromium version from Nix, using fallback: 143.0.0.0"
 		chromium_version="143.0.0.0"
 	fi
-	
+
 	# Extract major version using Nix's lib.versions.major
 	major_version=$(nix eval --impure --expr "
 		with import <nixpkgs> {};
 		lib.versions.major \"${chromium_version}\"
 	" 2>/dev/null | tr -d '"' || echo "")
-	
+
 	if [[ -z "${major_version}" ]]; then
 		# Fallback: extract first number from version string directly
 		major_version=$(echo "${chromium_version}" | cut -d. -f1)
 	fi
-	
+
 	if [[ -z "${major_version}" ]] || ! [[ "${major_version}" =~ ^[0-9]+$ ]]; then
 		log_warning "Could not determine Chromium major version, using default: 143"
 		major_version="143"
 	fi
-	
+
 	echo "${major_version}"
 }
 
 fetch_chrome_store_url() {
 	local extension_id="${1}"
 	log_info "Processing Chrome Web Store ID: ${extension_id}" >&2
-	
+
 	# Get Chromium major version automatically
 	local prodversion
 	prodversion=$(get_chromium_major_version)
 	log_info "  -> Using Chromium major version: ${prodversion}" >&2
-	
+
 	local x_param="id%3D${extension_id}%26installsource%3Dondemand%26uc"
 	local url="https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${prodversion}&x=${x_param}"
 	curl -w "%{url_effective}" -I -L -sS "${url}" -o /dev/null 2>&1
@@ -183,42 +183,42 @@ fetch_github_release_url() {
 	local extension_id="${1}"
 	local toml_file="${2}"
 	local extension_index="${3}"
-	
+
 	log_info "Processing GitHub release for ID: ${extension_id}" >&2
-	
+
 	# Extract GitHub release configuration from TOML file
 	# Extension-level fields override config-level defaults for flexibility
 	local owner
 	local repo
 	local pattern
 	local version
-	
+
 	# Try extension-level fields first, then fall back to config-level defaults
 	owner=$(yq -oy -r ".extensions[${extension_index}].owner" "${toml_file}" 2>/dev/null)
 	if [[ -z "${owner}" ]] || [[ "${owner}" == "null" ]]; then
 		owner=$(yq -oy -r ".config.sources.\"github-releases\".owner" "${toml_file}" 2>/dev/null)
 	fi
-	
+
 	repo=$(yq -oy -r ".extensions[${extension_index}].repo" "${toml_file}" 2>/dev/null)
 	if [[ -z "${repo}" ]] || [[ "${repo}" == "null" ]]; then
 		repo=$(yq -oy -r ".config.sources.\"github-releases\".repo" "${toml_file}" 2>/dev/null)
 	fi
-	
+
 	pattern=$(yq -oy -r ".extensions[${extension_index}].pattern" "${toml_file}" 2>/dev/null)
 	if [[ -z "${pattern}" ]] || [[ "${pattern}" == "null" ]]; then
 		pattern=$(yq -oy -r ".config.sources.\"github-releases\".pattern" "${toml_file}" 2>/dev/null)
 	fi
-	
+
 	version=$(yq -oy -r ".extensions[${extension_index}].version" "${toml_file}" 2>/dev/null)
 	if [[ -z "${version}" ]] || [[ "${version}" == "null" ]]; then
 		version="latest"
 	fi
-	
+
 	if [[ -z "${owner}" ]] || [[ "${owner}" == "null" ]] || [[ -z "${repo}" ]] || [[ "${repo}" == "null" ]]; then
 		log_error "GitHub release source requires 'owner' and 'repo' fields (extension or config level)"
 		return 1
 	fi
-	
+
 	# If version is specified and not "latest", use it; otherwise get latest release
 	if [[ -n "${version}" ]] && [[ "${version}" != "null" ]] && [[ "${version}" != "latest" ]]; then
 		log_info "  -> Using specified version: ${version}" >&2
@@ -236,7 +236,7 @@ fetch_github_release_url() {
 		version="${version#v}"
 		log_info "  -> Latest release version: ${version}" >&2
 	fi
-	
+
 	# Build URL from pattern
 	local finalurl
 	if [[ -n "${pattern}" ]] && [[ "${pattern}" != "null" ]]; then
@@ -250,7 +250,7 @@ fetch_github_release_url() {
 		# Default pattern: releases/download/v{version}/{id}.crx
 		finalurl="https://github.com/${owner}/${repo}/releases/download/v${version}/${extension_id}.crx"
 	fi
-	
+
 	log_info "  -> GitHub release URL: ${finalurl}" >&2
 	echo "${finalurl}"
 }
@@ -337,7 +337,7 @@ process_extension() {
 		log_error "Failed to download extension from ${finalurl}"
 		return 1
 	fi
-	
+
 	# Verify file was downloaded and is not empty
 	if [[ ! -f "${download_path}" ]] || [[ ! -s "${download_path}" ]]; then
 		log_error "Downloaded file is missing or empty"
@@ -356,12 +356,12 @@ process_extension() {
 	# CRX3 format: starts with "Cr24" (0x43 0x72 0x32 0x34) magic bytes, followed by version info
 	# The actual ZIP data starts after the header. We find ZIP magic bytes "PK" to locate the archive
 	local zip_path="${download_path}"
-	
+
 	# Check if it's CRX3 format (starts with Cr24) - if so, we need to skip the header
 	# CRX3 headers contain version, public key, and signature data before the ZIP content
 	local crx_header
 	crx_header=$(head -c 4 "${download_path}" 2>/dev/null || echo "")
-	
+
 	# Check for CRX3 magic: "Cr24" (0x43 0x72 0x32 0x34)
 	if [[ "${crx_header}" == "Cr24" ]]; then
 		log_info "  -> Detected CRX3 format, finding ZIP offset..."
@@ -375,7 +375,7 @@ process_extension() {
 		else
 			zip_offset=$(grep -abo "PK" "${download_path}" 2>/dev/null | head -1 | cut -d: -f1)
 		fi
-		
+
 		if [[ -n "${zip_offset}" ]] && [[ "${zip_offset}" =~ ^[0-9]+$ ]] && [[ "${zip_offset}" -gt 0 ]]; then
 			log_info "  -> Found ZIP at offset ${zip_offset}, extracting ZIP portion..."
 			# Extract ZIP portion starting from PK. zip_offset is 0-based, but tail -c is 1-based
@@ -402,14 +402,14 @@ process_extension() {
 	local unzip_output
 	unzip_output=$(unzip -q -o "${zip_path}" -d "${unzip_dir}" 2>&1)
 	local unzip_exit=$?
-	
+
 	if [[ ${unzip_exit} -ne 0 ]] || [[ ! -f "${unzip_dir}/manifest.json" ]]; then
 		log_info "  -> unzip failed (exit ${unzip_exit}), trying 7z..."
 		# unzip failed, try 7z
 		local p7zip_output
 		p7zip_output=$(7z x -o"${unzip_dir}" "${zip_path}" 2>&1)
 		local p7zip_exit=$?
-		
+
 		if [[ ${p7zip_exit} -ne 0 ]] || [[ ! -f "${unzip_dir}/manifest.json" ]]; then
 			log_error "Failed to extract archive for '${id}'"
 			log_error "unzip exit code: ${unzip_exit}, 7z exit code: ${p7zip_exit}"
@@ -616,10 +616,10 @@ EOF
 
 	echo "]" >> "${tmp_output_file}"
 
-	# Format the generated file with nixfmt-rfc-style
-	log_info "Formatting generated Nix file with nixfmt-rfc-style..."
-	if ! nixfmt-rfc-style "${tmp_output_file}" 2>/dev/null; then
-		log_warning "nixfmt-rfc-style failed or produced warnings, continuing anyway"
+	# Format the generated file with nixfmt
+	log_info "Formatting generated Nix file with nixfmt..."
+	if ! nixfmt "${tmp_output_file}" 2>/dev/null; then
+		log_warning "nixfmt failed or produced warnings, continuing anyway"
 	fi
 
 	# Validate syntax before replacing original file

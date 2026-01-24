@@ -39,7 +39,7 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = pkgs.stdenv.isLinux;
+        assertion = pkgs.stdenvNoCC.isLinux;
         message = "hm.chromium is only available on Linux";
       }
     ];
@@ -62,7 +62,7 @@ in
         "chromium"
         "google-chrome"
       ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while it's still possible
-      ++ lib.optionals pkgs.stdenv.isLinux [
+      ++ lib.optionals pkgs.stdenvNoCC.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 

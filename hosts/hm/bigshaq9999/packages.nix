@@ -1,13 +1,8 @@
-{
-  pkgs,
-  inputs,
-  config,
-  ...
-}:
+{ pkgs, inputs, ... }:
 {
   home.packages = builtins.attrValues {
     # CLI
-    dis = inputs.dis-source.packages.${config.nixpkgs.hostPlatform.system}.default;
+    dis = inputs.dis-source.packages.${pkgs.stdenvNoCC.hostPlatform.system}.default;
 
     inherit (pkgs)
       appimage-run

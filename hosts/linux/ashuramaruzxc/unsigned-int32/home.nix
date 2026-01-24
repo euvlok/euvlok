@@ -13,7 +13,7 @@ let
 
   cursorModule = import ../shared/home/cursor.nix {
     cursorName = "touhou-reimu";
-    cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
+    cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenvNoCC.hostPlatform.system}.cursors;
     iconPackage = pkgs.kdePackages.breeze-icons;
   };
 
@@ -115,7 +115,7 @@ let
         {
           # doesn't work with cudaEnable = true;
           home.packages = builtins.attrValues {
-            inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}) rpcs3;
+            inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
           };
         }
       )

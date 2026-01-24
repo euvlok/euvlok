@@ -88,7 +88,7 @@ let
     let
       version = "latest";
     in
-    inputs.firefox-addons-trivial.lib.${pkgs.stdenv.hostPlatform.system}.buildFirefoxXpiAddon {
+    inputs.firefox-addons-trivial.lib.${pkgs.stdenvNoCC.hostPlatform.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
       inherit version;
       addonId = "magnolia@12.34";
@@ -126,7 +126,7 @@ let
     "sync.services.mozilla.com"
   ];
   defaultExtensionsList = builtins.attrValues {
-    inherit (inputs.firefox-addons-trivial.packages.${pkgs.system})
+    inherit (inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system})
       # necessity
       darkreader
       facebook-container

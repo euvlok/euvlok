@@ -21,7 +21,7 @@
       prismlauncher
       # Development
       gnumake
-      nixfmt-rfc-style
+      nixfmt
       meson
       cmake
       font-manager

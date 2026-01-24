@@ -32,8 +32,11 @@
       ]
       ++ [
         {
-          home.file."Documents/catppuccin-userstyles.json".source =
-            "${pkgs.catppuccin-userstyles.outPath}/dist/import.json";
+          home.file."Documents/development/catppuccin/catppuccin-userstyles.json".source =
+            (pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+              inherit (config.catppuccin) accent flavor;
+            }).outPath
+            + "/dist/import.json";
         }
       ]
       ++ [

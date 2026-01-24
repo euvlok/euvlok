@@ -63,7 +63,7 @@
         swtpm
         ;
     }
-    ++ lib.optionals (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+    ++ lib.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
       builtins.attrValues { inherit (pkgs) looking-glass-client; }
     )
   );
@@ -91,7 +91,7 @@
     };
   };
   #! wait until the next lts kernel
-  virtualisation.kvmfr = lib.optionalAttrs (config.nixpkgs.hostPlatform.system != "aarch64-linux") {
+  virtualisation.kvmfr = lib.optionalAttrs (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") {
     enable = true;
     shm = {
       enable = true;
@@ -110,7 +110,7 @@
         swtpm
         ;
     }
-    ++ lib.optionals (config.nixpkgs.hostPlatform.system != "aarch64-linux") (
+    ++ lib.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
       builtins.attrValues { inherit (pkgs) looking-glass-client; }
     )
   );

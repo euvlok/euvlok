@@ -183,8 +183,9 @@ let
     };
     rust = {
       packages = builtins.attrValues {
-        inherit (pkgs.rust-bin.stable.latest) default;
         inherit (pkgs.unstable)
+          rustc
+          rustfmt
           rust-analyzer
           cargo-watch
           cargo-edit

@@ -8,7 +8,7 @@
 let
   default = {
     extensions.packages = builtins.attrValues {
-      inherit (inputs.firefox-addons-trivial.packages.${pkgs.system})
+      inherit (inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system})
         clearurls
         violentmonkey
         refined-github

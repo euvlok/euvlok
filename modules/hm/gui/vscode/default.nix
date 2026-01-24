@@ -12,11 +12,13 @@
   config = lib.mkIf config.hm.vscode.enable {
     programs.vscode = {
       enable = true;
-      package = lib.mkIf (pkgs.unstable.stdenvNoCC.isLinux) (
-        pkgs.unstable.vscode.override {
-          commandLineArgs = "--wayland-text-input-version=3 --enable-wayland-ime";
-        }
-      );
+      package =
+        if pkgs.unstable.stdenvNoCC.isLinux then
+          (pkgs.unstable.vscode.override {
+            commandLineArgs = "--wayland-text-input-version=3 --enable-wayland-ime";
+          })
+        else
+          pkgs.unstable.vscode;
     };
   };
 }

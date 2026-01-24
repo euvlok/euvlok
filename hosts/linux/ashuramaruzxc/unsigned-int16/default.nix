@@ -1,13 +1,12 @@
 { inputs, ... }:
 let
-  nixos-raspberrypi = inputs.nixos-raspberrypi-ashuramaruzxc;
-  inherit (inputs.nixos-raspberrypi-ashuramaruzxc.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
+  inherit (inputs.nixos-raspberrypi.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
   inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
 in
 {
   unsigned-int16 = mkHostSystem {
-    systemLib = inputs.nixos-raspberrypi-ashuramaruzxc.lib;
-    specialArgs = { inherit inputs nixos-raspberrypi; };
+    systemLib = inputs.nixos-raspberrypi.lib;
+    specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix

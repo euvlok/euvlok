@@ -38,7 +38,7 @@ in
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      (lib.mkIf pkgs.stdenv.isLinux (
+      (lib.mkIf pkgs.stdenvNoCC.isLinux (
         let
           wrappedBridge =
             pkgs.runCommand "protonmail-bridge-wrapped"

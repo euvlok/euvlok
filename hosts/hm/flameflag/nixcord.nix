@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   programs.nixcord.quickCss = ''
     /* ----- CATPPUCCIN THEME ----- */
     @import url("https://catppuccin.github.io/discord/dist/${config.catppuccin.flavor}-${config.catppuccin.accent}.css")
