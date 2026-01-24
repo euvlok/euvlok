@@ -18,9 +18,6 @@
     (final: prev: {
       yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { };
       yt-dlp-script = final.callPackage ../../pkgs/yt-dlp-script.nix { };
-      warp-terminal-catppuccin = final.callPackage ../../pkgs/warp-terminal-catppuccin.nix {
-        inherit (config.catppuccin) accent;
-      };
     })
   ];
 }

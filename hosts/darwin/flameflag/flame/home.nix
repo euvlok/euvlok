@@ -32,7 +32,6 @@
       ]
       ++ [
         {
-          home.file."warp/themes".source = "${pkgs.warp-terminal-catppuccin.outPath}/share/warp/themes";
           home.file."Documents/catppuccin-userstyles.json".source =
             "${pkgs.catppuccin-userstyles.outPath}/dist/import.json";
         }
