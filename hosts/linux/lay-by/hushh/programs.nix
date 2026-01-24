@@ -18,6 +18,8 @@
 
     hyprland.enable = true;
 
+    vscode.enable = true;
+
     kdeconnect.enable = true;
 
     fish.enable = true;

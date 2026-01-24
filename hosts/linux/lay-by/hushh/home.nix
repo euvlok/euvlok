@@ -58,7 +58,7 @@
             helix.enable = true;
             hyprland.enable = true;
             mpv.enable = true;
-            vscode.enable = true;
+            #vscode.enable = true; # This is a massive pain in the ass if you change your vscode config json frequently. Just going to manage it normally instead of declaratively.
             nixcord.enable = true;
           };
         }
