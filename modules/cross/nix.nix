@@ -22,22 +22,12 @@ in
             value.source = value.flake;
           }) config.nix.registry
         );
-        /*
-          "truetype:interpreter-version=40" tells freetype to use version 40 of the
-          TrueType bytecode interpreter
-          "cff:no-stem-darkening=0" tells freetype to not darken the stems (the main
-          vertical strokes) when processing fonts using the CFF engine
-          "autofitter:no-stem-darkening=0" does the same for the autofitter component
-          Essentially, it's a way to keep fonts looking as natural as they were
-          designed, without any extra darkening that might make them look a tad heavier
-        */
-        environment.variables.FREETYPE_PROPERTIES = lib.optionalString isLinux "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
       })
-      (lib.mkIf (isLinux) { nix.registry = lib.mkForce registry; })
+      (lib.mkIf isLinux { nix.registry = lib.mkForce registry; })
       {
         nix = {
           settings = {
-            experimental-features = "nix-command flakes ";
+            experimental-features = "nix-command flakes";
 
             substituters = [
               "https://devenv.cachix.org"
