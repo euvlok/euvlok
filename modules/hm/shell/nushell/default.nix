@@ -28,7 +28,7 @@ in
         # List Files
         lt = "ls --all | sort-by size | reverse";
         ll = "ls --all";
-        llf = ''ls --all | where type == file;'';
+        llf = "ls --all | where type == file;";
         ld = ''ls --all | where name =~ "^\\."'';
 
         # Time
@@ -52,7 +52,7 @@ in
 
         # Misc
         myip = "http get 'https://ipinfo.io/ip'";
-        path = ''echo $env.PATH'';
+        path = "echo $env.PATH";
 
         rebuild =
           if pkgs.stdenvNoCC.isLinux then

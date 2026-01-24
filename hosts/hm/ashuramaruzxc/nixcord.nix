@@ -27,7 +27,6 @@
     reverseImageSearch.enable = true;
     roleColorEverywhere.enable = true;
     serverInfo.enable = true;
-    textReplace.enable = true;
     themeAttributes.enable = true;
     unlockedAvatarZoom.enable = true;
     vencordToolbox.enable = true;
