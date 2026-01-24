@@ -54,9 +54,6 @@
     nvf-source.url = "github:NotAShelf/nvf";
     rust-overlay-source.inputs.nixpkgs.follows = "nixpkgs-source";
     rust-overlay-source.url = "github:oxalica/rust-overlay";
-    yazi-source.inputs.flake-utils.follows = "flake-utils";
-    yazi-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    yazi-source.url = "github:sxyazi/yazi/157156b5b8f36db15b2ba425c7d15589039a9e1e";
     vicinae-source.url = "github:vicinaehq/vicinae";
     vicinae-source.inputs.nixpkgs.follows = "nixpkgs-source";
 
