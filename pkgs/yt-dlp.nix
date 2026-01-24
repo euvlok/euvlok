@@ -18,19 +18,11 @@ python3Packages.buildPythonApplication {
   src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "0b08b833bfca6a0882f4741bb8fa46c1698c77e5";
-    hash = "sha256-z/D5wJSEn/I16PFO+PQwrHfLIRRMCpF/GQo8xwXv6o0=";
+    rev = "c8680b65f79cfeb23b342b70ffe1e233902f7933";
+    hash = "sha256-lX+dlnLOo65NymtKi9gqX4xsxiH9fsiLafKcaU++tIo=";
   };
 
   doCheck = false;
-
-  postPatch = ''
-    substituteInPlace yt_dlp/version.py \
-      --replace-fail "UPDATE_HINT = None" 'UPDATE_HINT = "Nixpkgs/NixOS likely already contain an updated version.\n       To get it run nix-channel --update or nix flake update in your config directory."'
-    substituteInPlace yt_dlp/networking/_curlcffi.py \
-      --replace-fail "if curl_cffi_version != (0, 5, 10) and not (0, 10) <= curl_cffi_version < (0, 14)" \
-      "if curl_cffi_version != (0, 5, 10) and not (0, 10) <= curl_cffi_version"
-  '';
 
   build-system = with python3Packages; [ hatchling ];
 
@@ -40,6 +32,7 @@ python3Packages.buildPythonApplication {
   ];
 
   dependencies = builtins.attrValues {
+    build-curl-cffi = python3Packages.curl-cffi;
     inherit (python3Packages)
       brotli
       certifi
