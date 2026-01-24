@@ -29,7 +29,7 @@
   };
 
   baseHomeManager = {
-    imports = [ inputs.home-manager-ashuramaruzxc.nixosModules.home-manager ];
+    imports = [ inputs.home-manager.nixosModules.home-manager ];
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;

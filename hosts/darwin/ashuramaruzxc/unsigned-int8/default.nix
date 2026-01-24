@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  unsigned-int8 = inputs.nix-darwin-ashuramaruzxc.lib.darwinSystem {
+  unsigned-int8 = inputs.nix-darwin.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.darwinModules.default

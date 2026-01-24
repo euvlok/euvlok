@@ -5,7 +5,7 @@
   ...
 }:
 {
-  imports = [ inputs.home-manager-lay-by.nixosModules.home-manager ];
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;
@@ -37,7 +37,7 @@
             no_display = true;
           };
           programs.rofi.enable = true;
-          programs.rofi.package = inputs.nixpkgs-lay-by.legacyPackages.x86_64-linux.rofi;
+          programs.rofi.package = pkgs.unstable.rofi;
           services.easyeffects.enable = true;
           fonts.fontconfig.enable = true;
           xsession.numlock.enable = true;

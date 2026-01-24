@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  faputa = inputs.nix-darwin-bigshaq9999.lib.darwinSystem {
+  faputa = inputs.nix-darwin.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.darwinModules.default

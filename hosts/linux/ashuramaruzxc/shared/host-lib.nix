@@ -30,7 +30,7 @@ in
 {
   mkHostSystem =
     {
-      systemLib ? inputs.nixpkgs-ashuramaruzxc.lib,
+      systemLib ? inputs.nixpkgs.lib,
       modules,
       sopsFile,
       catppuccinAccent,

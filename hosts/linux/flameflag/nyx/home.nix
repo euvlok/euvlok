@@ -5,7 +5,7 @@
   ...
 }:
 {
-  imports = [ inputs.home-manager-flameflag.nixosModules.home-manager ];
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;

@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  null = inputs.nixpkgs-sm-idk.lib.nixosSystem {
+  null = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default

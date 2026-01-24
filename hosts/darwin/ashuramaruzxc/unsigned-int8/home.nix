@@ -138,7 +138,7 @@ let
     macosPackages ++ socialPackages ++ multimediaPackages ++ gamingPackages ++ jetbrainsPackages;
 in
 {
-  imports = [ inputs.home-manager-ashuramaruzxc.darwinModules.home-manager ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;

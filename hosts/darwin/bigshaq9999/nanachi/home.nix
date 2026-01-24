@@ -6,7 +6,7 @@
   ...
 }:
 {
-  imports = [ inputs.home-manager-bigshaq9999.darwinModules.home-manager ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;

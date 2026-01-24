@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  nanachi = inputs.nixpkgs-bigshaq9999.lib.nixosSystem {
+  nanachi = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default

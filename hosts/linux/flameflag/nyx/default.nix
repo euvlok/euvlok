@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  nyx = inputs.nixpkgs-flameflag.lib.nixosSystem {
+  nyx = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default

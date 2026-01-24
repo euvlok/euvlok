@@ -4,7 +4,7 @@
   ...
 }:
 {
-  imports = [ inputs.home-manager-sm-idk.nixosModules.home-manager ];
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
   home-manager = {
     useGlobalPkgs = true;

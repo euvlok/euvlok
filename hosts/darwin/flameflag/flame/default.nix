@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  FlameFlags-Mac-mini = inputs.nix-darwin-flameflag.lib.darwinSystem {
+  FlameFlags-Mac-mini = inputs.nix-darwin.lib.darwinSystem {
     specialArgs = { inherit inputs; };
     modules = [
       inputs.self.darwinModules.default
