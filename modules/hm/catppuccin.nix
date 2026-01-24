@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -11,7 +12,7 @@ in
   config = lib.mkIf config.catppuccin.enable {
     programs =
       let
-        webFileIcons = pkgs.nur.repos.rycee.firefox-addons.catppuccin-web-file-icons;
+        webFileIcons = inputs.firefox-addons-trivial.packages.${pkgs.system}.catppuccin-web-file-icons;
       in
       {
         firefox.profiles.default.extensions.packages = [ webFileIcons ];

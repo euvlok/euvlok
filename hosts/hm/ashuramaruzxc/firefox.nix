@@ -126,7 +126,7 @@ let
     "sync.services.mozilla.com"
   ];
   defaultExtensionsList = builtins.attrValues {
-    inherit (pkgs.nur.repos.rycee.firefox-addons)
+    inherit (inputs.firefox-addons-trivial.packages.${pkgs.system})
       # necessity
       darkreader
       facebook-container

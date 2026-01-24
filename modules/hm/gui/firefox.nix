@@ -8,7 +8,7 @@
 let
   default = {
     extensions.packages = builtins.attrValues {
-      inherit (pkgs.nur.repos.rycee.firefox-addons)
+      inherit (inputs.firefox-addons-trivial.packages.${pkgs.system})
         clearurls
         violentmonkey
         refined-github
