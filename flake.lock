@@ -1893,29 +1893,6 @@
         "type": "github"
       }
     },
-    "nur-trivial": {
-      "inputs": {
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "nixpkgs-unstable-small"
-        ]
-      },
-      "locked": {
-        "lastModified": 1769630338,
-        "narHash": "sha256-VuCvLZNdaLPDbjtSjZG5cNCLggWMQdWkqX4Ht9RfWiI=",
-        "owner": "nix-community",
-        "repo": "NUR",
-        "rev": "c38ee067a3f4926d817bb806e01c4ff0c06218c2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "NUR",
-        "type": "github"
-      }
-    },
     "nur_2": {
       "inputs": {
         "flake-parts": [
@@ -2064,7 +2041,6 @@
         "nixpkgs": "nixpkgs_12",
         "nixpkgs-source": "nixpkgs-source",
         "nixpkgs-unstable-small": "nixpkgs-unstable-small",
-        "nur-trivial": "nur-trivial",
         "nvf-source": "nvf-source",
         "nvidia-patch-trivial": "nvidia-patch-trivial",
         "pre-commit-hooks": "pre-commit-hooks_2",

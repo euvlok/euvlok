@@ -31,9 +31,6 @@
     nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixcord-trivial.url = "github:FlameFlag/nixcord";
     nixos-hardware-trivial.url = "github:NixOS/nixos-hardware";
-    nur-trivial.inputs.flake-parts.follows = "flake-parts";
-    nur-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nur-trivial.url = "github:nix-community/NUR";
     nvidia-patch-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nvidia-patch-trivial.inputs.utils.follows = "flake-utils";
     nvidia-patch-trivial.url = "github:icewind1991/nvidia-patch-nixos";

@@ -14,9 +14,7 @@
     ./systemd.nix
     ./kanata.nix
 
-    inputs.nur-trivial.modules.nixos.default
     inputs.nixos-hardware-trivial.nixosModules.lenovo-legion-15arh05h
-
     inputs.sops-nix-trivial.nixosModules.sops
     {
       sops = {
