@@ -52,8 +52,6 @@
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";
-    rust-overlay-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    rust-overlay-source.url = "github:oxalica/rust-overlay";
     vicinae-source.url = "github:vicinaehq/vicinae";
     vicinae-source.inputs.nixpkgs.follows = "nixpkgs-source";
 
@@ -61,7 +59,6 @@
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
     anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
-    anime-game-launcher-source.inputs.rust-overlay.follows = "rust-overlay-source";
     anime-game-launcher-source.inputs.flake-compat.follows = "";
     # DO NOT override stylix utilities inputs
     # stylix-trivial.inputs.flake-parts.follows = "";

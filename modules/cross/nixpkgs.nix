@@ -13,7 +13,6 @@
         config = config.nixpkgs.config;
       };
     })
-    inputs.rust-overlay-source.overlays.default
     inputs.niri-flake-trivial.overlays.niri
     inputs.nix4vscode-trivial.overlays.default
     (final: prev: {
