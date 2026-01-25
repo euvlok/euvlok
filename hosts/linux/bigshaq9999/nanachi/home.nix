@@ -44,7 +44,6 @@
             niri.enable = true;
             nixcord.enable = true;
             nushell.enable = true;
-            nvf.enable = true;
             vscode.enable = true;
             yazi.enable = true;
           };

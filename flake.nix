@@ -49,9 +49,6 @@
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:FlameFlag/dis";
-    nvf-source.inputs.flake-parts.follows = "flake-parts";
-    nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    nvf-source.url = "github:NotAShelf/nvf";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
