@@ -54,6 +54,7 @@
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
     anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
     anime-game-launcher-source.inputs.flake-compat.follows = "";
+    darkly-source.url = "github:Bali10050/Darkly";
     # DO NOT override stylix utilities inputs
     # stylix-trivial.inputs.flake-parts.follows = "";
     # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
