@@ -14,7 +14,6 @@
     ./systemd.nix
     ./kanata.nix
 
-    inputs.nixos-hardware-trivial.nixosModules.lenovo-legion-15arh05h
     inputs.sops-nix-trivial.nixosModules.sops
     {
       sops = {
@@ -23,6 +22,12 @@
       };
     }
   ];
+
+  hardware.nvidia.prime = {
+    reverseSync.enable = true;
+    amdgpuBusId = "PCI:6:0:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
 
   # Users
   sops.secrets.nyx-password.neededForUsers = true;
