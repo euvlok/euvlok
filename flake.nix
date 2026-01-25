@@ -52,8 +52,6 @@
     nvf-source.inputs.flake-parts.follows = "flake-parts";
     nvf-source.inputs.nixpkgs.follows = "nixpkgs-source";
     nvf-source.url = "github:NotAShelf/nvf";
-    vicinae-source.url = "github:vicinaehq/vicinae";
-    vicinae-source.inputs.nixpkgs.follows = "nixpkgs-source";
 
     # DO NOT OVERRIDE NIXPKGS
     anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
