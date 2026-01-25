@@ -12,7 +12,8 @@ in
   config = lib.mkIf config.catppuccin.enable {
     programs =
       let
-        webFileIcons = inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system}.catppuccin-web-file-icons;
+        webFileIcons =
+          inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system}.catppuccin-web-file-icons;
       in
       {
         firefox.profiles.default.extensions.packages = [ webFileIcons ];

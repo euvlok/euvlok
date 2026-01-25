@@ -17,10 +17,7 @@
         noto-fonts-emoji
         twitter-color-emoji
         ;
-      inherit (pkgs.nerd-fonts)
-        jetbrains-mono
-        hack
-        ;
+      inherit (pkgs.nerd-fonts) jetbrains-mono hack;
     };
   };
 }
