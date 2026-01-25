@@ -26,6 +26,8 @@
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode-trivial.url = "github:nix-community/nix4vscode";
+    nixos-vscode-server-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    nixos-vscode-server-trivial.url = "github:nix-community/nixos-vscode-server";
     nixcord-trivial.inputs.flake-compat.follows = "";
     nixcord-trivial.inputs.flake-parts.follows = "flake-parts";
     nixcord-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";

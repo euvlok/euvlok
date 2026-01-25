@@ -6,7 +6,10 @@ in
 {
   unsigned-int16 = mkHostSystem {
     systemLib = inputs.nixos-raspberrypi.lib;
-    specialArgs = { inherit inputs; };
+    specialArgs = {
+      inherit inputs;
+      nixos-raspberrypi = inputs.nixos-raspberrypi;
+    };
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix

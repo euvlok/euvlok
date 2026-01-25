@@ -13,14 +13,8 @@
 
     targets.hyprlock.enable = false;
     targets.spicetify.enable = true;
+    targets.zen-browser.enable = false;
     # targets.anki.enable = false;
-    # targets.zen-browser = {
-    # enable = true;
-
-    # profileNames = [
-    # "default"
-    # ];
-    # };
     # targets.hyprpaper.enable = false;
 
     image = pkgs.fetchurl {

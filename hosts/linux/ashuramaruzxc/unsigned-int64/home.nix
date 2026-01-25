@@ -32,7 +32,7 @@ let
   ];
 
   globalImports = [
-    ../shared/aliases.nix
+    ../shared/home/aliases.nix
     catppuccinConfig
     inputs.sops-nix-trivial.homeManagerModules.sops
     {

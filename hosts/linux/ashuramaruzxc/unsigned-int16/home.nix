@@ -97,14 +97,7 @@ let
     ++ [
       { services.protonmail-bridge.enable = true; }
       { home.packages = allPackages; }
-      (
-        {
-          inputs,
-          lib,
-          ...
-        }:
-        cursorModule { inherit lib pkgs; }
-      )
+      cursorModule
       {
         programs = {
           rbw = {

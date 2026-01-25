@@ -7,8 +7,8 @@
 {
   sops.secrets.admin = {
     mode = "0740";
-    owner = config.users.users.nextcloud.name;
-    group = config.users.users.nextcloud.group;
+    owner = "nextcloud";
+    group = "nextcloud";
   };
   services.nextcloud = {
     enable = true;
@@ -151,7 +151,7 @@
   services.redis.servers.nextcloud = {
     enable = true;
     port = 0;
-    user = config.users.users.nextcloud.name;
+    user = "nextcloud";
   };
   services.nginx.virtualHosts = {
     "${config.services.nextcloud.hostName}" = {

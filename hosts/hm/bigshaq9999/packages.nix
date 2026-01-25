@@ -50,7 +50,7 @@
       gImageReader
       gimp
       mullvad-vpn
-      nekoray
+      throne
       networkmanager-openvpn
       obs-studio
       treesheets

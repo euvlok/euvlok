@@ -8,7 +8,7 @@ in
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-      inputs.nix-vscode-server-trivial.nixosModules.default
+      inputs.nixos-vscode-server-trivial.nixosModules.default
       { services.vscode-server.enable = true; }
     ];
     sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;

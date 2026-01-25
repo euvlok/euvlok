@@ -90,47 +90,11 @@ let
       inherit (pkgs.unstable.jetbrains) dataspell datagrip;
     };
 
-    jetbrains =
-      let
-        inherit (pkgs.jetbrains.plugins) addPlugins;
-        inherit (pkgs.jetbrains) rider clion idea;
-        commonPlugins = [
-          "better-direnv"
-          "catppuccin-icons"
-          "catppuccin-theme"
-          "csv-editor"
-          "docker"
-          "gittoolbox"
-          "graphql"
-          "indent-rainbow"
-          "ini"
-          "nixidea"
-          "rainbow-brackets"
-          "rainbow-csv"
-          "toml"
-          "vscode-keymap"
-        ];
-      in
-      builtins.attrValues {
-        riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
-        clionWithPlugins = addPlugins clion (
-          commonPlugins
-          ++ [
-            "rust"
-            "python-community-edition"
-          ]
-        );
-        ideaWithPlugins = addPlugins idea (
-          commonPlugins
-          ++ [
-            "go"
-            "minecraft-development"
-            "python"
-            "rust"
-            "scala"
-          ]
-        );
-      };
+    jetbrains = [
+      pkgs.unstable.jetbrains.rider
+      pkgs.unstable.jetbrains.clion
+      pkgs.unstable.jetbrains.idea
+    ];
 
     nemo = [
       (pkgs.nemo-with-extensions.override {

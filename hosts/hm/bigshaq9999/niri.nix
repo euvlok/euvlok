@@ -31,13 +31,14 @@
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
     };
-    catppuccin = {
-      enable = true;
-      flavor = "frappe";
-      accent = "rosewater";
-      size = "standard";
-      tweaks = [ "normal" ];
-    };
+  };
+
+  catppuccin.gtk = {
+    enable = true;
+    flavor = "frappe";
+    accent = "rosewater";
+    size = "standard";
+    tweaks = [ "normal" ];
   };
 
   services.kanshi = {

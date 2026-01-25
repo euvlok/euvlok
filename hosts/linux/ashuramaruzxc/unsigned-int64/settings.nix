@@ -154,7 +154,7 @@ _: {
         }
       ];
     };
-    dnscrypt-proxy2 = {
+    dnscrypt-proxy = {
       enable = true;
       settings = {
         listen_addresses = [
