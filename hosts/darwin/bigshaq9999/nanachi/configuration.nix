@@ -35,6 +35,8 @@
     ];
   };
 
+  services.tailscale.enable = true;
+
   users.users = {
     faputa = {
       home = "/Volumes/Reg/Users/faputa";
