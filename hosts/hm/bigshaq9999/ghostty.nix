@@ -1,5 +1,5 @@
 _: {
-  programs.ghossty.settings = {
+  programs.ghostty.settings = {
     font-size = 16;
   };
 }
