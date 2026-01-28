@@ -88,7 +88,7 @@ let
     let
       version = "latest";
     in
-    inputs.firefox-addons-trivial.lib.${pkgs.system}.buildFirefoxXpiAddon {
+    inputs.firefox-addons-trivial.lib.${pkgs.stdenv.hostPlatform.system}.buildFirefoxXpiAddon {
       pname = "bypass-paywalls-clean";
       inherit version;
       addonId = "magnolia@12.34";
@@ -130,7 +130,6 @@ let
       # necessity
       darkreader
       facebook-container
-      mullvad
       multi-account-containers
       user-agent-string-switcher
       web-archives
@@ -177,10 +176,10 @@ in
       extensions.force = true;
       inherit search settings;
     };
-    #! bitwarden is still broken
-    nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
-      builtins.attrValues { inherit (pkgs) firefoxpwa; }
-    );
+    # #! bitwarden is still broken
+    # nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
+    #   builtins.attrValues { inherit (pkgs) firefoxpwa; }
+    # );
     languagePacks = [
       "en-CA"
       "en-GB"
@@ -202,9 +201,9 @@ in
       extensions.force = true;
     };
     #! bitwarden is still broken
-    nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-      builtins.attrValues { inherit (pkgs.unstable) firefoxpwa; }
-    );
+    # nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
+    #   builtins.attrValues { inherit (pkgs.unstable) firefoxpwa; }
+    # );
     languagePacks = [
       "en-CA"
       "en-GB"
@@ -212,9 +211,9 @@ in
       "ja"
     ];
   };
-  home.packages = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-    builtins.attrValues {
-      inherit (pkgs) firefoxpwa;
-    }
-  );
+  # home.packages = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
+  #   builtins.attrValues {
+  #     inherit (pkgs) firefoxpwa;
+  #   }
+  # );
 }

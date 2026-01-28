@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -12,16 +11,16 @@
     hardware.steam-hardware.enable = true;
     nixpkgs.overlays = [
       (_: super: {
-        steam = super.steam.override {
+        steam = super.unstable.steam.override {
           extraPkgs =
             steamSuper:
             (builtins.attrValues {
               inherit (steamSuper)
                 curl
+                mesa-demos
                 imagemagick
                 keyutils
                 mangohud
-                mesa-demos
                 source-han-sans
                 steamtinkerlaunch # just in case compattools doesn't works
                 vkbasalt
@@ -29,6 +28,7 @@
                 wqy_zenhei
                 yad
                 nwjs # who knew that i would need that for rpg maker games
+                desktop-file-utils # for some native wrappers
                 ;
               inherit (pkgs)
                 libgdiplus
@@ -49,6 +49,9 @@
                 libXinerama
                 libXScrnSaver
                 xhost
+                ;
+              inherit (steamSuper.kdePackages)
+                qtbase
                 ;
               inherit (steamSuper.stdenv.cc.cc) lib;
             })
@@ -96,7 +99,7 @@
           inherit (pkgs) winetricks protonplus;
           inherit (pkgs.wineWowPackages) stagingFull;
         })
-        ++ (lib.optionals config.services.xserver.desktopManager.gnome.enable (
+        ++ (lib.optionals config.services.desktopManager.gnome.enable (
           builtins.attrValues { inherit (pkgs) adwsteamgtk; }
         ));
     };

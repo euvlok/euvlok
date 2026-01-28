@@ -17,7 +17,7 @@
     ../shared/system/fonts.nix
     ./hardware-configuration.nix
     ./networking.nix
-    # ./samba.nix
+    ./samba.nix
     ./users.nix
   ];
 
@@ -237,38 +237,6 @@
       TZ = "${config.time.timeZone}";
     };
   };
-
-  # flatpak
-  system.fsPackages = [ pkgs.bindfs ];
-  fileSystems =
-    let
-      mkRoSymBind = path: {
-        device = path;
-        fsType = "fuse.bindfs";
-        options = [
-          "ro"
-          "resolve-symlinks"
-          "x-gvfs-hide"
-        ];
-      };
-      aggregatedIcons = pkgs.buildEnv {
-        name = "system-icons";
-        paths = builtins.attrValues {
-          inherit (pkgs.kdePackages) breeze;
-          inherit (inputs.anime-cursors-source.packages.${config.nixpkgs.hostPlatform.system}) cursors;
-        };
-        pathsToLink = [ "/share/icons" ];
-      };
-      aggregatedFonts = pkgs.buildEnv {
-        name = "system-fonts";
-        paths = config.fonts.packages;
-        pathsToLink = [ "/share/fonts" ];
-      };
-    in
-    {
-      "/usr/share/icons" = mkRoSymBind "${aggregatedIcons}/share/icons";
-      "/usr/local/share/fonts" = mkRoSymBind "${aggregatedFonts}/share/fonts";
-    };
 
   sops.secrets.gh_token = { };
   sops.secrets.netrc_creds = { };

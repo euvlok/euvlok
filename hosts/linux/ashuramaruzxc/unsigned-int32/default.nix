@@ -32,6 +32,7 @@ in
         nixos = {
           plasma.enable = true;
           gnome.enable = true;
+          cosmic.enable = true;
           nvidia.enable = true;
           steam.enable = true;
         };

@@ -5,7 +5,7 @@
 {
   baseImports = [
     { home.stateVersion = "25.11"; }
-    # ../../../../pkgs/catppuccin-gtk.nix
+    ../../../../../pkgs/catppuccin-gtk.nix
   ];
 
   catppuccinConfig =

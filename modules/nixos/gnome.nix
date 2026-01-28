@@ -9,6 +9,9 @@
 
   config = lib.mkIf config.nixos.gnome.enable {
     services = {
+      xserver.enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
       gnome = {
         glib-networking.enable = true;
         gnome-browser-connector.enable = true;
@@ -22,11 +25,6 @@
       udev.packages = builtins.attrValues {
         inherit (pkgs) gnome-settings-daemon;
         inherit (pkgs.gnome2) GConf;
-      };
-      xserver = {
-        enable = true;
-        displayManager.gdm.enable = true;
-        desktopManager.gnome.enable = true;
       };
       gvfs.enable = true;
     };

@@ -5,7 +5,7 @@ let
       inherit (pkgs.unstable)
         keepassxc
         bitwarden-desktop
-        thunderbird
+        thunderbird-bin
         ;
     };
 
@@ -49,7 +49,7 @@ let
     networking = builtins.attrValues {
       inherit (pkgs)
         mullvad-vpn
-        nekoray
+        throne
         openvpn
         protonvpn-gui
         udptunnel
@@ -92,8 +92,8 @@ let
 
     jetbrains =
       let
-        inherit (pkgs.unstable.jetbrains.plugins) addPlugins;
-        inherit (pkgs.unstable.jetbrains) rider clion idea;
+        inherit (pkgs.jetbrains.plugins) addPlugins;
+        inherit (pkgs.jetbrains) rider clion idea;
         commonPlugins = [
           "better-direnv"
           "catppuccin-icons"
@@ -120,7 +120,7 @@ let
             "python-community-edition"
           ]
         );
-        ideaUltimateWithPlugins = addPlugins idea-ultimate (
+        ideaWithPlugins = addPlugins idea (
           commonPlugins
           ++ [
             "go"

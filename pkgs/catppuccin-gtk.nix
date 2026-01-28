@@ -66,7 +66,7 @@ in
         };
     })
     {
-      catppuccin.sources.gtk = inputs.catppuccin-gtk.packages.${pkgs.system}.gtk;
+      catppuccin.sources.gtk = inputs.catppuccin-gtk.packages.${pkgs.stdenv.hostPlatform.system}.gtk;
     }
   ];
 }

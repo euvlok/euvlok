@@ -73,7 +73,7 @@
             in
             lib.flatten (map (n: [ ../../../hm/flameflag/${n}.nix ]) hmExtraConfigModules)
           )
-          ++ lib.optionals osConfig.services.xserver.desktopManager.gnome.enable [
+          ++ lib.optionals osConfig.services.desktopManager.gnome.enable [
             ../../../hm/flameflag/dconf.nix
           ];
         in

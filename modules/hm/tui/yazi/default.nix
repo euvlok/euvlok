@@ -17,7 +17,7 @@
     home.packages = builtins.attrValues { inherit (pkgs) mediainfo exiftool clipboard-jh; };
     programs.yazi = {
       enable = true;
-      package = inputs.yazi-source.packages.${pkgs.system}.default;
+      package = inputs.yazi-source.packages.${pkgs.stdenv.hostPlatform.system}.default;
       plugins =
         let
           pluginsRepo = pkgs.fetchFromGitHub {
@@ -51,7 +51,7 @@
           };
         };
       initLua = builtins.concatStringsSep "\n" (
-        [ ''require('full-border'):setup()'' ]
+        [ "require('full-border'):setup()" ]
         ++ lib.optional config.programs.git.enable ''require("git"):setup()''
         ++ lib.optional config.programs.starship.enable ''require("starship"):setup()''
       );

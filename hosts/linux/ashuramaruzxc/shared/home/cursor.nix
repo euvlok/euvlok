@@ -34,15 +34,15 @@
     };
   };
 
-  # catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
-  #   enable = true;
-  #   inherit (osConfig.catppuccin) accent flavor;
-  #   size = "standard";
-  #   tweaks = [
-  #     "rimless"
-  #     "normal"
-  #   ];
-  # };
+  catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
+    enable = true;
+    inherit (osConfig.catppuccin) accent flavor;
+    size = "standard";
+    tweaks = [
+      "rimless"
+      "normal"
+    ];
+  };
 
   home.sessionVariables = {
     GTK_CSD = "0";

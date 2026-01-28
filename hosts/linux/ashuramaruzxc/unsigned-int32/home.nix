@@ -42,7 +42,7 @@ let
         nixcord.enable = true;
         nushell.enable = true;
         vscode.enable = true;
-        zed-editor.enable = true;
+        # zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
@@ -85,14 +85,14 @@ let
 
   userImports = {
     root = [
-      inputs.catppuccin-trivial.homeManagerModules.catppuccin
+      inputs.catppuccin-trivial.homeModules.catppuccin
       catppuccinConfig
       rootHmConfig
     ]
     ++ ashuramaruHmConfig;
 
     ashuramaru = [
-      inputs.catppuccin-trivial.homeManagerModules.catppuccin
+      inputs.catppuccin-trivial.homeModules.catppuccin
       catppuccinConfig
       inputs.sops-nix-trivial.homeManagerModules.sops
       {

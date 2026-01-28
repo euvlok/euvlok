@@ -121,7 +121,7 @@ let
       packages = builtins.attrValues { inherit (pkgs.unstable) kotlin kotlin-language-server gradle; };
     };
     lisp = {
-      packages = builtins.attrValues { inherit (pkgs.unstable) sbcl roswell; };
+      packages = builtins.attrValues { inherit (pkgs) sbcl roswell; };
     };
     lua = {
       packages = builtins.attrValues {
@@ -156,7 +156,7 @@ let
     };
     python =
       let
-        python312 = pkgs.unstable.python312.withPackages (pip: [
+        python312 = pkgs.python312.withPackages (pip: [
           pip.black
           pip.flake8
           pip.ipython

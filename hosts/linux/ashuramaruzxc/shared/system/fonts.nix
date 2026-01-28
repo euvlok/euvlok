@@ -47,4 +47,5 @@
       zed-mono
       ;
   };
+  fonts.fontDir.enable = true;
 }

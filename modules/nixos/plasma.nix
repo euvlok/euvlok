@@ -10,6 +10,10 @@
 
   config = lib.mkIf config.nixos.plasma.enable {
     services = {
+      xserver.enable = true;
+      displayManager.gdm.enable = true; # im sorry but sddm is brokenware
+      displayManager.defaultSession = "plasma";
+      desktopManager.plasma6.enable = true;
       gnome.gnome-settings-daemon.enable = true;
       dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
       udev.packages = builtins.attrValues {
@@ -17,9 +21,6 @@
         inherit (pkgs.gnome2) GConf;
       };
       gvfs.enable = true;
-      xserver.displayManager.gdm.enable = true;
-      displayManager.defaultSession = "plasma";
-      desktopManager.plasma6.enable = true;
     };
 
     environment = {
@@ -31,9 +32,9 @@
             adwaita-qt6
             dconf-editor # if not declaratively
             ;
-          inherit (inputs.lightly-source.packages.${config.nixpkgs.hostPlatform.system})
+          inherit (pkgs.unstable)
+            darkly
             darkly-qt5
-            darkly-qt6
             ;
           inherit (pkgs.kdePackages)
             ark
