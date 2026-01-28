@@ -160,11 +160,12 @@
                 let
                   scriptFile = ./modules/scripts/nvidia-prefetch.sh;
                   script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
-                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                    cd "$PWD" && ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} "$@"
                   '';
                 in
                 "${script}/bin/nvidia-prefetch";
             };
+
           };
         };
 

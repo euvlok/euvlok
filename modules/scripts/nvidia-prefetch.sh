@@ -212,6 +212,22 @@ find_repo_root() {
 	return 1
 }
 
+get_current_version() {
+	local nvidia_driver_nix_file
+	nvidia_driver_nix_file=$(find_nvidia_driver_nix) || {
+		return 1
+	}
+
+	if [[ -n "${nvidia_driver_nix_file}" ]] && [[ -f "${nvidia_driver_nix_file}" ]]; then
+		local current_version
+		current_version=$(rg '^\s*version\s*=\s*"([^"]+)"' "${nvidia_driver_nix_file}" -o -r '$1' | head -1)
+		echo "${current_version}"
+		return 0
+	fi
+
+	return 1
+}
+
 find_nvidia_driver_nix() {
 	local repo_root
 	repo_root=$(find_repo_root) || {
@@ -383,6 +399,17 @@ main() {
 	fi
 
 	readonly VERSION
+
+	if [[ "${UPDATE_FILE}" == true ]]; then
+		local current_version
+		current_version=$(get_current_version) || true
+
+		if [[ "${current_version}" == "${VERSION}" ]]; then
+			log_info "Current version (${current_version}) is already up to date"
+			log_info "Use --no-update to force hash recalculation"
+			exit 0
+		fi
+	fi
 
 	TEMP_DIR=$(mktemp -d)
 	readonly TEMP_DIR
