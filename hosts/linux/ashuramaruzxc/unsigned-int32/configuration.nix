@@ -179,7 +179,7 @@
         fcitx5-gtk
         gpgme
         ;
-      inherit (pkgs.kdePackages)
+      inherit (pkgs.unstable.kdePackages)
         bluedevil
         ;
       inherit (pkgs.unstable)

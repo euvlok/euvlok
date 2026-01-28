@@ -1,10 +1,17 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
   ...
 }:
 {
+  disabledModules = [ "services/desktop-managers/gnome.nix" ];
+
+  imports = [
+    ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/gnome.nix")
+  ];
+
   options.nixos.gnome.enable = lib.mkEnableOption "GNOME";
 
   config = lib.mkIf config.nixos.gnome.enable {
@@ -21,10 +28,10 @@
         gnome-settings-daemon.enable = true;
         sushi.enable = true;
       };
-      dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
+      dbus.packages = builtins.attrValues { inherit (pkgs.unstable) gcr; };
       udev.packages = builtins.attrValues {
-        inherit (pkgs) gnome-settings-daemon;
-        inherit (pkgs.gnome2) GConf;
+        inherit (pkgs.unstable) gnome-settings-daemon;
+        inherit (pkgs.unstable.gnome2) GConf;
       };
       gvfs.enable = true;
     };
@@ -32,7 +39,7 @@
     environment = {
       systemPackages =
         builtins.attrValues {
-          inherit (pkgs)
+          inherit (pkgs.unstable)
             apostrophe # Markdown Editor
             decibels # Audio Player
             gnome-obfuscate # Censor Private Info
@@ -41,11 +48,11 @@
             resources # Task Manager
             textpieces
             ;
-          inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
+          inherit (pkgs.unstable.gnomeExtensions) appindicator clipboard-indicator;
         }
         ++ lib.optionals config.catppuccin.enable (
           builtins.attrValues {
-            catppuccin-gtk = pkgs.catppuccin-gtk.override {
+            catppuccin-gtk = pkgs.unstable.catppuccin-gtk.override {
               accents = [ config.catppuccin.accent ];
               size = "compact";
               tweaks = [ "normal" ];
@@ -55,7 +62,7 @@
         );
 
       gnome.excludePackages = builtins.attrValues {
-        inherit (pkgs)
+        inherit (pkgs.unstable)
           epiphany # Browser
           evince # Docs
           geary # Email

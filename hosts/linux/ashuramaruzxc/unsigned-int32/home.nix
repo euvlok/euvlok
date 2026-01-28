@@ -14,7 +14,7 @@ let
   cursorModule = import ../shared/home/cursor.nix {
     cursorName = "touhou-reimu";
     cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenvNoCC.hostPlatform.system}.cursors;
-    iconPackage = pkgs.kdePackages.breeze-icons;
+    iconPackage = pkgs.unstable.kdePackages.breeze-icons;
   };
 
   inherit (homeCommon) catppuccinConfig rootHmConfig;

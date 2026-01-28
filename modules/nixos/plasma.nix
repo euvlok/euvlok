@@ -1,10 +1,17 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
   ...
 }:
 {
+  disabledModules = [ "services/desktop-managers/plasma6.nix" ];
+
+  imports = [
+    ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/plasma6.nix")
+  ];
+
   options.nixos.plasma.enable = lib.mkEnableOption "KDE Plasma";
 
   config = lib.mkIf config.nixos.plasma.enable {
@@ -14,10 +21,10 @@
       displayManager.defaultSession = "plasma";
       desktopManager.plasma6.enable = true;
       gnome.gnome-settings-daemon.enable = true;
-      dbus.packages = builtins.attrValues { inherit (pkgs) gcr; };
+      dbus.packages = builtins.attrValues { inherit (pkgs.unstable) gcr; };
       udev.packages = builtins.attrValues {
-        inherit (pkgs) gnome-settings-daemon;
-        inherit (pkgs.gnome2) GConf;
+        inherit (pkgs.unstable) gnome-settings-daemon;
+        inherit (pkgs.unstable.gnome2) GConf;
       };
       gvfs.enable = true;
     };
@@ -25,15 +32,17 @@
     environment = {
       systemPackages =
         builtins.attrValues {
-          inherit (pkgs)
+          inherit (pkgs.unstable)
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
-            darkly
-            darkly-qt5
             dconf-editor # if not declaratively
             ;
-          inherit (pkgs.kdePackages)
+          inherit (inputs.darkly-source.packages.${pkgs.stdenvNoCC.hostPlatform.system})
+            darkly-qt5
+            darkly-qt6
+            ;
+          inherit (pkgs.unstable.kdePackages)
             ark
             filelight
             kclock
@@ -84,13 +93,13 @@
             ;
         }
         ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
-          catppuccin-gtk = pkgs.catppuccin-gtk.override {
+          catppuccin-gtk = pkgs.unstable.catppuccin-gtk.override {
             accents = [ config.catppuccin.accent ];
             size = "compact";
             tweaks = [ "rimless" ];
             variant = config.catppuccin.flavor;
           };
-          catppuccin-kde = pkgs.catppuccin-kde.override {
+          catppuccin-kde = pkgs.unstable.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];
             winDecStyles = [ "classic" ];

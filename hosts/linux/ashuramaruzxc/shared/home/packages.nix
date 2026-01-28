@@ -18,7 +18,7 @@ let
         vlc
         youtube-music
         ;
-      inherit (pkgs.kdePackages)
+      inherit (pkgs.unstable.kdePackages)
         k3b
         kamera
         ;
@@ -34,7 +34,7 @@ let
         pdftk
         treesheets
         ;
-      inherit (pkgs.kdePackages) francis;
+      inherit (pkgs.unstable.kdePackages) francis;
     };
 
     social = builtins.attrValues {

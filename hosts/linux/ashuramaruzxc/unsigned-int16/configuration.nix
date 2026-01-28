@@ -99,7 +99,7 @@
   environment = {
     systemPackages = builtins.attrValues {
       inherit (pkgs) fcitx5-gtk;
-      inherit (pkgs.kdePackages) bluedevil;
+      inherit (pkgs.unstable.kdePackages) bluedevil;
     };
   };
 

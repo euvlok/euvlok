@@ -10,7 +10,7 @@
   nixos.plasma.enable = true;
 
   environment.plasma6.excludePackages = builtins.attrValues {
-    inherit (pkgs.kdePackages) discover;
+    inherit (pkgs.unstable.kdePackages) discover;
     inherit (pkgs) orca;
   };
 

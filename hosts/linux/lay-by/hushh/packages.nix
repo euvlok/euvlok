@@ -44,7 +44,7 @@
 
       ;
     # Theme stuff
-    inherit (pkgs.kdePackages)
+    inherit (pkgs.unstable.kdePackages)
       breeze
       breeze-gtk
       breeze-icons

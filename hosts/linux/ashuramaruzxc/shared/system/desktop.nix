@@ -17,7 +17,7 @@
   services.gnome.gnome-keyring.enable = true;
 
   environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
+    inherit (pkgs.unstable)
       gnome-boxes
       gnome-themes-extra
       gnome-tweaks
