@@ -4,7 +4,6 @@ _: {
     ../lib
     ./amd.nix
     ./audio.nix
-    ./cosmic.nix
     ./gnome.nix
     ./hardware.nix
     ./kanata.nix
