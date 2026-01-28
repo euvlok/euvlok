@@ -20,6 +20,7 @@
     ./services.nix
     ./sessionVariables.nix
     ./steam.nix
+    ./vscode-server.nix
     ./zram.nix
   ];
 }

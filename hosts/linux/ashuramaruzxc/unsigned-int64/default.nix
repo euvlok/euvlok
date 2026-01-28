@@ -8,8 +8,6 @@ in
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-      inputs.nixos-vscode-server-trivial.nixosModules.default
-      { services.vscode-server.enable = true; }
     ];
     sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
     catppuccinAccent = "rosewater";
