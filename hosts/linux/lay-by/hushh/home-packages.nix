@@ -54,6 +54,7 @@
       playerctl
       yt-dlp
       deluge-gtk
+      slsk-batchdl
       #kdenlive
       imagemagick
       gimp
