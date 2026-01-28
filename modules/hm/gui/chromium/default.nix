@@ -8,8 +8,8 @@ let
   cfg = config.hm.chromium;
 
   browserPackages = {
-    chromium = pkgs.unstable.chromium.override { enableWideVine = true; };
-    inherit (pkgs.unstable)
+    chromium = pkgs.chromium.override { enableWideVine = true; };
+    inherit (pkgs)
       brave
       google-chrome
       ungoogled-chromium
@@ -47,7 +47,7 @@ in
       enable = true;
       package = browserPackages.${cfg.browser};
       dictionaries = builtins.attrValues {
-        inherit (pkgs.unstable.hunspellDictsChromium) en_US de_DE fr_FR;
+        inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
 
       extensions = lib.unique (

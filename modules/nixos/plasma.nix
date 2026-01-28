@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -30,11 +29,9 @@
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
-            dconf-editor # if not declaratively
-            ;
-          inherit (pkgs.unstable)
             darkly
             darkly-qt5
+            dconf-editor # if not declaratively
             ;
           inherit (pkgs.kdePackages)
             ark

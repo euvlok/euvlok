@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   config,
   ...
@@ -212,7 +211,6 @@
       enable = true;
       type = "fcitx5";
       fcitx5 = {
-        # plasma6Support = true;
         waylandFrontend = true;
         addons = builtins.attrValues {
           inherit (pkgs) fcitx5-gtk fcitx5-mozc;

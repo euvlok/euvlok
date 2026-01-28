@@ -121,7 +121,7 @@ let
       packages = builtins.attrValues { inherit (pkgs.unstable) kotlin kotlin-language-server gradle; };
     };
     lisp = {
-      packages = builtins.attrValues { inherit (pkgs) sbcl roswell; };
+      packages = builtins.attrValues { inherit (pkgs.unstable) sbcl; };
     };
     lua = {
       packages = builtins.attrValues {

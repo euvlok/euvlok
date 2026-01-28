@@ -176,10 +176,10 @@ in
       extensions.force = true;
       inherit search settings;
     };
-    # #! bitwarden is still broken
-    # nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
-    #   builtins.attrValues { inherit (pkgs) firefoxpwa; }
-    # );
+    #! bitwarden is still broken
+    nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
+      builtins.attrValues { inherit (pkgs) keepassxc; }
+    );
     languagePacks = [
       "en-CA"
       "en-GB"
@@ -201,9 +201,9 @@ in
       extensions.force = true;
     };
     #! bitwarden is still broken
-    # nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-    #   builtins.attrValues { inherit (pkgs.unstable) firefoxpwa; }
-    # );
+    nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
+      builtins.attrValues { inherit (pkgs.unstable) keepassxc; }
+    );
     languagePacks = [
       "en-CA"
       "en-GB"
@@ -211,9 +211,4 @@ in
       "ja"
     ];
   };
-  # home.packages = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-  #   builtins.attrValues {
-  #     inherit (pkgs) firefoxpwa;
-  #   }
-  # );
 }
