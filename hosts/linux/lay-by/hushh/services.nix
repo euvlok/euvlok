@@ -23,6 +23,15 @@ _: {
       acceleration = "cuda";
     };
 
+    syncthing = {
+      enable = true;
+      folders = {
+        "Music" = {
+          path = "/media/HDD/music";
+        };
+      };
+    };
+
     # Misc services
     gvfs.enable = true;
     tumbler.enable = true;
