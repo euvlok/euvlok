@@ -36,11 +36,9 @@
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
-            dconf-editor # if not declaratively
-            ;
-          inherit (inputs.darkly-source.packages.${pkgs.stdenvNoCC.hostPlatform.system})
             darkly-qt5
             darkly-qt6
+            dconf-editor # if not declaratively
             ;
           inherit (pkgs.unstable.kdePackages)
             ark
