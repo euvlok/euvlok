@@ -65,7 +65,7 @@
         inputs.sops-nix-trivial.homeManagerModules.sops
         {
           sops = {
-            age.keyFile = ''/Users/faputa/Library/Application Support/sops/age/keys.txt'';
+            age.keyFile = "${config.home.homeDirectory}/Library/Application Support/sops/age/keys.txt";
             defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
           };
         }
