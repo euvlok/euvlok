@@ -1,5 +1,10 @@
-_: {
+{
+  inputs,
+  ...
+}:
+{
   imports = [
+    inputs.catppuccin-trivial.nixosModules.catppuccin
     ../cross
     ../lib
     ./amd.nix

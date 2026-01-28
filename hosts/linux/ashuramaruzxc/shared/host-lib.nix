@@ -17,7 +17,6 @@ let
       extra ? { },
     }:
     [
-      inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
           enable = true;

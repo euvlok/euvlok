@@ -21,6 +21,7 @@ let
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
+    inputs.self.homeModules.os
     inputs.self.homeConfigurations.ashuramaruzxc
     ../../../hm/ashuramaruzxc/graphics.nix
     ../../../hm/ashuramaruzxc/chromium
@@ -85,14 +86,12 @@ let
 
   userImports = {
     root = [
-      inputs.catppuccin-trivial.homeModules.catppuccin
       catppuccinConfig
       rootHmConfig
     ]
     ++ ashuramaruHmConfig;
 
     ashuramaru = [
-      inputs.catppuccin-trivial.homeModules.catppuccin
       catppuccinConfig
       inputs.sops-nix-trivial.homeManagerModules.sops
       {

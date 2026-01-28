@@ -6,9 +6,6 @@
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-    ]
-    ++ [
-      inputs.catppuccin-trivial.nixosModules.catppuccin
       {
         catppuccin = {
           enable = true;
