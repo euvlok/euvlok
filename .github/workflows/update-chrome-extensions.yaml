@@ -21,6 +21,11 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
 
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v5.1.0
+        with:
+          dotnet-version: "10.x"
+
       - name: Run extensions update scripts
         id: update_script
         run: |
@@ -33,7 +38,7 @@ jobs:
           for list_file in "${LIST_FILES[@]}"; do
             output_file="$(dirname "$list_file")/extensions.nix"
             echo "::group::Processing ${list_file} -> ${output_file}"
-            nix run .#chromium-extension -- -i "$list_file" -o "$output_file"
+            dotnet run modules/scripts/chromium-extensions-update.cs -- -i "$list_file" -o "$output_file"
             echo "::endgroup::"
           done
 
@@ -44,15 +49,96 @@ jobs:
             echo "::warning::Changes detected in one or more extension files."
             echo "has_changes=true" >> $GITHUB_OUTPUT
 
-            # Add all potential changes to staging to generate a complete summary
-            git add modules/ hosts/
+            git add hosts/ modules/
 
-            CHANGES_SUMMARY=$(git diff --staged --shortstat || true)
+            list_extensions() {
+              local nix_file="$1"
+              [ -z "$nix_file" ] && return
+              nix eval --json --impure --expr "map (x: x.id) (import \"$nix_file\" { pkgs = {}; config = { catppuccin.enable = false; }; lib = import <nixpkgs/lib>; })" 2>/dev/null | jq -r '.[]' | sort -u
+            }
+
+            get_ext_version() {
+              local nix_file="$1" id="$2"
+              nix eval --json --impure --expr "(builtins.head (builtins.filter (x: x.id == \"$id\") (import \"$nix_file\" { pkgs = {}; config = { catppuccin.enable = false; }; lib = import <nixpkgs/lib>; }))).version" 2>/dev/null | jq -r '.'
+            }
+
+            analyze_file_changes() {
+              local nix_file="$1" staged_content="$2" head_content="$3"
+              local -a added=() removed=() updated=()
+
+              local tmp_staged tmp_head old_exts new_exts
+              tmp_staged=$(mktemp)
+              echo "$staged_content" > "$tmp_staged"
+              tmp_head=$(mktemp)
+              echo "$head_content" > "$tmp_head"
+
+              old_exts=$([ -s "$tmp_head" ] && list_extensions "$tmp_head" || true)
+              new_exts=$([ -s "$tmp_staged" ] && list_extensions "$tmp_staged" || true)
+
+              rm -f "$tmp_staged" "$tmp_head"
+
+              while IFS= read -r ext; do
+                [ -z "$ext" ] && continue
+                if ! echo "$new_exts" | grep -qx "$ext"; then
+                  removed+=("$ext")
+                fi
+              done <<< "$old_exts"
+
+              while IFS= read -r ext; do
+                [ -z "$ext" ] && continue
+                if ! echo "$old_exts" | grep -qx "$ext"; then
+                  added+=("$ext")
+                elif [ -n "$head_content" ]; then
+                  local old_ver new_ver tmp_old tmp_new
+                  tmp_old=$(mktemp)
+                  tmp_new=$(mktemp)
+                  echo "$head_content" > "$tmp_old"
+                  echo "$staged_content" > "$tmp_new"
+                  old_ver=$(get_ext_version "$tmp_old" "$ext" || true)
+                  new_ver=$(get_ext_version "$tmp_new" "$ext" || true)
+                  rm -f "$tmp_old" "$tmp_new"
+                  [ "$old_ver" != "$new_ver" ] && updated+=("$ext|$old_ver|$new_ver")
+                fi
+              done <<< "$new_exts"
+
+              local file_label
+              file_label=$(basename "$(dirname "$nix_file")")
+
+              [ ${#added[@]} -eq 0 ] && [ ${#removed[@]} -eq 0 ] && [ ${#updated[@]} -eq 0 ] && return
+
+              echo "$file_label:"
+              for ext in "${added[@]}"; do
+                echo "  + $ext"
+              done
+              for ext in "${removed[@]}"; do
+                echo "  - $ext"
+              done
+              for item in "${updated[@]}"; do
+                IFS='|' read -r ext old_ver new_ver <<< "$item"
+                echo "  ~ $ext: $old_ver -> $new_ver"
+              done
+              echo ""
+            }
+
+            CHANGES_DETAIL=""
+            while IFS= read -r nix_file; do
+              [ -z "$nix_file" ] && continue
+
+              staged_content=$(git show :"$nix_file" 2>/dev/null || true)
+              head_content=$(git show HEAD:"$nix_file" 2>/dev/null || true)
+
+              file_changes=$(analyze_file_changes "$nix_file" "$staged_content" "$head_content")
+              [ -n "$file_changes" ] && CHANGES_DETAIL="${CHANGES_DETAIL}${file_changes}"
+            done <<< "$(git diff --staged --name-only | grep -E 'extensions\.nix$' || true)"
 
             {
               echo "changes_summary<<EOF"
-              echo "The following changes were detected:"
-              echo "$CHANGES_SUMMARY"
+              echo ""
+              if [ -n "$CHANGES_DETAIL" ]; then
+                echo "$CHANGES_DETAIL"
+              else
+                echo "Updated extension definitions."
+              fi
               echo "EOF"
             } >> $GITHUB_OUTPUT
           fi
@@ -65,7 +151,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 'git add' was performed in the previous step
           COMMIT_TITLE="chore(chromium): update extensions"
           COMMIT_BODY="${{ steps.update_script.outputs.changes_summary }}"
           git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"

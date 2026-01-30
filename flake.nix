@@ -137,7 +137,7 @@
                 let
                   scriptFile = ./auto-rebase.sh;
                   script = pkgs.writeShellScriptBin "auto-rebase" ''
-                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} "$@"
                   '';
                 in
                 "${script}/bin/auto-rebase";
@@ -146,9 +146,9 @@
               type = "app";
               program =
                 let
-                  scriptFile = ./modules/scripts/chromium-extensions-update.sh;
+                  scriptFile = ./modules/scripts/chromium-extensions-update.cs;
                   script = pkgs.writeShellScriptBin "chromium-extension" ''
-                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} -- "$@"
+                    ${pkgs.lib.getExe' pkgs.dotnetCorePackages.sdk_10_0-bin "dotnet"} run ${scriptFile} "$@"
                   '';
                 in
                 "${script}/bin/chromium-extension";
