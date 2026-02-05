@@ -55,6 +55,7 @@
       yt-dlp
       deluge-gtk
       slsk-batchdl
+      nicotine-plus
       #kdenlive
       imagemagick
       gimp
