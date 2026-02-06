@@ -14,6 +14,7 @@
     targets.hyprlock.enable = false;
     targets.spicetify.enable = true;
     targets.zen-browser.enable = false;
+    targets.rofi.enable = false;
     # targets.anki.enable = false;
     # targets.hyprpaper.enable = false;
 

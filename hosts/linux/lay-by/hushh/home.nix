@@ -36,8 +36,6 @@
             fps_limit = 200;
             no_display = true;
           };
-          programs.rofi.enable = true;
-          programs.rofi.package = pkgs.unstable.rofi;
           services.easyeffects.enable = true;
           fonts.fontconfig.enable = true;
           xsession.numlock.enable = true;
