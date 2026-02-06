@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
@@ -9,9 +8,6 @@
   options.nixos.amd.enable = lib.mkEnableOption "AMD drivers";
 
   config = lib.mkMerge [
-    ((lib.mkIf (config.nixos.amd.enable && config.nixpkgs.hostPlatform.isx86_64)) {
-      hardware.graphics.extraPackages32 = builtins.attrValues { inherit (pkgs.driversi686Linux) ; };
-    })
     (lib.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {
         inherit (pkgs) clinfo;
@@ -26,11 +22,7 @@
             rocmEnv = pkgs.symlinkJoin {
               name = "rocm-combined";
               paths = builtins.attrValues {
-                inherit (pkgs.rocmPackages)
-                  rocblas
-                  hipblas
-                  clr
-                  ;
+                inherit (pkgs.rocmPackages) rocblashipblasclr;
               };
             };
           in
