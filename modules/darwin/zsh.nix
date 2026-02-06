@@ -6,6 +6,7 @@
 }:
 let
   hmConfig = config.home-manager.users.${config.system.primaryUser};
+  paths = import ../../hm/shell/paths.nix { inherit lib; };
 
   userAliasesPath = ../../hm/${hmConfig.programs.git.settings.user.name}/aliases.nix;
   shellAliases =
@@ -63,6 +64,9 @@ let
 in
 {
   programs.zsh.interactiveShellInit = lib.concatStringsSep "\n" [
+    "# PATH"
+    paths.hm.shell.binPaths.zsh
+
     "# Oh My Zsh"
     omzPluginsStr
     "source ${pkgs.oh-my-zsh}/share/oh-my-zsh/oh-my-zsh.sh"
