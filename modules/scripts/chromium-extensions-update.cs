@@ -68,7 +68,7 @@ root.SetAction(async (parseResult, _) =>
         }
 
         await GenerateNixFile(outputFile, results, hasConditions);
-        await FormatNixFile(outputFile);
+        await RunProcessAsync("nix", $"run nixpkgs#nixfmt -- {outputFile}");
         await ValidateNixFile(outputFile);
 
         AnsiConsole.WriteLine();
@@ -522,12 +522,6 @@ async Task GenerateNixFile(string outputFile, List<ExtensionResult> results, boo
     if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 
     await File.WriteAllTextAsync(outputFile, sb.ToString());
-}
-
-async Task FormatNixFile(string outputFile)
-{
-    try { await RunProcessAsync("nix run nixpkgs#nixfmt -- ", outputFile); }
-    catch { /* ignored */ }
 }
 
 async Task ValidateNixFile(string outputFile)
