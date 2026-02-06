@@ -84,24 +84,6 @@ let
   zenSettings = settings // {
     "zen.urlbar.replace-newtab" = false;
   };
-  bypass-paywalls-clean =
-    let
-      version = "latest";
-    in
-    inputs.firefox-addons-trivial.lib.${pkgs.stdenvNoCC.hostPlatform.system}.buildFirefoxXpiAddon {
-      pname = "bypass-paywalls-clean";
-      inherit version;
-      addonId = "magnolia@12.34";
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-${version}.xpi";
-      name = "bypass-paywall-clean-${version}";
-      sha256 = "sha256-sFcIlR0wgmXiJovqw+10Mh+qaMl5heIvHntk6DeC3TU=";
-      meta = {
-        homepage = "https://twitter.com/Magnolia1234B";
-        description = "Bypass Paywalls of (custom) news sites";
-        license = lib.licenses.mit;
-        platforms = lib.platforms.all;
-      };
-    };
 
   restrictedDomainsList = [
     "accounts-static.cdn.mozilla.net"
@@ -116,7 +98,7 @@ let
     "install.mozilla.org"
     "media.tenjin-dk.com"
     "media.tenjin.com"
-    "metrics.tenjin-dk.com"
+    "metrics.tenjin.com"
     "metrics.tenjin.com"
     "oauth.accounts.firefox.com"
     "private.tenjin.com"
@@ -125,43 +107,15 @@ let
     "support.mozilla.org"
     "sync.services.mozilla.com"
   ];
-  defaultExtensionsList = builtins.attrValues {
-    inherit (inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system})
-      # necessity
-      darkreader
-      facebook-container
-      multi-account-containers
-      user-agent-string-switcher
-      web-archives
 
-      # devtools
-      angular-devtools
-      react-devtools
-      reduxdevtools
-      vue-js-devtools
-
-      youtube-no-translation
-      bitwarden
-      firefox-color
-      floccus
-      foxyproxy-standard
-      old-reddit-redirect
-      reddit-enhancement-suite
-      search-by-image
-      steam-database
-      stylus
-      tabliss
-      translate-web-pages
-
-      # Dictionaries
-      ukrainian-dictionary
-      french-dictionary
-      dictionary-german
-      polish-dictionary
-      bulgarian-dictionary
-      ;
-    inherit bypass-paywalls-clean;
-  };
+  defaultExtensionsList = builtins.attrValues (
+    import ./extensions.nix {
+      buildFirefoxXpiAddon = import ../../../../modules/hm/gui/firefox/firefox-addons.nix {
+        inherit pkgs lib;
+      };
+      inherit pkgs lib;
+    }
+  );
 in
 {
   programs.floorp = {
@@ -176,7 +130,6 @@ in
       extensions.force = true;
       inherit search settings;
     };
-    #! bitwarden is still broken
     nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
       builtins.attrValues { inherit (pkgs) keepassxc; }
     );
@@ -199,8 +152,8 @@ in
       settings = zenSettings;
       extensions.packages = defaultExtensionsList;
       extensions.force = true;
+      inherit search;
     };
-    #! bitwarden is still broken
     nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
       builtins.attrValues { inherit (pkgs.unstable) keepassxc; }
     );

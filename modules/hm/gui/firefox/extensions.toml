@@ -1,0 +1,54 @@
+# This file lists Firefox extensions to be managed by Nix
+#
+# Format:
+# - id: Required extension slug (AMO slug) or addonId
+# - name: Optional human-readable name (for documentation)
+# - source: One of "amo", "bpc", "url", or "github-releases" (default: "amo")
+# - url: Required if source is "url"
+# - condition: Optional Nix condition expression (e.g., "config.catppuccin.enable")
+#
+# For github-releases source:
+# - owner: GitHub repository owner (required, or set in [config.sources.github-releases])
+# - repo: GitHub repository name (required, or set in [config.sources.github-releases])
+# - pattern: URL pattern with placeholders {version}, {name}, {id} (optional, or set in config)
+# - version: Specific version tag, or "latest" to auto-detect (optional, defaults to "latest")
+#
+# Example config-level defaults:
+# [config.sources.github-releases]
+# owner = "some-org"
+# repo = "some-repo"
+# pattern = "releases/download/v{version}/{name}.xpi"
+
+# --- From Mozilla Add-ons (AMO) ---
+
+[[extensions]]
+id = "ublock-origin"
+name = "uBlock Origin"
+source = "amo"
+
+[[extensions]]
+id = "refined-github-"
+name = "Refined GitHub"
+source = "amo"
+
+[[extensions]]
+id = "violentmonkey"
+name = "Violentmonkey"
+source = "amo"
+
+[[extensions]]
+id = "clearurls"
+name = "ClearURLs"
+source = "amo"
+
+[[extensions]]
+id = "sponsorblock"
+name = "SponsorBlock"
+source = "amo"
+
+# --- From Third-Party Sources ---
+
+[[extensions]]
+id = "magnolia@12.34"
+name = "Bypass Paywalls Clean"
+source = "bpc"

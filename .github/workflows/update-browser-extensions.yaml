@@ -1,7 +1,17 @@
-name: Update Chromium Extensions
+name: Update Browser Extensions
 
 on:
   workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser type to update (all, chromium, firefox)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - chromium
+          - firefox
   schedule:
     - cron: "0 */8 * * *"
 
@@ -10,7 +20,7 @@ permissions:
 
 jobs:
   update-extensions:
-    name: Update Chromium Extensions
+    name: Update Browser Extensions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,15 +41,28 @@ jobs:
         run: |
           set -euo pipefail
 
-          mapfile -t LIST_FILES < <(find ./modules/hm/gui/chromium ./hosts/hm -name "extensions.toml")
+          browser="${{ github.event.inputs.browser }}"
+          if [ -z "$browser" ] || [ "$browser" == "all" ]; then
+            browsers="chromium firefox"
+          else
+            browsers="$browser"
+          fi
 
-          echo "::notice::Found ${#LIST_FILES[@]} extension lists to process."
+          for browser_type in $browsers; do
+            echo "::notice::Processing $browser_type extensions..."
 
-          for list_file in "${LIST_FILES[@]}"; do
-            output_file="$(dirname "$list_file")/extensions.nix"
-            echo "::group::Processing ${list_file} -> ${output_file}"
-            dotnet run modules/scripts/chromium-extensions-update.cs -- -i "$list_file" -o "$output_file"
-            echo "::endgroup::"
+            mapfile -t LIST_FILES < <(find ./modules -name "extensions.toml" -type f)
+
+            for list_file in "${LIST_FILES[@]}"; do
+              parent_dir="$(dirname "$(dirname "$list_file")")"
+              if [ "$(basename "$parent_dir")" != "$browser_type" ]; then
+                continue
+              fi
+
+              echo "::group::Processing ${list_file}"
+              dotnet run modules/scripts/browser-extensions-update.cs -- -i "$list_file" -b "$browser_type"
+              echo "::endgroup::"
+            done
           done
 
           if git diff --quiet; then
@@ -59,12 +82,22 @@ jobs:
 
             extract_ext_key() {
               local ext_json="$1"
-              echo "$ext_json" | jq -r '"\(.id)|\(.version)|\(.crxPath.url)"' 2>/dev/null
+              local browser_type="$2"
+              if [ "$browser_type" = "chromium" ]; then
+                echo "$ext_json" | jq -r '"\(.id)|\(.version)|\(.crxPath.url)"' 2>/dev/null
+              else
+                echo "$ext_json" | jq -r '"\(.name)|\(.version)|\(.url)"' 2>/dev/null
+              fi
             }
 
             get_ext_name() {
               local ext_json="$1"
-              echo "$ext_json" | jq -r '.id' 2>/dev/null
+              local browser_type="$2"
+              if [ "$browser_type" = "chromium" ]; then
+                echo "$ext_json" | jq -r '.id' 2>/dev/null
+              else
+                echo "$ext_json" | jq -r '.name' 2>/dev/null
+              fi
             }
 
             get_ext_version() {
@@ -83,12 +116,16 @@ jobs:
               echo "$head_content" > "$tmp_head"
 
               declare -A old_entries new_entries
+              local browser_type="chromium"
+              if [[ "$nix_file" == *"firefox"* ]]; then
+                browser_type="firefox"
+              fi
 
               if [ -s "$tmp_head" ]; then
                 while IFS= read -r ext; do
                   [ -z "$ext" ] && continue
-                  local key=$(extract_ext_key "$ext")
-                  local id=$(get_ext_name "$ext")
+                  local key=$(extract_ext_key "$ext" "$browser_type")
+                  local id=$(get_ext_name "$ext" "$browser_type")
                   [ -n "$key" ] && old_entries["$key"]="$ext"
                 done <<< "$(get_extension_details "$tmp_head")"
               fi
@@ -96,8 +133,8 @@ jobs:
               if [ -s "$tmp_staged" ]; then
                 while IFS= read -r ext; do
                   [ -z "$ext" ] && continue
-                  local key=$(extract_ext_key "$ext")
-                  local id=$(get_ext_name "$ext")
+                  local key=$(extract_ext_key "$ext" "$browser_type")
+                  local id=$(get_ext_name "$ext" "$browser_type")
                   [ -n "$key" ] && new_entries["$key"]="$ext"
                 done <<< "$(get_extension_details "$tmp_staged")"
               fi
@@ -106,13 +143,13 @@ jobs:
 
               for key in "${!old_entries[@]}"; do
                 if [[ ! -v new_entries["$key"] ]]; then
-                  local id=$(get_ext_name "${old_entries[$key]}")
+                  local id=$(get_ext_name "${old_entries[$key]}" "$browser_type")
                   removed+=("$id")
                 fi
               done
 
               for key in "${!new_entries[@]}"; do
-                local id=$(get_ext_name "${new_entries[$key]}")
+                local id=$(get_ext_name "${new_entries[$key]}" "$browser_type")
                 if [[ ! -v old_entries["$key"] ]]; then
                   added+=("$id")
                 elif [ -n "$head_content" ]; then
@@ -123,8 +160,14 @@ jobs:
                   if [ "$old_ver" != "$new_ver" ]; then
                     updated+=("$id|$old_ver|$new_ver")
                   else
-                    local old_hash=$(echo "$old_ext" | jq -r '.crxPath.hash' 2>/dev/null)
-                    local new_hash=$(echo "$new_ext" | jq -r '.crxPath.hash' 2>/dev/null)
+                    local old_hash new_hash
+                    if [ "$browser_type" = "chromium" ]; then
+                      old_hash=$(echo "$old_ext" | jq -r '.crxPath.hash' 2>/dev/null)
+                      new_hash=$(echo "$new_ext" | jq -r '.crxPath.hash' 2>/dev/null)
+                    else
+                      old_hash=$(echo "$old_ext" | jq -r '.sha256' 2>/dev/null)
+                      new_hash=$(echo "$new_ext" | jq -r '.sha256' 2>/dev/null)
+                    fi
                     if [ "$old_hash" != "$new_hash" ]; then
                       updated+=("$id|$old_ver|${new_ver} (hash changed)")
                     fi
@@ -134,10 +177,11 @@ jobs:
 
               local file_label
               file_label=$(basename "$(dirname "$nix_file")")
+              file_label="${file_label##*/}"
 
               [ ${#added[@]} -eq 0 ] && [ ${#removed[@]} -eq 0 ] && [ ${#updated[@]} -eq 0 ] && return
 
-              echo "$file_label:"
+              echo "$file_label ($browser_type):"
               for ext in "${added[@]}"; do
                 echo "  + $ext"
               done
@@ -184,7 +228,13 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          COMMIT_TITLE="chore(chromium): update extensions"
+          browser="${{ github.event.inputs.browser }}"
+          if [ -z "$browser" ] || [ "$browser" == "all" ]; then
+            COMMIT_TITLE="chore(browsers): update extensions"
+          else
+            COMMIT_TITLE="chore($browser): update extensions"
+          fi
+          
           COMMIT_BODY="${{ steps.update_script.outputs.changes_summary }}"
           git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
 
