@@ -20,11 +20,7 @@
         graphics = {
           enable = true;
           extraPackages = builtins.attrValues {
-            inherit (pkgs)
-              libva
-              mesa
-              vulkan-loader
-              ;
+            inherit (pkgs) libva mesa vulkan-loader;
           };
         };
         bluetooth.enable = true;

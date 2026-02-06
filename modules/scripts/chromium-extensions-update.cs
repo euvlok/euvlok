@@ -526,7 +526,7 @@ async Task GenerateNixFile(string outputFile, List<ExtensionResult> results, boo
 
 async Task FormatNixFile(string outputFile)
 {
-    try { await RunProcessAsync("nixfmt", outputFile); }
+    try { await RunProcessAsync("nix run nixpkgs#nixfmt -- ", outputFile); }
     catch { /* ignored */ }
 }
 

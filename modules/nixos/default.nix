@@ -1,7 +1,4 @@
-{
-  inputs,
-  ...
-}:
+{ inputs, ... }:
 {
   imports = [
     inputs.catppuccin-trivial.nixosModules.catppuccin
