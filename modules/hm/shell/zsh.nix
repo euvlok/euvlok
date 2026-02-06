@@ -4,6 +4,9 @@
   config,
   ...
 }:
+let
+  paths = import ./paths.nix { inherit lib; };
+in
 {
   options.hm.zsh.enable =
     lib.mkEnableOption "Declerative Zsh"
@@ -54,6 +57,7 @@
         }
       ];
       initContent = ''
+        ${paths.hm.shell.binPaths.zsh}
         source "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
       '';
     };

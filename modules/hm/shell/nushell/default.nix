@@ -12,6 +12,7 @@ let
   atuin-completions = pkgs.runCommand "atuin-completions.nu" {
     buildInputs = builtins.attrValues { inherit (pkgs.unstable) atuin; };
   } ''atuin gen-completions -s nushell > "$out"'';
+  paths = import ../paths.nix { inherit lib; };
 in
 {
   options.hm.nushell.enable = lib.mkEnableOption "Nushell";
@@ -93,6 +94,7 @@ in
           ) completionTypes;
         in
         ''
+          ${paths.hm.shell.binPaths.nushell}
           ${builtins.concatStringsSep "\n" sourceCommands}
           ${builtins.readFile ./aliases.nu}
           ${lib.optionalString config.programs.jujutsu.enable "source ${jj-completions}"}
