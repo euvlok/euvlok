@@ -1,0 +1,138 @@
+# This file lists Firefox extensions to be managed by Nix
+#
+# Format:
+# - id: Required extension slug (AMO slug) or addonId
+# - name: Optional human-readable name (for documentation)
+# - source: One of "amo", "bpc", "url", or "github-releases" (default: "amo")
+# - url: Required if source is "url"
+# - condition: Optional Nix condition expression (e.g., "config.catppuccin.enable")
+#
+# For github-releases source:
+# - owner: GitHub repository owner (required, or set in [config.sources.github-releases])
+# - repo: GitHub repository name (required, or set in [config.sources.github-releases])
+# - pattern: URL pattern with placeholders {version}, {name}, {id} (optional, or set in config)
+# - version: Specific version tag, or "latest" to auto-detect (optional, defaults to "latest")
+#
+# Example config-level defaults:
+# [config.sources.github-releases]
+# owner = "some-org"
+# repo = "some-repo"
+# pattern = "releases/download/v{version}/{name}.xpi"
+
+# --- Necessity ---
+
+[[extensions]]
+id = "darkreader"
+name = "Dark Reader"
+source = "amo"
+
+[[extensions]]
+id = "facebook-container"
+name = "Facebook Container"
+source = "amo"
+
+[[extensions]]
+id = "multi-account-containers"
+name = "Multi-Account Containers"
+source = "amo"
+
+[[extensions]]
+id = "user-agent-string-switcher"
+name = "User-Agent String Switcher"
+source = "amo"
+
+[[extensions]]
+id = "view-page-archive"
+name = "Web Archives"
+source = "amo"
+
+# --- Devtools ---
+
+[[extensions]]
+id = "angular-devtools"
+name = "Angular DevTools"
+source = "amo"
+
+[[extensions]]
+id = "react-devtools"
+name = "React Developer Tools"
+source = "amo"
+
+[[extensions]]
+id = "reduxdevtools"
+name = "Redux DevTools"
+source = "amo"
+
+[[extensions]]
+id = "vue-js-devtools"
+name = "Vue.js devtools"
+source = "amo"
+
+# --- Utilities ---
+
+[[extensions]]
+id = "youtube-no-translation"
+name = "YouTube No Translation"
+source = "amo"
+
+[[extensions]]
+id = "bitwarden-password-manager"
+name = "Bitwarden Password Manager"
+source = "amo"
+
+[[extensions]]
+id = "firefox-color"
+name = "Firefox Color"
+source = "amo"
+
+[[extensions]]
+id = "floccus"
+name = "Floccus"
+source = "amo"
+
+[[extensions]]
+id = "foxyproxy-standard"
+name = "FoxyProxy Standard"
+source = "amo"
+
+[[extensions]]
+id = "old-reddit-redirect"
+name = "Old Reddit Redirect"
+source = "amo"
+
+[[extensions]]
+id = "reddit-enhancement-suite"
+name = "Reddit Enhancement Suite"
+source = "amo"
+
+[[extensions]]
+id = "search-by-image"
+name = "Search by Image"
+source = "amo"
+
+[[extensions]]
+id = "steam-database"
+name = "SteamDB"
+source = "amo"
+
+[[extensions]]
+id = "stylus"
+name = "Stylus"
+source = "amo"
+
+[[extensions]]
+id = "tabliss"
+name = "Tabliss"
+source = "amo"
+
+[[extensions]]
+id = "translate-web-pages"
+name = "Translate Web Pages"
+source = "amo"
+
+# --- From Third-Party Sources ---
+
+[[extensions]]
+id = "magnolia@12.34"
+name = "Bypass Paywalls Clean"
+source = "bpc"

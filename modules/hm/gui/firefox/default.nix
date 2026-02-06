@@ -7,15 +7,12 @@
 }:
 let
   default = {
-    extensions.packages = builtins.attrValues {
-      inherit (inputs.firefox-addons-trivial.packages.${pkgs.stdenvNoCC.hostPlatform.system})
-        clearurls
-        violentmonkey
-        refined-github
-        sponsorblock
-        ublock-origin
-        ;
-    };
+    extensions.packages = builtins.attrValues (
+      import ./extensions.nix {
+        buildFirefoxXpiAddon = import ./firefox-addons.nix { inherit pkgs lib; };
+        inherit pkgs lib;
+      }
+    );
 
     extensions.force = true;
     search = {

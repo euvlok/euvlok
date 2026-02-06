@@ -1,7 +1,7 @@
 _: {
   imports = [
     ./chromium
-    ./firefox.nix
+    ./firefox
     ./mpv.nix
     ./nixcord.nix
     ./vscode

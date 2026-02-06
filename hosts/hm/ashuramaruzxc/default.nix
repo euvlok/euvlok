@@ -3,7 +3,7 @@ _: {
     ./aliases.nix
     ./chromium
     ./dconf.nix
-    ./firefox.nix
+    ./firefox
     ./git.nix
     ./helix.nix
     ./nixcord.nix

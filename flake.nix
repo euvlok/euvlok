@@ -19,7 +19,6 @@
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-trivial.url = "github:catppuccin/nix/v25.11";
-    firefox-addons-trivial.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -142,16 +141,16 @@
                 in
                 "${script}/bin/auto-rebase";
             };
-            chromium-extension-update = {
+            browser-extension-update = {
               type = "app";
               program =
                 let
-                  scriptFile = ./modules/scripts/chromium-extensions-update.cs;
-                  script = pkgs.writeShellScriptBin "chromium-extension" ''
+                  scriptFile = ./modules/scripts/browser-extensions-update.cs;
+                  script = pkgs.writeShellScriptBin "browser-extension" ''
                     ${pkgs.lib.getExe' pkgs.dotnetCorePackages.sdk_10_0-bin "dotnet"} run ${scriptFile} "$@"
                   '';
                 in
-                "${script}/bin/chromium-extension";
+                "${script}/bin/browser-extension";
             };
             nvidia-prefetch = {
               type = "app";
