@@ -51,55 +51,86 @@ jobs:
 
             git add hosts/ modules/
 
-            list_extensions() {
+            get_extension_details() {
               local nix_file="$1"
               [ -z "$nix_file" ] && return
-              nix eval --json --impure --expr "with import <nixpkgs> {}; map (x: x.id) (import \"$nix_file\" { inherit pkgs lib; config = { catppuccin.enable = false; }; })" 2>/dev/null | jq -r '.[]' | sort -u
+              nix eval --json --impure --expr "with import <nixpkgs> {}; import \"$nix_file\" { inherit pkgs lib; config = { catppuccin.enable = false; }; }" 2>/dev/null | jq -c '.[]' 2>/dev/null || true
+            }
+
+            extract_ext_key() {
+              local ext_json="$1"
+              echo "$ext_json" | jq -r '"\(.id)|\(.version)|\(.crxPath.url)"' 2>/dev/null
+            }
+
+            get_ext_name() {
+              local ext_json="$1"
+              echo "$ext_json" | jq -r '.id' 2>/dev/null
             }
 
             get_ext_version() {
-              local nix_file="$1" id="$2"
-              nix eval --json --impure --expr "with import <nixpkgs> {}; (builtins.head (builtins.filter (x: x.id == \"$id\") (import \"$nix_file\" { inherit pkgs lib; config = { catppuccin.enable = false; }; }))).version" 2>/dev/null | jq -r '.'
+              local ext_json="$1"
+              echo "$ext_json" | jq -r '.version' 2>/dev/null
             }
 
             analyze_file_changes() {
               local nix_file="$1" staged_content="$2" head_content="$3"
               local -a added=() removed=() updated=()
 
-              local tmp_staged tmp_head old_exts new_exts
+              local tmp_staged tmp_head
               tmp_staged=$(mktemp)
               echo "$staged_content" > "$tmp_staged"
               tmp_head=$(mktemp)
               echo "$head_content" > "$tmp_head"
 
-              old_exts=$([ -s "$tmp_head" ] && list_extensions "$tmp_head" || true)
-              new_exts=$([ -s "$tmp_staged" ] && list_extensions "$tmp_staged" || true)
+              declare -A old_entries new_entries
+
+              if [ -s "$tmp_head" ]; then
+                while IFS= read -r ext; do
+                  [ -z "$ext" ] && continue
+                  local key=$(extract_ext_key "$ext")
+                  local id=$(get_ext_name "$ext")
+                  [ -n "$key" ] && old_entries["$key"]="$ext"
+                done <<< "$(get_extension_details "$tmp_head")"
+              fi
+
+              if [ -s "$tmp_staged" ]; then
+                while IFS= read -r ext; do
+                  [ -z "$ext" ] && continue
+                  local key=$(extract_ext_key "$ext")
+                  local id=$(get_ext_name "$ext")
+                  [ -n "$key" ] && new_entries["$key"]="$ext"
+                done <<< "$(get_extension_details "$tmp_staged")"
+              fi
 
               rm -f "$tmp_staged" "$tmp_head"
 
-              while IFS= read -r ext; do
-                [ -z "$ext" ] && continue
-                if ! echo "$new_exts" | grep -qx "$ext"; then
-                  removed+=("$ext")
+              for key in "${!old_entries[@]}"; do
+                if [[ ! -v new_entries["$key"] ]]; then
+                  local id=$(get_ext_name "${old_entries[$key]}")
+                  removed+=("$id")
                 fi
-              done <<< "$old_exts"
+              done
 
-              while IFS= read -r ext; do
-                [ -z "$ext" ] && continue
-                if ! echo "$old_exts" | grep -qx "$ext"; then
-                  added+=("$ext")
+              for key in "${!new_entries[@]}"; do
+                local id=$(get_ext_name "${new_entries[$key]}")
+                if [[ ! -v old_entries["$key"] ]]; then
+                  added+=("$id")
                 elif [ -n "$head_content" ]; then
-                  local old_ver new_ver tmp_old tmp_new
-                  tmp_old=$(mktemp)
-                  tmp_new=$(mktemp)
-                  echo "$head_content" > "$tmp_old"
-                  echo "$staged_content" > "$tmp_new"
-                  old_ver=$(get_ext_version "$tmp_old" "$ext" || true)
-                  new_ver=$(get_ext_version "$tmp_new" "$ext" || true)
-                  rm -f "$tmp_old" "$tmp_new"
-                  [ "$old_ver" != "$new_ver" ] && updated+=("$ext|$old_ver|$new_ver")
+                  local old_ext="${old_entries[$key]}"
+                  local new_ext="${new_entries[$key]}"
+                  local old_ver=$(get_ext_version "$old_ext")
+                  local new_ver=$(get_ext_version "$new_ext")
+                  if [ "$old_ver" != "$new_ver" ]; then
+                    updated+=("$id|$old_ver|$new_ver")
+                  else
+                    local old_hash=$(echo "$old_ext" | jq -r '.crxPath.hash' 2>/dev/null)
+                    local new_hash=$(echo "$new_ext" | jq -r '.crxPath.hash' 2>/dev/null)
+                    if [ "$old_hash" != "$new_hash" ]; then
+                      updated+=("$id|$old_ver|${new_ver} (hash changed)")
+                    fi
+                  fi
                 fi
-              done <<< "$new_exts"
+              done
 
               local file_label
               file_label=$(basename "$(dirname "$nix_file")")
