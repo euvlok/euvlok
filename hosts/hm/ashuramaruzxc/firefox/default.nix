@@ -109,11 +109,8 @@ let
   ];
 
   defaultExtensionsList = builtins.attrValues (
-    import ./extensions.nix {
-      buildFirefoxXpiAddon = import ../../../../modules/hm/gui/firefox/firefox-addons.nix {
-        inherit pkgs lib;
-      };
-      inherit pkgs lib;
+    pkgs.callPackage ./extensions.nix {
+      buildFirefoxXpiAddon = pkgs.callPackage ../../../../modules/hm/gui/firefox/firefox-addons.nix { };
     }
   );
 in

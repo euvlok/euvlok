@@ -8,9 +8,8 @@
 let
   default = {
     extensions.packages = builtins.attrValues (
-      import ./extensions.nix {
-        buildFirefoxXpiAddon = import ./firefox-addons.nix { inherit pkgs lib; };
-        inherit pkgs lib;
+      pkgs.callPackage ./extensions.nix {
+        buildFirefoxXpiAddon = pkgs.callPackage ./firefox-addons.nix { };
       }
     );
 
