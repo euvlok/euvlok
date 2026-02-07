@@ -9,7 +9,7 @@ let
   default = {
     extensions.packages = builtins.attrValues (
       pkgs.callPackage ./extensions.nix {
-        buildFirefoxXpiAddon = pkgs.callPackage ./firefox-addons.nix { };
+        buildFirefoxXpiAddon = (pkgs.callPackage ./firefox-addons.nix { }).buildFirefoxXpiAddon;
       }
     );
 
