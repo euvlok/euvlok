@@ -12,14 +12,14 @@
 
 python3Packages.buildPythonApplication {
   pname = "yt-dlp";
-  version = "2026.02.04-unstable-2026-02-04";
+  version = "2026.02.04-unstable-2026-02-06";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "yt-dlp";
     repo = "yt-dlp";
-    rev = "442c90da3ec680037b7d94abf91ec63b2e5a9ade";
-    hash = "sha256-/HckpszbsAxT7EOkva9YWFCnV3flBWEjiI0Btf4kJAs=";
+    rev = "23c059a455acbb317b2bbe657efd59113bf4d5ac";
+    hash = "sha256-OhiR2OIfvJfDbvshpQWrmJ8EN+aeRpaimJ9+usEiPs4=";
   };
 
   doCheck = false;
