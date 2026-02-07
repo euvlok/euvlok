@@ -8,7 +8,7 @@
 }:
 {
   "clearurls" = buildFirefoxXpiAddon {
-    name = "clearurls";
+    pname = "clearurls";
     version = "1.27.3";
     addonId = "clearurls";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432106/clearurls-1.27.3.xpi";
@@ -18,17 +18,17 @@
     };
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
-    name = "magnolia@12.34";
+    pname = "magnolia@12.34";
     version = "4.2.9.6";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=5b8b5ddb964fdf20dbe856b1789acb17838b8ed7";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=efdcf42b4b680542971c4ce84a50bca9e677a75e";
     sha256 = "sha256-Jf9wYjFVxEfAGXo7qMFG28gW4pipvNuOAvqJGXKBq4s=";
     meta = with lib; {
       platforms = platforms.all;
     };
   };
   "refined-github-" = buildFirefoxXpiAddon {
-    name = "refined-github-";
+    pname = "refined-github-";
     version = "26.2.2";
     addonId = "refined-github-";
     url = "https://addons.mozilla.org/firefox/downloads/file/4682198/refined_github-26.2.2.xpi";
@@ -38,7 +38,7 @@
     };
   };
   "sponsorblock" = buildFirefoxXpiAddon {
-    name = "sponsorblock";
+    pname = "sponsorblock";
     version = "6.1.2";
     addonId = "sponsorblock";
     url = "https://addons.mozilla.org/firefox/downloads/file/4644570/sponsorblock-6.1.2.xpi";
@@ -48,7 +48,7 @@
     };
   };
   "ublock-origin" = buildFirefoxXpiAddon {
-    name = "ublock-origin";
+    pname = "ublock-origin";
     version = "1.69.0";
     addonId = "ublock-origin";
     url = "https://addons.mozilla.org/firefox/downloads/file/4675310/ublock_origin-1.69.0.xpi";
@@ -58,7 +58,7 @@
     };
   };
   "violentmonkey" = buildFirefoxXpiAddon {
-    name = "violentmonkey";
+    pname = "violentmonkey";
     version = "2.34.0";
     addonId = "violentmonkey";
     url = "https://addons.mozilla.org/firefox/downloads/file/4677263/violentmonkey-2.34.0.xpi";
