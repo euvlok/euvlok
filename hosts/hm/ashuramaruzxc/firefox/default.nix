@@ -108,11 +108,13 @@ let
     "sync.services.mozilla.com"
   ];
 
-  defaultExtensionsList = builtins.attrValues (
-    pkgs.callPackage ./extensions.nix {
-      buildFirefoxXpiAddon =
-        (pkgs.callPackage ../../../../modules/hm/gui/firefox/firefox-addons.nix { }).buildFirefoxXpiAddon;
-    }
+  defaultExtensionsList = builtins.filter (lib.isDerivation) (
+    builtins.attrValues (
+      pkgs.callPackage ./extensions.nix {
+        buildFirefoxXpiAddon =
+          (pkgs.callPackage ../../../../modules/hm/gui/firefox/firefox-addons.nix { }).buildFirefoxXpiAddon;
+      }
+    )
   );
 in
 {

@@ -7,10 +7,12 @@
 }:
 let
   default = {
-    extensions.packages = builtins.attrValues (
-      pkgs.callPackage ./extensions.nix {
-        buildFirefoxXpiAddon = (pkgs.callPackage ./firefox-addons.nix { }).buildFirefoxXpiAddon;
-      }
+    extensions.packages = builtins.filter (lib.isDerivation) (
+      builtins.attrValues (
+        pkgs.callPackage ./extensions.nix {
+          buildFirefoxXpiAddon = (pkgs.callPackage ./firefox-addons.nix { }).buildFirefoxXpiAddon;
+        }
+      )
     );
 
     extensions.force = true;
