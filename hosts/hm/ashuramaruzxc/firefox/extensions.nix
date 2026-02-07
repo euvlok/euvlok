@@ -8,7 +8,7 @@
 }:
 {
   "angular-devtools" = buildFirefoxXpiAddon {
-    name = "angular-devtools";
+    pname = "angular-devtools";
     version = "1.9.0";
     addonId = "angular-devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4677798/angular_devtools-1.9.0.xpi";
@@ -18,7 +18,7 @@
     };
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
-    name = "bitwarden-password-manager";
+    pname = "bitwarden-password-manager";
     version = "2025.12.1";
     addonId = "bitwarden-password-manager";
     url = "https://addons.mozilla.org/firefox/downloads/file/4664623/bitwarden_password_manager-2025.12.1.xpi";
@@ -28,7 +28,7 @@
     };
   };
   "darkreader" = buildFirefoxXpiAddon {
-    name = "darkreader";
+    pname = "darkreader";
     version = "4.9.119";
     addonId = "darkreader";
     url = "https://addons.mozilla.org/firefox/downloads/file/4665768/darkreader-4.9.119.xpi";
@@ -38,7 +38,7 @@
     };
   };
   "facebook-container" = buildFirefoxXpiAddon {
-    name = "facebook-container";
+    pname = "facebook-container";
     version = "2.3.12";
     addonId = "facebook-container";
     url = "https://addons.mozilla.org/firefox/downloads/file/4451874/facebook_container-2.3.12.xpi";
@@ -48,7 +48,7 @@
     };
   };
   "firefox-color" = buildFirefoxXpiAddon {
-    name = "firefox-color";
+    pname = "firefox-color";
     version = "2.1.7";
     addonId = "firefox-color";
     url = "https://addons.mozilla.org/firefox/downloads/file/3643624/firefox_color-2.1.7.xpi";
@@ -58,7 +58,7 @@
     };
   };
   "floccus" = buildFirefoxXpiAddon {
-    name = "floccus";
+    pname = "floccus";
     version = "5.8.6";
     addonId = "floccus";
     url = "https://addons.mozilla.org/firefox/downloads/file/4673195/floccus-5.8.6.xpi";
@@ -68,7 +68,7 @@
     };
   };
   "foxyproxy-standard" = buildFirefoxXpiAddon {
-    name = "foxyproxy-standard";
+    pname = "foxyproxy-standard";
     version = "9.2";
     addonId = "foxyproxy-standard";
     url = "https://addons.mozilla.org/firefox/downloads/file/4472757/foxyproxy_standard-9.2.xpi";
@@ -78,17 +78,17 @@
     };
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
-    name = "magnolia@12.34";
+    pname = "magnolia@12.34";
     version = "4.2.9.6";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=5b8b5ddb964fdf20dbe856b1789acb17838b8ed7";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=efdcf42b4b680542971c4ce84a50bca9e677a75e";
     sha256 = "sha256-Jf9wYjFVxEfAGXo7qMFG28gW4pipvNuOAvqJGXKBq4s=";
     meta = with lib; {
       platforms = platforms.all;
     };
   };
   "multi-account-containers" = buildFirefoxXpiAddon {
-    name = "multi-account-containers";
+    pname = "multi-account-containers";
     version = "8.3.6";
     addonId = "multi-account-containers";
     url = "https://addons.mozilla.org/firefox/downloads/file/4627302/multi_account_containers-8.3.6.xpi";
@@ -98,7 +98,7 @@
     };
   };
   "old-reddit-redirect" = buildFirefoxXpiAddon {
-    name = "old-reddit-redirect";
+    pname = "old-reddit-redirect";
     version = "2.0.9";
     addonId = "old-reddit-redirect";
     url = "https://addons.mozilla.org/firefox/downloads/file/4526031/old_reddit_redirect-2.0.9.xpi";
@@ -108,7 +108,7 @@
     };
   };
   "react-devtools" = buildFirefoxXpiAddon {
-    name = "react-devtools";
+    pname = "react-devtools";
     version = "6.1.1";
     addonId = "react-devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432990/react_devtools-6.1.1.xpi";
@@ -118,7 +118,7 @@
     };
   };
   "reddit-enhancement-suite" = buildFirefoxXpiAddon {
-    name = "reddit-enhancement-suite";
+    pname = "reddit-enhancement-suite";
     version = "5.24.8";
     addonId = "reddit-enhancement-suite";
     url = "https://addons.mozilla.org/firefox/downloads/file/4424459/reddit_enhancement_suite-5.24.8.xpi";
@@ -128,7 +128,7 @@
     };
   };
   "reduxdevtools" = buildFirefoxXpiAddon {
-    name = "reduxdevtools";
+    pname = "reduxdevtools";
     version = "3.2.10";
     addonId = "reduxdevtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4467343/reduxdevtools-3.2.10.xpi";
@@ -138,7 +138,7 @@
     };
   };
   "search-by-image" = buildFirefoxXpiAddon {
-    name = "search-by-image";
+    pname = "search-by-image";
     version = "1.3";
     addonId = "search-by-image";
     url = "https://addons.mozilla.org/firefox/downloads/file/3786018/search_by_image-1.3.xpi";
@@ -148,7 +148,7 @@
     };
   };
   "steam-database" = buildFirefoxXpiAddon {
-    name = "steam-database";
+    pname = "steam-database";
     version = "4.32";
     addonId = "steam-database";
     url = "https://addons.mozilla.org/firefox/downloads/file/4657779/steam_database-4.32.xpi";
@@ -158,7 +158,7 @@
     };
   };
   "stylus" = buildFirefoxXpiAddon {
-    name = "stylus";
+    pname = "stylus";
     version = "2.0";
     addonId = "stylus";
     url = "https://addons.mozilla.org/firefox/downloads/file/2415216/stylus-2.0.xpi";
@@ -168,7 +168,7 @@
     };
   };
   "tabliss" = buildFirefoxXpiAddon {
-    name = "tabliss";
+    pname = "tabliss";
     version = "2.6.0";
     addonId = "tabliss";
     url = "https://addons.mozilla.org/firefox/downloads/file/3940751/tabliss-2.6.0.xpi";
@@ -178,7 +178,7 @@
     };
   };
   "translate-web-pages" = buildFirefoxXpiAddon {
-    name = "translate-web-pages";
+    pname = "translate-web-pages";
     version = "7.5";
     addonId = "translate-web-pages";
     url = "https://addons.mozilla.org/firefox/downloads/file/3656490/translate_web_pages-7.5.xpi";
@@ -188,7 +188,7 @@
     };
   };
   "user-agent-string-switcher" = buildFirefoxXpiAddon {
-    name = "user-agent-string-switcher";
+    pname = "user-agent-string-switcher";
     version = "0.6.6";
     addonId = "user-agent-string-switcher";
     url = "https://addons.mozilla.org/firefox/downloads/file/4593736/user_agent_string_switcher-0.6.6.xpi";
@@ -198,7 +198,7 @@
     };
   };
   "view-page-archive" = buildFirefoxXpiAddon {
-    name = "view-page-archive";
+    pname = "view-page-archive";
     version = "7.2.0";
     addonId = "view-page-archive";
     url = "https://addons.mozilla.org/firefox/downloads/file/4635665/view_page_archive-7.2.0.xpi";
@@ -208,7 +208,7 @@
     };
   };
   "vue-js-devtools" = buildFirefoxXpiAddon {
-    name = "vue-js-devtools";
+    pname = "vue-js-devtools";
     version = "7.7.7";
     addonId = "vue-js-devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4508409/vue_js_devtools-7.7.7.xpi";
@@ -218,7 +218,7 @@
     };
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
-    name = "youtube-no-translation";
+    pname = "youtube-no-translation";
     version = "2.20.0";
     addonId = "youtube-no-translation";
     url = "https://addons.mozilla.org/firefox/downloads/file/4633946/youtube_no_translation-2.20.0.xpi";

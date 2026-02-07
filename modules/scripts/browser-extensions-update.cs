@@ -818,7 +818,7 @@ internal static class NixEntryGenerator
     private static string GenerateFirefoxEntry(string id, string url, string hash, string version) =>
         $$"""
           {
-            name = "{{id}}";
+            pname = "{{id}}";
             version = "{{version}}";
             addonId = "{{id}}";
             url = "{{url}}";
