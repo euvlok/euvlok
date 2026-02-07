@@ -14,7 +14,7 @@ let
     version = "1.6.1";
     addonId = "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4647055/catppuccin_web_file_icons-1.6.1.xpi";
-    sha256 = "sha256-a1ee2312bd2cb1306a38dec4b50edc55a43979d818733264dee955c6c04a7676";
+    sha256 = "sha256-oe4jEr0ssTBqON7EtQ7cVaQ5edgYczJk3ulVxsBKdnY=";
     meta = with lib; {
       homepage = "https://github.com/catppuccin/web-file-explorer-icons";
       description = "Soothing pastel icons for file explorers on the web!";
