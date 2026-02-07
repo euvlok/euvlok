@@ -110,7 +110,8 @@ let
 
   defaultExtensionsList = builtins.attrValues (
     pkgs.callPackage ./extensions.nix {
-      buildFirefoxXpiAddon = pkgs.callPackage ../../../../modules/hm/gui/firefox/firefox-addons.nix { };
+      buildFirefoxXpiAddon =
+        (pkgs.callPackage ../../../../modules/hm/gui/firefox/firefox-addons.nix { }).buildFirefoxXpiAddon;
     }
   );
 in
