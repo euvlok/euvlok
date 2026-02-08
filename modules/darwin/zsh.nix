@@ -6,9 +6,9 @@
 }:
 let
   hmConfig = config.home-manager.users.${config.system.primaryUser};
-  paths = import ../../hm/shell/paths.nix { inherit lib; };
+  paths = import ../hm/shell/paths.nix { inherit lib; };
 
-  userAliasesPath = ../../hm/${hmConfig.programs.git.settings.user.name}/aliases.nix;
+  userAliasesPath = ../../hosts/hm/${hmConfig.programs.git.settings.user.name}/aliases.nix;
   shellAliases =
     ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { }).programs.zsh.shellAliases)
     // lib.optionalAttrs (builtins.pathExists userAliasesPath) (
