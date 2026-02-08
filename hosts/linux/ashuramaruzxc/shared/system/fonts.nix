@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, lib, ... }:
 {
   fonts.packages = builtins.attrValues {
     inherit (pkgs)
@@ -47,5 +44,5 @@
       zed-mono
       ;
   };
-  fonts.fontDir.enable = true;
+  fonts.fontDir.enable = lib.mkIf pkgs.stdenvNoCC.isLinux true;
 }
