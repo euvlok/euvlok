@@ -8,7 +8,7 @@
       cleanup = "uninstall";
     };
     caskArgs = {
-      appdir = "${config.users.users.ashuramaru.home}/Applications";
+      appdir = "/Applications";
       no_quarantine = true;
       require_sha = false;
     };
@@ -21,24 +21,26 @@
       "element" # halo based department?
       ### --- Socials
       ### --- Gayming --- ###
-      "crossover" # Supporting wine project
-      "mythic" # heroic but better
-      "heroic"
-      "steam" # Gayming
-      "xemu"
-      "ppsspp-emulator"
       "cemu"
+      "crossover" # Supporting wine project
+      "heroic"
+      "mythic" # heroic but better
+      "ppsspp-emulator"
+      "steam" # Gayming
+      "wine@devel"
+      "xemu"
       ### --- Gayming --- ###
       ### --- Graphics --- ###
-      "blender"
-      "krita"
-      "kdenlive"
-      "obs"
-      "affinity-photo" # Proffessional soyjak drawing program
       "affinity-designer" # Proffessional soyjak designer program
+      "affinity-photo" # Proffessional soyjak drawing program
+      "blender"
+      "kdenlive"
+      "krita"
+      "obs"
       ### --- Graphics --- ###
       ### --- Utilities --- ###
       "forklift"
+      "gstreamer-runtime"
       "nextcloud-vfs"
       "yubico-authenticator"
       ### --- Utilities --- ###

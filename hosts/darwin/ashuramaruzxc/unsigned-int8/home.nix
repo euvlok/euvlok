@@ -24,7 +24,7 @@ let
     };
   };
 
-  ashuramaruHmConfig = [
+  hmModuleConfig = [
     inputs.self.homeModules.default
     inputs.self.homeModules.os
     inputs.self.homeConfigurations.ashuramaruzxc
@@ -47,12 +47,16 @@ let
         zellij.enable = true;
         languages = {
           cpp.enable = true;
-          csharp.enable = true;
-          csharp.version = "10";
+          csharp = {
+            enable = true;
+            version = "10";
+          };
           go.enable = true;
           haskell.enable = true;
-          java.enable = true;
-          java.version = "21";
+          java = {
+            enable = true;
+            version = "21";
+          };
           javascript.enable = true;
           kotlin.enable = true;
           lisp.enable = true;
@@ -66,14 +70,24 @@ let
     }
   ];
 
+  sopsConfig = [
+    inputs.sops-nix-trivial.homeManagerModules.sops
+    {
+      sops = {
+        age.keyFile = "$HOME/.config/sops/age/keys.txt";
+        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+      };
+    }
+  ];
+
   macosPackages = builtins.attrValues {
-    inherit (pkgs)
+    inherit (pkgs.unstable)
       alt-tab-macos
-      hidden-bar
-      rectangle
-      raycast
+      ice-bar
       iina
-      iterm2
+      raycast
+      shottr
+      stats
       ;
   };
 
@@ -83,11 +97,11 @@ let
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)
-      qbittorrent
       anki-bin
       audacity
-      # gimp
       inkscape
+      nicotine-plus
+      qbittorrent
       yubikey-manager
       ;
   };
@@ -107,35 +121,66 @@ let
 
   jetbrainsPackages =
     let
-      inherit (pkgs.jetbrains.plugins) addPlugins;
-      inherit (pkgs.jetbrains) rider clion idea;
-      commonPlugins = [
-        "better-direnv"
-        "catppuccin-icons"
-        "catppuccin-theme"
-        "csv-editor"
-        "ini"
-        "nixidea"
-        "rainbow-brackets"
-      ];
+      inherit (pkgs.unstable.jetbrains) rider clion idea;
+      # inherit (pkgs.jetbrains.plugins) addPlugins;
+      # commonPlugins = [
+      #   "better-direnv"
+      #   "catppuccin-icons"
+      #   "catppuccin-theme"
+      #   "csv-editor"
+      #   "ini"
+      #   "nixidea"
+      #   "rainbow-brackets"
+      # ];
     in
-    builtins.attrValues {
-      # riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
-      # clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
-      # ideaUltimateWithPlugins = addPlugins idea-ultimate (
-      #   commonPlugins
-      #   ++ [
-      #     "go"
-      #     "minecraft-development"
-      #     "python"
-      #     "rust"
-      #     "scala"
-      #   ]
-      # );
-    };
+    [
+      rider
+      clion
+      idea
+    ];
+  # builtins.attrValues {
+  #   riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
+  #   clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
+  #   ideaUltimateWithPlugins = addPlugins idea-ultimate (
+  #     commonPlugins ++ [ "go" "minecraft-development" "python" "rust" "scala" ]
+  #   );
+  # };
 
   allPackages =
     macosPackages ++ socialPackages ++ multimediaPackages ++ gamingPackages ++ jetbrainsPackages;
+
+  userExtras = [
+    { home.packages = allPackages; }
+    (
+      { config, ... }:
+      let
+        catppuccin-userstyles = pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+          inherit (config.catppuccin) accent flavor;
+        };
+      in
+      {
+        home.file."Documents/catppuccin-userstyles.json".source =
+          "${catppuccin-userstyles.outPath}/dist/import.json";
+      }
+    )
+    {
+      programs = {
+        btop.enable = true;
+        gitui.enable = lib.mkForce false;
+        rbw = {
+          enable = true;
+          settings = {
+            email = "ashuramaru@tenjin-dk.com";
+            base_url = "bitwarden.tenjin-dk.com";
+            lock_timeout = 600;
+            pinentry = pkgs.pinentry_mac;
+          };
+        };
+      };
+    }
+  ];
+
+  mkUserImports = commonImports ++ [ catppuccinConfig ] ++ sopsConfig ++ hmModuleConfig ++ userExtras;
 in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ];
@@ -145,49 +190,7 @@ in
     useUserPackages = true;
     backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs eulib; };
+    users.ashuramaru.imports = mkUserImports;
+    users.faputa.imports = mkUserImports;
   };
-
-  home-manager.users.ashuramaru.imports =
-    commonImports
-    ++ [
-      catppuccinConfig
-      inputs.sops-nix-trivial.homeManagerModules.sops
-      {
-        sops = {
-          age.keyFile = "$HOME/.config/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        };
-      }
-    ]
-    ++ ashuramaruHmConfig
-    ++ [
-      { home.packages = allPackages; }
-      (
-        { config, ... }:
-        let
-          catppuccin-userstyles = pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
-            inherit (config.catppuccin) accent flavor;
-          };
-        in
-        {
-          home.file."Documents/catppuccin-userstyles.json".source =
-            "${catppuccin-userstyles.outPath}/dist/import.json";
-        }
-      )
-      {
-        programs = {
-          rbw = {
-            enable = true;
-            settings = {
-              email = "ashuramaru@tenjin-dk.com";
-              base_url = "https://bitwarden.tenjin-dk.com";
-              lock_timeout = 600;
-              pinentry = pkgs.pinentry_mac;
-            };
-          };
-          btop.enable = true;
-          gitui.enable = lib.mkForce false;
-        };
-      }
-    ];
 }
