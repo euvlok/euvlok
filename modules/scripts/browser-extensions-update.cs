@@ -251,7 +251,7 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
         task?.Increment(10);
 
         var sourceHandler = new ExtensionSourceHandler(client, chromeStoreClient);
-        var (finalUrl, error) = await sourceHandler.FetchUrlAsync(ext, config, browser, browserVersion, task);
+        var (finalUrl, error, amoAddonId) = await sourceHandler.FetchUrlAsync(ext, config, browser, browserVersion, task);
 
         if (error != null)
             return new ExtensionResult(ext, error, null, null, null);
@@ -277,9 +277,19 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
         {
             var hash = await CalculateNixHashAsync(tempFile);
             task?.Increment(20);
-            var (version, permissions) = await ExtractVersionAndPermissionsAsync(tempFile);
+            var (version, permissions, manifestAddonId) = await ExtractVersionAndPermissionsAsync(tempFile);
             task?.Increment(10);
-            var nixEntry = NixEntryGenerator.Generate(ext, finalUrl, hash, version, permissions, browser);
+
+            // For Firefox: resolve the real addon ID
+            // Priority: manifest gecko ID > AMO guid > TOML slug
+            var resolvedAddonId = browser == BrowserType.Firefox
+                ? manifestAddonId ?? amoAddonId ?? ext.Id
+                : null;
+
+            if (browser == BrowserType.Firefox && resolvedAddonId != ext.Id)
+                Log.Info($"Resolved addonId for {ext.Id}: {resolvedAddonId}");
+
+            var nixEntry = NixEntryGenerator.Generate(ext, finalUrl, hash, version, permissions, browser, resolvedAddonId);
             return new ExtensionResult(ext, null, nixEntry, version, permissions);
         }
         finally { if (File.Exists(tempFile)) File.Delete(tempFile); }
@@ -321,7 +331,7 @@ async Task<string> CalculateNixHashAsync(string filePath)
 // ZIP file format: [PK\x03\x04 magic][local file header]...
 // Since CRX wraps a ZIP archive, we need to extract ZIP portion to read manifest.json
 // ZIP magic: PK\x03\x04 - Phil Katz's ZIP signature (from ZIP File Format Specification by PKWARE, Inc.)
-async Task<(string Version, string[] Permissions)> ExtractVersionAndPermissionsAsync(string extensionPath)
+async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersionAndPermissionsAsync(string extensionPath)
 {
     // CRX magic: "Cr24" - Chrome Extension file identifier
     var crxMagic = "Cr24"u8.ToArray();
@@ -391,7 +401,23 @@ async Task<(string Version, string[] Permissions)> ExtractVersionAndPermissionsA
         }
 
         var allPermissions = permissions.Concat(hostPermissions).ToArray();
-        return (version, allPermissions);
+
+        // Extract Firefox addon ID from manifest.json
+        string? addonId = null;
+        if (manifest.RootElement.TryGetProperty("browser_specific_settings", out var bss)
+            && bss.TryGetProperty("gecko", out var gecko)
+            && gecko.TryGetProperty("id", out var geckoId))
+        {
+            addonId = geckoId.GetString();
+        }
+        else if (manifest.RootElement.TryGetProperty("applications", out var apps)
+            && apps.TryGetProperty("gecko", out var geckoLegacy)
+            && geckoLegacy.TryGetProperty("id", out var geckoIdLegacy))
+        {
+            addonId = geckoIdLegacy.GetString();
+        }
+
+        return (version, allPermissions, addonId);
     }
     finally { if (zipPath != extensionPath && File.Exists(zipPath)) File.Delete(zipPath); }
 }
@@ -623,7 +649,8 @@ internal readonly record struct AmoVersion(
 );
 
 internal readonly record struct AmoAddon(
-    [property: JsonPropertyName("current_version")] AmoVersion? CurrentVersion
+    [property: JsonPropertyName("current_version")] AmoVersion? CurrentVersion,
+    [property: JsonPropertyName("guid")] string? Guid
 );
 
 [JsonSerializable(typeof(AmoFile))]
@@ -635,7 +662,7 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
 {
     private const string BpcRepo = "https://gitflic.ru/project/magnolia1234/bpc_uploads.git";
 
-    public async Task<(string? Url, string? Error)> FetchUrlAsync(
+    public async Task<(string? Url, string? Error, string? AddonId)> FetchUrlAsync(
         Extension ext,
         GithubReleaseConfig config,
         BrowserType browser,
@@ -643,16 +670,16 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         ProgressTask? task = null)
     {
         if (!browser.SupportsSource(ext.Source))
-            return (null, $"Source '{ext.Source}' is not supported for {browser} browser");
+            return (null, $"Source '{ext.Source}' is not supported for {browser} browser", null);
 
         return ext.Source switch
         {
-            ExtensionSource.ChromeStore => (await FetchChromeStoreUrlAsync(ext.Id, browserVersion, task), null),
-            ExtensionSource.Amo => (await FetchAmoUrlAsync(ext.Id), null),
-            ExtensionSource.Bpc => (await FetchBpcUrlAsync(browser), null),
-            ExtensionSource.Url => FetchUrlSource(ext),
-            ExtensionSource.GithubReleases => (await FetchGithubReleaseUrlAsync(ext, config, browser), null),
-            _ => (null, $"Unknown source '{ext.Source}'")
+            ExtensionSource.ChromeStore => (await FetchChromeStoreUrlAsync(ext.Id, browserVersion, task), null, null),
+            ExtensionSource.Amo => await FetchAmoUrlAndGuidAsync(ext.Id),
+            ExtensionSource.Bpc => (await FetchBpcUrlAsync(browser), null, null),
+            ExtensionSource.Url => (FetchUrlSource(ext).Url, FetchUrlSource(ext).Error, null),
+            ExtensionSource.GithubReleases => (await FetchGithubReleaseUrlAsync(ext, config, browser), null, null),
+            _ => (null, $"Unknown source '{ext.Source}'", null)
         };
     }
 
@@ -681,7 +708,7 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         return (int)response.StatusCode is 302 or 301 ? response.Headers.Location?.ToString() : null;
     }
 
-    private async Task<string?> FetchAmoUrlAsync(string extensionSlug)
+    private async Task<(string? Url, string? Error, string? AddonId)> FetchAmoUrlAndGuidAsync(string extensionSlug)
     {
         try
         {
@@ -694,15 +721,16 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
             var content = await response.Content.ReadAsStringAsync();
             var addon = JsonSerializer.Deserialize(content, AmoAddonContext.Default.AmoAddon);
 
-            if (addon.CurrentVersion is { File: not null })
-                return addon.CurrentVersion.Value.File?.Url;
+            var url = addon.CurrentVersion?.File?.Url;
+            var guid = addon.Guid;
+
+            return (url, null, guid);
         }
         catch (Exception ex)
         {
-            Log.Warning($"Failed to fetch AMO URL for {extensionSlug}: {ex.Message}");
+            Log.Warning($"Failed to fetch AMO data for {extensionSlug}: {ex.Message}");
+            return (null, ex.Message, null);
         }
-
-        return null;
     }
 
     private static async Task<string?> FetchBpcUrlAsync(BrowserType browser)
@@ -817,7 +845,8 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
 
 internal static class NixEntryGenerator
 {
-    public static string Generate(Extension ext, string url, string hash, string version, string[]? permissions, BrowserType browser)
+    public static string Generate(Extension ext, string url, string hash, string version,
+        string[]? permissions, BrowserType browser, string? resolvedAddonId = null)
     {
         var id = Escape(ext.Id);
         var safeUrl = Escape(url);
@@ -826,7 +855,8 @@ internal static class NixEntryGenerator
 
         return browser == BrowserType.Chromium
             ? GenerateChromiumEntry(id, safeUrl, safeHash, safeVersion)
-            : GenerateFirefoxEntry(id, safeUrl, safeHash, safeVersion, permissions);
+            : GenerateFirefoxEntry(id, safeUrl, safeHash, safeVersion, permissions,
+                Escape(resolvedAddonId ?? ext.Id));
     }
 
     private static string GenerateChromiumEntry(string id, string url, string hash, string version) =>
@@ -842,7 +872,8 @@ internal static class NixEntryGenerator
           }
           """;
 
-    private static string GenerateFirefoxEntry(string id, string url, string hash, string version, string[]? permissions)
+    private static string GenerateFirefoxEntry(string id, string url, string hash, string version,
+        string[]? permissions, string addonId)
     {
         var metaPermissions = permissions != null && permissions.Length > 0
             ? $$"""
@@ -863,7 +894,7 @@ internal static class NixEntryGenerator
           {
             pname = "{{id}}";
             version = "{{version}}";
-            addonId = "{{id}}";
+            addonId = "{{addonId}}";
             url = "{{url}}";
             sha256 = "{{hash}}";
             meta = with lib; {
