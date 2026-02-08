@@ -254,10 +254,10 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
         var (finalUrl, error) = await sourceHandler.FetchUrlAsync(ext, config, browser, browserVersion, task);
 
         if (error != null)
-            return new ExtensionResult(ext, error, null, null);
+            return new ExtensionResult(ext, error, null, null, null);
 
         if (string.IsNullOrEmpty(finalUrl))
-            return new ExtensionResult(ext, "Failed to get download URL", null, null);
+            return new ExtensionResult(ext, "Failed to get download URL", null, null, null);
 
         task?.Increment(20);
 
@@ -269,7 +269,7 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
             await using var fileStream = File.Create(tempFile);
             await stream.CopyToAsync(fileStream);
         }
-        catch (Exception ex) { return new ExtensionResult(ext, $"Failed to download: {ex.Message}", null, null); }
+        catch (Exception ex) { return new ExtensionResult(ext, $"Failed to download: {ex.Message}", null, null, null); }
 
         task?.Increment(40);
 
@@ -277,14 +277,14 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
         {
             var hash = await CalculateNixHashAsync(tempFile);
             task?.Increment(20);
-            var version = await ExtractVersionAsync(tempFile);
+            var (version, permissions) = await ExtractVersionAndPermissionsAsync(tempFile);
             task?.Increment(10);
-            var nixEntry = NixEntryGenerator.Generate(ext, finalUrl, hash, version, browser);
-            return new ExtensionResult(ext, null, nixEntry, version);
+            var nixEntry = NixEntryGenerator.Generate(ext, finalUrl, hash, version, permissions, browser);
+            return new ExtensionResult(ext, null, nixEntry, version, permissions);
         }
         finally { if (File.Exists(tempFile)) File.Delete(tempFile); }
     }
-    catch (Exception ex) { return new ExtensionResult(ext, ex.Message, null, null); }
+    catch (Exception ex) { return new ExtensionResult(ext, ex.Message, null, null, null); }
 }
 
 async Task<string> GetChromiumMajorVersionAsync(string? cachedVersion)
@@ -321,7 +321,7 @@ async Task<string> CalculateNixHashAsync(string filePath)
 // ZIP file format: [PK\x03\x04 magic][local file header]...
 // Since CRX wraps a ZIP archive, we need to extract ZIP portion to read manifest.json
 // ZIP magic: PK\x03\x04 - Phil Katz's ZIP signature (from ZIP File Format Specification by PKWARE, Inc.)
-async Task<string> ExtractVersionAsync(string extensionPath)
+async Task<(string Version, string[] Permissions)> ExtractVersionAndPermissionsAsync(string extensionPath)
 {
     // CRX magic: "Cr24" - Chrome Extension file identifier
     var crxMagic = "Cr24"u8.ToArray();
@@ -364,7 +364,34 @@ async Task<string> ExtractVersionAsync(string extensionPath)
         if (string.IsNullOrEmpty(version) && manifest.RootElement.TryGetProperty("version_name", out var vn))
             version = vn.GetString();
 
-        return version ?? throw new InvalidOperationException("Could not extract version from manifest");
+        if (string.IsNullOrEmpty(version))
+            throw new InvalidOperationException("Could not extract version from manifest");
+
+        string[] permissions = [];
+        if (manifest.RootElement.TryGetProperty("permissions", out var perms) && perms.ValueKind == JsonValueKind.Array)
+        {
+            permissions = perms.EnumerateArray()
+                .Where(p => p.ValueKind == JsonValueKind.String)
+                .Select(p => p.GetString()!)
+                .ToArray();
+        }
+
+        var hostPermissions = new List<string>();
+        if (manifest.RootElement.TryGetProperty("host_permissions", out var hostPerms) && hostPerms.ValueKind == JsonValueKind.Array)
+        {
+            hostPermissions.AddRange(hostPerms.EnumerateArray()
+                .Where(p => p.ValueKind == JsonValueKind.String)
+                .Select(p => p.GetString()!));
+        }
+        else if (manifest.RootElement.TryGetProperty("optional_permissions", out var optPerms) && optPerms.ValueKind == JsonValueKind.Array)
+        {
+            hostPermissions.AddRange(optPerms.EnumerateArray()
+                .Where(p => p.ValueKind == JsonValueKind.String && p.GetString()!.Contains('/') || p.GetString()!.Contains('*'))
+                .Select(p => p.GetString()!));
+        }
+
+        var allPermissions = permissions.Concat(hostPermissions).ToArray();
+        return (version, allPermissions);
     }
     finally { if (zipPath != extensionPath && File.Exists(zipPath)) File.Delete(zipPath); }
 }
@@ -577,7 +604,7 @@ internal readonly record struct Extension(
 
 internal readonly record struct GithubReleaseConfig(string? Owner, string? Repo, string? Pattern);
 
-internal readonly record struct ExtensionResult(Extension Extension, string? Error, string? NixEntry, string? Version);
+internal readonly record struct ExtensionResult(Extension Extension, string? Error, string? NixEntry, string? Version, string[]? Permissions);
 
 internal readonly record struct GitHubRelease(
     [property: JsonPropertyName("tag_name")] string? TagName,
@@ -790,7 +817,7 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
 
 internal static class NixEntryGenerator
 {
-    public static string Generate(Extension ext, string url, string hash, string version, BrowserType browser)
+    public static string Generate(Extension ext, string url, string hash, string version, string[]? permissions, BrowserType browser)
     {
         var id = Escape(ext.Id);
         var safeUrl = Escape(url);
@@ -799,7 +826,7 @@ internal static class NixEntryGenerator
 
         return browser == BrowserType.Chromium
             ? GenerateChromiumEntry(id, safeUrl, safeHash, safeVersion)
-            : GenerateFirefoxEntry(id, safeUrl, safeHash, safeVersion);
+            : GenerateFirefoxEntry(id, safeUrl, safeHash, safeVersion, permissions);
     }
 
     private static string GenerateChromiumEntry(string id, string url, string hash, string version) =>
@@ -815,8 +842,24 @@ internal static class NixEntryGenerator
           }
           """;
 
-    private static string GenerateFirefoxEntry(string id, string url, string hash, string version) =>
-        $$"""
+    private static string GenerateFirefoxEntry(string id, string url, string hash, string version, string[]? permissions)
+    {
+        var metaPermissions = permissions != null && permissions.Length > 0
+            ? $$"""
+              mozPermissions = [
+                {{string.Join('\n', permissions.Select(p => $"        \"{Escape(p)}\"").ToArray())}}
+              ]
+              """
+            : "";
+
+        var metaContent = string.IsNullOrEmpty(metaPermissions)
+            ? "platforms = platforms.all;"
+            : $$"""
+              platforms = platforms.all;
+              {{metaPermissions.Trim()}};
+              """;
+
+        return $$"""
           {
             pname = "{{id}}";
             version = "{{version}}";
@@ -824,13 +867,14 @@ internal static class NixEntryGenerator
             url = "{{url}}";
             sha256 = "{{hash}}";
             meta = with lib; {
-              platforms = platforms.all;
+              {{metaContent.Trim()}}
             };
           }
           """;
+    }
 
     public static string Escape(string s) =>
-        s.Replace("\\", @"\\").Replace("\"", "\\\"").Replace("$", "\\$");
+        s.Replace("\\", @"\\").Replace("\"", "\\\"").Replace("$", "\\$").Replace("[", "[[").Replace("]", "]]");
 }
 
 internal static class Icons
@@ -879,5 +923,5 @@ internal static class Log
     }
 
     private static string Escape(string s) =>
-        s.Replace("[", "[[").Replace("]", "]]]");
+        s.Replace("\\", @"\\").Replace("[", "[[").Replace("]", "]]");
 }
