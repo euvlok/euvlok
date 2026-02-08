@@ -10,7 +10,7 @@
   "clearurls" = buildFirefoxXpiAddon {
     pname = "clearurls";
     version = "1.27.3";
-    addonId = "clearurls";
+    addonId = "{74145f27-f039-47ce-a470-a662b129930a}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432106/clearurls-1.27.3.xpi";
     sha256 = "sha256-VJJrbkJ01ZNaX8DapjIPHTcePS8aWHdGfKOrIqZcTyA=";
     meta = with lib; {
@@ -1006,7 +1006,7 @@
   "refined-github-" = buildFirefoxXpiAddon {
     pname = "refined-github-";
     version = "26.2.2";
-    addonId = "refined-github-";
+    addonId = "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4682198/refined_github-26.2.2.xpi";
     sha256 = "sha256-Ag8ECpc7cA26yfrmYRrRtRargNRuMOKWt0qB4PFL2fQ=";
     meta = with lib; {
@@ -1025,7 +1025,7 @@
   "sponsorblock" = buildFirefoxXpiAddon {
     pname = "sponsorblock";
     version = "6.1.2";
-    addonId = "sponsorblock";
+    addonId = "sponsorBlocker@ajay.app";
     url = "https://addons.mozilla.org/firefox/downloads/file/4644570/sponsorblock-6.1.2.xpi";
     sha256 = "sha256-WY9myetrurK9X4c3a2MqWGD0QtNpTiM2EPWzf4tuPxA=";
     meta = with lib; {
@@ -1042,7 +1042,7 @@
   "ublock-origin" = buildFirefoxXpiAddon {
     pname = "ublock-origin";
     version = "1.69.0";
-    addonId = "ublock-origin";
+    addonId = "uBlock0@raymondhill.net";
     url = "https://addons.mozilla.org/firefox/downloads/file/4675310/ublock_origin-1.69.0.xpi";
     sha256 = "sha256-eFvN5ool+qiglJlk7F/+m9y4XT8K4hwj9gfGyPkUcs8=";
     meta = with lib; {
@@ -1065,7 +1065,7 @@
   "violentmonkey" = buildFirefoxXpiAddon {
     pname = "violentmonkey";
     version = "2.34.0";
-    addonId = "violentmonkey";
+    addonId = "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4677263/violentmonkey-2.34.0.xpi";
     sha256 = "sha256-rFjrJ5Z2Xac9tXGpSRNSrLuCh7dszZ4jdWEjZKTNVHM=";
     meta = with lib; {

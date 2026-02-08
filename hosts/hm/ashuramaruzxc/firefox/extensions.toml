@@ -106,7 +106,7 @@ name = "Reddit Enhancement Suite"
 source = "amo"
 
 [[extensions]]
-id = "search-by-image"
+id = "search_by_image"
 name = "Search by Image"
 source = "amo"
 
@@ -116,7 +116,7 @@ name = "SteamDB"
 source = "amo"
 
 [[extensions]]
-id = "stylus"
+id = "styl-us"
 name = "Stylus"
 source = "amo"
 
