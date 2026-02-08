@@ -10,7 +10,7 @@
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
     version = "1.9.0";
-    addonId = "angular-devtools";
+    addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4677798/angular_devtools-1.9.0.xpi";
     sha256 = "sha256-qZ6jSPkMhARpdjhpDPfrpQiH3oGsei3xF0w//3+EXpg=";
     meta = with lib; {
@@ -27,7 +27,7 @@
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
     version = "2025.12.1";
-    addonId = "bitwarden-password-manager";
+    addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4664623/bitwarden_password_manager-2025.12.1.xpi";
     sha256 = "sha256-p6Ej7uTkD92K98DGckNzHdzDeuFJjPKCiZX0kFYAxR8=";
     meta = with lib; {
@@ -53,7 +53,7 @@
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
     version = "4.9.119";
-    addonId = "darkreader";
+    addonId = "addon@darkreader.org";
     url = "https://addons.mozilla.org/firefox/downloads/file/4665768/darkreader-4.9.119.xpi";
     sha256 = "sha256-JhpCLy/Pg+4yCseigJ2Sa4Y3+63s6KV1i4Jb0GApRL4=";
     meta = with lib; {
@@ -71,7 +71,7 @@
   "facebook-container" = buildFirefoxXpiAddon {
     pname = "facebook-container";
     version = "2.3.12";
-    addonId = "facebook-container";
+    addonId = "@contain-facebook";
     url = "https://addons.mozilla.org/firefox/downloads/file/4451874/facebook_container-2.3.12.xpi";
     sha256 = "sha256-M2m9hlh3hg5tfTg5nVkCswDT1XN6yy0TQv9b6x03gME=";
     meta = with lib; {
@@ -92,7 +92,7 @@
   "firefox-color" = buildFirefoxXpiAddon {
     pname = "firefox-color";
     version = "2.1.7";
-    addonId = "firefox-color";
+    addonId = "FirefoxColor@mozilla.com";
     url = "https://addons.mozilla.org/firefox/downloads/file/3643624/firefox_color-2.1.7.xpi";
     sha256 = "sha256-t/sHtniPcjPdYiPngOGJtMe5VsJcQEk8KNcCBJMkkpI=";
     meta = with lib; {
@@ -107,7 +107,7 @@
   "floccus" = buildFirefoxXpiAddon {
     pname = "floccus";
     version = "5.8.6";
-    addonId = "floccus";
+    addonId = "floccus@handmadeideas.org";
     url = "https://addons.mozilla.org/firefox/downloads/file/4673195/floccus-5.8.6.xpi";
     sha256 = "sha256-UqczO5pJhN9l0K1LDE0myDL/9JJbPEKKmU9rF76gPPM=";
     meta = with lib; {
@@ -127,7 +127,7 @@
   "foxyproxy-standard" = buildFirefoxXpiAddon {
     pname = "foxyproxy-standard";
     version = "9.2";
-    addonId = "foxyproxy-standard";
+    addonId = "foxyproxy@eric.h.jung";
     url = "https://addons.mozilla.org/firefox/downloads/file/4472757/foxyproxy_standard-9.2.xpi";
     sha256 = "sha256-jbHGR5mmD3Eh1Rpun2sEGHFZg0SSfJWv6DDCeIDwiF0=";
     meta = with lib; {
@@ -1123,7 +1123,7 @@
   "multi-account-containers" = buildFirefoxXpiAddon {
     pname = "multi-account-containers";
     version = "8.3.6";
-    addonId = "multi-account-containers";
+    addonId = "@testpilot-containers";
     url = "https://addons.mozilla.org/firefox/downloads/file/4627302/multi_account_containers-8.3.6.xpi";
     sha256 = "sha256-vz3jW4RL7PFmRJ8dkn+ZSiq6+4/Ezod+ynqMbNEk00o=";
     meta = with lib; {
@@ -1148,7 +1148,7 @@
   "old-reddit-redirect" = buildFirefoxXpiAddon {
     pname = "old-reddit-redirect";
     version = "2.0.9";
-    addonId = "old-reddit-redirect";
+    addonId = "{9063c2e9-e07c-4c2c-9646-cfe7ca8d0498}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4526031/old_reddit_redirect-2.0.9.xpi";
     sha256 = "sha256-kedVS4W3kgH3LBdfbl9vSTszMO6DO4KJ+2QX2ZGt1Qo=";
     meta = with lib; {
@@ -1168,7 +1168,7 @@
   "react-devtools" = buildFirefoxXpiAddon {
     pname = "react-devtools";
     version = "6.1.1";
-    addonId = "react-devtools";
+    addonId = "@react-devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432990/react_devtools-6.1.1.xpi";
     sha256 = "sha256-staeIgQCvWuLx9gzlIkVsdbcq7RTodUIcqPbhg/ZLEY=";
     meta = with lib; {
@@ -1185,7 +1185,7 @@
   "reddit-enhancement-suite" = buildFirefoxXpiAddon {
     pname = "reddit-enhancement-suite";
     version = "5.24.8";
-    addonId = "reddit-enhancement-suite";
+    addonId = "jid1-xUfzOsOFlzSOXg@jetpack";
     url = "https://addons.mozilla.org/firefox/downloads/file/4424459/reddit_enhancement_suite-5.24.8.xpi";
     sha256 = "sha256-FYQFxQcEos0rxXwmipW0Hay6UJtw1x1uooCwQhW7h3M=";
     meta = with lib; {
@@ -1215,7 +1215,7 @@
   "reduxdevtools" = buildFirefoxXpiAddon {
     pname = "reduxdevtools";
     version = "3.2.10";
-    addonId = "reduxdevtools";
+    addonId = "extension@redux.devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4467343/reduxdevtools-3.2.10.xpi";
     sha256 = "sha256-7ysQoryLDRqETRRuPur/QH6qpjzQVk246v2HDIeoiVY=";
     meta = with lib; {
@@ -1231,25 +1231,33 @@
       ];
     };
   };
-  "search-by-image" = buildFirefoxXpiAddon {
-    pname = "search-by-image";
-    version = "1.3";
-    addonId = "search-by-image";
-    url = "https://addons.mozilla.org/firefox/downloads/file/3786018/search_by_image-1.3.xpi";
-    sha256 = "sha256-zXAOAKxOGbYP979IKVOAgrOjpor/Ct5qnx7Dzcs8M9I=";
+  "search_by_image" = buildFirefoxXpiAddon {
+    pname = "search_by_image";
+    version = "8.4.0";
+    addonId = "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4634627/search_by_image-8.4.0.xpi";
+    sha256 = "sha256-1wGohps782CE7DePiZAcr+y8QSZ+gfKpjRsZE38UG5I=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
+        "alarms"
         "contextMenus"
         "storage"
+        "unlimitedStorage"
+        "tabs"
+        "activeTab"
+        "notifications"
+        "webRequest"
+        "webRequestBlocking"
         "<all_urls>"
+        "scripting"
       ];
     };
   };
   "steam-database" = buildFirefoxXpiAddon {
     pname = "steam-database";
     version = "4.32";
-    addonId = "steam-database";
+    addonId = "firefox-extension@steamdb.info";
     url = "https://addons.mozilla.org/firefox/downloads/file/4657779/steam_database-4.32.xpi";
     sha256 = "sha256-ibK4EuD0tY00qvLtj6mhhoQtbJ3wY2Q3+Ur/TS4JgEw=";
     meta = with lib; {
@@ -1262,20 +1270,31 @@
       ];
     };
   };
-  "stylus" = buildFirefoxXpiAddon {
-    pname = "stylus";
-    version = "2.0";
-    addonId = "stylus";
-    url = "https://addons.mozilla.org/firefox/downloads/file/2415216/stylus-2.0.xpi";
-    sha256 = "sha256-0f1TXaJ9/jY1plToRQprBdiD+mwsvtvrL0iKA0xDE7U=";
+  "styl-us" = buildFirefoxXpiAddon {
+    pname = "styl-us";
+    version = "2.3.19";
+    addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4661054/styl_us-2.3.19_qtD9vir.xpi";
+    sha256 = "sha256-/tl9m4y4eT0bH5XJWr+vdmA3fAunHUnsSP/T1nb2avE=";
     meta = with lib; {
       platforms = platforms.all;
+      mozPermissions = [
+        "alarms"
+        "contextMenus"
+        "storage"
+        "tabs"
+        "unlimitedStorage"
+        "webNavigation"
+        "webRequest"
+        "webRequestBlocking"
+        "<all_urls>"
+      ];
     };
   };
   "tabliss" = buildFirefoxXpiAddon {
     pname = "tabliss";
     version = "2.6.0";
-    addonId = "tabliss";
+    addonId = "extension@tabliss.io";
     url = "https://addons.mozilla.org/firefox/downloads/file/3940751/tabliss-2.6.0.xpi";
     sha256 = "sha256-3nZoEPI0scE//bcEeubL8G7XnD0ItRoH5HZvrf8InA8=";
     meta = with lib; {
@@ -1288,7 +1307,7 @@
   "translate-web-pages" = buildFirefoxXpiAddon {
     pname = "translate-web-pages";
     version = "7.5";
-    addonId = "translate-web-pages";
+    addonId = "{d3a88b28-681e-43b6-ac3d-22f92ba18818}";
     url = "https://addons.mozilla.org/firefox/downloads/file/3656490/translate_web_pages-7.5.xpi";
     sha256 = "sha256-ENWrAcTpe9zxIoYlRYoF/kVHtZ1upBjeDuZHy3Gn6Nk=";
     meta = with lib; {
@@ -1304,7 +1323,7 @@
   "user-agent-string-switcher" = buildFirefoxXpiAddon {
     pname = "user-agent-string-switcher";
     version = "0.6.6";
-    addonId = "user-agent-string-switcher";
+    addonId = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4593736/user_agent_string_switcher-0.6.6.xpi";
     sha256 = "sha256-nB/uKb2JpyH3r412qZeqytAn1PKxQc2wQ+6QJ7iWdZk=";
     meta = with lib; {
@@ -1321,7 +1340,7 @@
   "view-page-archive" = buildFirefoxXpiAddon {
     pname = "view-page-archive";
     version = "7.2.0";
-    addonId = "view-page-archive";
+    addonId = "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4635665/view_page_archive-7.2.0.xpi";
     sha256 = "sha256-4jTX0ihjiBs2dvVoUwZgJEO+pDLCCvdhlZRU8Wlud5s=";
     meta = with lib; {
@@ -1343,7 +1362,7 @@
   "vue-js-devtools" = buildFirefoxXpiAddon {
     pname = "vue-js-devtools";
     version = "7.7.7";
-    addonId = "vue-js-devtools";
+    addonId = "{5caff8cc-3d2e-4110-a88a-003cc85b3858}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4508409/vue_js_devtools-7.7.7.xpi";
     sha256 = "sha256-VnLNDTKY+lfy9R5GRAEeQVLm4pH28zhgFJXdgDczEWk=";
     meta = with lib; {
@@ -1356,7 +1375,7 @@
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
     version = "2.20.0";
-    addonId = "youtube-no-translation";
+    addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4633946/youtube_no_translation-2.20.0.xpi";
     sha256 = "sha256-KY8CRp2GBrlPLl/S4jBU6XOeoW9WxqhRDO/CCd6VNxw=";
     meta = with lib; {
