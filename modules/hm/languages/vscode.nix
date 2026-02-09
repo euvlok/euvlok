@@ -11,6 +11,7 @@ let
     ) [ "vadimcn.vscode-lldb" ])
     ++ lib.optionals config.hm.languages.csharp.enable [
       "ms-dotnettools.csharp"
+      "ms-dotnettools.csdevkit"
       "ms-dotnettools.vscode-dotnet-runtime"
     ]
     ++ lib.optionals config.hm.languages.cpp.enable [

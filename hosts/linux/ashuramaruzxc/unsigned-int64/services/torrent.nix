@@ -28,6 +28,9 @@
       rpc-whitelist = "172.16.31.*";
       rpc-host-whitelist-enabled = true;
       rpc-host-whitelist = "*";
+      dht-enabled = false;
+      pex-enabled = false;
+      lpd-enabled = false;
     };
     webHome = pkgs.flood-for-transmission;
   };

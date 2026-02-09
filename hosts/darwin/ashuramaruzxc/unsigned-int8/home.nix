@@ -41,12 +41,12 @@ let
         mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
-        nushell.enable = true;
+        # nushell.enable = true;
         vscode.enable = true;
         zed-editor.enable = true;
         zellij.enable = true;
         languages = {
-          cpp.enable = true;
+          # cpp.enable = true;
           csharp = {
             enable = true;
             version = "10";
@@ -104,14 +104,16 @@ let
       qbittorrent
       yubikey-manager
       ;
+    helium-browser = pkgs.callPackage ../../../../pkgs/helium-browser.nix { };
   };
 
   gamingPackages = builtins.attrValues {
-    inherit (pkgs)
-      winetricks
-      ryubing
-      prismlauncher
+    inherit (pkgs.unstable)
       chiaki
+      prismlauncher
+      ryubing
+      winetricks
+      xemu
       ;
     inherit (pkgs.jetbrains) dataspell datagrip;
     pcsx2-bin = pkgs.pcsx2-bin.overrideAttrs (oldAttrs: {

@@ -23,6 +23,7 @@
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
+    nix-homebrew-trivial.url = "github:zhaofengli/nix-homebrew";
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode-trivial.url = "github:nix-community/nix4vscode";
     nixos-vscode-server-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -70,6 +71,20 @@
     pre-commit-hooks.inputs.flake-compat.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+
+    # Misc / Non Flakes sources(Trivial)
+    homebrew-core-trivial = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask-trivial = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    }; 
+    homebrew-crc-trivial = {
+      url = "github:cfergeau/homebrew-crc";
+      flake = false;
+    };
   };
 
   outputs =
