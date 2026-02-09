@@ -12,23 +12,17 @@
       no_quarantine = true;
       require_sha = false;
     };
-    taps = [
-      "cfergeau/crc"
-    ];
     casks = [
       ### --- Socials --- ###
       "telegram" # telegram swift client
       "element" # halo based department?
       ### --- Socials
-      ### --- Gayming --- ###
       "cemu"
-      "crossover" # Supporting wine project
-      "heroic"
-      "mythic" # heroic but better
       "ppsspp-emulator"
+      ### --- Gayming --- ###
+      "crossover" # Supporting wine project
       "steam" # Gayming
       "wine@devel"
-      "xemu"
       ### --- Gayming --- ###
       ### --- Graphics --- ###
       "affinity-designer" # Proffessional soyjak designer program
@@ -44,6 +38,9 @@
       "nextcloud-vfs"
       "yubico-authenticator"
       ### --- Utilities --- ###
+      # Bro i need working widevine 😭
+      "brave-browser"
     ];
+    taps = builtins.attrNames config.nix-homebrew.taps;
   };
 }
