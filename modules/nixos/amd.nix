@@ -22,7 +22,7 @@
             rocmEnv = pkgs.symlinkJoin {
               name = "rocm-combined";
               paths = builtins.attrValues {
-                inherit (pkgs.rocmPackages) rocblashipblasclr;
+                inherit (pkgs.rocmPackages) rocblas hipblas clr;
               };
             };
           in
