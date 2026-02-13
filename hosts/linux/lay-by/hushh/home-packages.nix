@@ -33,6 +33,7 @@
       nil
       devenv
       nix-search
+      nodejs
       # Misc productivity
       grim
       swappy
@@ -65,6 +66,7 @@
       nmap
       ghidra
       scanmem
+      keepassxc
       ;
     inherit (pkgs.unstable.kdePackages)
       kalgebra
