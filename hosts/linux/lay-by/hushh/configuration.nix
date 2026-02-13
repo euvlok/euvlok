@@ -6,6 +6,7 @@
     ./packages.nix
     ./programs.nix
     ./services.nix
+    ./slsk.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
