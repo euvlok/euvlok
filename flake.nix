@@ -3,6 +3,8 @@
 
   inputs = {
     # --- Shared ---
+    eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    eupkgs.url = "github:euvlok/pkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
@@ -80,7 +82,7 @@
     homebrew-cask-trivial = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
-    }; 
+    };
     homebrew-crc-trivial = {
       url = "github:cfergeau/homebrew-crc";
       flake = false;

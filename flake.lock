@@ -416,6 +416,26 @@
         "type": "github"
       }
     },
+    "eupkgs": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable-small"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771202585,
+        "narHash": "sha256-PLWRlh7D2ZanrOia5tFhejPyxfyJ4/sh+eQAatZ1T38=",
+        "owner": "euvlok",
+        "repo": "pkgs",
+        "rev": "e71258a15bb4ff7bfc55dcfaa2ae1f82387a81ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "euvlok",
+        "repo": "pkgs",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -1866,6 +1886,7 @@
         "devenv": "devenv_2",
         "dis-source": "dis-source",
         "disko-rpi": "disko-rpi",
+        "eupkgs": "eupkgs",
         "flake-parts": "flake-parts_5",
         "flake-utils": "flake-utils_2",
         "flatpak-declerative-trivial": "flatpak-declerative-trivial",

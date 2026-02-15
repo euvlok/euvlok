@@ -80,12 +80,15 @@ let
         ffmpeg_8-full
         imagemagick
         mediainfo
-        yt-dlp
         ;
 
-      inherit (pkgs) yt-dlp-script;
+      # Media
+      inherit (pkgs.eupkgs)
+        yt-dlp
+        yt-dlp-script
+        ;
 
-      # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.
+      # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.)
       inherit (pkgs.unstable) hyperfine tokei;
     }
   );
