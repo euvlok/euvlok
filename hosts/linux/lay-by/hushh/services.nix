@@ -25,7 +25,7 @@ _: {
 
     syncthing = {
       enable = true;
-      folders = {
+      settings.folders = {
         "Music" = {
           path = "/media/HDD/music";
         };

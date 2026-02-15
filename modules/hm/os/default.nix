@@ -1,15 +1,12 @@
 {
   lib,
   inputs,
-  osConfig,
+  osClass,
   ...
 }:
-let
-  isLinux = osConfig.nixpkgs.hostPlatform.isLinux;
-in
 {
   imports = [
     inputs.catppuccin-trivial.homeModules.catppuccin
   ]
-  ++ lib.optionals isLinux [ ./firefox.nix ];
+  ++ lib.optionals (osClass == "nixos") [ ./firefox.nix ];
 }
