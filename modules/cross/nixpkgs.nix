@@ -7,17 +7,18 @@
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
+    inputs.niri-flake-trivial.overlays.niri
+    inputs.nix4vscode-trivial.overlays.default
+  ]
+  ++ [
     (final: prev: {
       unstable = import inputs.nixpkgs-unstable-small {
         inherit (prev.stdenv.hostPlatform) system;
-        config = config.nixpkgs.config;
+        inherit (config.nixpkgs) config;
       };
     })
-    inputs.niri-flake-trivial.overlays.niri
-    inputs.nix4vscode-trivial.overlays.default
     (final: prev: {
-      yt-dlp = final.callPackage ../../pkgs/yt-dlp.nix { };
-      yt-dlp-script = final.callPackage ../../pkgs/yt-dlp-script.nix { };
+      eupkgs = inputs.eupkgs.legacyPackages.${prev.stdenv.hostPlatform.system};
     })
   ];
 }

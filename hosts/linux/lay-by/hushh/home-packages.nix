@@ -11,6 +11,8 @@
       hyprshot
       hyprcursor
       htop
+      ;
+    inherit (pkgs.unstable)
       # Gaming
       protontricks
       libnvidia-container
@@ -19,6 +21,8 @@
       winetricks
       r2modman
       prismlauncher
+      ;
+    inherit (pkgs.unstable)
       # Development
       gnumake
       nixfmt
@@ -34,6 +38,8 @@
       devenv
       nix-search
       nodejs
+      ;
+    inherit (pkgs.unstable)
       # Misc productivity
       grim
       swappy
@@ -43,17 +49,17 @@
       thunderbird-bin
       libreoffice
       p7zip
-      #_7zz
+      # _7zz
       file
       wlsunset
       killall
       piper
-
+      ;
+    inherit (pkgs.unstable)
       # Media
-      #davinci-resolve
-      #blender
+      # davinci-resolve
+      # blender
       playerctl
-      yt-dlp
       deluge-gtk
       slsk-batchdl
       nicotine-plus
@@ -62,6 +68,8 @@
       gimp
       evince
       alsa-utils
+      ;
+    inherit (pkgs.unstable)
       # Security
       nmap
       ghidra

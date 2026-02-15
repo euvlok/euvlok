@@ -104,7 +104,7 @@ let
       qbittorrent
       yubikey-manager
       ;
-    helium-browser = pkgs.callPackage ../../../../pkgs/helium-browser.nix { };
+    inherit (pkgs.eupkgs) helium-browser;
   };
 
   gamingPackages = builtins.attrValues {
@@ -156,13 +156,13 @@ let
     (
       { config, ... }:
       let
-        catppuccin-userstyles = pkgs.callPackage ../../../../pkgs/catppuccin-userstyles.nix {
+        catppuccin-userstyles = pkgs.eupkgs.catppuccin-userstyles {
           inherit (config.catppuccin) accent flavor;
         };
       in
       {
         home.file."Documents/catppuccin-userstyles.json".source =
-          "${catppuccin-userstyles.outPath}/dist/import.json";
+          "${catppuccin-userstyles}/dist/import.json";
       }
     )
     {
