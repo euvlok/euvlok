@@ -1,5 +1,6 @@
 _: {
   imports = [
+    ./nixpkgs.nix
     ./catppuccin.nix
     ./cli
     ./gui
