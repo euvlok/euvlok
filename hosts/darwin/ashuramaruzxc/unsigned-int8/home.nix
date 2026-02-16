@@ -153,18 +153,6 @@ let
 
   userExtras = [
     { home.packages = allPackages; }
-    (
-      { config, ... }:
-      let
-        catppuccin-userstyles = pkgs.eupkgs.catppuccin-userstyles {
-          inherit (config.catppuccin) accent flavor;
-        };
-      in
-      {
-        home.file."Documents/catppuccin-userstyles.json".source =
-          "${catppuccin-userstyles}/dist/import.json";
-      }
-    )
     {
       programs = {
         btop.enable = true;

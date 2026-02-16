@@ -36,11 +36,6 @@
             flavor = "frappe";
             accent = "blue";
           };
-          home.file."Documents/development/catppuccin/catppuccin-userstyles.json".source = "${
-            pkgs.eupkgs.catppuccin-userstyles {
-              inherit (config.catppuccin) accent flavor;
-            }
-          }/dist/import.json";
         }
       ]
       ++ [
