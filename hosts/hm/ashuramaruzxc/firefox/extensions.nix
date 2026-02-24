@@ -26,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2025.12.1";
+    version = "2026.1.1";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4664623/bitwarden_password_manager-2025.12.1.xpi";
-    sha256 = "sha256-p6Ej7uTkD92K98DGckNzHdzDeuFJjPKCiZX0kFYAxR8=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4698131/bitwarden_password_manager-2026.1.1.xpi";
+    sha256 = "sha256-YUOvXWHZUCH83Wk5q4wY+VNfd1yA1LafddHSOPga40c=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -52,10 +52,10 @@
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.119";
+    version = "4.9.120";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4665768/darkreader-4.9.119.xpi";
-    sha256 = "sha256-JhpCLy/Pg+4yCseigJ2Sa4Y3+63s6KV1i4Jb0GApRL4=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4690081/darkreader-4.9.120.xpi";
+    sha256 = "sha256-SWv1oOSk0mImUo7M4K4FHuPyMVPuSNUE1R8PIq+vD90=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.2.9.6";
+    version = "4.3.1.4";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=efdcf42b4b680542971c4ce84a50bca9e677a75e";
-    sha256 = "sha256-Jf9wYjFVxEfAGXo7qMFG28gW4pipvNuOAvqJGXKBq4s=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4e808e7c74b40e94b8415970916cdf46f2ace962";
+    sha256 = "sha256-IY9Ifj2Oc07i/bxRaylOza5LrWvoRAcYd+0qaBz9Fog=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -217,7 +217,6 @@
         "*://*.bbc.com/*"
         "*://*.bd.nl/*"
         "*://*.beleggersbelangen.nl/*"
-        "*://*.belfasttelegraph.co.uk/*"
         "*://*.bendigoadvertiser.com.au/*"
         "*://*.benzinga.com/*"
         "*://*.beobachter.ch/*"
@@ -269,6 +268,7 @@
         "*://*.capital.bg/*"
         "*://*.capital.fr/*"
         "*://*.capitalgazette.com/*"
+        "*://*.caravanmagazine.in/*"
         "*://*.cartacapital.com.br/*"
         "*://*.causeur.fr/*"
         "*://*.cen.acs.org/*"
@@ -333,6 +333,7 @@
         "*://*.dailytelegraph.com.au/*"
         "*://*.dailywire.com/*"
         "*://*.dallasnews.com/*"
+        "*://*.daytondailynews.com/*"
         "*://*.decanter.com/*"
         "*://*.defector.com/*"
         "*://*.delish.com/*"
@@ -432,6 +433,7 @@
         "*://*.fmrmagazine.com/*"
         "*://*.fnlondon.com/*"
         "*://*.focusplus.de/*"
+        "*://*.fokus.se/*"
         "*://*.forbes.com.au/*"
         "*://*.forbes.com/*"
         "*://*.forbes.pl/*"
@@ -688,6 +690,7 @@
         "*://*.motorsportmagazine.com/*"
         "*://*.moustique.be/*"
         "*://*.mundodeportivo.com/*"
+        "*://*.musicomh.com/*"
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
         "*://*.nationalgeographic.com/*"
@@ -709,6 +712,7 @@
         "*://*.newsweek.com/*"
         "*://*.newsweek.pl/*"
         "*://*.newyorker.com/*"
+        "*://*.next.ink/*"
         "*://*.nhregister.com/*"
         "*://*.niagarafallsreview.ca/*"
         "*://*.nicematin.com/*"
@@ -776,7 +780,6 @@
         "*://*.philosophynow.org/*"
         "*://*.pilotonline.com/*"
         "*://*.pionline.com/*"
-        "*://*.piqd.de/*"
         "*://*.piratewires.com/*"
         "*://*.pitchfork.com/*"
         "*://*.plasticsnews.com/*"
@@ -867,6 +870,7 @@
         "*://*.spektrum.de/*"
         "*://*.spglobal.com/*"
         "*://*.spiegel.de/*"
+        "*://*.spokesman.com/*"
         "*://*.sportico.com/*"
         "*://*.springermedizin.de/*"
         "*://*.standaard.be/*"
@@ -915,6 +919,7 @@
         "*://*.texasmonthly.com/*"
         "*://*.the-american-interest.com/*"
         "*://*.the-independent.com/*"
+        "*://*.the-past.com/*"
         "*://*.the-scientist.com/*"
         "*://*.the-star.co.ke/*"
         "*://*.the-tls.com/*"
@@ -1060,6 +1065,7 @@
         "*://*.zeit.de/*"
         "*://*.amplitude.com/*"
         "*://*.ampproject.org/*"
+        "*://*.arc-cdn.net/*"
         "*://*.axate.io/*"
         "*://*.blueconic.net/*"
         "*://*.cxense.com/*"
@@ -1087,6 +1093,7 @@
         "*://*.cedscdn.it/*"
         "*://*.cedsdigital.it/*"
         "*://*.corriereobjects.it/*"
+        "*://*.coxohio.com/*"
         "*://*.danzz.ch/*"
         "*://*.emol.cl/*"
         "*://*.epochbase.com/*"
@@ -1233,10 +1240,10 @@
   };
   "search_by_image" = buildFirefoxXpiAddon {
     pname = "search_by_image";
-    version = "8.4.0";
+    version = "8.5.0";
     addonId = "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4634627/search_by_image-8.4.0.xpi";
-    sha256 = "sha256-1wGohps782CE7DePiZAcr+y8QSZ+gfKpjRsZE38UG5I=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4689098/search_by_image-8.5.0.xpi";
+    sha256 = "sha256-NwlAp3/zxTmKMAwQJJ7PThOXVohHMoKvuaJhOma+L7M=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1374,10 +1381,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.20.0";
+    version = "2.20.1";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4633946/youtube_no_translation-2.20.0.xpi";
-    sha256 = "sha256-KY8CRp2GBrlPLl/S4jBU6XOeoW9WxqhRDO/CCd6VNxw=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4685260/youtube_no_translation-2.20.1.xpi";
+    sha256 = "sha256-xpNToJjibqxW071bu/SG0Xb7VX0ncFbpX2lb6bwaMFU=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
