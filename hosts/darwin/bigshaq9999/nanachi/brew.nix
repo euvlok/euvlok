@@ -29,7 +29,7 @@
       "obs"
       ### --- Graphics --- ###
       ### --- Utilities --- ###
-      "finetine"
+      "finetune"
       "forklift"
       "nextcloud-vfs"
       "qspace-pro"
