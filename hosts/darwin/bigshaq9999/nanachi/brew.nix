@@ -29,8 +29,10 @@
       "obs"
       ### --- Graphics --- ###
       ### --- Utilities --- ###
+      "finetine"
       "forklift"
       "nextcloud-vfs"
+      "qspace-pro"
       ### --- Utilities --- ###
       "mullvad-vpn"
     ];
