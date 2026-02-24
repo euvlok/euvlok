@@ -14,7 +14,7 @@
     enable = true;
     enableImagemagick = true;
     database.createLocally = true;
-    package = pkgs.nextcloud31;
+    package = pkgs.nextcloud32;
     settings = {
       enablePreview = true;
       enabledPreviewProviders = [

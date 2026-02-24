@@ -32,10 +32,12 @@
     enable = true;
     additionalModules = [ pkgs.nginxModules.pam ];
 
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
+    recommendedUwsgiSettings = true;
     recommendedTlsSettings = true;
+    recommendedProxySettings = true;
+    recommendedOptimisation = true;
+    recommendedGzipSettings = true;
+    recommendedBrotliSettings = true;
 
     sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
 
@@ -45,10 +47,8 @@
           https   "max-age=31536000; includeSubdomains; preload";
       }
       add_header Strict-Transport-Security $hsts_header;
-      # add_header Content-Security-Policy "script-src 'self'; object-src 'none'; base-uri 'none';" always;
       add_header 'Referrer-Policy' 'origin-when-cross-origin';
       add_header X-Content-Type-Options nosniff;
-      add_header X-XSS-Protection "1; mode=block";
       proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
     '';
     virtualHosts."_" = {
@@ -81,14 +81,6 @@
           autoindex on;
         '';
       };
-      # locations."/backup" = {
-      #   root = "/var/lib/minecraft";
-      #   extraConfig = ''autoindex on;'';
-      # };
-      # locations."/admin" = {
-      #   root = "/var/lib/minecraft";
-      #   extraConfig = ''autoindex on;'';
-      # };
     };
   };
   users.groups.minecraft = {
