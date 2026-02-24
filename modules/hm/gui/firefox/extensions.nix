@@ -30,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.2.9.6";
+    version = "4.3.1.4";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=efdcf42b4b680542971c4ce84a50bca9e677a75e";
-    sha256 = "sha256-Jf9wYjFVxEfAGXo7qMFG28gW4pipvNuOAvqJGXKBq4s=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4e808e7c74b40e94b8415970916cdf46f2ace962";
+    sha256 = "sha256-IY9Ifj2Oc07i/bxRaylOza5LrWvoRAcYd+0qaBz9Fog=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -100,7 +100,6 @@
         "*://*.bbc.com/*"
         "*://*.bd.nl/*"
         "*://*.beleggersbelangen.nl/*"
-        "*://*.belfasttelegraph.co.uk/*"
         "*://*.bendigoadvertiser.com.au/*"
         "*://*.benzinga.com/*"
         "*://*.beobachter.ch/*"
@@ -152,6 +151,7 @@
         "*://*.capital.bg/*"
         "*://*.capital.fr/*"
         "*://*.capitalgazette.com/*"
+        "*://*.caravanmagazine.in/*"
         "*://*.cartacapital.com.br/*"
         "*://*.causeur.fr/*"
         "*://*.cen.acs.org/*"
@@ -216,6 +216,7 @@
         "*://*.dailytelegraph.com.au/*"
         "*://*.dailywire.com/*"
         "*://*.dallasnews.com/*"
+        "*://*.daytondailynews.com/*"
         "*://*.decanter.com/*"
         "*://*.defector.com/*"
         "*://*.delish.com/*"
@@ -315,6 +316,7 @@
         "*://*.fmrmagazine.com/*"
         "*://*.fnlondon.com/*"
         "*://*.focusplus.de/*"
+        "*://*.fokus.se/*"
         "*://*.forbes.com.au/*"
         "*://*.forbes.com/*"
         "*://*.forbes.pl/*"
@@ -571,6 +573,7 @@
         "*://*.motorsportmagazine.com/*"
         "*://*.moustique.be/*"
         "*://*.mundodeportivo.com/*"
+        "*://*.musicomh.com/*"
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
         "*://*.nationalgeographic.com/*"
@@ -592,6 +595,7 @@
         "*://*.newsweek.com/*"
         "*://*.newsweek.pl/*"
         "*://*.newyorker.com/*"
+        "*://*.next.ink/*"
         "*://*.nhregister.com/*"
         "*://*.niagarafallsreview.ca/*"
         "*://*.nicematin.com/*"
@@ -659,7 +663,6 @@
         "*://*.philosophynow.org/*"
         "*://*.pilotonline.com/*"
         "*://*.pionline.com/*"
-        "*://*.piqd.de/*"
         "*://*.piratewires.com/*"
         "*://*.pitchfork.com/*"
         "*://*.plasticsnews.com/*"
@@ -750,6 +753,7 @@
         "*://*.spektrum.de/*"
         "*://*.spglobal.com/*"
         "*://*.spiegel.de/*"
+        "*://*.spokesman.com/*"
         "*://*.sportico.com/*"
         "*://*.springermedizin.de/*"
         "*://*.standaard.be/*"
@@ -798,6 +802,7 @@
         "*://*.texasmonthly.com/*"
         "*://*.the-american-interest.com/*"
         "*://*.the-independent.com/*"
+        "*://*.the-past.com/*"
         "*://*.the-scientist.com/*"
         "*://*.the-star.co.ke/*"
         "*://*.the-tls.com/*"
@@ -943,6 +948,7 @@
         "*://*.zeit.de/*"
         "*://*.amplitude.com/*"
         "*://*.ampproject.org/*"
+        "*://*.arc-cdn.net/*"
         "*://*.axate.io/*"
         "*://*.blueconic.net/*"
         "*://*.cxense.com/*"
@@ -970,6 +976,7 @@
         "*://*.cedscdn.it/*"
         "*://*.cedsdigital.it/*"
         "*://*.corriereobjects.it/*"
+        "*://*.coxohio.com/*"
         "*://*.danzz.ch/*"
         "*://*.emol.cl/*"
         "*://*.epochbase.com/*"
@@ -1005,10 +1012,10 @@
   };
   "refined-github-" = buildFirefoxXpiAddon {
     pname = "refined-github-";
-    version = "26.2.2";
+    version = "26.2.19";
     addonId = "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4682198/refined_github-26.2.2.xpi";
-    sha256 = "sha256-Ag8ECpc7cA26yfrmYRrRtRargNRuMOKWt0qB4PFL2fQ=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4699432/refined_github-26.2.19.xpi";
+    sha256 = "sha256-5PSNzuGju1720kiaSK6LT6sN9WgVMUZWM5g/wRG3k7c=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
