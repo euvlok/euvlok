@@ -13,8 +13,7 @@
       {
         nix-homebrew = {
           enable = true;
-          enableRosetta = true;
-          user = "faputa";
+          user = "ashuramaru";
           taps = {
             "homebrew/homebrew-core" = inputs.homebrew-core-trivial;
             "homebrew/homebrew-cask" = inputs.homebrew-cask-trivial;
