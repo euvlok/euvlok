@@ -82,6 +82,7 @@ let
 
   macosPackages = builtins.attrValues {
     inherit (pkgs.unstable)
+      aldente
       alt-tab-macos
       ice-bar
       iina
@@ -97,19 +98,31 @@ let
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)
-      anki-bin
-      audacity
-      inkscape
       nicotine-plus
       qbittorrent
-      yubikey-manager
+      ;
+  };
+  productivityPackages = builtins.attrValues {
+    inherit (pkgs)
+      anki-bin
+      inkscape
+      audacity
       ;
     inherit (pkgs.eupkgs) helium-browser;
+  };
+
+  authPackages = builtins.attrValues {
+    inherit (pkgs)
+      bitwarden-desktop
+      keepassxc
+      yubikey-manager
+      ;
   };
 
   gamingPackages = builtins.attrValues {
     inherit (pkgs.unstable)
       chiaki
+      osu-lazer-bin
       prismlauncher
       ryubing
       winetricks
@@ -149,7 +162,13 @@ let
   # };
 
   allPackages =
-    macosPackages ++ socialPackages ++ multimediaPackages ++ gamingPackages ++ jetbrainsPackages;
+    macosPackages
+    ++ socialPackages
+    ++ multimediaPackages
+    ++ authPackages
+    ++ productivityPackages
+    ++ gamingPackages
+    ++ jetbrainsPackages;
 
   userExtras = [
     { home.packages = allPackages; }
@@ -170,7 +189,7 @@ let
     }
   ];
 
-  mkUserImports = commonImports ++ [ catppuccinConfig ] ++ sopsConfig ++ hmModuleConfig ++ userExtras;
+  ashuramaru = commonImports ++ [ catppuccinConfig ] ++ sopsConfig ++ hmModuleConfig ++ userExtras;
 in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ];
@@ -179,7 +198,6 @@ in
     useUserPackages = true;
     backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs eulib; };
-    users.ashuramaru.imports = mkUserImports;
-    users.faputa.imports = mkUserImports;
+    users.ashuramaru.imports = ashuramaru;
   };
 }

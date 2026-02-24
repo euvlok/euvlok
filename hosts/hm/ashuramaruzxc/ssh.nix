@@ -1,10 +1,24 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   programs.ssh = {
     enableDefaultConfig = false;
     matchBlocks = {
       "*" = {
+        compression = false;
+        controlMaster = "no";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "no";
+        forwardAgent = false;
+        hashKnownHosts = false;
         identitiesOnly = true;
+        serverAliveCountMax = 3;
+        serverAliveInterval = 0;
+        userKnownHostsFile = "~/.ssh/known_hosts";
         identityFile = [ "${config.home.homeDirectory}/.ssh/id_ed25519-sk" ];
       };
 
@@ -36,5 +50,8 @@
         identityFile = [ "${config.home.homeDirectory}/.ssh/id_ecdsa-sk" ];
       };
     };
+  };
+  services.ssh-agent = {
+    enable = true;
   };
 }

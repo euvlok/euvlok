@@ -34,6 +34,7 @@
       ### --- Graphics --- ###
       ### --- Utilities --- ###
       "forklift"
+      "gstreamer-development"
       "gstreamer-runtime"
       "nextcloud-vfs"
       "yubico-authenticator"
