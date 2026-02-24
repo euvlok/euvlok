@@ -42,7 +42,7 @@ let
   customPlugins = [
     {
       name = "fast-syntax-highlighting";
-      src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+      src = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh";
     }
     {
       name = "nix-shell";
@@ -112,6 +112,11 @@ in
       }
     ''))
     (lib.optionalString (hmConfig.hm.zoxide.enable) (''eval "$(zoxide init zsh)"''))
+    (lib.optionalString (hmConfig.services.ssh-agent.enable) ''
+      if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
+        export SSH_AUTH_SOCK="$(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${hmConfig.services.ssh-agent.socket}"
+      fi
+    '')
   ];
 
   launchd.user.agents."symlink-zsh-config" = {
