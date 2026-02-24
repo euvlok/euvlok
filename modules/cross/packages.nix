@@ -83,14 +83,25 @@ let
         ;
 
       # Media
-      inherit (pkgs.eupkgs)
-        yt-dlp
-        yt-dlp-script
-        ;
+      # inherit (pkgs.eupkgs)
+      # yt-dlp
+      # yt-dlp-script
+      # ;
 
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.)
       inherit (pkgs.unstable) hyperfine tokei;
     }
+    # Revert once PR 485980 is fixed upstream nixpkgs
+    ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin (
+      builtins.attrValues {
+        inherit (pkgs) yt-dlp;
+      }
+    )
+    ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isLinux (
+      builtins.attrValues {
+        inherit (pkgs.eupkgs) yt-dlp yt-dlp-script;
+      }
+    )
   );
   linuxOnlyPkgs = (
     builtins.attrValues {
