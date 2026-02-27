@@ -1,15 +1,20 @@
 { lib, ... }:
 let
-  binPaths = [
-    "$HOME/.bun/bin"
-    "$HOME/.npm/bin"
-    "$HOME/.local/bin"
-    "$HOME/.cargo/bin"
-    "$HOME/.go/bin"
-    "$HOME/.yarn/bin"
+  binDirs = [
+    ".bun"
+    ".npm"
+    ".local"
+    ".cargo"
+    ".go"
+    "go"
+    ".yarn"
+    ".deno"
+    ".ghcup"
+    ".local/share/pnpm"
   ];
-
+  binPaths = map (dir: "$HOME/${dir}/bin") binDirs;
   bashPathStr = lib.concatStringsSep ":" binPaths;
+  nuList = "[ " + (lib.concatStringsSep " " (map (d: "\"${d}\"") binDirs)) + " ]";
 in
 {
   hm.shell.binPaths = {
@@ -18,7 +23,7 @@ in
     zsh = "export PATH=\"${bashPathStr}:$PATH\"";
     nushell = ''
       use std/util "path add"
-      ${lib.concatMapStringsSep "\n" (p: ''path add "${p}"'') binPaths}
+      ${nuList} | each {|dir| $"($env.HOME)/($dir)/bin" } | path add $in
     '';
   };
 }
