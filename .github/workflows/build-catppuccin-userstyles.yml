@@ -1,0 +1,244 @@
+name: Build Catppuccin Userstyles
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - uses: denoland/setup-deno@v2.0.3
+        with:
+          deno-version: v2.x
+
+      - name: Clone catppuccin/userstyles
+        run: git clone https://github.com/catppuccin/userstyles.git /tmp/userstyles
+
+      - name: Build
+        run: |
+          mkdir -p /tmp/userstyles-output
+          cd /tmp/userstyles
+          deno run --allow-all - <<'EOF'
+          import * as path from "https://deno.land/std@0.224.0/path/mod.ts";
+          import usercssMeta from "npm:usercss-meta@0.12.0";
+
+          const STYLES_DIR = "/tmp/userstyles/styles";
+          const OUTPUT_DIR = "/tmp/userstyles-output";
+          Deno.mkdirSync(OUTPUT_DIR, { recursive: true });
+
+          const stylesDirEntries = Array.from(Deno.readDirSync(STYLES_DIR));
+
+          const settings = {
+            settings: {
+              updateInterval: 24,
+              updateOnlyEnabled: true,
+              patchCsp: true,
+              "editor.linter": "",
+            },
+          };
+
+          const skippedStyles = new Map<string, string>();
+          const importData: Record<string, unknown>[] = [settings];
+
+          for (const entry of stylesDirEntries) {
+            if (!entry.isDirectory) continue;
+
+            const styleDir = path.join(STYLES_DIR, entry.name);
+            const lessFile = path.join(styleDir, "catppuccin.user.less");
+
+            try { await Deno.stat(lessFile); } catch { continue; }
+
+            try {
+              let content = await Deno.readTextFile(lessFile);
+              const { metadata } = usercssMeta.parse(content, { allowErrors: true });
+              if (metadata.preprocessor !== "less") continue;
+
+              if (!metadata.vars) {
+                metadata.vars = {};
+              }
+
+              if (!metadata.vars.lightFlavor) {
+                metadata.vars.lightFlavor = {
+                  type: "select",
+                  label: "Light Flavor",
+                  name: "lightFlavor",
+                  value: null,
+                  default: "latte",
+                  options: [
+                    { name: "latte", label: "Latte", value: "latte" },
+                    { name: "frappe", label: "Frappé", value: "frappe" },
+                    { name: "macchiato", label: "Macchiato", value: "macchiato" },
+                    { name: "mocha", label: "Mocha", value: "mocha" },
+                  ],
+                };
+              }
+
+              if (!metadata.vars.darkFlavor) {
+                metadata.vars.darkFlavor = {
+                  type: "select",
+                  label: "Dark Flavor",
+                  name: "darkFlavor",
+                  value: null,
+                  default: "mocha",
+                  options: [
+                    { name: "latte", label: "Latte", value: "latte" },
+                    { name: "frappe", label: "Frappé", value: "frappe" },
+                    { name: "macchiato", label: "Macchiato", value: "macchiato" },
+                    { name: "mocha", label: "Mocha", value: "mocha" },
+                  ],
+                };
+              }
+
+              const userstyle = {
+                enabled: true,
+                name: metadata.name,
+                description: metadata.description,
+                author: metadata.author,
+                url: metadata.url,
+                updateUrl: metadata.updateURL,
+                usercssData: metadata,
+                sourceCode: content,
+                originalDigest: "",
+              } as Record<string, unknown>;
+
+              importData.push(userstyle);
+            } catch (error) {
+              const errorMsg = error.message || String(error);
+              console.error(`Error: ${entry.name}: ${errorMsg}`);
+              skippedStyles.set(entry.name, errorMsg);
+            }
+          }
+
+          const baseImportFile = path.join(OUTPUT_DIR, `catppuccin-import.json`);
+          await Deno.writeTextFile(baseImportFile, JSON.stringify(importData, null, 2));
+          console.log(`Generated: ${baseImportFile} with ${importData.length - 1} styles`);
+
+          const flavors = ["latte", "frappe", "macchiato", "mocha"];
+          const accents = ["rosewater", "flamingo", "pink", "mauve", "red", "maroon", "peach", "yellow", "green", "teal", "sky", "sapphire", "blue", "lavender"];
+
+          const flavorMap: Record<string, string> = {
+            latte: "Latte",
+            frappe: "Frappé",
+            macchiato: "Macchiato",
+            mocha: "Mocha",
+          };
+
+          const accentMap: Record<string, string> = {
+            rosewater: "Rosewater",
+            flamingo: "Flamingo",
+            pink: "Pink",
+            mauve: "Mauve",
+            red: "Red",
+            maroon: "Maroon",
+            peach: "Peach",
+            yellow: "Yellow",
+            green: "Green",
+            teal: "Teal",
+            sky: "Sky",
+            sapphire: "Sapphire",
+            blue: "Blue",
+            lavender: "Lavender",
+          };
+
+          for (const lightFlavor of flavors) {
+            for (const darkFlavor of flavors) {
+              for (const accent of accents) {
+                const outputFile = path.join(OUTPUT_DIR, `catppuccin-${lightFlavor}-${darkFlavor}-${accent}-import.json`);
+                const normalizedLightFlavor = flavorMap[lightFlavor];
+                const normalizedDarkFlavor = flavorMap[darkFlavor];
+                const normalizedAccent = accentMap[accent];
+
+                const baseContent = await Deno.readTextFile(baseImportFile);
+                const baseData = JSON.parse(baseContent);
+
+                for (let i = 1; i < baseData.length; i++) {
+                  const style = baseData[i];
+
+                  // Update usercssData.vars defaults
+                  if (style.usercssData?.vars?.lightFlavor) {
+                    style.usercssData.vars.lightFlavor.default = lightFlavor;
+                  }
+                  if (style.usercssData?.vars?.darkFlavor) {
+                    style.usercssData.vars.darkFlavor.default = darkFlavor;
+                  }
+                  if (style.usercssData?.vars?.accentColor) {
+                    style.usercssData.vars.accentColor.default = accent;
+                  }
+
+                  if (style.sourceCode) {
+                    let sourceCode = style.sourceCode;
+
+                    // Unmark all light flavor options, then mark the target one
+                    sourceCode = sourceCode.replace(
+                      /@var select lightFlavor "Light Flavor" \[([^\]]+)\]/,
+                      (_, match) => {
+                        let options = match.replace(/\*/g, ''); // remove all markers
+                        // Mark the target flavor
+                        options = options.replace(
+                          new RegExp(`"${lightFlavor}:${normalizedLightFlavor}"`),
+                          `"${lightFlavor}:${normalizedLightFlavor}*"`
+                        );
+                        return `@var select lightFlavor "Light Flavor" [${options}]`;
+                      }
+                    );
+
+                    // Same for dark flavor
+                    sourceCode = sourceCode.replace(
+                      /@var select darkFlavor "Dark Flavor" \[([^\]]+)\]/,
+                      (_, match) => {
+                        let options = match.replace(/\*/g, '');
+                        options = options.replace(
+                          new RegExp(`"${darkFlavor}:${normalizedDarkFlavor}"`),
+                          `"${darkFlavor}:${normalizedDarkFlavor}*"`
+                        );
+                        return `@var select darkFlavor "Dark Flavor" [${options}]`;
+                      }
+                    );
+
+                    // Same for accent
+                    sourceCode = sourceCode.replace(
+                      /@var select accentColor "Accent" \[([^\]]+)\]/,
+                      (_, match) => {
+                        let options = match.replace(/\*/g, '');
+                        options = options.replace(
+                          new RegExp(`"${accent}:${normalizedAccent}"`),
+                          `"${accent}:${normalizedAccent}*"`
+                        );
+                        return `@var select accentColor "Accent" [${options}]`;
+                      }
+                    );
+
+                    style.sourceCode = sourceCode;
+                  }
+                }
+
+                await Deno.writeTextFile(outputFile, JSON.stringify(baseData, null, 2));
+                console.log(`Generated: ${outputFile}`);
+              }
+            }
+          }
+
+          // Summary of skipped styles
+          if (skippedStyles.size > 0) {
+            console.log('\n=== Skipped Styles ===');
+            for (const [name, reason] of skippedStyles) {
+              console.log(`${name}: ${reason}`);
+            }
+            console.log(`Total skipped: ${skippedStyles.size} styles`);
+          }
+          EOF
+
+      - uses: softprops/action-gh-release@v2.5.0
+        with:
+          tag_name: catppuccin-userstyles
+          name: Catppuccin Userstyles
+          body: Catppuccin userstyles - all light/dark flavor combinations with accents (224 total)
+          files: /tmp/userstyles-output/*
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
