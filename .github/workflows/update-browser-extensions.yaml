@@ -41,28 +41,22 @@ jobs:
         run: |
           set -euo pipefail
 
-          browser="${{ github.event.inputs.browser }}"
-          if [ -z "$browser" ] || [ "$browser" == "all" ]; then
-            browsers="chromium firefox"
-          else
-            browsers="$browser"
+          browser_filter="${{ github.event.inputs.browser }}"
+          if [ -z "$browser_filter" ] || [ "$browser_filter" == "all" ]; then
+            browser_filter=""
           fi
 
-          for browser_type in $browsers; do
-            echo "::notice::Processing $browser_type extensions..."
+          mapfile -t LIST_FILES < <(find ./modules ./hosts -name "sources.nix" -type f)
 
-            mapfile -t LIST_FILES < <(find ./modules -name "extensions.toml" -type f)
+          for list_file in "${LIST_FILES[@]}"; do
+            parent_dir="$(basename "$(dirname "$list_file")")"
+            if [ -n "$browser_filter" ] && [ "$parent_dir" != "$browser_filter" ]; then
+              continue
+            fi
 
-            for list_file in "${LIST_FILES[@]}"; do
-              parent_dir="$(dirname "$(dirname "$list_file")")"
-              if [ "$(basename "$parent_dir")" != "$browser_type" ]; then
-                continue
-              fi
-
-              echo "::group::Processing ${list_file}"
-              dotnet run modules/scripts/browser-extensions-update.cs -- -i "$list_file" -b "$browser_type"
-              echo "::endgroup::"
-            done
+            echo "::group::Processing ${list_file}"
+            dotnet run modules/scripts/browser-extensions-update.cs -- -i "$list_file"
+            echo "::endgroup::"
           done
 
           if git diff --quiet; then
