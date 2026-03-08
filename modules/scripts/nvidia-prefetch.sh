@@ -197,10 +197,20 @@ cleanup() {
 }
 
 find_repo_root() {
+	local current_dir
+	current_dir=$(pwd)
+	while [[ "${current_dir}" != "/" ]]; do
+		if [[ -f "${current_dir}/flake.nix" ]] || [[ -d "${current_dir}/.git" ]]; then
+			echo "${current_dir}"
+			return 0
+		fi
+		current_dir=$(dirname "${current_dir}")
+	done
+
 	local script_dir
 	script_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
-	local current_dir="${script_dir}"
+	current_dir="${script_dir}"
 	while [[ "${current_dir}" != "/" ]]; do
 		if [[ -f "${current_dir}/flake.nix" ]] || [[ -d "${current_dir}/.git" ]]; then
 			echo "${current_dir}"
