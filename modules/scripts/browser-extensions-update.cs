@@ -1,53 +1,48 @@
 #!/usr/bin/dotnet run
 
-#:package System.CommandLine@2.0.2
-#:package Spectre.Console@0.54.1-alpha.0.36
-#:package Tommy@3.1.2
+#:package System.CommandLine@2.0.3
+#:package Spectre.Console@0.54.1-alpha.0.68
+#:package CliWrap@3.10.0
 #:property Nullable=enable
 
 using System.CommandLine;
-using System.Diagnostics;
 using System.IO.Compression;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CliWrap;
+using CliWrap.Buffered;
 using Spectre.Console;
-using Tommy;
 
-HttpClient client = new();
-HttpClient chromeStoreClient = new(new HttpClientHandler { AllowAutoRedirect = false });
+var handler = new SocketsHttpHandler { PooledConnectionLifetime = TimeSpan.FromMinutes(2) };
+HttpClient client = new(handler);
+var chromeStoreHandler = new SocketsHttpHandler { PooledConnectionLifetime = TimeSpan.FromMinutes(2), AllowAutoRedirect = false };
+HttpClient chromeStoreClient = new(chromeStoreHandler);
 
 Option<string> inputOpt = new("--input", "-i")
 {
-    Description = "Specify the input TOML file",
+    Description = "Specify the input Nix source file",
     Required = true
 };
 Option<string> outputOpt = new("--output", "-o")
 {
-    Description = "Specify the output Nix file (default: input file with .nix extension)",
+    Description = "Specify the output Nix file (default: extensions.nix in the same directory)",
     Required = false
 };
-Option<string> browserOpt = new("--browser", "-b")
-{
-    Description = "Browser type (chromium or firefox)",
-    Required = true
-};
-
-RootCommand root = new("Generates a Nix file for browser extensions from a TOML configuration file")
+RootCommand root = new("Generates a Nix file for browser extensions from a Nix source file")
 {
     inputOpt,
-    outputOpt,
-    browserOpt
+    outputOpt
 };
 
-root.SetAction(async (parseResult, _) =>
+root.SetAction(async (parseResult, ct) =>
 {
     try
     {
         var inputFile = parseResult.GetValue(inputOpt)!;
-        var outputFile = parseResult.GetValue(outputOpt) ?? Path.ChangeExtension(inputFile, ".nix");
-        var browserInput = parseResult.GetValue(browserOpt)!.ToLowerInvariant();
+        var outputFile = parseResult.GetValue(outputOpt) ?? Path.Combine(Path.GetDirectoryName(inputFile)!, "extensions.nix");
 
         if (!File.Exists(inputFile))
         {
@@ -55,18 +50,12 @@ root.SetAction(async (parseResult, _) =>
             return 1;
         }
 
-        if (!Enum.TryParse<BrowserType>(browserInput, true, out var browser))
-        {
-            Log.Error($"Invalid browser type: {browserInput}. Must be 'chromium' or 'firefox'.");
-            return 1;
-        }
-
         AnsiConsole.Write(new FigletText("Extensions").Color(Color.Blue));
         Log.Header($"{Icons.File} {inputFile}");
         Log.Info($"Output: {outputFile}");
-        Log.Info($"Browser: {browser}");
 
-        var (extensions, config, hasConditions) = ParseToml(inputFile);
+        var (extensions, config, hasConditions, browser) = await ParseNixInput(inputFile, ct);
+        Log.Info($"Browser: {browser}");
         if (extensions.Count is 0)
         {
             Log.Warning($"No extensions found in {inputFile}");
@@ -78,7 +67,7 @@ root.SetAction(async (parseResult, _) =>
         string? browserVersion = null;
         if (browser == BrowserType.Chromium)
         {
-            browserVersion = await GetChromiumMajorVersionAsync(null);
+            browserVersion = await GetChromiumMajorVersionAsync(null, ct);
             Log.Info($"{Icons.Chromium} Chromium version: {browserVersion}");
         }
         else
@@ -86,7 +75,7 @@ root.SetAction(async (parseResult, _) =>
             Log.Info($"{Icons.Firefox} Firefox extensions");
         }
 
-        var results = await ProcessExtensionsWithProgress(extensions, config, browser, browserVersion);
+        var results = await ProcessExtensionsWithProgress(extensions, config, browser, browserVersion, ct);
         var errors = results.Where(r => r.Error != null).ToList();
 
         if (errors.Count > 0)
@@ -99,8 +88,8 @@ root.SetAction(async (parseResult, _) =>
         }
 
         await GenerateNixFile(outputFile, results, hasConditions, browser);
-        await ProcessUtils.RunAsync("nix", $"run nixpkgs#nixfmt -- {outputFile}");
-        await ValidateNixFile(outputFile);
+        await Cli.Wrap("nix").WithArguments(["run", "nixpkgs#nixfmt", "--", outputFile]).ExecuteAsync(ct);
+        await ValidateNixFile(outputFile, ct);
 
         AnsiConsole.WriteLine();
         Log.Success($"Generated {outputFile}");
@@ -115,86 +104,70 @@ root.SetAction(async (parseResult, _) =>
 
 return await root.Parse(args).InvokeAsync();
 
-GithubReleaseConfig ParseGithubConfig(TomlTable table)
+async Task<(List<Extension> Extensions, GithubReleaseConfig Config, bool HasConditions, BrowserType Browser)>
+    ParseNixInput(string inputFile,
+        CancellationToken ct = default)
 {
-    if (!table.HasKey("config")) return new GithubReleaseConfig();
-    var configTable = table["config"].AsTable;
-    if (!configTable.HasKey("sources")) return new GithubReleaseConfig();
-    var sourcesTable = configTable["sources"].AsTable;
-    if (!sourcesTable.HasKey("github-releases")) return new GithubReleaseConfig();
+    var json = (await Cli.Wrap("nix")
+        .WithArguments([
+            "eval",
+            "--json",
+            "--file",
+            inputFile
+        ])
+        .ExecuteBufferedAsync(ct)).StandardOutput;
+    var nixInput = JsonSerializer.Deserialize(json, AppJsonContext.Default.NixInputFile)
+        ?? throw new InvalidOperationException("Failed to parse Nix input file");
 
-    var ghTable = sourcesTable["github-releases"].AsTable;
-    return new GithubReleaseConfig(
-        Owner: ghTable["owner"]?.AsString?.Value,
-        Repo: ghTable["repo"]?.AsString?.Value,
-        Pattern: ghTable["pattern"]?.AsString?.Value);
-}
+    if (string.IsNullOrEmpty(nixInput.Browser) || !Enum.TryParse<BrowserType>(nixInput.Browser, true, out var browser))
+        throw new InvalidOperationException(
+            $"Invalid or missing 'browser' field in {inputFile}. Must be 'chromium' or 'firefox'.");
 
-Extension? TryParseExtension(TomlTable extTable, ref bool hasConditions)
-{
-    var id = extTable["id"]?.AsString?.Value;
-    if (string.IsNullOrEmpty(id))
-    {
-        Log.Warning("Extension missing 'id' field, skipping");
-        return null;
-    }
-
-    var condition = extTable["condition"]?.AsString?.Value;
-    if (!string.IsNullOrEmpty(condition)) hasConditions = true;
-
-    var sourceStr = extTable["source"]?.AsString?.Value ?? "chrome-store";
-    if (Enum.TryParse<ExtensionSource>(sourceStr.Replace("-", ""), true, out var source))
-        return new Extension(
-            Id: id,
-            Name: extTable["name"]?.AsString?.Value,
-            Source: source,
-            Url: extTable["url"]?.AsString?.Value,
-            Condition: condition,
-            Owner: extTable["owner"]?.AsString?.Value,
-            Repo: extTable["repo"]?.AsString?.Value,
-            Pattern: extTable["pattern"]?.AsString?.Value,
-            Version: extTable["version"]?.AsString?.Value);
-
-    Log.Warning($"Unknown source '{sourceStr}' for extension '{id}', defaulting to ChromeStore");
-    source = ExtensionSource.ChromeStore;
-
-    return new Extension(
-        Id: id,
-        Name: extTable["name"]?.AsString?.Value,
-        Source: source,
-        Url: extTable["url"]?.AsString?.Value,
-        Condition: condition,
-        Owner: extTable["owner"]?.AsString?.Value,
-        Repo: extTable["repo"]?.AsString?.Value,
-        Pattern: extTable["pattern"]?.AsString?.Value,
-        Version: extTable["version"]?.AsString?.Value);
-}
-
-(List<Extension> Extensions, GithubReleaseConfig Config, bool HasConditions) ParseToml(string tomlFile)
-{
-    using var reader = File.OpenText(tomlFile);
-    var table = TOML.Parse(reader);
-
-    var extensions = new List<Extension>();
+    List<Extension> extensions = [];
     var hasConditions = false;
-    var config = ParseGithubConfig(table);
 
-    if (!table.HasKey("extensions"))
-        return (extensions, config, hasConditions);
+    var ghConfig = new GithubReleaseConfig(
+        nixInput.Config?.Sources?.GithubReleases?.Owner,
+        nixInput.Config?.Sources?.GithubReleases?.Repo,
+        nixInput.Config?.Sources?.GithubReleases?.Pattern);
 
-    foreach (var node in table["extensions"].AsArray.Children)
+    foreach (var nixExt in nixInput.Extensions)
     {
-        if (TryParseExtension(node.AsTable, ref hasConditions) is { } ext)
-            extensions.Add(ext);
+        if (string.IsNullOrEmpty(nixExt.Id))
+        {
+            Log.Warning("Extension missing 'id' field, skipping");
+            continue;
+        }
+
+        if (!string.IsNullOrEmpty(nixExt.Condition)) hasConditions = true;
+
+        var sourceStr = nixExt.Source ?? "chrome-store";
+        if (!Enum.TryParse<ExtensionSource>(sourceStr.Replace("-", ""), true, out var source))
+        {
+            Log.Warning($"Unknown source '{sourceStr}' for extension '{nixExt.Id}', defaulting to ChromeStore");
+            source = ExtensionSource.ChromeStore;
+        }
+
+        extensions.Add(new Extension(
+            Id: nixExt.Id,
+            Name: nixExt.Name,
+            Source: source,
+            Url: nixExt.Url,
+            Condition: nixExt.Condition,
+            Owner: nixExt.Owner,
+            Repo: nixExt.Repo,
+            Pattern: nixExt.Pattern,
+            Version: nixExt.Version));
     }
 
-    return (extensions, config, hasConditions);
+    return (extensions, ghConfig, hasConditions, browser);
 }
 
 async Task<List<ExtensionResult>> ProcessExtensionsWithProgress(List<Extension> extensions,
     GithubReleaseConfig config,
     BrowserType browser,
-    string? browserVersion)
+    string? browserVersion,
+    CancellationToken ct = default)
 {
     List<ExtensionResult> results = [];
     var completed = 0;
@@ -210,14 +183,19 @@ async Task<List<ExtensionResult>> ProcessExtensionsWithProgress(List<Extension> 
             new RemainingTimeColumn())
         .StartAsync(async ctx =>
         {
-            var semaphore = new SemaphoreSlim(5, 5);
-            var tasks = extensions.Select(async ext =>
+            await Parallel.ForEachAsync(extensions,
+                new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = 5,
+                    CancellationToken = ct
+                },
+                async (ext,
+                    token) =>
             {
                 var task = ctx.AddTask(ext.Name ?? ext.Id, maxValue: 100);
-                await semaphore.WaitAsync();
                 try
                 {
-                    var result = await ProcessExtensionQuiet(ext, config, browser, browserVersion, task);
+                    var result = await ProcessExtensionQuiet(ext, config, browser, browserVersion, task, token);
                     lock (results)
                     {
                         results.Add(result);
@@ -230,11 +208,8 @@ async Task<List<ExtensionResult>> ProcessExtensionsWithProgress(List<Extension> 
                 finally
                 {
                     task.Value = 100;
-                    semaphore.Release();
                 }
             });
-
-            await Task.WhenAll(tasks);
         });
 
     return results;
@@ -244,20 +219,26 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
     GithubReleaseConfig config,
     BrowserType browser,
     string? browserVersion,
-    ProgressTask? task = null)
+    ProgressTask? task = null,
+    CancellationToken ct = default)
 {
     try
     {
         task?.Increment(10);
 
         var sourceHandler = new ExtensionSourceHandler(client, chromeStoreClient);
-        var (finalUrl, error, amoAddonId) = await sourceHandler.FetchUrlAsync(ext, config, browser, browserVersion, task);
+        var (finalUrl, error, amoAddonId) = await sourceHandler.FetchUrlAsync(ext,
+            config,
+            browser,
+            browserVersion,
+            task,
+            ct);
 
         if (error != null)
-            return new ExtensionResult(ext, error, null, null, null);
+            return new ExtensionResult(ext, error, null, null);
 
         if (string.IsNullOrEmpty(finalUrl))
-            return new ExtensionResult(ext, "Failed to get download URL", null, null, null);
+            return new ExtensionResult(ext, "Failed to get download URL", null, null);
 
         task?.Increment(20);
 
@@ -265,23 +246,28 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
         var tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.{extension}");
         try
         {
-            await using var stream = await client.GetStreamAsync(finalUrl);
+            await using var stream = await client.GetStreamAsync(finalUrl, ct);
             await using var fileStream = File.Create(tempFile);
-            await stream.CopyToAsync(fileStream);
+            await stream.CopyToAsync(fileStream, ct);
         }
-        catch (Exception ex) { return new ExtensionResult(ext, $"Failed to download: {ex.Message}", null, null, null); }
+        catch (Exception ex)
+        {
+            return new ExtensionResult(ext, $"Failed to download: {ex.Message}", null, null);
+        }
 
         task?.Increment(40);
 
         try
         {
-            var hash = await CalculateNixHashAsync(tempFile);
+            var hash = await CalculateNixHashAsync(tempFile, ct);
             task?.Increment(20);
-            var (version, permissions, manifestAddonId) = await ExtractVersionAndPermissionsAsync(tempFile);
+            var (version,
+                permissions, 
+                manifestAddonId) = await ExtractVersionAndPermissionsAsync(tempFile);
             task?.Increment(10);
 
             // For Firefox: resolve the real addon ID
-            // Priority: manifest gecko ID > AMO guid > TOML slug
+            // Priority: manifest gecko ID > AMO guid > source slug
             var resolvedAddonId = browser == BrowserType.Firefox
                 ? manifestAddonId ?? amoAddonId ?? ext.Id
                 : null;
@@ -289,23 +275,41 @@ async Task<ExtensionResult> ProcessExtensionQuiet(Extension ext,
             if (browser == BrowserType.Firefox && resolvedAddonId != ext.Id)
                 Log.Info($"Resolved addonId for {ext.Id}: {resolvedAddonId}");
 
-            var nixEntry = NixEntryGenerator.Generate(ext, finalUrl, hash, version, permissions, browser, resolvedAddonId);
-            return new ExtensionResult(ext, null, nixEntry, version, permissions);
+            var nixEntry = NixEntryGenerator.Generate(ext,
+                finalUrl,
+                hash,
+                version,
+                permissions,
+                browser,
+                resolvedAddonId);
+            return new ExtensionResult(ext, null, nixEntry, version);
         }
-        finally { if (File.Exists(tempFile)) File.Delete(tempFile); }
+        finally
+        {
+            if (File.Exists(tempFile)) File.Delete(tempFile);
+        }
     }
-    catch (Exception ex) { return new ExtensionResult(ext, ex.Message, null, null, null); }
+    catch (Exception ex)
+    {
+        return new ExtensionResult(ext, ex.Message, null, null);
+    }
 }
 
-async Task<string> GetChromiumMajorVersionAsync(string? cachedVersion)
+async Task<string> GetChromiumMajorVersionAsync(string? cachedVersion, CancellationToken ct = default)
 {
     if (cachedVersion != null)
         return cachedVersion;
 
     try
     {
-        var output = await ProcessUtils.RunAsync("nix",
-            "eval --impure --expr 'with import <nixpkgs> {}; lib.getVersion chromium'");
+        var output = (await Cli.Wrap("nix")
+            .WithArguments([
+                "eval",
+                "--impure",
+                "--expr",
+                "with import <nixpkgs> {}; lib.getVersion chromium"
+            ])
+            .ExecuteBufferedAsync(ct)).StandardOutput;
         var version = output.Trim().Trim('"').Split('.')[0];
         if (int.TryParse(version, out _))
             return version;
@@ -316,14 +320,21 @@ async Task<string> GetChromiumMajorVersionAsync(string? cachedVersion)
     return "143";
 }
 
-async Task<string> CalculateNixHashAsync(string filePath)
+async Task<string> CalculateNixHashAsync(string filePath, CancellationToken ct = default)
 {
     await using var stream = File.OpenRead(filePath);
-    using var sha256 = SHA256.Create();
-    var hash = await sha256.ComputeHashAsync(stream);
-    var hexHash = Convert.ToHexString(hash).ToLowerInvariant();
+    var hash = await SHA256.HashDataAsync(stream, ct);
+    var hexHash = Convert.ToHexStringLower(hash);
 
-    var output = await ProcessUtils.RunAsync("nix", $"hash to-sri --type sha256 {hexHash}");
+    var output = (await Cli.Wrap("nix")
+        .WithArguments([
+            "hash",
+            "to-sri",
+            "--type",
+            "sha256",
+            hexHash
+        ])
+        .ExecuteBufferedAsync(ct)).StandardOutput;
     return output.Trim();
 }
 
@@ -331,7 +342,8 @@ async Task<string> CalculateNixHashAsync(string filePath)
 // ZIP file format: [PK\x03\x04 magic][local file header]...
 // Since CRX wraps a ZIP archive, we need to extract ZIP portion to read manifest.json
 // ZIP magic: PK\x03\x04 - Phil Katz's ZIP signature (from ZIP File Format Specification by PKWARE, Inc.)
-async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersionAndPermissionsAsync(string extensionPath)
+async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersionAndPermissionsAsync(
+    string extensionPath)
 {
     // CRX magic: "Cr24" - Chrome Extension file identifier
     var crxMagic = "Cr24"u8.ToArray();
@@ -346,7 +358,7 @@ async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersi
     if (headerBytes.SequenceEqual(crxMagic))
     {
         var allBytes = await File.ReadAllBytesAsync(extensionPath);
-        var zipOffset = FindPattern(allBytes.AsSpan(), zipMagic);
+        var zipOffset = allBytes.AsSpan().IndexOf(zipMagic);
 
         if (zipOffset < 0)
             throw new InvalidOperationException("Could not find ZIP archive within CRX file");
@@ -386,17 +398,22 @@ async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersi
                 .ToArray();
         }
 
-        var hostPermissions = new List<string>();
-        if (manifest.RootElement.TryGetProperty("host_permissions", out var hostPerms) && hostPerms.ValueKind == JsonValueKind.Array)
+        List<string> hostPermissions = [];
+        if (manifest.RootElement.TryGetProperty("host_permissions",
+                out var hostPerms) &&
+            hostPerms.ValueKind == JsonValueKind.Array)
         {
             hostPermissions.AddRange(hostPerms.EnumerateArray()
                 .Where(p => p.ValueKind == JsonValueKind.String)
                 .Select(p => p.GetString()!));
         }
-        else if (manifest.RootElement.TryGetProperty("optional_permissions", out var optPerms) && optPerms.ValueKind == JsonValueKind.Array)
+        else if (manifest.RootElement.TryGetProperty("optional_permissions",
+                     out var optPerms) &&
+                 optPerms.ValueKind == JsonValueKind.Array)
         {
             hostPermissions.AddRange(optPerms.EnumerateArray()
-                .Where(p => p.ValueKind == JsonValueKind.String && p.GetString()!.Contains('/') || p.GetString()!.Contains('*'))
+                .Where(p => p.ValueKind == JsonValueKind.String &&
+                            (p.GetString()!.Contains('/') || p.GetString()!.Contains('*')))
                 .Select(p => p.GetString()!));
         }
 
@@ -422,28 +439,20 @@ async Task<(string Version, string[] Permissions, string? AddonId)> ExtractVersi
     finally { if (zipPath != extensionPath && File.Exists(zipPath)) File.Delete(zipPath); }
 }
 
-// Searches for a byte pattern in data and returns the index of first occurrence, or -1 if not found.
-// Used to locate the ZIP magic number (PK\x03\x04) within CRX files to extract the ZIP archive.
-int FindPattern(ReadOnlySpan<byte> data, ReadOnlySpan<byte> pattern)
-{
-    for (var i = 0; i <= data.Length - pattern.Length; i++)
-        if (data.Slice(i, pattern.Length).SequenceEqual(pattern))
-            return i;
-    return -1;
-}
-
 async Task GenerateNixFile(string outputFile, List<ExtensionResult> results, bool hasConditions, BrowserType browser)
 {
     var configParam = hasConditions ? "  config," + Environment.NewLine : "";
 
     var unconditionalEntries = results
         .Where(r => string.IsNullOrEmpty(r.Extension.Condition) && r.NixEntry != null)
-        .OrderBy(r => r.Extension.Id).ToList();
+        .OrderBy(r => r.Extension.Id)
+        .ToList();
     var conditionalEntries = results
         .Where(r => !string.IsNullOrEmpty(r.Extension.Condition) && r.NixEntry != null)
-        .OrderBy(r => r.Extension.Id).ToList();
+        .OrderBy(r => r.Extension.Id)
+        .ToList();
 
-    var sb = new StringBuilder();
+    StringBuilder sb = new();
 
     sb.AppendLine("# This file is auto-generated by an update script");
     sb.AppendLine("# DO NOT edit manually");
@@ -494,77 +503,15 @@ async Task GenerateNixFile(string outputFile, List<ExtensionResult> results, boo
     await File.WriteAllTextAsync(outputFile, sb.ToString());
 }
 
-async Task ValidateNixFile(string outputFile)
+async Task ValidateNixFile(string outputFile, CancellationToken ct = default)
 {
-    try { await ProcessUtils.RunAsync("nix-instantiate", $"--parse {outputFile}"); }
+    try { await Cli.Wrap("nix-instantiate").WithArguments(["--parse", outputFile]).ExecuteAsync(ct); }
     catch { throw new InvalidOperationException("Generated nix file is invalid"); }
-}
-
-internal static class ProcessUtils
-{
-    public static async Task<string> RunAsync(string command, string arguments, string? workingDir = null)
-    {
-        ProcessStartInfo psi = new()
-        {
-            FileName = command,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            WorkingDirectory = workingDir
-        };
-
-        foreach (var arg in ParseArguments(arguments))
-            psi.ArgumentList.Add(arg);
-
-        using var process = Process.Start(psi) ?? throw new InvalidOperationException($"Failed to start process: {command}");
-        var output = await process.StandardOutput.ReadToEndAsync();
-        var error = await process.StandardError.ReadToEndAsync();
-        await process.WaitForExitAsync();
-
-        return process.ExitCode != 0
-            ? throw new InvalidOperationException($"Process {command} exited with code {process.ExitCode}: {error}")
-            : output;
-    }
-
-    private static List<string> ParseArguments(string arguments)
-    {
-        var args = new List<string>();
-        var current = new StringBuilder();
-        var inQuotes = false;
-
-        foreach (var c in arguments)
-        {
-            switch (c)
-            {
-                case '\'':
-                    inQuotes = !inQuotes;
-                    break;
-                case ' ' when !inQuotes:
-                    {
-                        if (current.Length > 0)
-                        {
-                            args.Add(current.ToString());
-                            current.Clear();
-                        }
-
-                        break;
-                    }
-                default:
-                    current.Append(c);
-                    break;
-            }
-        }
-
-        if (current.Length > 0)
-            args.Add(current.ToString());
-
-        return args;
-    }
 }
 
 internal static class GitHubUtils
 {
-    public static string? GetToken()
+    public static async Task<string?> GetTokenAsync(CancellationToken ct = default)
     {
         var envToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
         if (!string.IsNullOrEmpty(envToken))
@@ -572,7 +519,7 @@ internal static class GitHubUtils
 
         try
         {
-            var ghToken = ProcessUtils.RunAsync("gh", "auth token").Result.Trim();
+            var ghToken = (await Cli.Wrap("gh").WithArguments(["auth", "token"]).ExecuteBufferedAsync(ct)).StandardOutput.Trim();
             if (!string.IsNullOrEmpty(ghToken) && ghToken.StartsWith("gho_"))
                 return ghToken;
         }
@@ -630,33 +577,57 @@ internal readonly record struct Extension(
 
 internal readonly record struct GithubReleaseConfig(string? Owner, string? Repo, string? Pattern);
 
-internal readonly record struct ExtensionResult(Extension Extension, string? Error, string? NixEntry, string? Version, string[]? Permissions);
+internal readonly record struct ExtensionResult(Extension Extension, string? Error, string? NixEntry, string? Version);
 
 internal readonly record struct GitHubRelease(
     [property: JsonPropertyName("tag_name")] string? TagName,
     [property: JsonPropertyName("name")] string? Name
 );
 
-[JsonSerializable(typeof(GitHubRelease))]
-internal partial class GitHubReleaseContext : JsonSerializerContext;
-
-internal readonly record struct AmoFile(
-    [property: JsonPropertyName("url")] string Url
+internal record NixInputFile(
+    [property: JsonPropertyName("browser")] string? Browser,
+    [property: JsonPropertyName("extensions")] NixInputExtension[] Extensions,
+    [property: JsonPropertyName("config")] NixInputConfig? Config = null
 );
 
-internal readonly record struct AmoVersion(
-    [property: JsonPropertyName("file")] AmoFile? File
+internal record NixInputExtension(
+    [property: JsonPropertyName("id")] string? Id,
+    [property: JsonPropertyName("name")] string? Name = null,
+    [property: JsonPropertyName("source")] string? Source = null,
+    [property: JsonPropertyName("url")] string? Url = null,
+    [property: JsonPropertyName("condition")] string? Condition = null,
+    [property: JsonPropertyName("owner")] string? Owner = null,
+    [property: JsonPropertyName("repo")] string? Repo = null,
+    [property: JsonPropertyName("pattern")] string? Pattern = null,
+    [property: JsonPropertyName("version")] string? Version = null
 );
 
+internal record NixInputConfig(
+    [property: JsonPropertyName("sources")] NixInputSources? Sources = null
+);
+
+internal record NixInputSources(
+    [property: JsonPropertyName("github-releases")] NixInputGithubReleases? GithubReleases = null
+);
+
+internal record NixInputGithubReleases(
+    [property: JsonPropertyName("owner")] string? Owner = null,
+    [property: JsonPropertyName("repo")] string? Repo = null,
+    [property: JsonPropertyName("pattern")] string? Pattern = null
+);
+
+internal readonly record struct AmoFile([property: JsonPropertyName("url")] string Url);
+internal readonly record struct AmoVersion([property: JsonPropertyName("file")] AmoFile? File);
 internal readonly record struct AmoAddon(
-    [property: JsonPropertyName("current_version")] AmoVersion? CurrentVersion,
-    [property: JsonPropertyName("guid")] string? Guid
-);
+    [property: JsonPropertyName("current_version")]
+    AmoVersion? CurrentVersion,
+    [property: JsonPropertyName("guid")] string? Guid);
 
-[JsonSerializable(typeof(AmoFile))]
-[JsonSerializable(typeof(AmoVersion))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
+[JsonSerializable(typeof(NixInputFile))]
+[JsonSerializable(typeof(GitHubRelease))]
 [JsonSerializable(typeof(AmoAddon))]
-internal partial class AmoAddonContext : JsonSerializerContext;
+internal partial class AppJsonContext : JsonSerializerContext;
 
 internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreClient)
 {
@@ -667,25 +638,27 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         GithubReleaseConfig config,
         BrowserType browser,
         string? browserVersion,
-        ProgressTask? task = null)
+        ProgressTask? task = null,
+        CancellationToken ct = default)
     {
         if (!browser.SupportsSource(ext.Source))
             return (null, $"Source '{ext.Source}' is not supported for {browser} browser", null);
 
         return ext.Source switch
         {
-            ExtensionSource.ChromeStore => (await FetchChromeStoreUrlAsync(ext.Id, browserVersion, task), null, null),
-            ExtensionSource.Amo => await FetchAmoUrlAndGuidAsync(ext.Id),
-            ExtensionSource.Bpc => (await FetchBpcUrlAsync(browser), null, null),
-            ExtensionSource.Url => (FetchUrlSource(ext).Url, FetchUrlSource(ext).Error, null),
-            ExtensionSource.GithubReleases => (await FetchGithubReleaseUrlAsync(ext, config, browser), null, null),
+            ExtensionSource.ChromeStore => (await FetchChromeStoreUrlAsync(ext.Id, browserVersion, task, ct), null, null),
+            ExtensionSource.Amo => await FetchAmoUrlAndGuidAsync(ext.Id, ct),
+            ExtensionSource.Bpc => (await FetchBpcUrlAsync(browser, ct), null, null),
+            ExtensionSource.Url => FetchUrlSource(ext) is var result ? (result.Url, result.Error, null) : default,
+            ExtensionSource.GithubReleases => (await FetchGithubReleaseUrlAsync(ext, config, browser, ct), null, null),
             _ => (null, $"Unknown source '{ext.Source}'", null)
         };
     }
 
     private async Task<string?> FetchChromeStoreUrlAsync(string extensionId,
         string? browserVersion,
-        ProgressTask? task = null)
+        ProgressTask? task = null,
+        CancellationToken ct = default)
     {
         var prodVersion = browserVersion ?? "143";
         task?.Increment(10);
@@ -703,23 +676,23 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
                 .ToString()
         };
 
-        var response = await chromeStoreClient.GetAsync(uriBuilder.Uri);
+        var response = await chromeStoreClient.GetAsync(uriBuilder.Uri, ct);
 
         return (int)response.StatusCode is 302 or 301 ? response.Headers.Location?.ToString() : null;
     }
 
-    private async Task<(string? Url, string? Error, string? AddonId)> FetchAmoUrlAndGuidAsync(string extensionSlug)
+    private async Task<(string? Url, string? Error, string? AddonId)> FetchAmoUrlAndGuidAsync(string extensionSlug,
+        CancellationToken ct = default)
     {
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://addons.mozilla.org/api/v5/addons/addon/{extensionSlug}/");
             request.Headers.Add("User-Agent", "BrowserExtensionsUpdater");
 
-            var response = await client.SendAsync(request);
+            var response = await client.SendAsync(request, ct);
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
-            var addon = JsonSerializer.Deserialize(content, AmoAddonContext.Default.AmoAddon);
+            var addon = await response.Content.ReadFromJsonAsync(AppJsonContext.Default.AmoAddon, ct);
 
             var url = addon.CurrentVersion?.File?.Url;
             var guid = addon.Guid;
@@ -733,13 +706,19 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         }
     }
 
-    private static async Task<string?> FetchBpcUrlAsync(BrowserType browser)
+    private static async Task<string?> FetchBpcUrlAsync(BrowserType browser, CancellationToken ct = default)
     {
         var filename = browser == BrowserType.Chromium
             ? "bypass-paywalls-chrome-clean-latest.crx"
             : "bypass_paywalls_clean-latest.xpi";
 
-        var output = await ProcessUtils.RunAsync("git", $"ls-remote {BpcRepo} HEAD");
+        var output = (await Cli.Wrap("git")
+            .WithArguments([
+                "ls-remote",
+                BpcRepo,
+                "HEAD"
+            ])
+            .ExecuteBufferedAsync(ct)).StandardOutput;
         var commit = output.Split('\t')[0];
 
         if (string.IsNullOrEmpty(commit))
@@ -765,7 +744,10 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         return (ext.Url, null);
     }
 
-    private async Task<string?> FetchGithubReleaseUrlAsync(Extension ext, GithubReleaseConfig config, BrowserType browser)
+    private async Task<string?> FetchGithubReleaseUrlAsync(Extension ext,
+        GithubReleaseConfig config,
+        BrowserType browser,
+        CancellationToken ct = default)
     {
         var owner = ext.Owner ??
                     config.Owner ?? throw new InvalidOperationException("GitHub release source requires 'owner' field");
@@ -781,7 +763,7 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         }
         else
         {
-            finalVersion = await FetchLatestGithubReleaseVersionAsync(owner, repo);
+            finalVersion = await FetchLatestGithubReleaseVersionAsync(owner, repo, ct);
         }
 
         if (!string.IsNullOrEmpty(pattern))
@@ -797,21 +779,22 @@ internal class ExtensionSourceHandler(HttpClient client, HttpClient chromeStoreC
         return BuildGithubReleaseDownloadUrl(owner, repo, finalVersion, ext.Id, extension);
     }
 
-    private async Task<string> FetchLatestGithubReleaseVersionAsync(string owner, string repo)
+    private async Task<string> FetchLatestGithubReleaseVersionAsync(string owner,
+        string repo,
+        CancellationToken ct = default)
     {
         HttpRequestMessage request = new(HttpMethod.Get, $"https://api.github.com/repos/{owner}/{repo}/releases/latest");
         request.Headers.Add("User-Agent", "BrowserExtensionsUpdater");
         request.Headers.Add("Accept", "application/vnd.github.v3+json");
 
-        var githubToken = GitHubUtils.GetToken();
+        var githubToken = await GitHubUtils.GetTokenAsync(ct);
         if (!string.IsNullOrEmpty(githubToken))
             request.Headers.Add("Authorization", $"token {githubToken}");
 
-        var response = await client.SendAsync(request);
+        var response = await client.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync();
-        var release = JsonSerializer.Deserialize(content, GitHubReleaseContext.Default.GitHubRelease);
+        var release = await response.Content.ReadFromJsonAsync(AppJsonContext.Default.GitHubRelease, ct);
 
         var tagName = release.TagName ?? release.Name;
 
@@ -875,19 +858,19 @@ internal static class NixEntryGenerator
     private static string GenerateFirefoxEntry(string id, string url, string hash, string version,
         string[]? permissions, string addonId)
     {
-        var metaPermissions = permissions != null && permissions.Length > 0
-            ? $$"""
+        var metaPermissions = permissions is { Length: > 0 }
+            ? $"""
               mozPermissions = [
-                {{string.Join('\n', permissions.Select(p => $"        \"{Escape(p)}\"").ToArray())}}
+                {string.Join('\n', permissions.Select(p => $"        \"{Escape(p)}\"").ToArray())}
               ]
               """
             : "";
 
         var metaContent = string.IsNullOrEmpty(metaPermissions)
             ? "platforms = platforms.all;"
-            : $$"""
+            : $"""
               platforms = platforms.all;
-              {{metaPermissions.Trim()}};
+              {metaPermissions.Trim()};
               """;
 
         return $$"""
@@ -905,7 +888,7 @@ internal static class NixEntryGenerator
     }
 
     public static string Escape(string s) =>
-        s.Replace("\\", @"\\").Replace("\"", "\\\"").Replace("$", "\\$").Replace("[", "[[").Replace("]", "]]");
+        s.Replace("\\", @"\\").Replace("\"", "\\\"").Replace("$", "\\$");
 }
 
 internal static class Icons
