@@ -52,10 +52,10 @@
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.120";
+    version = "4.9.123";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4690081/darkreader-4.9.120.xpi";
-    sha256 = "sha256-SWv1oOSk0mImUo7M4K4FHuPyMVPuSNUE1R8PIq+vD90=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4710145/darkreader-4.9.123.xpi";
+    sha256 = "sha256-mj5s2sU/ICV72BJkUywWr+2tAOsmI73tie0rMLHkAkM=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.1.4";
+    version = "4.3.2.2";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4e808e7c74b40e94b8415970916cdf46f2ace962";
-    sha256 = "sha256-IY9Ifj2Oc07i/bxRaylOza5LrWvoRAcYd+0qaBz9Fog=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=23cd19854fd411861e9a725ef0e044122a49e819";
+    sha256 = "sha256-7Z7jC9N7HWFLG+4iGzubG5RGkBcKMDC5jopBPz5m4xc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -319,6 +319,7 @@
         "*://*.cronista.com/*"
         "*://*.crusoe.com.br/*"
         "*://*.csmonitor.com/*"
+        "*://*.ctinsider.com/*"
         "*://*.ctpost.com/*"
         "*://*.curbed.com/*"
         "*://*.cw.com.tw/*"
@@ -343,6 +344,7 @@
         "*://*.denverpost.com/*"
         "*://*.derbund.ch/*"
         "*://*.desmoinesregister.com/*"
+        "*://*.derstandard.at/*"
         "*://*.destentor.nl/*"
         "*://*.detroitnews.com/*"
         "*://*.df.cl/*"
@@ -712,7 +714,6 @@
         "*://*.newsweek.com/*"
         "*://*.newsweek.pl/*"
         "*://*.newyorker.com/*"
-        "*://*.next.ink/*"
         "*://*.nhregister.com/*"
         "*://*.niagarafallsreview.ca/*"
         "*://*.nicematin.com/*"
@@ -738,6 +739,7 @@
         "*://*.nydailynews.com/*"
         "*://*.nymag.com/*"
         "*://*.nypost.com/*"
+        "*://*.nysun.com/*"
         "*://*.nyteknik.se/*"
         "*://*.nytimes.com/*"
         "*://*.nzherald.co.nz/*"
@@ -921,7 +923,6 @@
         "*://*.the-independent.com/*"
         "*://*.the-past.com/*"
         "*://*.the-scientist.com/*"
-        "*://*.the-star.co.ke/*"
         "*://*.the-tls.com/*"
         "*://*.theadvocate.com.au/*"
         "*://*.theadvocate.com/*"
@@ -1052,6 +1053,7 @@
         "*://*.womenshealthmag.com/*"
         "*://*.womensrunning.com/*"
         "*://*.wonderzine.com/*"
+        "*://*.worldeconomics.com/*"
         "*://*.wp.de/*"
         "*://*.wr.de/*"
         "*://*.wsj.com/*"
@@ -1121,6 +1123,7 @@
         "*://*.djservices.io/*"
         "*://*.fnetcore-api-prod.azurewebsites.net/*"
         "*://*.funkemedien.de/*"
+        "*://*.mediafin.be/*"
         "*://codebeautify.org/*"
         "*://gitflic.ru/*"
         "*://*/*"
@@ -1263,10 +1266,10 @@
   };
   "steam-database" = buildFirefoxXpiAddon {
     pname = "steam-database";
-    version = "4.32";
+    version = "4.33";
     addonId = "firefox-extension@steamdb.info";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4657779/steam_database-4.32.xpi";
-    sha256 = "sha256-ibK4EuD0tY00qvLtj6mhhoQtbJ3wY2Q3+Ur/TS4JgEw=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4704123/steam_database-4.33.xpi";
+    sha256 = "sha256-enoGkukwbsG06vIbtKy68NCx9qbprNykCQPfA/2R908=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1346,10 +1349,10 @@
   };
   "view-page-archive" = buildFirefoxXpiAddon {
     pname = "view-page-archive";
-    version = "7.2.0";
+    version = "7.3.0";
     addonId = "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4635665/view_page_archive-7.2.0.xpi";
-    sha256 = "sha256-4jTX0ihjiBs2dvVoUwZgJEO+pDLCCvdhlZRU8Wlud5s=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4695473/view_page_archive-7.3.0.xpi";
+    sha256 = "sha256-28rxrQLBZOikRly9wBNofBa236gPxCsEoul+nzwARHo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1381,10 +1384,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.20.1";
+    version = "2.21.1";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4685260/youtube_no_translation-2.20.1.xpi";
-    sha256 = "sha256-xpNToJjibqxW071bu/SG0Xb7VX0ncFbpX2lb6bwaMFU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4714437/youtube_no_translation-2.21.1.xpi";
+    sha256 = "sha256-ps4MkQRsNdTqwOS7/+h/GaBIHdSdBLOUP8NMAIQPzrk=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
