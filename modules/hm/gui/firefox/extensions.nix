@@ -30,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.1.4";
+    version = "4.3.2.2";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4e808e7c74b40e94b8415970916cdf46f2ace962";
-    sha256 = "sha256-IY9Ifj2Oc07i/bxRaylOza5LrWvoRAcYd+0qaBz9Fog=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=23cd19854fd411861e9a725ef0e044122a49e819";
+    sha256 = "sha256-7Z7jC9N7HWFLG+4iGzubG5RGkBcKMDC5jopBPz5m4xc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -202,6 +202,7 @@
         "*://*.cronista.com/*"
         "*://*.crusoe.com.br/*"
         "*://*.csmonitor.com/*"
+        "*://*.ctinsider.com/*"
         "*://*.ctpost.com/*"
         "*://*.curbed.com/*"
         "*://*.cw.com.tw/*"
@@ -226,6 +227,7 @@
         "*://*.denverpost.com/*"
         "*://*.derbund.ch/*"
         "*://*.desmoinesregister.com/*"
+        "*://*.derstandard.at/*"
         "*://*.destentor.nl/*"
         "*://*.detroitnews.com/*"
         "*://*.df.cl/*"
@@ -595,7 +597,6 @@
         "*://*.newsweek.com/*"
         "*://*.newsweek.pl/*"
         "*://*.newyorker.com/*"
-        "*://*.next.ink/*"
         "*://*.nhregister.com/*"
         "*://*.niagarafallsreview.ca/*"
         "*://*.nicematin.com/*"
@@ -621,6 +622,7 @@
         "*://*.nydailynews.com/*"
         "*://*.nymag.com/*"
         "*://*.nypost.com/*"
+        "*://*.nysun.com/*"
         "*://*.nyteknik.se/*"
         "*://*.nytimes.com/*"
         "*://*.nzherald.co.nz/*"
@@ -804,7 +806,6 @@
         "*://*.the-independent.com/*"
         "*://*.the-past.com/*"
         "*://*.the-scientist.com/*"
-        "*://*.the-star.co.ke/*"
         "*://*.the-tls.com/*"
         "*://*.theadvocate.com.au/*"
         "*://*.theadvocate.com/*"
@@ -935,6 +936,7 @@
         "*://*.womenshealthmag.com/*"
         "*://*.womensrunning.com/*"
         "*://*.wonderzine.com/*"
+        "*://*.worldeconomics.com/*"
         "*://*.wp.de/*"
         "*://*.wr.de/*"
         "*://*.wsj.com/*"
@@ -1004,6 +1006,7 @@
         "*://*.djservices.io/*"
         "*://*.fnetcore-api-prod.azurewebsites.net/*"
         "*://*.funkemedien.de/*"
+        "*://*.mediafin.be/*"
         "*://codebeautify.org/*"
         "*://gitflic.ru/*"
         "*://*/*"
@@ -1012,10 +1015,10 @@
   };
   "refined-github-" = buildFirefoxXpiAddon {
     pname = "refined-github-";
-    version = "26.2.19";
+    version = "26.3.3";
     addonId = "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4699432/refined_github-26.2.19.xpi";
-    sha256 = "sha256-5PSNzuGju1720kiaSK6LT6sN9WgVMUZWM5g/wRG3k7c=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4712327/refined_github-26.3.3.xpi";
+    sha256 = "sha256-x5SyydZbo2NWJ3TeNbVSd3IR23xgRN/T0HvM+TB3K3U=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
