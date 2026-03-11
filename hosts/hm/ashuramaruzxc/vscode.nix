@@ -126,6 +126,7 @@ in
         # Workbench
         "workbench.editor.showIcons" = true;
         "workbench.sideBar.location" = "right";
+        "workbench.secondarySideBar.defaultVisibility" = "hidden";
         "window.titleBarStyle" = "native";
         "telemetry.telemetryLevel" = "off";
 
