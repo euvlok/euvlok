@@ -32,7 +32,7 @@
     pname = "magnolia@12.34";
     version = "4.3.2.2";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=6b23c6d4e4585f18617a9dba66b1f475fc6adde3";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=a874af47127892ccc1da41986a30c934e01b6f01";
     sha256 = "sha256-7Z7jC9N7HWFLG+4iGzubG5RGkBcKMDC5jopBPz5m4xc=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1051,10 +1051,10 @@
   };
   "ublock-origin" = buildFirefoxXpiAddon {
     pname = "ublock-origin";
-    version = "1.69.0";
+    version = "1.70.0";
     addonId = "uBlock0@raymondhill.net";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4675310/ublock_origin-1.69.0.xpi";
-    sha256 = "sha256-eFvN5ool+qiglJlk7F/+m9y4XT8K4hwj9gfGyPkUcs8=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4721638/ublock_origin-1.70.0.xpi";
+    sha256 = "sha256-8nMNKHcAV2OkXXZXSYkuk29JyucT0o96puoxRFS4nPE=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
