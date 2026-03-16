@@ -64,11 +64,11 @@ lib.flatten [
   {
     id = "lmkeolibdeeglfglnncmfleojmakecjb";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTBMpBmnyvowaPGwXxAh9dSYR-vttX1yI_hnq7vnnBFT8TOaNsahS-7QgFDo1DbcQypWVig9jNGMUIgal2dBw3rSDC_Aa3IQhFG05scHOSzTmVwta7eCz8JAnB_ohXYAxlKa5cLf8fcqoQz5cpGdPBYdbYkYDFnV/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_21_2_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTBpu5OPdPfy2JdoaPXcERu3LW_yhqp9qDI2wmNEju7sMep26qPIXVW2l3C2T6epvMdPv_pkT9FkUODjrwvzEXkreLLk4iWK7oZwLwO0lEa0dU4Fko-ST8UJOT36qDgAxlKa5dWFrGUHG8FG_2_6sBAH2r7D2yBs/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_21_3_0.crx";
       name = "lmkeolibdeeglfglnncmfleojmakecjb.crx";
-      hash = "sha256-ArT/ku8rr4ZoRF54V7pBdtKsLOsC4lbB+ZJ4H5UzeBk=";
+      hash = "sha256-ekTTxOqEhkdT9yZLrJ9O5keksuzPyj2f/BW0Pc9K3LA=";
     };
-    version = "2.21.2";
+    version = "2.21.3";
   }
   {
     id = "mnjggcdmjocbbbhaepdhchncahnbgone";
