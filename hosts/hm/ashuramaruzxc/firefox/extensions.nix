@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.2.2";
+    version = "4.3.3.0";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=e4fc570f1f10505b47e0db3f9e8015039f37445d";
-    sha256 = "sha256-7Z7jC9N7HWFLG+4iGzubG5RGkBcKMDC5jopBPz5m4xc=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=6e4003d587b60b1282acf04177a8898678dcf7ea";
+    sha256 = "sha256-E2zGgjImabcFRmm4XRWNz9xmySIY5F7PI2Fkgzrafw0=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -331,6 +331,7 @@
         "*://*.dailyliberal.com.au/*"
         "*://*.dailymail.co.uk/*"
         "*://*.dailypress.com/*"
+        "*://*.dailyrecord.co.uk/*"
         "*://*.dailytelegraph.com.au/*"
         "*://*.dailywire.com/*"
         "*://*.dallasnews.com/*"
@@ -418,11 +419,13 @@
         "*://*.exame.com/*"
         "*://*.examiner.com.au/*"
         "*://*.expansion.com/*"
+        "*://*.express.co.uk/*"
         "*://*.expressnews.com/*"
         "*://*.expresso.pt/*"
         "*://*.farodevigo.es/*"
         "*://*.fastcompany.com/*"
         "*://*.faz.net/*"
+        "*://*.fd.nl/*"
         "*://*.femmesdaujourdhui.be/*"
         "*://*.fieldandstream.com/*"
         "*://*.financialexpress.com/*"
@@ -446,6 +449,7 @@
         "*://*.foxnews.com/*"
         "*://*.fr.de/*"
         "*://*.freep.com/*"
+        "*://*.freiepresse.de/*"
         "*://*.freitag.de/*"
         "*://*.fresnobee.com/*"
         "*://*.ft.com/*"
