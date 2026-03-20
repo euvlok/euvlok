@@ -14,7 +14,7 @@
 
 # 🇪🇺 ❄️ EUVlok
 
-__EU__ stands for the European Union, while __vlok__ comes from the Dutch word
+**EU** stands for the European Union, while **vlok** comes from the Dutch word
 for "flake".
 
 When choosing the name for this repository, we focused on three factors:
@@ -28,14 +28,14 @@ Dolstra](https://edolstra.github.io/). Additionally, the Netherlands is a
 strong supporter of the EU, shares its values, and has close ties to both Nix
 and NixOS.
 
-----
+---
 
 ## 👋🏻 👥 Welcome to our communal repository
 
 As friends, we've decided to create this shared repo where we will store
 our dotfiles. This endeavor is more than just a convenient place to keep our
-dotfiles. It's a shared commitment to __deepen our understanding of Nix and
-collectively learn and grow.__
+dotfiles. It's a shared commitment to **deepen our understanding of Nix and
+collectively learn and grow.**
 
 We frequently discuss Nix and share new programs with each other. Previously,
 our repositories were separate, which made instant sharing difficult.
@@ -48,13 +48,13 @@ Beyond the immediate benefits of sharing _(between ourselves)_, a core
 motivation for this communal repository is our ambition to truly push Nix to its
 limits. Crafting an isolated Nix configuration tailored to a single individual
 is _relatively easy_, you can take as many shortcuts as you like, and design
-choices be damned. ___We, however, aspire to the opposite.___
+choices be damned. **_We, however, aspire to the opposite._**
 
 We want to cultivate a shared "system," so to speak, that is not only robust and
 highly maintainable, but also serves as a practical demonstration of advanced,
 collaborative testament to what can be done with Nix.
 
-----
+---
 
 ## 🤝🏻 🤲🏻 Open Hands, Open Code
 
@@ -75,7 +75,7 @@ confident that substantial portions—especially the opinionated sections
 and custom generic functions for modules—will be still useful to anyone who
 discovers this repo.
 
-----
+---
 
 ## 🤔 🔍 What do I look for?
 
@@ -101,9 +101,9 @@ nix resources
 - [Noogle](https://noogle.dev/)
 
 - [Nixpkgs](https://github.com/NixOS/nixpkgs)
-(<https://github.com/NixOS/nixpkgs>)
+  (<https://github.com/NixOS/nixpkgs>)
 - [Nixpkgs Docs](https://github.com/NixOS/nixpkgs/tree/master/doc)
-(<https://github.com/NixOS/nixpkgs/tree/master/doc>)
+  (<https://github.com/NixOS/nixpkgs/tree/master/doc>)
 - [Nixpkgs 25.05 Release Notes](https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md)
 
 - [Home Manager Unstable Options](https://home-manager-options.extranix.com/?query=&release=master)

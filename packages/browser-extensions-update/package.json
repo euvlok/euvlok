@@ -1,0 +1,21 @@
+{
+  "name": "@euvlok/browser-extensions-update",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@euvlok/shared": "workspace:*",
+    "citty": "^0.2.1",
+    "consola": "^3.4.2",
+    "fflate": "^0.8.2",
+    "figlet": "^1.11.0",
+    "listr2": "^10.2.1",
+    "ofetch": "^1.5.1",
+    "p-limit": "^7.3.0",
+    "pathe": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.7.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@euvlok/auto-rebase",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun test",
+    "test:watch": "bun test --watch"
+  },
+  "dependencies": {
+    "@euvlok/shared": "workspace:*",
+    "citty": "^0.2.1",
+    "consola": "^3.4.2",
+    "pathe": "^2.0.3"
+  }
+}

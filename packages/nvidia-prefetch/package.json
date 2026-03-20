@@ -1,0 +1,13 @@
+{
+  "name": "@euvlok/nvidia-prefetch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@euvlok/shared": "workspace:*",
+    "citty": "^0.2.1",
+    "consola": "^3.4.2",
+    "pathe": "^2.0.3"
+  }
+}
