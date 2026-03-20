@@ -140,7 +140,7 @@
               hooks.shellcheck.enable = true;
             };
             packages = builtins.attrValues {
-              inherit (pkgs) git pre-commit;
+              inherit (pkgs) git pre-commit bun;
               inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
             };
           };
@@ -151,9 +151,9 @@
               type = "app";
               program =
                 let
-                  scriptFile = ./auto-rebase.sh;
                   script = pkgs.writeShellScriptBin "auto-rebase" ''
-                    ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} "$@"
+                    cd "$(git rev-parse --show-toplevel)"
+                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/auto-rebase/src/index.ts -- "$@"
                   '';
                 in
                 "${script}/bin/auto-rebase";
@@ -162,9 +162,9 @@
               type = "app";
               program =
                 let
-                  scriptFile = ./modules/scripts/browser-extensions-update.cs;
                   script = pkgs.writeShellScriptBin "browser-extension" ''
-                    ${pkgs.lib.getExe' pkgs.dotnetCorePackages.sdk_10_0-bin "dotnet"} run ${scriptFile} "$@"
+                    cd "$(git rev-parse --show-toplevel)"
+                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/browser-extensions-update/src/index.ts -- "$@"
                   '';
                 in
                 "${script}/bin/browser-extension";
@@ -173,9 +173,9 @@
               type = "app";
               program =
                 let
-                  scriptFile = ./modules/scripts/nvidia-prefetch.sh;
                   script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
-                    cd "$PWD" && ${pkgs.lib.getExe' pkgs.nix "nix-shell"} ${scriptFile} "$@"
+                    cd "$(git rev-parse --show-toplevel)"
+                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/nvidia-prefetch/src/index.ts -- "$@"
                   '';
                 in
                 "${script}/bin/nvidia-prefetch";

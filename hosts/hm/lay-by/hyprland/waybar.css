@@ -8,5 +8,5 @@
   padding-bottom: 0;
 }
 window#waybar {
-  background: shade(alpha(@borders, 0.8), 1.0);
+  background: shade(alpha(@borders, 0.8), 1);
 }
