@@ -144,7 +144,7 @@ lib.flatten [
   {
     id = "nhdogjmejiglipccpnnnanhbledajbpd";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa4meFcGsRDazLOWIq704VaSjxzJCFz1mam_DqGUAxxT9_3CODeC-_lcncoef8o0YmTW9KZUkN-fsvP2dXcQFq872zd3ylJCLNkmoOTTkyubKvQrlLPlBIO8RdMXWCK-AMZSmuWLPfRb3VmfY__V72sbnQoru6lMAw/NHDOGJMEJIGLIPCCPNNNANHBLEDAJBPD_7_7_7_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTCypALI0wsEXKWnvsbth8DtmD-y2IOk-T_fXswrldWJocOHz_2sioljbA4MLyzLxzlGagsMa7rbd5Fu5sM_4JWTTZ25NQDnBwDwO9JTPxga4hXuO1c4ftVD4KehoVdsAMZSmuU3M1ZbuapAnsTqpyrINgR6KRYTDQ/NHDOGJMEJIGLIPCCPNNNANHBLEDAJBPD_7_7_7_0.crx";
       name = "nhdogjmejiglipccpnnnanhbledajbpd.crx";
       hash = "sha256-v1ZcI/2eLAdO1HFE0FBDNveH5fEFOI9zxihG3ukvASQ=";
     };
