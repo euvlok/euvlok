@@ -26,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.1.1";
+    version = "2026.2.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4698131/bitwarden_password_manager-2026.1.1.xpi";
-    sha256 = "sha256-YUOvXWHZUCH83Wk5q4wY+VNfd1yA1LafddHSOPga40c=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4715321/bitwarden_password_manager-2026.2.0.xpi";
+    sha256 = "sha256-5UmZ1FrhzQAUUqNClCQGM8iala6DLyEnIddGqJVVlY4=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1136,10 +1136,10 @@
   };
   "multi-account-containers" = buildFirefoxXpiAddon {
     pname = "multi-account-containers";
-    version = "8.3.6";
+    version = "8.3.7";
     addonId = "@testpilot-containers";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4627302/multi_account_containers-8.3.6.xpi";
-    sha256 = "sha256-vz3jW4RL7PFmRJ8dkn+ZSiq6+4/Ezod+ynqMbNEk00o=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4733069/multi_account_containers-8.3.7.xpi";
+    sha256 = "sha256-f29e97EG0z0bmdLF5TogZdB/eEsYUv6bn3g5TptAUWU=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
