@@ -1161,10 +1161,10 @@
   };
   "old-reddit-redirect" = buildFirefoxXpiAddon {
     pname = "old-reddit-redirect";
-    version = "2.0.9";
+    version = "2.1.0";
     addonId = "{9063c2e9-e07c-4c2c-9646-cfe7ca8d0498}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4526031/old_reddit_redirect-2.0.9.xpi";
-    sha256 = "sha256-kedVS4W3kgH3LBdfbl9vSTszMO6DO4KJ+2QX2ZGt1Qo=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4716803/old_reddit_redirect-2.1.0.xpi";
+    sha256 = "sha256-LRpDKsqxtd2N+4/X7trfiLXBk4YASYoAlxDt9O8bD5o=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1388,10 +1388,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.21.1";
+    version = "2.21.4";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4714437/youtube_no_translation-2.21.1.xpi";
-    sha256 = "sha256-ps4MkQRsNdTqwOS7/+h/GaBIHdSdBLOUP8NMAIQPzrk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4732610/youtube_no_translation-2.21.4.xpi";
+    sha256 = "sha256-ksl7a+odHRRWPEZ6KZPNRIIoq6iVoW3xaIfGUGkHLpk=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
