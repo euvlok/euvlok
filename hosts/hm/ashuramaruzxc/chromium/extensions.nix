@@ -9,7 +9,7 @@ lib.flatten [
   {
     id = "bhchdcejhohfmigjafbampogmaanbfkg";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTCd9ZlKy8w1KIwrZpDqzuzJij1se-SCJOG1Rvh-nPTU_YHoLoy96XVPt-bDHQsp5rvhbLnvOfTSq0pTHDpsSwfXXnU0pP6__sz2IkwnpQOgiPXrJLFWIM8TmKAsJCUAxlKa5fPju4ySwp6pW-Nd3GRM1yIeSM85/BHCHDCEJHOHFMIGJAFBAMPOGMAANBFKG_0_6_6_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa5-0isTFyXmpyi13W6NHJxLI7HrZfp1z4GbxUK065wWW8syRZqjXXUwgBtSuzaJ5nw8yb5sQHs7x3lQgdvMFPS16J0s7TElRiBPScuz76UVVWiQ7xWlheIhCkzT_78AxlKa5ZhrBtIqrDCjJFBx4KyMBWL3ppgf/BHCHDCEJHOHFMIGJAFBAMPOGMAANBFKG_0_6_6_0.crx";
       name = "bhchdcejhohfmigjafbampogmaanbfkg.crx";
       hash = "sha256-2n0HNRR2NRWTxO96ytORUedOiFAZmopmUHv/S43PB0k=";
     };
@@ -54,7 +54,7 @@ lib.flatten [
   {
     id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTDT3AKATFV8WLLKmAHq35IMV-XqtWp0rvRVfEMLkTm9U1UqU9uRqNaJ5-JNhw5Wee1TXJCMWdhWMkzgXofIzhDic9YxCU4LI7i0WUdMiHnFqhV1aZTdH6-VPe289cYAxlKa5fGFp5IyTJwpL_G3OE51uCeVdOYJ/EIMADPBCBFNMBKOPOOJFEKHNKHDBIEEH_4_9_121_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa5eftAjq8aPVxjUWehFiNmN8kWxssuTgtQFsrtyaqxce6dAJwpYhWmcVv2z161oNtoObTWwC1fiQlHfmnEXXcTr-RD6oS_HzBOEvIxHlES73QAzEXROAGJdmnnEY7kAxlKa5XAC4ZHWRYnnEZaMIcwacEamSp1x/EIMADPBCBFNMBKOPOOJFEKHNKHDBIEEH_4_9_121_0.crx";
       name = "eimadpbcbfnmbkopoojfekhnkhdbieeh.crx";
       hash = "sha256-qNLM3j/z/Qt/2tUsmFIjpVH17V2Bj6aCwhgl3DprzH0=";
     };
@@ -81,7 +81,7 @@ lib.flatten [
   {
     id = "hipekcciheckooncpjeljhnekcoolahp";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTCmaJ7EfwA8eJiHfsFc-TIWrPLTOAh9vOor-yuB1MbjYXFvkNZocj4kKy1eDoQfoTrqAbcZ3w5xxLB7zQDHf5AhObmukNOdxdylQONsQO7A3FmNAMZSmuXYEINVPlBPpjOg8P0nUoj_Jz28Dw/HIPEKCCIHECKOONCPJELJHNEKCOOLAHP_2_6_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7YlZ2N3UYO8meiIPyU_06elBCwNa7jDaJnbiisxPc2hEtKyhs4wYJ7cOj0ugSb7LYo42iymZYpYxIPgHzI7ZxHllfRyHzZs951pWv03rGAarxHAMZSmuW4U5YXXerQ4nPZuTlCvIBhRFWgfA/HIPEKCCIHECKOONCPJELJHNEKCOOLAHP_2_6_0_0.crx";
       name = "hipekcciheckooncpjeljhnekcoolahp.crx";
       hash = "sha256-3a3HVG6dWVRx+EQ48gohNlu3BOzVZrpoZCxnf3chzRY=";
     };
@@ -90,7 +90,7 @@ lib.flatten [
   {
     id = "hkgfoiooedgoejojocmhlaklaeopbecg";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTDJFj0MQprUSFV9X72IO2qzpqHe7DxxJQ76DJAxN7xDcVxSpr6nQsBWKPXzUQ0Eoy75U5M1swelgpt_sFqC14f1LIL9xK7tLkWAlFH0wVtG4cEVrWHxoqVNewISGgDGUprlDHY3pmSJ0Sf59YrY-3nkDVrMZAc/HKGFOIOOEDGOEJOJOCMHLAKLAEOPBECG_1_14_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa6-3zLEPlGIyuYhV6U54pAQo1I293PrFdsZO9Yx9Zn6Vy_FxIj-SPieOxEciRitL3ZtM-g8I9EVAdnV-OE2rwuJDaS08H_DAvVdevflYQu2nMOMTiUvX0PVIg3SmgDGUprl9ja5TT5Kckt34k1AGR9BwP0JCeg/HKGFOIOOEDGOEJOJOCMHLAKLAEOPBECG_1_14_0_0.crx";
       name = "hkgfoiooedgoejojocmhlaklaeopbecg.crx";
       hash = "sha256-NaWNfAH9zyLIVpmK5+cb72PUZ3whU5NwCb+9BA45aGc=";
     };
@@ -153,7 +153,7 @@ lib.flatten [
   {
     id = "nngceckbapebfimnlniiiahkandclblb";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTC_A65rY0xo2qHYBm3U_YzKIDL6dbnlgnIQVAVpfV9L1v4NHybJhH8VPJ2yXKixJwfrxbtKwS5E8EL4K_XPFyiW8xZY4XY55c3sfdp2TH03WjT4B2EwkD5Dv_gSgCAQAMZSmuVbq_obon74AKFZqB1YNEbozQ4gGA/NNGCECKBAPEBFIMNLNIIIAHKANDCLBLB_2026_2_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa6nPoRPMPMI3vscIvuKi1gZK6OhgQczGqIq1GbFgyzevCoJ9Iq9xHQm647kVUk_SaeOAyPxPaxumZqJ_jJD49DWBm7z6wpghhlyYpZI_uykQ8aXG2uRPRiRi7_AtnyXAMZSmuVW1bsmSJYGZUclmG71X7s3exI-Cg/NNGCECKBAPEBFIMNLNIIIAHKANDCLBLB_2026_2_0_0.crx";
       name = "nngceckbapebfimnlniiiahkandclblb.crx";
       hash = "sha256-MlSOVJ9m8FApBZ4NhCne9ja/YXuLyX25eRPj34B9jpE=";
     };
@@ -162,7 +162,7 @@ lib.flatten [
   {
     id = "pobhoodpcipjmedfenaigbeloiidbflp";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTCrdtCT9E9fw3Ri9K5pfc1hslXxU99CB081YiNvGpB9CtpDEJNQBJDGKSLUf3oGIsSDR1AGo1EEmj7AYV-q56UIcg320Y3GhV00ewe-GYfddYdLuYZ8TD3QkhySJ_4AxlKa5YeZwjL-u55jOAqa4FT53rtqd661/POBHOODPCIPJMEDFENAIGBELOIIDBFLP_6_4_1_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa4exikoAOsKW15XzG0rqPjKbm-_pUiWUuCSsWoSRobBvn9qYutpjaYphb1dJ1nK3BQUxxG4Kwi5PrLvBTyZrgreH3IAKwsC716jKRuAR8uNorbl0a-GSkIiqjEOSPwAxlKa5e-rK6yMRcnpVL0C3-AWOOuBeQdQ/POBHOODPCIPJMEDFENAIGBELOIIDBFLP_6_4_1_0.crx";
       name = "pobhoodpcipjmedfenaigbeloiidbflp.crx";
       hash = "sha256-4sMXmTnApAGaK2aEhgp+Cp1vPweS78wRDn9cuYU0+VU=";
     };
