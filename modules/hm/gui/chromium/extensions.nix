@@ -10,7 +10,7 @@ lib.flatten [
   {
     id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7tT_SXuoGz4f73RVoXHiEQT7rm3V98edO5chUe020gbOfwQdzSy7x0Q-05bch0zoG5dRG8jvwGiT94rsXuXUg6BqbEVO7UVYM3nBQMdPwXtfv0kmtPtSSuwgI5F6gEAMZSmuWhjhcMIU5PSS5lMPXUquKEtGCdCg/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_70_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTDpfusaPBmtpXn-meLaKiQOnBzoLV__Ceoi0LMZ82zXN8L1haglaRVN5mLJQAI21qTtAlK91aEzJKrRli4CNpxt22GiqU_PkkUfdR49YP6KjykFnCmOhY9SV9qkjBOrAMZSmuXv7B9NIVwrz5dqWokeeF8eEQQ8JA/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_70_0_0.crx";
       name = "cjpalhdlnbpafiamejdnhcphjbkeiagm.crx";
       hash = "sha256-FIbmYVj8cmXce7Vq4h7d2nOjmk4RkCnABmC4y5NDyGk=";
     };
@@ -55,7 +55,7 @@ lib.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=1fd5068c24d5039d2b3ca9a6c5c1b10cee1c95b2";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=b30b3c0e20de2158f5e5ccdcd28bb5bef24550b9";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
       hash = "sha256-HRflRdBDvuIlhx8GP+g6ryWUvsvteWddLH02qteGV8U=";
     };
@@ -83,7 +83,7 @@ lib.flatten [
     {
       id = "lnjaiaapbakfhlbjenjkhffcdpoompki";
       crxPath = pkgs.fetchurl {
-        url = "https://clients2.googleusercontent.com/crx/blobs/Aa54OTC-ORdS9rm6j5gBVsNow1ruW4UNRbvV-aD9qTPxNkI3yDMz0EzoJHojdUKimzjCVw1-Bk_V5I5zIPDplX5NGrq6GAPpRXm3vkr9tTUTH2mCzCCp96xvbpNhtgBRU6oAxlKa5ezxbWWeBHpcErPurNxwomc6MT9v/LNJAIAAPBAKFHLBJENJKHFFCDPOOMPKI_1_6_1_0.crx";
+        url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa5Qqm3rL32c_mn0gHTPtCwoZe97M0p7ff90YdeKUgBWJvYdHcBxVgEVPeE_MBIvKy7F7MZvuJkdTY2mJxSwrMEIs6MFxSwKYD8de8PFpeAimCqsPGXsqsO-Ow5MmrMAxlKa5c-qlYvr0QIGLMChqIPfnrAnF6EV/LNJAIAAPBAKFHLBJENJKHFFCDPOOMPKI_1_6_1_0.crx";
         name = "lnjaiaapbakfhlbjenjkhffcdpoompki.crx";
         hash = "sha256-ym0nff+4QNPWR6QXDBzpxvAV4dIc8VV5m14uSs19HzU=";
       };
