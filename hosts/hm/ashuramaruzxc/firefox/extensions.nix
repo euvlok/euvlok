@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.3.0";
+    version = "4.3.3.7";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=fc04fb453f6d2d360f7dcb5a058a9e2283c468a7";
-    sha256 = "sha256-E2zGgjImabcFRmm4XRWNz9xmySIY5F7PI2Fkgzrafw0=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4c56aead596ec6e58ebb3f389cd2687de3d590c6";
+    sha256 = "sha256-GuYqh8HkMxItB8A1CLzrYR+bu8CUXfbVy0Uq+wyWAPo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -498,7 +498,6 @@
         "*://*.housebeautiful.com/*"
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
-        "*://*.huffingtonpost.it/*"
         "*://*.humanite.fr/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
@@ -909,7 +908,6 @@
         "*://*.swarajyamag.com/*"
         "*://*.sydsvenskan.se/*"
         "*://*.syracuse.com/*"
-        "*://*.t3n.de/*"
         "*://*.tagesanzeiger.ch/*"
         "*://*.tagesspiegel.de/*"
         "*://*.tampabay.com/*"
@@ -1009,7 +1007,6 @@
         "*://*.tucson.com/*"
         "*://*.tulsaworld.com/*"
         "*://*.tuttosport.com/*"
-        "*://*.tvn24.pl/*"
         "*://*.twincities.com/*"
         "*://*.unherd.com/*"
         "*://*.uol.com.br/*"
