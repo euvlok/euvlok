@@ -38,7 +38,10 @@
           services.easyeffects.enable = true;
           fonts.fontconfig.enable = true;
           xsession.numlock.enable = true;
-          programs.vscode.enable = true;
+          programs.vscode = {
+            enable = true;
+            mutableExtensionsDir = true;
+          };
         }
       ]
       ++ [

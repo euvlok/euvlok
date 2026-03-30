@@ -46,6 +46,8 @@
     zen-browser-trivial.inputs.home-manager.follows = "home-manager";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
+    claude-code.url = "github:sadjow/claude-code-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
 
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";

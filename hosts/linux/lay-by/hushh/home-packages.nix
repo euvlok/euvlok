@@ -29,6 +29,9 @@
       meson
       cmake
       font-manager
+      python3
+      claude-code
+
       # nim
       nim
       nimble
@@ -39,12 +42,14 @@
       nix-search
       nodejs
       ;
+    inherit (pkgs.unstable.python313Packages)
+      pip
+      ;
     inherit (pkgs.unstable)
       # Misc productivity
       grim
       swappy
       slurp
-      neofetch
       nitch
       thunderbird-bin
       libreoffice
