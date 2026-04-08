@@ -38,19 +38,15 @@
       pinentryPackage = pkgs.pinentry-curses;
     };
   };
-  virtualisation.oci-containers.containers.FlareSolverr = {
-    image = "ghcr.io/flaresolverr/flaresolverr:latest";
+  virtualisation.oci-containers.containers.byparr = {
+    image = "ghcr.io/thephaseless/byparr:latest";
     autoStart = true;
     ports = [
       "172.16.31.1:8191:8191"
-      "127.0.0.1:8191:8191"
     ];
-
     environment = {
-      LOG_LEVEL = "info";
-      LOG_HTML = "false";
-      CAPTCHA_SOLVER = "hcaptcha-solver";
-      TZ = "${config.time.timeZone}";
+      HOST = "172.16.31.1";
+      PORT = "8191";
     };
   };
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
