@@ -30,8 +30,7 @@
       cmake
       font-manager
       python3
-      claude-code
-
+      opencode
       # nim
       nim
       nimble
