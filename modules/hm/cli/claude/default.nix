@@ -8,6 +8,9 @@
   options.hm.claude-code.enable = lib.mkEnableOption "claude-code";
 
   config = lib.mkIf config.hm.claude-code.enable {
+
+    home.packages = builtins.attrValues { inherit (pkgs.unstable) claude-code; };
+
     home.file.".claude/statusline-command.sh" = {
       source = ./statusline-command.sh;
       executable = true;
