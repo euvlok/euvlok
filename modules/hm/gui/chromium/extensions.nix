@@ -55,20 +55,20 @@ lib.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=3d3ea9958098977502b5a1c2459c0b1d658e4b4c";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=ae649d57e4c151af685476e5447a9868c4758bb9";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
-      hash = "sha256-rErwBpTQ7PuSQsPsnYgbL0d7VbSUkUXnb5KZRWzINzQ=";
+      hash = "sha256-3aqQC3Z/ijzN6nQEkYzmc2dvYvc6v23fXdGEXSmvBc4=";
     };
-    version = "4.3.4.5";
+    version = "4.3.4.7";
   }
   {
     id = "lmkeolibdeeglfglnncmfleojmakecjb";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa6GzzvuJ9aGLZy7R_eGUVo9tVJtDdaHK1L0NWcVKCY8q6__Z22RgFy4cBSMH59UPwrYlPiR4V4T7XiCQIV1YUtPC94nRbtTzw12QWClVC1UslYPGlGjtUSjdQYLIRwAxlKa5YROiJWdpBrrSPrC8uOSmcuaaeyA/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_22_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7QYMuXsiKpmwhVXyyPw9TwGMgWTJcchjLEE49yXMyiFLH96V_0u_jfNfRXWizApqX96UcENjqnf8SULLUFglY4UFLOu1OcBOftrKaDH0kHtmc6h74ZYU21Bj2pICQAxlKa5ftf0UwDYY03MinoDwh7gWAHX1H1/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_22_1_0.crx";
       name = "lmkeolibdeeglfglnncmfleojmakecjb.crx";
-      hash = "sha256-ROb0HTfkOzUI73Yct38qvDWiXfUNF30+aQz306lgnHc=";
+      hash = "sha256-am3TSDZeJwFuey7LdrrxGw7ObBRNwaqxNd3crB/G6q0=";
     };
-    version = "2.22.0";
+    version = "2.22.1";
   }
   {
     id = "mnjggcdmjocbbbhaepdhchncahnbgone";

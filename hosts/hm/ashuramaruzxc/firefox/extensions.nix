@@ -26,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.2.0";
+    version = "2026.3.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4715321/bitwarden_password_manager-2026.2.0.xpi";
-    sha256 = "sha256-5UmZ1FrhzQAUUqNClCQGM8iala6DLyEnIddGqJVVlY4=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4749958/bitwarden_password_manager-2026.3.0.xpi";
+    sha256 = "sha256-LcbQdNTcCr0qiWb1BlpV5yUrv15Usjwx2+2r+sDU28Q=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -52,10 +52,10 @@
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.123";
+    version = "4.9.124";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4710145/darkreader-4.9.123.xpi";
-    sha256 = "sha256-mj5s2sU/ICV72BJkUywWr+2tAOsmI73tie0rMLHkAkM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4748915/darkreader-4.9.124.xpi";
+    sha256 = "sha256-znA8mFRZmc7gtcQW9P1KMIDxQFRA8AXVxc8jrAhovL0=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.3.7";
+    version = "4.3.4.7";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=3d3ea9958098977502b5a1c2459c0b1d658e4b4c";
-    sha256 = "sha256-GuYqh8HkMxItB8A1CLzrYR+bu8CUXfbVy0Uq+wyWAPo=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ae649d57e4c151af685476e5447a9868c4758bb9";
+    sha256 = "sha256-Nnl7KJaRQ/TrMmkVpLY7dCPtTR+qLF9SCcLGElQg+u8=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -278,6 +278,7 @@
         "*://*.charentelibre.fr/*"
         "*://*.charliehebdo.fr/*"
         "*://*.charlotteobserver.com/*"
+        "*://*.chicago.suntimes.com/*"
         "*://*.chicagobusiness.com/*"
         "*://*.chicagotribune.com/*"
         "*://*.chronicle.com/*"
@@ -498,6 +499,7 @@
         "*://*.housebeautiful.com/*"
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
+        "*://*.huffingtonpost.it/*"
         "*://*.humanite.fr/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
@@ -675,6 +677,7 @@
         "*://*.medscape.com/*"
         "*://*.menshealth.com/*"
         "*://*.mercurynews.com/*"
+        "*://*.meretmarine.com/*"
         "*://*.merkur.de/*"
         "*://*.mexiconewsdaily.com/*"
         "*://*.miamiherald.com/*"
@@ -827,6 +830,7 @@
         "*://*.rnd.de/*"
         "*://*.roadandtrack.com/*"
         "*://*.rollingstone.com/*"
+        "*://*.rotowire.com/*"
         "*://*.rp-online.de/*"
         "*://*.rp.pl/*"
         "*://*.rubbernews.com/*"
@@ -993,6 +997,7 @@
         "*://*.tirebusiness.com/*"
         "*://*.tlz.de/*"
         "*://*.tokyo-np.co.jp/*"
+        "*://*.tomshardware.com/*"
         "*://*.topagrar.com/*"
         "*://*.torontosun.com/*"
         "*://*.towardsdatascience.com/*"
@@ -1244,10 +1249,10 @@
   };
   "search_by_image" = buildFirefoxXpiAddon {
     pname = "search_by_image";
-    version = "8.5.0";
+    version = "8.5.1";
     addonId = "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4689098/search_by_image-8.5.0.xpi";
-    sha256 = "sha256-NwlAp3/zxTmKMAwQJJ7PThOXVohHMoKvuaJhOma+L7M=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4752716/search_by_image-8.5.1.xpi";
+    sha256 = "sha256-nBcxv/xWYmCPCXvsAy7T+8zaVOFZNDhthDaypipJ9Yo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1385,10 +1390,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.21.4";
+    version = "2.22.0";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4732610/youtube_no_translation-2.21.4.xpi";
-    sha256 = "sha256-ksl7a+odHRRWPEZ6KZPNRIIoq6iVoW3xaIfGUGkHLpk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4756712/youtube_no_translation-2.22.0.xpi";
+    sha256 = "sha256-uE+wXit3J0xMFGvQkl9Yfqld+VjMbWCo7Z9wLszZAko=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
