@@ -25,6 +25,7 @@
         ../../../hm/bigshaq9999/git.nix
         ../../../hm/bigshaq9999/helix.nix
         ../../../hm/bigshaq9999/ghostty.nix
+        ../../../hm/bigshaq9999/ssh.nix
       ]
       ++ [
         {
@@ -45,6 +46,7 @@
             profiles.default = {
               userSettings = {
                 "editor.fontSize" = lib.mkForce 15;
+                "terminal.integrated.fontSize" = lib.mkForce 15;
                 "editor.tabSize" = lib.mkForce 4;
                 "editor.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
                 "terminal.integrated.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
