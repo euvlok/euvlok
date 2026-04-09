@@ -30,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.3.7";
+    version = "4.3.4.7";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=3d3ea9958098977502b5a1c2459c0b1d658e4b4c";
-    sha256 = "sha256-GuYqh8HkMxItB8A1CLzrYR+bu8CUXfbVy0Uq+wyWAPo=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ae649d57e4c151af685476e5447a9868c4758bb9";
+    sha256 = "sha256-Nnl7KJaRQ/TrMmkVpLY7dCPtTR+qLF9SCcLGElQg+u8=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -161,6 +161,7 @@
         "*://*.charentelibre.fr/*"
         "*://*.charliehebdo.fr/*"
         "*://*.charlotteobserver.com/*"
+        "*://*.chicago.suntimes.com/*"
         "*://*.chicagobusiness.com/*"
         "*://*.chicagotribune.com/*"
         "*://*.chronicle.com/*"
@@ -381,6 +382,7 @@
         "*://*.housebeautiful.com/*"
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
+        "*://*.huffingtonpost.it/*"
         "*://*.humanite.fr/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
@@ -558,6 +560,7 @@
         "*://*.medscape.com/*"
         "*://*.menshealth.com/*"
         "*://*.mercurynews.com/*"
+        "*://*.meretmarine.com/*"
         "*://*.merkur.de/*"
         "*://*.mexiconewsdaily.com/*"
         "*://*.miamiherald.com/*"
@@ -710,6 +713,7 @@
         "*://*.rnd.de/*"
         "*://*.roadandtrack.com/*"
         "*://*.rollingstone.com/*"
+        "*://*.rotowire.com/*"
         "*://*.rp-online.de/*"
         "*://*.rp.pl/*"
         "*://*.rubbernews.com/*"
@@ -876,6 +880,7 @@
         "*://*.tirebusiness.com/*"
         "*://*.tlz.de/*"
         "*://*.tokyo-np.co.jp/*"
+        "*://*.tomshardware.com/*"
         "*://*.topagrar.com/*"
         "*://*.torontosun.com/*"
         "*://*.towardsdatascience.com/*"
@@ -1035,10 +1040,10 @@
   };
   "sponsorblock" = buildFirefoxXpiAddon {
     pname = "sponsorblock";
-    version = "6.1.2";
+    version = "6.1.3";
     addonId = "sponsorBlocker@ajay.app";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4644570/sponsorblock-6.1.2.xpi";
-    sha256 = "sha256-WY9myetrurK9X4c3a2MqWGD0QtNpTiM2EPWzf4tuPxA=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4744354/sponsorblock-6.1.3.xpi";
+    sha256 = "sha256-zG7ikYKYzmoXVLRi0LVNmpb1RfZc06xpAWMy68odEAs=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
