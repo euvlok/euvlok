@@ -3,7 +3,7 @@ _: {
     ./chromium
     ./firefox
     ./mpv.nix
-    ./nixcord.nix
+    ./nixcord
     ./vscode
     ./zed.nix
   ];

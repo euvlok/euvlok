@@ -12,6 +12,7 @@
     ../shared/system/fonts.nix
     ../shared/system/hyperv.nix
     ../shared/system/lxc.nix
+    ../shared/system/nix-credentials.nix
     ../shared/system/settings.nix
     ./hardware-configuration.nix
     ./services/default.nix
@@ -55,29 +56,14 @@
 
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
 
-  time.timeZone = "Europe/Berlin";
-  i18n.defaultLocale = "en_US.UTF-8";
+  nixos.locale = {
+    enable = true;
+    timeZone = "Europe/Berlin";
+    extraLocaleSettings = { };
+  };
 
   services.avahi.enable = lib.mkForce false;
   services.displayManager.gdm.autoSuspend = false;
-
-  sops.secrets.gh_token = {
-    mode = "0440";
-    group = "users";
-  };
-  sops.secrets.netrc_creds = {
-    mode = "0440";
-    group = "users";
-  };
-
-  nix.extraOptions = ''
-    !include ${config.sops.secrets.gh_token.path}
-  '';
-  nix.settings = {
-    netrc-file = config.sops.secrets.netrc_creds.path;
-  };
-  nix.gc.automatic = true;
-  nix.gc.options = "--delete-older-than 14d";
 
   system.stateVersion = config.system.nixos.release;
 }

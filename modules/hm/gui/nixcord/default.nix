@@ -6,7 +6,10 @@
   ...
 }:
 {
-  imports = [ inputs.nixcord-trivial.homeModules.nixcord ];
+  imports = [
+    inputs.nixcord-trivial.homeModules.nixcord
+    ./base.nix
+  ];
 
   options.hm.nixcord.enable = lib.mkEnableOption "Nixcord";
 

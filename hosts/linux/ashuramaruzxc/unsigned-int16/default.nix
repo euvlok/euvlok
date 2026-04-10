@@ -1,11 +1,9 @@
 { inputs, ... }:
 let
   inherit (inputs.nixos-raspberrypi.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
-  inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
 in
 {
-  unsigned-int16 = mkHostSystem {
-    systemLib = inputs.nixos-raspberrypi.lib;
+  unsigned-int16 = inputs.nixos-raspberrypi.lib.nixosSystem {
     specialArgs = {
       inherit inputs;
       nixos-raspberrypi = inputs.nixos-raspberrypi;
@@ -20,10 +18,20 @@ in
       raspberry-pi-5.bluetooth
       raspberry-pi-5.display-vc4
       raspberry-pi-5.page-size-16k
-    ];
-    sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
-    catppuccinAccent = "flamingo";
-    extraModules = [
+      inputs.sops-nix-trivial.nixosModules.sops
+      {
+        sops = {
+          age.keyFile = "/var/lib/sops/age/keys.txt";
+          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
+        };
+      }
+      {
+        catppuccin = {
+          enable = true;
+          accent = "flamingo";
+          flavor = "mocha";
+        };
+      }
       inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
