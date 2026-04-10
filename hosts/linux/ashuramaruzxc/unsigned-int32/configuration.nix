@@ -12,6 +12,8 @@
     ../shared/system/hyperv.nix
     ../shared/system/lxc.nix
     ../shared/system/desktop.nix
+    ../shared/system/nix-credentials.nix
+    ../shared/system/pam-security.nix
     ../shared/system/settings.nix
     ../shared/system/fonts.nix
     ./hardware-configuration.nix
@@ -110,46 +112,7 @@
 
   programs.zsh.enable = true;
 
-  security = {
-    polkit = {
-      enable = true;
-      adminIdentities = [ "unix-group:wheel" ];
-    };
-    pam = {
-      services = {
-        login = {
-          sshAgentAuth = true;
-          u2fAuth = true;
-          enableGnomeKeyring = true;
-          enableKwallet = true;
-        };
-        su = {
-          sshAgentAuth = true;
-          u2fAuth = true;
-        };
-        sudo = {
-          sshAgentAuth = true;
-          u2fAuth = true;
-        };
-        sshd = {
-          sshAgentAuth = true;
-          u2fAuth = true;
-          enableGnomeKeyring = true;
-          enableKwallet = true;
-          googleOsLoginAuthentication = true;
-          googleOsLoginAccountVerification = true;
-          googleAuthenticator.enable = true;
-        };
-      };
-      # u2f = {
-      # enable = true;
-      # settings = {
-      # cue = true;
-      # };
-      # control = "required";
-      # };
-    };
-  };
+  security.polkit.enable = true;
 
   programs = {
     gnupg.dirmngr.enable = true;
@@ -189,14 +152,9 @@
     };
   };
 
-  time.timeZone = "Europe/Warsaw";
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    supportedLocales = [
-      "en_US.UTF-8/UTF-8"
-      "pl_PL.UTF-8/UTF-8"
-      "all"
-    ];
+  nixos.locale = {
+    enable = true;
+    timeZone = "Europe/Warsaw";
     extraLocaleSettings = {
       LC_MESSAGES = "en_US.UTF-8";
       LC_MEASUREMENT = "pl_PL.UTF-8";
@@ -207,7 +165,13 @@
       LC_TELEPHONE = "pl_PL.UTF-8";
       LC_NUMERIC = "pl_PL.UTF-8";
     };
-
+  };
+  i18n = {
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "pl_PL.UTF-8/UTF-8"
+      "all"
+    ];
     inputMethod = {
       enable = true;
       type = "fcitx5";
@@ -236,23 +200,6 @@
       TZ = "${config.time.timeZone}";
     };
   };
-
-  sops.secrets.gh_token = {
-    mode = "0440";
-    group = "users";
-  };
-  sops.secrets.netrc_creds = {
-    mode = "0440";
-    group = "users";
-  };
-
-  nix.extraOptions = ''
-    !include ${config.sops.secrets.gh_token.path}
-  '';
-  nix.settings.netrc-file = config.sops.secrets.netrc_creds.path;
-
-  nix.gc.automatic = true;
-  nix.gc.options = "--delete-older-than 14d";
 
   system.stateVersion = config.system.nixos.release;
 }

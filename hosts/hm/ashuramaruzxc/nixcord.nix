@@ -9,35 +9,16 @@
   '';
   programs.nixcord.config.enableReactDevtools = true;
   programs.nixcord.config.plugins = {
-    alwaysExpandRoles.enable = true;
-    betterGifPicker.enable = true;
     betterNotesBox.enable = true;
     betterSessions.enable = true;
-    biggerStreamPreview.enable = true;
     consoleJanitor.disableSpotifyLogger = true;
     copyEmojiMarkdown.enable = true;
-    disableCallIdle.enable = true;
-    dontRoundMyTimestamps.enable = true;
-    fixCodeblockGap.enable = true;
-    forceOwnerCrown.enable = true;
-    friendsSince.enable = true;
     messageLinkEmbeds.enable = true;
     # moreCommands.enable = true;
     # moreKaomoji.enable = true;
     reverseImageSearch.enable = true;
     roleColorEverywhere.enable = true;
-    serverInfo.enable = true;
-    themeAttributes.enable = true;
-    unlockedAvatarZoom.enable = true;
-    vencordToolbox.enable = true;
-    viewIcons.enable = true;
     viewRaw.enable = true;
-    messageLogger = {
-      enable = true;
-      collapseDeleted = true;
-      ignoreSelf = true;
-      ignoreBots = true;
-    };
     ### utils
     appleMusicRichPresence = {
       enable = true;

@@ -12,10 +12,9 @@
   system.stateVersion = "25.11";
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  nixos.boot.systemd-boot.enable = true;
   boot = {
     supportedFilesystems = [ "ntfs" ];
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
     consoleLogLevel = 0;
     initrd.verbose = false;
   };

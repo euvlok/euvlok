@@ -6,9 +6,11 @@
     ../lib
     ./amd.nix
     ./audio.nix
+    ./boot.nix
     ./gnome.nix
     ./hardware.nix
     ./kanata.nix
+    ./locale.nix
     ./networking.nix
     ./nix.nix
     ./nvidia.nix

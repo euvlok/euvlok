@@ -7,8 +7,7 @@
     ./power.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  nixos.boot.systemd-boot.enable = true;
 
   nixos.plasma.enable = true;
 

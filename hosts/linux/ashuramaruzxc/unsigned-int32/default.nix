@@ -1,17 +1,25 @@
 { inputs, ... }:
-let
-  inherit (import ../shared/host-lib.nix { inherit inputs; }) mkHostSystem;
-in
 {
-  unsigned-int32 = mkHostSystem {
+  unsigned-int32 = inputs.nixpkgs.lib.nixosSystem {
+    specialArgs = { inherit inputs; };
     modules = [
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-    ];
-    sopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-    catppuccinAccent = "flamingo";
-    extraModules = [
+      inputs.sops-nix-trivial.nixosModules.sops
+      {
+        sops = {
+          age.keyFile = "/var/lib/sops/age/keys.txt";
+          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
+        };
+      }
+      {
+        catppuccin = {
+          enable = true;
+          accent = "flamingo";
+          flavor = "mocha";
+        };
+      }
       inputs.anime-game-launcher-source.nixosModules.default
       {
         programs.anime-game-launcher.enable = true;

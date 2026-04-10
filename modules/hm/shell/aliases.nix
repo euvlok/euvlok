@@ -37,6 +37,15 @@ let
     mp4 = "yt-dlp-script mp4";
     mp4-cut = "yt-dlp-script mp4-cut";
 
+    # Modern Replacements
+    vi = "hx";
+    vim = "hx";
+    htop = "btop";
+    neofetch = "fastfetch";
+
+    # Utility
+    bc = "bc -l";
+
     # Misc
     myip = "curl 'https://ipinfo.io/ip'";
 

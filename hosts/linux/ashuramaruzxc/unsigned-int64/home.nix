@@ -4,14 +4,30 @@
   ...
 }:
 let
-  homeCommon = import ../shared/home/common.nix { inherit inputs eulib; };
-  homeBaseUsers = import ../shared/home/base-users.nix {
-    inherit (homeCommon) baseImports baseHomeManager;
+  baseImports = [
+    { home.stateVersion = "25.11"; }
+    ../../../../modules/hm/catppuccin-gtk.nix
+  ];
+
+  catppuccinConfig =
+    { osConfig, ... }:
+    {
+      catppuccin = {
+        inherit (osConfig.catppuccin) enable accent flavor;
+      };
+    };
+
+  rootHmConfig = {
+    hm = {
+      bash.enable = true;
+      direnv.enable = true;
+      fzf.enable = true;
+      helix.enable = true;
+      nh.enable = true;
+      zellij.enable = true;
+      zsh.enable = true;
+    };
   };
-  inherit (homeCommon)
-    catppuccinConfig
-    rootHmConfig
-    ;
 
   commonHmConfig = [
     inputs.self.homeModules.default
@@ -42,15 +58,29 @@ let
       };
     }
   ];
+in
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-  userImports = {
-    root = [ rootHmConfig ] ++ commonHmConfig;
-    ashuramaru = commonHmConfig;
-    fumono = commonHmConfig;
-    minecraft = commonHmConfig;
+  home-manager = {
+    useUserPackages = true;
+    backupFileExtension = "bak";
+    extraSpecialArgs = { inherit inputs eulib; };
   };
 
-in
-homeBaseUsers {
-  inherit userImports globalImports;
+  home-manager.users.root = {
+    imports = baseImports ++ globalImports ++ [ rootHmConfig ] ++ commonHmConfig;
+  };
+
+  home-manager.users.ashuramaru = {
+    imports = baseImports ++ globalImports ++ commonHmConfig;
+  };
+
+  home-manager.users.fumono = {
+    imports = baseImports ++ globalImports ++ commonHmConfig;
+  };
+
+  home-manager.users.minecraft = {
+    imports = baseImports ++ globalImports ++ commonHmConfig;
+  };
 }
