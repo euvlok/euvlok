@@ -1,7 +1,6 @@
 _: {
-  # TLP does not run when used with KDE or GNOME.
-  services.power-profiles-daemon.enable = true;
-  services.tlp.enable = true; # Disabled for Plasma
+  services.power-profiles-daemon.enable = false;
+  services.tlp.enable = true;
   services.tlp.settings = {
     CPU_SCALING_GOVERNOR_ON_AC = "performance";
     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";

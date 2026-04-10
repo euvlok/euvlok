@@ -7,6 +7,9 @@
     ./power.nix
   ];
 
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   nixos.plasma.enable = true;
 
   environment.plasma6.excludePackages = builtins.attrValues {

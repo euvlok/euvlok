@@ -42,7 +42,6 @@
     noMosaic.enable = true;
     noPendingCount.enable = true;
     noProfileThemes.enable = true;
-    normalizeMessageLinks.enable = true;
     noTypingAnimation.enable = true;
     pauseInvitesForever.enable = true;
     pictureInPicture.enable = true;
