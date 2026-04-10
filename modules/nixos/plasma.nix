@@ -16,6 +16,11 @@
   options.nixos.plasma.enable = lib.mkEnableOption "KDE Plasma";
 
   config = lib.mkIf config.nixos.plasma.enable {
+    nixpkgs.overlays = [
+      (_final: prev: {
+        kdePackages = prev.unstable.kdePackages;
+      })
+    ];
     services = {
       xserver.enable = true;
       displayManager.gdm.enable = true; # im sorry but sddm is brokenware
