@@ -65,6 +65,7 @@
       # davinci-resolve
       # blender
       playerctl
+      feishin
       deluge-gtk
       slsk-batchdl
       nicotine-plus
