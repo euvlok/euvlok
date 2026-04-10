@@ -3,8 +3,6 @@ let
   mkScript = name: path: lib.getExe (pkgs.writeScriptBin name (builtins.readFile path));
 
   editor = {
-    vi = "hx";
-    vim = "hx";
     nvim = "hx";
     nano = "hx";
   };
@@ -16,10 +14,8 @@ let
     du = "dust";
     find = "fd";
     grep = "rg";
-    htop = "btop";
     ps = "procs";
     curl = "xh";
-    neofetch = "fastfetch";
   };
 
   networking = {
@@ -31,7 +27,6 @@ let
   };
 
   utility = {
-    bc = "bc -l";
     h = "history";
     j = "jobs -l";
     sha1 = lib.getExe' pkgs.openssl "sha1";

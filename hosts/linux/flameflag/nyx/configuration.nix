@@ -47,26 +47,12 @@
     ];
   };
 
-  # Keyboard layout
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
-    };
+  nixos.locale = {
+    enable = true;
+    timeZone = "Europe/Sofia";
   };
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  time.timeZone = "Europe/Sofia";
+  nixos.boot.systemd-boot.enable = true;
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs) telegram-desktop;

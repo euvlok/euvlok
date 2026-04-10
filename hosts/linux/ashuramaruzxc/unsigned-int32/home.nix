@@ -5,19 +5,37 @@
   ...
 }:
 let
-  homeCommon = import ../shared/home/common.nix { inherit inputs eulib; };
   homePackages = import ../shared/home/packages.nix { inherit pkgs; };
-  homeBaseUsers = import ../shared/home/base-users.nix {
-    inherit (homeCommon) baseImports baseHomeManager;
-  };
-
   cursorModule = import ../shared/home/cursor.nix {
     cursorName = "touhou-reimu";
     cursorPackage = inputs.anime-cursors-source.packages.${pkgs.stdenvNoCC.hostPlatform.system}.cursors;
     iconPackage = pkgs.unstable.kdePackages.breeze-icons;
   };
 
-  inherit (homeCommon) catppuccinConfig rootHmConfig;
+  baseImports = [
+    { home.stateVersion = "25.11"; }
+    ../../../../modules/hm/catppuccin-gtk.nix
+  ];
+
+  catppuccinConfig =
+    { osConfig, ... }:
+    {
+      catppuccin = {
+        inherit (osConfig.catppuccin) enable accent flavor;
+      };
+    };
+
+  rootHmConfig = {
+    hm = {
+      bash.enable = true;
+      direnv.enable = true;
+      fzf.enable = true;
+      helix.enable = true;
+      nh.enable = true;
+      zellij.enable = true;
+      zsh.enable = true;
+    };
+  };
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
@@ -80,66 +98,76 @@ let
       "nemo"
     ]
     ++ [ pkgs.unstable.piper ];
+in
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-  # globalImports = [ ../shared/aliases.nix ];
+  home-manager = {
+    useUserPackages = true;
+    backupFileExtension = "bak";
+    extraSpecialArgs = { inherit inputs eulib; };
+  };
 
-  userImports = {
-    root = [
-      catppuccinConfig
-      rootHmConfig
-    ]
-    ++ ashuramaruHmConfig;
+  home-manager.users.root = {
+    imports =
+      baseImports
+      ++ [
+        catppuccinConfig
+        rootHmConfig
+      ]
+      ++ ashuramaruHmConfig;
+  };
 
-    ashuramaru = [
-      catppuccinConfig
-      inputs.sops-nix-trivial.homeManagerModules.sops
-      {
-        sops = {
-          age.keyFile = "$HOME/.config/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        };
-      }
-    ]
-    ++ ashuramaruHmConfig
-    ++ [
-      { services.protonmail-bridge.enable = true; }
-      { home.packages = allPackages; }
-      (
+  home-manager.users.ashuramaru = {
+    imports =
+      baseImports
+      ++ [
+        catppuccinConfig
+        inputs.sops-nix-trivial.homeManagerModules.sops
         {
-          inputs,
-          lib,
-          ...
-        }:
-        {
-          # doesn't work with cudaEnable = true;
-          home.packages = builtins.attrValues {
-            inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
+          sops = {
+            age.keyFile = "$HOME/.config/sops/age/keys.txt";
+            defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
           };
         }
-      )
-      cursorModule
-      {
-        programs = {
-          rbw = {
-            enable = true;
-            settings = {
-              email = "ashuramaru@tenjin-dk.com";
-              base_url = "https://bitwarden.tenjin-dk.com";
-              lock_timeout = 600;
-              pinentry = pkgs.pinentry-qt;
+      ]
+      ++ ashuramaruHmConfig
+      ++ [
+        { services.protonmail-bridge.enable = true; }
+        { home.packages = allPackages; }
+        (
+          {
+            inputs,
+            lib,
+            ...
+          }:
+          {
+            # doesn't work with cudaEnable = true;
+            home.packages = builtins.attrValues {
+              inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
             };
+          }
+        )
+        cursorModule
+        {
+          programs = {
+            rbw = {
+              enable = true;
+              settings = {
+                email = "ashuramaru@tenjin-dk.com";
+                base_url = "https://bitwarden.tenjin-dk.com";
+                lock_timeout = 600;
+                pinentry = pkgs.pinentry-qt;
+              };
+            };
+            ghostty.settings = {
+              window-height = 40;
+              window-width = 140;
+            };
+            btop.enable = true;
+            direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
           };
-          ghostty.settings = {
-            window-height = 40;
-            window-width = 140;
-          };
-          btop.enable = true;
-          direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
-        };
-      }
-    ];
+        }
+      ];
   };
-in
-homeBaseUsers {
-  inherit userImports;
 }
