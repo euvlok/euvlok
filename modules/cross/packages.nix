@@ -90,6 +90,10 @@ let
 
       # Development Tools (enable `hm.languages.*`) for stuff like cmake, gnumake, cargo, etc.)
       inherit (pkgs.unstable) hyperfine tokei;
+
+      # AI Coding Assistants
+      inherit (pkgs) claude-code;
+      inherit (pkgs.unstable) opencode;
     }
     # Revert once PR 485980 is fixed upstream nixpkgs
     ++ lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin (
