@@ -2,6 +2,11 @@
 {
   system.primaryUser = "flame";
 
+  environment.systemPackages = builtins.attrValues {
+    inherit (pkgs) claude-code;
+    inherit (pkgs.unstable) opencode;
+  };
+
   nixpkgs.hostPlatform.system = "aarch64-darwin";
 
   users.users.${config.system.primaryUser} = {
