@@ -72,7 +72,10 @@
     inherit (pkgs)
       # Communication Tools
       telegram-desktop
+      # AI Coding Assistants
+      claude-code
       ;
+    inherit (pkgs.unstable) opencode;
   };
 
   services.pipewire.wireplumber.extraConfig = {
