@@ -11,13 +11,15 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+    nixos-raspberrypi.inputs.flake-compat.follows = "";
+    nixos-raspberrypi.inputs.nixpkgs.follows = "nixpkgs";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
     # This input is meant to be used for `-source` inputs and is rarely updated
     # to not cause constant rebuilds when updating generic unstable
     nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # --- Trivial ---
-    base16-trivial.url = "github:SenchoPens/base16.nix";
+    base16-trivial.follows = "stylix-trivial/base16";
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -28,7 +30,9 @@
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
     nix-homebrew-trivial.url = "github:zhaofengli/nix-homebrew";
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    nix4vscode-trivial.inputs.systems.follows = "flake-utils/systems";
     nix4vscode-trivial.url = "github:nix-community/nix4vscode";
+    nixos-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils";
     nixos-vscode-server-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixos-vscode-server-trivial.url = "github:nix-community/nixos-vscode-server";
     nixcord-trivial.inputs.flake-compat.follows = "";
@@ -41,35 +45,56 @@
     sops-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    spicetify-nix-trivial.inputs.systems.follows = "flake-utils/systems";
     spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    stylix-trivial.inputs.systems.follows = "flake-utils/systems";
     stylix-trivial.url = "github:danth/stylix/release-25.11";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
-    claude-code.url = "github:sadjow/claude-code-nix";
+    claude-code.inputs.flake-utils.follows = "flake-utils";
     claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    flameflag-dotfiles.url = "github:FlameFlag/nix-dotfiles";
+    claude-code.url = "github:sadjow/claude-code-nix";
+    flameflag-dotfiles.inputs.dis.follows = "dis-source";
+    flameflag-dotfiles.inputs.nix-darwin.follows = "nix-darwin";
+    flameflag-dotfiles.inputs.nixcord.follows = "nixcord-trivial";
     flameflag-dotfiles.inputs.nixpkgs.follows = "nixpkgs";
     flameflag-dotfiles.inputs.nixpkgs-unstable.follows = "nixpkgs-unstable-small";
+    flameflag-dotfiles.inputs.niri.follows = "niri-flake-trivial";
+    flameflag-dotfiles.inputs.sops-nix.follows = "sops-nix-trivial";
+    flameflag-dotfiles.url = "github:FlameFlag/nix-dotfiles";
 
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
     dis-source.url = "github:FlameFlag/dis";
 
     # DO NOT OVERRIDE NIXPKGS
-    anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
+    anime-cursors-source.inputs.devenv.follows = "devenv";
     anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
-    anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
+    anime-cursors-source.inputs.nixpkgs-python.inputs.flake-compat.follows = "";
+    anime-cursors-source.inputs.mk-shell-bin.follows = "mk-shell-bin";
+    anime-cursors-source.inputs.nix2container.follows = "nix2container";
+    anime-cursors-source.inputs.pre-commit-hooks.follows = "pre-commit-hooks";
+    anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
     anime-game-launcher-source.inputs.flake-compat.follows = "";
+    anime-game-launcher-source.inputs.rust-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
     # DO NOT override stylix utilities inputs
     # stylix-trivial.inputs.flake-parts.follows = "";
     # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
     # DO NOT override nixpkgs, it uses it's own fork
 
     # Infra / Shared / Core Inputs
+    devenv.inputs.cachix.inputs.flake-compat.follows = "";
+    devenv.inputs.crate2nix.follows = "";
+    devenv.inputs.flake-compat.follows = "";
+    devenv.inputs.flake-parts.follows = "flake-parts";
+    devenv.inputs.git-hooks.inputs.gitignore.follows = "";
+    devenv.inputs.nixd.follows = "";
     devenv.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     devenv.url = "github:cachix/devenv";
+    disko-rpi.inputs.nixpkgs.follows = "nixpkgs";
     disko-rpi.url = "github:nvmd/disko/gpt-attrs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
@@ -77,6 +102,7 @@
     nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix2container.url = "github:nlewo/nix2container";
     pre-commit-hooks.inputs.flake-compat.follows = "";
+    pre-commit-hooks.inputs.gitignore.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
 
