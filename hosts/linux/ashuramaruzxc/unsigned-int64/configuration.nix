@@ -49,6 +49,10 @@
       PORT = "8191";
     };
   };
+  nixpkgs.config.permittedInsecurePackages = [
+    "mbedtls-2.28.10"
+  ];
+
   environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
 
   time.timeZone = "Europe/Berlin";
