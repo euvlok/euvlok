@@ -1,6 +1,12 @@
 { pkgs, lib, ... }:
 let
   aliases = {
+    # AI Aliases
+    c = "claude";
+    cc = "claude";
+    o = "opencode";
+    oo = "opencode";
+
     v = "hx";
     vi = "hx";
     vim = "hx";
