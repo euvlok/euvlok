@@ -1,5 +1,6 @@
 _: {
   imports = [
+    ./aliases.nix
     ./git.nix
     ./hyprland
     ./stylix.nix

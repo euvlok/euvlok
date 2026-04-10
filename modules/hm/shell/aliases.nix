@@ -37,12 +37,6 @@ let
     mp4 = "yt-dlp-script mp4";
     mp4-cut = "yt-dlp-script mp4-cut";
 
-    # AI Aliases
-    c = "claude";
-    cc = "claude";
-    o = "opencode";
-    oo = "opencode";
-
     # Misc
     myip = "curl 'https://ipinfo.io/ip'";
 

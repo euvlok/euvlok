@@ -55,12 +55,6 @@ in
         myip = "http get 'https://ipinfo.io/ip'";
         path = "echo $env.PATH";
 
-        # AI Aliases
-        c = "claude";
-        cc = "claude";
-        o = "opencode";
-        oo = "opencode";
-
         rebuild =
           if pkgs.stdenvNoCC.isLinux then
             "nixos-rebuild switch --flake (readlink -f /etc/nixos) --use-remote-sudo"
