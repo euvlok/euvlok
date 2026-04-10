@@ -7,7 +7,8 @@ in
   programs.gh.enable = true;
   programs.git = {
     enable = true;
-    inherit userName userEmail;
+    settings.user.name = userName;
+    settings.user.email = userEmail;
   };
   home.file.".gitconfig".source =
     config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/git/config";
