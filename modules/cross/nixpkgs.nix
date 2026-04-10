@@ -9,6 +9,7 @@
   nixpkgs.overlays = [
     inputs.niri-flake-trivial.overlays.niri
     inputs.nix4vscode-trivial.overlays.default
+    inputs.claude-code.overlays.default
   ]
   ++ [
     (final: prev: {
@@ -19,6 +20,8 @@
     })
     (final: prev: {
       eupkgs = inputs.eupkgs.legacyPackages.${prev.stdenv.hostPlatform.system};
+      claude-statusline =
+        inputs.flameflag-dotfiles.packages.${prev.stdenv.hostPlatform.system}.claude-statusline;
     })
   ];
 }

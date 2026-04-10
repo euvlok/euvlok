@@ -9,6 +9,7 @@
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
     # This input is meant to be used for `-source` inputs and is rarely updated
@@ -48,6 +49,9 @@
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
     claude-code.url = "github:sadjow/claude-code-nix";
     claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    flameflag-dotfiles.url = "github:FlameFlag/nix-dotfiles";
+    flameflag-dotfiles.inputs.nixpkgs.follows = "nixpkgs";
+    flameflag-dotfiles.inputs.nixpkgs-unstable.follows = "nixpkgs-unstable-small";
 
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
