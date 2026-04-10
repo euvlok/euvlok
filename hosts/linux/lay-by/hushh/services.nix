@@ -1,4 +1,8 @@
 _: {
+
+  systemd.services.navidrome.serviceConfig = {
+    BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];
+  };
   services = {
     xserver.xkb = {
       layout = "us";
@@ -27,8 +31,20 @@ _: {
       enable = true;
       settings.folders = {
         "Music" = {
-          path = "/media/HDD/music";
+          path = "/media/HDD/spotmusic/";
         };
+      };
+    };
+
+    navidrome = {
+      enable = true;
+      settings = {
+        MusicFolder = "/media/HDD/spotmusic/";
+        Port = 4533;
+        Address = "127.0.0.1";
+        EnableSharing = false;
+        CoverJpegQuality = 95;
+        ScanSchedule = "@every 1h"; # Or "@every 24h"
       };
     };
 

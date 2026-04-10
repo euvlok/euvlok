@@ -69,7 +69,7 @@
       "custom/music" = {
         format = "󰎇 {} 󰎇";
         interval = 1;
-        on-click = "playerctl -p spotify play-pause";
+        on-click = "playerctl -p Feishin play-pause";
         exec = builtins.readFile ./scripts/music.sh;
       };
       "custom/nvidia" = {

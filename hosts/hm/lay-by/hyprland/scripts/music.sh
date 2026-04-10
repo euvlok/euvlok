@@ -2,7 +2,7 @@
 #! nix-shell -i bash -p playerctl spotify --pure
 # shellcheck shell=bash
 
-players="spotify|rhythmbox"
+players="spotify|rhythmbox|Feishin"
 if [ -z "$u" ]; then
     artist=$(playerctl -a metadata | grep -E $players | grep xesam:artist | cut -d " " -f 3-)
     song=$(playerctl -a metadata | grep -E $players | grep xesam:title | cut -d " " -f 3-)

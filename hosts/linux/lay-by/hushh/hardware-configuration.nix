@@ -5,6 +5,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 
@@ -25,7 +26,26 @@
   boot.extraModulePackages = [ ];
   boot.kernelParams = [
     "nvidia_drm.fbdev=1"
+    "quiet"
+    "splash"
+    "udev.log_level=3"
+    "rd.systemd.show_status=auto"
+    "boot.shell_on_fail"
   ];
+  boot.consoleLogLevel = 3;
+  boot.initrd.verbose = false;
+
+  boot.initrd.systemd.enable = true;
+  boot.plymouth = {
+    enable = true;
+    theme = "lone";
+    themePackages = with pkgs; [
+      # By default we would install all themes
+      (adi1090x-plymouth-themes.override {
+        selected_themes = [ "lone" ];
+      })
+    ];
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/0ba3f7ef-9efb-4b39-97d0-5d5621d0e2fc";
