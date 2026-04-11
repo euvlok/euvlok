@@ -24,6 +24,11 @@
 
     nix-ld.enable = true;
 
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
