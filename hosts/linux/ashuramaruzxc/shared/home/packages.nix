@@ -30,7 +30,6 @@ let
         gImageReader
         libreoffice-qt6-fresh
         obsidian
-        octaveFull
         pdftk
         treesheets
         ;
