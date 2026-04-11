@@ -46,10 +46,9 @@
       "video=HDMI1:2560x1440@120"
       ### ------------------------------------ ###
       "iommu=pt"
+      "amd_pstate=active"
       ### ------------------------------------ ###
-      "nvme_core.default_ps_max_latency_us=0"
-      "pcie_aspm=off"
-      "pcie_port_pm=off"
+      "pcie_aspm=default"
     ];
     extraModprobeConfig = ''
       options hid_apple fnmode=2
@@ -69,6 +68,7 @@
       "i915"
       "amdgpu"
       "nouveau"
+      "k10temp"
     ];
     supportedFilesystems = {
       btrfs = true;
@@ -78,19 +78,24 @@
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   boot.loader = {
-    grub = {
+    limine = {
       enable = true;
-      device = "nodev";
-      efiSupport = true;
-      useOSProber = true;
-      configurationLimit = 15;
+      maxGenerations = 15;
+      secureBoot.enable = true;
+      validateChecksums = true;
+      panicOnChecksumMismatch = true;
+      additionalFiles = {
+        "EFI/memtest86/BOOTX64.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
+      };
+      extraEntries = ''
+        /Windows
+          protocol: efi
+          path: uuid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
 
-      # memtest
-      memtest86.enable = true;
-      memtest86.params = [
-        "console=ttyS0,115200n8"
-        "maxcpus=32"
-      ];
+        /Memtest86
+          protocol: efi
+          path: boot():///EFI/memtest86/BOOTX64.efi
+      '';
     };
     generationsDir.copyKernels = true;
     efi.canTouchEfiVariables = true;
