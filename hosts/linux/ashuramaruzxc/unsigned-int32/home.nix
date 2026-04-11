@@ -29,7 +29,6 @@ let
     {
       hm = {
         chromium.enable = true;
-        chromium.browser = "chromium";
         fastfetch.enable = true;
         firefox = {
           floorp.enable = true;
@@ -43,7 +42,7 @@ let
         nixcord.enable = true;
         nushell.enable = true;
         vscode.enable = true;
-        # zed-editor.enable = true;
+        zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
