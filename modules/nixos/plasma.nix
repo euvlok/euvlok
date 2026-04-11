@@ -6,11 +6,12 @@
   ...
 }:
 {
-  disabledModules = [ "services/desktop-managers/plasma6.nix" ];
+  #! temp remove plasma from nixos-unstable
+  # disabledModules = [ "services/desktop-managers/plasma6.nix" ];
 
-  imports = [
-    ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/plasma6.nix")
-  ];
+  # imports = [
+  #   ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/plasma6.nix")
+  # ];
 
   options.nixos.plasma.enable = lib.mkEnableOption "KDE Plasma";
 
@@ -36,8 +37,8 @@
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
+            darkly
             darkly-qt5
-            darkly-qt6
             dconf-editor # if not declaratively
             ;
           inherit (pkgs.unstable.kdePackages)
