@@ -37,7 +37,7 @@
               vulkan-headers
               vulkan-tools
               ;
-            inherit (steamSuper.xorg)
+            inherit (steamSuper)
               libXcursor
               libXi
               libXinerama
