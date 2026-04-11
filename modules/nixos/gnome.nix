@@ -6,11 +6,12 @@
   ...
 }:
 {
-  disabledModules = [ "services/desktop-managers/gnome.nix" ];
+  #! temp remove gnome from nixos-unstable
+  # disabledModules = [ "services/desktop-managers/gnome.nix" ];
 
-  imports = [
-    ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/gnome.nix")
-  ];
+  # imports = [
+  #   ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/gnome.nix")
+  # ];
 
   options.nixos.gnome.enable = lib.mkEnableOption "GNOME";
 
