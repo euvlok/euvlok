@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell --pure -i bash -p gifski ffmpeg_7-full parallel fd rename
+#! nix-shell --pure -i bash -p gifski ffmpeg_8-full parallel fd rename
 # shellcheck shell=bash
 
 set -euo pipefail
