@@ -53,17 +53,6 @@
     zen-browser-trivial.inputs.home-manager.follows = "home-manager";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
-    claude-code.inputs.flake-utils.follows = "flake-utils";
-    claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    claude-code.url = "github:sadjow/claude-code-nix";
-    flameflag-dotfiles.inputs.dis.follows = "dis-source";
-    flameflag-dotfiles.inputs.nix-darwin.follows = "nix-darwin";
-    flameflag-dotfiles.inputs.nixcord.follows = "nixcord-trivial";
-    flameflag-dotfiles.inputs.nixpkgs.follows = "nixpkgs";
-    flameflag-dotfiles.inputs.nixpkgs-unstable.follows = "nixpkgs-unstable-small";
-    flameflag-dotfiles.inputs.niri.follows = "niri-flake-trivial";
-    flameflag-dotfiles.inputs.sops-nix.follows = "sops-nix-trivial";
-    flameflag-dotfiles.url = "github:FlameFlag/nix-dotfiles";
 
     # ---- Source ----
     dis-source.inputs.nixpkgs.follows = "nixpkgs-source";

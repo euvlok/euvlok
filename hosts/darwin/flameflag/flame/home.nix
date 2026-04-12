@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgs,
   eulib,
   config,
   ...
