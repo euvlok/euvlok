@@ -52,7 +52,5 @@
       ;
     inherit (pkgs) seahorse;
     inherit (inputs.zen-browser-trivial.packages.x86_64-linux) default;
-    # AI Coding Assistants
-    inherit (pkgs.unstable) opencode;
   };
 }

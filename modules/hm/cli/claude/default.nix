@@ -8,11 +8,14 @@
   options.hm.claude.statusLine.enable = lib.mkEnableOption "Claude statusline";
 
   config = {
+    home.packages = builtins.attrValues {
+      inherit (pkgs.eupkgs) claude-code claude-statusline opencode;
+    };
     home.file.".claude/settings.json".text = builtins.toJSON (
       lib.optionalAttrs config.hm.claude.statusLine.enable {
         statusLine = {
           type = "command";
-          command = "${pkgs.claude-statusline}/bin/claude-statusline";
+          command = "${pkgs.eupkgs.claude-statusline}/bin/claude-statusline";
         };
       }
       // {

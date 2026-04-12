@@ -69,13 +69,8 @@
   time.timeZone = "Europe/Sofia";
 
   environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
-      # Communication Tools
-      telegram-desktop
-      # AI Coding Assistants
-      claude-code
-      ;
-    inherit (pkgs.unstable) opencode;
+    inherit (pkgs) telegram-desktop;
+    inherit (pkgs.eupkgs) claude-code opencode;
   };
 
   services.pipewire.wireplumber.extraConfig = {
