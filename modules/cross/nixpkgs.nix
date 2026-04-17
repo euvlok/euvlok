@@ -17,7 +17,7 @@
       };
     })
     (final: prev: {
-      eupkgs = inputs.eupkgs.legacyPackages.${prev.stdenv.hostPlatform.system};
+      eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
     })
     /**
       nixpkgs @507531
