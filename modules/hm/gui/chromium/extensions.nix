@@ -55,7 +55,7 @@ lib.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=c4bf5672c39ce1c093fa38099a893b696bfa9d6c";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=0c1eca55121882683de059cdbdd9aa835abec0e1";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
       hash = "sha256-8U96HH+Nc1O+/zhwK6//N3qvWUncOm77cUtXF7S++2Y=";
     };
@@ -64,20 +64,20 @@ lib.flatten [
   {
     id = "lmkeolibdeeglfglnncmfleojmakecjb";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7NwG1AaV4uPKex2EpFJc1s7pUV6oG1GnY-XpzNpRVpL9NQyVmyub1QGmy3QjJmG8pHDLy7ZLT5PoPohzBxpO07Yd8PXCf6pgLw77de9SUZyWO-0MZyU--qFPQbXEUAxlKa5c5AiG2ZilxBhYezRQLz8ih_g_4a/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_22_2_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa40dndbG3aW_8A94rye4RKPhtZQ3U6qXvmlB5MFdgRhEKZcrD7JEnD-o2aVNJMSh2XLP1zJSVlndU1GXeyw9bFzKCGO0EYX34SnIoyoxbltCi6eSJVPKZOw5cmfLvwAxlKa5Z3Khb3pCrvRv3aL2ktm_NDuLNaF/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_23_0_0.crx";
       name = "lmkeolibdeeglfglnncmfleojmakecjb.crx";
-      hash = "sha256-r2CH28vdaUllAqOTBbBAuqe2mC5YgIz/+jf29Gz5TuI=";
+      hash = "sha256-fUfW6KV9iDlZ1fE6Bo0PV4voTZvClpN7yYgIvoM4Y2I=";
     };
-    version = "2.22.2";
+    version = "2.23.0";
   }
   {
     id = "mnjggcdmjocbbbhaepdhchncahnbgone";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7WmsB8SsLHgLWYbOXiZMdNSK_hqrKojmE73rxI-nIYxOmSHtainfVyok24LTWM5Bq94Nn7tBwnsho8VyNfNJgj7v1onms6ChHo5eQQln0x8NFawmEhMrfxrWyvPgYAxlKa5eA7M-mMk9RE8mrjYX0j-oJEt0uv/MNJGGCDMJOCBBBHAEPDHCHNCAHNBGONE_6_1_3_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa6Nm7YgSSEQ002PnsTBQEirubQU4flMEnGHoc7t-2aBweRlMdPc6b9JShnu9NtV9d17okcXv0Q1QEiQkM07nc2iCUTyTg79GnZKvi8Hs_PgI4smmFc3YvBQe2Beu78AxlKa5cDrkaWJKaIci2lJqcEeLuYk5fs2/MNJGGCDMJOCBBBHAEPDHCHNCAHNBGONE_6_1_4_0.crx";
       name = "mnjggcdmjocbbbhaepdhchncahnbgone.crx";
-      hash = "sha256-GvAqrQGXC/uEkm0D167S2TK8gr+ox1af0XB5zK9sxjE=";
+      hash = "sha256-aF3kwiCN3VIGdvoH92AVWgJklU5SmAWSaf0vi9TFTc0=";
     };
-    version = "6.1.3";
+    version = "6.1.4";
   }
   (lib.optionals (config.catppuccin.enable) [
     {
