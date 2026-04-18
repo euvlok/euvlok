@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (config.nixpkgs.hostPlatform) isLinux isDarwin;
+  inherit (config.nixpkgs.hostPlatform) isLinux;
 
   registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
@@ -24,15 +24,6 @@ in
         );
       })
       (lib.mkIf isLinux { nix.registry = lib.mkForce registry; })
-      (lib.mkIf isDarwin {
-        # nix-daemon runs under launchd without a locale, so Perl-based
-        # helpers in nixpkgs fetchers warn "Pathname can't be converted
-        # from UTF-8 to current locale" for every non-ASCII path.
-        launchd.daemons.nix-daemon.serviceConfig.EnvironmentVariables = {
-          LANG = "en_US.UTF-8";
-          LC_ALL = "en_US.UTF-8";
-        };
-      })
       {
         nix = {
           settings = {
