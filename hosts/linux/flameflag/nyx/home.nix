@@ -21,7 +21,6 @@
             { home.stateVersion = "25.05"; }
           ]
           ++ [
-            inputs.sops-nix-trivial.homeManagerModules.sops
             {
               sops = {
                 age.keyFile = "/home/nyx/.config/sops/age/keys.txt";

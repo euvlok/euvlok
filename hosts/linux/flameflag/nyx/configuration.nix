@@ -14,7 +14,6 @@
     ./systemd.nix
     ./kanata.nix
 
-    inputs.sops-nix-trivial.nixosModules.sops
     {
       sops = {
         age.keyFile = "/home/nyx/.config/sops/age/keys.txt";

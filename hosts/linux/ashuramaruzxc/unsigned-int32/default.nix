@@ -6,13 +6,7 @@
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-      inputs.sops-nix-trivial.nixosModules.sops
-      {
-        sops = {
-          age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-        };
-      }
+      { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml; }
       {
         catppuccin = {
           enable = true;

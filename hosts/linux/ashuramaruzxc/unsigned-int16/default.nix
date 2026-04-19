@@ -18,13 +18,7 @@ in
       raspberry-pi-5.bluetooth
       raspberry-pi-5.display-vc4
       raspberry-pi-5.page-size-16k
-      inputs.sops-nix-trivial.nixosModules.sops
-      {
-        sops = {
-          age.keyFile = "/var/lib/sops/age/keys.txt";
-          defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml;
-        };
-      }
+      { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml; }
       {
         catppuccin = {
           enable = true;

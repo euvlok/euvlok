@@ -5,14 +5,7 @@
 }:
 {
   imports = [
-    inputs.sops-nix-trivial.darwinModules.sops
-    {
-      sops = {
-        age.keyFile = "/var/lib/sops/age/keys.txt";
-        age.sshKeyPaths = [ ]; # we don't need this shit here
-        defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
-      };
-    }
+    { sops.defaultSopsFile = ../../../../secrets/bigshaq9999.yaml; }
   ];
 
   system.primaryUser = "faputa";
