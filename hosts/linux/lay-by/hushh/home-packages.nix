@@ -31,7 +31,6 @@
       font-manager
       python3
 
-
       # nim
       nim
       nimble
@@ -74,6 +73,8 @@
       gimp
       evince
       alsa-utils
+      lsp-plugins
+      calf
       ;
     inherit (pkgs.unstable)
       # Security

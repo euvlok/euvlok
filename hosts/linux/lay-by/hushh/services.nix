@@ -48,6 +48,12 @@ _: {
       };
     };
 
+    libinput = {
+      enable = true;
+      mouse.accelProfile = "flat";
+      mouse.accelSpeed = "0";
+    };
+
     # Misc services
     gvfs.enable = true;
     tumbler.enable = true;
