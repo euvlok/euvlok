@@ -1,8 +1,11 @@
 specialArgs: self: super:
 let
-  kanata = import ./kanata.nix specialArgs self super;
-  yazi = import ./yazi.nix specialArgs self super;
-  ghostty = import ./ghostty.nix specialArgs self super;
-  zellij = import ./zellij.nix specialArgs self super;
+  entries = builtins.readDir ./.;
+  isOverlayFile =
+    name:
+    entries.${name} == "regular" && name != "default.nix" && builtins.match ".*\\.nix" name != null;
+  overlayFiles = builtins.filter isOverlayFile (builtins.attrNames entries);
 in
-kanata // yazi // ghostty // zellij
+builtins.foldl' (
+  acc: name: acc // (import (./. + "/${name}") specialArgs self super)
+) { } overlayFiles
