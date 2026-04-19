@@ -123,13 +123,7 @@ in
       baseImports
       ++ [
         catppuccinConfig
-        inputs.sops-nix-trivial.homeManagerModules.sops
-        {
-          sops = {
-            age.keyFile = "$HOME/.config/sops/age/keys.txt";
-            defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml;
-          };
-        }
+        { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml; }
       ]
       ++ ashuramaruHmConfig
       ++ [

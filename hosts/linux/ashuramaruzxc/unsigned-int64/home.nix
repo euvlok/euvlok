@@ -50,13 +50,7 @@ let
   globalImports = [
     ../shared/home/aliases.nix
     catppuccinConfig
-    inputs.sops-nix-trivial.homeManagerModules.sops
-    {
-      sops = {
-        age.keyFile = "$HOME/.config/sops/age/keys.txt";
-        defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml;
-      };
-    }
+    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml; }
   ];
 in
 {

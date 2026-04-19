@@ -18,6 +18,7 @@
     ./security.nix
     ./services.nix
     ./sessionVariables.nix
+    ./sops.nix
     ./steam.nix
     ./vscode-server.nix
     ./zram.nix

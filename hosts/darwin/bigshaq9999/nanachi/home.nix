@@ -56,13 +56,7 @@
         }
       ]
       ++ [
-        inputs.sops-nix-trivial.homeManagerModules.sops
-        {
-          sops = {
-            age.keyFile = "${config.home.homeDirectory}/Library/Application Support/sops/age/keys.txt";
-            defaultSopsFile = ../../../../secrets/bigshaq9999.yaml;
-          };
-        }
+        { sops.defaultSopsFile = ../../../../secrets/bigshaq9999.yaml; }
       ]
       ++ [
         inputs.self.homeModules.default
