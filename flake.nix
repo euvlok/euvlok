@@ -167,42 +167,34 @@
           };
           formatter = pkgs.nixfmt;
 
-          apps = {
-            auto-rebase = {
-              type = "app";
-              program =
-                let
-                  script = pkgs.writeShellScriptBin "auto-rebase" ''
-                    cd "$(git rev-parse --show-toplevel)"
-                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/auto-rebase/src/index.ts -- "$@"
-                  '';
-                in
-                "${script}/bin/auto-rebase";
+          apps =
+            let
+              mkBunApp =
+                { bin, entry }:
+                {
+                  type = "app";
+                  program = pkgs.lib.getExe (
+                    pkgs.writeShellScriptBin bin ''
+                      cd "$(git rev-parse --show-toplevel)"
+                      ${pkgs.lib.getExe pkgs.bun} --bun run ${entry} -- "$@"
+                    ''
+                  );
+                };
+            in
+            pkgs.lib.mapAttrs (_: mkBunApp) {
+              auto-rebase = {
+                bin = "auto-rebase";
+                entry = "./packages/auto-rebase/src/index.ts";
+              };
+              browser-extension-update = {
+                bin = "browser-extension";
+                entry = "./packages/browser-extensions-update/src/index.ts";
+              };
+              nvidia-prefetch = {
+                bin = "nvidia-prefetch";
+                entry = "./packages/nvidia-prefetch/src/index.ts";
+              };
             };
-            browser-extension-update = {
-              type = "app";
-              program =
-                let
-                  script = pkgs.writeShellScriptBin "browser-extension" ''
-                    cd "$(git rev-parse --show-toplevel)"
-                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/browser-extensions-update/src/index.ts -- "$@"
-                  '';
-                in
-                "${script}/bin/browser-extension";
-            };
-            nvidia-prefetch = {
-              type = "app";
-              program =
-                let
-                  script = pkgs.writeShellScriptBin "nvidia-prefetch" ''
-                    cd "$(git rev-parse --show-toplevel)"
-                    ${pkgs.lib.getExe pkgs.bun} --bun run ./packages/nvidia-prefetch/src/index.ts -- "$@"
-                  '';
-                in
-                "${script}/bin/nvidia-prefetch";
-            };
-
-          };
         };
 
       flake = {
