@@ -1,10 +1,7 @@
 { inputs, ... }:
-let
-  hostArgs = { inherit inputs; };
-in
 {
   flake = {
-    nixosConfigurations."null" = (import ../../hosts/linux/sm-idk/null hostArgs).null;
+    nixosConfigurations."null" = import ../../hosts/linux/sm-idk/null inputs;
     homeConfigurations.sm-idk = import ../../hosts/hm/sm-idk;
   };
 }
