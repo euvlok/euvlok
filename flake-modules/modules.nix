@@ -13,15 +13,15 @@
     modules = {
       nixos.default = import ../modules/nixos;
       darwin.default = ../modules/darwin;
+      homeManager.default = ../modules/hm;
+      homeManager.os = ../modules/hm/os;
     };
 
     # Legacy aliases for external consumers and internal hosts/**/*.nix
     nixosModules.default = config.flake.modules.nixos.default;
     darwinModules.default = config.flake.modules.darwin.default;
-
     homeModules = {
-      default = ../modules/hm;
-      os = ../modules/hm/os;
+      inherit (config.flake.modules.homeManager) default os;
     };
   };
 }
