@@ -115,6 +115,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.devenv.flakeModule
+        inputs.flake-parts.flakeModules.easyOverlay
         inputs.flake-parts.flakeModules.modules
         inputs.home-manager.flakeModules.default
         inputs.pre-commit-hooks.flakeModule

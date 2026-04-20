@@ -29,6 +29,14 @@
         nvidia-prefetch = mkBunPackage { name = "nvidia-prefetch"; };
       };
 
+      overlayAttrs = {
+        inherit (config.packages)
+          auto-rebase
+          browser-extension-update
+          nvidia-prefetch
+          ;
+      };
+
       apps = pkgs.lib.mapAttrs (_: pkg: {
         type = "app";
         program = pkgs.lib.getExe pkg;
