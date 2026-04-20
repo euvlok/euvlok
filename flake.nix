@@ -112,113 +112,27 @@
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      { config, ... }:
-      {
-        imports = [
-          inputs.devenv.flakeModule
-          inputs.flake-parts.flakeModules.modules
-          inputs.home-manager.flakeModules.default
-          inputs.pre-commit-hooks.flakeModule
-        ];
-        systems = [
-          "aarch64-darwin"
-          "aarch64-linux"
-          "x86_64-darwin"
-          "x86_64-linux"
-        ];
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.devenv.flakeModule
+        inputs.flake-parts.flakeModules.modules
+        inputs.home-manager.flakeModules.default
+        inputs.pre-commit-hooks.flakeModule
 
-        perSystem =
-          { config, pkgs, ... }:
-          let
-            mkBunPackage =
-              {
-                name,
-                dir ? name,
-              }:
-              pkgs.writeShellApplication {
-                inherit name;
-                runtimeInputs = [
-                  pkgs.bun
-                  pkgs.git
-                ];
-                text = ''
-                  cd "$(git rev-parse --show-toplevel)"
-                  exec bun --bun run ./packages/${dir}/src/index.ts -- "$@"
-                '';
-              };
-          in
-          {
-            formatter = pkgs.nixfmt;
-
-            pre-commit.settings = {
-              excludes = [
-                ".direnv"
-                ".devenv"
-              ];
-              hooks = {
-                nixfmt-rfc-style = {
-                  enable = true;
-                  package = pkgs.nixfmt;
-                };
-                shellcheck.enable = true;
-              };
-            };
-
-            devenv.shells.default = {
-              name = "euvlok development shell";
-              languages = {
-                nix.enable = true;
-                shell.enable = true;
-              };
-              enterShell = config.pre-commit.installationScript;
-              packages = builtins.attrValues {
-                inherit (pkgs) git pre-commit bun;
-                inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
-              };
-            };
-
-            packages = {
-              auto-rebase = mkBunPackage { name = "auto-rebase"; };
-              browser-extension-update = mkBunPackage {
-                name = "browser-extension-update";
-                dir = "browser-extensions-update";
-              };
-              nvidia-prefetch = mkBunPackage { name = "nvidia-prefetch"; };
-            };
-
-            apps = pkgs.lib.mapAttrs (_: pkg: {
-              type = "app";
-              program = pkgs.lib.getExe pkg;
-            }) config.packages;
-          };
-
-        flake = {
-          modules = {
-            nixos.default = import ./modules/nixos;
-            darwin.default = ./modules/darwin;
-          };
-
-          # Legacy aliases for external consumers and internal hosts/**/*.nix
-          nixosModules.default = config.flake.modules.nixos.default;
-          darwinModules.default = config.flake.modules.darwin.default;
-
-          homeModules = {
-            default = ./modules/hm;
-            os = ./modules/hm/os;
-          };
-
-          homeConfigurations = {
-            ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
-            bigshaq9999 = import ./hosts/hm/bigshaq9999;
-            flameflag = import ./hosts/hm/flameflag;
-            lay-by = import ./hosts/hm/lay-by;
-            sm-idk = import ./hosts/hm/sm-idk;
-          };
-
-          nixosConfigurations = import ./hosts/linux { inherit inputs; };
-          darwinConfigurations = import ./hosts/darwin { inherit inputs; };
-        };
-      }
-    );
+        ./flake-modules/dev-shell.nix
+        ./flake-modules/packages.nix
+        ./flake-modules/modules.nix
+        ./flake-modules/users/ashuramaruzxc.nix
+        ./flake-modules/users/bigshaq9999.nix
+        ./flake-modules/users/flameflag.nix
+        ./flake-modules/users/lay-by.nix
+        ./flake-modules/users/sm-idk.nix
+      ];
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+    };
 }
