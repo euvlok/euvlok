@@ -4,6 +4,9 @@
   config,
   ...
 }:
+let
+  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
+in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ];
 
@@ -27,15 +30,7 @@
           };
         }
       ]
-      ++ [
-        {
-          catppuccin = {
-            enable = true;
-            flavor = "frappe";
-            accent = "blue";
-          };
-        }
-      ]
+      ++ [ (mkCatppuccin hosts.FlameFlags-Mac-mini) ]
       ++ [
         inputs.self.homeModules.default
         inputs.self.homeModules.os

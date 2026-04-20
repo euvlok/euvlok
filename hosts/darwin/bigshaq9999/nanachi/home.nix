@@ -5,6 +5,9 @@
   eulib,
   ...
 }:
+let
+  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
+in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ];
 
@@ -27,15 +30,7 @@
         ../../../hm/bigshaq9999/ghostty.nix
         ../../../hm/bigshaq9999/ssh.nix
       ]
-      ++ [
-        {
-          catppuccin = {
-            enable = true;
-            flavor = "frappe";
-            accent = "rosewater";
-          };
-        }
-      ]
+      ++ [ (mkCatppuccin hosts.nanachi-darwin) ]
       ++ [
         ../../../hm/ashuramaruzxc/nixcord.nix
       ]

@@ -1,6 +1,7 @@
 { inputs, ... }:
 let
   inherit (inputs.nixos-raspberrypi.nixosModules) raspberry-pi-5 usb-gadget-ethernet;
+  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
 in
 {
   unsigned-int16 = inputs.nixos-raspberrypi.lib.nixosSystem {
@@ -19,13 +20,7 @@ in
       raspberry-pi-5.display-vc4
       raspberry-pi-5.page-size-16k
       { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml; }
-      {
-        catppuccin = {
-          enable = true;
-          accent = "flamingo";
-          flavor = "mocha";
-        };
-      }
+      (mkCatppuccin hosts.unsigned-int16)
       inputs.flatpak-declerative-trivial.nixosModules.default
       {
         services.flatpak = {
