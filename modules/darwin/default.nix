@@ -5,6 +5,5 @@ _: {
     ./nix.nix
     ./sops.nix
     ./system.nix
-    ./zsh.nix
   ];
 }

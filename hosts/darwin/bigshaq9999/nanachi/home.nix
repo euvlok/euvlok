@@ -23,8 +23,8 @@ in
         { home.stateVersion = "25.11"; }
       ]
       ++ [
-        ../../../hm/flameflag/nushell.nix
-        ../../../hm/flameflag/starship.nix
+        ../../../hm/bigshaq9999/nushell.nix
+        ../../../hm/bigshaq9999/starship.nix
         ../../../hm/bigshaq9999/git.nix
         ../../../hm/bigshaq9999/helix.nix
         ../../../hm/bigshaq9999/ghostty.nix
@@ -57,8 +57,6 @@ in
         inputs.self.homeModules.default
         inputs.self.homeModules.os
         inputs.self.homeConfigurations.bigshaq9999
-        ../../../hm/flameflag/nushell.nix
-        ../../../hm/flameflag/starship.nix
         {
           hm = {
             fastfetch.enable = true;

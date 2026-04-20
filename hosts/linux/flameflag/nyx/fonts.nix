@@ -16,11 +16,11 @@
     };
     packages =
       builtins.attrValues {
-        inherit (pkgs) noto-fonts-cjk-sans noto-fonts-emoji twemoji-color-font;
+        inherit (pkgs) noto-fonts-cjk-sans noto-fonts-color-emoji twemoji-color-font;
         inherit (pkgs.nerd-fonts) monaspace noto;
       }
       ++ lib.optionals config.nixos.gnome.enable (
-        builtins.attrValues { inherit (pkgs.nerd-fonts) adawaita-mono; }
+        builtins.attrValues { inherit (pkgs.nerd-fonts) adwaita-mono; }
       );
   };
 }

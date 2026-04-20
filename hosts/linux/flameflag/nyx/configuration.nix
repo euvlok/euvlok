@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   config,
   ...
@@ -18,6 +17,10 @@
       sops = {
         age.keyFile = "/home/nyx/.config/sops/age/keys.txt";
         defaultSopsFile = ../../../../secrets/flameflag.yaml;
+        secrets.github_ssh = {
+          uid = 0;
+          gid = 0;
+        };
       };
     }
   ];
@@ -52,11 +55,6 @@
   };
 
   nixos.boot.systemd-boot.enable = true;
-
-  environment.systemPackages = builtins.attrValues {
-    inherit (pkgs) telegram-desktop;
-    inherit (pkgs.eupkgs) claude-code opencode;
-  };
 
   services.pipewire.wireplumber.extraConfig = {
     # Fixes the "Corsair HS80 Wireless" Volume desync between Headset & System

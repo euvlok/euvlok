@@ -1,0 +1,81 @@
+{{- $nushellConfigPath := "" -}}
+{{- $yaziConfigPath := "" -}}
+{{- $fontsPath := "" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $nushellConfigPath = "Library/Application Support/nushell" -}}
+{{-   $yaziConfigPath = ".config/yazi" -}}
+{{-   $fontsPath = "Library/Fonts" -}}
+{{- else -}}
+{{-   $nushellConfigPath = ".config/nushell" -}}
+{{-   $yaziConfigPath = ".config/yazi" -}}
+{{-   $fontsPath = ".local/share/fonts" -}}
+{{- end -}}
+
+# ----- Nushell -----
+
+{{- $nushellTools := list "bat" "curl" "git" "jj" "man" "nix" "rg" "ssh" "vscode" "zellij" -}}
+{{- range $tool := $nushellTools }}
+["{{ $nushellConfigPath }}/completions/{{ $tool }}.nu"]
+type = "file"
+url = "https://raw.githubusercontent.com/nushell/nu_scripts/main/custom-completions/{{ $tool }}/{{ $tool }}-completions.nu"
+refreshPeriod = "168h"
+{{ end }}
+
+# ----- Oh-My-Zsh -----
+
+[".oh-my-zsh"]
+type = "git-repo"
+url = "https://github.com/ohmyzsh/ohmyzsh.git"
+refreshPeriod = "168h"
+[".oh-my-zsh".pull]
+args = ["--ff-only"]
+
+[".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
+type = "git-repo"
+url = "https://github.com/zsh-users/zsh-autosuggestions.git"
+refreshPeriod = "168h"
+
+[".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+type = "git-repo"
+url = "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+refreshPeriod = "168h"
+
+[".oh-my-zsh/custom/plugins/fzf-tab"]
+type = "git-repo"
+url = "https://github.com/Aloxaf/fzf-tab.git"
+refreshPeriod = "168h"
+
+# ----- Oh-My-Bash -----
+
+[".oh-my-bash"]
+type = "git-repo"
+url = "https://github.com/ohmybash/oh-my-bash.git"
+refreshPeriod = "168h"
+[".oh-my-bash".pull]
+args = ["--ff-only"]
+
+# ----- fzf-tab-completion (bash) -----
+
+[".fzf-tab-completion"]
+type = "git-repo"
+url = "https://github.com/lincheney/fzf-tab-completion.git"
+refreshPeriod = "168h"
+
+# ----- Paid Fonts (private repo, auth via gh) -----
+
+["{{ $fontsPath }}/paid-fonts"]
+type = "git-repo"
+url = "https://github.com/FlameFlag/paid-fonts.git"
+refreshPeriod = "168h"
+[{{ printf "%s/paid-fonts" $fontsPath | printf "%q" }}.pull]
+args = ["--ff-only"]
+
+# ----- Yazi -----
+
+{{- $yaziFlavors := list "frappe" "latte" -}}
+{{- range $flavor := $yaziFlavors }}
+["{{ $yaziConfigPath }}/flavors/catppuccin-{{ $flavor }}-blue.yazi/flavor.toml"]
+type = "file"
+url = "https://raw.githubusercontent.com/catppuccin/yazi/main/themes/{{ $flavor }}/catppuccin-{{ $flavor }}-blue.toml"
+refreshPeriod = "168h"
+{{ end }}

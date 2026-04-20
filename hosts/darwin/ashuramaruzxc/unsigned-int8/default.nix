@@ -3,6 +3,7 @@ inputs.nix-darwin.lib.darwinSystem {
   specialArgs = { inherit inputs; };
   modules = [
     inputs.self.darwinModules.default
+    ../../../../modules/darwin/zsh.nix
     ../../../linux/ashuramaruzxc/shared/system/fonts.nix
     ./brew.nix
     ./configuration.nix

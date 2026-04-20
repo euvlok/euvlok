@@ -5,7 +5,8 @@ inputs.nix-darwin.lib.darwinSystem {
     inputs.self.darwinModules.default
     ./configuration.nix
     ./fonts.nix
-    ./home.nix
+    ./launchd.nix
+    ./packages.nix
     ./system.nix
   ];
 }
