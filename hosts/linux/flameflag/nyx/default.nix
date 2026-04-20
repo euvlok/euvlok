@@ -1,4 +1,7 @@
 { inputs, ... }:
+let
+  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
+in
 {
   nyx = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { inherit inputs; };
@@ -6,13 +9,7 @@
       inputs.self.nixosModules.default
       ./configuration.nix
       ./home.nix
-      {
-        catppuccin = {
-          enable = true;
-          flavor = "frappe";
-          accent = "blue";
-        };
-      }
+      (mkCatppuccin hosts.nyx)
       {
         nixos = {
           amd.enable = true;

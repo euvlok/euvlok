@@ -1,4 +1,7 @@
 { inputs, ... }:
+let
+  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
+in
 {
   unsigned-int64 = inputs.nixpkgs.lib.nixosSystem {
     specialArgs = { inherit inputs; };
@@ -7,13 +10,7 @@
       ./configuration.nix
       ./home.nix
       { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int64.yaml; }
-      {
-        catppuccin = {
-          enable = true;
-          accent = "rosewater";
-          flavor = "mocha";
-        };
-      }
+      (mkCatppuccin hosts.unsigned-int64)
       {
         nixos = {
           gnome.enable = true;
