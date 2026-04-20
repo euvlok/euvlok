@@ -1,0 +1,182 @@
+theme "catppuccin-frappe"
+default_shell "nu"
+copy_command "{{ if eq .chezmoi.os "darwin" }}pbcopy{{ else }}wl-copy{{ end }}"
+copy_clipboard "system"
+copy_on_select false
+scrollback_editor "hx"
+mirror_session true
+show_startup_tips false
+on_force_close "detach"
+
+ui {
+    pane_frames {
+        rounded_corners true
+        hide_session_name false
+    }
+}
+
+default_layout "compact"
+
+plugins {
+    tab-bar path="tab-bar"
+    strider path="strider"
+    compact-bar path="compact-bar"
+    session-manager path="session-manager"
+    status-bar path="status-bar"
+}
+
+load_plugins {
+    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/latest/download/zellij-autolock.wasm" {
+        triggers "nvim|vim|hx|git|fzf|zoxide|atuin"
+        watch_triggers "lazygit|gitui|yazi|lf"
+        watch_interval "1.0"
+    }
+}
+
+keybinds clear-defaults=true {
+    normal {
+        unbind "Ctrl p"
+        unbind "Ctrl t"
+        unbind "Ctrl o"
+        unbind "Ctrl b"
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} g" { SwitchToMode "Session"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} k" { Clear; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 1" { GoToTab 1; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 2" { GoToTab 2; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 3" { GoToTab 3; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 4" { GoToTab 4; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 5" { GoToTab 5; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 6" { GoToTab 6; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 7" { GoToTab 7; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 8" { GoToTab 8; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 9" { GoToTab 9; }
+        bind "Alt C" { Copy; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Backspace" { CloseFocus; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift S" { SwitchToMode "Pane"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift R" { SwitchToMode "Resize"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Left" { MoveFocus "Left"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Down" { MoveFocus "Down"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Up" { MoveFocus "Up"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Right" { MoveFocus "Right"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} t" { NewTab; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} [" { SwitchToMode "Scroll"; }
+    }
+    pane {
+        bind "Left" { NewPane "Left"; SwitchToMode "Normal"; }
+        bind "Down" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "Up" { NewPane "Up"; SwitchToMode "Normal"; }
+        bind "Right" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "p" { SwitchFocus; }
+        bind "x" { CloseFocus; }
+        bind "f" { ToggleFocusFullscreen; }
+        bind "z" { TogglePaneFrames; }
+        bind "c" { SwitchToMode "RenamePane"; PaneNameInput 0; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    tab {
+        bind "h" { GoToPreviousTab; SwitchToMode "Normal"; }
+        bind "l" { GoToNextTab; SwitchToMode "Normal"; }
+        bind "x" { CloseTab; SwitchToMode "Normal"; }
+        bind "s" { ToggleActiveSyncTab; SwitchToMode "Normal"; }
+        bind "b" { BreakPane; SwitchToMode "Normal"; }
+        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    move {
+        bind "h" "Left" { MovePane "Left"; }
+        bind "j" "Down" { MovePane "Down"; }
+        bind "k" { MovePane "Up"; }
+        bind "l" { MovePane "Right"; }
+        bind "n" { MovePane; }
+        bind "p" { MovePaneBackwards; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    scroll {
+        bind "j" "Down" { ScrollDown; }
+        bind "k" { ScrollUp; }
+        bind "PageDown" { PageScrollDown; }
+        bind "PageUp" { PageScrollUp; }
+        bind "e" { EditScrollback; SwitchToMode "Normal"; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    resize {
+        bind "Left" { Resize "Increase Left"; SwitchToMode "Normal"; }
+        bind "Down" { Resize "Increase Down"; SwitchToMode "Normal"; }
+        bind "Up" { Resize "Increase Up"; SwitchToMode "Normal"; }
+        bind "Right" { Resize "Increase Right"; SwitchToMode "Normal"; }
+        bind "=" { Resize "Increase"; SwitchToMode "Normal"; }
+        bind "-" { Resize "Decrease"; SwitchToMode "Normal"; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    renametab {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Tab"; }
+    }
+    renamepane {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenamePane; SwitchToMode "Pane"; }
+    }
+    locked {
+        bind "g" { SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} g" { SwitchToMode "Normal"; }
+    }
+    search {
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "c" { SearchToggleOption "CaseSensitivity"; }
+        bind "w" { SearchToggleOption "WholeWord"; }
+        bind "e" { EditScrollback; SwitchToMode "Normal"; }
+        bind "n" { Search "down"; }
+        bind "N" { Search "up"; }
+        bind "Esc" { SwitchToMode "Normal"; }
+    }
+    session {
+        bind "d" { Detach; SwitchToMode "Normal"; }
+        bind "w" { LaunchOrFocusPlugin "session-manager"; SwitchToMode "Normal"; }
+        bind "t" { NewTab; SwitchToMode "Normal"; }
+        bind "1" { GoToTab 1; SwitchToMode "Normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "Normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "Normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "Normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "Normal"; }
+        bind "6" { GoToTab 6; SwitchToMode "Normal"; }
+        bind "7" { GoToTab 7; SwitchToMode "Normal"; }
+        bind "8" { GoToTab 8; SwitchToMode "Normal"; }
+        bind "9" { GoToTab 9; SwitchToMode "Normal"; }
+        bind "q" { Quit; }
+        bind "r" { SwitchToMode "Resize"; }
+        bind "p" { SwitchToMode "Pane"; }
+        bind "m" { SwitchToMode "Move"; }
+        bind "T" { SwitchToMode "Tab"; }
+        bind "s" { SwitchToMode "Scroll"; }
+        bind "S" { SwitchToMode "Pane"; }
+        bind "R" { SwitchToMode "Resize"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} g" { SwitchToMode "Normal"; }
+        bind "h" { MoveFocus "Left"; }
+        bind "j" { MoveFocus "Down"; }
+        bind "k" { MoveFocus "Up"; }
+        bind "l" { MoveFocus "Right"; }
+        bind "K" { Clear; SwitchToMode "Normal"; }
+        bind "?" {
+            LaunchOrFocusPlugin "https://github.com/karimould/zellij-forgot/releases/latest/download/zellij_forgot.wasm" {
+                "LOAD_ZELLIJ_BINDINGS" "true"
+                floating true
+            }
+            SwitchToMode "Normal"
+        }
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Left" { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Down" { MoveFocus "Down"; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Up" { MoveFocus "Up"; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} Shift Right" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} k" { Clear; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 1" { GoToTab 1; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 2" { GoToTab 2; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 3" { GoToTab 3; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 4" { GoToTab 4; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 5" { GoToTab 5; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 6" { GoToTab 6; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 7" { GoToTab 7; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 8" { GoToTab 8; SwitchToMode "Normal"; }
+        bind "{{ if eq .chezmoi.os "darwin" }}Super{{ else }}Ctrl{{ end }} 9" { GoToTab 9; SwitchToMode "Normal"; }
+    }
+}

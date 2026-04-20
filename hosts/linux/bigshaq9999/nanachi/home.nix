@@ -21,10 +21,10 @@
         ../../../hm/bigshaq9999/niri.nix
         ../../../hm/bigshaq9999/taskwarrior.nix
         ../../../hm/bigshaq9999/waybar.nix
-        ../../../hm/flameflag/mpv.nix
-        ../../../hm/flameflag/nixcord.nix
-        ../../../hm/flameflag/starship.nix
-        ../../../hm/flameflag/yazi.nix
+        ../../../hm/bigshaq9999/mpv.nix
+        ../../../hm/bigshaq9999/nixcord.nix
+        ../../../hm/bigshaq9999/starship.nix
+        ../../../hm/bigshaq9999/yazi.nix
       ]
       ++ [
         inputs.self.homeModules.default
