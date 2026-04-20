@@ -17,7 +17,7 @@
     {
       sops = {
         age.keyFile = "/home/nyx/.config/sops/age/keys.txt";
-        defaultSopsFile = ../../secrets/secrets.yaml;
+        defaultSopsFile = ../../../../secrets/flameflag.yaml;
       };
     }
   ];
