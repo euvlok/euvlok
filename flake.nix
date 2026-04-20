@@ -95,7 +95,7 @@
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
 
-    # Misc / Non Flakes sources(Trivial)
+    # Misc / Non Flakes sources (Trivial)
     homebrew-core-trivial = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -112,107 +112,113 @@
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ inputs.devenv.flakeModule ];
-      systems = [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ];
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+      { config, ... }:
+      {
+        imports = [
+          inputs.devenv.flakeModule
+          inputs.flake-parts.flakeModules.modules
+          inputs.home-manager.flakeModules.default
+          inputs.pre-commit-hooks.flakeModule
+        ];
+        systems = [
+          "aarch64-darwin"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "x86_64-linux"
+        ];
 
-      perSystem =
-        { pkgs, system, ... }:
-        {
-          _module.args.pkgs = inputs.nixpkgs.legacyPackages.${system};
-          checks = {
-            pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-              src = ./.;
-              hooks.shellcheck.enable = true;
-              hooks.nixfmt-rfc-style = {
-                enable = true;
-                package = pkgs.nixfmt;
-                excludes = [
-                  ".direnv"
-                  ".devenv"
+        perSystem =
+          { config, pkgs, ... }:
+          let
+            mkBunPackage =
+              {
+                name,
+                dir ? name,
+              }:
+              pkgs.writeShellApplication {
+                inherit name;
+                runtimeInputs = [
+                  pkgs.bun
+                  pkgs.git
                 ];
+                text = ''
+                  cd "$(git rev-parse --show-toplevel)"
+                  exec bun --bun run ./packages/${dir}/src/index.ts -- "$@"
+                '';
               };
-            };
-          };
-          devenv.shells.default = {
-            name = "euvlok development shell";
-            languages = {
-              nix.enable = true;
-              shell.enable = true;
-            };
-            git-hooks = {
+          in
+          {
+            formatter = pkgs.nixfmt;
+
+            pre-commit.settings = {
               excludes = [
                 ".direnv"
                 ".devenv"
               ];
-              hooks.nixfmt-rfc-style = {
-                enable = true;
-                excludes = [
-                  ".direnv"
-                  ".devenv"
-                ];
-                package = pkgs.nixfmt;
-              };
-              hooks.shellcheck.enable = true;
-            };
-            packages = builtins.attrValues {
-              inherit (pkgs) git pre-commit bun;
-              inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
-            };
-          };
-          formatter = pkgs.nixfmt;
-
-          apps =
-            let
-              mkBunApp =
-                { bin, entry }:
-                {
-                  type = "app";
-                  program = pkgs.lib.getExe (
-                    pkgs.writeShellScriptBin bin ''
-                      cd "$(git rev-parse --show-toplevel)"
-                      ${pkgs.lib.getExe pkgs.bun} --bun run ${entry} -- "$@"
-                    ''
-                  );
+              hooks = {
+                nixfmt-rfc-style = {
+                  enable = true;
+                  package = pkgs.nixfmt;
                 };
-            in
-            pkgs.lib.mapAttrs (_: mkBunApp) {
-              auto-rebase = {
-                bin = "auto-rebase";
-                entry = "./packages/auto-rebase/src/index.ts";
-              };
-              browser-extension-update = {
-                bin = "browser-extension";
-                entry = "./packages/browser-extensions-update/src/index.ts";
-              };
-              nvidia-prefetch = {
-                bin = "nvidia-prefetch";
-                entry = "./packages/nvidia-prefetch/src/index.ts";
+                shellcheck.enable = true;
               };
             };
+
+            devenv.shells.default = {
+              name = "euvlok development shell";
+              languages = {
+                nix.enable = true;
+                shell.enable = true;
+              };
+              enterShell = config.pre-commit.installationScript;
+              packages = builtins.attrValues {
+                inherit (pkgs) git pre-commit bun;
+                inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
+              };
+            };
+
+            packages = {
+              auto-rebase = mkBunPackage { name = "auto-rebase"; };
+              browser-extension-update = mkBunPackage {
+                name = "browser-extension-update";
+                dir = "browser-extensions-update";
+              };
+              nvidia-prefetch = mkBunPackage { name = "nvidia-prefetch"; };
+            };
+
+            apps = pkgs.lib.mapAttrs (_: pkg: {
+              type = "app";
+              program = pkgs.lib.getExe pkg;
+            }) config.packages;
+          };
+
+        flake = {
+          modules = {
+            nixos.default = import ./modules/nixos;
+            darwin.default = ./modules/darwin;
+          };
+
+          # Legacy aliases for external consumers and internal hosts/**/*.nix
+          nixosModules.default = config.flake.modules.nixos.default;
+          darwinModules.default = config.flake.modules.darwin.default;
+
+          homeModules = {
+            default = ./modules/hm;
+            os = ./modules/hm/os;
+          };
+
+          homeConfigurations = {
+            ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
+            bigshaq9999 = import ./hosts/hm/bigshaq9999;
+            flameflag = import ./hosts/hm/flameflag;
+            lay-by = import ./hosts/hm/lay-by;
+            sm-idk = import ./hosts/hm/sm-idk;
+          };
+
+          nixosConfigurations = import ./hosts/linux { inherit inputs; };
+          darwinConfigurations = import ./hosts/darwin { inherit inputs; };
         };
-
-      flake = {
-        nixosModules.default = import ./modules/nixos;
-        darwinModules.default = ./modules/darwin;
-        homeModules.default = ./modules/hm;
-        homeModules.os = ./modules/hm/os;
-
-        homeConfigurations = {
-          ashuramaruzxc = import ./hosts/hm/ashuramaruzxc;
-          bigshaq9999 = import ./hosts/hm/bigshaq9999;
-          flameflag = import ./hosts/hm/flameflag;
-          lay-by = import ./hosts/hm/lay-by;
-          sm-idk = import ./hosts/hm/sm-idk;
-        };
-
-        nixosConfigurations = import ./hosts/linux { inherit inputs; };
-        darwinConfigurations = import ./hosts/darwin { inherit inputs; };
-      };
-    };
+      }
+    );
 }
