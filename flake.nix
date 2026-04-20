@@ -114,13 +114,11 @@
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
-        inputs.devenv.flakeModule
         inputs.flake-parts.flakeModules.easyOverlay
         inputs.flake-parts.flakeModules.modules
+        inputs.flake-parts.flakeModules.partitions
         inputs.home-manager.flakeModules.default
-        inputs.pre-commit-hooks.flakeModule
 
-        ./flake-modules/dev-shell.nix
         ./flake-modules/packages.nix
         ./flake-modules/modules.nix
         ./flake-modules/users/ashuramaruzxc.nix
@@ -129,6 +127,24 @@
         ./flake-modules/users/lay-by.nix
         ./flake-modules/users/sm-idk.nix
       ];
+
+      # Keep devenv + pre-commit-hooks (and their transitive evaluation)
+      # out of the host build path. Hosts only need nixpkgs, home-manager,
+      # nix-darwin, etc. The dev partition is only evaluated when someone
+      # asks for devShells/checks/formatter.
+      partitionedAttrs = {
+        devShells = "dev";
+        checks = "dev";
+        formatter = "dev";
+      };
+      partitions.dev.module = {
+        imports = [
+          inputs.devenv.flakeModule
+          inputs.pre-commit-hooks.flakeModule
+          ./flake-modules/dev-shell.nix
+        ];
+      };
+
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
