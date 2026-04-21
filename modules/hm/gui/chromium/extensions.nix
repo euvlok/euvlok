@@ -28,11 +28,11 @@ lib.flatten [
   {
     id = "jinjaccalgkegednnccohejagnlnfdag";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa4dAonJNfXERYMOjSHbsaF6u0kEp0dy5VLs9xmdqnZ_EDBwYCy0-rnElJumRKF4kinDio32hNatUOlO_nl3jJ0ptRDsTun5B-J_6uclNomfkfDL7w8KAOA7-KJ19DcAxlKa5cAzrRaeRbbGS1S5ODd7QKiQUP7A/JINJACCALGKEGEDNNCCOHEJAGNLNFDAG_2_35_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa7rWYMe78WIriHJvm42BvV2sWvkgOpet3KysEFJilrCssZH37xxRGADR5KPeZvLHdJJ09iNU8eluonzIMwB8SlV-m40HvaqVtn3tCxxyYrf_nLzfWo6GxIUvjaRaUEAxlKa5T-3pjRHJ2cxnrVwCFajMlpKD4E6/JINJACCALGKEGEDNNCCOHEJAGNLNFDAG_2_36_0_0.crx";
       name = "jinjaccalgkegednnccohejagnlnfdag.crx";
-      hash = "sha256-1CYC+DQm0Glg33AnkuICDyJKvLoCJUKyPPkb7VwCeqs=";
+      hash = "sha256-OOnRfEig1MO3RuQnGQx2Hr1v3/8XhNN6qUMGdSKc2Ug=";
     };
-    version = "2.35.0";
+    version = "2.36.0";
   }
   {
     id = "kpaaapnegfaaoimjpagopchdbmenfngl";
@@ -55,7 +55,7 @@ lib.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=d4f1c5e1e4595c2e0865ce2a838cb207655457db";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=3ce40be62b3a82f421861a47c3d05f6654119249";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
       hash = "sha256-tlLe3/HFWod2OQBqGmp3ScieEz5R+rlkkEoPTopLVtU=";
     };
@@ -73,11 +73,11 @@ lib.flatten [
   {
     id = "mnjggcdmjocbbbhaepdhchncahnbgone";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa6Nm7YgSSEQ002PnsTBQEirubQU4flMEnGHoc7t-2aBweRlMdPc6b9JShnu9NtV9d17okcXv0Q1QEiQkM07nc2iCUTyTg79GnZKvi8Hs_PgI4smmFc3YvBQe2Beu78AxlKa5cDrkaWJKaIci2lJqcEeLuYk5fs2/MNJGGCDMJOCBBBHAEPDHCHNCAHNBGONE_6_1_4_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AQx-wa5TpZKfbc5tWcOacplSWGEJtYVIYr9urvAEIFNSkMyqcDIFcrGUGixKpBZRXYZCdpaXqx4_AxJHf0Ig6rxWS1nf30qTl_8Phn5ZvYjqFeyAoNw0duFYYqcfCINceiQAxlKa5cJZ7vHIZAiHiKP5_8NrjysDNRfb/MNJGGCDMJOCBBBHAEPDHCHNCAHNBGONE_6_1_5_0.crx";
       name = "mnjggcdmjocbbbhaepdhchncahnbgone.crx";
-      hash = "sha256-aF3kwiCN3VIGdvoH92AVWgJklU5SmAWSaf0vi9TFTc0=";
+      hash = "sha256-nE5FE3Eo1jG8sT1KYjVl8JRbmAiyhN8IZObHsAIb0wY=";
     };
-    version = "6.1.4";
+    version = "6.1.5";
   }
   (lib.optionals (config.catppuccin.enable) [
     {
