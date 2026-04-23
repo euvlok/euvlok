@@ -12,11 +12,11 @@ let
     multimedia = builtins.attrValues {
       inherit (pkgs)
         nicotine-plus
+        pear-desktop
         qbittorrent
         quodlibet-full
         tenacity
         vlc
-        youtube-music
         ;
       inherit (pkgs.unstable.kdePackages)
         k3b
@@ -48,15 +48,15 @@ let
     networking = builtins.attrValues {
       inherit (pkgs)
         mullvad-vpn
-        throne
         openvpn
-        protonvpn-gui
+        proton-vpn
+        throne
         udptunnel
         v2raya
         ;
     };
 
-    audio = builtins.attrValues { inherit (pkgs) helvum pavucontrol qpwgraph; };
+    audio = builtins.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
 
     gaming = builtins.attrValues {
       inherit (pkgs.unstable) osu-lazer-bin;
@@ -65,7 +65,7 @@ let
         cemu
         chiaki
         dolphin-emu
-        flycast
+        # flycast
         gogdl
         goverlay
         heroic
