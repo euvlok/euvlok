@@ -37,7 +37,7 @@
               hm = {
                 chromium.browser = "brave";
                 chromium.enable = true;
-                claude.statusLine.enable = true;
+                claude.enable = true;
                 fastfetch.enable = true;
                 firefox.enable = true;
                 firefox.zen-browser.enable = true;

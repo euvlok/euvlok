@@ -37,7 +37,7 @@ in
         inputs.self.homeConfigurations.flameflag
         {
           hm = {
-            claude.statusLine.enable = true;
+            claude.enable = true;
             fastfetch.enable = true;
             ghostty.enable = true;
             helix.enable = true;
