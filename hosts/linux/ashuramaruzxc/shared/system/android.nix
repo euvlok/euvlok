@@ -25,9 +25,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.adb.enable = true;
     users.groups.adbusers.members = lib.optionals cfg.enable cfg.users;
     virtualisation.waydroid.enable = lib.optionals cfg.enable cfg.waydroid.enable;
-    environment.systemPackages = [ pkgs.scrcpy ];
+    environment.systemPackages = [
+      pkgs.scrcpy
+      pkgs.android-tools
+    ];
   };
 }
