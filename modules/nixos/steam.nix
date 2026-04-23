@@ -20,6 +20,27 @@
         protontricks.enable = true;
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
+        extraCompatPackages = builtins.attrValues {
+          inherit (pkgs.unstable) proton-ge-bin;
+        };
+        extraPackages = builtins.attrValues {
+          inherit (pkgs)
+            curl
+            desktop-file-utils
+            libkrb5
+            libpng
+            libpulseaudio
+            libvorbis
+            mangohud
+            nwjs
+            thcrap-steam-proton-wrapper
+            vkbasalt
+            yad
+            ;
+        };
+        fontPackages = builtins.attrValues {
+          inherit (pkgs) wqy_zenhei source-han-sans;
+        };
       };
       gamemode = {
         enable = true;
@@ -36,7 +57,7 @@
         (builtins.attrValues {
           inherit (pkgs) scummvm inotify-tools;
           inherit (pkgs) winetricks protonplus;
-          inherit (pkgs.wineWowPackages) stagingFull;
+          inherit (pkgs.wineWow64Packages) stagingFull;
         })
         ++ (lib.optionals config.services.desktopManager.gnome.enable (
           builtins.attrValues { inherit (pkgs) adwsteamgtk; }
