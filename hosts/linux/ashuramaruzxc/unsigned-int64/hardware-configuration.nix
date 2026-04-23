@@ -60,7 +60,6 @@
   };
   ### ----------------BOOT------------------- ###
   boot.initrd = {
-    systemd.users.root.shell = "/bin/cryptsetup-askpass";
     network = {
       enable = true;
       ssh = {
@@ -76,7 +75,6 @@
       };
     };
     luks = {
-      yubikeySupport = true;
       reusePassphrases = true;
       mitigateDMAAttacks = true;
       devices = {
