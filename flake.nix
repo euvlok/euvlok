@@ -6,11 +6,11 @@
     eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     eupkgs.url = "github:euvlok/pkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
     nixos-raspberrypi.inputs.flake-compat.follows = "";
     nixos-raspberrypi.inputs.nixpkgs.follows = "nixpkgs";
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
@@ -23,7 +23,7 @@
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    catppuccin-trivial.url = "github:catppuccin/nix/v25.11";
+    catppuccin-trivial.url = "github:catppuccin/nix";
     flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
