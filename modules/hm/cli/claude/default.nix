@@ -12,10 +12,10 @@
       inherit (pkgs.eupkgs)
         claude-code
         claude-statusline
-        # opencode
         codex
         ;
     };
+    inherit (pkgs.unstable) opencode;
     home.file.".claude/settings.json".text = builtins.toJSON (
       lib.optionalAttrs config.hm.claude.statusLine.enable {
         statusLine = {
