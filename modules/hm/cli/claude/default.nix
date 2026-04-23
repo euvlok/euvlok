@@ -4,13 +4,36 @@
   config,
   ...
 }:
+let
+  codexConfig = {
+    projects = builtins.listToAttrs (
+      map
+        (path: {
+          name = path;
+          value.trust_level = "trusted";
+        })
+        [
+          "${config.home.homeDirectory}/Developer/codex"
+          "${config.home.homeDirectory}/Developer/eupkgs"
+          "${config.home.homeDirectory}/Developer/euvlok"
+        ]
+    );
+  };
+in
 {
   options.hm.claude.statusLine.enable = lib.mkEnableOption "Claude statusline";
 
   config = {
     home.packages = builtins.attrValues {
-      inherit (pkgs.eupkgs) claude-code claude-statusline opencode;
+      inherit (pkgs.eupkgs)
+        claude-code
+        claude-statusline
+        opencode
+        codex
+        ;
     };
+    home.file.".codex/config.toml".source =
+      (pkgs.formats.toml { }).generate "codex-config.toml" codexConfig;
     home.file.".claude/settings.json".text = builtins.toJSON (
       lib.optionalAttrs config.hm.claude.statusLine.enable {
         statusLine = {
