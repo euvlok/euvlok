@@ -15,6 +15,8 @@
   options.nixos.cosmic.enable = lib.mkEnableOption "COSMIC";
 
   config = lib.mkIf config.nixos.cosmic.enable {
+    nixos.gui.enable = lib.mkDefault true;
+
     services = {
       displayManager.cosmic-greeter.enable = true;
       desktopManager.cosmic.enable = true;

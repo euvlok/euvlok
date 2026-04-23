@@ -20,6 +20,24 @@
       };
     };
 
+  /**
+    # Type: { pkgs, config, tweaks ? [] } -> Derivation
+
+    Builds catppuccin-gtk with host-specific accent/flavor and caller-specified tweaks.
+  */
+  mkCatppuccinGtk =
+    {
+      pkgs,
+      config,
+      tweaks ? [ ],
+    }:
+    pkgs.unstable.catppuccin-gtk.override {
+      accents = [ config.catppuccin.accent ];
+      variant = config.catppuccin.flavor;
+      size = "compact";
+      inherit tweaks;
+    };
+
   # Canonical catppuccin theme per host. Keys match attribute names in
   # {nixos,darwin}Configurations. Hosts with the same short name on
   # different platforms are suffixed with -linux / -darwin.
