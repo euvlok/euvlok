@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   config,
   ...
@@ -42,6 +43,7 @@
   };
 
   services = {
+    displayManager.gdm.enable = lib.mkForce false;
     hardware.openrgb = {
       enable = true;
       motherboard = "amd";
