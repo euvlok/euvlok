@@ -6,6 +6,7 @@ Thumbs.db
 
 .devenv/
 .direnv/
+.codex
 result
 result-*
 /.pre-commit-config.yaml
