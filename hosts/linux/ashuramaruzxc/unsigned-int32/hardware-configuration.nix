@@ -115,6 +115,7 @@
   ### ----------------BOOT------------------- ###
 
   boot.initrd = {
+    systemd.enable = false;
     ### ---------------------LUKS--------------------- ###
     luks = {
       yubikeySupport = true;
@@ -304,10 +305,12 @@
   };
   fileSystems."/home/ashuramaru" = {
     device = "/Users/marie";
+    fsType = "none";
     options = [ "bind" ];
   };
   fileSystems."/home/meanrin" = {
     device = "/Users/alex";
+    fsType = "none";
     options = [ "bind" ];
   };
   ### ---------------/dev/sdc2-------------------- ###
