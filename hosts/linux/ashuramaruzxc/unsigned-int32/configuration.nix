@@ -20,7 +20,6 @@
     ./hardware-configuration.nix
     ./networking.nix
     ./samba.nix
-    ./steam.nix
     ./users.nix
   ];
 
