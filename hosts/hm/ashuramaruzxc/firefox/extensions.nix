@@ -147,10 +147,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.4.7";
+    version = "4.3.5.5";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=7e052174ba12c0a921308f4bda25235d02221d68";
-    sha256 = "sha256-Nnl7KJaRQ/TrMmkVpLY7dCPtTR+qLF9SCcLGElQg+u8=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=2a46f1651dae3ef097efc8702fd275c7a51c834e";
+    sha256 = "sha256-RYzvNrwzW+z7XBlwLkxjYcuVwHlKTLPNL7UWwehgPks=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -330,7 +330,7 @@
         "*://*.dailyadvertiser.com.au/*"
         "*://*.dailyherald.com/*"
         "*://*.dailyliberal.com.au/*"
-        "*://*.dailymail.co.uk/*"
+        "*://*.dailymail.com/*"
         "*://*.dailypress.com/*"
         "*://*.dailyrecord.co.uk/*"
         "*://*.dailytelegraph.com.au/*"
@@ -449,6 +449,7 @@
         "*://*.fortune.com/*"
         "*://*.foxnews.com/*"
         "*://*.fr.de/*"
+        "*://*.franc-tireur.fr/*"
         "*://*.freep.com/*"
         "*://*.freiepresse.de/*"
         "*://*.freitag.de/*"
@@ -661,7 +662,6 @@
         "*://*.macrobusiness.com.au/*"
         "*://*.madison.com/*"
         "*://*.magazyn-kuchnia.pl/*"
-        "*://*.mailonsunday.co.uk/*"
         "*://*.mainichi.jp/*"
         "*://*.mallorcazeitung.es/*"
         "*://*.manoramaonline.com/*"
@@ -788,13 +788,11 @@
         "*://*.philosophynow.org/*"
         "*://*.pilotonline.com/*"
         "*://*.pionline.com/*"
-        "*://*.piratewires.com/*"
         "*://*.pitchfork.com/*"
         "*://*.plasticsnews.com/*"
         "*://*.pnp.de/*"
         "*://*.politicaexterior.com/*"
         "*://*.politico.com/*"
-        "*://*.politis.fr/*"
         "*://*.polityka.pl/*"
         "*://*.popsci.com/*"
         "*://*.popularmechanics.com/*"
@@ -1098,9 +1096,9 @@
         "*://*.adobedtm.com/*"
         "*://*.blink.net/*"
         "*://*.bwbx.io/*"
+        "*://*.californiatimes.com/*"
         "*://*.cedscdn.it/*"
         "*://*.cedsdigital.it/*"
-        "*://*.corriereobjects.it/*"
         "*://*.coxohio.com/*"
         "*://*.danzz.ch/*"
         "*://*.emol.cl/*"
@@ -1112,6 +1110,7 @@
         "*://*.glanacion.com/*"
         "*://*.go.com/*"
         "*://*.hadrianpaywall.com/*"
+        "*://*.ith9ueyuhu.it/*"
         "*://*.mcclatchy.com/*"
         "*://*.ndcmediagroep.nl/*"
         "*://*.nhst.tech/*"
@@ -1390,10 +1389,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.22.0";
+    version = "2.23.0";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4756712/youtube_no_translation-2.22.0.xpi";
-    sha256 = "sha256-uE+wXit3J0xMFGvQkl9Yfqld+VjMbWCo7Z9wLszZAko=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4769229/youtube_no_translation-2.23.0.xpi";
+    sha256 = "sha256-OmTjD8g6tmEMAJdlo0RXEllW8nqQbwScfk43ULhuWjA=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
