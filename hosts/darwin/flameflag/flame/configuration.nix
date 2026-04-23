@@ -3,7 +3,7 @@
   system.primaryUser = "flame";
 
   environment.systemPackages = builtins.attrValues {
-    inherit (pkgs.eupkgs) claude-code opencode;
+    inherit (pkgs.eupkgs) claude-code opencode codex;
   };
 
   nixpkgs.hostPlatform.system = "aarch64-darwin";
