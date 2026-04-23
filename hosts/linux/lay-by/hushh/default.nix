@@ -7,6 +7,7 @@ inputs.nixpkgs.lib.nixosSystem {
     ./home.nix
     {
       nixos = {
+        gui.enable = true;
         nvidia.enable = true;
         steam.enable = true;
       };

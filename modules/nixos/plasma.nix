@@ -5,6 +5,9 @@
   pkgs,
   ...
 }:
+let
+  inherit (import ../../lib/catppuccin.nix) mkCatppuccinGtk;
+in
 {
   #! temp remove plasma from nixos-unstable
   # disabledModules = [ "services/desktop-managers/plasma6.nix" ];
@@ -16,23 +19,17 @@
   options.nixos.plasma.enable = lib.mkEnableOption "KDE Plasma";
 
   config = lib.mkIf config.nixos.plasma.enable {
+    nixos.gui.enable = lib.mkDefault true;
+
     nixpkgs.overlays = [
       (_final: prev: {
         kdePackages = prev.unstable.kdePackages;
       })
     ];
     services = {
-      xserver.enable = true;
-      displayManager.gdm.enable = true; # im sorry but sddm is brokenware
+      displayManager.plasma-login-manager.enable = true;
       displayManager.defaultSession = "plasma";
       desktopManager.plasma6.enable = true;
-      gnome.gnome-settings-daemon.enable = true;
-      dbus.packages = builtins.attrValues { inherit (pkgs.unstable) gcr; };
-      udev.packages = builtins.attrValues {
-        inherit (pkgs.unstable) gnome-settings-daemon;
-        inherit (pkgs.unstable.gnome2) GConf;
-      };
-      gvfs.enable = true;
     };
 
     environment = {
@@ -96,19 +93,17 @@
             kservice
             ;
         }
-        ++ lib.optionalAttrs config.catppuccin.enable builtins.attrValues {
-          catppuccin-gtk = pkgs.unstable.catppuccin-gtk.override {
-            accents = [ config.catppuccin.accent ];
-            size = "compact";
+        ++ lib.optionals config.catppuccin.enable [
+          (mkCatppuccinGtk {
+            inherit pkgs config;
             tweaks = [ "rimless" ];
-            variant = config.catppuccin.flavor;
-          };
-          catppuccin-kde = pkgs.unstable.catppuccin-kde.override {
+          })
+          (pkgs.unstable.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];
             winDecStyles = [ "classic" ];
-          };
-        };
+          })
+        ];
     };
   };
 }
