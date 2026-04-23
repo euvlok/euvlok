@@ -13,7 +13,7 @@ let
   };
 
   baseImports = [
-    { home.stateVersion = "25.11"; }
+    { home.stateVersion = "26.05"; }
     ../../../../modules/hm/catppuccin-gtk.nix
   ];
 
@@ -24,18 +24,6 @@ let
         inherit (osConfig.catppuccin) enable accent flavor;
       };
     };
-
-  rootHmConfig = {
-    hm = {
-      bash.enable = true;
-      direnv.enable = true;
-      fzf.enable = true;
-      helix.enable = true;
-      nh.enable = true;
-      zellij.enable = true;
-      zsh.enable = true;
-    };
-  };
 
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
@@ -60,7 +48,7 @@ let
         nixcord.enable = true;
         nushell.enable = true;
         vscode.enable = true;
-        zed-editor.enable = true;
+        # zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
@@ -106,16 +94,6 @@ in
     useUserPackages = true;
     backupFileExtension = "bak";
     extraSpecialArgs = { inherit inputs eulib; };
-  };
-
-  home-manager.users.root = {
-    imports =
-      baseImports
-      ++ [
-        catppuccinConfig
-        rootHmConfig
-      ]
-      ++ ashuramaruHmConfig;
   };
 
   home-manager.users.ashuramaru = {
