@@ -27,7 +27,6 @@
         "mgmcdermott.vscode-language-babel"
         "editorconfig.editorconfig"
         "oderwat.indent-rainbow"
-        "visualstudioexptteam.vscodeintellicode"
         "tamasfe.even-better-toml"
       ];
       userSettings = {
