@@ -78,7 +78,6 @@ let
     "eamodio.gitlens"
     "ms-vscode.hexeditor"
     "ms-vsliveshare.vsliveshare"
-    "visualstudioexptteam.intellicode-api-usage-examples"
     ## -- Vscode specific -- ##
 
     ## -- Dictionary/Languages support -- ##
@@ -252,6 +251,7 @@ in
 
         # Ruby
         "[ruby]" = {
+          "editor.defaultFormatter" = "shopify.ruby-lsp";
           "editor.formatOnSave" = true;
         };
 

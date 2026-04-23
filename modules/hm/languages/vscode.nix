@@ -50,7 +50,6 @@ let
     ]
     ++ lib.optionals config.hm.languages.ruby.enable [
       "shopify.ruby-lsp"
-      "sorbet.sorbet-vscode-extension"
     ]
     ++ lib.optionals config.hm.languages.python.enable [
       "charliermarsh.ruff"
