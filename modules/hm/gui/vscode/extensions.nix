@@ -15,7 +15,6 @@
         "mads-hartmann.bash-ide-vscode"
         "rogalmic.bash-debug"
         "timonwong.shellcheck"
-        "streetsidesoftware.code-spell-checker"
         "usernamehw.errorlens"
         "davidanson.vscode-markdownlint"
         "redhat.vscode-xml"
