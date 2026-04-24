@@ -156,7 +156,7 @@ let
     };
     python =
       let
-        python312 = pkgs.python312.withPackages (pip: [
+        python313 = pkgs.python313.withPackages (pip: [
           pip.black
           pip.flake8
           pip.ipython
@@ -170,7 +170,7 @@ let
         ]);
       in
       {
-        packages = builtins.attrValues { python = python312; };
+        packages = builtins.attrValues { python = python313; };
       };
     ruby = {
       packages = builtins.attrValues {
