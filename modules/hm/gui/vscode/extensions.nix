@@ -26,7 +26,6 @@
         "mgmcdermott.vscode-language-babel"
         "editorconfig.editorconfig"
         "oderwat.indent-rainbow"
-        "tamasfe.even-better-toml"
       ];
       userSettings = {
         security.workspace.trust.enabled = false;
