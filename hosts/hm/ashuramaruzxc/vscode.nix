@@ -36,7 +36,6 @@ let
     ## -- C/C++ Utils -- ##
 
     ## -- Python Utils -- ##
-    # Fuck you sarco
     "batisteo.vscode-django"
     "donjayamanne.python-environment-manager"
     "kaih2o.python-resource-monitor"
@@ -83,6 +82,11 @@ let
     ## -- Dictionary/Languages support -- ##
     "ms-ceintl.vscode-language-pack-ja"
     ## -- Dictionary/Languages support -- ##
+
+    ## -- Slop -- ##
+    "saoudrizwan.claude-dev"
+    "openai.chatgpt"
+    ## -- Slop -- ##
   ];
 in
 {
