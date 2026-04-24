@@ -33,7 +33,7 @@ let
         };
         ghostty.enable = true;
         helix.enable = true;
-        mpv.enable = true;
+        # mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
         # nushell.enable = true;
@@ -73,16 +73,19 @@ let
     inherit (pkgs.unstable)
       aldente
       alt-tab-macos
+      betterdisplay
       ice-bar
       iina
+      keka
       raycast
       shottr
       stats
+      the-unarchiver
       ;
   };
 
   socialPackages = builtins.attrValues {
-    inherit (pkgs) signal-desktop-bin materialgram;
+    inherit (pkgs) signal-desktop materialgram;
   };
 
   multimediaPackages = builtins.attrValues {
@@ -164,7 +167,6 @@ let
     {
       programs = {
         btop.enable = true;
-        gitui.enable = lib.mkForce false;
         rbw = {
           enable = true;
           settings = {

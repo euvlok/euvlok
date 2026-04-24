@@ -16,11 +16,13 @@
       ### --- Socials --- ###
       "telegram" # telegram swift client
       "element" # halo based department?
+      "deltachat"
       ### --- Socials
       "cemu"
       "ppsspp-emulator"
       ### --- Gayming --- ###
       "crossover" # Supporting wine project
+      "dolphin"
       "steam" # Gayming
       "wine@devel"
       ### --- Gayming --- ###
