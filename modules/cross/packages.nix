@@ -32,6 +32,7 @@ let
         tree
         util-linux # Essential Linux utilities (dmesg, fdisk, mount...)
         which
+        bchunk
         ;
 
       # Modern UNIX
