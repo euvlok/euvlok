@@ -3,14 +3,10 @@ let
   extensionStrings = [
     ## -- Programming languages/lsp support -- ##
     "josetr.cmake-language-support-vscode"
-    "scala-lang.scala"
-    "mathiasfrohlich.kotlin"
     "ms-azuretools.vscode-docker"
     "ms-kubernetes-tools.vscode-kubernetes-tools"
-    "dotjoshjohnson.xml"
     "graphql.vscode-graphql"
     "graphql.vscode-graphql-syntax"
-    "pinage404.bash-extension-pack"
 
     # Gay
     "biud436.rgss-script-compiler" # VX
@@ -23,13 +19,10 @@ let
     ## -- Misc Utils -- ##
     "njpwerner.autodocstring"
     "mikestead.dotenv"
-    "humao.rest-client" # Alternative REST client
     "rangav.vscode-thunder-client" # Thunder Client
     ## -- Misc Utils -- ##
 
     ## -- C/C++ Utils -- ##
-    "formulahendry.code-runner"
-    "danielpinto8zz6.c-cpp-compile-run"
     "ms-vscode.makefile-tools"
     "cschlosser.doxdocgen"
     "jeff-hykin.better-cpp-syntax" # Better syntax highlighting
@@ -51,18 +44,14 @@ let
 
     ## -- JavaScript/Typescript Utils -- ##
     "angular.ng-template"
-    "dsznajder.es7-react-js-snippets"
     "ecmel.vscode-html-css"
     "formulahendry.auto-close-tag"
     "formulahendry.auto-rename-tag"
-    "hollowtree.vue-snippets"
     "jasonnutter.search-node-modules"
     "johnpapa.angular2"
     "msjsdiag.vscode-react-native"
-    "octref.vetur"
     "prisma.prisma"
     "ritwickdey.liveserver"
-    "steoates.autoimport"
     "vue.volar"
     "wix.vscode-import-cost"
     "styled-components.vscode-styled-components" # styled-components
@@ -72,8 +61,6 @@ let
     ## -- Vscode specific -- ##
     "aaron-bond.better-comments"
     "christian-kohler.path-intellisense"
-    "donjayamanne.githistory"
-    "donjayamanne.git-extension-pack"
     "eamodio.gitlens"
     "ms-vscode.hexeditor"
     "ms-vsliveshare.vsliveshare"
@@ -85,7 +72,7 @@ let
 
     ## -- Slop -- ##
     "saoudrizwan.claude-dev"
-    "openai.chatgpt"
+    # "openai.chatgpt"
     ## -- Slop -- ##
   ];
 in
@@ -144,7 +131,6 @@ in
           "editor.defaultFormatter" = "charliermarsh.ruff";
           "editor.formatOnSave" = true;
           "editor.insertSpaces" = true;
-          "languageServer" = "Pylance";
           "editor.codeActionsOnSave" = {
             "source.fixAll.ruff" = "explicit";
             "source.organizeImports.ruff" = "explicit";
@@ -154,9 +140,8 @@ in
           "--profile"
           "black"
         ];
-        "ruff.format.args" = [
-          "--line-length=120"
-        ];
+        "ruff.nativeServer" = "on";
+        "ruff.lineLength" = 120;
 
         # JS / TS
         "javascript.suggest.paths" = false;

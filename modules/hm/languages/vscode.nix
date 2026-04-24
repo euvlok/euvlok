@@ -67,7 +67,7 @@ let
     ++ lib.optionals config.hm.languages.elixir.enable [ "jakebecker.elixir-ls" ]
     ++ lib.optionals config.hm.languages.java.enable [
       "oracle.oracle-java"
-      # "redhat.java"
+      "redhat.java"
       "vscjava.vscode-gradle"
       "vscjava.vscode-java-debug"
       "vscjava.vscode-java-dependency"
@@ -268,6 +268,7 @@ in
         };
       }
       // lib.optionalAttrs (config.hm.languages.python.enable or false) {
+        "ruff.nativeServer" = "on";
         "[python]" = {
           editor.defaultFormatter = "charliermarsh.ruff";
           editor.codeActionsOnSave = {
@@ -299,6 +300,9 @@ in
           editor.defaultFormatter = "tamasfe.even-better-toml";
           editor.formatOnSave = true;
         };
+      }
+      // {
+        chat.disableAIFeatures = true;
       };
   };
 }
