@@ -149,7 +149,7 @@
     pname = "magnolia@12.34";
     version = "4.3.5.5";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=2a46f1651dae3ef097efc8702fd275c7a51c834e";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=cfad75c4cc961be6d7aed7b61c9e57974c105137";
     sha256 = "sha256-RYzvNrwzW+z7XBlwLkxjYcuVwHlKTLPNL7UWwehgPks=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1337,10 +1337,10 @@
   };
   "user-agent-string-switcher" = buildFirefoxXpiAddon {
     pname = "user-agent-string-switcher";
-    version = "0.6.6";
+    version = "0.6.7";
     addonId = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4593736/user_agent_string_switcher-0.6.6.xpi";
-    sha256 = "sha256-nB/uKb2JpyH3r412qZeqytAn1PKxQc2wQ+6QJ7iWdZk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4773733/user_agent_string_switcher-0.6.7.xpi";
+    sha256 = "sha256-l5oEyaOA8QtxWYCTWm8+hw3/88gQDL45PWW0bbgqslc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1348,6 +1348,7 @@
         "contextMenus"
         "scripting"
         "declarativeNetRequestWithHostAccess"
+        "webRequest"
         "<all_urls>"
       ];
     };

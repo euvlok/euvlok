@@ -32,7 +32,7 @@
     pname = "magnolia@12.34";
     version = "4.3.5.5";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=2a46f1651dae3ef097efc8702fd275c7a51c834e";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=cfad75c4cc961be6d7aed7b61c9e57974c105137";
     sha256 = "sha256-RYzvNrwzW+z7XBlwLkxjYcuVwHlKTLPNL7UWwehgPks=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1039,10 +1039,10 @@
   };
   "sponsorblock" = buildFirefoxXpiAddon {
     pname = "sponsorblock";
-    version = "6.1.3";
+    version = "6.1.5";
     addonId = "sponsorBlocker@ajay.app";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4744354/sponsorblock-6.1.3.xpi";
-    sha256 = "sha256-zG7ikYKYzmoXVLRi0LVNmpb1RfZc06xpAWMy68odEAs=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4773757/sponsorblock-6.1.5.xpi";
+    sha256 = "sha256-2Owimuywt44weobUNklokbdV+HTCTA9zJFUcf/0bLhQ=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1079,10 +1079,10 @@
   };
   "violentmonkey" = buildFirefoxXpiAddon {
     pname = "violentmonkey";
-    version = "2.35.0";
+    version = "2.37.0";
     addonId = "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4704557/violentmonkey-2.35.0.xpi";
-    sha256 = "sha256-ANbtB/cw5PXhU5XZogTqkd/04G5wxR8N8R7fVNxkXsk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4777100/violentmonkey-2.37.0.xpi";
+    sha256 = "sha256-XQS0AvORw6O4Jq7QZL93HeQclMvIzNj3s6POcMsB1zU=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
