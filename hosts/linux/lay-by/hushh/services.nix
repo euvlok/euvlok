@@ -9,8 +9,6 @@ _: {
       variant = "";
     };
 
-    libinput.mouse.accelProfile = "flat";
-
     displayManager = {
       autoLogin = {
         enable = true;

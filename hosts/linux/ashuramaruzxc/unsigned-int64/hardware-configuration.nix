@@ -75,7 +75,6 @@
       };
     };
     luks = {
-      reusePassphrases = true;
       mitigateDMAAttacks = true;
       devices = {
         "root" = {

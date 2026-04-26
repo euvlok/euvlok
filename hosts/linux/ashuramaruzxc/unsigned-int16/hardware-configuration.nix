@@ -4,9 +4,6 @@
 
   boot = {
     kernelPackages = pkgs.linuxAndFirmware.v6_12_44.linuxPackages_rpi5;
-    loader.raspberryPi = {
-      bootloader = "kernel";
-    };
     tmp.useTmpfs = true;
     supportedFilesystems = [ "zfs" ];
 

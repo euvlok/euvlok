@@ -5,8 +5,8 @@ let
       inherit (pkgs.unstable)
         keepassxc
         bitwarden-desktop
-        thunderbird-bin
         ;
+      inherit (pkgs) thunderbird;
     };
 
     multimedia = builtins.attrValues {
