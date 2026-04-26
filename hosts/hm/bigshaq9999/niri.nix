@@ -33,14 +33,6 @@
     };
   };
 
-  catppuccin.gtk = {
-    enable = true;
-    flavor = "frappe";
-    accent = "rosewater";
-    size = "standard";
-    tweaks = [ "normal" ];
-  };
-
   services.kanshi = {
     enable = true;
     settings = [

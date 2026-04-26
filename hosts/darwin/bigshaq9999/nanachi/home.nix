@@ -108,7 +108,7 @@ in
               ;
 
             # SNS
-            inherit (pkgs) signal-desktop-bin;
+            inherit (pkgs) signal-desktop;
 
             # Utilities
             inherit (pkgs)

@@ -46,6 +46,7 @@
         default_theme = true;
         default_language = "en_us";
       };
+      security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
     declarativePlugins = builtins.attrValues { inherit (pkgs.grafanaPlugins) grafana-piechart-panel; };
   };
@@ -207,41 +208,32 @@
       };
     };
   };
-  services.promtail = {
+  services.fluent-bit = {
     enable = true;
-    configuration = {
-      server = {
-        http_listen_port = 3031;
-        grpc_listen_port = 0;
+    settings = {
+      pipeline = {
+        inputs = [
+          {
+            name = "systemd";
+            tag = "systemd.*";
+            db = "/var/lib/fluent-bit/systemd.db";
+            read_from_tail = true;
+          }
+        ];
+        outputs = [
+          {
+            name = "loki";
+            match = "systemd.*";
+            host = "127.0.0.1";
+            port = config.services.loki.configuration.server.http_listen_port;
+            labels = "job=systemd-journal,host=unsigned-int64";
+            label_keys = "$_SYSTEMD_UNIT";
+          }
+        ];
       };
-      positions = {
-        filename = "/tmp/positions.yaml";
-      };
-      clients = [
-        {
-          url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
-        }
-      ];
-      scrape_configs = [
-        {
-          job_name = "journal";
-          journal = {
-            max_age = "24h";
-            labels = {
-              job = "systemd-journal";
-              host = "unsigned-int64";
-            };
-          };
-          relabel_configs = [
-            {
-              source_labels = [ "__journal__systemd_unit" ];
-              target_label = "unit";
-            }
-          ];
-        }
-      ];
     };
   };
+  systemd.tmpfiles.rules = [ "d /var/lib/fluent-bit 0750 root root -" ];
 
   services.nginx.virtualHosts = {
     "${config.services.grafana.settings.server.domain}" = {
