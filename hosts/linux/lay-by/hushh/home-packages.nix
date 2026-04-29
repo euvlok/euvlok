@@ -24,12 +24,14 @@
       ;
     inherit (pkgs.unstable)
       # Development
+      vscode-fhs
       gnumake
       nixfmt
       meson
       cmake
       font-manager
       python3
+      uv
 
       # nim
       nim

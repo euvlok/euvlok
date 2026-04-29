@@ -17,6 +17,7 @@
     targets.rofi.enable = false;
     # targets.anki.enable = false;
     # targets.hyprpaper.enable = false;
+    targets.vscode.enable = false;
 
     image = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/lay-by/wallpapers/refs/heads/main/starfighter2.png";
