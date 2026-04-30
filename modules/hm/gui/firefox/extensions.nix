@@ -32,7 +32,7 @@
     pname = "magnolia@12.34";
     version = "4.3.6.0";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=09df625e797ed2df3dd1a5a7806ad1b532eeab67";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=c17c61eb8581a57db25bf742813772c1c43d01a7";
     sha256 = "sha256-mJVbkBpXxIwGD8DuE8M32m0qxA1CDchEY6K+1E7L4aU=";
     meta = with lib; {
       platforms = platforms.all;
