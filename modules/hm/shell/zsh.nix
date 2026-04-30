@@ -8,11 +8,7 @@ let
   paths = import ./paths.nix { inherit lib; };
 in
 {
-  options.hm.zsh.enable =
-    lib.mkEnableOption "Declerative Zsh"
-    // lib.optionalAttrs (pkgs.stdenvNoCC.isLinux) {
-      default = true;
-    };
+  options.hm.zsh.enable = lib.mkEnableOption "Declerative Zsh";
 
   config = lib.mkIf config.hm.zsh.enable {
     assertions = [

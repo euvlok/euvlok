@@ -37,8 +37,8 @@
       ;
 
     inherit (pkgs.eupkgs)
-      claude-code
-      claude-statusline
+      agent-statusline-pi
+      codex
       opencode
       ;
 
