@@ -1,6 +1,6 @@
 _: {
   imports = [
-    ./claude
+    ./clankers.nix
     ./direnv.nix
     ./fastfetch
     ./fzf.nix
