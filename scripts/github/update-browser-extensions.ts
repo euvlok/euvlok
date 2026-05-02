@@ -8,8 +8,15 @@ import {
   walkFiles,
   withTempFile,
 } from '@euvlok/github';
-import { addGitPaths, escapeNixString, exec, execSafe, listStagedFiles } from '@euvlok/shared';
-import { simpleGit } from 'simple-git';
+import {
+  addGitPaths,
+  escapeNixString,
+  exec,
+  listStagedFiles,
+  nixEvalJson,
+  readGitBlob,
+  readGitIndex,
+} from '@euvlok/shared';
 import { z } from 'zod';
 import {
   type ExtensionSummary,
@@ -122,18 +129,6 @@ async function analyzeFileChanges(nixFile: string): Promise<string> {
   return lines.join('\n');
 }
 
-async function readGitBlob(ref: string, path: string): Promise<string> {
-  return simpleGit()
-    .raw(['show', `${ref}:${path}`])
-    .catch(() => '');
-}
-
-async function readGitIndex(path: string): Promise<string> {
-  return simpleGit()
-    .raw(['show', `:${path}`])
-    .catch(() => '');
-}
-
 async function parseExtensions(
   nixContent: string,
   browserType: BrowserType,
@@ -143,20 +138,15 @@ async function parseExtensions(
   }
 
   return withTempFile(nixContent, 'nix', async (tempFile) => {
-    const result = await execSafe([
-      'nix',
-      'eval',
-      '--json',
-      '--impure',
-      '--expr',
+    const json = await nixEvalJson(
       `with import <nixpkgs> {}; import "${escapeNixString(tempFile)}" { inherit pkgs lib; config = { catppuccin.enable = false; }; }`,
-    ]);
+    );
 
-    if (result.exitCode !== 0 || !result.stdout) {
+    if (json === null) {
       return new Map();
     }
 
-    const entries = z.array(z.unknown()).parse(JSON.parse(result.stdout));
+    const entries = z.array(z.unknown()).parse(json);
     return new Map(
       entries
         .map((entry) => summarizeExtension(entry, browserType))

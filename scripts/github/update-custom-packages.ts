@@ -7,8 +7,13 @@ import {
   runSequentialTasks,
   walkFiles,
 } from '@euvlok/github';
-import { addGitPaths, escapeNixString, execSafe } from '@euvlok/shared';
-import { simpleGit } from 'simple-git';
+import {
+  addGitPaths,
+  escapeNixString,
+  execSafe,
+  nixEvalRaw,
+  stagedShortstat,
+} from '@euvlok/shared';
 
 const packageRoot = 'pkgs';
 
@@ -33,7 +38,7 @@ if (!(await hasGitDiff())) {
 
 await commitAndPush({
   title: 'chore(pkgs): update custom packages',
-  body: `The following package updates were applied:\n\n${await stagedShortstat()}`,
+  body: `The following package updates were applied:\n\n${await formatStagedShortstat()}`,
   add: [packageRoot],
   refName: currentRefName(),
 });
@@ -66,34 +71,23 @@ async function updatePackage(nixFile: string): Promise<void> {
 }
 
 async function isDerivation(absPath: string): Promise<boolean> {
-  const result = await execSafe([
-    'nix',
-    'eval',
-    '--impure',
-    '--raw',
-    '--expr',
+  const result = await nixEvalRaw(
     `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).type`,
-  ]);
+  );
 
-  return result.exitCode === 0 && result.stdout === 'derivation';
+  return result === 'derivation';
 }
 
 async function hasSrc(absPath: string): Promise<boolean> {
-  const result = await execSafe([
-    'nix',
-    'eval',
-    '--impure',
-    '--raw',
-    '--expr',
-    `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).src`,
-  ]);
-
-  return result.exitCode === 0;
+  return (
+    (await nixEvalRaw(
+      `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).src`,
+    )) !== null
+  );
 }
 
-async function stagedShortstat(): Promise<string> {
-  const git = simpleGit();
+async function formatStagedShortstat(): Promise<string> {
   await addGitPaths(packageRoot);
-  const stdout = await git.raw(['diff', '--staged', '--shortstat']);
+  const stdout = await stagedShortstat();
   return stdout ? `    ${stdout}` : '    Updated package definitions.';
 }

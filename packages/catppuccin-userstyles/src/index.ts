@@ -1,8 +1,8 @@
 import { mkdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { basename, dirname, join, resolve } from 'node:path';
+import { logger } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
-import { consola } from 'consola';
 
 type UsercssSelectOption = {
   name: string;
@@ -103,7 +103,7 @@ function logExcludedStyles(allCount: number, sourceCount: number, included: Set<
   if (excluded === 0) return;
 
   const skipped = EXCLUDED_STYLE_IDS.filter((id) => !included.has(id)).join(', ');
-  consola.info(`Excluded ${excluded} style(s): ${skipped}`);
+  logger.info(`Excluded ${excluded} style(s): ${skipped}`);
 }
 
 async function buildVariants(outputDir: string, baseData: StylusImport): Promise<string[]> {
@@ -124,7 +124,7 @@ async function buildVariants(outputDir: string, baseData: StylusImport): Promise
         });
         const name = `catppuccin-latte-${darkFlavor}-${accent}-import.json`;
         await writeJson(join(outputDir, name), variant);
-        consola.debug(name);
+        logger.debug(name);
         return name;
       }),
     ),
@@ -151,10 +151,10 @@ export async function buildCatppuccinUserstyles(
 
   const baseData = await buildStylusImport(sourceFiles);
   await writeJson(join(outputDir, 'catppuccin-import.json'), baseData);
-  consola.info(`Base: ${baseData.length - 1} styles from ${userstylesDir}`);
+  logger.info(`Base: ${baseData.length - 1} styles from ${userstylesDir}`);
 
   const variants = await buildVariants(outputDir, baseData);
-  consola.success(`Generated ${variants.length} variants in ${outputDir}`);
+  logger.success(`Generated ${variants.length} variants in ${outputDir}`);
 }
 
 const app = buildApplication(

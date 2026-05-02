@@ -1,28 +1,6 @@
-import { mkdtemp } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
 import { create as createGlob } from '@actions/glob';
-import { rmRF } from '@actions/io';
 
-async function writeTempFile(content: string, suffix = 'tmp'): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'euvlok-gh-'));
-  const path = join(dir, `content.${suffix}`);
-  await Bun.write(path, content);
-  return path;
-}
-
-export async function withTempFile<T>(
-  content: string,
-  suffix: string,
-  callback: (path: string) => Promise<T>,
-): Promise<T> {
-  const path = await writeTempFile(content, suffix);
-  return callback(path).finally(() => removeTempPath(path));
-}
-
-async function removeTempPath(path: string): Promise<void> {
-  await rmRF(dirname(path));
-}
+export { withTempFile } from '../files';
 
 export async function walkFiles(
   root: string,

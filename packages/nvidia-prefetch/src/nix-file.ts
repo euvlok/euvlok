@@ -1,6 +1,11 @@
-import { escapeNixString, execSafe, findRepoRoot, logger, validateNixFile } from '@euvlok/shared';
-import { $ } from 'bun';
-import { join } from 'pathe';
+import {
+  escapeNixString,
+  execSafe,
+  findRepoRoot,
+  logger,
+  validateNixFile,
+  withTempFile,
+} from '@euvlok/shared';
 
 async function find(): Promise<string | null> {
   const root = await findRepoRoot();
@@ -69,23 +74,20 @@ export async function updateNvidiaDriverNix(
 }
 `;
 
-  const tmp = join(Bun.env.TMPDIR || '/tmp', `nvidia-driver-${Date.now()}.nix`);
-  await Bun.write(tmp, content);
+  await withTempFile(content, 'nix', async (tmp) => {
+    if (
+      await validateNixFile(tmp)
+        .then(() => false)
+        .catch(() => true)
+    ) {
+      await Bun.write(path, Bun.file(backup));
+      await Bun.file(backup).delete();
+      throw new Error('Generated nix file is invalid, restored backup');
+    }
 
-  if (
-    await validateNixFile(tmp)
-      .then(() => false)
-      .catch(() => true)
-  ) {
-    await Bun.write(path, Bun.file(backup));
-    await $`rm -f ${tmp}`.quiet();
-    await $`rm -f ${backup}`.quiet();
-    throw new Error('Generated nix file is invalid, restored backup');
-  }
-
-  await Bun.write(path, Bun.file(tmp));
-  await $`rm -f ${tmp}`.quiet();
-  await $`rm -f ${backup}`.quiet();
+    await Bun.write(path, Bun.file(tmp));
+    await Bun.file(backup).delete();
+  });
 
   logger.success(`Successfully updated ${path}`);
 }

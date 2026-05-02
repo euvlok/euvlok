@@ -16,3 +16,19 @@ export async function addGitPaths(paths: string | string[], root?: string): Prom
 export async function listStagedFiles(root?: string): Promise<string[]> {
   return lines(await simpleGit(root).raw(['diff', '--cached', '--name-only']));
 }
+
+export async function readGitBlob(ref: string, path: string, root?: string): Promise<string> {
+  return simpleGit(root)
+    .raw(['show', `${ref}:${path}`])
+    .catch(() => '');
+}
+
+export async function readGitIndex(path: string, root?: string): Promise<string> {
+  return simpleGit(root)
+    .raw(['show', `:${path}`])
+    .catch(() => '');
+}
+
+export async function stagedShortstat(root?: string): Promise<string> {
+  return simpleGit(root).raw(['diff', '--staged', '--shortstat']);
+}
