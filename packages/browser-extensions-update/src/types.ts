@@ -4,15 +4,9 @@ export type BrowserType = 'chromium' | 'firefox';
 
 export type ExtensionSource = 'chrome-store' | 'amo' | 'bpc' | 'url' | 'github-releases';
 
-export const BrowserTypeSchema = z.enum(['chromium', 'firefox']);
+const BrowserTypeSchema = z.enum(['chromium', 'firefox']);
 
-export const ExtensionSourceSchema = z.enum([
-  'chrome-store',
-  'amo',
-  'bpc',
-  'url',
-  'github-releases',
-]);
+const ExtensionSourceSchema = z.enum(['chrome-store', 'amo', 'bpc', 'url', 'github-releases']);
 
 const optionalString = z.string().nullish().transform(valueOrUndefined);
 
@@ -41,7 +35,7 @@ export interface ExtensionResult {
   version?: string;
 }
 
-export const NixInputExtensionSchema = z.object({
+const NixInputExtensionSchema = z.object({
   id: optionalString,
   name: optionalString,
   source: z.preprocess((value) => value ?? 'chrome-store', ExtensionSourceSchema),
@@ -74,8 +68,6 @@ export const NixInputFileSchema = z.object({
 });
 
 export type NixInputFile = z.infer<typeof NixInputFileSchema>;
-export type NixInputExtension = z.infer<typeof NixInputExtensionSchema>;
-export type NixInputConfig = NonNullable<NixInputFile['config']>;
 
 export const AmoAddonSchema = z.object({
   current_version: z

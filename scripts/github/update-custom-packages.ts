@@ -1,10 +1,10 @@
 import { basename, resolve } from 'node:path';
 import { escapeNixString, execSafe } from '@euvlok/shared';
-import { Listr } from 'listr2';
 import { simpleGit } from 'simple-git';
 import { walkFiles } from './lib/files';
 import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
-import { group, actionsLogger as logger } from './lib/logging';
+import { actionsLogger as logger } from './lib/logging';
+import { runSequentialTasks } from './lib/tasks';
 
 const packageRoot = 'pkgs';
 
@@ -20,15 +20,7 @@ if (nixFiles.length === 0) {
   process.exit(0);
 }
 
-const tasks = new Listr(
-  nixFiles.map((nixFile) => ({
-    title: nixFile,
-    task: () => group(`Processing ${nixFile}`, () => updatePackage(nixFile)),
-  })),
-  { concurrent: false, exitOnError: false },
-);
-
-await tasks.run();
+await runSequentialTasks(nixFiles, String, updatePackage);
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any packages.');
