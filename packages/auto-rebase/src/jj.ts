@@ -1,7 +1,7 @@
 import { execSafe, isGitRepo, listStagedFiles, logger } from '@euvlok/shared';
 import { $ } from 'bun';
 import { join } from 'pathe';
-import { simpleGit } from 'simple-git';
+import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
 import type { RebaseContext } from './context';
 import { removeDiffFiles, restoreStaging } from './staging';
@@ -64,19 +64,15 @@ async function useExistingJjIfValid(ctx: RebaseContext): Promise<boolean> {
   return true;
 }
 
-async function captureDiff(
-  git: ReturnType<typeof simpleGit>,
-  path: string,
-  args: string[],
-): Promise<string> {
+async function captureDiff(git: SimpleGit, path: string, options: string[]): Promise<string> {
   return git
-    .raw(args)
+    .diff(options)
     .then(async (diff) => {
       await Bun.write(path, diff);
       return path;
     })
     .catch(() => {
-      logger.warn(`Failed to capture ${args.includes('--cached') ? 'staged' : 'unstaged'} diff`);
+      logger.warn(`Failed to capture ${options.includes('--cached') ? 'staged' : 'unstaged'} diff`);
       return '';
     });
 }
@@ -86,7 +82,7 @@ async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
   const timestamp = Math.floor(Date.now() / 1000);
   const git = simpleGit({ baseDir: ctx.repoRoot, trimmed: false });
   const cachedHasDiff = await git
-    .raw(['diff', '--cached', '--quiet'])
+    .diff(['--cached', '--quiet'])
     .then(() => false)
     .catch(() => true);
 
@@ -97,12 +93,12 @@ async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
   ctx.stagedDiffPath = await captureDiff(
     git,
     join(ctx.repoRoot, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`),
-    ['diff', '--cached'],
+    ['--cached'],
   );
   ctx.unstagedDiffPath = await captureDiff(
     git,
     join(ctx.repoRoot, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`),
-    ['diff'],
+    [],
   );
 }
 
@@ -168,7 +164,7 @@ async function clearUnexpectedStaging(ctx: RebaseContext): Promise<void> {
   }
 
   logger.warn(`Unexpected staged files after export: ${current}`);
-  await git.reset();
+  await git.reset(ResetMode.MIXED);
 }
 
 async function restoreStagingState(ctx: RebaseContext): Promise<void> {

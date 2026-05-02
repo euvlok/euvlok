@@ -80,6 +80,24 @@ describe('restoreStaging', () => {
     expect(staged).toContain('b.ts');
   });
 
+  test('clears unrelated staged files before restoring original staged diff', async () => {
+    await commitFiles(
+      tmpDir,
+      { 'original.ts': 'original\n', 'unrelated.ts': 'base\n' },
+      'add files',
+    );
+    await stageChanges(tmpDir, { 'original.ts': 'original staged\n' });
+    const stagedDiff = await captureStagedDiff(tmpDir);
+    await $`git -C ${tmpDir} reset`.quiet();
+    await stageChanges(tmpDir, { 'unrelated.ts': 'should not stay staged\n' });
+
+    await restoreStaging(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
+
+    const staged = await stagedFiles(tmpDir);
+    expect(staged).toContain('original.ts');
+    expect(staged).not.toContain('unrelated.ts');
+  });
+
   test('falls back to git add when diff file missing', async () => {
     await commitFiles(tmpDir, { 'file.ts': 'original\n' }, 'add file');
     await Bun.write(join(tmpDir, 'file.ts'), 'modified\n');
