@@ -19,7 +19,8 @@ if (nixFiles.length === 0) {
   process.exit(0);
 }
 
-for (const nixFile of nixFiles) {
+await nixFiles.reduce(async (previous, nixFile) => {
+  await previous;
   await group(`Processing ${nixFile}`, async () => {
     const absPath = resolve(nixFile);
     const name = basename(nixFile, '.nix');
@@ -42,11 +43,11 @@ for (const nixFile of nixFiles) {
 
     if (result.exitCode === 0) {
       logger.info(`Update script succeeded for ${nixFile}`);
-    } else {
-      logger.warn(`Update script failed for ${nixFile}, skipping.`);
+      return;
     }
+    logger.warn(`Update script failed for ${nixFile}, skipping.`);
   });
-}
+}, Promise.resolve());
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any packages.');

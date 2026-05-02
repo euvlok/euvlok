@@ -37,11 +37,10 @@ const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
     },
   },
   async func(args, requestedVersion) {
-    let version = requestedVersion;
     const update = args.update;
+    const version = requestedVersion ?? (await fetchLatestVersion());
 
-    if (!version) {
-      version = await fetchLatestVersion();
+    if (!requestedVersion) {
       logger.success(`Using latest driver version: ${version}`);
     }
 

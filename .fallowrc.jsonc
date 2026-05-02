@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/refs/heads/main/schema.json",
+  "entry": ["packages/auto-rebase/tests/**/*.ts"],
+  "dynamicallyLoaded": ["hosts/hm/lay-by/hyprland/waybar.css"],
+  "ignoreDependencies": ["@tktco/node-actionlint"],
+  "duplicates": {
+    "ignore": ["packages/auto-rebase/tests/**"]
+  },
+  "health": {
+    "maxCyclomatic": 31,
+    "maxCognitive": 44,
+    "maxCrap": 1000,
+    "ignore": ["packages/auto-rebase/tests/**"]
+  }
+}

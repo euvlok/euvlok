@@ -2,24 +2,24 @@ import { exec } from '@euvlok/shared';
 import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
 import { group, actionsLogger as logger } from './lib/logging';
 
-interface FlakeLock {
+type FlakeLock = {
   nodes?: Record<string, FlakeNode | undefined>;
-}
+};
 
-interface FlakeNode {
+type FlakeNode = {
   inputs?: Record<string, string>;
   locked?: {
     owner?: string;
     repo?: string;
     rev?: string;
   };
-}
+};
 
-interface InputSnapshot {
+type InputSnapshot = {
   name: string;
   repo: string | null;
   rev: string;
-}
+};
 
 const lockFile = Bun.file('flake.lock');
 

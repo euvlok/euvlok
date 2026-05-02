@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { create as createGlob } from '@actions/glob';
 import { rmRF } from '@actions/io';
 
-export async function writeTempFile(content: string, suffix = 'tmp'): Promise<string> {
+async function writeTempFile(content: string, suffix = 'tmp'): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), 'euvlok-gh-'));
   const path = join(dir, `content.${suffix}`);
   await Bun.write(path, content);
@@ -24,7 +24,7 @@ export async function withTempFile<T>(
   }
 }
 
-export async function removeTempPath(path: string): Promise<void> {
+async function removeTempPath(path: string): Promise<void> {
   await rmRF(dirname(path));
 }
 

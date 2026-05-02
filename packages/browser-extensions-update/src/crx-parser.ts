@@ -3,11 +3,11 @@ import { unzipSync } from 'fflate';
 
 const CRX_MAGIC = new Uint8Array([0x43, 0x72, 0x32, 0x34]); // "Cr24"
 
-interface ManifestInfo {
+type ManifestInfo = {
   version: string;
   permissions: string[];
   addonId?: string;
-}
+};
 
 function isCrx(data: Uint8Array): boolean {
   return (

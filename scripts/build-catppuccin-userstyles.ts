@@ -153,22 +153,23 @@ const app = buildApplication(
         (option) => option.name,
       );
 
-      let variants = 0;
-      for (const darkFlavor of DEFAULT_DARK_FLAVORS) {
-        for (const accent of accents) {
-          const variant = buildVariant(baseData, {
-            lightFlavor: 'latte',
-            darkFlavor,
-            accentColor: accent,
-          });
-          const name = `catppuccin-latte-${darkFlavor}-${accent}-import.json`;
-          await writeJson(join(outputDir, name), variant);
-          variants++;
-          consola.debug(name);
-        }
-      }
+      const variants = await Promise.all(
+        DEFAULT_DARK_FLAVORS.flatMap((darkFlavor) =>
+          accents.map(async (accent) => {
+            const variant = buildVariant(baseData, {
+              lightFlavor: 'latte',
+              darkFlavor,
+              accentColor: accent,
+            });
+            const name = `catppuccin-latte-${darkFlavor}-${accent}-import.json`;
+            await writeJson(join(outputDir, name), variant);
+            consola.debug(name);
+            return name;
+          }),
+        ),
+      );
 
-      consola.success(`Generated ${variants} variants in ${outputDir}`);
+      consola.success(`Generated ${variants.length} variants in ${outputDir}`);
     },
   }),
   {
@@ -180,22 +181,28 @@ const app = buildApplication(
 await run(app, Bun.argv.slice(2), { process });
 
 async function firstExistingDir(candidates: string[]): Promise<string> {
-  for (const candidate of candidates) {
-    if (await Bun.file(join(candidate, 'styles')).exists()) return candidate;
-  }
-
-  return candidates[0];
+  return (
+    (
+      await Promise.all(
+        candidates.map(async (candidate) => ({
+          candidate,
+          exists: await Bun.file(join(candidate, 'styles')).exists(),
+        })),
+      )
+    ).find((candidate) => candidate.exists)?.candidate ?? candidates[0]
+  );
 }
 
 async function getUserstyleFiles(root: string): Promise<string[]> {
-  const glob = new Bun.Glob('styles/*/catppuccin.user.less');
-  const files: string[] = [];
-
-  for await (const file of glob.scan({ cwd: root, absolute: true, onlyFiles: true })) {
-    files.push(file);
-  }
-
-  return files.sort((a, b) => basename(a).localeCompare(basename(b)) || a.localeCompare(b));
+  return Array.fromAsync(
+    new Bun.Glob('styles/*/catppuccin.user.less').scan({
+      cwd: root,
+      absolute: true,
+      onlyFiles: true,
+    }),
+  ).then((files) =>
+    files.sort((a, b) => basename(a).localeCompare(basename(b)) || a.localeCompare(b)),
+  );
 }
 
 function getStyleId(file: string): string {
@@ -203,26 +210,27 @@ function getStyleId(file: string): string {
 }
 
 async function buildStylusImport(files: string[]): Promise<StylusImport> {
-  const data: StylusImport = [SETTINGS];
+  return [
+    SETTINGS,
+    ...(await Promise.all(
+      files.map(async (file) => {
+        const sourceCode = await Bun.file(file).text();
+        const { metadata } = usercssMeta.parse(sourceCode);
 
-  for (const file of files) {
-    const sourceCode = await Bun.file(file).text();
-    const { metadata } = usercssMeta.parse(sourceCode);
-
-    data.push({
-      enabled: true,
-      name: metadata.name,
-      description: metadata.description,
-      author: metadata.author,
-      url: metadata.url,
-      updateUrl: metadata.updateURL,
-      usercssData: metadata,
-      sourceCode,
-      originalDigest: calcStyleDigest(sourceCode),
-    });
-  }
-
-  return data;
+        return {
+          enabled: true as const,
+          name: metadata.name,
+          description: metadata.description,
+          author: metadata.author,
+          url: metadata.url,
+          updateUrl: metadata.updateURL,
+          usercssData: metadata,
+          sourceCode,
+          originalDigest: calcStyleDigest(sourceCode),
+        };
+      }),
+    )),
+  ];
 }
 
 function buildVariant(
@@ -231,19 +239,17 @@ function buildVariant(
 ): StylusImport {
   const variant = structuredClone(data);
 
-  for (const entry of variant) {
-    if (!isStylusUserstyle(entry)) continue;
-
-    for (const [name, value] of Object.entries(defaults)) {
+  variant.filter(isStylusUserstyle).forEach((entry) => {
+    Object.entries(defaults).forEach(([name, value]) => {
       setSelectDefault(entry.usercssData, name, value);
-    }
+    });
 
     entry.sourceCode = replaceUserstyleHeader(
       entry.sourceCode,
       usercssMeta.stringify(entry.usercssData),
     );
     entry.originalDigest = calcStyleDigest(entry.sourceCode);
-  }
+  });
 
   return variant;
 }
@@ -259,9 +265,9 @@ function setSelectDefault(metadata: UsercssMetadata, name: string, value: string
 
   variable.default = value;
   variable.value = value;
-  for (const option of options) {
+  options.forEach((option) => {
     option.default = option.name === value;
-  }
+  });
 }
 
 function getSelectOptions(metadata: UsercssMetadata, name: string): UsercssSelectOption[] {

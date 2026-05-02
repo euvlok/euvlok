@@ -3,7 +3,7 @@ import * as cache from '@actions/cache';
 import { hashFiles } from '@actions/glob';
 import { actionsLogger as logger } from './logging';
 
-export function isGitHubActions(): boolean {
+function isGitHubActions(): boolean {
   return process.env.GITHUB_ACTIONS === 'true';
 }
 

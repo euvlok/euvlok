@@ -5,19 +5,17 @@ import { dirname, join } from 'pathe';
  * looking for flake.nix or .git directory.
  */
 export async function findRepoRoot(startDir?: string): Promise<string | null> {
-  let current = startDir ?? process.cwd();
+  const current = startDir ?? process.cwd();
+  if (current === '/') return null;
 
-  while (current !== '/') {
-    if (
-      (await Bun.file(join(current, 'flake.nix')).exists()) ||
-      (await Bun.file(join(current, '.git', 'HEAD')).exists())
-    ) {
-      return current;
-    }
-    current = dirname(current);
+  if (
+    (await Bun.file(join(current, 'flake.nix')).exists()) ||
+    (await Bun.file(join(current, '.git', 'HEAD')).exists())
+  ) {
+    return current;
   }
 
-  return null;
+  return findRepoRoot(dirname(current));
 }
 
 /**

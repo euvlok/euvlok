@@ -8,13 +8,20 @@ import {
 
 // TODO: Cache result — each call makes up to 4 subprocess calls, and this is called 4+ times per run
 export async function getRemoteBookmark(root: string): Promise<string> {
-  for (const bookmark of COMMON_BRANCH_NAMES) {
-    const result = await execSafe(
-      ['jj', 'log', '-r', `${bookmark}@${DEFAULT_REMOTE}`, '--limit', '1'],
-      { cwd: root },
-    );
-    if (result.exitCode === 0) return `${bookmark}@${DEFAULT_REMOTE}`;
-  }
+  const commonBookmark = await COMMON_BRANCH_NAMES.reduce(async (previous, bookmark) => {
+    const found = await previous;
+    if (found) return found;
+
+    return (
+      await execSafe(['jj', 'log', '-r', `${bookmark}@${DEFAULT_REMOTE}`, '--limit', '1'], {
+        cwd: root,
+      })
+    ).exitCode === 0
+      ? bookmark
+      : null;
+  }, Promise.resolve<string | null>(null));
+
+  if (commonBookmark) return `${commonBookmark}@${DEFAULT_REMOTE}`;
 
   const fallback = await execSafe(
     [
@@ -52,13 +59,7 @@ export async function checkLocalChanges(root: string): Promise<boolean> {
     { cwd: root },
   );
 
-  const lines = local.stdout.split('\n').filter((l) => l.trim().length > 0);
-  if (lines.length > 0) {
-    logger.info(`Found ${lines.length} local commit(s) ahead of remote`);
-    return true;
-  }
-
-  return false;
+  return hasCommits(local.stdout, (count) => `Found ${count} local commit(s) ahead of remote`);
 }
 
 export async function checkRemoteChanges(root: string): Promise<boolean> {
@@ -68,9 +69,13 @@ export async function checkRemoteChanges(root: string): Promise<boolean> {
     { cwd: root },
   );
 
-  const lines = remote.stdout.split('\n').filter((l) => l.trim().length > 0);
+  return hasCommits(remote.stdout, (count) => `Found ${count} new commit(s) on remote`);
+}
+
+function hasCommits(stdout: string, message: (count: number) => string): boolean {
+  const lines = stdout.split('\n').filter((line) => line.trim().length > 0);
   if (lines.length > 0) {
-    logger.info(`Found ${lines.length} new commit(s) on remote`);
+    logger.info(message(lines.length));
     return true;
   }
 

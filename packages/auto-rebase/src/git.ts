@@ -15,11 +15,14 @@ export async function checkGitLocks(root: string): Promise<void> {
   const head = join(root, GIT_DIR, 'HEAD.lock');
   if (!(await Bun.file(idx).exists()) && !(await Bun.file(head).exists())) return;
   logger.warn('Git lock file detected. Waiting up to 5 seconds...');
-  for (let i = 0; i < 10; i++) {
-    if (!(await Bun.file(idx).exists()) && !(await Bun.file(head).exists())) return;
+
+  const locksCleared = await Array.from({ length: 10 }).reduce(async (previous) => {
+    if (await previous) return true;
     await Bun.sleep(500);
-  }
-  if ((await Bun.file(idx).exists()) || (await Bun.file(head).exists())) {
+    return !(await Bun.file(idx).exists()) && !(await Bun.file(head).exists());
+  }, Promise.resolve(false));
+
+  if (!locksCleared) {
     throw new Error(
       'Git locks still present after waiting. Please manually resolve Git locks before running this script',
     );
@@ -44,18 +47,24 @@ export async function fetchLatest(ctx: RebaseContext): Promise<void> {
   } catch {
     throw new Error(`Failed to fetch from ${DEFAULT_REMOTE}`);
   }
-  for (const bookmark of COMMON_BRANCH_NAMES) {
-    const refFound = await git
-      .raw(['show-ref', '--verify', '--quiet', `refs/remotes/${DEFAULT_REMOTE}/${bookmark}`])
-      .then(() => true)
-      .catch(() => false);
-    if (refFound) {
-      await execSafe(['jj', 'bookmark', 'track', `${bookmark}@${DEFAULT_REMOTE}`], {
-        cwd: ctx.repoRoot,
-      });
-      break;
-    }
+  const bookmark = (
+    await Promise.all(
+      COMMON_BRANCH_NAMES.map(async (bookmark) => ({
+        bookmark,
+        refFound: await git
+          .raw(['show-ref', '--verify', '--quiet', `refs/remotes/${DEFAULT_REMOTE}/${bookmark}`])
+          .then(() => true)
+          .catch(() => false),
+      })),
+    )
+  ).find((result) => result.refFound)?.bookmark;
+
+  if (bookmark) {
+    await execSafe(['jj', 'bookmark', 'track', `${bookmark}@${DEFAULT_REMOTE}`], {
+      cwd: ctx.repoRoot,
+    });
   }
+
   const jj = await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
     cwd: ctx.repoRoot,
   });

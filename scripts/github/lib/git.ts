@@ -5,12 +5,12 @@ import { actionsLogger as logger } from './logging';
 
 export type RefName = string;
 
-export interface CommitAndPushOptions {
+export type CommitAndPushOptions = {
   title: string;
   body: string;
   add: readonly string[];
   refName: RefName;
-}
+};
 
 const git = simpleGit({ trimmed: false });
 
@@ -18,7 +18,7 @@ export async function hasGitDiff(pathspecs: readonly string[] = []): Promise<boo
   return !(await gitQuiet(['diff', '--quiet', ...pathspecs]));
 }
 
-export async function hasStagedChanges(): Promise<boolean> {
+async function hasStagedChanges(): Promise<boolean> {
   return !(await gitQuiet(['diff', '--staged', '--quiet']));
 }
 
@@ -38,7 +38,7 @@ export async function readGitIndex(path: string): Promise<string> {
   return git.raw(['show', `:${path}`]).catch(() => '');
 }
 
-export async function configureGitHubBot(): Promise<void> {
+async function configureGitHubBot(): Promise<void> {
   await git.addConfig('user.name', 'github-actions[bot]', false, 'local');
   await git.addConfig(
     'user.email',
@@ -86,16 +86,16 @@ export function currentRefName(fallback = 'main'): RefName {
 }
 
 async function pushWithRebaseRetry(refName: RefName): Promise<void> {
-  const maxAttempts = 5;
+  await Array.from({ length: 5 }, (_, index) => index + 1).reduce(async (previous, attempt) => {
+    if (await previous) return true;
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
       await git.push('origin', `HEAD:${refName}`);
       logger.info(`Successfully pushed changes on attempt ${attempt}.`);
-      return;
+      return true;
     } catch {
-      if (attempt === maxAttempts) {
-        throw new Error(`Failed to push after ${maxAttempts} attempts.`);
+      if (attempt === 5) {
+        throw new Error('Failed to push after 5 attempts.');
       }
     }
 
@@ -105,7 +105,8 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
     );
     await Bun.sleep(waitSeconds * 1000);
     await git.raw(['pull', '--rebase', 'origin', refName]);
-  }
+    return false;
+  }, Promise.resolve(false));
 }
 
 async function gitQuiet(args: string[]): Promise<boolean> {

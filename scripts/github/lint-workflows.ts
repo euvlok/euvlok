@@ -5,9 +5,11 @@ import { listWorkflowFiles } from './lib/workflows';
 const workflowFiles = await listWorkflowFiles();
 
 await group('actionlint', async () => {
-  for (const workflowFile of workflowFiles) {
-    await exec(['node_modules/.bin/node-actionlint', workflowFile], { inheritOutput: true });
-  }
+  await Promise.all(
+    workflowFiles.map((workflowFile) =>
+      exec(['node_modules/.bin/node-actionlint', workflowFile], { inheritOutput: true }),
+    ),
+  );
 });
 
 await group('zizmor', async () => {
