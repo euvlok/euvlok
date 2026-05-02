@@ -6,6 +6,16 @@
 }:
 let
   cfg = config.hm.clankers;
+  claudeAliases = {
+    cc = "claude --dangerously-skip-permissions";
+    op = "opencode";
+  };
+  codexShellAliases = {
+    cx = "command codex --sandbox danger-full-access --ask-for-approval never";
+  };
+  codexNushellAliases = {
+    cx = "^codex --sandbox danger-full-access --ask-for-approval never";
+  };
 in
 {
   options.hm.clankers = {
@@ -27,6 +37,10 @@ in
           inherit (pkgs.unstable) opencode;
         })
         ++ lib.optional cfg.claude.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
+
+      programs.bash.shellAliases = claudeAliases;
+      programs.zsh.shellAliases = claudeAliases;
+      programs.nushell.shellAliases = claudeAliases;
 
       home.file.".claude/settings.json".text = builtins.toJSON (
         lib.optionalAttrs cfg.claude.statusLine.enable {
@@ -61,9 +75,14 @@ in
       );
     })
     (lib.mkIf cfg.codex.enable {
-      home.packages =
-        [ pkgs.eupkgs.codex ]
-        ++ lib.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
+      home.packages = [
+        pkgs.eupkgs.codex
+      ]
+      ++ lib.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
+
+      programs.bash.shellAliases = codexShellAliases;
+      programs.zsh.shellAliases = codexShellAliases;
+      programs.nushell.shellAliases = codexNushellAliases;
     })
   ];
 }
