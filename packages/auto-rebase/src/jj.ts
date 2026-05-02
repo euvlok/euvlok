@@ -1,10 +1,10 @@
+import { execSafe, isGitRepo, logger } from '@euvlok/shared';
 import { $ } from 'bun';
-import { logger, execSafe, isGitRepo } from '@euvlok/shared';
 import { join } from 'pathe';
+import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
 import type { RebaseContext } from './context';
-import { JJ_DIR, EUVLOK_TMP_DIR, DEFAULT_REMOTE, DETACHED_HEAD } from './constants';
-import { saveState, removeState } from './state';
-import { restoreStaging, removeDiffFiles } from './staging';
+import { removeDiffFiles, restoreStaging } from './staging';
+import { removeState, saveState } from './state';
 
 function exists(root: string): Promise<boolean> {
   return Bun.file(join(root, JJ_DIR, 'repo', 'store', 'type')).exists();
@@ -72,14 +72,7 @@ export async function setupJj(ctx: RebaseContext): Promise<void> {
   const cached = await execSafe(['git', '-C', root, 'diff', '--cached', '--quiet']);
   if (cached.exitCode !== 0) {
     ctx.originalHadStaged = true;
-    const staged = await execSafe([
-      'git',
-      '-C',
-      root,
-      'diff',
-      '--cached',
-      '--name-only',
-    ]);
+    const staged = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
     ctx.originalStagedFiles = staged.stdout;
 
     ctx.stagedDiffPath = join(root, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`);
@@ -158,14 +151,7 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   if (ctx.originalHadStaged && ctx.originalStagedFiles) {
     await restoreStaging(root, ctx.stagedDiffPath, ctx.originalStagedFiles);
 
-    const current = await execSafe([
-      'git',
-      '-C',
-      root,
-      'diff',
-      '--cached',
-      '--name-only',
-    ]);
+    const current = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
     const now = current.stdout.split('\n').filter(Boolean).sort().join('\n');
     const expected = ctx.originalStagedFiles.split('\n').filter(Boolean).sort().join('\n');
 
@@ -180,14 +166,7 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   }
 
   if (!ctx.originalHadStaged || !ctx.originalStagedFiles) {
-    const current = await execSafe([
-      'git',
-      '-C',
-      root,
-      'diff',
-      '--cached',
-      '--name-only',
-    ]);
+    const current = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
     if (current.stdout) {
       logger.warn(`Unexpected staged files after export: ${current.stdout}`);
       await execSafe(['git', '-C', root, 'reset']);

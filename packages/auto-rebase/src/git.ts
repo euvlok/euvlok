@@ -1,7 +1,7 @@
-import { logger, execSafe } from '@euvlok/shared';
+import { execSafe, logger } from '@euvlok/shared';
 import { join } from 'pathe';
+import { COMMON_BRANCH_NAMES, DEFAULT_REMOTE, GIT_DIR } from './constants';
 import type { RebaseContext } from './context';
-import { GIT_DIR, DEFAULT_REMOTE, COMMON_BRANCH_NAMES } from './constants';
 
 export async function getOriginalBranch(root: string): Promise<string> {
   const result = await execSafe(['git', '-C', root, 'symbolic-ref', '--short', 'HEAD']);
@@ -34,14 +34,7 @@ export async function fetchLatest(ctx: RebaseContext): Promise<void> {
     );
     return;
   }
-  const remote = await execSafe([
-    'git',
-    '-C',
-    ctx.repoRoot,
-    'remote',
-    'get-url',
-    DEFAULT_REMOTE,
-  ]);
+  const remote = await execSafe(['git', '-C', ctx.repoRoot, 'remote', 'get-url', DEFAULT_REMOTE]);
   if (remote.exitCode !== 0) {
     throw new Error(`No '${DEFAULT_REMOTE}' remote configured. Cannot fetch changes`);
   }

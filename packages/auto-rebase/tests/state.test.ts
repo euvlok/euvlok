@@ -1,7 +1,7 @@
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { join } from 'pathe';
-import { getStateFilePath, loadState, saveState, removeState } from '../src/state';
-import { createTempDir, cleanupTempDir } from './test-utils';
+import { getStateFilePath, loadState, removeState, saveState } from '../src/state';
+import { cleanupTempDir, createTempDir } from './test-utils';
 
 describe('state', () => {
   let tmpDir: string;
@@ -40,13 +40,13 @@ describe('state', () => {
       const state = await loadState(tmpDir);
 
       expect(state).not.toBeNull();
-      expect(state!.originalBranch).toBe('feature-branch');
-      expect(state!.originalHadStaged).toBe(true);
-      expect(state!.originalStagedFiles).toBe('src/foo.ts');
-      expect(state!.stagedDiffPath).toBe('/tmp/staged-123.diff');
-      expect(state!.unstagedDiffPath).toBe('/tmp/unstaged-123.diff');
-      expect(state!.jjWasPresent).toBe(false);
-      expect(state!.timestamp).toBe(1700000000);
+      expect(state?.originalBranch).toBe('feature-branch');
+      expect(state?.originalHadStaged).toBe(true);
+      expect(state?.originalStagedFiles).toBe('src/foo.ts');
+      expect(state?.stagedDiffPath).toBe('/tmp/staged-123.diff');
+      expect(state?.unstagedDiffPath).toBe('/tmp/unstaged-123.diff');
+      expect(state?.jjWasPresent).toBe(false);
+      expect(state?.timestamp).toBe(1700000000);
     });
 
     test('handles missing fields with defaults', async () => {
@@ -54,12 +54,12 @@ describe('state', () => {
       const state = await loadState(tmpDir);
 
       expect(state).not.toBeNull();
-      expect(state!.originalBranch).toBe('HEAD');
-      expect(state!.originalHadStaged).toBe(false);
-      expect(state!.originalStagedFiles).toBe('');
-      expect(state!.stagedDiffPath).toBe('');
-      expect(state!.unstagedDiffPath).toBe('');
-      expect(state!.jjWasPresent).toBe(false);
+      expect(state?.originalBranch).toBe('HEAD');
+      expect(state?.originalHadStaged).toBe(false);
+      expect(state?.originalStagedFiles).toBe('');
+      expect(state?.stagedDiffPath).toBe('');
+      expect(state?.unstagedDiffPath).toBe('');
+      expect(state?.jjWasPresent).toBe(false);
     });
 
     test('returns non-null for empty file (HEAD default is truthy)', async () => {
@@ -107,13 +107,13 @@ describe('state', () => {
       const loaded = await loadState(tmpDir);
 
       expect(loaded).not.toBeNull();
-      expect(loaded!.originalBranch).toBe(state.originalBranch);
-      expect(loaded!.originalHadStaged).toBe(state.originalHadStaged);
-      expect(loaded!.originalStagedFiles).toBe(state.originalStagedFiles);
-      expect(loaded!.stagedDiffPath).toBe(state.stagedDiffPath);
-      expect(loaded!.unstagedDiffPath).toBe(state.unstagedDiffPath);
-      expect(loaded!.jjWasPresent).toBe(state.jjWasPresent);
-      expect(loaded!.timestamp).toBe(state.timestamp);
+      expect(loaded?.originalBranch).toBe(state.originalBranch);
+      expect(loaded?.originalHadStaged).toBe(state.originalHadStaged);
+      expect(loaded?.originalStagedFiles).toBe(state.originalStagedFiles);
+      expect(loaded?.stagedDiffPath).toBe(state.stagedDiffPath);
+      expect(loaded?.unstagedDiffPath).toBe(state.unstagedDiffPath);
+      expect(loaded?.jjWasPresent).toBe(state.jjWasPresent);
+      expect(loaded?.timestamp).toBe(state.timestamp);
     });
   });
 

@@ -1,7 +1,7 @@
+import type { ExecResult } from '@euvlok/shared';
 import { $ } from 'bun';
 import { join } from 'pathe';
 import type { RebaseContext } from '../src/context';
-import type { ExecResult } from '@euvlok/shared';
 
 export function createTestContext(overrides?: Partial<RebaseContext>): RebaseContext {
   return {

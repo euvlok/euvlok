@@ -1,9 +1,9 @@
 import type {
-  Extension,
-  GithubReleaseConfig,
   BrowserType,
-  GitHubRelease,
+  Extension,
   FetchUrlResult,
+  GitHubRelease,
+  GithubReleaseConfig,
 } from '../types';
 import { getFileExtension } from '../types';
 
@@ -29,7 +29,7 @@ async function latest(owner: string, repo: string) {
   };
 
   const auth = await token();
-  if (auth) headers['Authorization'] = `token ${auth}`;
+  if (auth) headers.Authorization = `token ${auth}`;
 
   const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`, {
     headers,
@@ -56,9 +56,10 @@ export async function fetchGithubReleaseUrl(
   if (!owner) return { error: "GitHub release source requires 'owner' field" };
   if (!repo) return { error: "GitHub release source requires 'repo' field" };
 
-  const version = (ext.version ?? 'latest') === 'latest'
-    ? await latest(owner, repo)
-    : (ext.version ?? '').replace(/^v/, '');
+  const version =
+    (ext.version ?? 'latest') === 'latest'
+      ? await latest(owner, repo)
+      : (ext.version ?? '').replace(/^v/, '');
 
   if (pattern) {
     const path = pattern

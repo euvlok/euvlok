@@ -34,7 +34,7 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
   }
 
   const originalBranch = value('ORIGINAL_BRANCH') || 'HEAD';
-  const timestamp = parseInt(raw('TIMESTAMP')) || 0;
+  const timestamp = parseInt(raw('TIMESTAMP'), 10) || 0;
 
   // Validate basic sanity
   if (!originalBranch && !timestamp) return null;
@@ -52,16 +52,15 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
 
 export async function saveState(repoRoot: string, state: RebaseState): Promise<void> {
   const path = getStateFilePath(repoRoot);
-  const content =
-    [
-      `ORIGINAL_BRANCH="${state.originalBranch}"`,
-      `ORIGINAL_HAD_STAGED="${state.originalHadStaged}"`,
-      `ORIGINAL_STAGED_FILES="${state.originalStagedFiles}"`,
-      `PATH_TO_STAGED_DIFF="${state.stagedDiffPath}"`,
-      `PATH_TO_UNSTAGED_DIFF="${state.unstagedDiffPath}"`,
-      `JJ_WAS_PRESENT="${state.jjWasPresent}"`,
-      `TIMESTAMP=${state.timestamp}`,
-    ].join('\n') + '\n';
+  const content = `${[
+    `ORIGINAL_BRANCH="${state.originalBranch}"`,
+    `ORIGINAL_HAD_STAGED="${state.originalHadStaged}"`,
+    `ORIGINAL_STAGED_FILES="${state.originalStagedFiles}"`,
+    `PATH_TO_STAGED_DIFF="${state.stagedDiffPath}"`,
+    `PATH_TO_UNSTAGED_DIFF="${state.unstagedDiffPath}"`,
+    `JJ_WAS_PRESENT="${state.jjWasPresent}"`,
+    `TIMESTAMP=${state.timestamp}`,
+  ].join('\n')}\n`;
 
   await Bun.write(path, content);
 }

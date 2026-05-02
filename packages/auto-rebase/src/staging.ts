@@ -1,5 +1,5 @@
+import { execSafe, logger } from '@euvlok/shared';
 import { $ } from 'bun';
-import { logger, execSafe } from '@euvlok/shared';
 
 export async function restoreStaging(
   root: string,

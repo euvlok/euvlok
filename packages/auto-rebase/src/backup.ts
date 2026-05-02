@@ -1,6 +1,6 @@
+import { execSafe, logger } from '@euvlok/shared';
 import { $ } from 'bun';
-import { logger, execSafe } from '@euvlok/shared';
-import { join, basename } from 'pathe';
+import { basename, join } from 'pathe';
 import type { RebaseContext } from './context';
 
 export async function createBackup(ctx: RebaseContext): Promise<string> {

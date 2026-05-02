@@ -1,9 +1,9 @@
-import { logger, execSafe } from '@euvlok/shared';
+import { execSafe, logger } from '@euvlok/shared';
 import {
-  DEFAULT_REMOTE,
   COMMON_BRANCH_NAMES,
-  JJ_TEMPLATE_COMMIT_ID,
+  DEFAULT_REMOTE,
   JJ_TEMPLATE_BOOKMARKS,
+  JJ_TEMPLATE_COMMIT_ID,
 } from './constants';
 
 // TODO: Cache result — each call makes up to 4 subprocess calls, and this is called 4+ times per run

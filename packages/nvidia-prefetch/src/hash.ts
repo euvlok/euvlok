@@ -1,4 +1,4 @@
-import { logger, exec } from '@euvlok/shared';
+import { exec, logger } from '@euvlok/shared';
 import { join } from 'pathe';
 import { GITHUB_BASE_URL } from './version';
 

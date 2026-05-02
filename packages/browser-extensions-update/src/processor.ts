@@ -1,13 +1,13 @@
+import { exec, logger, nixHashToSri } from '@euvlok/shared';
 import { $ } from 'bun';
-import { logger, exec, nixHashToSri } from '@euvlok/shared';
-import { join } from 'pathe';
 import { Listr } from 'listr2';
 import pLimit from 'p-limit';
+import { join } from 'pathe';
+import { extractManifestInfo } from './crx-parser';
+import { generateNixEntry } from './nix-entry';
+import { fetchExtensionUrl } from './sources/index';
 import type { BrowserType, Extension, ExtensionResult, GithubReleaseConfig } from './types';
 import { getFileExtension } from './types';
-import { fetchExtensionUrl } from './sources/index';
-import { generateNixEntry } from './nix-entry';
-import { extractManifestInfo } from './crx-parser';
 
 export async function getChromiumMajorVersion(): Promise<string> {
   try {
@@ -48,7 +48,10 @@ export async function processExtension(
 
   const response = await fetch(result.url).catch(() => null);
   if (!response?.ok) {
-    return { extension: ext, error: `Failed to download: HTTP ${response?.status ?? 'network error'}` };
+    return {
+      extension: ext,
+      error: `Failed to download: HTTP ${response?.status ?? 'network error'}`,
+    };
   }
   await Bun.write(tmp, new Uint8Array(await response.arrayBuffer()));
 
@@ -63,7 +66,15 @@ export async function processExtension(
       logger.info(`Resolved addonId for ${ext.id}: ${addon}`);
     }
 
-    const entry = generateNixEntry(ext, result.url, sri, manifest.version, manifest.permissions, browser, addon);
+    const entry = generateNixEntry(
+      ext,
+      result.url,
+      sri,
+      manifest.version,
+      manifest.permissions,
+      browser,
+      addon,
+    );
     return { extension: ext, nixEntry: entry, version: manifest.version };
   } finally {
     await $`rm -f ${tmp}`.quiet();

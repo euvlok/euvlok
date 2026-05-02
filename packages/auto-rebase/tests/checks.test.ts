@@ -1,22 +1,20 @@
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 import { join } from 'pathe';
 import {
-  realExec,
-  silentLogger,
   cleanupTempDir,
   createTempJjRepo,
-  pushCommitToRemote,
   type JjTestRepo,
+  pushCommitToRemote,
+  realExec,
+  silentLogger,
 } from './test-utils';
-
-import { mock } from 'bun:test';
 
 mock.module('@euvlok/shared', () => ({
   execSafe: realExec,
   logger: silentLogger,
 }));
 
-import { getRemoteBookmark, checkLocalChanges, checkRemoteChanges } from '../src/checks';
+import { checkLocalChanges, checkRemoteChanges, getRemoteBookmark } from '../src/checks';
 
 describe('getRemoteBookmark', () => {
   let repo: JjTestRepo;

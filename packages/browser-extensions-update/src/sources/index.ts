@@ -1,8 +1,8 @@
-import type { Extension, GithubReleaseConfig, BrowserType, FetchUrlResult } from '../types';
+import type { BrowserType, Extension, FetchUrlResult, GithubReleaseConfig } from '../types';
 import { supportsSource } from '../types';
-import { fetchChromeStoreUrl } from './chrome-store';
 import { fetchAmoUrlAndGuid } from './amo';
 import { fetchBpcUrl } from './bpc';
+import { fetchChromeStoreUrl } from './chrome-store';
 import { fetchGithubReleaseUrl } from './github-releases';
 import { fetchUrlSource } from './url';
 

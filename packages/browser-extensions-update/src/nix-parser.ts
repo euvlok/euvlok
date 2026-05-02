@@ -1,4 +1,4 @@
-import { logger, exec } from '@euvlok/shared';
+import { exec, logger } from '@euvlok/shared';
 import type {
   BrowserType,
   Extension,
@@ -26,12 +26,12 @@ export async function parseNixInput(path: string) {
   };
 
   const extensions: Extension[] = input.extensions
-    .filter((e) => {
+    .filter((e): e is typeof e & { id: string } => {
       if (!e.id) logger.warn("Extension missing 'id' field, skipping");
       return !!e.id;
     })
     .map((e) => ({
-      id: e.id!,
+      id: e.id,
       name: e.name ?? undefined,
       source: (e.source ?? 'chrome-store') as ExtensionSource,
       url: e.url ?? undefined,

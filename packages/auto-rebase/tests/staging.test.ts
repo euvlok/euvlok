@@ -1,10 +1,10 @@
-import { describe, test, expect, mock, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 import { $ } from 'bun';
 import { join } from 'pathe';
 import {
-  createTempGitRepo,
-  createTempDir,
   cleanupTempDir,
+  createTempDir,
+  createTempGitRepo,
   realExec,
   silentLogger,
 } from './test-utils';
@@ -14,7 +14,7 @@ mock.module('@euvlok/shared', () => ({
   logger: silentLogger,
 }));
 
-import { restoreStaging, removeDiffFiles } from '../src/staging';
+import { removeDiffFiles, restoreStaging } from '../src/staging';
 
 describe('restoreStaging', () => {
   let tmpDir: string;

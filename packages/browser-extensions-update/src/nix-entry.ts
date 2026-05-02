@@ -1,5 +1,5 @@
 import { escapeNixString } from '@euvlok/shared';
-import type { Extension, BrowserType } from './types';
+import type { BrowserType, Extension } from './types';
 
 function chromium(id: string, url: string, hash: string, version: string) {
   return `  {
@@ -21,12 +21,13 @@ function firefox(
   perms: string[] | undefined,
   addon: string,
 ) {
-  const meta = perms && perms.length > 0
-    ? `platforms = platforms.all;
+  const meta =
+    perms && perms.length > 0
+      ? `platforms = platforms.all;
       mozPermissions = [
 ${perms.map((p) => `        "${escapeNixString(p)}"`).join('\n')}
       ];`
-    : 'platforms = platforms.all;';
+      : 'platforms = platforms.all;';
 
   return `  {
     pname = "${id}";

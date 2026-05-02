@@ -1,14 +1,14 @@
-import { describe, test, expect, mock, beforeEach, afterEach, spyOn } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from 'bun:test';
 import { join } from 'pathe';
 import {
-  createTempGitRepo,
   cleanupTempDir,
+  createTempGitRepo,
+  createTempJjRepo,
   createTestContext,
+  type JjTestRepo,
   mockExecResult,
   realExec,
   silentLogger,
-  createTempJjRepo,
-  type JjTestRepo,
 } from './test-utils';
 
 // Mock @euvlok/shared with real exec by default (delegates to actual git).
@@ -20,7 +20,7 @@ mock.module('@euvlok/shared', () => ({
   logger: silentLogger,
 }));
 
-import { getOriginalBranch, checkGitLocks, fetchLatest } from '../src/git';
+import { checkGitLocks, fetchLatest, getOriginalBranch } from '../src/git';
 
 describe('getOriginalBranch', () => {
   let tmpDir: string;
@@ -74,7 +74,7 @@ describe('checkGitLocks', () => {
   });
 
   test('throws when locks persist after timeout', async () => {
-    sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined as any);
+    sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined);
     await Bun.write(join(tmpDir, '.git', 'index.lock'), '');
 
     await expect(checkGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
@@ -97,7 +97,7 @@ describe('checkGitLocks', () => {
   });
 
   test('detects HEAD.lock too', async () => {
-    sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined as any);
+    sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined);
     await Bun.write(join(tmpDir, '.git', 'HEAD.lock'), '');
 
     await expect(checkGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
