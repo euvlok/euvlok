@@ -1,6 +1,5 @@
 import { exec, logger, validateNixFile } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
-import { $ } from 'bun';
 import figlet from 'figlet';
 import { dirname, join } from 'pathe';
 import { generateNixFile } from './nix-generator';
@@ -46,7 +45,7 @@ function exitOnErrors(results: Awaited<ReturnType<typeof processExtensionsWithPr
 }
 
 async function writeOutput(output: string, nix: string): Promise<void> {
-  await $`mkdir -p ${dirname(output)}`.quiet();
+  await exec(['mkdir', '-p', dirname(output)]);
   await Bun.write(output, nix);
 
   await formatNixFile(output);

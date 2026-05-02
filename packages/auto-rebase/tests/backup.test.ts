@@ -5,10 +5,12 @@ import {
   createTempGitRepo,
   createTestContext,
   realExec,
+  realExecOrThrow,
   silentLogger,
 } from './test-utils';
 
 mock.module('@euvlok/shared', () => ({
+  exec: realExecOrThrow,
   execSafe: realExec,
   logger: silentLogger,
 }));

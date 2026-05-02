@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
-import { $ } from 'bun';
 import { join } from 'pathe';
 import {
   cleanupTempDir,
   createTempGitRepo,
   realExec,
+  realExecOrThrow,
   silentLogger,
   useTempDir,
 } from './test-utils';
@@ -24,19 +24,22 @@ async function writeFiles(tmpDir: string, files: Record<string, string>) {
 
 async function commitFiles(tmpDir: string, files: Record<string, string>, message: string) {
   await writeFiles(tmpDir, files);
-  await $`git -C ${tmpDir} add ${Object.keys(files)}`.quiet();
-  await $`git -C ${tmpDir} commit -m ${message}`.quiet();
+  await realExecOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
+  await realExecOrThrow(['git', '-C', tmpDir, 'commit', '-m', message]);
 }
 
 async function stageChanges(tmpDir: string, files: Record<string, string>) {
   await writeFiles(tmpDir, files);
-  await $`git -C ${tmpDir} add ${Object.keys(files)}`.quiet();
+  await realExecOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
 }
 
 async function captureStagedDiff(tmpDir: string): Promise<{ diffPath: string; fileList: string }> {
   const diffPath = join(tmpDir, 'staged.diff');
-  await Bun.write(diffPath, await $`git -C ${tmpDir} diff --cached`.text());
-  const fileList = (await $`git -C ${tmpDir} diff --cached --name-only`.text()).trim();
+  await Bun.write(
+    diffPath,
+    await realExecOrThrow(['git', '-C', tmpDir, 'diff', '--cached'], { trimOutput: false }),
+  );
+  const fileList = await realExecOrThrow(['git', '-C', tmpDir, 'diff', '--cached', '--name-only']);
   return { diffPath, fileList };
 }
 
@@ -60,7 +63,7 @@ describe('restoreStaging', () => {
     await commitFiles(tmpDir, { 'file.ts': 'line1\n' }, 'add file');
     await stageChanges(tmpDir, { 'file.ts': 'line1\nline2\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await $`git -C ${tmpDir} reset`.quiet();
+    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
 
     await restoreStaging(tmpDir, stagedDiff.diffPath, 'file.ts');
 
@@ -71,7 +74,7 @@ describe('restoreStaging', () => {
     await commitFiles(tmpDir, { 'a.ts': 'a\n', 'b.ts': 'b\n' }, 'add files');
     await stageChanges(tmpDir, { 'a.ts': 'a modified\n', 'b.ts': 'b modified\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await $`git -C ${tmpDir} reset`.quiet();
+    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
 
     await restoreStaging(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
 
@@ -88,7 +91,7 @@ describe('restoreStaging', () => {
     );
     await stageChanges(tmpDir, { 'original.ts': 'original staged\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await $`git -C ${tmpDir} reset`.quiet();
+    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
     await stageChanges(tmpDir, { 'unrelated.ts': 'should not stay staged\n' });
 
     await restoreStaging(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
