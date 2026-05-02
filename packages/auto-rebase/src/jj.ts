@@ -11,7 +11,7 @@ function exists(root: string): Promise<boolean> {
   return Bun.file(join(root, JJ_DIR, 'repo', 'store', 'type')).exists();
 }
 
-export async function checkJjPresent(root: string): Promise<boolean> {
+async function checkJjPresent(root: string): Promise<boolean> {
   if (!(await exists(root))) return false;
   const which = await execSafe(['which', 'jj']);
   if (which.exitCode !== 0) return false;
@@ -21,7 +21,7 @@ export async function checkJjPresent(root: string): Promise<boolean> {
   return log.exitCode === 0;
 }
 
-export async function persistState(ctx: RebaseContext): Promise<void> {
+async function persistState(ctx: RebaseContext): Promise<void> {
   await saveState(ctx.repoRoot, {
     originalBranch: ctx.originalBranch || DETACHED_HEAD,
     originalHadStaged: ctx.originalHadStaged,

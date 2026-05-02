@@ -6,7 +6,7 @@ export const X86_64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-x86_64
 export const AARCH64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-aarch64';
 export const GITHUB_BASE_URL = 'https://github.com/NVIDIA';
 
-export async function fetchVersionsFromPlatform(url: string, name: string): Promise<string[]> {
+async function fetchVersionsFromPlatform(url: string, name: string): Promise<string[]> {
   logger.info(`Checking ${name} platform...`);
 
   const response = await fetch(`${url}/`);
@@ -26,7 +26,7 @@ export async function fetchVersionsFromPlatform(url: string, name: string): Prom
   return versions;
 }
 
-export function findCommonLatestVersion(versions1: string[], versions2: string[]): string | null {
+function findCommonLatestVersion(versions1: string[], versions2: string[]): string | null {
   const set2 = new Set(versions2);
   const common = versions1.filter((v) => set2.has(v));
 

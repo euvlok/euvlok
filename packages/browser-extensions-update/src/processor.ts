@@ -28,13 +28,13 @@ export async function getChromiumMajorVersion(): Promise<string> {
   return '143';
 }
 
-export async function hash(path: string) {
+async function hash(path: string) {
   const hasher = new Bun.CryptoHasher('sha256');
   hasher.update(new Uint8Array(await Bun.file(path).arrayBuffer()));
   return nixHashToSri(hasher.digest('hex'));
 }
 
-export async function processExtension(
+async function processExtension(
   ext: Extension,
   config: GithubReleaseConfig,
   browser: BrowserType,

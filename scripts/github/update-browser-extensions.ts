@@ -14,12 +14,12 @@ import { group, actionsLogger as logger } from './lib/logging';
 
 type BrowserType = 'chromium' | 'firefox';
 
-interface ExtensionSummary {
+type ExtensionSummary = {
   id: string;
   version: string;
   key: string;
   hash: string;
-}
+};
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -29,13 +29,14 @@ if (sourceFiles.length === 0) {
   process.exit(0);
 }
 
-for (const sourceFile of sourceFiles) {
+await sourceFiles.reduce(async (previous, sourceFile) => {
+  await previous;
   await group(`Processing ${sourceFile}`, async () => {
     await exec(['bun', 'run', 'browser-extension-update', '--', '-i', sourceFile], {
       inheritOutput: true,
     });
   });
-}
+}, Promise.resolve());
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any extension files.');

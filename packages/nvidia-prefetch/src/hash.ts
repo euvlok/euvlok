@@ -2,7 +2,7 @@ import { exec, logger } from '@euvlok/shared';
 import { join } from 'pathe';
 import { GITHUB_BASE_URL } from './version';
 
-export async function sri(filePath: string): Promise<string> {
+async function sri(filePath: string): Promise<string> {
   return exec(['nix-hash', '--flat', '--base32', '--type', 'sha256', '--sri', filePath]);
 }
 

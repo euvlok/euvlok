@@ -15,62 +15,59 @@ const report: WorkflowCheckReport = {
   checkedAt: new Date().toISOString(),
   workflows: [],
 };
-let failures = 0;
 
-for (const workflowFile of workflowFiles) {
-  const content = await Bun.file(workflowFile).text();
+report.workflows = await Promise.all(workflowFiles.map(checkWorkflow));
+
+await withTempFile(JSON.stringify(report, null, 2), 'json', uploadWorkflowReport);
+await saveWorkflowCache();
+
+const failures = report.workflows.filter((workflow) => !workflow.ok);
+if (failures.length > 0) {
+  throw new Error(`${failures.length} workflow file(s) failed validation.`);
+}
+
+async function checkWorkflow(workflowFile: string): Promise<WorkflowCheckResult> {
   const result = parseWorkflow(
     {
       name: workflowFile,
-      content,
+      content: await Bun.file(workflowFile).text(),
     },
     new NoOperationTraceWriter(),
   );
 
   const parseErrors = result.context.errors.getErrors();
   if (parseErrors.length > 0 || !result.value) {
-    failures += 1;
-    report.workflows.push({
+    logger.error(`${workflowFile} failed GitHub Actions workflow parsing.`);
+    parseErrors.forEach((error) => {
+      logger.error(error.toString());
+    });
+    return {
       path: workflowFile,
       ok: false,
       errors: parseErrors.map((error) => error.toString()),
-    });
-    logger.error(`${workflowFile} failed GitHub Actions workflow parsing.`);
-    for (const error of parseErrors) {
-      logger.error(error.toString());
-    }
-    continue;
+    };
   }
 
   const workflow = await convertWorkflowTemplate(result.context, result.value);
   const conversionErrors = workflow.errors ?? [];
   if (conversionErrors.length > 0) {
-    failures += 1;
-    report.workflows.push({
+    logger.error(`${workflowFile} failed GitHub Actions workflow conversion.`);
+    conversionErrors.forEach((error) => {
+      logger.error(error.Message);
+    });
+    return {
       path: workflowFile,
       ok: false,
       errors: conversionErrors.map((error) => error.Message),
-    });
-    logger.error(`${workflowFile} failed GitHub Actions workflow conversion.`);
-    for (const error of conversionErrors) {
-      logger.error(error.Message);
-    }
-    continue;
+    };
   }
 
-  report.workflows.push({
+  logger.info(formatWorkflowSummary(workflowFile, workflow));
+  return {
     path: workflowFile,
     ok: true,
     jobCount: workflow.jobs.length,
-  });
-  logger.info(formatWorkflowSummary(workflowFile, workflow));
-}
-
-await withTempFile(JSON.stringify(report, null, 2), 'json', uploadWorkflowReport);
-await saveWorkflowCache();
-
-if (failures > 0) {
-  throw new Error(`${failures} workflow file(s) failed validation.`);
+  };
 }
 
 function formatWorkflowSummary(path: string, workflow: WorkflowTemplate): string {
@@ -79,10 +76,10 @@ function formatWorkflowSummary(path: string, workflow: WorkflowTemplate): string
   return `${path} parsed as a workflow with ${jobCount} ${jobLabel}.`;
 }
 
-interface WorkflowCheckReport {
+type WorkflowCheckReport = {
   checkedAt: string;
   workflows: WorkflowCheckResult[];
-}
+};
 
 type WorkflowCheckResult =
   | {
