@@ -1,6 +1,11 @@
 import { exec, logger } from '@euvlok/shared';
 import { join } from 'pathe';
+import { z } from 'zod';
 import { GITHUB_BASE_URL } from './version';
+
+const prefetchResultSchema = z.object({
+  hash: z.string(),
+});
 
 async function sri(filePath: string): Promise<string> {
   return exec(['nix-hash', '--flat', '--base32', '--type', 'sha256', '--sri', filePath]);
@@ -33,6 +38,6 @@ export async function fetchGithubHash(repo: string, version: string): Promise<st
     '--json',
     url,
   ]);
-  const result = JSON.parse(output);
+  const result = prefetchResultSchema.parse(JSON.parse(output));
   return result.hash;
 }

@@ -1,6 +1,20 @@
+import { z } from 'zod';
+
 export type BrowserType = 'chromium' | 'firefox';
 
 export type ExtensionSource = 'chrome-store' | 'amo' | 'bpc' | 'url' | 'github-releases';
+
+export const BrowserTypeSchema = z.enum(['chromium', 'firefox']);
+
+export const ExtensionSourceSchema = z.enum([
+  'chrome-store',
+  'amo',
+  'bpc',
+  'url',
+  'github-releases',
+]);
+
+const optionalString = z.string().nullish().transform(valueOrUndefined);
 
 export interface Extension {
   id: string;
@@ -27,41 +41,59 @@ export interface ExtensionResult {
   version?: string;
 }
 
-export interface NixInputFile {
-  browser?: string;
-  extensions: NixInputExtension[];
-  config?: NixInputConfig;
-}
+export const NixInputExtensionSchema = z.object({
+  id: optionalString,
+  name: optionalString,
+  source: z.preprocess((value) => value ?? 'chrome-store', ExtensionSourceSchema),
+  url: optionalString,
+  condition: optionalString,
+  owner: optionalString,
+  repo: optionalString,
+  pattern: optionalString,
+  version: optionalString,
+});
 
-export interface NixInputExtension {
-  id?: string;
-  name?: string;
-  source?: string;
-  url?: string;
-  condition?: string;
-  owner?: string;
-  repo?: string;
-  pattern?: string;
-  version?: string;
-}
+export const NixInputFileSchema = z.object({
+  browser: BrowserTypeSchema,
+  extensions: z.array(NixInputExtensionSchema),
+  config: z
+    .object({
+      sources: z
+        .object({
+          'github-releases': z
+            .object({
+              owner: optionalString,
+              repo: optionalString,
+              pattern: optionalString,
+            })
+            .optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+});
 
-export interface NixInputConfig {
-  sources?: {
-    'github-releases'?: {
-      owner?: string;
-      repo?: string;
-      pattern?: string;
-    };
-  };
-}
+export type NixInputFile = z.infer<typeof NixInputFileSchema>;
+export type NixInputExtension = z.infer<typeof NixInputExtensionSchema>;
+export type NixInputConfig = NonNullable<NixInputFile['config']>;
 
-export interface AmoAddon {
-  current_version?: {
-    file?: {
-      url: string;
-    };
-  };
-  guid?: string;
+export const AmoAddonSchema = z.object({
+  current_version: z
+    .object({
+      file: z
+        .object({
+          url: z.string().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+  guid: optionalString,
+});
+
+export type AmoAddon = z.infer<typeof AmoAddonSchema>;
+
+function valueOrUndefined<T>(value: T | null | undefined): T | undefined {
+  return value ?? undefined;
 }
 
 export interface FetchUrlResult {

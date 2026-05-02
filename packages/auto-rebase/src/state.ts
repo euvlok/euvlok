@@ -1,4 +1,5 @@
 import { join } from 'pathe';
+import { z } from 'zod';
 
 const STATE_MARKER = '.auto-rebase-state';
 
@@ -12,6 +13,16 @@ export interface RebaseState {
   timestamp: number;
 }
 
+const RebaseStateSchema = z.object({
+  originalBranch: z.string().optional().catch(undefined),
+  originalHadStaged: z.boolean().optional().catch(undefined),
+  originalStagedFiles: z.string().optional().catch(undefined),
+  stagedDiffPath: z.string().optional().catch(undefined),
+  unstagedDiffPath: z.string().optional().catch(undefined),
+  jjWasPresent: z.boolean().optional().catch(undefined),
+  timestamp: z.number().optional().catch(undefined),
+});
+
 export function getStateFilePath(repoRoot: string): string {
   return join(repoRoot, STATE_MARKER);
 }
@@ -23,10 +34,10 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
   const content = await Bun.file(path).text();
   if (!content.trim()) return null;
 
-  return normalizeState(JSON.parse(content) as Partial<RebaseState>);
+  return normalizeState(RebaseStateSchema.parse(JSON.parse(content)));
 }
 
-function normalizeState(parsed: Partial<RebaseState>): RebaseState {
+function normalizeState(parsed: z.infer<typeof RebaseStateSchema>): RebaseState {
   const originalBranch = parsed.originalBranch || 'HEAD';
 
   return {

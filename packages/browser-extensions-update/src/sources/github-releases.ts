@@ -86,8 +86,11 @@ function releaseVersion(release: GithubRelease): string {
   return tag.replace(/^v/, '');
 }
 
-function interpolatePattern(pattern: string, version: string, ext: Extension): string {
-  return pattern.replace('{version}', version).replace('{name}', ext.id).replace('{id}', ext.id);
+export function interpolatePattern(pattern: string, version: string, ext: Extension): string {
+  return pattern
+    .replaceAll('{version}', version)
+    .replaceAll('{name}', ext.id)
+    .replaceAll('{id}', ext.id);
 }
 
 function releaseAssetUrl(

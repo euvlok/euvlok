@@ -1,4 +1,4 @@
-import type { AmoAddon, FetchUrlResult } from '../types';
+import { type AmoAddon, AmoAddonSchema, type FetchUrlResult } from '../types';
 
 async function fetchAddon(slug: string): Promise<Response | null> {
   return fetch(`https://addons.mozilla.org/api/v5/addons/addon/${slug}/`, {
@@ -23,6 +23,6 @@ export async function fetchAmoUrlAndGuid(slug: string): Promise<FetchUrlResult> 
   const error = responseError(response);
   if (error) return error;
 
-  const addon: AmoAddon = await response?.json();
+  const addon: AmoAddon = AmoAddonSchema.parse(await response?.json());
   return addonResult(addon);
 }

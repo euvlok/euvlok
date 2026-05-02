@@ -15,7 +15,7 @@
     "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts",
     "format:check": "bun run check",
     "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
-    "test": "bun test packages/auto-rebase/tests"
+    "test": "bun test packages/auto-rebase/tests packages/browser-extensions-update/tests"
   },
   "dependencies": {
     "@actions/artifact": "^6.2.1",
@@ -36,7 +36,8 @@
     "pathe": "^2.0.3",
     "semver": "^7.7.4",
     "simple-git": "^3.36.0",
-    "usercss-meta": "0.12.0"
+    "usercss-meta": "0.12.0",
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@actions/workflow-parser": "^0.3.55",

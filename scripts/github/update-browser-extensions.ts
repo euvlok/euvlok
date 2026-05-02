@@ -2,6 +2,13 @@ import { basename, dirname } from 'node:path';
 import { escapeNixString, exec, execSafe } from '@euvlok/shared';
 import { Listr } from 'listr2';
 import { simpleGit } from 'simple-git';
+import { z } from 'zod';
+import {
+  type BrowserType,
+  type ExtensionSummary,
+  formatUpdatedExtension,
+  summarizeExtension,
+} from './lib/extension-summary';
 import { walkFiles, withTempFile } from './lib/files';
 import {
   commitAndPush,
@@ -12,15 +19,6 @@ import {
   readGitIndex,
 } from './lib/git';
 import { group, actionsLogger as logger } from './lib/logging';
-
-type BrowserType = 'chromium' | 'firefox';
-
-type ExtensionSummary = {
-  id: string;
-  version: string;
-  key: string;
-  hash: string;
-};
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -156,7 +154,7 @@ async function parseExtensions(
       return new Map();
     }
 
-    const entries = JSON.parse(result.stdout) as unknown[];
+    const entries = z.array(z.unknown()).parse(JSON.parse(result.stdout));
     return new Map(
       entries
         .map((entry) => summarizeExtension(entry, browserType))
@@ -164,79 +162,4 @@ async function parseExtensions(
         .map((entry) => [entry.key, entry]),
     );
   });
-}
-
-function summarizeExtension(entry: unknown, browserType: BrowserType): ExtensionSummary | null {
-  const record = readRecord(entry);
-  if (!record) return null;
-
-  return browserType === 'chromium'
-    ? summarizeChromiumExtension(record)
-    : summarizeFirefoxExtension(record);
-}
-
-function summarizeChromiumExtension(entry: Record<string, unknown>): ExtensionSummary | null {
-  const crxPath = readRecord(entry.crxPath);
-  if (!crxPath) return null;
-
-  return buildExtensionSummary({
-    id: readString(entry.id),
-    version: readString(entry.version),
-    url: readString(crxPath.url),
-    hash: readString(crxPath.hash),
-  });
-}
-
-function summarizeFirefoxExtension(entry: Record<string, unknown>): ExtensionSummary | null {
-  return buildExtensionSummary({
-    id: readString(entry.name),
-    version: readString(entry.version),
-    url: readString(entry.url),
-    hash: readString(entry.sha256),
-  });
-}
-
-function buildExtensionSummary(input: {
-  id: string;
-  version: string;
-  url: string;
-  hash: string;
-}): ExtensionSummary | null {
-  if (!input.id || !input.version || !input.url) return null;
-
-  return {
-    id: input.id,
-    version: input.version,
-    key: `${input.id}|${input.version}|${input.url}`,
-    hash: input.hash,
-  };
-}
-
-function formatUpdatedExtension(
-  oldEntry: ExtensionSummary | undefined,
-  newEntry: ExtensionSummary,
-): string[] {
-  if (!oldEntry) {
-    return [];
-  }
-
-  if (oldEntry.version !== newEntry.version) {
-    return [`${newEntry.id}|${oldEntry.version}|${newEntry.version}`];
-  }
-
-  return oldEntry.hash !== newEntry.hash
-    ? [`${newEntry.id}|${oldEntry.version}|${newEntry.version} (hash changed)`]
-    : [];
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function readRecord(value: unknown): Record<string, unknown> | null {
-  return isRecord(value) ? value : null;
-}
-
-function readString(value: unknown): string {
-  return typeof value === 'string' ? value : '';
 }
