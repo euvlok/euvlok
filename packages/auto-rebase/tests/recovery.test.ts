@@ -1,16 +1,14 @@
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
+import { $ } from 'bun';
 import { join } from 'pathe';
 import {
-  createTempDir,
   cleanupTempDir,
-  realExec,
-  silentLogger,
+  createTempDir,
   createTempJjRepo,
   type JjTestRepo,
+  realExec,
+  silentLogger,
 } from './test-utils';
-import { $ } from 'bun';
-
-import { mock } from 'bun:test';
 
 mock.module('@euvlok/shared', () => ({
   execSafe: realExec,

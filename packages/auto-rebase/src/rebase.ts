@@ -1,6 +1,6 @@
-import { logger, execSafe } from '@euvlok/shared';
-import type { RebaseContext } from './context';
+import { execSafe, logger } from '@euvlok/shared';
 import { getRemoteBookmark } from './checks';
+import type { RebaseContext } from './context';
 
 export async function checkRebaseSafety(
   ctx: RebaseContext,

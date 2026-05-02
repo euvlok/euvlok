@@ -1,8 +1,8 @@
-import { logger, execSafe } from '@euvlok/shared';
+import { execSafe, logger } from '@euvlok/shared';
 import { join } from 'pathe';
-import { JJ_DIR, DETACHED_HEAD } from './constants';
+import { DETACHED_HEAD, JJ_DIR } from './constants';
+import { removeDiffFiles, restoreStaging } from './staging';
 import { loadState, removeState } from './state';
-import { restoreStaging, removeDiffFiles } from './staging';
 
 export async function recoverFromInterruptedState(root: string): Promise<boolean> {
   const state = await loadState(root);
@@ -19,9 +19,10 @@ export async function recoverFromInterruptedState(root: string): Promise<boolean
     }
 
     const result = await execSafe(['jj', 'git', 'export'], { cwd: root });
-    const msg = result.exitCode === 0
-      ? 'Exported jj working copy to git'
-      : 'Failed to export jj working copy during recovery';
+    const msg =
+      result.exitCode === 0
+        ? 'Exported jj working copy to git'
+        : 'Failed to export jj working copy during recovery';
     result.exitCode === 0 ? logger.success(msg) : logger.warn(msg);
 
     if (state.originalHadStaged && state.originalStagedFiles) {

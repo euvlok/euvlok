@@ -1,17 +1,34 @@
 import { escapeNixString } from '@euvlok/shared';
 import type { BrowserType, ExtensionResult } from './types';
 
+type GeneratedExtensionResult = ExtensionResult & { nixEntry: string };
+type GatedExtensionResult = GeneratedExtensionResult & {
+  extension: GeneratedExtensionResult['extension'] & { condition: string };
+};
+
+function hasNixEntry(result: ExtensionResult): result is GeneratedExtensionResult {
+  return !!result.nixEntry;
+}
+
+function isPlain(result: ExtensionResult): result is GeneratedExtensionResult {
+  return !result.extension.condition && hasNixEntry(result);
+}
+
+function isGated(result: ExtensionResult): result is GatedExtensionResult {
+  return !!result.extension.condition && hasNixEntry(result);
+}
+
 export function generateNixFile(
   results: ExtensionResult[],
   conditional: boolean,
   browser: BrowserType,
 ) {
   const plain = results
-    .filter((r) => !r.extension.condition && r.nixEntry)
+    .filter(isPlain)
     .sort((a, b) => a.extension.id.localeCompare(b.extension.id));
 
   const gated = results
-    .filter((r) => r.extension.condition && r.nixEntry)
+    .filter(isGated)
     .sort((a, b) => a.extension.id.localeCompare(b.extension.id));
 
   const lines: string[] = [
@@ -23,23 +40,27 @@ export function generateNixFile(
     lines.push('{', '  pkgs,');
     if (conditional) lines.push('  config,');
     lines.push('  lib,', '  ...', '}:', 'lib.flatten [');
-    plain.map((e) => lines.push(e.nixEntry!));
-    gated.map((e) => {
-      lines.push(`  (lib.optionals (${escapeNixString(e.extension.condition!)}) [`);
-      lines.push(e.nixEntry!);
+    plain.forEach((e) => {
+      lines.push(e.nixEntry);
+    });
+    gated.forEach((e) => {
+      lines.push(`  (lib.optionals (${escapeNixString(e.extension.condition)}) [`);
+      lines.push(e.nixEntry);
       lines.push('  ])');
     });
     lines.push(']');
-    return lines.join('\n') + '\n';
+    return `${lines.join('\n')}\n`;
   }
 
   lines.push('{ buildFirefoxXpiAddon, fetchurl, lib, stdenv }:', '  {');
-  plain.map((e) => lines.push(`    "${e.extension.id}" = buildFirefoxXpiAddon ${e.nixEntry!};`));
-  gated.map((e) => {
+  plain.forEach((e) => {
+    lines.push(`    "${e.extension.id}" = buildFirefoxXpiAddon ${e.nixEntry};`);
+  });
+  gated.forEach((e) => {
     lines.push(
-      `    (lib.optionals (${escapeNixString(e.extension.condition!)}) [\n      buildFirefoxXpiAddon ${e.nixEntry!}\n    ]);`,
+      `    (lib.optionals (${escapeNixString(e.extension.condition)}) [\n      buildFirefoxXpiAddon ${e.nixEntry}\n    ]);`,
     );
   });
   lines.push('  }');
-  return lines.join('\n') + '\n';
+  return `${lines.join('\n')}\n`;
 }

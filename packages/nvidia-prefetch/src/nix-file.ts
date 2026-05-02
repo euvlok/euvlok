@@ -1,5 +1,5 @@
+import { escapeNixString, execSafe, findRepoRoot, logger, validateNixFile } from '@euvlok/shared';
 import { $ } from 'bun';
-import { logger, execSafe, escapeNixString, validateNixFile, findRepoRoot } from '@euvlok/shared';
 import { join } from 'pathe';
 
 async function find(): Promise<string | null> {

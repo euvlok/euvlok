@@ -1,9 +1,6 @@
 import type { FetchUrlResult } from '../types';
 
-export async function fetchChromeStoreUrl(
-  id: string,
-  version?: string,
-): Promise<FetchUrlResult> {
+export async function fetchChromeStoreUrl(id: string, version?: string): Promise<FetchUrlResult> {
   const url = new URL('https://clients2.google.com/service/update2/crx');
   url.searchParams.set('response', 'redirect');
   url.searchParams.set('acceptformat', 'crx2,crx3');
