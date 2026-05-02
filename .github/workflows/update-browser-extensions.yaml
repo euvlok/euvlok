@@ -56,7 +56,7 @@ jobs:
             fi
 
             echo "::group::Processing ${list_file}"
-            bun run packages/browser-extensions-update/src/index.ts -- -i "$list_file"
+            bun run browser-extension-update -- -i "$list_file"
             echo "::endgroup::"
           done
 
