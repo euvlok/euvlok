@@ -1,5 +1,5 @@
 import { addGitPaths, logger } from '@euvlok/shared';
-import { simpleGit } from 'simple-git';
+import { ResetMode, simpleGit } from 'simple-git';
 
 export async function restoreStaging(
   root: string,
@@ -8,11 +8,11 @@ export async function restoreStaging(
 ): Promise<void> {
   logger.info('Restoring original staging state...');
   const git = simpleGit(root);
-  await git.reset();
+  await git.reset(ResetMode.MIXED);
 
   if (stagedDiffPath && (await Bun.file(stagedDiffPath).exists())) {
     const check = await git
-      .raw(['apply', '--check', '--cached', stagedDiffPath])
+      .applyPatch(stagedDiffPath, ['--check', '--cached'])
       .then(() => true)
       .catch(() => false);
 
@@ -26,7 +26,7 @@ export async function restoreStaging(
     }
 
     const apply = await git
-      .raw(['apply', '--cached', stagedDiffPath])
+      .applyPatch(stagedDiffPath, ['--cached'])
       .then(() => true)
       .catch(() => false);
     if (apply) {

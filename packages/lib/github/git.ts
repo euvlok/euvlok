@@ -15,11 +15,11 @@ export type CommitAndPushOptions = {
 const git = simpleGit({ trimmed: false });
 
 export async function hasGitDiff(pathspecs: readonly string[] = []): Promise<boolean> {
-  return !(await gitQuiet(['diff', '--quiet', ...pathspecs]));
+  return !(await gitDiffQuiet(['--quiet', ...pathspecs]));
 }
 
 async function hasStagedChanges(): Promise<boolean> {
-  return !(await gitQuiet(['diff', '--staged', '--quiet']));
+  return !(await gitDiffQuiet(['--staged', '--quiet']));
 }
 
 async function configureGitHubBot(): Promise<void> {
@@ -91,14 +91,14 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
       `Push failed on attempt ${attempt}. Waiting ${waitSeconds}s and retrying after rebase...`,
     );
     await Bun.sleep(waitSeconds * 1000);
-    await git.raw(['pull', '--rebase', 'origin', refName]);
+    await git.pull('origin', refName, ['--rebase']);
     return false;
   }, Promise.resolve(false));
 }
 
-async function gitQuiet(args: string[]): Promise<boolean> {
+async function gitDiffQuiet(args: string[]): Promise<boolean> {
   return git
-    .raw(args)
+    .diff(args)
     .then(() => true)
     .catch(() => false);
 }
