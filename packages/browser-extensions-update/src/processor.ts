@@ -1,7 +1,5 @@
-import { exec, execSafe, logger } from '@euvlok/shared';
-import { $ } from 'bun';
+import { execSafe, logger, nixHashToSri, withTempPath } from '@euvlok/shared';
 import { Listr } from 'listr2';
-import { join } from 'pathe';
 import { extractManifestInfo } from './crx-parser';
 import { generateNixEntry } from './nix-entry';
 import { fetchExtensionUrl } from './sources/index';
@@ -27,14 +25,6 @@ async function hash(path: string) {
   const hasher = new Bun.CryptoHasher('sha256');
   hasher.update(new Uint8Array(await Bun.file(path).arrayBuffer()));
   return nixHashToSri(hasher.digest('hex'));
-}
-
-async function nixHashToSri(hexHash: string): Promise<string> {
-  return exec(['nix', 'hash', 'to-sri', '--type', 'sha256', hexHash]);
-}
-
-function tempExtensionPath(browser: BrowserType): string {
-  return join(Bun.env.TMPDIR || '/tmp', `${crypto.randomUUID()}.${getFileExtension(browser)}`);
 }
 
 async function downloadExtension(url: string, path: string): Promise<string | null> {
@@ -90,15 +80,14 @@ async function processExtension(
   const result = await fetchExtensionUrl(ext, config, browser, version);
   if (result.error) return { extension: ext, error: result.error };
   if (!result.url) return { extension: ext, error: 'Failed to get download URL' };
+  const url = result.url;
 
-  const tmp = tempExtensionPath(browser);
+  return withTempPath(getFileExtension(browser), async (tmp) => {
+    const downloadError = await downloadExtension(url, tmp);
+    if (downloadError) return { extension: ext, error: downloadError };
 
-  const downloadError = await downloadExtension(result.url, tmp);
-  if (downloadError) return { extension: ext, error: downloadError };
-
-  return buildExtensionResult(ext, browser, result.url, result.addonId, tmp).finally(() =>
-    $`rm -f ${tmp}`.quiet(),
-  );
+    return buildExtensionResult(ext, browser, url, result.addonId, tmp);
+  });
 }
 
 export async function processExtensionsWithProgress(
