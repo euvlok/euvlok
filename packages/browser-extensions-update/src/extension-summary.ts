@@ -1,6 +1,5 @@
 import { z } from 'zod';
-
-export type BrowserType = 'chromium' | 'firefox';
+import type { BrowserType } from './types';
 
 export type ExtensionSummary = {
   id: string;

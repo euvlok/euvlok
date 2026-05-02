@@ -1,6 +1,11 @@
+import {
+  commitAndPush,
+  currentRefName,
+  group,
+  hasGitDiff,
+  actionsLogger as logger,
+} from '@euvlok/github';
 import { exec } from '@euvlok/shared';
-import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
-import { group, actionsLogger as logger } from './lib/logging';
 
 type FlakeLock = {
   nodes?: Record<string, FlakeNode | undefined>;

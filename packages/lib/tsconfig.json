@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "."
   },
-  "include": ["src"],
-  "references": [{ "path": "../lib" }]
+  "include": ["*.ts", "github"]
 }

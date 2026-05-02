@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import { consola } from '@euvlok/shared';
 import type { ConsolaReporter, LogObject } from 'consola';
+import { consola } from '../logger';
 
 export const actionsLogger = consola.create({
   reporters: [

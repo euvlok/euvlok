@@ -1,24 +1,22 @@
 import { basename, dirname } from 'node:path';
-import { escapeNixString, exec, execSafe } from '@euvlok/shared';
-import { simpleGit } from 'simple-git';
-import { z } from 'zod';
-import {
-  type BrowserType,
-  type ExtensionSummary,
-  formatUpdatedExtension,
-  summarizeExtension,
-} from './lib/extension-summary';
-import { walkFiles, withTempFile } from './lib/files';
 import {
   commitAndPush,
   currentRefName,
   hasGitDiff,
-  listStagedFiles,
-  readGitBlob,
-  readGitIndex,
-} from './lib/git';
-import { actionsLogger as logger } from './lib/logging';
-import { runSequentialTasks } from './lib/tasks';
+  actionsLogger as logger,
+  runSequentialTasks,
+  walkFiles,
+  withTempFile,
+} from '@euvlok/github';
+import { addGitPaths, escapeNixString, exec, execSafe, listStagedFiles } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
+import { z } from 'zod';
+import {
+  type ExtensionSummary,
+  formatUpdatedExtension,
+  summarizeExtension,
+} from '../../packages/browser-extensions-update/src/extension-summary';
+import type { BrowserType } from '../../packages/browser-extensions-update/src/types';
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -36,7 +34,7 @@ if (!(await hasGitDiff())) {
 }
 
 logger.warn('Changes detected in one or more extension files.');
-await simpleGit().add(['hosts/', 'modules/']);
+await addGitPaths(['hosts/', 'modules/']);
 
 const changedExtensionFiles = (await listStagedFiles())
   .filter((file) => file.endsWith('extensions.nix'))
@@ -122,6 +120,18 @@ async function analyzeFileChanges(nixFile: string): Promise<string> {
   );
   lines.push('');
   return lines.join('\n');
+}
+
+async function readGitBlob(ref: string, path: string): Promise<string> {
+  return simpleGit()
+    .raw(['show', `${ref}:${path}`])
+    .catch(() => '');
+}
+
+async function readGitIndex(path: string): Promise<string> {
+  return simpleGit()
+    .raw(['show', `:${path}`])
+    .catch(() => '');
 }
 
 async function parseExtensions(

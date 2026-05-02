@@ -1,4 +1,4 @@
-import { execSafe, isGitRepo, logger } from '@euvlok/shared';
+import { execSafe, isGitRepo, listStagedFiles, logger } from '@euvlok/shared';
 import { $ } from 'bun';
 import { join } from 'pathe';
 import { simpleGit } from 'simple-git';
@@ -93,7 +93,7 @@ async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
   if (!cachedHasDiff) return;
 
   ctx.originalHadStaged = true;
-  ctx.originalStagedFiles = await git.raw(['diff', '--cached', '--name-only']);
+  ctx.originalStagedFiles = (await listStagedFiles(ctx.repoRoot)).join('\n');
   ctx.stagedDiffPath = await captureDiff(
     git,
     join(ctx.repoRoot, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`),
@@ -142,13 +142,10 @@ function normalizeFileList(files: string): string {
   return files.split('\n').filter(Boolean).sort().join('\n');
 }
 
-async function restoreOriginalStaging(
-  ctx: RebaseContext,
-  git: ReturnType<typeof simpleGit>,
-): Promise<void> {
+async function restoreOriginalStaging(ctx: RebaseContext): Promise<void> {
   await restoreStaging(ctx.repoRoot, ctx.stagedDiffPath, ctx.originalStagedFiles);
 
-  const current = await git.raw(['diff', '--cached', '--name-only']);
+  const current = (await listStagedFiles(ctx.repoRoot)).join('\n');
   const now = normalizeFileList(current);
   const expected = normalizeFileList(ctx.originalStagedFiles);
 
@@ -162,8 +159,9 @@ async function restoreOriginalStaging(
   logger.success('Staging state restored correctly');
 }
 
-async function clearUnexpectedStaging(git: ReturnType<typeof simpleGit>): Promise<void> {
-  const current = await git.raw(['diff', '--cached', '--name-only']);
+async function clearUnexpectedStaging(ctx: RebaseContext): Promise<void> {
+  const git = simpleGit(ctx.repoRoot);
+  const current = (await listStagedFiles(ctx.repoRoot)).join('\n');
   if (!current) {
     logger.success('Staging state preserved (no files staged)');
     return;
@@ -173,24 +171,18 @@ async function clearUnexpectedStaging(git: ReturnType<typeof simpleGit>): Promis
   await git.reset();
 }
 
-async function restoreStagingState(
-  ctx: RebaseContext,
-  git: ReturnType<typeof simpleGit>,
-): Promise<void> {
+async function restoreStagingState(ctx: RebaseContext): Promise<void> {
   if (ctx.originalHadStaged && ctx.originalStagedFiles) {
-    await restoreOriginalStaging(ctx, git);
+    await restoreOriginalStaging(ctx);
     return;
   }
 
-  await clearUnexpectedStaging(git);
+  await clearUnexpectedStaging(ctx);
 }
 
-async function checkoutOriginalBranch(
-  git: ReturnType<typeof simpleGit>,
-  branch: string,
-): Promise<void> {
+async function checkoutOriginalBranch(root: string, branch: string): Promise<void> {
   if (branch === DETACHED_HEAD) return;
-  await git.checkout(branch);
+  await simpleGit(root).checkout(branch);
 }
 
 async function exportJjWorkingCopy(root: string): Promise<boolean> {
@@ -225,12 +217,11 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   }
 
   logger.info('Exporting jj working copy back to git...');
-  const git = simpleGit({ baseDir: root, trimmed: false });
 
-  await checkoutOriginalBranch(git, branch);
+  await checkoutOriginalBranch(root, branch);
   if (!(await exportJjWorkingCopy(root))) return;
 
-  await restoreStagingState(ctx, git);
+  await restoreStagingState(ctx);
 
   logger.info('Restored git state from jj working copy');
   await logPersistentJj(root);
