@@ -1,46 +1,60 @@
-import { defineCommand, runMain } from 'citty';
-import { logger, execSafe, findRepoRoot, isGitRepo, isEuvlokRepo } from '@euvlok/shared';
-import { createContext } from './context';
-import { getOriginalBranch, checkGitLocks, fetchLatest } from './git';
-import { setupJj, cleanupJj } from './jj';
+import { execSafe, findRepoRoot, isEuvlokRepo, isGitRepo, logger } from '@euvlok/shared';
+import { buildApplication, buildCommand, run } from '@stricli/core';
 import { createBackup } from './backup';
-import { recoverFromInterruptedState } from './recovery';
-import { getRemoteBookmark, checkLocalChanges, checkRemoteChanges } from './checks';
-import { checkRebaseSafety, performRebase } from './rebase';
+import { checkLocalChanges, checkRemoteChanges, getRemoteBookmark } from './checks';
 import { cleanupOnError } from './cleanup';
+import { createContext } from './context';
+import { checkGitLocks, fetchLatest, getOriginalBranch } from './git';
+import { cleanupJj, setupJj } from './jj';
+import { checkRebaseSafety, performRebase } from './rebase';
+import { recoverFromInterruptedState } from './recovery';
 
-const main = defineCommand({
-  meta: {
-    name: 'auto-rebase',
-    description:
-      'Fetch the latest changes from remote and automatically rebase local changes on top of the latest remote if there are no conflicts',
+type AutoRebaseFlags = {
+  branch?: string;
+  dryRun: boolean;
+  autoRebase: boolean;
+  backupDir: string;
+};
+
+const command = buildCommand<AutoRebaseFlags>({
+  docs: {
+    brief: 'Fetch remote changes and rebase local work when it is safe',
+    fullDescription:
+      'Fetches the latest changes from remote and automatically rebases local changes on top of the latest remote when there are no conflicts.',
   },
-  args: {
-    branch: {
-      type: 'string',
-      alias: 'b',
-      description: 'Specify the branch to work on (default: current branch)',
+  parameters: {
+    flags: {
+      branch: {
+        kind: 'parsed',
+        parse: String,
+        brief: 'Branch to work on. Defaults to the current branch.',
+        optional: true,
+      },
+      dryRun: {
+        kind: 'boolean',
+        brief: 'Show what would be done without actually rebasing.',
+        default: false,
+      },
+      autoRebase: {
+        kind: 'boolean',
+        brief: 'Automatically rebase when the safety check passes.',
+        default: true,
+      },
+      backupDir: {
+        kind: 'parsed',
+        parse: String,
+        brief: 'Directory to store the backup bundle.',
+        default: Bun.env.TMPDIR || '/tmp',
+      },
     },
-    'dry-run': {
-      type: 'boolean',
-      description: 'Show what would be done without actually rebasing',
-      default: false,
-    },
-    'no-auto-rebase': {
-      type: 'boolean',
-      description: "Only check rebase safety, don't automatically rebase",
-      default: false,
-    },
-    'backup-dir': {
-      type: 'string',
-      description: `Directory to store backup bundle (default: system temp dir)`,
-      default: Bun.env.TMPDIR,
+    aliases: {
+      b: 'branch',
     },
   },
-  async run({ args }) {
-    const dryRun = args['dry-run'];
-    const autoRebase = !args['no-auto-rebase'];
-    const backupDir = args['backup-dir'] || Bun.env.TMPDIR || '/tmp';
+  async func(args) {
+    const dryRun = args.dryRun;
+    const autoRebase = args.autoRebase;
+    const backupDir = args.backupDir;
 
     const root = await findRepoRoot();
     if (!root) {
@@ -188,4 +202,11 @@ const main = defineCommand({
   },
 });
 
-runMain(main);
+const app = buildApplication(command, {
+  name: 'auto-rebase',
+  scanner: {
+    caseStyle: 'allow-kebab-for-camel',
+  },
+});
+
+await run(app, Bun.argv.slice(2), { process });

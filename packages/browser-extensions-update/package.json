@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "@euvlok/shared": "workspace:*",
-    "citty": "^0.2.1",
+    "@stricli/core": "^1.2.6",
     "consola": "^3.4.2",
     "fflate": "^0.8.2",
     "figlet": "^1.11.0",

@@ -1,44 +1,44 @@
-import { defineCommand, runMain } from 'citty';
-import { $ } from 'bun';
 import { logger } from '@euvlok/shared';
+import { buildApplication, buildCommand, run } from '@stricli/core';
+import { $ } from 'bun';
 import { join } from 'pathe';
-import { fetchLatestVersion, X86_64_BASE_URL, AARCH64_BASE_URL } from './version';
 import { fetchDriverHash, fetchGithubHash } from './hash';
 import { getCurrentVersion, updateNvidiaDriverNix } from './nix-file';
+import { AARCH64_BASE_URL, fetchLatestVersion, X86_64_BASE_URL } from './version';
 
-const main = defineCommand({
-  meta: {
-    name: 'nvidia-prefetch',
-    description:
-      'Fetch and compute SHA256 hashes for NVIDIA driver packages and related repositories',
-  },
-  args: {
-    version: {
-      type: 'string',
-      alias: 'v',
-      description: 'Specify a particular NVIDIA driver version to fetch',
-    },
-    latest: {
-      type: 'boolean',
-      alias: 'l',
-      description: 'Fetch the latest available NVIDIA driver version (default)',
-      default: false,
-    },
-    'no-update': {
-      type: 'boolean',
-      description: 'Do not update the nvidia-driver.nix file, only print the hashes',
-      default: false,
-    },
-  },
-  async run({ args }) {
-    let version = args.version || args._[0];
-    const latest = args.latest;
-    const update = !args['no-update'];
+type NvidiaPrefetchFlags = {
+  update: boolean;
+};
 
-    if (version && latest) {
-      logger.error('Cannot specify both --version and --latest');
-      process.exit(1);
-    }
+const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
+  docs: {
+    brief: 'Fetch NVIDIA driver hashes and update the Nix expression',
+    fullDescription:
+      'Fetches and computes SHA256 hashes for NVIDIA driver packages and related repositories.',
+  },
+  parameters: {
+    flags: {
+      update: {
+        kind: 'boolean',
+        brief: 'Update the nvidia-driver.nix file after computing hashes.',
+        default: true,
+      },
+    },
+    positional: {
+      kind: 'tuple',
+      parameters: [
+        {
+          parse: String,
+          brief: 'NVIDIA driver version. Defaults to the latest available version.',
+          placeholder: 'version',
+          optional: true,
+        },
+      ],
+    },
+  },
+  async func(args, requestedVersion) {
+    let version = requestedVersion;
+    const update = args.update;
 
     if (!version) {
       version = await fetchLatestVersion();
@@ -100,4 +100,11 @@ const main = defineCommand({
   },
 });
 
-runMain(main);
+const app = buildApplication(command, {
+  name: 'nvidia-prefetch',
+  scanner: {
+    caseStyle: 'allow-kebab-for-camel',
+  },
+});
+
+await run(app, Bun.argv.slice(2), { process });

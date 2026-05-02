@@ -1,32 +1,45 @@
-import { defineCommand, runMain } from 'citty';
+import { formatNixFile, logger, validateNixFile } from '@euvlok/shared';
+import { buildApplication, buildCommand, run } from '@stricli/core';
 import { $ } from 'bun';
-import { logger, validateNixFile, formatNixFile } from '@euvlok/shared';
-import { join, dirname } from 'pathe';
 import figlet from 'figlet';
+import { dirname, join } from 'pathe';
+import { generateNixFile } from './nix-generator';
 import { parseNixInput } from './nix-parser';
 import { getChromiumMajorVersion, processExtensionsWithProgress } from './processor';
-import { generateNixFile } from './nix-generator';
 
-const main = defineCommand({
-  meta: {
-    name: 'browser-extensions-update',
-    description: 'Generates a Nix file for browser extensions from a Nix source file',
+type BrowserExtensionsUpdateFlags = {
+  output?: string;
+};
+
+const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
+  docs: {
+    brief: 'Generate a browser extensions Nix file',
+    fullDescription: 'Generates a Nix file for browser extensions from a Nix source file.',
   },
-  args: {
-    input: {
-      type: 'string',
-      alias: 'i',
-      description: 'Specify the input Nix source file',
-      required: true,
+  parameters: {
+    flags: {
+      output: {
+        kind: 'parsed',
+        parse: String,
+        brief: 'Output Nix file. Defaults to extensions.nix in the input directory.',
+        optional: true,
+      },
     },
-    output: {
-      type: 'string',
-      alias: 'o',
-      description: 'Specify the output Nix file (default: extensions.nix in the same directory)',
+    aliases: {
+      o: 'output',
+    },
+    positional: {
+      kind: 'tuple',
+      parameters: [
+        {
+          parse: String,
+          brief: 'Input Nix source file.',
+          placeholder: 'input',
+        },
+      ],
     },
   },
-  async run({ args }) {
-    const input = args.input;
+  async func(args, input) {
     const output = args.output ?? join(dirname(input), 'extensions.nix');
 
     if (!(await Bun.file(input).exists())) {
@@ -80,4 +93,11 @@ const main = defineCommand({
   },
 });
 
-runMain(main);
+const app = buildApplication(command, {
+  name: 'browser-extensions-update',
+  scanner: {
+    caseStyle: 'allow-kebab-for-camel',
+  },
+});
+
+await run(app, Bun.argv.slice(2), { process });
