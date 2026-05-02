@@ -1,6 +1,5 @@
 import { basename, dirname } from 'node:path';
 import { escapeNixString, exec, execSafe } from '@euvlok/shared';
-import { Listr } from 'listr2';
 import { simpleGit } from 'simple-git';
 import { z } from 'zod';
 import {
@@ -18,7 +17,8 @@ import {
   readGitBlob,
   readGitIndex,
 } from './lib/git';
-import { group, actionsLogger as logger } from './lib/logging';
+import { actionsLogger as logger } from './lib/logging';
+import { runSequentialTasks } from './lib/tasks';
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -28,15 +28,7 @@ if (sourceFiles.length === 0) {
   process.exit(0);
 }
 
-const tasks = new Listr(
-  sourceFiles.map((sourceFile) => ({
-    title: sourceFile,
-    task: () => group(`Processing ${sourceFile}`, () => updateExtensionFile(sourceFile)),
-  })),
-  { concurrent: false, exitOnError: false },
-);
-
-await tasks.run();
+await runSequentialTasks(sourceFiles, String, updateExtensionFile);
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any extension files.');

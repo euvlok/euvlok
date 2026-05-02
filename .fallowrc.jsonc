@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/refs/heads/main/schema.json",
   "entry": [
     "packages/*/src/index.ts",
-    "packages/auto-rebase/tests/**/*.ts",
+    "packages/*/tests/**/*.ts",
     "prettier.config.js",
     "scripts/**/*.ts"
   ],
