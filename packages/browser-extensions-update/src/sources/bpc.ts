@@ -1,4 +1,4 @@
-import { exec } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
 import type { BrowserType, FetchUrlResult } from '../types';
 
 const BPC_REPO = 'https://gitflic.ru/project/magnolia1234/bpc_uploads.git';
@@ -9,7 +9,7 @@ export async function fetchBpcUrl(browser: BrowserType): Promise<FetchUrlResult>
       ? 'bypass-paywalls-chrome-clean-latest.crx'
       : 'bypass_paywalls_clean-latest.xpi';
 
-  const output = await exec(['git', 'ls-remote', BPC_REPO, 'HEAD']);
+  const output = await simpleGit().listRemote([BPC_REPO, 'HEAD']);
   const commit = output.split('\t')[0];
 
   if (!commit) {

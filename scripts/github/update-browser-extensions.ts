@@ -1,5 +1,6 @@
 import { basename, dirname } from 'node:path';
 import { escapeNixString, exec, execSafe } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
 import { walkFiles, withTempFile } from './lib/files';
 import {
   commitAndPush,
@@ -42,7 +43,7 @@ if (!(await hasGitDiff())) {
 }
 
 logger.warn('Changes detected in one or more extension files.');
-await exec(['git', 'add', 'hosts/', 'modules/']);
+await simpleGit().add(['hosts/', 'modules/']);
 
 const changedExtensionFiles = (await listStagedFiles())
   .filter((file) => file.endsWith('extensions.nix'))

@@ -1,5 +1,5 @@
-import { execSafe, logger } from '@euvlok/shared';
-import { $ } from 'bun';
+import { logger } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
 
 export async function restoreStaging(
   root: string,
@@ -7,20 +7,16 @@ export async function restoreStaging(
   originalStagedFiles: string,
 ): Promise<void> {
   logger.info('Restoring original staging state...');
-  await execSafe(['git', '-C', root, 'reset']);
+  const git = simpleGit(root);
+  await git.reset();
 
   if (stagedDiffPath && (await Bun.file(stagedDiffPath).exists())) {
-    const check = await execSafe([
-      'git',
-      '-C',
-      root,
-      'apply',
-      '--check',
-      '--cached',
-      stagedDiffPath,
-    ]);
+    const check = await git
+      .raw(['apply', '--check', '--cached', stagedDiffPath])
+      .then(() => true)
+      .catch(() => false);
 
-    if (check.exitCode !== 0) {
+    if (!check) {
       logger.warn(
         'Context changed during rebase. Your staged changes are now unstaged to prevent corruption',
       );
@@ -29,8 +25,11 @@ export async function restoreStaging(
       return;
     }
 
-    const apply = await execSafe(['git', '-C', root, 'apply', '--cached', stagedDiffPath]);
-    if (apply.exitCode === 0) {
+    const apply = await git
+      .raw(['apply', '--cached', stagedDiffPath])
+      .then(() => true)
+      .catch(() => false);
+    if (apply) {
       logger.success('Restored staged changes to index');
       return;
     }
@@ -45,11 +44,12 @@ export async function restoreStaging(
 }
 
 async function restageFiles(root: string, originalStagedFiles: string): Promise<void> {
+  const git = simpleGit(root);
   await Promise.all(
     originalStagedFiles
       .split('\n')
       .filter(Boolean)
-      .map((file) => execSafe(['git', '-C', root, 'add', file])),
+      .map((file) => git.add(file)),
   );
   logger.warn('Restored staging by re-adding files (partial staging may be lost)');
 }
@@ -59,7 +59,11 @@ export async function removeDiffFiles(
   unstagedDiffPath: string,
 ): Promise<void> {
   if (stagedDiffPath && (await Bun.file(stagedDiffPath).exists()))
-    await $`rm -f ${stagedDiffPath}`.quiet();
+    await Bun.file(stagedDiffPath)
+      .delete()
+      .catch(() => undefined);
   if (unstagedDiffPath && (await Bun.file(unstagedDiffPath).exists()))
-    await $`rm -f ${unstagedDiffPath}`.quiet();
+    await Bun.file(unstagedDiffPath)
+      .delete()
+      .catch(() => undefined);
 }

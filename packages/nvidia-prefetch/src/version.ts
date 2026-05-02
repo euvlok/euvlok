@@ -1,4 +1,6 @@
 import { logger } from '@euvlok/shared';
+import * as cheerio from 'cheerio';
+import semver from 'semver';
 
 export const X86_64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-x86_64';
 export const AARCH64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-aarch64';
@@ -10,17 +12,16 @@ export async function fetchVersionsFromPlatform(url: string, name: string): Prom
   const response = await fetch(`${url}/`);
   const html = await response.text();
 
-  const versions = Array.from(html.matchAll(/href='(\d+\.\d+\.\d+)\//g), (m) => m[1]);
+  const $ = cheerio.load(html);
+  const versions = $('a')
+    .map((_index, link) => $(link).attr('href')?.replace(/\/$/, '') ?? '')
+    .get()
+    .filter((href): href is string => semver.valid(href) !== null)
+    .sort(semver.compare);
 
   if (versions.length === 0) {
     throw new Error(`Could not fetch versions from ${name} platform`);
   }
-
-  const collator = new Intl.Collator(undefined, {
-    numeric: true,
-    sensitivity: 'base',
-  });
-  versions.sort(collator.compare);
 
   return versions;
 }
@@ -31,11 +32,7 @@ export function findCommonLatestVersion(versions1: string[], versions2: string[]
 
   if (common.length === 0) return null;
 
-  const collator = new Intl.Collator(undefined, {
-    numeric: true,
-    sensitivity: 'base',
-  });
-  common.sort(collator.compare);
+  common.sort(semver.compare);
 
   return common[common.length - 1];
 }

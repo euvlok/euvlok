@@ -1,6 +1,7 @@
-import { execSafe, logger } from '@euvlok/shared';
+import { logger } from '@euvlok/shared';
 import { $ } from 'bun';
 import { basename, join } from 'pathe';
+import { simpleGit } from 'simple-git';
 import type { RebaseContext } from './context';
 
 export async function createBackup(ctx: RebaseContext): Promise<string> {
@@ -17,22 +18,19 @@ export async function createBackup(ctx: RebaseContext): Promise<string> {
   const repoName = basename(ctx.repoRoot);
   const file = join(ctx.backupDir, `${repoName}-backup-${timestamp}.gitbundle`);
 
-  const headResult = await execSafe(['git', '-C', ctx.repoRoot, 'rev-parse', 'HEAD']);
-  if (headResult.exitCode !== 0) {
+  const git = simpleGit(ctx.repoRoot);
+  const hasHead = await git
+    .revparse(['HEAD'])
+    .then(() => true)
+    .catch(() => false);
+  if (!hasHead) {
     logger.warn('Repository has no commits. Skipping backup creation');
     return '';
   }
 
-  const bundleResult = await execSafe([
-    'git',
-    '-C',
-    ctx.repoRoot,
-    'bundle',
-    'create',
-    file,
-    '--all',
-  ]);
-  if (bundleResult.exitCode !== 0) {
+  try {
+    await git.raw(['bundle', 'create', file, '--all']);
+  } catch {
     throw new Error('Failed to create backup bundle');
   }
 

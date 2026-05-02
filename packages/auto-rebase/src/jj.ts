@@ -1,6 +1,7 @@
 import { execSafe, isGitRepo, logger } from '@euvlok/shared';
 import { $ } from 'bun';
 import { join } from 'pathe';
+import { simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
 import type { RebaseContext } from './context';
 import { removeDiffFiles, restoreStaging } from './staging';
@@ -68,29 +69,28 @@ export async function setupJj(ctx: RebaseContext): Promise<void> {
 
   await $`mkdir -p ${join(root, EUVLOK_TMP_DIR)}`.quiet();
   const timestamp = Math.floor(Date.now() / 1000);
+  const git = simpleGit({ baseDir: root, trimmed: false });
 
-  const cached = await execSafe(['git', '-C', root, 'diff', '--cached', '--quiet']);
-  if (cached.exitCode !== 0) {
+  const cachedHasDiff = await git
+    .raw(['diff', '--cached', '--quiet'])
+    .then(() => false)
+    .catch(() => true);
+  if (cachedHasDiff) {
     ctx.originalHadStaged = true;
-    const staged = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
-    ctx.originalStagedFiles = staged.stdout;
+    ctx.originalStagedFiles = await git.raw(['diff', '--cached', '--name-only']);
 
     ctx.stagedDiffPath = join(root, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`);
-    const diff = await execSafe(['git', '-C', root, 'diff', '--cached']);
-    if (diff.exitCode === 0) {
-      await Bun.write(ctx.stagedDiffPath, diff.stdout);
-    }
-    if (diff.exitCode !== 0) {
+    try {
+      await Bun.write(ctx.stagedDiffPath, await git.raw(['diff', '--cached']));
+    } catch {
       logger.warn('Failed to capture staged diff');
       ctx.stagedDiffPath = '';
     }
 
     ctx.unstagedDiffPath = join(root, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`);
-    const unstaged = await execSafe(['git', '-C', root, 'diff']);
-    if (unstaged.exitCode === 0) {
-      await Bun.write(ctx.unstagedDiffPath, unstaged.stdout);
-    }
-    if (unstaged.exitCode !== 0) {
+    try {
+      await Bun.write(ctx.unstagedDiffPath, await git.raw(['diff']));
+    } catch {
       logger.warn('Failed to capture unstaged diff');
       ctx.unstagedDiffPath = '';
     }
@@ -137,9 +137,10 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   }
 
   logger.info('Exporting jj working copy back to git...');
+  const git = simpleGit({ baseDir: root, trimmed: false });
 
   if (branch !== DETACHED_HEAD) {
-    await execSafe(['git', '-C', root, 'checkout', branch]);
+    await git.checkout(branch);
   }
 
   const exported = await execSafe(['jj', 'git', 'export'], { cwd: root });
@@ -151,8 +152,8 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   if (ctx.originalHadStaged && ctx.originalStagedFiles) {
     await restoreStaging(root, ctx.stagedDiffPath, ctx.originalStagedFiles);
 
-    const current = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
-    const now = current.stdout.split('\n').filter(Boolean).sort().join('\n');
+    const current = await git.raw(['diff', '--cached', '--name-only']);
+    const now = current.split('\n').filter(Boolean).sort().join('\n');
     const expected = ctx.originalStagedFiles.split('\n').filter(Boolean).sort().join('\n');
 
     if (now !== expected) {
@@ -166,12 +167,12 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   }
 
   if (!ctx.originalHadStaged || !ctx.originalStagedFiles) {
-    const current = await execSafe(['git', '-C', root, 'diff', '--cached', '--name-only']);
-    if (current.stdout) {
-      logger.warn(`Unexpected staged files after export: ${current.stdout}`);
-      await execSafe(['git', '-C', root, 'reset']);
+    const current = await git.raw(['diff', '--cached', '--name-only']);
+    if (current) {
+      logger.warn(`Unexpected staged files after export: ${current}`);
+      await git.reset();
     }
-    if (!current.stdout) {
+    if (!current) {
       logger.success('Staging state preserved (no files staged)');
     }
   }

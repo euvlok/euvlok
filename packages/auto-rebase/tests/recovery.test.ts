@@ -34,16 +34,7 @@ describe('recoverFromInterruptedState', () => {
   });
 
   test('recovers without .jj directory', async () => {
-    const stateContent = [
-      'ORIGINAL_BRANCH="main"',
-      'ORIGINAL_HAD_STAGED="false"',
-      'ORIGINAL_STAGED_FILES=""',
-      'PATH_TO_STAGED_DIFF=""',
-      'PATH_TO_UNSTAGED_DIFF=""',
-      'JJ_WAS_PRESENT="false"',
-      'TIMESTAMP=1700000000',
-    ].join('\n');
-    await Bun.write(join(tmpDir, '.auto-rebase-state'), stateContent);
+    await Bun.write(join(tmpDir, '.auto-rebase-state'), JSON.stringify(testState()));
 
     const result = await recoverFromInterruptedState(tmpDir);
 
@@ -57,16 +48,10 @@ describe('recoverFromInterruptedState', () => {
     await Bun.write(stagedDiff, 'diff content');
     await Bun.write(unstagedDiff, 'diff content');
 
-    const stateContent = [
-      'ORIGINAL_BRANCH="main"',
-      'ORIGINAL_HAD_STAGED="false"',
-      'ORIGINAL_STAGED_FILES=""',
-      `PATH_TO_STAGED_DIFF="${stagedDiff}"`,
-      `PATH_TO_UNSTAGED_DIFF="${unstagedDiff}"`,
-      'JJ_WAS_PRESENT="false"',
-      'TIMESTAMP=1700000000',
-    ].join('\n');
-    await Bun.write(join(tmpDir, '.auto-rebase-state'), stateContent);
+    await Bun.write(
+      join(tmpDir, '.auto-rebase-state'),
+      JSON.stringify(testState({ stagedDiffPath: stagedDiff, unstagedDiffPath: unstagedDiff })),
+    );
 
     await recoverFromInterruptedState(tmpDir);
 
@@ -88,16 +73,10 @@ describe('recoverFromInterruptedState with real jj', () => {
   });
 
   test('recovers with real .jj directory present', async () => {
-    const stateContent = [
-      'ORIGINAL_BRANCH="master"',
-      'ORIGINAL_HAD_STAGED="false"',
-      'ORIGINAL_STAGED_FILES=""',
-      'PATH_TO_STAGED_DIFF=""',
-      'PATH_TO_UNSTAGED_DIFF=""',
-      'JJ_WAS_PRESENT="false"',
-      'TIMESTAMP=1700000000',
-    ].join('\n');
-    await Bun.write(join(repo.dir, '.auto-rebase-state'), stateContent);
+    await Bun.write(
+      join(repo.dir, '.auto-rebase-state'),
+      JSON.stringify(testState({ originalBranch: 'master' })),
+    );
 
     const result = await recoverFromInterruptedState(repo.dir);
 
@@ -105,3 +84,16 @@ describe('recoverFromInterruptedState with real jj', () => {
     expect(await Bun.file(join(repo.dir, '.auto-rebase-state')).exists()).toBe(false);
   });
 });
+
+function testState(overrides: Record<string, unknown> = {}) {
+  return {
+    originalBranch: 'main',
+    originalHadStaged: false,
+    originalStagedFiles: '',
+    stagedDiffPath: '',
+    unstagedDiffPath: '',
+    jjWasPresent: false,
+    timestamp: 1700000000,
+    ...overrides,
+  };
+}
