@@ -14,98 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v21
+        uses: DeterminateSystems/nix-installer-action@c5a866b6ab867e88becbed4467b93592bce69f8a # v21
 
-      - name: Grant perms to update script
-        run: chmod +x ./pkgs/update.sh
+      - name: Install Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          no-cache: true
 
-      - name: Update Packages
-        id: package_updater
-        run: |
-          set -euo pipefail
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-          while read -r nixfile; do
-            name=$(basename "$nixfile" .nix)
-            abs_path=$(realpath "$nixfile")
-            echo "::group::Processing $nixfile"
-
-            # Check 1: Is the file a valid derivation?
-            if ! (nix eval --impure --raw --expr \
-              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).type" 2>/dev/null | grep -qx "derivation"); then
-              echo "::warning::$nixfile is NOT a derivation, skipping."
-              echo "::endgroup::"
-              continue
-            fi
-
-            # Check 2: Does the derivation have a .src attribute?
-            # We redirect all output to /dev/null and check only the exit code.
-            # If '.src' is missing, nix eval will fail with a non-zero exit code.
-            if ! nix eval --impure --raw --expr \
-              "with import <nixpkgs> {}; (callPackage \"$abs_path\" {}).src" &> /dev/null; then
-              echo "::notice::$nixfile does not have a .src attribute, skipping update."
-              echo "::endgroup::"
-              continue
-            fi
-
-            echo "::notice::$nixfile is a fetchable derivation, proceeding with update."
-
-            if ./pkgs/update.sh "$nixfile"; then
-              echo "::notice::Update script succeeded for $nixfile"
-            else
-              echo "::error::Update script failed for $nixfile, skipping."
-            fi
-            echo "::endgroup::"
-          done < <(find ./pkgs -type f -name '*.nix')
-
-          if git diff --quiet; then
-            echo "::notice::No changes detected in any packages."
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "::warning::Changes detected in one or more packages."
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and Push Changes
-        if: steps.package_updater.outputs.has_changes == 'true'
-        run: |
-          set -euo pipefail
-
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add pkgs/
-          CHANGES_SUMMARY=$(git diff --staged --shortstat | sed 's/^/    /')
-          COMMIT_TITLE="chore(pkgs): update custom packages"
-          COMMIT_BODY=$(cat <<EOF
-          The following package updates were applied:
-
-          ${CHANGES_SUMMARY}
-          EOF
-          )
-
-          git commit -m "$COMMIT_TITLE" -m "$COMMIT_BODY"
-
-          MAX_ATTEMPTS=5
-          for i in $(seq 1 $MAX_ATTEMPTS); do
-            # Attempt to push to the remote branch
-            if git push origin HEAD:${{ github.ref_name }}; then
-              echo "::notice::Successfully pushed changes on attempt $i."
-              exit 0 # Success
-            fi
-
-            if [[ $i -eq $MAX_ATTEMPTS ]]; then
-              echo "::error::Failed to push after $MAX_ATTEMPTS attempts."
-              exit 1 # All attempts failed
-            fi
-
-            wait_time=$((5 * i))
-            echo "::warning::Push failed on attempt $i. Waiting ${wait_time}s and retrying after rebase..."
-            sleep $wait_time
-
-            git pull --rebase origin ${{ github.ref_name }}
-          done
+      - name: Update packages
+        run: bun run github:update-custom-packages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

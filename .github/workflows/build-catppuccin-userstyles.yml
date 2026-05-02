@@ -11,11 +11,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: oven-sh/setup-bun@v2.2.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: latest
+          no-cache: true
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -24,13 +27,22 @@ jobs:
         run: git clone --depth 1 https://github.com/catppuccin/userstyles.git /tmp/userstyles
 
       - name: Generate Stylus imports
-        run: bun scripts/build-catppuccin-userstyles.ts /tmp/userstyles /tmp/userstyles-output
+        run: bun run build-catppuccin-userstyles /tmp/userstyles /tmp/userstyles-output
 
-      - uses: softprops/action-gh-release@v2.5.0
-        with:
-          tag_name: catppuccin-userstyles
-          name: Catppuccin Userstyles
-          body: Catppuccin userstyles - latte light with dark flavor/accent variants. Gmail and Shinigami Eyes are excluded by default.
-          files: /tmp/userstyles-output/*
+      - name: Publish release
+        run: |
+          body="Catppuccin userstyles - latte light with dark flavor/accent variants. Gmail and Shinigami Eyes are excluded by default."
+
+          if gh release view catppuccin-userstyles > /dev/null 2>&1; then
+            gh release edit catppuccin-userstyles \
+              --title "Catppuccin Userstyles" \
+              --notes "$body"
+            gh release upload catppuccin-userstyles /tmp/userstyles-output/* --clobber
+          else
+            gh release create catppuccin-userstyles /tmp/userstyles-output/* \
+              --title "Catppuccin Userstyles" \
+              --notes "$body" \
+              --latest=false
+          fi
         env:
           GITHUB_TOKEN: ${{ github.token }}

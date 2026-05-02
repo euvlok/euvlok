@@ -1,44 +1,74 @@
+import type { ExecOptions as ActionsExecOptions } from '@actions/exec';
+import { getExecOutput } from '@actions/exec';
+
 export interface ExecResult {
   stdout: string;
   stderr: string;
   exitCode: number;
 }
 
+export interface ExecOptions {
+  cwd?: string;
+  env?: Record<string, string | undefined>;
+  input?: string;
+  inheritOutput?: boolean;
+  trimOutput?: boolean;
+}
+
 /**
  * Execute a shell command and return the trimmed stdout.
  * Throws on non-zero exit code.
  */
-export async function exec(cmd: string[], opts?: { cwd?: string }): Promise<string> {
-  const result = Bun.spawn(cmd, {
-    cwd: opts?.cwd,
-    stdout: 'pipe',
-    stderr: 'pipe',
-  });
+export async function exec(cmd: string[], opts?: ExecOptions): Promise<string> {
+  const result = await execSafe(cmd, opts);
 
-  const exitCode = await result.exited;
-  const stdout = await new Response(result.stdout).text();
-  const stderr = await new Response(result.stderr).text();
-
-  if (exitCode !== 0) {
-    throw new Error(`Command failed (exit ${exitCode}): ${cmd.join(' ')}\n${stderr}`);
+  if (result.exitCode !== 0) {
+    throw new Error(`Command failed (exit ${result.exitCode}): ${cmd.join(' ')}\n${result.stderr}`);
   }
 
-  return stdout.trim();
+  return result.stdout;
 }
 
 /**
  * Execute a shell command and return the result without throwing on failure.
  */
-export async function execSafe(cmd: string[], opts?: { cwd?: string }): Promise<ExecResult> {
-  const result = Bun.spawn(cmd, {
+export async function execSafe(cmd: string[], opts?: ExecOptions): Promise<ExecResult> {
+  const [command, ...args] = cmd;
+  if (!command) {
+    throw new Error('Cannot execute an empty command.');
+  }
+
+  const result = await getExecOutput(command, args, {
     cwd: opts?.cwd,
-    stdout: 'pipe',
-    stderr: 'pipe',
+    env: buildEnv(opts?.env),
+    silent: !opts?.inheritOutput,
+    ignoreReturnCode: true,
+    input: opts?.input === undefined ? undefined : Buffer.from(opts.input),
   });
 
-  const exitCode = await result.exited;
-  const stdout = await new Response(result.stdout).text();
-  const stderr = await new Response(result.stderr).text();
+  const trim = opts?.trimOutput ?? true;
+  return {
+    stdout: trim ? result.stdout.trim() : result.stdout,
+    stderr: trim ? result.stderr.trim() : result.stderr,
+    exitCode: result.exitCode,
+  };
+}
 
-  return { stdout: stdout.trim(), stderr: stderr.trim(), exitCode };
+function buildEnv(overrides?: Record<string, string | undefined>): ActionsExecOptions['env'] {
+  return Object.entries(overrides ?? {}).reduce(
+    (env, [key, value]) => {
+      if (value === undefined) {
+        delete env[key];
+        return env;
+      }
+
+      env[key] = value;
+      return env;
+    },
+    Object.fromEntries(
+      Object.entries(process.env).filter(
+        (entry): entry is [string, string] => entry[1] !== undefined,
+      ),
+    ),
+  );
 }

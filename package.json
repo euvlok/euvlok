@@ -6,13 +6,25 @@
     "auto-rebase": "bun --bun run packages/auto-rebase/src/index.ts",
     "browser-extension-update": "bun --bun run packages/browser-extensions-update/src/index.ts",
     "build-catppuccin-userstyles": "bun --bun run scripts/build-catppuccin-userstyles.ts",
-    "check": "biome check --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts",
+    "github:check-workflows": "bun --bun run scripts/github/check-workflows.ts",
+    "github:lint-workflows": "bun --bun run scripts/github/lint-workflows.ts",
+    "github:update-browser-extensions": "bun --bun run scripts/github/update-browser-extensions.ts",
+    "github:update-custom-packages": "bun --bun run scripts/github/update-custom-packages.ts",
+    "github:update-trivial-flake-inputs": "bun --bun run scripts/github/update-trivial-flake-inputs.ts",
+    "check": "biome check --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts && bun run github:check-workflows && bun run github:lint-workflows",
     "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts",
     "format:check": "bun run check",
     "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
     "test": "bun test packages/auto-rebase/tests"
   },
   "dependencies": {
+    "@actions/artifact": "^6.2.1",
+    "@actions/cache": "^6.0.0",
+    "@actions/core": "^3.0.1",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.1.1",
+    "@actions/glob": "^0.7.0",
+    "@actions/io": "^3.0.2",
     "@stricli/core": "1.2.6",
     "consola": "3.4.2",
     "fflate": "^0.8.2",
@@ -24,9 +36,12 @@
     "usercss-meta": "0.12.0"
   },
   "devDependencies": {
+    "@actions/workflow-parser": "^0.3.55",
     "@biomejs/biome": "^2.4.14",
+    "@tktco/node-actionlint": "^1.6.0",
     "@types/bun": "^1.3.13",
     "@types/figlet": "^1.7.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
   }
 }
