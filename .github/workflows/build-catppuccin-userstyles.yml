@@ -13,24 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
-      - uses: denoland/setup-deno@v2.0.3
+      - uses: oven-sh/setup-bun@v2.2.0
         with:
-          deno-version: v2.x
+          bun-version: latest
 
-      - name: Clone and build upstream base
-        run: |
-          git clone --depth 1 https://github.com/catppuccin/userstyles.git /tmp/userstyles
-          cd /tmp/userstyles
-          deno task ci:stylus-import
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-      - name: Generate flavor/accent variants
-        run: deno run --allow-read --allow-write scripts/build-catppuccin-userstyles.ts
+      - name: Clone upstream userstyles
+        run: git clone --depth 1 https://github.com/catppuccin/userstyles.git /tmp/userstyles
+
+      - name: Generate Stylus imports
+        run: bun scripts/build-catppuccin-userstyles.ts /tmp/userstyles /tmp/userstyles-output
 
       - uses: softprops/action-gh-release@v2.5.0
         with:
           tag_name: catppuccin-userstyles
           name: Catppuccin Userstyles
-          body: Catppuccin userstyles - latte light with dark flavor/accent variants (45 total)
+          body: Catppuccin userstyles - latte light with dark flavor/accent variants. Gmail and Shinigami Eyes are excluded by default.
           files: /tmp/userstyles-output/*
         env:
           GITHUB_TOKEN: ${{ github.token }}
