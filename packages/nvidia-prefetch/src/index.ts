@@ -1,6 +1,5 @@
-import { logger } from '@euvlok/shared';
+import { exec, logger } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
-import { $ } from 'bun';
 import { join } from 'pathe';
 import { fetchDriverHash, fetchGithubHash } from './hash';
 import { getCurrentVersion, updateNvidiaDriverNix } from './nix-file';
@@ -36,9 +35,7 @@ async function exitIfCurrent(update: boolean, version: string): Promise<void> {
 }
 
 async function createTempDir(): Promise<string> {
-  return (
-    await $`mktemp -d ${join(Bun.env.TMPDIR || '/tmp', 'nvidia-prefetch-')}XXXXXX`.text()
-  ).trim();
+  return exec(['mktemp', '-d', `${join(Bun.env.TMPDIR || '/tmp', 'nvidia-prefetch-')}XXXXXX`]);
 }
 
 async function fetchHashes(version: string, tempDir: string): Promise<DriverHashes> {
@@ -123,7 +120,7 @@ const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
         await updateNixIfRequested(update, version, hashes);
       })
       .finally(async () => {
-        await $`rm -rf ${tempDir}`.quiet();
+        await exec(['rm', '-rf', tempDir]);
         logger.info('Cleaned up temporary directory');
       });
   },

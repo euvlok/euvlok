@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
-import { $ } from 'bun';
 import { join } from 'pathe';
-import { cleanupTempDir, createTempDir, realExec, silentLogger, useTempJjRepo } from './test-utils';
+import {
+  cleanupTempDir,
+  createTempDir,
+  realExec,
+  realExecOrThrow,
+  silentLogger,
+  useTempJjRepo,
+} from './test-utils';
 
 mock.module('@euvlok/shared', () => ({
   execSafe: realExec,
@@ -15,7 +21,7 @@ describe('recoverFromInterruptedState', () => {
 
   beforeEach(async () => {
     tmpDir = await createTempDir();
-    await $`mkdir -p ${join(tmpDir, '.git')}`.quiet();
+    await realExecOrThrow(['mkdir', '-p', join(tmpDir, '.git')]);
   });
 
   afterEach(async () => {
