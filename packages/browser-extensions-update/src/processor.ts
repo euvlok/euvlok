@@ -1,4 +1,4 @@
-import { execSafe, logger, nixHashToSri } from '@euvlok/shared';
+import { exec, execSafe, logger } from '@euvlok/shared';
 import { $ } from 'bun';
 import { Listr } from 'listr2';
 import { join } from 'pathe';
@@ -27,6 +27,10 @@ async function hash(path: string) {
   const hasher = new Bun.CryptoHasher('sha256');
   hasher.update(new Uint8Array(await Bun.file(path).arrayBuffer()));
   return nixHashToSri(hasher.digest('hex'));
+}
+
+async function nixHashToSri(hexHash: string): Promise<string> {
+  return exec(['nix', 'hash', 'to-sri', '--type', 'sha256', hexHash]);
 }
 
 function tempExtensionPath(browser: BrowserType): string {

@@ -24,10 +24,3 @@ export async function findRepoRoot(startDir?: string): Promise<string | null> {
 export async function isGitRepo(dir: string): Promise<boolean> {
   return Bun.file(join(dir, '.git', 'HEAD')).exists();
 }
-
-/**
- * Check if a directory is the euvlok repository.
- */
-export async function isEuvlokRepo(dir: string): Promise<boolean> {
-  return Bun.file(join(dir, '.euvlok')).exists();
-}

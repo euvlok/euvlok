@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'bun:test';
+import { execSafe } from '@euvlok/shared';
 import { zipSync } from 'fflate';
 import { join } from 'pathe';
-import { summarizeExtension } from '../../../scripts/github/lib/extension-summary';
 import { extractManifestInfo } from '../src/crx-parser';
+import { summarizeExtension } from '../src/extension-summary';
 import { interpolatePattern } from '../src/sources/github-releases';
 import { AmoAddonSchema, NixInputFileSchema } from '../src/types';
 
@@ -14,18 +15,10 @@ const sourceFiles = [
 ];
 
 async function nixEvalJson(path: string): Promise<unknown> {
-  const proc = Bun.spawn(['nix', 'eval', '--json', '--file', path], {
-    stderr: 'pipe',
-    stdout: 'pipe',
-  });
-  const [exitCode, stdout, stderr] = await Promise.all([
-    proc.exited,
-    new Response(proc.stdout).text(),
-    new Response(proc.stderr).text(),
-  ]);
+  const result = await execSafe(['nix', 'eval', '--json', '--file', path]);
 
-  if (exitCode !== 0) throw new Error(stderr);
-  return JSON.parse(stdout);
+  if (result.exitCode !== 0) throw new Error(result.stderr);
+  return JSON.parse(result.stdout);
 }
 
 describe('browser extension schemas', () => {

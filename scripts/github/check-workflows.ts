@@ -1,13 +1,13 @@
+import artifactClient from '@actions/artifact';
+import * as cache from '@actions/cache';
+import { hashFiles } from '@actions/glob';
 import type { WorkflowTemplate } from '@actions/workflow-parser';
 import {
   convertWorkflowTemplate,
   NoOperationTraceWriter,
   parseWorkflow,
 } from '@actions/workflow-parser';
-import { withTempFile } from './lib/files';
-import { actionsLogger as logger } from './lib/logging';
-import { restoreWorkflowCache, saveWorkflowCache, uploadWorkflowReport } from './lib/runtime';
-import { listWorkflowFiles } from './lib/workflows';
+import { listWorkflowFiles, actionsLogger as logger, withTempFile } from '@euvlok/github';
 
 await restoreWorkflowCache();
 const workflowFiles = await listWorkflowFiles();
@@ -74,6 +74,50 @@ function formatWorkflowSummary(path: string, workflow: WorkflowTemplate): string
   const jobCount = workflow.jobs.length;
   const jobLabel = jobCount === 1 ? 'job' : 'jobs';
   return `${path} parsed as a workflow with ${jobCount} ${jobLabel}.`;
+}
+
+function isGitHubActions(): boolean {
+  return process.env.GITHUB_ACTIONS === 'true';
+}
+
+async function restoreWorkflowCache(): Promise<void> {
+  if (!isGitHubActions() || !cache.isFeatureAvailable()) {
+    return;
+  }
+
+  const key = await workflowCacheKey();
+  const hit = await cache.restoreCache(['.github/workflows'], key, ['github-workflows-']);
+  if (hit) {
+    logger.info(`Restored workflow cache: ${hit}`);
+  }
+}
+
+async function saveWorkflowCache(): Promise<void> {
+  if (!isGitHubActions() || !cache.isFeatureAvailable()) {
+    return;
+  }
+
+  const key = await workflowCacheKey();
+  await cache
+    .saveCache(['.github/workflows'], key)
+    .then((cacheId) => logger.info(`Saved workflow cache: ${cacheId}`))
+    .catch((error) => logger.warn('Workflow cache save skipped.', error));
+}
+
+async function uploadWorkflowReport(path: string): Promise<void> {
+  if (!isGitHubActions()) {
+    return;
+  }
+
+  const response = await artifactClient.uploadArtifact('github-workflow-check', [path], '.', {
+    retentionDays: 7,
+  });
+  logger.info(`Uploaded workflow validation artifact ${response.id}.`);
+}
+
+async function workflowCacheKey(): Promise<string> {
+  const hash = await hashFiles('.github/workflows/*.yml\n.github/workflows/*.yaml');
+  return `github-workflows-${hash || 'empty'}`;
 }
 
 type WorkflowCheckReport = {

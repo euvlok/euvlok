@@ -12,7 +12,10 @@
     "outDir": "dist",
     "types": ["bun"],
     "paths": {
-      "@euvlok/shared": ["./packages/shared/src/index.ts"]
+      "@euvlok/catppuccin-userstyles": ["./packages/catppuccin-userstyles/src/index.ts"],
+      "@euvlok/github": ["./packages/lib/github/index.ts"],
+      "@euvlok/lib": ["./packages/lib/index.ts"],
+      "@euvlok/shared": ["./packages/lib/core.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]

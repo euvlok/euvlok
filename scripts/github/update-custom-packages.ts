@@ -1,10 +1,14 @@
 import { basename, resolve } from 'node:path';
-import { escapeNixString, execSafe } from '@euvlok/shared';
+import {
+  commitAndPush,
+  currentRefName,
+  hasGitDiff,
+  actionsLogger as logger,
+  runSequentialTasks,
+  walkFiles,
+} from '@euvlok/github';
+import { addGitPaths, escapeNixString, execSafe } from '@euvlok/shared';
 import { simpleGit } from 'simple-git';
-import { walkFiles } from './lib/files';
-import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
-import { actionsLogger as logger } from './lib/logging';
-import { runSequentialTasks } from './lib/tasks';
 
 const packageRoot = 'pkgs';
 
@@ -89,7 +93,7 @@ async function hasSrc(absPath: string): Promise<boolean> {
 
 async function stagedShortstat(): Promise<string> {
   const git = simpleGit();
-  await git.add(packageRoot);
+  await addGitPaths(packageRoot);
   const stdout = await git.raw(['diff', '--staged', '--shortstat']);
   return stdout ? `    ${stdout}` : '    Updated package definitions.';
 }

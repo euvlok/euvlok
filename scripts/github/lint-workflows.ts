@@ -1,6 +1,5 @@
+import { group, listWorkflowFiles, actionsLogger as logger } from '@euvlok/github';
 import { exec, execSafe } from '@euvlok/shared';
-import { group, actionsLogger as logger } from './lib/logging';
-import { listWorkflowFiles } from './lib/workflows';
 
 const workflowFiles = await listWorkflowFiles();
 

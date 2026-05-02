@@ -1,4 +1,4 @@
-import { formatNixFile, logger, validateNixFile } from '@euvlok/shared';
+import { exec, logger, validateNixFile } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import { $ } from 'bun';
 import figlet from 'figlet';
@@ -51,6 +51,10 @@ async function writeOutput(output: string, nix: string): Promise<void> {
 
   await formatNixFile(output);
   await validateNixFile(output);
+}
+
+async function formatNixFile(filePath: string): Promise<void> {
+  await exec(['nix', 'run', 'nixpkgs#nixfmt', '--', filePath]);
 }
 
 const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({

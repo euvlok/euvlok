@@ -1,3 +1,4 @@
+import { execSafe } from '@euvlok/shared';
 import { Octokit } from '@octokit/rest';
 import type { BrowserType, Extension, FetchUrlResult, GithubReleaseConfig } from '../types';
 import { getFileExtension } from '../types';
@@ -10,10 +11,10 @@ async function getGithubToken() {
   const gh = Bun.which('gh');
   if (!gh) return undefined;
 
-  const proc = Bun.spawn([gh, 'auth', 'token'], { stdout: 'pipe', stderr: 'pipe' });
-  if ((await proc.exited) !== 0) return undefined;
+  const result = await execSafe([gh, 'auth', 'token']);
+  if (result.exitCode !== 0) return undefined;
 
-  return (await new Response(proc.stdout).text()).trim() || undefined;
+  return result.stdout || undefined;
 }
 
 async function githubClient(): Promise<Octokit> {

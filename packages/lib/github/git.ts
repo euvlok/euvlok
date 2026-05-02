@@ -22,22 +22,6 @@ async function hasStagedChanges(): Promise<boolean> {
   return !(await gitQuiet(['diff', '--staged', '--quiet']));
 }
 
-export async function listStagedFiles(): Promise<string[]> {
-  const stdout = await git.raw(['diff', '--staged', '--name-only']);
-  return stdout
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
-export async function readGitBlob(ref: string, path: string): Promise<string> {
-  return git.raw(['show', `${ref}:${path}`]).catch(() => '');
-}
-
-export async function readGitIndex(path: string): Promise<string> {
-  return git.raw(['show', `:${path}`]).catch(() => '');
-}
-
 async function configureGitHubBot(): Promise<void> {
   await git.addConfig('user.name', 'github-actions[bot]', false, 'local');
   await git.addConfig(
@@ -73,7 +57,7 @@ async function configureAuthenticatedRemote(): Promise<void> {
   await git.remote(['set-url', 'origin', remoteUrl]);
 }
 
-export function currentRefName(fallback = 'main'): RefName {
+export function currentRefName(fallback = 'master'): RefName {
   if (process.env.GITHUB_REF_NAME) {
     return process.env.GITHUB_REF_NAME;
   }

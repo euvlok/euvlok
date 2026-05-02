@@ -1,4 +1,4 @@
-import { execSafe, findRepoRoot, isEuvlokRepo, isGitRepo, logger } from '@euvlok/shared';
+import { execSafe, findRepoRoot, isGitRepo, logger } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import { createBackup } from './backup';
 import { checkLocalChanges, checkRemoteChanges, getRemoteBookmark } from './checks';
@@ -49,6 +49,10 @@ async function requireEuvlokRepository(root: string): Promise<void> {
   logger.error('This is not an euvlok repository (missing .euvlok file)');
   logger.info('This script is designed to work only with the euvlok repository');
   process.exit(1);
+}
+
+async function isEuvlokRepo(dir: string): Promise<boolean> {
+  return Bun.file(`${dir}/.euvlok`).exists();
 }
 
 function registerCleanupSignals(ctx: RebaseContext): void {
