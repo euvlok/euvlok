@@ -1,4 +1,3 @@
-import { $ } from 'bun';
 import { join } from 'pathe';
 
 const STATE_MARKER = '.auto-rebase-state';
@@ -22,49 +21,30 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
   if (!(await Bun.file(path).exists())) return null;
 
   const content = await Bun.file(path).text();
+  if (!content.trim()) return null;
 
-  function value(key: string): string {
-    const match = content.match(new RegExp(`^${key}="(.*)"$`, 'm'));
-    return match ? match[1] : '';
-  }
-
-  function raw(key: string): string {
-    const match = content.match(new RegExp(`^${key}=(.*)$`, 'm'));
-    return match ? match[1] : '';
-  }
-
-  const originalBranch = value('ORIGINAL_BRANCH') || 'HEAD';
-  const timestamp = parseInt(raw('TIMESTAMP'), 10) || 0;
-
-  // Validate basic sanity
-  if (!originalBranch && !timestamp) return null;
+  const parsed = JSON.parse(content) as Partial<RebaseState>;
+  const originalBranch = parsed.originalBranch || 'HEAD';
+  const timestamp = Number(parsed.timestamp) || 0;
 
   return {
     originalBranch,
-    originalHadStaged: value('ORIGINAL_HAD_STAGED') === 'true',
-    originalStagedFiles: value('ORIGINAL_STAGED_FILES'),
-    stagedDiffPath: value('PATH_TO_STAGED_DIFF'),
-    unstagedDiffPath: value('PATH_TO_UNSTAGED_DIFF'),
-    jjWasPresent: value('JJ_WAS_PRESENT') === 'true',
+    originalHadStaged: parsed.originalHadStaged === true,
+    originalStagedFiles: parsed.originalStagedFiles ?? '',
+    stagedDiffPath: parsed.stagedDiffPath ?? '',
+    unstagedDiffPath: parsed.unstagedDiffPath ?? '',
+    jjWasPresent: parsed.jjWasPresent === true,
     timestamp,
   };
 }
 
 export async function saveState(repoRoot: string, state: RebaseState): Promise<void> {
   const path = getStateFilePath(repoRoot);
-  const content = `${[
-    `ORIGINAL_BRANCH="${state.originalBranch}"`,
-    `ORIGINAL_HAD_STAGED="${state.originalHadStaged}"`,
-    `ORIGINAL_STAGED_FILES="${state.originalStagedFiles}"`,
-    `PATH_TO_STAGED_DIFF="${state.stagedDiffPath}"`,
-    `PATH_TO_UNSTAGED_DIFF="${state.unstagedDiffPath}"`,
-    `JJ_WAS_PRESENT="${state.jjWasPresent}"`,
-    `TIMESTAMP=${state.timestamp}`,
-  ].join('\n')}\n`;
-
-  await Bun.write(path, content);
+  await Bun.write(path, `${JSON.stringify(state, null, 2)}\n`);
 }
 
 export async function removeState(repoRoot: string): Promise<void> {
-  await $`rm -f ${getStateFilePath(repoRoot)}`.quiet();
+  await Bun.file(getStateFilePath(repoRoot))
+    .delete()
+    .catch(() => undefined);
 }

@@ -55,11 +55,6 @@ export interface NixInputConfig {
   };
 }
 
-export interface GitHubRelease {
-  tag_name?: string;
-  name?: string;
-}
-
 export interface AmoAddon {
   current_version?: {
     file?: {

@@ -1,5 +1,6 @@
 import { execSafe, logger } from '@euvlok/shared';
 import { join } from 'pathe';
+import { simpleGit } from 'simple-git';
 import { DETACHED_HEAD, JJ_DIR } from './constants';
 import { removeDiffFiles, restoreStaging } from './staging';
 import { loadState, removeState } from './state';
@@ -15,7 +16,7 @@ export async function recoverFromInterruptedState(root: string): Promise<boolean
     logger.info('Exporting jj working copy to git...');
 
     if (state.originalBranch !== DETACHED_HEAD) {
-      await execSafe(['git', '-C', root, 'checkout', state.originalBranch]);
+      await simpleGit(root).checkout(state.originalBranch);
     }
 
     const result = await execSafe(['jj', 'git', 'export'], { cwd: root });

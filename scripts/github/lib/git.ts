@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import { exec, execSafe } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
 import { actionsLogger as logger } from './logging';
 
 export type RefName = string;
@@ -12,18 +12,18 @@ export interface CommitAndPushOptions {
   refName: RefName;
 }
 
+const git = simpleGit({ trimmed: false });
+
 export async function hasGitDiff(pathspecs: readonly string[] = []): Promise<boolean> {
-  const result = await execSafe(['git', 'diff', '--quiet', ...pathspecs]);
-  return result.exitCode !== 0;
+  return !(await gitQuiet(['diff', '--quiet', ...pathspecs]));
 }
 
 export async function hasStagedChanges(): Promise<boolean> {
-  const result = await execSafe(['git', 'diff', '--staged', '--quiet']);
-  return result.exitCode !== 0;
+  return !(await gitQuiet(['diff', '--staged', '--quiet']));
 }
 
 export async function listStagedFiles(): Promise<string[]> {
-  const stdout = await exec(['git', 'diff', '--staged', '--name-only']);
+  const stdout = await git.raw(['diff', '--staged', '--name-only']);
   return stdout
     .split('\n')
     .map((line) => line.trim())
@@ -31,37 +31,34 @@ export async function listStagedFiles(): Promise<string[]> {
 }
 
 export async function readGitBlob(ref: string, path: string): Promise<string> {
-  const result = await execSafe(['git', 'show', `${ref}:${path}`], { trimOutput: false });
-  return result.exitCode === 0 ? result.stdout : '';
+  return git.raw(['show', `${ref}:${path}`]).catch(() => '');
 }
 
 export async function readGitIndex(path: string): Promise<string> {
-  const result = await execSafe(['git', 'show', `:${path}`], { trimOutput: false });
-  return result.exitCode === 0 ? result.stdout : '';
+  return git.raw(['show', `:${path}`]).catch(() => '');
 }
 
 export async function configureGitHubBot(): Promise<void> {
-  await exec(['git', 'config', '--local', 'user.name', 'github-actions[bot]']);
-  await exec([
-    'git',
-    'config',
-    '--local',
+  await git.addConfig('user.name', 'github-actions[bot]', false, 'local');
+  await git.addConfig(
     'user.email',
     '41898282+github-actions[bot]@users.noreply.github.com',
-  ]);
+    false,
+    'local',
+  );
 }
 
 export async function commitAndPush(options: CommitAndPushOptions): Promise<void> {
   await configureGitHubBot();
   await configureAuthenticatedRemote();
-  await exec(['git', 'add', ...options.add]);
+  await git.add([...options.add]);
 
   if (!(await hasStagedChanges())) {
     logger.info('No staged changes remain after git add.');
     return;
   }
 
-  await exec(['git', 'commit', '-m', options.title, '-m', options.body], { inheritOutput: true });
+  await git.commit([options.title, options.body]);
   await pushWithRebaseRetry(options.refName);
 }
 
@@ -73,7 +70,7 @@ async function configureAuthenticatedRemote(): Promise<void> {
 
   core.setSecret(token);
   const remoteUrl = `https://x-access-token:${token}@github.com/${context.repo.owner}/${context.repo.repo}.git`;
-  await exec(['git', 'remote', 'set-url', 'origin', remoteUrl]);
+  await git.remote(['set-url', 'origin', remoteUrl]);
 }
 
 export function currentRefName(fallback = 'main'): RefName {
@@ -92,17 +89,14 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
   const maxAttempts = 5;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    const push = await execSafe(['git', 'push', 'origin', `HEAD:${refName}`], {
-      inheritOutput: true,
-    });
-
-    if (push.exitCode === 0) {
+    try {
+      await git.push('origin', `HEAD:${refName}`);
       logger.info(`Successfully pushed changes on attempt ${attempt}.`);
       return;
-    }
-
-    if (attempt === maxAttempts) {
-      throw new Error(`Failed to push after ${maxAttempts} attempts.`);
+    } catch {
+      if (attempt === maxAttempts) {
+        throw new Error(`Failed to push after ${maxAttempts} attempts.`);
+      }
     }
 
     const waitSeconds = 5 * attempt;
@@ -110,6 +104,13 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
       `Push failed on attempt ${attempt}. Waiting ${waitSeconds}s and retrying after rebase...`,
     );
     await Bun.sleep(waitSeconds * 1000);
-    await exec(['git', 'pull', '--rebase', 'origin', refName], { inheritOutput: true });
+    await git.raw(['pull', '--rebase', 'origin', refName]);
   }
+}
+
+async function gitQuiet(args: string[]): Promise<boolean> {
+  return git
+    .raw(args)
+    .then(() => true)
+    .catch(() => false);
 }

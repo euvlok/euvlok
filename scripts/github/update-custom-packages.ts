@@ -1,5 +1,6 @@
 import { basename, resolve } from 'node:path';
-import { escapeNixString, exec, execSafe } from '@euvlok/shared';
+import { escapeNixString, execSafe } from '@euvlok/shared';
+import { simpleGit } from 'simple-git';
 import { walkFiles } from './lib/files';
 import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
 import { group, actionsLogger as logger } from './lib/logging';
@@ -86,7 +87,8 @@ async function hasSrc(absPath: string): Promise<boolean> {
 }
 
 async function stagedShortstat(): Promise<string> {
-  await exec(['git', 'add', packageRoot]);
-  const stdout = await exec(['git', 'diff', '--staged', '--shortstat']);
+  const git = simpleGit();
+  await git.add(packageRoot);
+  const stdout = await git.raw(['diff', '--staged', '--shortstat']);
   return stdout ? `    ${stdout}` : '    Updated package definitions.';
 }

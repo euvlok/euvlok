@@ -1,44 +1,29 @@
-import type {
-  BrowserType,
-  Extension,
-  FetchUrlResult,
-  GitHubRelease,
-  GithubReleaseConfig,
-} from '../types';
+import { Octokit } from '@octokit/rest';
+import type { BrowserType, Extension, FetchUrlResult, GithubReleaseConfig } from '../types';
 import { getFileExtension } from '../types';
 
-async function token() {
+async function getGithubToken() {
   if (Bun.env.GITHUB_TOKEN) return Bun.env.GITHUB_TOKEN;
 
   try {
     const proc = Bun.spawn(['gh', 'auth', 'token'], { stdout: 'pipe', stderr: 'pipe' });
     await proc.exited;
     const val = (await new Response(proc.stdout).text()).trim();
-    if (val.startsWith('gho_')) return val;
+    return val || undefined;
   } catch {
-    // ignore
+    return undefined;
   }
-
-  return null;
 }
 
 async function latest(owner: string, repo: string) {
-  const headers: Record<string, string> = {
-    'User-Agent': 'BrowserExtensionsUpdater',
-    Accept: 'application/vnd.github.v3+json',
-  };
-
-  const auth = await token();
-  if (auth) headers.Authorization = `token ${auth}`;
-
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`, {
-    headers,
+  const auth = await getGithubToken();
+  const octokit = new Octokit({
+    auth,
+    userAgent: 'BrowserExtensionsUpdater',
   });
 
-  if (!response.ok) throw new Error(`GitHub API returned status ${response.status}`);
-
-  const release: GitHubRelease = await response.json();
-  const tag = release.tag_name ?? release.name;
+  const { data: release } = await octokit.repos.getLatestRelease({ owner, repo });
+  const tag = release.tag_name || release.name;
   if (!tag) throw new Error('Failed to get latest release version from GitHub API');
 
   return tag.replace(/^v/, '');

@@ -146,13 +146,16 @@ describe('fetchLatest', () => {
 
   test('throws when jj git fetch fails', async () => {
     mockExecSafe.mockReset();
-    const ctx = createTestContext();
+    const repo = await createTempJjRepo();
+    const ctx = createTestContext({ repoRoot: repo.dir });
     mockExecSafe
-      .mockResolvedValueOnce(mockExecResult()) // remote get-url
-      .mockResolvedValueOnce(mockExecResult()) // git fetch
-      .mockResolvedValueOnce(mockExecResult()) // show-ref master found
       .mockResolvedValueOnce(mockExecResult()) // jj bookmark track
       .mockResolvedValueOnce(mockExecResult({ exitCode: 1 })); // jj git fetch fails
-    await expect(fetchLatest(ctx)).rejects.toThrow('Failed to fetch from git remote');
+    try {
+      await expect(fetchLatest(ctx)).rejects.toThrow('Failed to fetch from git remote');
+    } finally {
+      await cleanupTempDir(repo.dir);
+      await cleanupTempDir(repo.remoteDir);
+    }
   });
 });

@@ -26,15 +26,15 @@ describe('state', () => {
     });
 
     test('parses valid state file', async () => {
-      const content = [
-        'ORIGINAL_BRANCH="feature-branch"',
-        'ORIGINAL_HAD_STAGED="true"',
-        'ORIGINAL_STAGED_FILES="src/foo.ts"',
-        'PATH_TO_STAGED_DIFF="/tmp/staged-123.diff"',
-        'PATH_TO_UNSTAGED_DIFF="/tmp/unstaged-123.diff"',
-        'JJ_WAS_PRESENT="false"',
-        'TIMESTAMP=1700000000',
-      ].join('\n');
+      const content = JSON.stringify({
+        originalBranch: 'feature-branch',
+        originalHadStaged: true,
+        originalStagedFiles: 'src/foo.ts',
+        stagedDiffPath: '/tmp/staged-123.diff',
+        unstagedDiffPath: '/tmp/unstaged-123.diff',
+        jjWasPresent: false,
+        timestamp: 1700000000,
+      });
 
       await Bun.write(join(tmpDir, '.auto-rebase-state'), content);
       const state = await loadState(tmpDir);
@@ -50,7 +50,10 @@ describe('state', () => {
     });
 
     test('handles missing fields with defaults', async () => {
-      await Bun.write(join(tmpDir, '.auto-rebase-state'), 'TIMESTAMP=1700000000\n');
+      await Bun.write(
+        join(tmpDir, '.auto-rebase-state'),
+        JSON.stringify({ timestamp: 1700000000 }),
+      );
       const state = await loadState(tmpDir);
 
       expect(state).not.toBeNull();
@@ -62,14 +65,14 @@ describe('state', () => {
       expect(state?.jjWasPresent).toBe(false);
     });
 
-    test('returns non-null for empty file (HEAD default is truthy)', async () => {
+    test('returns null for empty file', async () => {
       await Bun.write(join(tmpDir, '.auto-rebase-state'), '');
-      expect(await loadState(tmpDir)).not.toBeNull();
+      expect(await loadState(tmpDir)).toBeNull();
     });
   });
 
   describe('saveState', () => {
-    test('writes correct key=value format', async () => {
+    test('writes JSON format', async () => {
       await saveState(tmpDir, {
         originalBranch: 'main',
         originalHadStaged: true,
@@ -81,13 +84,15 @@ describe('state', () => {
       });
 
       const content = await Bun.file(join(tmpDir, '.auto-rebase-state')).text();
-      expect(content).toContain('ORIGINAL_BRANCH="main"');
-      expect(content).toContain('ORIGINAL_HAD_STAGED="true"');
-      expect(content).toContain('ORIGINAL_STAGED_FILES="file.ts"');
-      expect(content).toContain('PATH_TO_STAGED_DIFF="/tmp/staged.diff"');
-      expect(content).toContain('PATH_TO_UNSTAGED_DIFF="/tmp/unstaged.diff"');
-      expect(content).toContain('JJ_WAS_PRESENT="false"');
-      expect(content).toContain('TIMESTAMP=1700000000');
+      expect(JSON.parse(content)).toEqual({
+        originalBranch: 'main',
+        originalHadStaged: true,
+        originalStagedFiles: 'file.ts',
+        stagedDiffPath: '/tmp/staged.diff',
+        unstagedDiffPath: '/tmp/unstaged.diff',
+        jjWasPresent: false,
+        timestamp: 1700000000,
+      });
     });
   });
 
