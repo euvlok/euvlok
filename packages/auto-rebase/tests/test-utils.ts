@@ -1,3 +1,4 @@
+import { afterEach, beforeEach } from 'bun:test';
 import type { ExecResult } from '@euvlok/shared';
 import { $ } from 'bun';
 import { join } from 'pathe';
@@ -39,12 +40,20 @@ export async function realExec(cmd: string[], opts?: { cwd?: string }): Promise<
   return { stdout: stdout.trim(), stderr: stderr.trim(), exitCode };
 }
 
-export async function createTempGitRepo(): Promise<string> {
-  const dir = join('/tmp', `test-repo-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-  await $`mkdir -p ${dir}`.quiet();
-  await $`git -C ${dir} init`.quiet();
+function tempPath(prefix: string): string {
+  return join('/tmp', `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+}
+
+async function configureGitUser(dir: string): Promise<void> {
   await $`git -C ${dir} config user.email "test@test.com"`.quiet();
   await $`git -C ${dir} config user.name "Test"`.quiet();
+}
+
+export async function createTempGitRepo(): Promise<string> {
+  const dir = tempPath('test-repo');
+  await $`mkdir -p ${dir}`.quiet();
+  await $`git -C ${dir} init`.quiet();
+  await configureGitUser(dir);
   await Bun.write(join(dir, '.gitkeep'), '');
   await $`git -C ${dir} add .`.quiet();
   await $`git -C ${dir} commit -m "init"`.quiet();
@@ -52,13 +61,33 @@ export async function createTempGitRepo(): Promise<string> {
 }
 
 export async function createTempDir(): Promise<string> {
-  const dir = join('/tmp', `test-dir-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const dir = tempPath('test-dir');
   await $`mkdir -p ${dir}`.quiet();
   return dir;
 }
 
 export async function cleanupTempDir(dir: string): Promise<void> {
   if (dir.startsWith('/tmp/')) await $`rm -rf ${dir}`.quiet();
+}
+
+export function useTempDir(): { current: () => string } {
+  let dir = '';
+
+  beforeEach(async () => {
+    dir = await createTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanupTempDir(dir);
+    dir = '';
+  });
+
+  return {
+    current: () => {
+      if (!dir) throw new Error('Temporary directory has not been created');
+      return dir;
+    },
+  };
 }
 
 export const silentLogger = {
@@ -73,18 +102,40 @@ export interface JjTestRepo {
   remoteDir: string;
 }
 
+export function useTempJjRepo(): { current: () => JjTestRepo } {
+  let repo: JjTestRepo | undefined;
+
+  beforeEach(async () => {
+    repo = await createTempJjRepo();
+  });
+
+  afterEach(async () => {
+    if (!repo) return;
+    await cleanupTempJjRepo(repo);
+    repo = undefined;
+  });
+
+  return {
+    current: () => {
+      if (!repo) throw new Error('Test jj repository has not been created');
+      return repo;
+    },
+  };
+}
+
+export async function cleanupTempJjRepo(repo: JjTestRepo): Promise<void> {
+  await cleanupTempDir(repo.dir);
+  await cleanupTempDir(repo.remoteDir);
+}
+
 export async function createTempJjRepo(): Promise<JjTestRepo> {
-  const remoteDir = join(
-    '/tmp',
-    `test-remote-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-  );
+  const remoteDir = tempPath('test-remote');
   await $`git init --bare ${remoteDir}`.quiet();
 
-  const dir = join('/tmp', `test-jj-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const dir = tempPath('test-jj');
   await $`mkdir -p ${dir}`.quiet();
   await $`git -C ${dir} init`.quiet();
-  await $`git -C ${dir} config user.email "test@test.com"`.quiet();
-  await $`git -C ${dir} config user.name "Test"`.quiet();
+  await configureGitUser(dir);
   await $`git -C ${dir} remote add origin ${remoteDir}`.quiet();
   await Bun.write(join(dir, 'README'), 'init\n');
   await $`git -C ${dir} add README`.quiet();
@@ -98,10 +149,9 @@ export async function createTempJjRepo(): Promise<JjTestRepo> {
 }
 
 export async function pushCommitToRemote(remoteDir: string, filename?: string): Promise<void> {
-  const tmpClone = join('/tmp', `test-clone-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const tmpClone = tempPath('test-clone');
   await $`git clone ${remoteDir} ${tmpClone}`.quiet();
-  await $`git -C ${tmpClone} config user.email "test@test.com"`.quiet();
-  await $`git -C ${tmpClone} config user.name "Test"`.quiet();
+  await configureGitUser(tmpClone);
   const fname = filename ?? `remote-${Date.now()}.txt`;
   await Bun.write(join(tmpClone, fname), 'remote change\n');
   await $`git -C ${tmpClone} add .`.quiet();

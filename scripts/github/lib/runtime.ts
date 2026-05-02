@@ -25,12 +25,10 @@ export async function saveWorkflowCache(): Promise<void> {
   }
 
   const key = await workflowCacheKey();
-  try {
-    const cacheId = await cache.saveCache(['.github/workflows'], key);
-    logger.info(`Saved workflow cache: ${cacheId}`);
-  } catch (error) {
-    logger.warn('Workflow cache save skipped.', error);
-  }
+  await cache
+    .saveCache(['.github/workflows'], key)
+    .then((cacheId) => logger.info(`Saved workflow cache: ${cacheId}`))
+    .catch((error) => logger.warn('Workflow cache save skipped.', error));
 }
 
 export async function uploadWorkflowReport(path: string): Promise<void> {

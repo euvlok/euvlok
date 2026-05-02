@@ -11,6 +11,48 @@ type BrowserExtensionsUpdateFlags = {
   output?: string;
 };
 
+async function requireInputFile(input: string): Promise<void> {
+  if (await Bun.file(input).exists()) return;
+  logger.error(`Input file not found: ${input}`);
+  process.exit(1);
+}
+
+function logHeader(input: string, output: string): void {
+  logger.log(figlet.textSync('Extensions', { font: 'Standard' }));
+  logger.info(`Input: ${input}`);
+  logger.info(`Output: ${output}`);
+}
+
+async function browserVersion(browser: string): Promise<string | undefined> {
+  if (browser !== 'chromium') return undefined;
+  const version = await getChromiumMajorVersion();
+  logger.info(`Chromium version: ${version}`);
+  return version;
+}
+
+function logBrowser(browser: string, version?: string): void {
+  logger.info(`Browser: ${browser}`);
+  if (!version) logger.info('Firefox extensions');
+}
+
+function exitOnErrors(results: Awaited<ReturnType<typeof processExtensionsWithProgress>>): void {
+  const errors = results.filter((r) => r.error);
+  if (errors.length === 0) return;
+
+  logger.log('');
+  logger.error(`Failed to process ${errors.length} extension(s):`);
+  errors.map((e) => logger.error(`  ${e.extension.name ?? e.extension.id}: ${e.error}`));
+  process.exit(1);
+}
+
+async function writeOutput(output: string, nix: string): Promise<void> {
+  await $`mkdir -p ${dirname(output)}`.quiet();
+  await Bun.write(output, nix);
+
+  await formatNixFile(output);
+  await validateNixFile(output);
+}
+
 const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
   docs: {
     brief: 'Generate a browser extensions Nix file',
@@ -42,19 +84,10 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
   async func(args, input) {
     const output = args.output ?? join(dirname(input), 'extensions.nix');
 
-    if (!(await Bun.file(input).exists())) {
-      logger.error(`Input file not found: ${input}`);
-      process.exit(1);
-    }
-
-    logger.log(figlet.textSync('Extensions', { font: 'Standard' }));
-    logger.info(`Input: ${input}`);
-    logger.info(`Output: ${output}`);
+    await requireInputFile(input);
+    logHeader(input, output);
 
     const parsed = await parseNixInput(input);
-
-    logger.info(`Browser: ${parsed.browser}`);
-
     if (parsed.extensions.length === 0) {
       logger.warn(`No extensions found in ${input}`);
       process.exit(0);
@@ -62,9 +95,8 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
 
     logger.info(`Found ${parsed.extensions.length} extension(s) to process`);
 
-    const version = parsed.browser === 'chromium' ? await getChromiumMajorVersion() : undefined;
-    if (version) logger.info(`Chromium version: ${version}`);
-    if (!version) logger.info('Firefox extensions');
+    const version = await browserVersion(parsed.browser);
+    logBrowser(parsed.browser, version);
 
     const results = await processExtensionsWithProgress(
       parsed.extensions,
@@ -73,20 +105,10 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
       version,
     );
 
-    const errors = results.filter((r) => r.error);
-    if (errors.length > 0) {
-      logger.log('');
-      logger.error(`Failed to process ${errors.length} extension(s):`);
-      errors.map((e) => logger.error(`  ${e.extension.name ?? e.extension.id}: ${e.error}`));
-      process.exit(1);
-    }
+    exitOnErrors(results);
 
     const nix = generateNixFile(results, parsed.conditional, parsed.browser);
-    await $`mkdir -p ${dirname(output)}`.quiet();
-    await Bun.write(output, nix);
-
-    await formatNixFile(output);
-    await validateNixFile(output);
+    await writeOutput(output, nix);
 
     logger.log('');
     logger.success(`Generated ${output}`);

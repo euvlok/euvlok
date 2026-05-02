@@ -10,17 +10,33 @@ type ManifestInfo = {
 };
 
 function isCrx(data: Uint8Array): boolean {
-  return (
-    data.length >= 4 &&
-    data[0] === CRX_MAGIC[0] &&
-    data[1] === CRX_MAGIC[1] &&
-    data[2] === CRX_MAGIC[2] &&
-    data[3] === CRX_MAGIC[3]
-  );
+  return data.length >= CRX_MAGIC.length && CRX_MAGIC.every((byte, index) => data[index] === byte);
 }
 
 const strings = (arr: unknown) =>
   Array.isArray(arr) ? arr.filter((p): p is string => typeof p === 'string') : [];
+
+function hostPermissions(manifest: Record<string, unknown>): string[] {
+  if (Array.isArray(manifest.host_permissions)) return strings(manifest.host_permissions);
+  return strings(manifest.optional_permissions).filter(isHostPermission);
+}
+
+function isHostPermission(permission: string): boolean {
+  return permission.includes('/') || permission.includes('*');
+}
+
+function geckoAddonId(manifest: Record<string, unknown>): string | undefined {
+  const browserSettings = manifest.browser_specific_settings;
+  const applications = manifest.applications;
+  const gecko = readRecord(browserSettings)?.gecko ?? readRecord(applications)?.gecko;
+  return readRecord(gecko)?.id as string | undefined;
+}
+
+function readRecord(value: unknown): Record<string, unknown> | undefined {
+  return typeof value === 'object' && value !== null
+    ? (value as Record<string, unknown>)
+    : undefined;
+}
 
 export async function extractManifestInfo(path: string): Promise<ManifestInfo> {
   const data = new Uint8Array(await Bun.file(path).arrayBuffer());
@@ -34,15 +50,9 @@ export async function extractManifestInfo(path: string): Promise<ManifestInfo> {
   const version = manifest.version ?? manifest.version_name;
   if (!version) throw new Error('Could not extract version from manifest');
 
-  const perms = [
-    ...strings(manifest.permissions),
-    ...(Array.isArray(manifest.host_permissions)
-      ? strings(manifest.host_permissions)
-      : strings(manifest.optional_permissions).filter((p) => p.includes('/') || p.includes('*'))),
-  ];
+  const perms = [...strings(manifest.permissions), ...hostPermissions(manifest)];
 
-  const gecko = manifest.browser_specific_settings?.gecko ?? manifest.applications?.gecko;
-  return { version, permissions: perms, addonId: gecko?.id };
+  return { version, permissions: perms, addonId: geckoAddonId(manifest) };
 }
 
 function getZipContents(data: Uint8Array): Buffer {

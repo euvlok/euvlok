@@ -89,13 +89,16 @@ await commitAndPush({
 
 function snapshotInput(name: string, lock: FlakeLock): InputSnapshot {
   const locked = lock.nodes?.[name]?.locked;
-  const owner = locked?.owner;
-  const repo = locked?.repo;
   return {
     name,
-    repo: owner && repo ? `${owner}/${repo}` : null,
+    repo: repoPath(locked),
     rev: locked?.rev ?? 'unknown',
   };
+}
+
+function repoPath(locked: FlakeNode['locked']): string | null {
+  if (!locked?.owner || !locked.repo) return null;
+  return `${locked.owner}/${locked.repo}`;
 }
 
 function shortRev(rev: string): string {

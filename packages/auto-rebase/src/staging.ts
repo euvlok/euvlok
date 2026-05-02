@@ -45,12 +45,8 @@ export async function restoreStaging(
 
 async function restageFiles(root: string, originalStagedFiles: string): Promise<void> {
   const git = simpleGit(root);
-  await Promise.all(
-    originalStagedFiles
-      .split('\n')
-      .filter(Boolean)
-      .map((file) => git.add(file)),
-  );
+  const files = originalStagedFiles.split('\n').filter(Boolean);
+  if (files.length > 0) await git.add(files);
   logger.warn('Restored staging by re-adding files (partial staging may be lost)');
 }
 

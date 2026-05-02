@@ -33,85 +33,177 @@ async function persistState(ctx: RebaseContext): Promise<void> {
   });
 }
 
-export async function setupJj(ctx: RebaseContext): Promise<void> {
-  const root = ctx.repoRoot;
-  const branch = ctx.originalBranch;
+async function setBookmark(root: string, branch: string): Promise<void> {
+  if (branch === DETACHED_HEAD) return;
+  await execSafe(['jj', 'bookmark', 'set', branch, '-r', '@'], { cwd: root });
+}
 
-  if (await exists(root)) {
-    if (await checkJjPresent(root)) {
-      ctx.jjWasPresent = true;
-      logger.info('Jujutsu repository already present');
-      logger.info('Syncing jj repository with Git changes...');
-      await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
-        cwd: root,
-      });
-      if (branch !== DETACHED_HEAD) {
-        await execSafe(['jj', 'bookmark', 'set', branch, '-r', '@'], {
-          cwd: root,
-        });
-      }
-      return;
-    }
-    logger.warn('Found invalid .jj directory, removing and reinitializing...');
-    await $`rm -rf ${join(root, JJ_DIR)}`.quiet();
+async function syncExistingJj(ctx: RebaseContext): Promise<void> {
+  ctx.jjWasPresent = true;
+  logger.info('Jujutsu repository already present');
+  logger.info('Syncing jj repository with Git changes...');
+  await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
+    cwd: ctx.repoRoot,
+  });
+  await setBookmark(ctx.repoRoot, ctx.originalBranch);
+}
+
+async function removeInvalidJj(root: string): Promise<void> {
+  logger.warn('Found invalid .jj directory, removing and reinitializing...');
+  await $`rm -rf ${join(root, JJ_DIR)}`.quiet();
+}
+
+async function useExistingJjIfValid(ctx: RebaseContext): Promise<boolean> {
+  if (!(await exists(ctx.repoRoot))) return false;
+  if (!(await checkJjPresent(ctx.repoRoot))) {
+    await removeInvalidJj(ctx.repoRoot);
+    return false;
   }
 
-  if (!(await isGitRepo(root))) {
-    throw new Error('Not a git repository. Cannot initialize jujutsu');
-  }
+  await syncExistingJj(ctx);
+  return true;
+}
 
-  logger.info('Initializing jujutsu for operations...');
+async function captureDiff(
+  git: ReturnType<typeof simpleGit>,
+  path: string,
+  args: string[],
+): Promise<string> {
+  return git
+    .raw(args)
+    .then(async (diff) => {
+      await Bun.write(path, diff);
+      return path;
+    })
+    .catch(() => {
+      logger.warn(`Failed to capture ${args.includes('--cached') ? 'staged' : 'unstaged'} diff`);
+      return '';
+    });
+}
 
-  if (ctx.dryRun) {
-    logger.info('  [DRY RUN] Would run: jj git init --git-repo=. && jj bookmark set');
-    return;
-  }
-
-  await $`mkdir -p ${join(root, EUVLOK_TMP_DIR)}`.quiet();
+async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
+  await $`mkdir -p ${join(ctx.repoRoot, EUVLOK_TMP_DIR)}`.quiet();
   const timestamp = Math.floor(Date.now() / 1000);
-  const git = simpleGit({ baseDir: root, trimmed: false });
-
+  const git = simpleGit({ baseDir: ctx.repoRoot, trimmed: false });
   const cachedHasDiff = await git
     .raw(['diff', '--cached', '--quiet'])
     .then(() => false)
     .catch(() => true);
-  if (cachedHasDiff) {
-    ctx.originalHadStaged = true;
-    ctx.originalStagedFiles = await git.raw(['diff', '--cached', '--name-only']);
 
-    ctx.stagedDiffPath = join(root, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`);
-    try {
-      await Bun.write(ctx.stagedDiffPath, await git.raw(['diff', '--cached']));
-    } catch {
-      logger.warn('Failed to capture staged diff');
-      ctx.stagedDiffPath = '';
-    }
+  if (!cachedHasDiff) return;
 
-    ctx.unstagedDiffPath = join(root, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`);
-    try {
-      await Bun.write(ctx.unstagedDiffPath, await git.raw(['diff']));
-    } catch {
-      logger.warn('Failed to capture unstaged diff');
-      ctx.unstagedDiffPath = '';
-    }
-  }
+  ctx.originalHadStaged = true;
+  ctx.originalStagedFiles = await git.raw(['diff', '--cached', '--name-only']);
+  ctx.stagedDiffPath = await captureDiff(
+    git,
+    join(ctx.repoRoot, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`),
+    ['diff', '--cached'],
+  );
+  ctx.unstagedDiffPath = await captureDiff(
+    git,
+    join(ctx.repoRoot, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`),
+    ['diff'],
+  );
+}
 
-  const init = await execSafe(['jj', 'git', 'init', `--git-repo=${root}`], {
-    cwd: root,
+async function initJj(ctx: RebaseContext): Promise<void> {
+  const init = await execSafe(['jj', 'git', 'init', `--git-repo=${ctx.repoRoot}`], {
+    cwd: ctx.repoRoot,
   });
+
   if (init.exitCode !== 0) {
     throw new Error(`Failed to initialize jujutsu: ${init.stderr}`);
   }
 
   ctx.cleanupNeeded = true;
   await persistState(ctx);
+}
 
-  if (branch !== DETACHED_HEAD) {
-    await execSafe(['jj', 'bookmark', 'set', branch, '-r', '@'], { cwd: root });
+export async function setupJj(ctx: RebaseContext): Promise<void> {
+  const root = ctx.repoRoot;
+
+  if (await useExistingJjIfValid(ctx)) return;
+  if (!(await isGitRepo(root))) throw new Error('Not a git repository. Cannot initialize jujutsu');
+
+  logger.info('Initializing jujutsu for operations...');
+  if (ctx.dryRun) {
+    logger.info('  [DRY RUN] Would run: jj git init --git-repo=. && jj bookmark set');
+    return;
   }
 
+  await captureOriginalStaging(ctx);
+  await initJj(ctx);
+  await setBookmark(root, ctx.originalBranch);
   await persistState(ctx);
   logger.success('Jujutsu initialized');
+}
+
+function normalizeFileList(files: string): string {
+  return files.split('\n').filter(Boolean).sort().join('\n');
+}
+
+async function restoreOriginalStaging(
+  ctx: RebaseContext,
+  git: ReturnType<typeof simpleGit>,
+): Promise<void> {
+  await restoreStaging(ctx.repoRoot, ctx.stagedDiffPath, ctx.originalStagedFiles);
+
+  const current = await git.raw(['diff', '--cached', '--name-only']);
+  const now = normalizeFileList(current);
+  const expected = normalizeFileList(ctx.originalStagedFiles);
+
+  if (now !== expected) {
+    logger.warn('Staging state restoration incomplete');
+    logger.info(`Original staged: ${ctx.originalStagedFiles}`);
+    logger.info(`Current staged: ${now || 'none'}`);
+    return;
+  }
+
+  logger.success('Staging state restored correctly');
+}
+
+async function clearUnexpectedStaging(git: ReturnType<typeof simpleGit>): Promise<void> {
+  const current = await git.raw(['diff', '--cached', '--name-only']);
+  if (!current) {
+    logger.success('Staging state preserved (no files staged)');
+    return;
+  }
+
+  logger.warn(`Unexpected staged files after export: ${current}`);
+  await git.reset();
+}
+
+async function restoreStagingState(
+  ctx: RebaseContext,
+  git: ReturnType<typeof simpleGit>,
+): Promise<void> {
+  if (ctx.originalHadStaged && ctx.originalStagedFiles) {
+    await restoreOriginalStaging(ctx, git);
+    return;
+  }
+
+  await clearUnexpectedStaging(git);
+}
+
+async function checkoutOriginalBranch(
+  git: ReturnType<typeof simpleGit>,
+  branch: string,
+): Promise<void> {
+  if (branch === DETACHED_HEAD) return;
+  await git.checkout(branch);
+}
+
+async function exportJjWorkingCopy(root: string): Promise<boolean> {
+  const exported = await execSafe(['jj', 'git', 'export'], { cwd: root });
+  if (exported.exitCode === 0) return true;
+
+  logger.warn('Failed to export jj working copy to git');
+  return false;
+}
+
+async function logPersistentJj(root: string): Promise<void> {
+  if (!(await exists(root))) return;
+  logger.info('Keeping .jj directory for future runs (persistent ephemerality)');
 }
 
 export async function cleanupJj(ctx: RebaseContext): Promise<void> {
@@ -119,11 +211,7 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   const branch = ctx.originalBranch;
 
   if (ctx.jjWasPresent) {
-    if (branch !== DETACHED_HEAD) {
-      await execSafe(['jj', 'bookmark', 'set', branch, '-r', '@'], {
-        cwd: root,
-      });
-    }
+    await setBookmark(root, branch);
     return;
   }
 
@@ -139,49 +227,13 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   logger.info('Exporting jj working copy back to git...');
   const git = simpleGit({ baseDir: root, trimmed: false });
 
-  if (branch !== DETACHED_HEAD) {
-    await git.checkout(branch);
-  }
+  await checkoutOriginalBranch(git, branch);
+  if (!(await exportJjWorkingCopy(root))) return;
 
-  const exported = await execSafe(['jj', 'git', 'export'], { cwd: root });
-  if (exported.exitCode !== 0) {
-    logger.warn('Failed to export jj working copy to git');
-    return;
-  }
-
-  if (ctx.originalHadStaged && ctx.originalStagedFiles) {
-    await restoreStaging(root, ctx.stagedDiffPath, ctx.originalStagedFiles);
-
-    const current = await git.raw(['diff', '--cached', '--name-only']);
-    const now = current.split('\n').filter(Boolean).sort().join('\n');
-    const expected = ctx.originalStagedFiles.split('\n').filter(Boolean).sort().join('\n');
-
-    if (now !== expected) {
-      logger.warn('Staging state restoration incomplete');
-      logger.info(`Original staged: ${ctx.originalStagedFiles}`);
-      logger.info(`Current staged: ${now || 'none'}`);
-    }
-    if (now === expected) {
-      logger.success('Staging state restored correctly');
-    }
-  }
-
-  if (!ctx.originalHadStaged || !ctx.originalStagedFiles) {
-    const current = await git.raw(['diff', '--cached', '--name-only']);
-    if (current) {
-      logger.warn(`Unexpected staged files after export: ${current}`);
-      await git.reset();
-    }
-    if (!current) {
-      logger.success('Staging state preserved (no files staged)');
-    }
-  }
+  await restoreStagingState(ctx, git);
 
   logger.info('Restored git state from jj working copy');
-
-  if ((await exists(root)) && !ctx.jjWasPresent) {
-    logger.info('Keeping .jj directory for future runs (persistent ephemerality)');
-  }
+  await logPersistentJj(root);
 
   await removeDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
 

@@ -3,7 +3,7 @@ import { buildApplication, buildCommand, run } from '@stricli/core';
 import { createBackup } from './backup';
 import { checkLocalChanges, checkRemoteChanges, getRemoteBookmark } from './checks';
 import { cleanupOnError } from './cleanup';
-import { createContext } from './context';
+import { createContext, type RebaseContext } from './context';
 import { checkGitLocks, fetchLatest, getOriginalBranch } from './git';
 import { cleanupJj, setupJj } from './jj';
 import { checkRebaseSafety, performRebase } from './rebase';
@@ -15,6 +15,192 @@ type AutoRebaseFlags = {
   autoRebase: boolean;
   backupDir: string;
 };
+
+type ChangeState = 'none' | 'remote-only' | 'local-only' | 'local-and-remote';
+
+async function exitWithError(message: string): Promise<never> {
+  logger.error(message);
+  process.exit(1);
+}
+
+async function requireRepositoryRoot(): Promise<string> {
+  const root = await findRepoRoot();
+  if (!root) return exitWithError('Could not find repository root');
+  if (!(await isGitRepo(root))) await exitWithError('Not a git repository');
+
+  logger.info(`Repository root: ${root}`);
+  return root;
+}
+
+async function recoverRepository(root: string, backupDir: string): Promise<void> {
+  const recovered = await recoverFromInterruptedState(root);
+  if (recovered) return;
+
+  logger.error('Recovery failed. Please manually clean up:');
+  logger.error("  1. Check for .jj directory and remove if you didn't create it");
+  logger.error('  2. Remove .auto-rebase-state file if it exists');
+  logger.error(`  3. Restore from backup if needed: ${backupDir}`);
+  process.exit(1);
+}
+
+async function requireEuvlokRepository(root: string): Promise<void> {
+  if (await isEuvlokRepo(root)) return;
+
+  logger.error('This is not an euvlok repository (missing .euvlok file)');
+  logger.info('This script is designed to work only with the euvlok repository');
+  process.exit(1);
+}
+
+function registerCleanupSignals(ctx: RebaseContext): void {
+  const cleanupAndExit = async () => {
+    await cleanupOnError(ctx);
+    process.exit(1);
+  };
+
+  process.on('SIGINT', cleanupAndExit);
+  process.on('SIGTERM', cleanupAndExit);
+}
+
+async function fetchLatestWithCleanup(ctx: RebaseContext): Promise<void> {
+  await fetchLatest(ctx).catch(async (e) => {
+    await cleanupJj(ctx);
+    throw e;
+  });
+}
+
+async function handleRemoteOnlyChanges(ctx: RebaseContext): Promise<void> {
+  logger.info('Only remote changes detected. Updating to latest remote...');
+  const target = await getRemoteBookmark(ctx.repoRoot);
+
+  const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
+    cwd: ctx.repoRoot,
+  });
+
+  if (!ctx.dryRun && result.exitCode !== 0) logger.warn('Rebase failed');
+
+  if (ctx.dryRun) {
+    if (result.exitCode === 0) logger.success('  [DRY RUN] Rebase would succeed');
+    if (result.exitCode !== 0) logger.warn('  [DRY RUN] Rebase would fail');
+    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+  }
+
+  await cleanupJj(ctx);
+}
+
+function changeState(local: boolean, remote: boolean): ChangeState {
+  if (local && remote) return 'local-and-remote';
+  if (local) return 'local-only';
+  if (remote) return 'remote-only';
+  return 'none';
+}
+
+async function handleChangeSet(ctx: RebaseContext): Promise<boolean> {
+  const local = await checkLocalChanges(ctx.repoRoot);
+  const remote = await checkRemoteChanges(ctx.repoRoot);
+
+  switch (changeState(local, remote)) {
+    case 'none':
+      logger.info('No local or remote changes detected. Nothing to do');
+      await cleanupJj(ctx);
+      return true;
+    case 'remote-only':
+      await handleRemoteOnlyChanges(ctx);
+      return true;
+    case 'local-only':
+      logger.info('Only local changes detected. No rebase needed');
+      await cleanupJj(ctx);
+      return true;
+    case 'local-and-remote':
+      return false;
+  }
+}
+
+async function handleUnsafeRebase(ctx: RebaseContext): Promise<void> {
+  logger.warn('Rebase may have conflicts. Not automatically rebasing');
+  logger.info('Please resolve conflicts manually using standard Git commands:');
+  logger.info('  git pull');
+  logger.info(`Backup available at: ${ctx.backupFile}`);
+}
+
+async function handleSafeAutoRebase(
+  ctx: RebaseContext,
+  rebaseAlreadyApplied: boolean,
+): Promise<void> {
+  if (rebaseAlreadyApplied) {
+    logger.info('Rebase already completed during safety check (optimization)');
+    logger.success('Successfully rebased local changes onto latest remote!');
+    return;
+  }
+
+  logger.info('Rebase is safe. Automatically rebasing...');
+  await performRebase(ctx).catch(async () => {
+    await cleanupJj(ctx);
+    process.exit(1);
+  });
+  logger.success('Successfully rebased local changes onto latest remote!');
+}
+
+async function handleSafeManualRebase(
+  ctx: RebaseContext,
+  rebaseAlreadyApplied: boolean,
+): Promise<void> {
+  if (rebaseAlreadyApplied) {
+    logger.info('Undoing test rebase (--no-auto-rebase is set)');
+    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+  }
+
+  logger.info('Rebase would be safe, but --no-auto-rebase is set. Skipping rebase');
+}
+
+async function handleLocalAndRemoteChanges(ctx: RebaseContext): Promise<void> {
+  logger.info('Both local and remote changes detected. Checking rebase safety...');
+
+  const safety = await checkRebaseSafety(ctx);
+
+  if (!safety.safe) await handleUnsafeRebase(ctx);
+  if (safety.safe && ctx.autoRebase) {
+    await handleSafeAutoRebase(ctx, safety.rebaseAlreadyApplied);
+  }
+  if (safety.safe && !ctx.autoRebase) {
+    await handleSafeManualRebase(ctx, safety.rebaseAlreadyApplied);
+  }
+
+  await cleanupJj(ctx);
+}
+
+function logCompletion(ctx: RebaseContext): void {
+  logger.success('Operation completed!');
+  if (ctx.dryRun) logger.info('This was a dry run - no changes were made');
+  if (ctx.backupFile) logger.info(`Backup saved at: ${ctx.backupFile}`);
+}
+
+async function runAutoRebase(args: AutoRebaseFlags): Promise<void> {
+  const root = await requireRepositoryRoot();
+  await recoverRepository(root, args.backupDir);
+  await requireEuvlokRepository(root);
+
+  const ctx = createContext(root, args.dryRun, args.autoRebase, args.backupDir);
+  ctx.originalBranch = args.branch ?? (await getOriginalBranch(root));
+  logger.info(`Original branch: ${ctx.originalBranch}`);
+
+  await checkGitLocks(root);
+  registerCleanupSignals(ctx);
+
+  try {
+    ctx.backupFile = await createBackup(ctx);
+    await setupJj(ctx);
+    await fetchLatestWithCleanup(ctx);
+
+    const handled = await handleChangeSet(ctx);
+    if (!handled) await handleLocalAndRemoteChanges(ctx);
+
+    logCompletion(ctx);
+  } catch (e: unknown) {
+    await cleanupOnError(ctx);
+    logger.error(e instanceof Error ? e.message : String(e));
+    process.exit(1);
+  }
+}
 
 const command = buildCommand<AutoRebaseFlags>({
   docs: {
@@ -52,153 +238,7 @@ const command = buildCommand<AutoRebaseFlags>({
     },
   },
   async func(args) {
-    const dryRun = args.dryRun;
-    const autoRebase = args.autoRebase;
-    const backupDir = args.backupDir;
-
-    const root = await findRepoRoot();
-    if (!root) {
-      logger.error('Could not find repository root');
-      process.exit(1);
-    }
-
-    if (!(await isGitRepo(root))) {
-      logger.error('Not a git repository');
-      process.exit(1);
-    }
-
-    logger.info(`Repository root: ${root}`);
-
-    const recovered = await recoverFromInterruptedState(root);
-    if (!recovered) {
-      logger.error('Recovery failed. Please manually clean up:');
-      logger.error("  1. Check for .jj directory and remove if you didn't create it");
-      logger.error('  2. Remove .auto-rebase-state file if it exists');
-      logger.error(`  3. Restore from backup if needed: ${backupDir}`);
-      process.exit(1);
-    }
-
-    if (!(await isEuvlokRepo(root))) {
-      logger.error('This is not an euvlok repository (missing .euvlok file)');
-      logger.info('This script is designed to work only with the euvlok repository');
-      process.exit(1);
-    }
-
-    const ctx = createContext(root, dryRun, autoRebase, backupDir);
-    ctx.originalBranch = args.branch ?? (await getOriginalBranch(root));
-    logger.info(`Original branch: ${ctx.originalBranch}`);
-
-    await checkGitLocks(root);
-
-    process.on('SIGINT', async () => {
-      await cleanupOnError(ctx);
-      process.exit(1);
-    });
-    process.on('SIGTERM', async () => {
-      await cleanupOnError(ctx);
-      process.exit(1);
-    });
-
-    try {
-      ctx.backupFile = await createBackup(ctx);
-      await setupJj(ctx);
-
-      try {
-        await fetchLatest(ctx);
-      } catch (e) {
-        await cleanupJj(ctx);
-        throw e;
-      }
-
-      const local = await checkLocalChanges(root);
-      const remote = await checkRemoteChanges(root);
-
-      if (!local && !remote) {
-        logger.info('No local or remote changes detected. Nothing to do');
-        await cleanupJj(ctx);
-        return;
-      }
-
-      if (!local && remote) {
-        logger.info('Only remote changes detected. Updating to latest remote...');
-        const target = await getRemoteBookmark(root);
-
-        const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
-          cwd: root,
-        });
-        if (!dryRun) {
-          if (result.exitCode !== 0) logger.warn('Rebase failed');
-        }
-        if (dryRun) {
-          if (result.exitCode === 0) {
-            logger.success('  [DRY RUN] Rebase would succeed');
-          }
-          if (result.exitCode !== 0) {
-            logger.warn('  [DRY RUN] Rebase would fail');
-          }
-          await execSafe(['jj', 'undo'], { cwd: root });
-        }
-
-        await cleanupJj(ctx);
-        return;
-      }
-
-      if (local && !remote) {
-        logger.info('Only local changes detected. No rebase needed');
-        await cleanupJj(ctx);
-        return;
-      }
-
-      logger.info('Both local and remote changes detected. Checking rebase safety...');
-
-      const safety = await checkRebaseSafety(ctx);
-
-      if (!safety.safe) {
-        logger.warn('Rebase may have conflicts. Not automatically rebasing');
-        logger.info('Please resolve conflicts manually using standard Git commands:');
-        logger.info('  git pull');
-        logger.info(`Backup available at: ${ctx.backupFile}`);
-      }
-
-      if (safety.safe && autoRebase) {
-        if (safety.rebaseAlreadyApplied) {
-          logger.info('Rebase already completed during safety check (optimization)');
-          logger.success('Successfully rebased local changes onto latest remote!');
-        }
-        if (!safety.rebaseAlreadyApplied) {
-          logger.info('Rebase is safe. Automatically rebasing...');
-          try {
-            await performRebase(ctx);
-            logger.success('Successfully rebased local changes onto latest remote!');
-          } catch {
-            await cleanupJj(ctx);
-            process.exit(1);
-          }
-        }
-      }
-
-      if (safety.safe && !autoRebase) {
-        if (safety.rebaseAlreadyApplied) {
-          logger.info('Undoing test rebase (--no-auto-rebase is set)');
-          await execSafe(['jj', 'undo'], { cwd: root });
-        }
-        logger.info('Rebase would be safe, but --no-auto-rebase is set. Skipping rebase');
-      }
-
-      await cleanupJj(ctx);
-
-      logger.success('Operation completed!');
-      if (dryRun) {
-        logger.info('This was a dry run - no changes were made');
-      }
-      if (ctx.backupFile) {
-        logger.info(`Backup saved at: ${ctx.backupFile}`);
-      }
-    } catch (e: unknown) {
-      await cleanupOnError(ctx);
-      logger.error(e instanceof Error ? e.message : String(e));
-      process.exit(1);
-    }
+    await runAutoRebase(args);
   },
 });
 

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, mock, test } from 'bun:test';
 import { join } from 'pathe';
 import {
   cleanupTempDir,
+  cleanupTempJjRepo,
   createTempJjRepo,
   createTestContext,
   type JjTestRepo,
@@ -33,10 +34,7 @@ describe('checkRebaseSafety', () => {
   let repo: JjTestRepo;
 
   afterEach(async () => {
-    if (repo) {
-      await cleanupTempDir(repo.dir);
-      await cleanupTempDir(repo.remoteDir);
-    }
+    if (repo) await cleanupTempJjRepo(repo);
   });
 
   test('clean divergence returns safe with rebase applied', async () => {
@@ -87,10 +85,7 @@ describe('performRebase', () => {
   let repo: JjTestRepo;
 
   afterEach(async () => {
-    if (repo) {
-      await cleanupTempDir(repo.dir);
-      await cleanupTempDir(repo.remoteDir);
-    }
+    if (repo) await cleanupTempJjRepo(repo);
   });
 
   test('clean rebase succeeds without error', async () => {

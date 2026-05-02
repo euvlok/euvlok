@@ -89,14 +89,17 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
   await Array.from({ length: 5 }, (_, index) => index + 1).reduce(async (previous, attempt) => {
     if (await previous) return true;
 
-    try {
-      await git.push('origin', `HEAD:${refName}`);
+    const pushed = await git
+      .push('origin', `HEAD:${refName}`)
+      .then(() => true)
+      .catch(() => false);
+    if (pushed) {
       logger.info(`Successfully pushed changes on attempt ${attempt}.`);
       return true;
-    } catch {
-      if (attempt === 5) {
-        throw new Error('Failed to push after 5 attempts.');
-      }
+    }
+
+    if (attempt === 5) {
+      throw new Error('Failed to push after 5 attempts.');
     }
 
     const waitSeconds = 5 * attempt;

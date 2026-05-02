@@ -48,8 +48,8 @@ describe('getOriginalBranch', () => {
   });
 
   test('returns HEAD for detached HEAD', async () => {
-    const { stdout: hash } = await realExec(['git', '-C', tmpDir, 'rev-parse', 'HEAD']);
-    await realExec(['git', '-C', tmpDir, 'checkout', '--detach', hash]);
+    const head = await realExec(['git', '-C', tmpDir, 'rev-parse', 'HEAD']);
+    await realExec(['git', '-C', tmpDir, 'checkout', '--detach', head.stdout]);
     const result = await getOriginalBranch(tmpDir);
     expect(result).toBe('HEAD');
   });
@@ -151,11 +151,11 @@ describe('fetchLatest', () => {
     mockExecSafe
       .mockResolvedValueOnce(mockExecResult()) // jj bookmark track
       .mockResolvedValueOnce(mockExecResult({ exitCode: 1 })); // jj git fetch fails
-    try {
-      await expect(fetchLatest(ctx)).rejects.toThrow('Failed to fetch from git remote');
-    } finally {
-      await cleanupTempDir(repo.dir);
-      await cleanupTempDir(repo.remoteDir);
-    }
+    await expect(
+      fetchLatest(ctx).finally(async () => {
+        await cleanupTempDir(repo.dir);
+        await cleanupTempDir(repo.remoteDir);
+      }),
+    ).rejects.toThrow('Failed to fetch from git remote');
   });
 });

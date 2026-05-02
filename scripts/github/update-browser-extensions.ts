@@ -1,5 +1,6 @@
 import { basename, dirname } from 'node:path';
 import { escapeNixString, exec, execSafe } from '@euvlok/shared';
+import { Listr } from 'listr2';
 import { simpleGit } from 'simple-git';
 import { walkFiles, withTempFile } from './lib/files';
 import {
@@ -29,14 +30,15 @@ if (sourceFiles.length === 0) {
   process.exit(0);
 }
 
-await sourceFiles.reduce(async (previous, sourceFile) => {
-  await previous;
-  await group(`Processing ${sourceFile}`, async () => {
-    await exec(['bun', 'run', 'browser-extension-update', '--', '-i', sourceFile], {
-      inheritOutput: true,
-    });
-  });
-}, Promise.resolve());
+const tasks = new Listr(
+  sourceFiles.map((sourceFile) => ({
+    title: sourceFile,
+    task: () => group(`Processing ${sourceFile}`, () => updateExtensionFile(sourceFile)),
+  })),
+  { concurrent: false, exitOnError: false },
+);
+
+await tasks.run();
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any extension files.');
@@ -74,6 +76,12 @@ function normalizeBrowserFilter(input: string | undefined): BrowserType | null {
   }
 
   throw new Error(`Unsupported browser filter: ${input}`);
+}
+
+async function updateExtensionFile(sourceFile: string): Promise<void> {
+  await exec(['bun', 'run', 'browser-extension-update', '--', '-i', sourceFile], {
+    inheritOutput: true,
+  });
 }
 
 async function findSourceFiles(filter: BrowserType | null): Promise<string[]> {
@@ -159,43 +167,48 @@ async function parseExtensions(
 }
 
 function summarizeExtension(entry: unknown, browserType: BrowserType): ExtensionSummary | null {
-  if (!isRecord(entry)) {
-    return null;
-  }
+  const record = readRecord(entry);
+  if (!record) return null;
 
-  if (browserType === 'chromium') {
-    const crxPath = entry.crxPath;
-    if (!isRecord(crxPath)) {
-      return null;
-    }
+  return browserType === 'chromium'
+    ? summarizeChromiumExtension(record)
+    : summarizeFirefoxExtension(record);
+}
 
-    const id = readString(entry.id);
-    const version = readString(entry.version);
-    const url = readString(crxPath.url);
-    if (!id || !version || !url) {
-      return null;
-    }
+function summarizeChromiumExtension(entry: Record<string, unknown>): ExtensionSummary | null {
+  const crxPath = readRecord(entry.crxPath);
+  if (!crxPath) return null;
 
-    return {
-      id,
-      version,
-      key: `${id}|${version}|${url}`,
-      hash: readString(crxPath.hash),
-    };
-  }
+  return buildExtensionSummary({
+    id: readString(entry.id),
+    version: readString(entry.version),
+    url: readString(crxPath.url),
+    hash: readString(crxPath.hash),
+  });
+}
 
-  const id = readString(entry.name);
-  const version = readString(entry.version);
-  const url = readString(entry.url);
-  if (!id || !version || !url) {
-    return null;
-  }
+function summarizeFirefoxExtension(entry: Record<string, unknown>): ExtensionSummary | null {
+  return buildExtensionSummary({
+    id: readString(entry.name),
+    version: readString(entry.version),
+    url: readString(entry.url),
+    hash: readString(entry.sha256),
+  });
+}
+
+function buildExtensionSummary(input: {
+  id: string;
+  version: string;
+  url: string;
+  hash: string;
+}): ExtensionSummary | null {
+  if (!input.id || !input.version || !input.url) return null;
 
   return {
-    id,
-    version,
-    key: `${id}|${version}|${url}`,
-    hash: readString(entry.sha256),
+    id: input.id,
+    version: input.version,
+    key: `${input.id}|${input.version}|${input.url}`,
+    hash: input.hash,
   };
 }
 
@@ -218,6 +231,10 @@ function formatUpdatedExtension(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
+}
+
+function readRecord(value: unknown): Record<string, unknown> | null {
+  return isRecord(value) ? value : null;
 }
 
 function readString(value: unknown): string {

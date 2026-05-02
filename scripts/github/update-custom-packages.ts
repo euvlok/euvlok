@@ -1,5 +1,6 @@
 import { basename, resolve } from 'node:path';
 import { escapeNixString, execSafe } from '@euvlok/shared';
+import { Listr } from 'listr2';
 import { simpleGit } from 'simple-git';
 import { walkFiles } from './lib/files';
 import { commitAndPush, currentRefName, hasGitDiff } from './lib/git';
@@ -19,35 +20,15 @@ if (nixFiles.length === 0) {
   process.exit(0);
 }
 
-await nixFiles.reduce(async (previous, nixFile) => {
-  await previous;
-  await group(`Processing ${nixFile}`, async () => {
-    const absPath = resolve(nixFile);
-    const name = basename(nixFile, '.nix');
+const tasks = new Listr(
+  nixFiles.map((nixFile) => ({
+    title: nixFile,
+    task: () => group(`Processing ${nixFile}`, () => updatePackage(nixFile)),
+  })),
+  { concurrent: false, exitOnError: false },
+);
 
-    if (!(await isDerivation(absPath))) {
-      logger.warn(`${nixFile} is NOT a derivation, skipping.`);
-      return;
-    }
-
-    if (!(await hasSrc(absPath))) {
-      logger.info(`${nixFile} does not have a .src attribute, skipping update.`);
-      return;
-    }
-
-    logger.info(`${name} is a fetchable derivation, proceeding with update.`);
-
-    const result = await execSafe(['bash', './pkgs/update.sh', nixFile], {
-      inheritOutput: true,
-    });
-
-    if (result.exitCode === 0) {
-      logger.info(`Update script succeeded for ${nixFile}`);
-      return;
-    }
-    logger.warn(`Update script failed for ${nixFile}, skipping.`);
-  });
-}, Promise.resolve());
+await tasks.run();
 
 if (!(await hasGitDiff())) {
   logger.info('No changes detected in any packages.');
@@ -60,6 +41,33 @@ await commitAndPush({
   add: [packageRoot],
   refName: currentRefName(),
 });
+
+async function updatePackage(nixFile: string): Promise<void> {
+  const absPath = resolve(nixFile);
+  const name = basename(nixFile, '.nix');
+
+  if (!(await isDerivation(absPath))) {
+    logger.warn(`${nixFile} is NOT a derivation, skipping.`);
+    return;
+  }
+
+  if (!(await hasSrc(absPath))) {
+    logger.info(`${nixFile} does not have a .src attribute, skipping update.`);
+    return;
+  }
+
+  logger.info(`${name} is a fetchable derivation, proceeding with update.`);
+
+  const result = await execSafe(['bash', './pkgs/update.sh', nixFile], {
+    inheritOutput: true,
+  });
+
+  if (result.exitCode === 0) {
+    logger.info(`Update script succeeded for ${nixFile}`);
+    return;
+  }
+  logger.warn(`Update script failed for ${nixFile}, skipping.`);
+}
 
 async function isDerivation(absPath: string): Promise<boolean> {
   const result = await execSafe([

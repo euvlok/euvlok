@@ -1,14 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 import { $ } from 'bun';
 import { join } from 'pathe';
-import {
-  cleanupTempDir,
-  createTempDir,
-  createTempJjRepo,
-  type JjTestRepo,
-  realExec,
-  silentLogger,
-} from './test-utils';
+import { cleanupTempDir, createTempDir, realExec, silentLogger, useTempJjRepo } from './test-utils';
 
 mock.module('@euvlok/shared', () => ({
   execSafe: realExec,
@@ -61,27 +54,19 @@ describe('recoverFromInterruptedState', () => {
 });
 
 describe('recoverFromInterruptedState with real jj', () => {
-  let repo: JjTestRepo;
-
-  beforeEach(async () => {
-    repo = await createTempJjRepo();
-  });
-
-  afterEach(async () => {
-    await cleanupTempDir(repo.dir);
-    await cleanupTempDir(repo.remoteDir);
-  });
+  const repo = useTempJjRepo();
 
   test('recovers with real .jj directory present', async () => {
+    const current = repo.current();
     await Bun.write(
-      join(repo.dir, '.auto-rebase-state'),
+      join(current.dir, '.auto-rebase-state'),
       JSON.stringify(testState({ originalBranch: 'master' })),
     );
 
-    const result = await recoverFromInterruptedState(repo.dir);
+    const result = await recoverFromInterruptedState(current.dir);
 
     expect(result).toBe(true);
-    expect(await Bun.file(join(repo.dir, '.auto-rebase-state')).exists()).toBe(false);
+    expect(await Bun.file(join(current.dir, '.auto-rebase-state')).exists()).toBe(false);
   });
 });
 
