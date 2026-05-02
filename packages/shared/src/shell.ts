@@ -38,13 +38,7 @@ export async function execSafe(cmd: string[], opts?: ExecOptions): Promise<ExecR
     throw new Error('Cannot execute an empty command.');
   }
 
-  const result = await getExecOutput(command, args, {
-    cwd: opts?.cwd,
-    env: buildEnv(opts?.env),
-    silent: !opts?.inheritOutput,
-    ignoreReturnCode: true,
-    input: opts?.input === undefined ? undefined : Buffer.from(opts.input),
-  });
+  const result = await getExecOutput(command, args, buildActionsExecOptions(opts));
 
   const trim = opts?.trimOutput ?? true;
   return {
@@ -52,6 +46,20 @@ export async function execSafe(cmd: string[], opts?: ExecOptions): Promise<ExecR
     stderr: trim ? result.stderr.trim() : result.stderr,
     exitCode: result.exitCode,
   };
+}
+
+function buildActionsExecOptions(opts?: ExecOptions): ActionsExecOptions {
+  return {
+    cwd: opts?.cwd,
+    env: buildEnv(opts?.env),
+    silent: !opts?.inheritOutput,
+    ignoreReturnCode: true,
+    input: inputBuffer(opts),
+  };
+}
+
+function inputBuffer(opts?: ExecOptions): Buffer | undefined {
+  return opts?.input === undefined ? undefined : Buffer.from(opts.input);
 }
 
 function buildEnv(overrides?: Record<string, string | undefined>): ActionsExecOptions['env'] {

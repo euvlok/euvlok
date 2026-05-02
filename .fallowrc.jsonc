@@ -1,15 +1,25 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/refs/heads/main/schema.json",
-  "entry": ["packages/auto-rebase/tests/**/*.ts"],
+  "entry": [
+    "packages/*/src/index.ts",
+    "packages/auto-rebase/tests/**/*.ts",
+    "prettier.config.js",
+    "scripts/**/*.ts"
+  ],
+  "includeEntryExports": true,
   "dynamicallyLoaded": ["hosts/hm/lay-by/hyprland/waybar.css"],
   "ignoreDependencies": ["@tktco/node-actionlint"],
+  "ignoreExports": [{ "file": "prettier.config.js", "exports": ["default"] }],
   "duplicates": {
-    "ignore": ["packages/auto-rebase/tests/**"]
+    "mode": "strict",
+    "minTokens": 35,
+    "minLines": 4,
+    "ignore": []
   },
   "health": {
-    "maxCyclomatic": 31,
-    "maxCognitive": 44,
-    "maxCrap": 1000,
-    "ignore": ["packages/auto-rebase/tests/**"]
+    "maxCyclomatic": 10,
+    "maxCognitive": 15,
+    "maxCrap": 50,
+    "ignore": []
   }
 }

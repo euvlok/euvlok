@@ -1,17 +1,28 @@
 import type { AmoAddon, FetchUrlResult } from '../types';
 
-export async function fetchAmoUrlAndGuid(slug: string): Promise<FetchUrlResult> {
-  const response = await fetch(`https://addons.mozilla.org/api/v5/addons/addon/${slug}/`, {
+async function fetchAddon(slug: string): Promise<Response | null> {
+  return fetch(`https://addons.mozilla.org/api/v5/addons/addon/${slug}/`, {
     headers: { 'User-Agent': 'BrowserExtensionsUpdater' },
   }).catch(() => null);
+}
 
-  if (!response?.ok) {
-    return { error: `AMO API returned status ${response?.status ?? 'network error'}` };
-  }
+function responseError(response: Response | null): FetchUrlResult | null {
+  if (response?.ok) return null;
+  return { error: `AMO API returned status ${response?.status ?? 'network error'}` };
+}
 
-  const addon: AmoAddon = await response.json();
+function addonResult(addon: AmoAddon): FetchUrlResult {
   return {
     url: addon.current_version?.file?.url,
     addonId: addon.guid ?? undefined,
   };
+}
+
+export async function fetchAmoUrlAndGuid(slug: string): Promise<FetchUrlResult> {
+  const response = await fetchAddon(slug);
+  const error = responseError(response);
+  if (error) return error;
+
+  const addon: AmoAddon = await response?.json();
+  return addonResult(addon);
 }

@@ -17,11 +17,7 @@ export async function withTempFile<T>(
   callback: (path: string) => Promise<T>,
 ): Promise<T> {
   const path = await writeTempFile(content, suffix);
-  try {
-    return await callback(path);
-  } finally {
-    await removeTempPath(path);
-  }
+  return callback(path).finally(() => removeTempPath(path));
 }
 
 async function removeTempPath(path: string): Promise<void> {

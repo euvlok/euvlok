@@ -28,11 +28,9 @@ export async function createBackup(ctx: RebaseContext): Promise<string> {
     return '';
   }
 
-  try {
-    await git.raw(['bundle', 'create', file, '--all']);
-  } catch {
+  await git.raw(['bundle', 'create', file, '--all']).catch(() => {
     throw new Error('Failed to create backup bundle');
-  }
+  });
 
   logger.success(`Backup created: ${file}`);
   logger.warn(

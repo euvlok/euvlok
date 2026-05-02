@@ -38,38 +38,57 @@ export async function fetchLatest(ctx: RebaseContext): Promise<void> {
     return;
   }
   const git = simpleGit(ctx.repoRoot);
+  await fetchGitRemote(git);
+  await trackRemoteBookmark(ctx.repoRoot, git);
+  await fetchJjRemote(ctx.repoRoot);
+  logger.success('Fetched latest changes from git remote');
+}
+
+async function fetchGitRemote(git: ReturnType<typeof simpleGit>): Promise<void> {
   const remotes = await git.getRemotes(true);
   if (!remotes.some((remote) => remote.name === DEFAULT_REMOTE)) {
     throw new Error(`No '${DEFAULT_REMOTE}' remote configured. Cannot fetch changes`);
   }
-  try {
-    await git.fetch(DEFAULT_REMOTE);
-  } catch {
+  await git.fetch(DEFAULT_REMOTE).catch(() => {
     throw new Error(`Failed to fetch from ${DEFAULT_REMOTE}`);
-  }
-  const bookmark = (
-    await Promise.all(
-      COMMON_BRANCH_NAMES.map(async (bookmark) => ({
-        bookmark,
-        refFound: await git
-          .raw(['show-ref', '--verify', '--quiet', `refs/remotes/${DEFAULT_REMOTE}/${bookmark}`])
-          .then(() => true)
-          .catch(() => false),
-      })),
-    )
-  ).find((result) => result.refFound)?.bookmark;
+  });
+}
+
+async function remoteBookmarkExists(
+  git: ReturnType<typeof simpleGit>,
+  bookmark: string,
+): Promise<boolean> {
+  return git
+    .raw(['show-ref', '--verify', '--quiet', `refs/remotes/${DEFAULT_REMOTE}/${bookmark}`])
+    .then(() => true)
+    .catch(() => false);
+}
+
+async function firstRemoteBookmark(git: ReturnType<typeof simpleGit>): Promise<string | undefined> {
+  const results = await Promise.all(
+    COMMON_BRANCH_NAMES.map(async (bookmark) => ({
+      bookmark,
+      refFound: await remoteBookmarkExists(git, bookmark),
+    })),
+  );
+  return results.find((result) => result.refFound)?.bookmark;
+}
+
+async function trackRemoteBookmark(root: string, git: ReturnType<typeof simpleGit>): Promise<void> {
+  const bookmark = await firstRemoteBookmark(git);
 
   if (bookmark) {
     await execSafe(['jj', 'bookmark', 'track', `${bookmark}@${DEFAULT_REMOTE}`], {
-      cwd: ctx.repoRoot,
+      cwd: root,
     });
   }
+}
 
+async function fetchJjRemote(root: string): Promise<void> {
   const jj = await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
-    cwd: ctx.repoRoot,
+    cwd: root,
   });
   if (jj.exitCode !== 0) {
     throw new Error('Failed to fetch from git remote');
   }
-  logger.success('Fetched latest changes from git remote');
 }

@@ -72,9 +72,11 @@ export async function updateNvidiaDriverNix(
   const tmp = join(Bun.env.TMPDIR || '/tmp', `nvidia-driver-${Date.now()}.nix`);
   await Bun.write(tmp, content);
 
-  try {
-    await validateNixFile(tmp);
-  } catch {
+  if (
+    await validateNixFile(tmp)
+      .then(() => false)
+      .catch(() => true)
+  ) {
     await Bun.write(path, Bun.file(backup));
     await $`rm -f ${tmp}`.quiet();
     await $`rm -f ${backup}`.quiet();

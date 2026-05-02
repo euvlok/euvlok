@@ -23,9 +23,11 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
   const content = await Bun.file(path).text();
   if (!content.trim()) return null;
 
-  const parsed = JSON.parse(content) as Partial<RebaseState>;
+  return normalizeState(JSON.parse(content) as Partial<RebaseState>);
+}
+
+function normalizeState(parsed: Partial<RebaseState>): RebaseState {
   const originalBranch = parsed.originalBranch || 'HEAD';
-  const timestamp = Number(parsed.timestamp) || 0;
 
   return {
     originalBranch,
@@ -34,7 +36,7 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
     stagedDiffPath: parsed.stagedDiffPath ?? '',
     unstagedDiffPath: parsed.unstagedDiffPath ?? '',
     jjWasPresent: parsed.jjWasPresent === true,
-    timestamp,
+    timestamp: Number(parsed.timestamp) || 0,
   };
 }
 

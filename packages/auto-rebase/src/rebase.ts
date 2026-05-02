@@ -2,6 +2,24 @@ import { execSafe, logger } from '@euvlok/shared';
 import { getRemoteBookmark } from './checks';
 import type { RebaseContext } from './context';
 
+function hasConflictOutput(result: { stdout: string; stderr: string }): boolean {
+  return /conflict/i.test(result.stderr + result.stdout);
+}
+
+function successResult(rebaseAlreadyApplied: boolean) {
+  return { safe: true, rebaseAlreadyApplied };
+}
+
+function unsafeResult() {
+  return { safe: false, rebaseAlreadyApplied: false };
+}
+
+async function rebaseOnto(ctx: RebaseContext, target: string) {
+  return execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
+    cwd: ctx.repoRoot,
+  });
+}
+
 export async function checkRebaseSafety(
   ctx: RebaseContext,
 ): Promise<{ safe: boolean; rebaseAlreadyApplied: boolean }> {
@@ -10,9 +28,7 @@ export async function checkRebaseSafety(
 
   if (ctx.dryRun) {
     logger.info('  [DRY RUN] Performing actual rebase in jj to show result...');
-    const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
-      cwd: ctx.repoRoot,
-    });
+    const result = await rebaseOnto(ctx, target);
     if (result.exitCode === 0) {
       logger.success('  [DRY RUN] Rebase would succeed');
       logger.info('  [DRY RUN] Resulting jj log:');
@@ -20,34 +36,31 @@ export async function checkRebaseSafety(
         cwd: ctx.repoRoot,
       });
       await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
-      return { safe: true, rebaseAlreadyApplied: false };
+      return successResult(false);
     }
     logger.warn('  [DRY RUN] Rebase would have conflicts');
     await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
-    return { safe: false, rebaseAlreadyApplied: false };
+    return unsafeResult();
   }
 
-  const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
-    cwd: ctx.repoRoot,
-  });
+  const result = await rebaseOnto(ctx, target);
 
   if (result.exitCode === 0) {
     logger.success('Rebase would be safe (test rebase succeeded)');
-    return { safe: true, rebaseAlreadyApplied: true };
+    return successResult(true);
   }
 
-  const conflicts = /conflict/i.test(result.stderr + result.stdout);
   await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
 
-  if (conflicts) {
+  if (hasConflictOutput(result)) {
     logger.warn('Rebase would have conflicts. Aborting safety check');
     logger.info('Please resolve conflicts manually using standard Git commands:');
     logger.info('  git pull');
-    return { safe: false, rebaseAlreadyApplied: false };
+    return unsafeResult();
   }
 
   logger.success('Rebase appears safe (no conflicts detected)');
-  return { safe: true, rebaseAlreadyApplied: false };
+  return successResult(false);
 }
 
 export async function performRebase(ctx: RebaseContext): Promise<void> {
@@ -59,17 +72,14 @@ export async function performRebase(ctx: RebaseContext): Promise<void> {
     return;
   }
 
-  const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
-    cwd: ctx.repoRoot,
-  });
+  const result = await rebaseOnto(ctx, target);
 
   if (result.exitCode === 0) {
     logger.success(`Successfully rebased onto ${target}`);
     return;
   }
 
-  const conflicts = /conflict/i.test(result.stderr + result.stdout);
-  if (conflicts) {
+  if (hasConflictOutput(result)) {
     logger.error('Rebase failed due to conflicts');
     logger.warn('Conflicts detected. Aborting rebase to prevent corruption');
     await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });

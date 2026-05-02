@@ -76,6 +76,87 @@ type BuildFlags = {
 };
 type BuildArgs = [userstylesDir?: string, outputDir?: string];
 
+async function resolveUserstylesDir(userstylesDirArg?: string): Promise<string> {
+  return resolve(
+    userstylesDirArg ??
+      process.env.USERSTYLES_DIR ??
+      (await firstExistingDir(['/tmp/userstyles', '/tmp/catppuccin-userstyles'])),
+  );
+}
+
+function resolveOutputDir(outputDirArg?: string): string {
+  return resolve(outputDirArg ?? process.env.OUTPUT_DIR ?? DEFAULT_OUTPUT_DIR);
+}
+
+function filterSourceFiles(
+  files: string[],
+  includedExcludedStyles: Set<ExcludedStyleId>,
+): string[] {
+  return files.filter((file) => {
+    const styleId = getStyleId(file);
+    return !isExcludedStyleId(styleId) || includedExcludedStyles.has(styleId);
+  });
+}
+
+function logExcludedStyles(allCount: number, sourceCount: number, included: Set<ExcludedStyleId>) {
+  const excluded = allCount - sourceCount;
+  if (excluded === 0) return;
+
+  const skipped = EXCLUDED_STYLE_IDS.filter((id) => !included.has(id)).join(', ');
+  consola.info(`Excluded ${excluded} style(s): ${skipped}`);
+}
+
+async function buildVariants(outputDir: string, baseData: StylusImport): Promise<string[]> {
+  const firstStyle = baseData.find(isStylusUserstyle);
+  if (!firstStyle) throw new Error('No UserCSS styles were generated');
+
+  const accents = getSelectOptions(firstStyle.usercssData, 'accentColor').map(
+    (option) => option.name,
+  );
+
+  return Promise.all(
+    DEFAULT_DARK_FLAVORS.flatMap((darkFlavor) =>
+      accents.map(async (accent) => {
+        const variant = buildVariant(baseData, {
+          lightFlavor: 'latte',
+          darkFlavor,
+          accentColor: accent,
+        });
+        const name = `catppuccin-latte-${darkFlavor}-${accent}-import.json`;
+        await writeJson(join(outputDir, name), variant);
+        consola.debug(name);
+        return name;
+      }),
+    ),
+  );
+}
+
+async function runBuild(
+  { include }: BuildFlags,
+  userstylesDirArg?: string,
+  outputDirArg?: string,
+): Promise<void> {
+  const userstylesDir = await resolveUserstylesDir(userstylesDirArg);
+  const outputDir = resolveOutputDir(outputDirArg);
+  const includedExcludedStyles = new Set(include);
+
+  const allSourceFiles = await getUserstyleFiles(userstylesDir);
+  const sourceFiles = filterSourceFiles(allSourceFiles, includedExcludedStyles);
+  if (sourceFiles.length === 0) {
+    throw new Error(`No userstyles found under ${join(userstylesDir, 'styles')}`);
+  }
+
+  await mkdir(outputDir, { recursive: true });
+  logExcludedStyles(allSourceFiles.length, sourceFiles.length, includedExcludedStyles);
+
+  const baseData = await buildStylusImport(sourceFiles);
+  await writeJson(join(outputDir, 'catppuccin-import.json'), baseData);
+  consola.info(`Base: ${baseData.length - 1} styles from ${userstylesDir}`);
+
+  const variants = await buildVariants(outputDir, baseData);
+  consola.success(`Generated ${variants.length} variants in ${outputDir}`);
+}
+
 const app = buildApplication(
   buildCommand<BuildFlags, BuildArgs>({
     docs: {
@@ -111,66 +192,7 @@ const app = buildApplication(
         ],
       },
     },
-    func: async ({ include }, userstylesDirArg, outputDirArg) => {
-      const userstylesDir = resolve(
-        userstylesDirArg ??
-          process.env.USERSTYLES_DIR ??
-          (await firstExistingDir(['/tmp/userstyles', '/tmp/catppuccin-userstyles'])),
-      );
-      const outputDir = resolve(outputDirArg ?? process.env.OUTPUT_DIR ?? DEFAULT_OUTPUT_DIR);
-      const includedExcludedStyles = new Set(include);
-
-      const allSourceFiles = await getUserstyleFiles(userstylesDir);
-      const sourceFiles = allSourceFiles.filter((file) => {
-        const styleId = getStyleId(file);
-        return !isExcludedStyleId(styleId) || includedExcludedStyles.has(styleId);
-      });
-      if (sourceFiles.length === 0) {
-        throw new Error(`No userstyles found under ${join(userstylesDir, 'styles')}`);
-      }
-
-      await mkdir(outputDir, { recursive: true });
-
-      const excluded = allSourceFiles.length - sourceFiles.length;
-      if (excluded > 0) {
-        consola.info(
-          `Excluded ${excluded} style(s): ${EXCLUDED_STYLE_IDS.filter(
-            (id) => !includedExcludedStyles.has(id),
-          ).join(', ')}`,
-        );
-      }
-
-      const baseData = await buildStylusImport(sourceFiles);
-      await writeJson(join(outputDir, 'catppuccin-import.json'), baseData);
-      consola.info(`Base: ${baseData.length - 1} styles from ${userstylesDir}`);
-
-      const firstStyle = baseData.find(isStylusUserstyle);
-      if (!firstStyle) {
-        throw new Error('No UserCSS styles were generated');
-      }
-
-      const accents = getSelectOptions(firstStyle.usercssData, 'accentColor').map(
-        (option) => option.name,
-      );
-
-      const variants = await Promise.all(
-        DEFAULT_DARK_FLAVORS.flatMap((darkFlavor) =>
-          accents.map(async (accent) => {
-            const variant = buildVariant(baseData, {
-              lightFlavor: 'latte',
-              darkFlavor,
-              accentColor: accent,
-            });
-            const name = `catppuccin-latte-${darkFlavor}-${accent}-import.json`;
-            await writeJson(join(outputDir, name), variant);
-            consola.debug(name);
-            return name;
-          }),
-        ),
-      );
-
-      consola.success(`Generated ${variants.length} variants in ${outputDir}`);
-    },
+    func: runBuild,
   }),
   {
     name: 'build-catppuccin-userstyles',
@@ -215,16 +237,16 @@ async function buildStylusImport(files: string[]): Promise<StylusImport> {
     ...(await Promise.all(
       files.map(async (file) => {
         const sourceCode = await Bun.file(file).text();
-        const { metadata } = usercssMeta.parse(sourceCode);
+        const parsed = usercssMeta.parse(sourceCode);
 
         return {
           enabled: true as const,
-          name: metadata.name,
-          description: metadata.description,
-          author: metadata.author,
-          url: metadata.url,
-          updateUrl: metadata.updateURL,
-          usercssData: metadata,
+          name: parsed.metadata.name,
+          description: parsed.metadata.description,
+          author: parsed.metadata.author,
+          url: parsed.metadata.url,
+          updateUrl: parsed.metadata.updateURL,
+          usercssData: parsed.metadata,
           sourceCode,
           originalDigest: calcStyleDigest(sourceCode),
         };
