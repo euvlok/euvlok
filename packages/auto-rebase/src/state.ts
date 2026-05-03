@@ -14,13 +14,21 @@ export interface RebaseState {
 }
 
 const RebaseStateSchema = z.object({
-  originalBranch: z.string().optional().catch(undefined),
-  originalHadStaged: z.boolean().optional().catch(undefined),
-  originalStagedFiles: z.string().optional().catch(undefined),
-  stagedDiffPath: z.string().optional().catch(undefined),
-  unstagedDiffPath: z.string().optional().catch(undefined),
-  jjWasPresent: z.boolean().optional().catch(undefined),
-  timestamp: z.number().optional().catch(undefined),
+  originalBranch: z
+    .string()
+    .default('HEAD')
+    .catch('HEAD')
+    .transform((branch) => branch || 'HEAD'),
+  originalHadStaged: z.boolean().default(false).catch(false),
+  originalStagedFiles: z.string().default('').catch(''),
+  stagedDiffPath: z.string().default('').catch(''),
+  unstagedDiffPath: z.string().default('').catch(''),
+  jjWasPresent: z.boolean().default(false).catch(false),
+  timestamp: z
+    .number()
+    .default(0)
+    .catch(0)
+    .transform((timestamp) => Number(timestamp) || 0),
 });
 
 export function getStateFilePath(repoRoot: string): string {
@@ -34,21 +42,7 @@ export async function loadState(repoRoot: string): Promise<RebaseState | null> {
   const content = await Bun.file(path).text();
   if (!content.trim()) return null;
 
-  return normalizeState(RebaseStateSchema.parse(JSON.parse(content)));
-}
-
-function normalizeState(parsed: z.infer<typeof RebaseStateSchema>): RebaseState {
-  const originalBranch = parsed.originalBranch || 'HEAD';
-
-  return {
-    originalBranch,
-    originalHadStaged: parsed.originalHadStaged === true,
-    originalStagedFiles: parsed.originalStagedFiles ?? '',
-    stagedDiffPath: parsed.stagedDiffPath ?? '',
-    unstagedDiffPath: parsed.unstagedDiffPath ?? '',
-    jjWasPresent: parsed.jjWasPresent === true,
-    timestamp: Number(parsed.timestamp) || 0,
-  };
+  return RebaseStateSchema.parse(JSON.parse(content));
 }
 
 export async function saveState(repoRoot: string, state: RebaseState): Promise<void> {

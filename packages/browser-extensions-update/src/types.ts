@@ -1,15 +1,16 @@
-import { assertNever } from '@euvlok/shared';
+import { assertNever } from '@euvlok/core';
 import { z } from 'zod';
 
 export type BrowserType = 'chromium' | 'firefox';
 
 export type ExtensionSource = 'chrome-store' | 'amo' | 'bpc' | 'url' | 'github-releases';
 
-const BrowserTypeSchema = z.enum(['chromium', 'firefox']);
+export const BrowserTypeSchema = z.enum(['chromium', 'firefox']);
 
 const ExtensionSourceSchema = z.enum(['chrome-store', 'amo', 'bpc', 'url', 'github-releases']);
 
 const optionalString = z.string().nullish().transform(valueOrUndefined);
+const optionalUrl = z.url().nullish().transform(valueOrUndefined);
 
 export interface Extension {
   id: string;
@@ -40,7 +41,7 @@ const NixInputExtensionSchema = z.object({
   id: optionalString,
   name: optionalString,
   source: z.preprocess((value) => value ?? 'chrome-store', ExtensionSourceSchema),
-  url: optionalString,
+  url: optionalUrl,
   condition: optionalString,
   owner: optionalString,
   repo: optionalString,
@@ -75,7 +76,7 @@ export const AmoAddonSchema = z.object({
     .object({
       file: z
         .object({
-          url: z.string().optional(),
+          url: z.url().optional(),
         })
         .optional(),
     })
@@ -89,17 +90,17 @@ function valueOrUndefined<T>(value: T | null | undefined): T | undefined {
   return value ?? undefined;
 }
 
-export interface FetchUrlResult {
+export interface ExtensionDownloadUrlResult {
   url?: string;
   error?: string;
   addonId?: string;
 }
 
-export function getFileExtension(browser: BrowserType): string {
+export function getBrowserDownloadFileExtension(browser: BrowserType): string {
   return browser === 'chromium' ? 'crx' : 'xpi';
 }
 
-export function supportsSource(browser: BrowserType, source: ExtensionSource): boolean {
+export function isExtensionSourceSupported(browser: BrowserType, source: ExtensionSource): boolean {
   switch (source) {
     case 'chrome-store':
       return browser === 'chromium';

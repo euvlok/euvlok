@@ -1,6 +1,6 @@
-import type { Extension, FetchUrlResult } from '../types';
+import type { Extension, ExtensionDownloadUrlResult } from '../types';
 
-export function fetchUrlSource(ext: Extension): FetchUrlResult {
+export function resolveConfiguredDownloadUrl(ext: Extension): ExtensionDownloadUrlResult {
   if (!ext.url) {
     return {
       error: `Extension '${ext.id}' has source 'url' but no 'url' field specified`,

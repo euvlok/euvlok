@@ -1,4 +1,4 @@
-import { escapeNixString } from '@euvlok/shared';
+import { escapeNixString } from '@euvlok/core';
 import type { BrowserType, Extension } from './types';
 
 function chromium(id: string, url: string, hash: string, version: string) {
@@ -41,7 +41,7 @@ ${perms.map((p) => `        "${escapeNixString(p)}"`).join('\n')}
   }`;
 }
 
-export function generateNixEntry(
+export function generateExtensionNixEntry(
   ext: Extension,
   url: string,
   hash: string,
@@ -51,8 +51,16 @@ export function generateNixEntry(
   addon?: string,
 ) {
   const id = escapeNixString(ext.id);
-  const safe = (s: string) => escapeNixString(s);
+  const escapeNix = (s: string) => escapeNixString(s);
 
-  if (browser === 'chromium') return chromium(id, safe(url), safe(hash), safe(version));
-  return firefox(id, safe(url), safe(hash), safe(version), perms, safe(addon ?? ext.id));
+  if (browser === 'chromium')
+    return chromium(id, escapeNix(url), escapeNix(hash), escapeNix(version));
+  return firefox(
+    id,
+    escapeNix(url),
+    escapeNix(hash),
+    escapeNix(version),
+    perms,
+    escapeNix(addon ?? ext.id),
+  );
 }

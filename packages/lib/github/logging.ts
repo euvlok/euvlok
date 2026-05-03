@@ -14,6 +14,9 @@ export const actionsLogger = consola.create({
 
 export const group = core.group;
 
+/**
+ * Convert a consola log object into a GitHub Actions annotation.
+ */
 function writeAnnotation(logObj: LogObject): void {
   const message = formatLogObject(logObj);
 
@@ -30,11 +33,17 @@ function writeAnnotation(logObj: LogObject): void {
   }
 }
 
+/**
+ * Format a consola log object into a single annotation message.
+ */
 function formatLogObject(logObj: LogObject): string {
   const args = logObj.message ? [logObj.message, ...logObj.args] : logObj.args;
   return args.map(formatLogArg).join(' ');
 }
 
+/**
+ * Format one consola argument without terminal colors.
+ */
 function formatLogArg(value: unknown): string {
   if (value instanceof Error) {
     return value.stack ?? value.message;

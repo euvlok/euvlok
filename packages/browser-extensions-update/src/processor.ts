@@ -1,13 +1,19 @@
-import { execSafe, logger, sha256SriFromFile, withTempPath } from '@euvlok/shared';
+import {
+  computeFileSha256Sri,
+  downloadToFile,
+  logger,
+  runCommandResult,
+  withTempFilePath,
+} from '@euvlok/core';
 import { Listr } from 'listr2';
 import { extractManifestInfo } from './crx-parser';
-import { generateNixEntry } from './nix-entry';
-import { fetchExtensionUrl } from './sources/index';
+import { generateExtensionNixEntry } from './nix-entry';
+import { resolveExtensionDownloadUrl } from './sources/index';
 import type { BrowserType, Extension, ExtensionResult, GithubReleaseConfig } from './types';
-import { getFileExtension } from './types';
+import { getBrowserDownloadFileExtension } from './types';
 
 export async function getChromiumMajorVersion(): Promise<string> {
-  const output = await execSafe([
+  const output = await runCommandResult([
     'nix',
     'eval',
     '--impure',
@@ -22,11 +28,9 @@ export async function getChromiumMajorVersion(): Promise<string> {
 }
 
 async function downloadExtension(url: string, path: string): Promise<string | null> {
-  const response = await fetch(url).catch(() => null);
-  if (!response?.ok) return `Failed to download: HTTP ${response?.status ?? 'network error'}`;
-
-  await Bun.write(path, new Uint8Array(await response.arrayBuffer()));
-  return null;
+  return downloadToFile(url, path)
+    .then(() => null)
+    .catch((error) => (error instanceof Error ? error.message : String(error)));
 }
 
 function resolveAddonId(
@@ -49,10 +53,10 @@ async function buildExtensionResult(
   addonId: string | undefined,
   tmp: string,
 ): Promise<ExtensionResult> {
-  const sri = await sha256SriFromFile(tmp);
+  const sri = await computeFileSha256Sri(tmp);
   const manifest = await extractManifestInfo(tmp);
   const addon = resolveAddonId(ext, browser, manifest.addonId, addonId);
-  const entry = generateNixEntry(
+  const entry = generateExtensionNixEntry(
     ext,
     url,
     sri,
@@ -71,12 +75,12 @@ async function processExtension(
   browser: BrowserType,
   version?: string,
 ): Promise<ExtensionResult> {
-  const result = await fetchExtensionUrl(ext, config, browser, version);
+  const result = await resolveExtensionDownloadUrl(ext, config, browser, version);
   if (result.error) return { extension: ext, error: result.error };
   if (!result.url) return { extension: ext, error: 'Failed to get download URL' };
   const url = result.url;
 
-  return withTempPath(getFileExtension(browser), async (tmp) => {
+  return withTempFilePath(getBrowserDownloadFileExtension(browser), async (tmp) => {
     const downloadError = await downloadExtension(url, tmp);
     if (downloadError) return { extension: ext, error: downloadError };
 

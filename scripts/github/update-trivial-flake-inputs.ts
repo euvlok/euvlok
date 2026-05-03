@@ -1,24 +1,30 @@
+import { runCommand } from '@euvlok/core';
 import {
   commitAndPush,
-  currentRefName,
+  getCurrentRefName,
   group,
-  hasGitDiff,
+  hasUnstagedGitDiff,
   actionsLogger as logger,
 } from '@euvlok/github';
-import { exec } from '@euvlok/shared';
+import { z } from 'zod';
 
-type FlakeLock = {
-  nodes?: Record<string, FlakeNode | undefined>;
-};
+const FlakeLockedSchema = z.object({
+  owner: z.string().optional(),
+  repo: z.string().optional(),
+  rev: z.string().optional(),
+});
 
-type FlakeNode = {
-  inputs?: Record<string, string>;
-  locked?: {
-    owner?: string;
-    repo?: string;
-    rev?: string;
-  };
-};
+const FlakeNodeSchema = z.object({
+  inputs: z.record(z.string(), z.string()).optional().catch(undefined),
+  locked: FlakeLockedSchema.optional().catch(undefined),
+});
+
+const FlakeLockSchema = z.object({
+  nodes: z.record(z.string(), FlakeNodeSchema.optional()).optional(),
+});
+
+type FlakeLock = z.output<typeof FlakeLockSchema>;
+type FlakeNode = z.output<typeof FlakeNodeSchema>;
 
 type InputSnapshot = {
   name: string;
@@ -33,7 +39,7 @@ if (!(await lockFile.exists())) {
   process.exit(0);
 }
 
-const before = (await lockFile.json()) as FlakeLock;
+const before = FlakeLockSchema.parse(await lockFile.json());
 const trivialInputs = Object.keys(before.nodes?.root?.inputs ?? {})
   .filter((name) => name.endsWith('-trivial'))
   .sort((a, b) => a.localeCompare(b));
@@ -50,7 +56,7 @@ const oldSnapshots = new Map<string, InputSnapshot>(
 );
 
 await group('Updating trivial inputs', async () => {
-  await exec(['nix', 'flake', 'update', ...trivialInputs], {
+  await runCommand(['nix', 'flake', 'update', ...trivialInputs], {
     inheritOutput: true,
     env: {
       NIX_CONFIG: 'extra-experimental-features = nix-command flakes pipe-operator',
@@ -58,12 +64,12 @@ await group('Updating trivial inputs', async () => {
   });
 });
 
-if (!(await hasGitDiff(['flake.lock']))) {
+if (!(await hasUnstagedGitDiff(['flake.lock']))) {
   logger.info('No changes detected in flake.lock after update.');
   process.exit(0);
 }
 
-const after = (await lockFile.json()) as FlakeLock;
+const after = FlakeLockSchema.parse(await lockFile.json());
 const changedInputs = trivialInputs.flatMap((name) => {
   const oldInput = oldSnapshots.get(name);
   const newInput = snapshotInput(name, after);
@@ -89,7 +95,7 @@ await commitAndPush({
   title: 'chore: update trivial flake inputs',
   body,
   add: ['flake.lock'],
-  refName: currentRefName(),
+  refName: getCurrentRefName(),
 });
 
 function snapshotInput(name: string, lock: FlakeLock): InputSnapshot {

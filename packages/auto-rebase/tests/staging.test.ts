@@ -3,18 +3,18 @@ import { join } from 'pathe';
 import {
   cleanupTempDir,
   createTempGitRepo,
-  realExec,
-  realExecOrThrow,
+  runRealCommandOrThrow,
+  runRealCommandResult,
   silentLogger,
   useTempDir,
 } from './test-utils';
 
-mock.module('@euvlok/shared', () => ({
-  execSafe: realExec,
+mock.module('@euvlok/core', () => ({
+  runCommandResult: runRealCommandResult,
   logger: silentLogger,
 }));
 
-import { removeDiffFiles, restoreStaging } from '../src/staging';
+import { removeSavedDiffFiles, restoreGitIndexFromBackup } from '../src/staging';
 
 async function writeFiles(tmpDir: string, files: Record<string, string>) {
   await Promise.all(
@@ -24,31 +24,45 @@ async function writeFiles(tmpDir: string, files: Record<string, string>) {
 
 async function commitFiles(tmpDir: string, files: Record<string, string>, message: string) {
   await writeFiles(tmpDir, files);
-  await realExecOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
-  await realExecOrThrow(['git', '-C', tmpDir, 'commit', '-m', message]);
+  await runRealCommandOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
+  await runRealCommandOrThrow(['git', '-C', tmpDir, 'commit', '-m', message]);
 }
 
 async function stageChanges(tmpDir: string, files: Record<string, string>) {
   await writeFiles(tmpDir, files);
-  await realExecOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
+  await runRealCommandOrThrow(['git', '-C', tmpDir, 'add', ...Object.keys(files)]);
 }
 
 async function captureStagedDiff(tmpDir: string): Promise<{ diffPath: string; fileList: string }> {
   const diffPath = join(tmpDir, 'staged.diff');
   await Bun.write(
     diffPath,
-    await realExecOrThrow(['git', '-C', tmpDir, 'diff', '--cached'], { trimOutput: false }),
+    await runRealCommandOrThrow(['git', '-C', tmpDir, 'diff', '--cached'], { trimOutput: false }),
   );
-  const fileList = await realExecOrThrow(['git', '-C', tmpDir, 'diff', '--cached', '--name-only']);
+  const fileList = await runRealCommandOrThrow([
+    'git',
+    '-C',
+    tmpDir,
+    'diff',
+    '--cached',
+    '--name-only',
+  ]);
   return { diffPath, fileList };
 }
 
 async function stagedFiles(tmpDir: string): Promise<string> {
-  const result = await realExec(['git', '-C', tmpDir, 'diff', '--cached', '--name-only']);
+  const result = await runRealCommandResult([
+    'git',
+    '-C',
+    tmpDir,
+    'diff',
+    '--cached',
+    '--name-only',
+  ]);
   return result.stdout;
 }
 
-describe('restoreStaging', () => {
+describe('restoreGitIndexFromBackup', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -63,9 +77,9 @@ describe('restoreStaging', () => {
     await commitFiles(tmpDir, { 'file.ts': 'line1\n' }, 'add file');
     await stageChanges(tmpDir, { 'file.ts': 'line1\nline2\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
+    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
 
-    await restoreStaging(tmpDir, stagedDiff.diffPath, 'file.ts');
+    await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, 'file.ts');
 
     expect(await stagedFiles(tmpDir)).toContain('file.ts');
   });
@@ -74,9 +88,9 @@ describe('restoreStaging', () => {
     await commitFiles(tmpDir, { 'a.ts': 'a\n', 'b.ts': 'b\n' }, 'add files');
     await stageChanges(tmpDir, { 'a.ts': 'a modified\n', 'b.ts': 'b modified\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
+    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
 
-    await restoreStaging(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
+    await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
 
     const staged = await stagedFiles(tmpDir);
     expect(staged).toContain('a.ts');
@@ -91,10 +105,10 @@ describe('restoreStaging', () => {
     );
     await stageChanges(tmpDir, { 'original.ts': 'original staged\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await realExecOrThrow(['git', '-C', tmpDir, 'reset']);
+    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
     await stageChanges(tmpDir, { 'unrelated.ts': 'should not stay staged\n' });
 
-    await restoreStaging(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
+    await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
 
     const staged = await stagedFiles(tmpDir);
     expect(staged).toContain('original.ts');
@@ -105,18 +119,18 @@ describe('restoreStaging', () => {
     await commitFiles(tmpDir, { 'file.ts': 'original\n' }, 'add file');
     await Bun.write(join(tmpDir, 'file.ts'), 'modified\n');
 
-    await restoreStaging(tmpDir, '/nonexistent.diff', 'file.ts');
+    await restoreGitIndexFromBackup(tmpDir, '/nonexistent.diff', 'file.ts');
 
     expect(await stagedFiles(tmpDir)).toContain('file.ts');
   });
 
   test('handles empty file list gracefully', async () => {
-    await restoreStaging(tmpDir, '', '');
+    await restoreGitIndexFromBackup(tmpDir, '', '');
     expect(await stagedFiles(tmpDir)).toBe('');
   });
 });
 
-describe('removeDiffFiles', () => {
+describe('removeSavedDiffFiles', () => {
   const tmpDir = useTempDir();
 
   test('removes existing diff files', async () => {
@@ -125,19 +139,22 @@ describe('removeDiffFiles', () => {
     await Bun.write(staged, 'diff content');
     await Bun.write(unstaged, 'diff content');
 
-    await removeDiffFiles(staged, unstaged);
+    await removeSavedDiffFiles(staged, unstaged);
 
     expect(await Bun.file(staged).exists()).toBe(false);
     expect(await Bun.file(unstaged).exists()).toBe(false);
   });
 
   test('handles empty paths without error', async () => {
-    await expect(removeDiffFiles('', '')).resolves.toBeUndefined();
+    await expect(removeSavedDiffFiles('', '')).resolves.toBeUndefined();
   });
 
   test('handles non-existent files without error', async () => {
     await expect(
-      removeDiffFiles(join(tmpDir.current(), 'nope1.diff'), join(tmpDir.current(), 'nope2.diff')),
+      removeSavedDiffFiles(
+        join(tmpDir.current(), 'nope1.diff'),
+        join(tmpDir.current(), 'nope2.diff'),
+      ),
     ).resolves.toBeUndefined();
   });
 });

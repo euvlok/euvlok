@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { createContext } from '../src/context';
+import { createRebaseContext } from '../src/context';
 
-describe('createContext', () => {
+describe('createRebaseContext', () => {
   test('returns correct defaults', () => {
-    const ctx = createContext('/repo', false, true, '/tmp');
+    const ctx = createRebaseContext('/repo', false, true, '/tmp');
     expect(ctx.repoRoot).toBe('/repo');
     expect(ctx.dryRun).toBe(false);
     expect(ctx.autoRebase).toBe(true);
@@ -19,7 +19,7 @@ describe('createContext', () => {
   });
 
   test('constructor args passed through', () => {
-    const ctx = createContext('/my/repo', true, false, '/backups');
+    const ctx = createRebaseContext('/my/repo', true, false, '/backups');
     expect(ctx.repoRoot).toBe('/my/repo');
     expect(ctx.dryRun).toBe(true);
     expect(ctx.autoRebase).toBe(false);

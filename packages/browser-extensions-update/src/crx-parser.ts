@@ -18,25 +18,23 @@ const geckoSchema = z
   })
   .optional();
 
-const manifestSchema = z
-  .object({
-    version: z.string().optional(),
-    version_name: z.string().optional(),
-    permissions: stringArraySchema,
-    optional_permissions: stringArraySchema,
-    host_permissions: stringArraySchema,
-    browser_specific_settings: z
-      .object({
-        gecko: geckoSchema,
-      })
-      .optional(),
-    applications: z
-      .object({
-        gecko: geckoSchema,
-      })
-      .optional(),
-  })
-  .passthrough();
+const manifestSchema = z.looseObject({
+  version: z.string().optional(),
+  version_name: z.string().optional(),
+  permissions: stringArraySchema,
+  optional_permissions: stringArraySchema,
+  host_permissions: stringArraySchema,
+  browser_specific_settings: z
+    .object({
+      gecko: geckoSchema,
+    })
+    .optional(),
+  applications: z
+    .object({
+      gecko: geckoSchema,
+    })
+    .optional(),
+});
 
 function isCrx(data: Uint8Array): boolean {
   return data.length >= CRX_MAGIC.length && CRX_MAGIC.every((byte, index) => data[index] === byte);

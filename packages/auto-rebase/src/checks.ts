@@ -1,4 +1,4 @@
-import { execSafe, logger, nonEmptyLines } from '@euvlok/shared';
+import { logger, runCommandResult, splitNonEmptyLines } from '@euvlok/core';
 import {
   COMMON_BRANCH_NAMES,
   DEFAULT_REMOTE,
@@ -13,7 +13,7 @@ export async function getRemoteBookmark(root: string): Promise<string> {
     if (found) return found;
 
     return (
-      await execSafe(['jj', 'log', '-r', `${bookmark}@${DEFAULT_REMOTE}`, '--limit', '1'], {
+      await runCommandResult(['jj', 'log', '-r', `${bookmark}@${DEFAULT_REMOTE}`, '--limit', '1'], {
         cwd: root,
       })
     ).exitCode === 0
@@ -23,7 +23,7 @@ export async function getRemoteBookmark(root: string): Promise<string> {
 
   if (commonBookmark) return `${commonBookmark}@${DEFAULT_REMOTE}`;
 
-  const fallback = await execSafe(
+  const fallback = await runCommandResult(
     [
       'jj',
       'log',
@@ -39,22 +39,22 @@ export async function getRemoteBookmark(root: string): Promise<string> {
   );
 
   if (fallback.stdout) {
-    const first = nonEmptyLines(fallback.stdout)[0]?.split(/\s+/)[0];
+    const first = splitNonEmptyLines(fallback.stdout)[0]?.split(/\s+/)[0];
     if (first) return first;
   }
 
   return 'remote_bookmarks()';
 }
 
-export async function checkLocalChanges(root: string): Promise<boolean> {
-  const status = await execSafe(['jj', 'status'], { cwd: root });
+export async function hasLocalChanges(root: string): Promise<boolean> {
+  const status = await runCommandResult(['jj', 'status'], { cwd: root });
   if (status.stdout.includes('Working copy changes:')) {
     logger.info('Found uncommitted changes in working directory');
     return true;
   }
 
   const target = await getRemoteBookmark(root);
-  const local = await execSafe(
+  const local = await runCommandResult(
     ['jj', 'log', '-r', `${target}..@-`, '--no-graph', '-T', JJ_TEMPLATE_COMMIT_ID],
     { cwd: root },
   );
@@ -62,9 +62,9 @@ export async function checkLocalChanges(root: string): Promise<boolean> {
   return hasCommits(local.stdout, (count) => `Found ${count} local commit(s) ahead of remote`);
 }
 
-export async function checkRemoteChanges(root: string): Promise<boolean> {
+export async function hasRemoteChanges(root: string): Promise<boolean> {
   const target = await getRemoteBookmark(root);
-  const remote = await execSafe(
+  const remote = await runCommandResult(
     ['jj', 'log', '-r', `@..${target}`, '--no-graph', '-T', JJ_TEMPLATE_COMMIT_ID],
     { cwd: root },
   );
@@ -73,7 +73,7 @@ export async function checkRemoteChanges(root: string): Promise<boolean> {
 }
 
 function hasCommits(stdout: string, message: (count: number) => string): boolean {
-  const lines = nonEmptyLines(stdout);
+  const lines = splitNonEmptyLines(stdout);
   if (lines.length > 0) {
     logger.info(message(lines.length));
     return true;

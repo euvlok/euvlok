@@ -1,13 +1,13 @@
-import { execSafe, findRepoRoot, isGitRepo, logger } from '@euvlok/shared';
+import { findRepoRoot, isGitRepo, logger, runCommandResult } from '@euvlok/core';
 import { buildApplication, buildCommand, run } from '@stricli/core';
-import { createBackup } from './backup';
-import { checkLocalChanges, checkRemoteChanges, getRemoteBookmark } from './checks';
-import { cleanupOnError } from './cleanup';
-import { createContext, type RebaseContext } from './context';
-import { checkGitLocks, fetchLatest, getOriginalBranch } from './git';
+import { createRebaseBackup } from './backup';
+import { getRemoteBookmark, hasLocalChanges, hasRemoteChanges } from './checks';
+import { cleanupRebaseAfterError } from './cleanup';
+import { createRebaseContext, type RebaseContext } from './context';
+import { assertNoGitLocks, fetchLatestRemoteState, getOriginalBranch } from './git';
 import { cleanupJj, setupJj } from './jj';
 import { checkRebaseSafety, performRebase } from './rebase';
-import { recoverFromInterruptedState } from './recovery';
+import { recoverInterruptedRebase } from './recovery';
 
 type AutoRebaseFlags = {
   branch?: string;
@@ -33,7 +33,7 @@ async function requireRepositoryRoot(): Promise<string> {
 }
 
 async function recoverRepository(root: string, backupDir: string): Promise<void> {
-  const recovered = await recoverFromInterruptedState(root);
+  const recovered = await recoverInterruptedRebase(root);
   if (recovered) return;
 
   logger.error('Recovery failed. Please manually clean up:');
@@ -57,7 +57,7 @@ async function isEuvlokRepo(dir: string): Promise<boolean> {
 
 function registerCleanupSignals(ctx: RebaseContext): void {
   const cleanupAndExit = async () => {
-    await cleanupOnError(ctx);
+    await cleanupRebaseAfterError(ctx);
     process.exit(1);
   };
 
@@ -66,7 +66,7 @@ function registerCleanupSignals(ctx: RebaseContext): void {
 }
 
 async function fetchLatestWithCleanup(ctx: RebaseContext): Promise<void> {
-  await fetchLatest(ctx).catch(async (e) => {
+  await fetchLatestRemoteState(ctx).catch(async (e) => {
     await cleanupJj(ctx);
     throw e;
   });
@@ -76,7 +76,7 @@ async function handleRemoteOnlyChanges(ctx: RebaseContext): Promise<void> {
   logger.info('Only remote changes detected. Updating to latest remote...');
   const target = await getRemoteBookmark(ctx.repoRoot);
 
-  const result = await execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
+  const result = await runCommandResult(['jj', 'rebase', '-b', '@', '-d', target], {
     cwd: ctx.repoRoot,
   });
 
@@ -85,7 +85,7 @@ async function handleRemoteOnlyChanges(ctx: RebaseContext): Promise<void> {
   if (ctx.dryRun) {
     if (result.exitCode === 0) logger.success('  [DRY RUN] Rebase would succeed');
     if (result.exitCode !== 0) logger.warn('  [DRY RUN] Rebase would fail');
-    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+    await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
   }
 
   await cleanupJj(ctx);
@@ -99,8 +99,8 @@ function changeState(local: boolean, remote: boolean): ChangeState {
 }
 
 async function handleChangeSet(ctx: RebaseContext): Promise<boolean> {
-  const local = await checkLocalChanges(ctx.repoRoot);
-  const remote = await checkRemoteChanges(ctx.repoRoot);
+  const local = await hasLocalChanges(ctx.repoRoot);
+  const remote = await hasRemoteChanges(ctx.repoRoot);
 
   switch (changeState(local, remote)) {
     case 'none':
@@ -150,7 +150,7 @@ async function handleSafeManualRebase(
 ): Promise<void> {
   if (rebaseAlreadyApplied) {
     logger.info('Undoing test rebase (--no-auto-rebase is set)');
-    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+    await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
   }
 
   logger.info('Rebase would be safe, but --no-auto-rebase is set. Skipping rebase');
@@ -183,15 +183,15 @@ async function runAutoRebase(args: AutoRebaseFlags): Promise<void> {
   await recoverRepository(root, args.backupDir);
   await requireEuvlokRepository(root);
 
-  const ctx = createContext(root, args.dryRun, args.autoRebase, args.backupDir);
+  const ctx = createRebaseContext(root, args.dryRun, args.autoRebase, args.backupDir);
   ctx.originalBranch = args.branch ?? (await getOriginalBranch(root));
   logger.info(`Original branch: ${ctx.originalBranch}`);
 
-  await checkGitLocks(root);
+  await assertNoGitLocks(root);
   registerCleanupSignals(ctx);
 
   try {
-    ctx.backupFile = await createBackup(ctx);
+    ctx.backupFile = await createRebaseBackup(ctx);
     await setupJj(ctx);
     await fetchLatestWithCleanup(ctx);
 
@@ -200,7 +200,7 @@ async function runAutoRebase(args: AutoRebaseFlags): Promise<void> {
 
     logCompletion(ctx);
   } catch (e: unknown) {
-    await cleanupOnError(ctx);
+    await cleanupRebaseAfterError(ctx);
     logger.error(e instanceof Error ? e.message : String(e));
     process.exit(1);
   }

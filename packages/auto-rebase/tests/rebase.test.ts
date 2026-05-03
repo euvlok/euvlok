@@ -7,12 +7,12 @@ import {
   createTestContext,
   type JjTestRepo,
   pushCommitToRemote,
-  realExec,
+  runRealCommandResult,
   silentLogger,
 } from './test-utils';
 
-mock.module('@euvlok/shared', () => ({
-  execSafe: realExec,
+mock.module('@euvlok/core', () => ({
+  runCommandResult: runRealCommandResult,
   logger: silentLogger,
 }));
 
@@ -23,10 +23,10 @@ async function setupDivergingRepo(): Promise<JjTestRepo> {
   // Push a remote commit (different file — no conflict)
   await pushCommitToRemote(repo.remoteDir, 'remote-only.txt');
   // Fetch it so jj knows about the remote changes
-  await realExec(['jj', 'git', 'fetch', '--remote', 'origin'], { cwd: repo.dir });
+  await runRealCommandResult(['jj', 'git', 'fetch', '--remote', 'origin'], { cwd: repo.dir });
   // Make a local change (different file — no conflict)
   await Bun.write(join(repo.dir, 'local-only.txt'), 'local\n');
-  await realExec(['jj', 'new', '-m', 'local commit'], { cwd: repo.dir });
+  await runRealCommandResult(['jj', 'new', '-m', 'local commit'], { cwd: repo.dir });
   return repo;
 }
 
@@ -59,19 +59,19 @@ describe('checkRebaseSafety', () => {
       '/tmp',
       `test-clone-conflict-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );
-    await realExec(['git', 'clone', repo.remoteDir, tmpClone]);
-    await realExec(['git', '-C', tmpClone, 'config', 'user.email', 'test@test.com']);
-    await realExec(['git', '-C', tmpClone, 'config', 'user.name', 'Test']);
+    await runRealCommandResult(['git', 'clone', repo.remoteDir, tmpClone]);
+    await runRealCommandResult(['git', '-C', tmpClone, 'config', 'user.email', 'test@test.com']);
+    await runRealCommandResult(['git', '-C', tmpClone, 'config', 'user.name', 'Test']);
     await Bun.write(join(tmpClone, 'README'), 'remote version\n');
-    await realExec(['git', '-C', tmpClone, 'add', '.']);
-    await realExec(['git', '-C', tmpClone, 'commit', '-m', 'remote edit']);
-    await realExec(['git', '-C', tmpClone, 'push', 'origin', 'master']);
+    await runRealCommandResult(['git', '-C', tmpClone, 'add', '.']);
+    await runRealCommandResult(['git', '-C', tmpClone, 'commit', '-m', 'remote edit']);
+    await runRealCommandResult(['git', '-C', tmpClone, 'push', 'origin', 'master']);
     await cleanupTempDir(tmpClone);
 
     // Local modifies same file
     await Bun.write(join(repo.dir, 'README'), 'local version\n');
-    await realExec(['jj', 'git', 'fetch', '--remote', 'origin'], { cwd: repo.dir });
-    await realExec(['jj', 'new', '-m', 'local conflicting commit'], { cwd: repo.dir });
+    await runRealCommandResult(['jj', 'git', 'fetch', '--remote', 'origin'], { cwd: repo.dir });
+    await runRealCommandResult(['jj', 'new', '-m', 'local conflicting commit'], { cwd: repo.dir });
 
     const ctx = createTestContext({ repoRoot: repo.dir });
     const result = await checkRebaseSafety(ctx);

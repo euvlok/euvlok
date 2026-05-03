@@ -1,4 +1,4 @@
-import { execSafe, logger } from '@euvlok/shared';
+import { logger, runCommandResult } from '@euvlok/core';
 import { getRemoteBookmark } from './checks';
 import type { RebaseContext } from './context';
 
@@ -15,7 +15,7 @@ function unsafeResult() {
 }
 
 async function rebaseOnto(ctx: RebaseContext, target: string) {
-  return execSafe(['jj', 'rebase', '-b', '@', '-d', target], {
+  return runCommandResult(['jj', 'rebase', '-b', '@', '-d', target], {
     cwd: ctx.repoRoot,
   });
 }
@@ -32,14 +32,14 @@ export async function checkRebaseSafety(
     if (result.exitCode === 0) {
       logger.success('  [DRY RUN] Rebase would succeed');
       logger.info('  [DRY RUN] Resulting jj log:');
-      await execSafe(['jj', 'log', '-r', '@', '--limit', '5', '--no-graph'], {
+      await runCommandResult(['jj', 'log', '-r', '@', '--limit', '5', '--no-graph'], {
         cwd: ctx.repoRoot,
       });
-      await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+      await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
       return successResult(false);
     }
     logger.warn('  [DRY RUN] Rebase would have conflicts');
-    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+    await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
     return unsafeResult();
   }
 
@@ -50,7 +50,7 @@ export async function checkRebaseSafety(
     return successResult(true);
   }
 
-  await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+  await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
 
   if (hasConflictOutput(result)) {
     logger.warn('Rebase would have conflicts. Aborting safety check');
@@ -82,7 +82,7 @@ export async function performRebase(ctx: RebaseContext): Promise<void> {
   if (hasConflictOutput(result)) {
     logger.error('Rebase failed due to conflicts');
     logger.warn('Conflicts detected. Aborting rebase to prevent corruption');
-    await execSafe(['jj', 'undo'], { cwd: ctx.repoRoot });
+    await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
     logger.info('The repository has been restored to its original state');
     logger.info('Please resolve conflicts manually using standard Git commands:');
     logger.info('  git pull');

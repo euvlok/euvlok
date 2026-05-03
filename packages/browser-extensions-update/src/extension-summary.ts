@@ -12,7 +12,7 @@ const chromiumExtensionSchema = z.object({
   id: z.string(),
   version: z.string(),
   crxPath: z.object({
-    url: z.string(),
+    url: z.url(),
     hash: z.string(),
   }),
 });
@@ -20,7 +20,7 @@ const chromiumExtensionSchema = z.object({
 const firefoxExtensionSchema = z.object({
   name: z.string(),
   version: z.string(),
-  url: z.string(),
+  url: z.url(),
   sha256: z.string(),
 });
 

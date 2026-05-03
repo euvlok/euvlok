@@ -1,4 +1,4 @@
-import { escapeNixString } from '@euvlok/shared';
+import { escapeNixString } from '@euvlok/core';
 import type { BrowserType, ExtensionResult } from './types';
 
 type GeneratedExtensionResult = ExtensionResult & { nixEntry: string };
@@ -18,7 +18,7 @@ function isGated(result: ExtensionResult): result is GatedExtensionResult {
   return !!result.extension.condition && hasNixEntry(result);
 }
 
-export function generateNixFile(
+export function generateExtensionsNixFile(
   results: ExtensionResult[],
   conditional: boolean,
   browser: BrowserType,

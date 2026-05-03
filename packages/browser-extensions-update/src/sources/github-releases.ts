@@ -1,7 +1,12 @@
-import { execSafe } from '@euvlok/shared';
+import { runCommandResult } from '@euvlok/core';
 import { Octokit } from '@octokit/rest';
-import type { BrowserType, Extension, FetchUrlResult, GithubReleaseConfig } from '../types';
-import { getFileExtension } from '../types';
+import type {
+  BrowserType,
+  Extension,
+  ExtensionDownloadUrlResult,
+  GithubReleaseConfig,
+} from '../types';
+import { getBrowserDownloadFileExtension } from '../types';
 
 type GithubRelease = Awaited<ReturnType<Octokit['repos']['getLatestRelease']>>['data'];
 
@@ -11,7 +16,7 @@ async function getGithubToken() {
   const gh = Bun.which('gh');
   if (!gh) return undefined;
 
-  const result = await execSafe([gh, 'auth', 'token']);
+  const result = await runCommandResult([gh, 'auth', 'token']);
   if (result.exitCode !== 0) return undefined;
 
   return result.stdout || undefined;
@@ -41,7 +46,7 @@ function readReleaseConfig(ext: Extension, config: GithubReleaseConfig) {
   };
 }
 
-function missingConfigError(owner?: string, repo?: string): FetchUrlResult | null {
+function missingConfigError(owner?: string, repo?: string): ExtensionDownloadUrlResult | null {
   if (!owner) return { error: "GitHub release source requires 'owner' field" };
   if (!repo) return { error: "GitHub release source requires 'repo' field" };
   return null;
@@ -98,8 +103,8 @@ function releaseAssetUrl(
   ext: Extension,
   browser: BrowserType,
   release: GithubRelease,
-): FetchUrlResult {
-  const expectedName = `${ext.id}.${getFileExtension(browser)}`;
+): ExtensionDownloadUrlResult {
+  const expectedName = `${ext.id}.${getBrowserDownloadFileExtension(browser)}`;
   const asset = release.assets.find((asset) => asset.name === expectedName);
 
   if (!asset) {
@@ -115,7 +120,7 @@ export async function fetchGithubReleaseUrl(
   ext: Extension,
   config: GithubReleaseConfig,
   browser: BrowserType,
-): Promise<FetchUrlResult> {
+): Promise<ExtensionDownloadUrlResult> {
   const releaseConfig = readReleaseConfig(ext, config);
   const configError = missingConfigError(releaseConfig.owner, releaseConfig.repo);
   if (configError) return configError;

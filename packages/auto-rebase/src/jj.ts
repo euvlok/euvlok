@@ -1,10 +1,16 @@
 import { mkdir, rm } from 'node:fs/promises';
-import { execSafe, isGitRepo, listStagedFiles, logger, nonEmptyLines } from '@euvlok/shared';
+import {
+  isGitRepo,
+  listStagedFiles,
+  logger,
+  runCommandResult,
+  splitNonEmptyLines,
+} from '@euvlok/core';
 import { join } from 'pathe';
 import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
 import type { RebaseContext } from './context';
-import { removeDiffFiles, restoreStaging } from './staging';
+import { removeSavedDiffFiles, restoreGitIndexFromBackup } from './staging';
 import { removeState, saveState } from './state';
 
 function exists(root: string): Promise<boolean> {
@@ -14,7 +20,7 @@ function exists(root: string): Promise<boolean> {
 async function checkJjPresent(root: string): Promise<boolean> {
   if (!(await exists(root))) return false;
   if (!Bun.which('jj')) return false;
-  const log = await execSafe(['jj', 'log', '-r', '@', '--limit', '1'], {
+  const log = await runCommandResult(['jj', 'log', '-r', '@', '--limit', '1'], {
     cwd: root,
   });
   return log.exitCode === 0;
@@ -34,14 +40,14 @@ async function persistState(ctx: RebaseContext): Promise<void> {
 
 async function setBookmark(root: string, branch: string): Promise<void> {
   if (branch === DETACHED_HEAD) return;
-  await execSafe(['jj', 'bookmark', 'set', branch, '-r', '@'], { cwd: root });
+  await runCommandResult(['jj', 'bookmark', 'set', branch, '-r', '@'], { cwd: root });
 }
 
 async function syncExistingJj(ctx: RebaseContext): Promise<void> {
   ctx.jjWasPresent = true;
   logger.info('Jujutsu repository already present');
   logger.info('Syncing jj repository with Git changes...');
-  await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
+  await runCommandResult(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
     cwd: ctx.repoRoot,
   });
   await setBookmark(ctx.repoRoot, ctx.originalBranch);
@@ -102,7 +108,7 @@ async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
 }
 
 async function initJj(ctx: RebaseContext): Promise<void> {
-  const init = await execSafe(['jj', 'git', 'init', `--git-repo=${ctx.repoRoot}`], {
+  const init = await runCommandResult(['jj', 'git', 'init', `--git-repo=${ctx.repoRoot}`], {
     cwd: ctx.repoRoot,
   });
 
@@ -134,11 +140,11 @@ export async function setupJj(ctx: RebaseContext): Promise<void> {
 }
 
 function normalizeFileList(files: string): string {
-  return nonEmptyLines(files, { trim: false }).sort().join('\n');
+  return splitNonEmptyLines(files, { trim: false }).sort().join('\n');
 }
 
 async function restoreOriginalStaging(ctx: RebaseContext): Promise<void> {
-  await restoreStaging(ctx.repoRoot, ctx.stagedDiffPath, ctx.originalStagedFiles);
+  await restoreGitIndexFromBackup(ctx.repoRoot, ctx.stagedDiffPath, ctx.originalStagedFiles);
 
   const current = (await listStagedFiles(ctx.repoRoot)).join('\n');
   const now = normalizeFileList(current);
@@ -181,7 +187,7 @@ async function checkoutOriginalBranch(root: string, branch: string): Promise<voi
 }
 
 async function exportJjWorkingCopy(root: string): Promise<boolean> {
-  const exported = await execSafe(['jj', 'git', 'export'], { cwd: root });
+  const exported = await runCommandResult(['jj', 'git', 'export'], { cwd: root });
   if (exported.exitCode === 0) return true;
 
   logger.warn('Failed to export jj working copy to git');
@@ -221,7 +227,7 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   logger.info('Restored git state from jj working copy');
   await logPersistentJj(root);
 
-  await removeDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
+  await removeSavedDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
 
   logger.success('Cleanup completed');
   await removeState(root);

@@ -1,18 +1,18 @@
 import {
+  assertValidNixFile,
   escapeNixString,
-  execSafe,
   findRepoRoot,
   logger,
-  nonEmptyLines,
-  validateNixFile,
+  runCommandResult,
+  splitNonEmptyLines,
   withTempFile,
-} from '@euvlok/shared';
+} from '@euvlok/core';
 
 async function find(): Promise<string | null> {
   const root = await findRepoRoot();
   if (!root) return null;
 
-  const result = await execSafe([
+  const result = await runCommandResult([
     'find',
     root,
     '-name',
@@ -31,11 +31,11 @@ async function find(): Promise<string | null> {
   ]);
 
   if (result.exitCode !== 0 || !result.stdout) return null;
-  const path = nonEmptyLines(result.stdout, { trim: false })[0];
+  const path = splitNonEmptyLines(result.stdout, { trim: false })[0];
   return path && (await Bun.file(path).exists()) ? path : null;
 }
 
-export async function getCurrentVersion(): Promise<string | null> {
+export async function getCurrentNvidiaVersion(): Promise<string | null> {
   const path = await find();
   if (!path) return null;
 
@@ -77,7 +77,7 @@ export async function updateNvidiaDriverNix(
 
   await withTempFile(content, 'nix', async (tmp) => {
     if (
-      await validateNixFile(tmp)
+      await assertValidNixFile(tmp)
         .then(() => false)
         .catch(() => true)
     ) {

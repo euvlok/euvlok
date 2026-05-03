@@ -1,7 +1,7 @@
-import { addGitPaths, logger, nonEmptyLines } from '@euvlok/shared';
+import { addGitPaths, logger, splitNonEmptyLines } from '@euvlok/core';
 import { ResetMode, simpleGit } from 'simple-git';
 
-export async function restoreStaging(
+export async function restoreGitIndexFromBackup(
   root: string,
   stagedDiffPath: string,
   originalStagedFiles: string,
@@ -44,12 +44,12 @@ export async function restoreStaging(
 }
 
 async function restageFiles(root: string, originalStagedFiles: string): Promise<void> {
-  const files = nonEmptyLines(originalStagedFiles, { trim: false });
+  const files = splitNonEmptyLines(originalStagedFiles, { trim: false });
   await addGitPaths(files, root);
   logger.warn('Restored staging by re-adding files (partial staging may be lost)');
 }
 
-export async function removeDiffFiles(
+export async function removeSavedDiffFiles(
   stagedDiffPath: string,
   unstagedDiffPath: string,
 ): Promise<void> {

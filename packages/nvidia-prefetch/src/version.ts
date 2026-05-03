@@ -1,4 +1,4 @@
-import { logger } from '@euvlok/shared';
+import { logger } from '@euvlok/core';
 import * as cheerio from 'cheerio';
 
 export const X86_64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-x86_64';
@@ -48,7 +48,10 @@ async function fetchVersionsFromPlatform(url: string, name: string): Promise<str
   return versions;
 }
 
-export function findCommonLatestVersion(versions1: string[], versions2: string[]): string | null {
+export function findLatestSharedNvidiaVersion(
+  versions1: string[],
+  versions2: string[],
+): string | null {
   const set2 = new Set(versions2);
   const common = versions1.filter((v) => set2.has(v));
 
@@ -59,13 +62,13 @@ export function findCommonLatestVersion(versions1: string[], versions2: string[]
   return common[common.length - 1];
 }
 
-export async function fetchLatestVersion(): Promise<string> {
+export async function fetchLatestNvidiaVersion(): Promise<string> {
   logger.info('Fetching latest NVIDIA driver version from all platforms...');
 
   const x86 = await fetchVersionsFromPlatform(X86_64_BASE_URL, 'x86_64');
   const aarch = await fetchVersionsFromPlatform(AARCH64_BASE_URL, 'aarch64');
 
-  const latest = findCommonLatestVersion(x86, aarch);
+  const latest = findLatestSharedNvidiaVersion(x86, aarch);
   if (!latest) {
     throw new Error(
       'Could not find a version available on both platforms. Please specify a version manually using --version flag',

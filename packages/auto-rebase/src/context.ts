@@ -13,7 +13,7 @@ export interface RebaseContext {
   backupFile: string;
 }
 
-export function createContext(
+export function createRebaseContext(
   repoRoot: string,
   dryRun: boolean,
   autoRebase: boolean,

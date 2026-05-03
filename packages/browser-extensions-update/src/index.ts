@@ -1,10 +1,10 @@
 import { mkdir } from 'node:fs/promises';
-import { exec, logger, validateNixFile } from '@euvlok/shared';
+import { assertValidNixFile, logger, runCommand } from '@euvlok/core';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import figlet from 'figlet';
 import { dirname, join } from 'pathe';
-import { generateNixFile } from './nix-generator';
-import { parseNixInput } from './nix-parser';
+import { generateExtensionsNixFile } from './nix-generator';
+import { parseNixExtensionInput } from './nix-parser';
 import { getChromiumMajorVersion, processExtensionsWithProgress } from './processor';
 
 type BrowserExtensionsUpdateFlags = {
@@ -50,11 +50,11 @@ async function writeOutput(output: string, nix: string): Promise<void> {
   await Bun.write(output, nix);
 
   await formatNixFile(output);
-  await validateNixFile(output);
+  await assertValidNixFile(output);
 }
 
 async function formatNixFile(filePath: string): Promise<void> {
-  await exec(['nix', 'run', 'nixpkgs#nixfmt', '--', filePath]);
+  await runCommand(['nix', 'run', 'nixpkgs#nixfmt', '--', filePath]);
 }
 
 const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
@@ -91,7 +91,7 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
     await requireInputFile(input);
     logHeader(input, output);
 
-    const parsed = await parseNixInput(input);
+    const parsed = await parseNixExtensionInput(input);
     if (parsed.extensions.length === 0) {
       logger.warn(`No extensions found in ${input}`);
       process.exit(0);
@@ -111,7 +111,7 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
 
     exitOnErrors(results);
 
-    const nix = generateNixFile(results, parsed.conditional, parsed.browser);
+    const nix = generateExtensionsNixFile(results, parsed.conditional, parsed.browser);
     await writeOutput(output, nix);
 
     logger.log('');

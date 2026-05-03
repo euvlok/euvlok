@@ -1,12 +1,12 @@
-import { logger } from '@euvlok/shared';
+import { logger } from '@euvlok/core';
 import type { RebaseContext } from './context';
 import { cleanupJj } from './jj';
-import { removeDiffFiles } from './staging';
+import { removeSavedDiffFiles } from './staging';
 
-export async function cleanupOnError(ctx: RebaseContext): Promise<void> {
+export async function cleanupRebaseAfterError(ctx: RebaseContext): Promise<void> {
   logger.error('Script failed. Attempting cleanup...');
 
-  await removeDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
+  await removeSavedDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
 
   await cleanupJj(ctx);
   logger.info(`Backup available at: ${ctx.backupFile}`);

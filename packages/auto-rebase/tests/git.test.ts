@@ -6,27 +6,27 @@ import {
   createTempJjRepo,
   createTestContext,
   type JjTestRepo,
-  mockExecResult,
-  realExec,
+  mockCommandResult,
+  runRealCommandResult,
   silentLogger,
 } from './test-utils';
 
-// Mock @euvlok/shared with real exec by default (delegates to actual git).
-// For specific fetchLatest tests, we override to return controlled results.
-const mockExecSafe = mock(realExec);
+// Mock @euvlok/core with real runCommand by default (delegates to actual git).
+// For specific fetchLatestRemoteState tests, we override to return controlled results.
+const mockExecSafe = mock(runRealCommandResult);
 
-mock.module('@euvlok/shared', () => ({
-  execSafe: mockExecSafe,
+mock.module('@euvlok/core', () => ({
+  runCommandResult: mockExecSafe,
   logger: silentLogger,
 }));
 
-import { checkGitLocks, fetchLatest, getOriginalBranch } from '../src/git';
+import { assertNoGitLocks, fetchLatestRemoteState, getOriginalBranch } from '../src/git';
 
 describe('getOriginalBranch', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    mockExecSafe.mockImplementation(realExec);
+    mockExecSafe.mockImplementation(runRealCommandResult);
     tmpDir = await createTempGitRepo();
   });
 
@@ -35,7 +35,7 @@ describe('getOriginalBranch', () => {
   });
 
   test('returns current branch name', async () => {
-    await realExec(['git', '-C', tmpDir, 'checkout', '-b', 'feature-test']);
+    await runRealCommandResult(['git', '-C', tmpDir, 'checkout', '-b', 'feature-test']);
     const result = await getOriginalBranch(tmpDir);
     expect(result).toBe('feature-test');
   });
@@ -48,19 +48,19 @@ describe('getOriginalBranch', () => {
   });
 
   test('returns HEAD for detached HEAD', async () => {
-    const head = await realExec(['git', '-C', tmpDir, 'rev-parse', 'HEAD']);
-    await realExec(['git', '-C', tmpDir, 'checkout', '--detach', head.stdout]);
+    const head = await runRealCommandResult(['git', '-C', tmpDir, 'rev-parse', 'HEAD']);
+    await runRealCommandResult(['git', '-C', tmpDir, 'checkout', '--detach', head.stdout]);
     const result = await getOriginalBranch(tmpDir);
     expect(result).toBe('HEAD');
   });
 });
 
-describe('checkGitLocks', () => {
+describe('assertNoGitLocks', () => {
   let tmpDir: string;
   let sleepSpy: ReturnType<typeof spyOn>;
 
   beforeEach(async () => {
-    mockExecSafe.mockImplementation(realExec);
+    mockExecSafe.mockImplementation(runRealCommandResult);
     tmpDir = await createTempGitRepo();
   });
 
@@ -70,14 +70,14 @@ describe('checkGitLocks', () => {
   });
 
   test('returns immediately when no locks', async () => {
-    await expect(checkGitLocks(tmpDir)).resolves.toBeUndefined();
+    await expect(assertNoGitLocks(tmpDir)).resolves.toBeUndefined();
   });
 
   test('throws when locks persist after timeout', async () => {
     sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined);
     await Bun.write(join(tmpDir, '.git', 'index.lock'), '');
 
-    await expect(checkGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
+    await expect(assertNoGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
   });
 
   test('returns when lock clears during polling', async () => {
@@ -93,27 +93,27 @@ describe('checkGitLocks', () => {
       }
     });
 
-    await expect(checkGitLocks(tmpDir)).resolves.toBeUndefined();
+    await expect(assertNoGitLocks(tmpDir)).resolves.toBeUndefined();
   });
 
   test('detects HEAD.lock too', async () => {
     sleepSpy = spyOn(Bun, 'sleep').mockResolvedValue(undefined);
     await Bun.write(join(tmpDir, '.git', 'HEAD.lock'), '');
 
-    await expect(checkGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
+    await expect(assertNoGitLocks(tmpDir)).rejects.toThrow('Git locks still present');
   });
 });
 
-describe('fetchLatest', () => {
+describe('fetchLatestRemoteState', () => {
   afterEach(() => {
-    mockExecSafe.mockImplementation(realExec);
+    mockExecSafe.mockImplementation(runRealCommandResult);
   });
 
-  test('dry-run skips all exec calls', async () => {
+  test('dry-run skips all runCommand calls', async () => {
     mockExecSafe.mockReset();
-    mockExecSafe.mockImplementation(() => Promise.resolve(mockExecResult()));
+    mockExecSafe.mockImplementation(() => Promise.resolve(mockCommandResult()));
     const ctx = createTestContext({ dryRun: true });
-    await fetchLatest(ctx);
+    await fetchLatestRemoteState(ctx);
     expect(mockExecSafe).not.toHaveBeenCalled();
   });
 
@@ -130,17 +130,17 @@ describe('fetchLatest', () => {
     });
 
     test('throws when no remote configured', async () => {
-      mockExecSafe.mockImplementation(realExec);
+      mockExecSafe.mockImplementation(runRealCommandResult);
       tmpDir = await createTempGitRepo();
       const ctx = createTestContext({ repoRoot: tmpDir });
-      await expect(fetchLatest(ctx)).rejects.toThrow("No 'origin' remote configured");
+      await expect(fetchLatestRemoteState(ctx)).rejects.toThrow("No 'origin' remote configured");
     });
 
     test('fetch succeeds with real local remote', async () => {
-      mockExecSafe.mockImplementation(realExec);
+      mockExecSafe.mockImplementation(runRealCommandResult);
       repo = await createTempJjRepo();
       const ctx = createTestContext({ repoRoot: repo.dir });
-      await expect(fetchLatest(ctx)).resolves.toBeUndefined();
+      await expect(fetchLatestRemoteState(ctx)).resolves.toBeUndefined();
     });
   });
 
@@ -149,10 +149,10 @@ describe('fetchLatest', () => {
     const repo = await createTempJjRepo();
     const ctx = createTestContext({ repoRoot: repo.dir });
     mockExecSafe
-      .mockResolvedValueOnce(mockExecResult()) // jj bookmark track
-      .mockResolvedValueOnce(mockExecResult({ exitCode: 1 })); // jj git fetch fails
+      .mockResolvedValueOnce(mockCommandResult()) // jj bookmark track
+      .mockResolvedValueOnce(mockCommandResult({ exitCode: 1 })); // jj git fetch fails
     await expect(
-      fetchLatest(ctx).finally(async () => {
+      fetchLatestRemoteState(ctx).finally(async () => {
         await cleanupTempDir(repo.dir);
         await cleanupTempDir(repo.remoteDir);
       }),
