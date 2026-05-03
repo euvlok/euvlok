@@ -1,3 +1,4 @@
+import { mkdir } from 'node:fs/promises';
 import { exec, logger, validateNixFile } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import figlet from 'figlet';
@@ -45,7 +46,7 @@ function exitOnErrors(results: Awaited<ReturnType<typeof processExtensionsWithPr
 }
 
 async function writeOutput(output: string, nix: string): Promise<void> {
-  await exec(['mkdir', '-p', dirname(output)]);
+  await mkdir(dirname(output), { recursive: true });
   await Bun.write(output, nix);
 
   await formatNixFile(output);

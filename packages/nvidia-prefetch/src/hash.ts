@@ -18,8 +18,17 @@ export async function fetchDriverHash(
   const driverPath = join(tempDir, driverName);
 
   logger.info(`Fetching ${arch} driver ${version}...`);
-  await exec(['curl', '-fL', driverUrl, '-o', driverPath]);
+  await downloadFile(driverUrl, driverPath);
   return sha256SriFromFile(driverPath);
+}
+
+async function downloadFile(url: string, path: string): Promise<void> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to download ${url}: HTTP ${response.status}`);
+  }
+
+  await Bun.write(path, new Uint8Array(await response.arrayBuffer()));
 }
 
 export async function fetchGithubHash(repo: string, version: string): Promise<string> {

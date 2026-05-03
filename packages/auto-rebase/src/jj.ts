@@ -1,4 +1,5 @@
-import { exec, execSafe, isGitRepo, listStagedFiles, logger } from '@euvlok/shared';
+import { mkdir, rm } from 'node:fs/promises';
+import { execSafe, isGitRepo, listStagedFiles, logger } from '@euvlok/shared';
 import { join } from 'pathe';
 import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
@@ -12,8 +13,7 @@ function exists(root: string): Promise<boolean> {
 
 async function checkJjPresent(root: string): Promise<boolean> {
   if (!(await exists(root))) return false;
-  const which = await execSafe(['which', 'jj']);
-  if (which.exitCode !== 0) return false;
+  if (!Bun.which('jj')) return false;
   const log = await execSafe(['jj', 'log', '-r', '@', '--limit', '1'], {
     cwd: root,
   });
@@ -49,7 +49,7 @@ async function syncExistingJj(ctx: RebaseContext): Promise<void> {
 
 async function removeInvalidJj(root: string): Promise<void> {
   logger.warn('Found invalid .jj directory, removing and reinitializing...');
-  await exec(['rm', '-rf', join(root, JJ_DIR)]);
+  await rm(join(root, JJ_DIR), { recursive: true, force: true });
 }
 
 async function useExistingJjIfValid(ctx: RebaseContext): Promise<boolean> {
@@ -77,7 +77,7 @@ async function captureDiff(git: SimpleGit, path: string, options: string[]): Pro
 }
 
 async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
-  await exec(['mkdir', '-p', join(ctx.repoRoot, EUVLOK_TMP_DIR)]);
+  await mkdir(join(ctx.repoRoot, EUVLOK_TMP_DIR), { recursive: true });
   const timestamp = Math.floor(Date.now() / 1000);
   const git = simpleGit({ baseDir: ctx.repoRoot, trimmed: false });
   const cachedHasDiff = await git

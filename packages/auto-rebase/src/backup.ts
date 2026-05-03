@@ -1,4 +1,5 @@
-import { exec, logger } from '@euvlok/shared';
+import { mkdir } from 'node:fs/promises';
+import { logger } from '@euvlok/shared';
 import { basename, join } from 'pathe';
 import { simpleGit } from 'simple-git';
 import type { RebaseContext } from './context';
@@ -11,7 +12,7 @@ export async function createBackup(ctx: RebaseContext): Promise<string> {
     return '';
   }
 
-  await exec(['mkdir', '-p', ctx.backupDir]);
+  await mkdir(ctx.backupDir, { recursive: true });
 
   const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 15);
   const repoName = basename(ctx.repoRoot);

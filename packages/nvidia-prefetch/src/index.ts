@@ -1,4 +1,6 @@
-import { exec, logger } from '@euvlok/shared';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { logger } from '@euvlok/shared';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import { join } from 'pathe';
 import { fetchDriverHash, fetchGithubHash } from './hash';
@@ -52,7 +54,7 @@ async function exitIfCurrent(
 }
 
 async function createTempDir(): Promise<string> {
-  return exec(['mktemp', '-d', `${join(Bun.env.TMPDIR || '/tmp', 'nvidia-prefetch-')}XXXXXX`]);
+  return mkdtemp(join(Bun.env.TMPDIR ?? tmpdir(), 'nvidia-prefetch-'));
 }
 
 async function fetchHashes(version: string, tempDir: string): Promise<DriverHashes> {
@@ -137,7 +139,7 @@ const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
         await updateNixIfRequested(update, version, hashes);
       })
       .finally(async () => {
-        await exec(['rm', '-rf', tempDir]);
+        await rm(tempDir, { recursive: true, force: true });
         logger.info('Cleaned up temporary directory');
       });
   },
