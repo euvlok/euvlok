@@ -22,7 +22,6 @@
     "@actions/cache": "^6.0.0",
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
-    "@actions/glob": "^0.7.0",
     "@octokit/rest": "^22.0.1",
     "@stricli/core": "1.2.6",
     "cheerio": "^1.2.0",

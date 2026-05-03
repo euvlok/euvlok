@@ -3,4 +3,4 @@ export type { CommitAndPushOptions, RefName } from './git';
 export { commitAndPush, currentRefName, hasGitDiff } from './git';
 export { actionsLogger, group } from './logging';
 export { runSequentialTasks } from './tasks';
-export { listWorkflowFiles } from './workflows';
+export { hashWorkflowFiles, listWorkflowFiles } from './workflows';
