@@ -3,6 +3,7 @@ import {
   execSafe,
   findRepoRoot,
   logger,
+  nonEmptyLines,
   validateNixFile,
   withTempFile,
 } from '@euvlok/shared';
@@ -30,7 +31,7 @@ async function find(): Promise<string | null> {
   ]);
 
   if (result.exitCode !== 0 || !result.stdout) return null;
-  const path = result.stdout.split('\n')[0];
+  const path = nonEmptyLines(result.stdout, { trim: false })[0];
   return path && (await Bun.file(path).exists()) ? path : null;
 }
 

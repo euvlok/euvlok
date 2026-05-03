@@ -1,5 +1,5 @@
 import { mkdir, rm } from 'node:fs/promises';
-import { execSafe, isGitRepo, listStagedFiles, logger } from '@euvlok/shared';
+import { execSafe, isGitRepo, listStagedFiles, logger, nonEmptyLines } from '@euvlok/shared';
 import { join } from 'pathe';
 import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
@@ -134,7 +134,7 @@ export async function setupJj(ctx: RebaseContext): Promise<void> {
 }
 
 function normalizeFileList(files: string): string {
-  return files.split('\n').filter(Boolean).sort().join('\n');
+  return nonEmptyLines(files, { trim: false }).sort().join('\n');
 }
 
 async function restoreOriginalStaging(ctx: RebaseContext): Promise<void> {
