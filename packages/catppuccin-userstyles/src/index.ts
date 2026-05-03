@@ -10,10 +10,20 @@ const UsercssSelectOptionSchema = z.looseObject({
   default: z.boolean().optional(),
 });
 
+const UsercssOptionalPrimitiveSchema = z.preprocess(
+  (value) => (value === null ? undefined : value),
+  z.union([z.string(), z.number(), z.boolean()]).optional(),
+);
+
+const UsercssSelectOptionsSchema = z.preprocess(
+  (value) => (value === null ? undefined : value),
+  z.array(UsercssSelectOptionSchema).optional(),
+);
+
 const UsercssSelectVarSchema = z.looseObject({
-  value: z.string().optional(),
-  default: z.string().optional(),
-  options: z.array(UsercssSelectOptionSchema).optional(),
+  value: UsercssOptionalPrimitiveSchema,
+  default: UsercssOptionalPrimitiveSchema,
+  options: UsercssSelectOptionsSchema,
 });
 
 const UsercssMetadataSchema = z.looseObject({
