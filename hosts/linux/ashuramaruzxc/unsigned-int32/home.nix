@@ -52,6 +52,7 @@ let
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
+        claude.enable = true;
         ghostty.enable = true;
         helix.enable = true;
         mpv.enable = true;
@@ -59,7 +60,7 @@ let
         nixcord.enable = true;
         nushell.enable = true;
         vscode.enable = true;
-        # zed-editor.enable = true;
+        zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
