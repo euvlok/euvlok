@@ -1,3 +1,4 @@
+import { assertNever } from '@euvlok/shared';
 import { z } from 'zod';
 
 export type BrowserType = 'chromium' | 'firefox';
@@ -109,6 +110,6 @@ export function supportsSource(browser: BrowserType, source: ExtensionSource): b
     case 'github-releases':
       return true;
     default:
-      return false;
+      return assertNever(source);
   }
 }

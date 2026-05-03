@@ -1,4 +1,4 @@
-import { addGitPaths, logger } from '@euvlok/shared';
+import { addGitPaths, logger, nonEmptyLines } from '@euvlok/shared';
 import { ResetMode, simpleGit } from 'simple-git';
 
 export async function restoreStaging(
@@ -44,7 +44,7 @@ export async function restoreStaging(
 }
 
 async function restageFiles(root: string, originalStagedFiles: string): Promise<void> {
-  const files = originalStagedFiles.split('\n').filter(Boolean);
+  const files = nonEmptyLines(originalStagedFiles, { trim: false });
   await addGitPaths(files, root);
   logger.warn('Restored staging by re-adding files (partial staging may be lost)');
 }

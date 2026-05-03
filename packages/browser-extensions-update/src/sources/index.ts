@@ -1,4 +1,11 @@
-import type { BrowserType, Extension, FetchUrlResult, GithubReleaseConfig } from '../types';
+import type { MaybePromise } from '@euvlok/shared';
+import type {
+  BrowserType,
+  Extension,
+  ExtensionSource,
+  FetchUrlResult,
+  GithubReleaseConfig,
+} from '../types';
 import { supportsSource } from '../types';
 import { fetchAmoUrlAndGuid } from './amo';
 import { fetchBpcUrl } from './bpc';
@@ -11,15 +18,15 @@ type SourceFetcher = (
   config: GithubReleaseConfig,
   browser: BrowserType,
   version?: string,
-) => Promise<FetchUrlResult> | FetchUrlResult;
+) => MaybePromise<FetchUrlResult>;
 
-const sourceFetchers: Record<string, SourceFetcher> = {
+const sourceFetchers = {
   'chrome-store': (ext, _config, _browser, version) => fetchChromeStoreUrl(ext.id, version),
   amo: (ext) => fetchAmoUrlAndGuid(ext.id),
   bpc: (_ext, _config, browser) => fetchBpcUrl(browser),
   url: (ext) => fetchUrlSource(ext),
   'github-releases': fetchGithubReleaseUrl,
-};
+} satisfies Record<ExtensionSource, SourceFetcher>;
 
 export async function fetchExtensionUrl(
   ext: Extension,
@@ -33,6 +40,5 @@ export async function fetchExtensionUrl(
     };
   }
 
-  const fetcher = sourceFetchers[ext.source];
-  return fetcher?.(ext, config, browser, version) ?? { error: `Unknown source '${ext.source}'` };
+  return sourceFetchers[ext.source](ext, config, browser, version);
 }

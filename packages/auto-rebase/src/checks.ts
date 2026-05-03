@@ -1,4 +1,4 @@
-import { execSafe, logger } from '@euvlok/shared';
+import { execSafe, logger, nonEmptyLines } from '@euvlok/shared';
 import {
   COMMON_BRANCH_NAMES,
   DEFAULT_REMOTE,
@@ -39,7 +39,7 @@ export async function getRemoteBookmark(root: string): Promise<string> {
   );
 
   if (fallback.stdout) {
-    const first = fallback.stdout.split('\n')[0]?.trim().split(/\s+/)[0];
+    const first = nonEmptyLines(fallback.stdout)[0]?.split(/\s+/)[0];
     if (first) return first;
   }
 
@@ -73,7 +73,7 @@ export async function checkRemoteChanges(root: string): Promise<boolean> {
 }
 
 function hasCommits(stdout: string, message: (count: number) => string): boolean {
-  const lines = stdout.split('\n').filter((line) => line.trim().length > 0);
+  const lines = nonEmptyLines(stdout);
   if (lines.length > 0) {
     logger.info(message(lines.length));
     return true;

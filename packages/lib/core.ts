@@ -11,3 +11,4 @@ export {
 export { findRepoRoot, isGitRepo } from './repo';
 export type { ExecResult } from './shell';
 export { exec, execSafe } from './shell';
+export { asArray, assertNever, type MaybeArray, type MaybePromise, nonEmptyLines } from './utils';
