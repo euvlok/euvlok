@@ -1,4 +1,5 @@
 import { afterEach, beforeEach } from 'bun:test';
+import { mkdir, rm } from 'node:fs/promises';
 import type { ExecResult } from '@euvlok/shared';
 import { join } from 'pathe';
 import type { RebaseContext } from '../src/context';
@@ -71,7 +72,7 @@ async function configureGitUser(dir: string): Promise<void> {
 
 export async function createTempGitRepo(): Promise<string> {
   const dir = tempPath('test-repo');
-  await realExecOrThrow(['mkdir', '-p', dir]);
+  await mkdir(dir, { recursive: true });
   await realExecOrThrow(['git', '-C', dir, 'init']);
   await configureGitUser(dir);
   await Bun.write(join(dir, '.gitkeep'), '');
@@ -82,12 +83,12 @@ export async function createTempGitRepo(): Promise<string> {
 
 export async function createTempDir(): Promise<string> {
   const dir = tempPath('test-dir');
-  await realExecOrThrow(['mkdir', '-p', dir]);
+  await mkdir(dir, { recursive: true });
   return dir;
 }
 
 export async function cleanupTempDir(dir: string): Promise<void> {
-  if (dir.startsWith('/tmp/')) await realExecOrThrow(['rm', '-rf', dir]);
+  if (dir.startsWith('/tmp/')) await rm(dir, { recursive: true, force: true });
 }
 
 export function useTempDir(): { current: () => string } {
@@ -153,7 +154,7 @@ export async function createTempJjRepo(): Promise<JjTestRepo> {
   await realExecOrThrow(['git', 'init', '--bare', remoteDir]);
 
   const dir = tempPath('test-jj');
-  await realExecOrThrow(['mkdir', '-p', dir]);
+  await mkdir(dir, { recursive: true });
   await realExecOrThrow(['git', '-C', dir, 'init']);
   await configureGitUser(dir);
   await realExecOrThrow(['git', '-C', dir, 'remote', 'add', 'origin', remoteDir]);
@@ -177,5 +178,5 @@ export async function pushCommitToRemote(remoteDir: string, filename?: string): 
   await realExecOrThrow(['git', '-C', tmpClone, 'add', '.']);
   await realExecOrThrow(['git', '-C', tmpClone, 'commit', '-m', 'remote commit']);
   await realExecOrThrow(['git', '-C', tmpClone, 'push', 'origin', 'master']);
-  await realExecOrThrow(['rm', '-rf', tmpClone]);
+  await rm(tmpClone, { recursive: true, force: true });
 }

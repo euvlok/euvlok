@@ -89,7 +89,7 @@ describe('checkGitLocks', () => {
       sleepCount++;
       if (sleepCount === 2) {
         // Simulate lock being released mid-wait
-        await Bun.$`rm -f ${lockPath}`.quiet();
+        await Bun.file(lockPath).delete();
       }
     });
 
