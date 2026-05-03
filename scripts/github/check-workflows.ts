@@ -1,13 +1,17 @@
 import artifactClient from '@actions/artifact';
 import * as cache from '@actions/cache';
-import { hashFiles } from '@actions/glob';
 import type { WorkflowTemplate } from '@actions/workflow-parser';
 import {
   convertWorkflowTemplate,
   NoOperationTraceWriter,
   parseWorkflow,
 } from '@actions/workflow-parser';
-import { listWorkflowFiles, actionsLogger as logger, withTempFile } from '@euvlok/github';
+import {
+  hashWorkflowFiles,
+  listWorkflowFiles,
+  actionsLogger as logger,
+  withTempFile,
+} from '@euvlok/github';
 
 await restoreWorkflowCache();
 const workflowFiles = await listWorkflowFiles();
@@ -116,7 +120,7 @@ async function uploadWorkflowReport(path: string): Promise<void> {
 }
 
 async function workflowCacheKey(): Promise<string> {
-  const hash = await hashFiles('.github/workflows/*.yml\n.github/workflows/*.yaml');
+  const hash = await hashWorkflowFiles();
   return `github-workflows-${hash || 'empty'}`;
 }
 
