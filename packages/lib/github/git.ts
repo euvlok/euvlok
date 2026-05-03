@@ -14,14 +14,23 @@ export type CommitAndPushOptions = {
 
 const git = simpleGit({ trimmed: false });
 
-export async function hasGitDiff(pathspecs: readonly string[] = []): Promise<boolean> {
+/**
+ * Check whether git reports a diff for the provided pathspecs.
+ */
+export async function hasUnstagedGitDiff(pathspecs: readonly string[] = []): Promise<boolean> {
   return !(await gitDiffQuiet(['--quiet', ...pathspecs]));
 }
 
+/**
+ * Check whether the git index contains staged changes.
+ */
 async function hasStagedChanges(): Promise<boolean> {
   return !(await gitDiffQuiet(['--staged', '--quiet']));
 }
 
+/**
+ * Configure the local repository to author commits as the GitHub Actions bot.
+ */
 async function configureGitHubBot(): Promise<void> {
   await git.addConfig('user.name', 'github-actions[bot]', false, 'local');
   await git.addConfig(
@@ -32,6 +41,9 @@ async function configureGitHubBot(): Promise<void> {
   );
 }
 
+/**
+ * Stage, commit, and push generated changes to a branch.
+ */
 export async function commitAndPush(options: CommitAndPushOptions): Promise<void> {
   await configureGitHubBot();
   await configureAuthenticatedRemote();
@@ -46,6 +58,9 @@ export async function commitAndPush(options: CommitAndPushOptions): Promise<void
   await pushWithRebaseRetry(options.refName);
 }
 
+/**
+ * Use GITHUB_TOKEN to make the origin remote writable from GitHub Actions.
+ */
 async function configureAuthenticatedRemote(): Promise<void> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
@@ -57,7 +72,10 @@ async function configureAuthenticatedRemote(): Promise<void> {
   await git.remote(['set-url', 'origin', remoteUrl]);
 }
 
-export function currentRefName(fallback = 'master'): RefName {
+/**
+ * Resolve the branch name for the current GitHub Actions ref.
+ */
+export function getCurrentRefName(fallback = 'master'): RefName {
   if (process.env.GITHUB_REF_NAME) {
     return process.env.GITHUB_REF_NAME;
   }
@@ -69,6 +87,9 @@ export function currentRefName(fallback = 'master'): RefName {
   return process.env.GITHUB_HEAD_REF ?? fallback;
 }
 
+/**
+ * Push to the target ref, rebasing and retrying if the remote moved.
+ */
 async function pushWithRebaseRetry(refName: RefName): Promise<void> {
   await Array.from({ length: 5 }, (_, index) => index + 1).reduce(async (previous, attempt) => {
     if (await previous) return true;
@@ -96,6 +117,9 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
   }, Promise.resolve(false));
 }
 
+/**
+ * Run git diff in quiet mode and return whether it exits successfully.
+ */
 async function gitDiffQuiet(args: string[]): Promise<boolean> {
   return git
     .diff(args)

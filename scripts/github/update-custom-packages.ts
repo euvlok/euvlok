@@ -1,19 +1,19 @@
 import { basename, resolve } from 'node:path';
 import {
-  commitAndPush,
-  currentRefName,
-  hasGitDiff,
-  actionsLogger as logger,
-  runSequentialTasks,
-  walkFiles,
-} from '@euvlok/github';
-import {
   addGitPaths,
   escapeNixString,
-  execSafe,
-  nixEvalRaw,
-  stagedShortstat,
-} from '@euvlok/shared';
+  evaluateNixRaw,
+  getStagedShortstat,
+  runCommandResult,
+} from '@euvlok/core';
+import {
+  commitAndPush,
+  findFiles,
+  getCurrentRefName,
+  hasUnstagedGitDiff,
+  actionsLogger as logger,
+  runTasksSequentially,
+} from '@euvlok/github';
 
 const packageRoot = 'pkgs';
 
@@ -22,16 +22,16 @@ if (!(await Bun.file(packageRoot).exists())) {
   process.exit(0);
 }
 
-const nixFiles = await walkFiles(packageRoot, (path) => path.endsWith('.nix'));
+const nixFiles = await findFiles(packageRoot, (path) => path.endsWith('.nix'));
 
 if (nixFiles.length === 0) {
   logger.info('No package derivations found under pkgs/.');
   process.exit(0);
 }
 
-await runSequentialTasks(nixFiles, String, updatePackage);
+await runTasksSequentially(nixFiles, String, updatePackage);
 
-if (!(await hasGitDiff())) {
+if (!(await hasUnstagedGitDiff())) {
   logger.info('No changes detected in any packages.');
   process.exit(0);
 }
@@ -40,7 +40,7 @@ await commitAndPush({
   title: 'chore(pkgs): update custom packages',
   body: `The following package updates were applied:\n\n${await formatStagedShortstat()}`,
   add: [packageRoot],
-  refName: currentRefName(),
+  refName: getCurrentRefName(),
 });
 
 async function updatePackage(nixFile: string): Promise<void> {
@@ -59,7 +59,7 @@ async function updatePackage(nixFile: string): Promise<void> {
 
   logger.info(`${name} is a fetchable derivation, proceeding with update.`);
 
-  const result = await execSafe(['bash', './pkgs/update.sh', nixFile], {
+  const result = await runCommandResult(['bash', './pkgs/update.sh', nixFile], {
     inheritOutput: true,
   });
 
@@ -71,7 +71,7 @@ async function updatePackage(nixFile: string): Promise<void> {
 }
 
 async function isDerivation(absPath: string): Promise<boolean> {
-  const result = await nixEvalRaw(
+  const result = await evaluateNixRaw(
     `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).type`,
   );
 
@@ -80,7 +80,7 @@ async function isDerivation(absPath: string): Promise<boolean> {
 
 async function hasSrc(absPath: string): Promise<boolean> {
   return (
-    (await nixEvalRaw(
+    (await evaluateNixRaw(
       `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).src`,
     )) !== null
   );
@@ -88,6 +88,6 @@ async function hasSrc(absPath: string): Promise<boolean> {
 
 async function formatStagedShortstat(): Promise<string> {
   await addGitPaths(packageRoot);
-  const stdout = await stagedShortstat();
+  const stdout = await getStagedShortstat();
   return stdout ? `    ${stdout}` : '    Updated package definitions.';
 }

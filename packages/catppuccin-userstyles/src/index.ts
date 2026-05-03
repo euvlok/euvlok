@@ -1,29 +1,36 @@
 import { mkdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { basename, dirname, join, resolve } from 'node:path';
-import { logger } from '@euvlok/shared';
+import { logger } from '@euvlok/core';
 import { buildApplication, buildCommand, run } from '@stricli/core';
+import { z } from 'zod';
 
-type UsercssSelectOption = {
-  name: string;
-  default?: boolean;
-};
+const UsercssSelectOptionSchema = z.looseObject({
+  name: z.string(),
+  default: z.boolean().optional(),
+});
 
-type UsercssSelectVar = {
-  value?: string;
-  default?: string;
-  options?: UsercssSelectOption[];
-};
+const UsercssSelectVarSchema = z.looseObject({
+  value: z.string().optional(),
+  default: z.string().optional(),
+  options: z.array(UsercssSelectOptionSchema).optional(),
+});
 
-type UsercssMetadata = {
-  name: string;
-  description?: string;
-  author?: string;
-  url?: string;
-  updateURL?: string;
-  vars?: Record<string, UsercssSelectVar>;
-  [key: string]: unknown;
-};
+const UsercssMetadataSchema = z.looseObject({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  author: z.string().optional(),
+  url: z.url().optional(),
+  updateURL: z.url().optional(),
+  vars: z.record(z.string(), UsercssSelectVarSchema).optional(),
+});
+
+const UsercssParseResultSchema = z.object({
+  metadata: UsercssMetadataSchema,
+});
+
+type UsercssSelectOption = z.output<typeof UsercssSelectOptionSchema>;
+type UsercssMetadata = z.output<typeof UsercssMetadataSchema>;
 
 type UsercssMeta = {
   parse: (sourceCode: string) => { metadata: UsercssMetadata };
@@ -131,7 +138,7 @@ async function buildVariants(outputDir: string, baseData: StylusImport): Promise
   );
 }
 
-export async function buildCatppuccinUserstyles(
+async function buildCatppuccinUserstyles(
   { include }: BuildFlags,
   userstylesDirArg?: string,
   outputDirArg?: string,
@@ -239,7 +246,7 @@ async function buildStylusImport(files: string[]): Promise<StylusImport> {
     ...(await Promise.all(
       files.map(async (file) => {
         const sourceCode = await Bun.file(file).text();
-        const parsed = usercssMeta.parse(sourceCode);
+        const parsed = UsercssParseResultSchema.parse(usercssMeta.parse(sourceCode));
 
         return {
           enabled: true as const,
@@ -296,7 +303,7 @@ function setSelectDefault(metadata: UsercssMetadata, name: string, value: string
 
 function getSelectOptions(metadata: UsercssMetadata, name: string): UsercssSelectOption[] {
   const options = metadata.vars?.[name]?.options;
-  if (!Array.isArray(options)) {
+  if (!options) {
     throw new Error(`Missing select variable "${name}" in ${metadata.name}`);
   }
 

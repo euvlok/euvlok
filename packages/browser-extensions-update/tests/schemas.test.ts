@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { execSafe } from '@euvlok/shared';
+import { runCommandResult } from '@euvlok/core';
 import { zipSync } from 'fflate';
 import { join } from 'pathe';
 import { extractManifestInfo } from '../src/crx-parser';
@@ -14,8 +14,8 @@ const sourceFiles = [
   'modules/hm/gui/firefox/sources.nix',
 ];
 
-async function nixEvalJson(path: string): Promise<unknown> {
-  const result = await execSafe(['nix', 'eval', '--json', '--file', path]);
+async function evaluateNixJson(path: string): Promise<unknown> {
+  const result = await runCommandResult(['nix', 'eval', '--json', '--file', path]);
 
   if (result.exitCode !== 0) throw new Error(result.stderr);
   return JSON.parse(result.stdout);
@@ -24,7 +24,7 @@ async function nixEvalJson(path: string): Promise<unknown> {
 describe('browser extension schemas', () => {
   test('parse all checked-in source files emitted by nix eval', async () => {
     for (const sourceFile of sourceFiles) {
-      const parsed = NixInputFileSchema.parse(await nixEvalJson(sourceFile));
+      const parsed = NixInputFileSchema.parse(await evaluateNixJson(sourceFile));
       expect(parsed.browser === 'chromium' || parsed.browser === 'firefox').toBe(true);
       expect(parsed.extensions.length).toBeGreaterThan(0);
       expect(parsed.extensions.every((extension) => extension.source)).toBe(true);

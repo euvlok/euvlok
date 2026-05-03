@@ -1,10 +1,10 @@
-export interface ExecResult {
+export interface CommandResult {
   stdout: string;
   stderr: string;
   exitCode: number;
 }
 
-export interface ExecOptions {
+export interface CommandOptions {
   cwd?: string;
   env?: Record<string, string | undefined>;
   input?: string;
@@ -13,11 +13,11 @@ export interface ExecOptions {
 }
 
 /**
- * Execute a shell command and return the trimmed stdout.
+ * Run a command without invoking a shell and return stdout.
  * Throws on non-zero exit code.
  */
-export async function exec(cmd: string[], opts?: ExecOptions): Promise<string> {
-  const result = await execSafe(cmd, opts);
+export async function runCommand(cmd: string[], opts?: CommandOptions): Promise<string> {
+  const result = await runCommandResult(cmd, opts);
 
   if (result.exitCode !== 0) {
     throw new Error(`Command failed (exit ${result.exitCode}): ${cmd.join(' ')}\n${result.stderr}`);
@@ -27,9 +27,12 @@ export async function exec(cmd: string[], opts?: ExecOptions): Promise<string> {
 }
 
 /**
- * Execute a shell command and return the result without throwing on failure.
+ * Run a command without invoking a shell and return its exit result.
  */
-export async function execSafe(cmd: string[], opts?: ExecOptions): Promise<ExecResult> {
+export async function runCommandResult(
+  cmd: string[],
+  opts?: CommandOptions,
+): Promise<CommandResult> {
   if (cmd.length === 0) {
     throw new Error('Cannot execute an empty command.');
   }
@@ -61,6 +64,9 @@ export async function execSafe(cmd: string[], opts?: ExecOptions): Promise<ExecR
   };
 }
 
+/**
+ * Read an entire process output stream, optionally mirroring chunks as they arrive.
+ */
 async function readOutput(
   stream: ReadableStream<Uint8Array>,
   mirror?: NodeJS.WriteStream,
@@ -75,6 +81,9 @@ async function readOutput(
   return Buffer.concat(chunks).toString();
 }
 
+/**
+ * Merge process.env with overrides, deleting keys set to undefined.
+ */
 function buildEnv(overrides?: Record<string, string | undefined>): Record<string, string> {
   return Object.entries(overrides ?? {}).reduce(
     (env, [key, value]) => {

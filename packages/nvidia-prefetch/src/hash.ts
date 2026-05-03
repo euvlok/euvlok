@@ -1,4 +1,4 @@
-import { exec, logger, sha256SriFromFile } from '@euvlok/shared';
+import { computeFileSha256Sri, downloadToFile, logger, runCommand } from '@euvlok/core';
 import { join } from 'pathe';
 import { z } from 'zod';
 import { GITHUB_BASE_URL } from './version';
@@ -7,7 +7,7 @@ const prefetchResultSchema = z.object({
   hash: z.string(),
 });
 
-export async function fetchDriverHash(
+export async function fetchDriverSha256Sri(
   arch: string,
   baseUrl: string,
   version: string,
@@ -18,22 +18,13 @@ export async function fetchDriverHash(
   const driverPath = join(tempDir, driverName);
 
   logger.info(`Fetching ${arch} driver ${version}...`);
-  await downloadFile(driverUrl, driverPath);
-  return sha256SriFromFile(driverPath);
+  await downloadToFile(driverUrl, driverPath);
+  return computeFileSha256Sri(driverPath);
 }
 
-async function downloadFile(url: string, path: string): Promise<void> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to download ${url}: HTTP ${response.status}`);
-  }
-
-  await Bun.write(path, new Uint8Array(await response.arrayBuffer()));
-}
-
-export async function fetchGithubHash(repo: string, version: string): Promise<string> {
+export async function prefetchGithubSourceHash(repo: string, version: string): Promise<string> {
   const url = `${GITHUB_BASE_URL}/${repo}/archive/${version}.tar.gz`;
-  const output = await exec([
+  const output = await runCommand([
     'nix',
     'store',
     'prefetch-file',

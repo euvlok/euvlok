@@ -3,7 +3,10 @@ import { join } from 'node:path';
 
 export { withTempFile } from '../files';
 
-export async function walkFiles(
+/**
+ * Recursively list files under a root directory that match a predicate.
+ */
+export async function findFiles(
   root: string,
   predicate: (path: string) => boolean,
 ): Promise<string[]> {
@@ -26,6 +29,9 @@ export async function walkFiles(
     .sort((a, b) => a.localeCompare(b));
 }
 
+/**
+ * Check whether a path exists and is a directory.
+ */
 async function directoryExists(path: string): Promise<boolean> {
   return stat(path)
     .then((stats) => stats.isDirectory())

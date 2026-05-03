@@ -1,4 +1,4 @@
-import { execSafe, logger } from '@euvlok/shared';
+import { logger, runCommandResult } from '@euvlok/core';
 import { join } from 'pathe';
 import { simpleGit } from 'simple-git';
 import { COMMON_BRANCH_NAMES, DEFAULT_REMOTE, GIT_DIR } from './constants';
@@ -10,7 +10,7 @@ export async function getOriginalBranch(root: string): Promise<string> {
   return branch.detached ? 'HEAD' : branch.current || 'HEAD';
 }
 
-export async function checkGitLocks(root: string): Promise<void> {
+export async function assertNoGitLocks(root: string): Promise<void> {
   const idx = join(root, GIT_DIR, 'index.lock');
   const head = join(root, GIT_DIR, 'HEAD.lock');
   if (!(await Bun.file(idx).exists()) && !(await Bun.file(head).exists())) return;
@@ -29,7 +29,7 @@ export async function checkGitLocks(root: string): Promise<void> {
   }
 }
 
-export async function fetchLatest(ctx: RebaseContext): Promise<void> {
+export async function fetchLatestRemoteState(ctx: RebaseContext): Promise<void> {
   logger.info('Fetching latest changes from remote...');
   if (ctx.dryRun) {
     logger.info(
@@ -78,14 +78,14 @@ async function trackRemoteBookmark(root: string, git: ReturnType<typeof simpleGi
   const bookmark = await firstRemoteBookmark(git);
 
   if (bookmark) {
-    await execSafe(['jj', 'bookmark', 'track', `${bookmark}@${DEFAULT_REMOTE}`], {
+    await runCommandResult(['jj', 'bookmark', 'track', `${bookmark}@${DEFAULT_REMOTE}`], {
       cwd: root,
     });
   }
 }
 
 async function fetchJjRemote(root: string): Promise<void> {
-  const jj = await execSafe(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
+  const jj = await runCommandResult(['jj', 'git', 'fetch', '--remote', DEFAULT_REMOTE], {
     cwd: root,
   });
   if (jj.exitCode !== 0) {

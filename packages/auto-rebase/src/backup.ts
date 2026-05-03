@@ -1,10 +1,10 @@
 import { mkdir } from 'node:fs/promises';
-import { logger } from '@euvlok/shared';
+import { logger } from '@euvlok/core';
 import { basename, join } from 'pathe';
 import { simpleGit } from 'simple-git';
 import type { RebaseContext } from './context';
 
-export async function createBackup(ctx: RebaseContext): Promise<string> {
+export async function createRebaseBackup(ctx: RebaseContext): Promise<string> {
   logger.info('Creating backup of current repository state...');
 
   if (ctx.dryRun) {

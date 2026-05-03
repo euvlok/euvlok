@@ -1,12 +1,12 @@
+import { runCommand, runCommandResult } from '@euvlok/core';
 import { group, listWorkflowFiles, actionsLogger as logger } from '@euvlok/github';
-import { exec, execSafe } from '@euvlok/shared';
 
 const workflowFiles = await listWorkflowFiles();
 
 await group('actionlint', async () => {
   await Promise.all(
     workflowFiles.map((workflowFile) =>
-      exec(['node_modules/.bin/node-actionlint', workflowFile], { inheritOutput: true }),
+      runCommand(['node_modules/.bin/node-actionlint', workflowFile], { inheritOutput: true }),
     ),
   );
 });
@@ -18,17 +18,20 @@ await group('zizmor', async () => {
     return;
   }
 
-  await exec([...runner, '--offline', '--no-progress', '--format=github', '.github/workflows'], {
-    inheritOutput: true,
-  });
+  await runCommand(
+    [...runner, '--offline', '--no-progress', '--format=github', '.github/workflows'],
+    {
+      inheritOutput: true,
+    },
+  );
 });
 
 async function findZizmorRunner(): Promise<string[] | null> {
-  if ((await execSafe(['uvx', '--version'])).exitCode === 0) {
+  if ((await runCommandResult(['uvx', '--version'])).exitCode === 0) {
     return ['uvx', 'zizmor'];
   }
 
-  if ((await execSafe(['pipx', '--version'])).exitCode === 0) {
+  if ((await runCommandResult(['pipx', '--version'])).exitCode === 0) {
     return ['pipx', 'run', 'zizmor'];
   }
 

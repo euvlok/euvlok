@@ -1,9 +1,9 @@
 import { simpleGit } from 'simple-git';
-import type { BrowserType, FetchUrlResult } from '../types';
+import type { BrowserType, ExtensionDownloadUrlResult } from '../types';
 
 const BPC_REPO = 'https://gitflic.ru/project/magnolia1234/bpc_uploads.git';
 
-export async function fetchBpcUrl(browser: BrowserType): Promise<FetchUrlResult> {
+export async function fetchBpcUrl(browser: BrowserType): Promise<ExtensionDownloadUrlResult> {
   const filename =
     browser === 'chromium'
       ? 'bypass-paywalls-chrome-clean-latest.crx'

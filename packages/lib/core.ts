@@ -1,14 +1,14 @@
-export { withTempFile, withTempPath } from './files';
-export { addGitPaths, listStagedFiles, readGitBlob, readGitIndex, stagedShortstat } from './git';
-export { consola, logger } from './logger';
+export { downloadToFile, withTempDir, withTempFile, withTempFilePath } from './files';
+export { addGitPaths, getStagedShortstat, listStagedFiles, readGitBlob, readGitIndex } from './git';
+export { logger } from './logger';
 export {
+  assertValidNixFile,
+  computeFileSha256Sri,
   escapeNixString,
-  nixEvalJson,
-  nixEvalRaw,
-  sha256SriFromFile,
-  validateNixFile,
+  evaluateNixJson,
+  evaluateNixRaw,
 } from './nix';
 export { findRepoRoot, isGitRepo } from './repo';
-export type { ExecResult } from './shell';
-export { exec, execSafe } from './shell';
-export { asArray, assertNever, type MaybeArray, type MaybePromise, nonEmptyLines } from './utils';
+export type { CommandResult } from './shell';
+export { runCommand, runCommandResult } from './shell';
+export { assertNever, type MaybePromise, splitNonEmptyLines } from './utils';

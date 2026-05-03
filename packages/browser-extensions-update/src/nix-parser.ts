@@ -1,4 +1,4 @@
-import { exec, logger } from '@euvlok/shared';
+import { logger, runCommand } from '@euvlok/core';
 import type { BrowserType, Extension, GithubReleaseConfig, NixInputFile } from './types';
 import { NixInputFileSchema } from './types';
 
@@ -31,8 +31,8 @@ function toExtension(e: NixInputFile['extensions'][number] & { id: string }): Ex
   };
 }
 
-export async function parseNixInput(path: string) {
-  const json = await exec(['nix', 'eval', '--json', '--file', path]);
+export async function parseNixExtensionInput(path: string) {
+  const json = await runCommand(['nix', 'eval', '--json', '--file', path]);
   const input = NixInputFileSchema.parse(JSON.parse(json));
 
   const browser: BrowserType = input.browser;

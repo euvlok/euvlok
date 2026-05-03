@@ -2,7 +2,10 @@ import { Listr } from 'listr2';
 import type { MaybePromise } from '../utils';
 import { group } from './logging';
 
-export async function runSequentialTasks<T>(
+/**
+ * Run a list of items through Listr sequentially, grouping each item in Actions logs.
+ */
+export async function runTasksSequentially<T>(
   items: readonly T[],
   title: (item: T) => string,
   task: (item: T) => MaybePromise<void>,

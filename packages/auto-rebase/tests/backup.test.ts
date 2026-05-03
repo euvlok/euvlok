@@ -4,20 +4,20 @@ import {
   createTempDir,
   createTempGitRepo,
   createTestContext,
-  realExec,
-  realExecOrThrow,
+  runRealCommandOrThrow,
+  runRealCommandResult,
   silentLogger,
 } from './test-utils';
 
-mock.module('@euvlok/shared', () => ({
-  exec: realExecOrThrow,
-  execSafe: realExec,
+mock.module('@euvlok/core', () => ({
+  runCommand: runRealCommandOrThrow,
+  runCommandResult: runRealCommandResult,
   logger: silentLogger,
 }));
 
-import { createBackup } from '../src/backup';
+import { createRebaseBackup } from '../src/backup';
 
-describe('createBackup', () => {
+describe('createRebaseBackup', () => {
   let repoDir: string;
   let backupDir: string;
 
@@ -33,31 +33,31 @@ describe('createBackup', () => {
 
   test('creates a valid git bundle', async () => {
     const ctx = createTestContext({ repoRoot: repoDir, backupDir });
-    const result = await createBackup(ctx);
+    const result = await createRebaseBackup(ctx);
 
     expect(result).toContain(backupDir);
     expect(result).toEndWith('.gitbundle');
     expect(await Bun.file(result).exists()).toBe(true);
 
     // Verify the bundle is actually valid
-    const verify = await realExec(['git', 'bundle', 'verify', result]);
+    const verify = await runRealCommandResult(['git', 'bundle', 'verify', result]);
     expect(verify.exitCode).toBe(0);
   });
 
   test('dry run returns empty string without creating files', async () => {
     const ctx = createTestContext({ repoRoot: repoDir, backupDir, dryRun: true });
-    const result = await createBackup(ctx);
+    const result = await createRebaseBackup(ctx);
     expect(result).toBe('');
   });
 
   test('empty repo (no commits) returns empty string', async () => {
     const emptyDir = await createTempDir();
-    await realExec(['git', 'init', emptyDir]);
-    await realExec(['git', '-C', emptyDir, 'config', 'user.email', 'test@test.com']);
-    await realExec(['git', '-C', emptyDir, 'config', 'user.name', 'Test']);
+    await runRealCommandResult(['git', 'init', emptyDir]);
+    await runRealCommandResult(['git', '-C', emptyDir, 'config', 'user.email', 'test@test.com']);
+    await runRealCommandResult(['git', '-C', emptyDir, 'config', 'user.name', 'Test']);
 
     const ctx = createTestContext({ repoRoot: emptyDir, backupDir });
-    const result = await createBackup(ctx);
+    const result = await createRebaseBackup(ctx);
     expect(result).toBe('');
 
     await cleanupTempDir(emptyDir);

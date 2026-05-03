@@ -1,29 +1,32 @@
 import { basename, dirname } from 'node:path';
 import {
-  commitAndPush,
-  currentRefName,
-  hasGitDiff,
-  actionsLogger as logger,
-  runSequentialTasks,
-  walkFiles,
-  withTempFile,
-} from '@euvlok/github';
-import {
   addGitPaths,
   escapeNixString,
-  exec,
+  evaluateNixJson,
   listStagedFiles,
-  nixEvalJson,
   readGitBlob,
   readGitIndex,
-} from '@euvlok/shared';
+  runCommand,
+} from '@euvlok/core';
+import {
+  commitAndPush,
+  findFiles,
+  getCurrentRefName,
+  hasUnstagedGitDiff,
+  actionsLogger as logger,
+  runTasksSequentially,
+  withTempFile,
+} from '@euvlok/github';
 import { z } from 'zod';
 import {
   type ExtensionSummary,
   formatUpdatedExtension,
   summarizeExtension,
 } from '../../packages/browser-extensions-update/src/extension-summary';
-import type { BrowserType } from '../../packages/browser-extensions-update/src/types';
+import {
+  type BrowserType,
+  BrowserTypeSchema,
+} from '../../packages/browser-extensions-update/src/types';
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -33,9 +36,9 @@ if (sourceFiles.length === 0) {
   process.exit(0);
 }
 
-await runSequentialTasks(sourceFiles, String, updateExtensionFile);
+await runTasksSequentially(sourceFiles, String, updateExtensionFile);
 
-if (!(await hasGitDiff())) {
+if (!(await hasUnstagedGitDiff())) {
   logger.info('No changes detected in any extension files.');
   process.exit(0);
 }
@@ -59,22 +62,22 @@ await commitAndPush({
   title: commitTitle,
   body: changes.length > 0 ? `\n${changes.join('\n')}` : '\nUpdated extension definitions.',
   add: ['hosts/', 'modules/'],
-  refName: currentRefName(),
+  refName: getCurrentRefName(),
 });
 
 function normalizeBrowserFilter(input: string | undefined): BrowserType | null {
   if (!input || input === 'all') {
     return null;
   }
-  if (input === 'chromium' || input === 'firefox') {
-    return input;
-  }
+
+  const parsed = BrowserTypeSchema.safeParse(input);
+  if (parsed.success) return parsed.data;
 
   throw new Error(`Unsupported browser filter: ${input}`);
 }
 
 async function updateExtensionFile(sourceFile: string): Promise<void> {
-  await exec(['bun', 'run', 'browser-extension-update', '--', '-i', sourceFile], {
+  await runCommand(['bun', 'run', 'browser-extension-update', '--', '-i', sourceFile], {
     inheritOutput: true,
   });
 }
@@ -83,7 +86,7 @@ async function findSourceFiles(filter: BrowserType | null): Promise<string[]> {
   const roots = ['modules', 'hosts'];
   const files = (
     await Promise.all(
-      roots.map((root) => walkFiles(root, (path) => basename(path) === 'sources.nix')),
+      roots.map((root) => findFiles(root, (path) => basename(path) === 'sources.nix')),
     )
   ).flat();
 
@@ -138,7 +141,7 @@ async function parseExtensions(
   }
 
   return withTempFile(nixContent, 'nix', async (tempFile) => {
-    const json = await nixEvalJson(
+    const json = await evaluateNixJson(
       `with import <nixpkgs> {}; import "${escapeNixString(tempFile)}" { inherit pkgs lib; config = { catppuccin.enable = false; }; }`,
     );
 

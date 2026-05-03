@@ -1,6 +1,6 @@
 import { afterEach, beforeEach } from 'bun:test';
 import { mkdir, rm } from 'node:fs/promises';
-import type { ExecResult } from '@euvlok/shared';
+import type { CommandResult } from '@euvlok/core';
 import { join } from 'pathe';
 import type { RebaseContext } from '../src/context';
 
@@ -22,7 +22,7 @@ export function createTestContext(overrides?: Partial<RebaseContext>): RebaseCon
   };
 }
 
-export function mockExecResult(overrides?: Partial<ExecResult>): ExecResult {
+export function mockCommandResult(overrides?: Partial<CommandResult>): CommandResult {
   return {
     stdout: '',
     stderr: '',
@@ -31,11 +31,11 @@ export function mockExecResult(overrides?: Partial<ExecResult>): ExecResult {
   };
 }
 
-/** Re-implementation of execSafe for use in test mocks that need real shell execution. */
-export async function realExec(
+/** Re-implementation of runCommandResult for use in test mocks that need real shell execution. */
+export async function runRealCommandResult(
   cmd: string[],
   opts?: { cwd?: string; trimOutput?: boolean },
-): Promise<ExecResult> {
+): Promise<CommandResult> {
   const result = Bun.spawn(cmd, { cwd: opts?.cwd, stdout: 'pipe', stderr: 'pipe' });
   const exitCode = await result.exited;
   const stdout = await new Response(result.stdout).text();
@@ -48,12 +48,12 @@ export async function realExec(
   };
 }
 
-/** Re-implementation of exec for use in test setup that should fail fast. */
-export async function realExecOrThrow(
+/** Re-implementation of runCommand for use in test setup that should fail fast. */
+export async function runRealCommandOrThrow(
   cmd: string[],
   opts?: { cwd?: string; trimOutput?: boolean },
 ): Promise<string> {
-  const result = await realExec(cmd, opts);
+  const result = await runRealCommandResult(cmd, opts);
   if (result.exitCode !== 0) {
     throw new Error(`Command failed (exit ${result.exitCode}): ${cmd.join(' ')}\n${result.stderr}`);
   }
@@ -66,18 +66,18 @@ function tempPath(prefix: string): string {
 }
 
 async function configureGitUser(dir: string): Promise<void> {
-  await realExecOrThrow(['git', '-C', dir, 'config', 'user.email', 'test@test.com']);
-  await realExecOrThrow(['git', '-C', dir, 'config', 'user.name', 'Test']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'config', 'user.email', 'test@test.com']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'config', 'user.name', 'Test']);
 }
 
 export async function createTempGitRepo(): Promise<string> {
   const dir = tempPath('test-repo');
   await mkdir(dir, { recursive: true });
-  await realExecOrThrow(['git', '-C', dir, 'init']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'init']);
   await configureGitUser(dir);
   await Bun.write(join(dir, '.gitkeep'), '');
-  await realExecOrThrow(['git', '-C', dir, 'add', '.']);
-  await realExecOrThrow(['git', '-C', dir, 'commit', '-m', 'init']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'add', '.']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'commit', '-m', 'init']);
   return dir;
 }
 
@@ -151,32 +151,34 @@ export async function cleanupTempJjRepo(repo: JjTestRepo): Promise<void> {
 
 export async function createTempJjRepo(): Promise<JjTestRepo> {
   const remoteDir = tempPath('test-remote');
-  await realExecOrThrow(['git', 'init', '--bare', remoteDir]);
+  await runRealCommandOrThrow(['git', 'init', '--bare', remoteDir]);
 
   const dir = tempPath('test-jj');
   await mkdir(dir, { recursive: true });
-  await realExecOrThrow(['git', '-C', dir, 'init']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'init']);
   await configureGitUser(dir);
-  await realExecOrThrow(['git', '-C', dir, 'remote', 'add', 'origin', remoteDir]);
+  await runRealCommandOrThrow(['git', '-C', dir, 'remote', 'add', 'origin', remoteDir]);
   await Bun.write(join(dir, 'README'), 'init\n');
-  await realExecOrThrow(['git', '-C', dir, 'add', 'README']);
-  await realExecOrThrow(['git', '-C', dir, 'commit', '-m', 'init']);
-  await realExecOrThrow(['git', '-C', dir, 'push', 'origin', 'master']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'add', 'README']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'commit', '-m', 'init']);
+  await runRealCommandOrThrow(['git', '-C', dir, 'push', 'origin', 'master']);
 
-  await realExecOrThrow(['jj', 'git', 'init', '--git-repo=.'], { cwd: dir });
-  await realExecOrThrow(['jj', 'bookmark', 'track', 'master', '--remote=origin'], { cwd: dir });
+  await runRealCommandOrThrow(['jj', 'git', 'init', '--git-repo=.'], { cwd: dir });
+  await runRealCommandOrThrow(['jj', 'bookmark', 'track', 'master', '--remote=origin'], {
+    cwd: dir,
+  });
 
   return { dir, remoteDir };
 }
 
 export async function pushCommitToRemote(remoteDir: string, filename?: string): Promise<void> {
   const tmpClone = tempPath('test-clone');
-  await realExecOrThrow(['git', 'clone', remoteDir, tmpClone]);
+  await runRealCommandOrThrow(['git', 'clone', remoteDir, tmpClone]);
   await configureGitUser(tmpClone);
   const fname = filename ?? `remote-${Date.now()}.txt`;
   await Bun.write(join(tmpClone, fname), 'remote change\n');
-  await realExecOrThrow(['git', '-C', tmpClone, 'add', '.']);
-  await realExecOrThrow(['git', '-C', tmpClone, 'commit', '-m', 'remote commit']);
-  await realExecOrThrow(['git', '-C', tmpClone, 'push', 'origin', 'master']);
+  await runRealCommandOrThrow(['git', '-C', tmpClone, 'add', '.']);
+  await runRealCommandOrThrow(['git', '-C', tmpClone, 'commit', '-m', 'remote commit']);
+  await runRealCommandOrThrow(['git', '-C', tmpClone, 'push', 'origin', 'master']);
   await rm(tmpClone, { recursive: true, force: true });
 }

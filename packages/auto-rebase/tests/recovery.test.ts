@@ -1,16 +1,22 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'pathe';
-import { cleanupTempDir, createTempDir, realExec, silentLogger, useTempJjRepo } from './test-utils';
+import {
+  cleanupTempDir,
+  createTempDir,
+  runRealCommandResult,
+  silentLogger,
+  useTempJjRepo,
+} from './test-utils';
 
-mock.module('@euvlok/shared', () => ({
-  execSafe: realExec,
+mock.module('@euvlok/core', () => ({
+  runCommandResult: runRealCommandResult,
   logger: silentLogger,
 }));
 
-import { recoverFromInterruptedState } from '../src/recovery';
+import { recoverInterruptedRebase } from '../src/recovery';
 
-describe('recoverFromInterruptedState', () => {
+describe('recoverInterruptedRebase', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -23,13 +29,13 @@ describe('recoverFromInterruptedState', () => {
   });
 
   test('returns true when no state file exists', async () => {
-    expect(await recoverFromInterruptedState(tmpDir)).toBe(true);
+    expect(await recoverInterruptedRebase(tmpDir)).toBe(true);
   });
 
   test('recovers without .jj directory', async () => {
     await Bun.write(join(tmpDir, '.auto-rebase-state'), JSON.stringify(testState()));
 
-    const result = await recoverFromInterruptedState(tmpDir);
+    const result = await recoverInterruptedRebase(tmpDir);
 
     expect(result).toBe(true);
     expect(await Bun.file(join(tmpDir, '.auto-rebase-state')).exists()).toBe(false);
@@ -46,14 +52,14 @@ describe('recoverFromInterruptedState', () => {
       JSON.stringify(testState({ stagedDiffPath: stagedDiff, unstagedDiffPath: unstagedDiff })),
     );
 
-    await recoverFromInterruptedState(tmpDir);
+    await recoverInterruptedRebase(tmpDir);
 
     expect(await Bun.file(stagedDiff).exists()).toBe(false);
     expect(await Bun.file(unstagedDiff).exists()).toBe(false);
   });
 });
 
-describe('recoverFromInterruptedState with real jj', () => {
+describe('recoverInterruptedRebase with real jj', () => {
   const repo = useTempJjRepo();
 
   test('recovers with real .jj directory present', async () => {
@@ -63,7 +69,7 @@ describe('recoverFromInterruptedState with real jj', () => {
       JSON.stringify(testState({ originalBranch: 'master' })),
     );
 
-    const result = await recoverFromInterruptedState(current.dir);
+    const result = await recoverInterruptedRebase(current.dir);
 
     expect(result).toBe(true);
     expect(await Bun.file(join(current.dir, '.auto-rebase-state')).exists()).toBe(false);

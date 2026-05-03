@@ -1,14 +1,11 @@
-import { mkdtemp, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { logger } from '@euvlok/shared';
+import { logger, withTempDir } from '@euvlok/core';
 import { buildApplication, buildCommand, run } from '@stricli/core';
-import { join } from 'pathe';
-import { fetchDriverHash, fetchGithubHash } from './hash';
-import { getCurrentVersion, updateNvidiaDriverNix } from './nix-file';
+import { fetchDriverSha256Sri, prefetchGithubSourceHash } from './hash';
+import { getCurrentNvidiaVersion, updateNvidiaDriverNix } from './nix-file';
 import {
   AARCH64_BASE_URL,
   compareNvidiaVersions,
-  fetchLatestVersion,
+  fetchLatestNvidiaVersion,
   X86_64_BASE_URL,
 } from './version';
 
@@ -25,7 +22,7 @@ type DriverHashes = {
 };
 
 async function resolveVersion(requestedVersion?: string): Promise<string> {
-  const version = requestedVersion ?? (await fetchLatestVersion());
+  const version = requestedVersion ?? (await fetchLatestNvidiaVersion());
   if (!requestedVersion) logger.success(`Using latest driver version: ${version}`);
   return version;
 }
@@ -37,7 +34,7 @@ async function exitIfCurrent(
 ): Promise<void> {
   if (!update) return;
 
-  const current = await getCurrentVersion();
+  const current = await getCurrentNvidiaVersion();
   if (!current) return;
 
   if (!requestedVersion && compareNvidiaVersions(version, current) < 0) {
@@ -53,24 +50,20 @@ async function exitIfCurrent(
   process.exit(0);
 }
 
-async function createTempDir(): Promise<string> {
-  return mkdtemp(join(Bun.env.TMPDIR ?? tmpdir(), 'nvidia-prefetch-'));
-}
-
 async function fetchHashes(version: string, tempDir: string): Promise<DriverHashes> {
   logger.info(`Fetching hashes for NVIDIA driver version ${version}...`);
 
-  const sha256 = await fetchDriverHash('x86_64', X86_64_BASE_URL, version, tempDir);
-  const sha256_aarch64 = await fetchDriverHash('aarch64', AARCH64_BASE_URL, version, tempDir);
+  const sha256 = await fetchDriverSha256Sri('x86_64', X86_64_BASE_URL, version, tempDir);
+  const sha256_aarch64 = await fetchDriverSha256Sri('aarch64', AARCH64_BASE_URL, version, tempDir);
 
   logger.info('Fetching NVIDIA open kernel modules...');
-  const openSha256 = await fetchGithubHash('open-gpu-kernel-modules', version);
+  const openSha256 = await prefetchGithubSourceHash('open-gpu-kernel-modules', version);
 
   logger.info('Fetching nvidia-settings...');
-  const settingsSha256 = await fetchGithubHash('nvidia-settings', version);
+  const settingsSha256 = await prefetchGithubSourceHash('nvidia-settings', version);
 
   logger.info('Fetching nvidia-persistenced...');
-  const persistencedSha256 = await fetchGithubHash('nvidia-persistenced', version);
+  const persistencedSha256 = await prefetchGithubSourceHash('nvidia-persistenced', version);
 
   return { sha256, sha256_aarch64, openSha256, settingsSha256, persistencedSha256 };
 }
@@ -132,16 +125,11 @@ const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
     const version = await resolveVersion(requestedVersion);
     await exitIfCurrent(update, version, requestedVersion);
 
-    const tempDir = await createTempDir();
-    await fetchHashes(version, tempDir)
-      .then(async (hashes) => {
-        logHashes(hashes);
-        await updateNixIfRequested(update, version, hashes);
-      })
-      .finally(async () => {
-        await rm(tempDir, { recursive: true, force: true });
-        logger.info('Cleaned up temporary directory');
-      });
+    await withTempDir('nvidia-prefetch-', async (tempDir) => {
+      const hashes = await fetchHashes(version, tempDir);
+      logHashes(hashes);
+      await updateNixIfRequested(update, version, hashes);
+    }).finally(() => logger.info('Cleaned up temporary directory'));
   },
 });
 
