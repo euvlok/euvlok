@@ -1,4 +1,4 @@
-import { execSafe, logger, nixHashToSri, withTempPath } from '@euvlok/shared';
+import { execSafe, logger, sha256SriFromFile, withTempPath } from '@euvlok/shared';
 import { Listr } from 'listr2';
 import { extractManifestInfo } from './crx-parser';
 import { generateNixEntry } from './nix-entry';
@@ -19,12 +19,6 @@ export async function getChromiumMajorVersion(): Promise<string> {
 
   logger.warn('Could not determine Chromium version, using default: 143');
   return '143';
-}
-
-async function hash(path: string) {
-  const hasher = new Bun.CryptoHasher('sha256');
-  hasher.update(new Uint8Array(await Bun.file(path).arrayBuffer()));
-  return nixHashToSri(hasher.digest('hex'));
 }
 
 async function downloadExtension(url: string, path: string): Promise<string | null> {
@@ -55,7 +49,7 @@ async function buildExtensionResult(
   addonId: string | undefined,
   tmp: string,
 ): Promise<ExtensionResult> {
-  const sri = await hash(tmp);
+  const sri = await sha256SriFromFile(tmp);
   const manifest = await extractManifestInfo(tmp);
   const addon = resolveAddonId(ext, browser, manifest.addonId, addonId);
   const entry = generateNixEntry(

@@ -21,13 +21,10 @@ export async function nixEvalJson(expr: string): Promise<unknown | null> {
   return JSON.parse(result.stdout);
 }
 
-export async function nixHashToSri(hexHash: string): Promise<string> {
-  const result = await execSafe(['nix', 'hash', 'to-sri', '--type', 'sha256', hexHash]);
-  if (result.exitCode !== 0) {
-    throw new Error(`Failed to convert nix hash to SRI: ${result.stderr}`);
-  }
-
-  return result.stdout;
+export async function sha256SriFromFile(filePath: string): Promise<string> {
+  const hasher = new Bun.CryptoHasher('sha256');
+  hasher.update(new Uint8Array(await Bun.file(filePath).arrayBuffer()));
+  return `sha256-${hasher.digest('base64')}`;
 }
 
 /**
