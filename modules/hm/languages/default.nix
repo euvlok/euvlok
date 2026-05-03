@@ -174,7 +174,7 @@ let
       };
     ruby = {
       packages = builtins.attrValues {
-        inherit (pkgs.unstable) ruby_3_4 solargraph rubocop;
+        inherit (pkgs.unstable) ruby_4_0 solargraph rubocop;
         inherit (pkgs.unstable.rubyPackages)
           rails
           ruby-lsp
