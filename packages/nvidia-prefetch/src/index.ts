@@ -3,7 +3,12 @@ import { buildApplication, buildCommand, run } from '@stricli/core';
 import { join } from 'pathe';
 import { fetchDriverHash, fetchGithubHash } from './hash';
 import { getCurrentVersion, updateNvidiaDriverNix } from './nix-file';
-import { AARCH64_BASE_URL, fetchLatestVersion, X86_64_BASE_URL } from './version';
+import {
+  AARCH64_BASE_URL,
+  compareNvidiaVersions,
+  fetchLatestVersion,
+  X86_64_BASE_URL,
+} from './version';
 
 type NvidiaPrefetchFlags = {
   update: boolean;
@@ -23,10 +28,22 @@ async function resolveVersion(requestedVersion?: string): Promise<string> {
   return version;
 }
 
-async function exitIfCurrent(update: boolean, version: string): Promise<void> {
+async function exitIfCurrent(
+  update: boolean,
+  version: string,
+  requestedVersion?: string,
+): Promise<void> {
   if (!update) return;
 
   const current = await getCurrentVersion();
+  if (!current) return;
+
+  if (!requestedVersion && compareNvidiaVersions(version, current) < 0) {
+    throw new Error(
+      `Refusing to downgrade NVIDIA driver from ${current} to ${version}. Specify a version manually if this downgrade is intentional.`,
+    );
+  }
+
   if (current !== version) return;
 
   logger.info(`Current version (${current}) is already up to date`);
@@ -111,7 +128,7 @@ const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
   async func(args, requestedVersion) {
     const update = args.update;
     const version = await resolveVersion(requestedVersion);
-    await exitIfCurrent(update, version);
+    await exitIfCurrent(update, version, requestedVersion);
 
     const tempDir = await createTempDir();
     await fetchHashes(version, tempDir)
