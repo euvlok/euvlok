@@ -1,10 +1,32 @@
 import { logger } from '@euvlok/shared';
 import * as cheerio from 'cheerio';
-import semver from 'semver';
 
 export const X86_64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-x86_64';
 export const AARCH64_BASE_URL = 'https://download.nvidia.com/XFree86/Linux-aarch64';
 export const GITHUB_BASE_URL = 'https://github.com/NVIDIA';
+
+function parseNvidiaVersion(version: string): number[] | null {
+  if (!/^\d+(?:\.\d+)+$/.test(version)) return null;
+  return version.split('.').map(Number);
+}
+
+export function compareNvidiaVersions(a: string, b: string): number {
+  const parsedA = parseNvidiaVersion(a);
+  const parsedB = parseNvidiaVersion(b);
+
+  if (!parsedA || !parsedB) {
+    throw new Error(`Cannot compare invalid NVIDIA driver versions: ${a}, ${b}`);
+  }
+
+  const length = Math.max(parsedA.length, parsedB.length);
+  for (let index = 0; index < length; index++) {
+    const partA = parsedA[index] ?? 0;
+    const partB = parsedB[index] ?? 0;
+    if (partA !== partB) return partA - partB;
+  }
+
+  return 0;
+}
 
 async function fetchVersionsFromPlatform(url: string, name: string): Promise<string[]> {
   logger.info(`Checking ${name} platform...`);
@@ -16,8 +38,8 @@ async function fetchVersionsFromPlatform(url: string, name: string): Promise<str
   const versions = $('a')
     .map((_index, link) => $(link).attr('href')?.replace(/\/$/, '') ?? '')
     .get()
-    .filter((href): href is string => semver.valid(href) !== null)
-    .sort(semver.compare);
+    .filter((href): href is string => parseNvidiaVersion(href) !== null)
+    .sort(compareNvidiaVersions);
 
   if (versions.length === 0) {
     throw new Error(`Could not fetch versions from ${name} platform`);
@@ -26,13 +48,13 @@ async function fetchVersionsFromPlatform(url: string, name: string): Promise<str
   return versions;
 }
 
-function findCommonLatestVersion(versions1: string[], versions2: string[]): string | null {
+export function findCommonLatestVersion(versions1: string[], versions2: string[]): string | null {
   const set2 = new Set(versions2);
   const common = versions1.filter((v) => set2.has(v));
 
   if (common.length === 0) return null;
 
-  common.sort(semver.compare);
+  common.sort(compareNvidiaVersions);
 
   return common[common.length - 1];
 }
