@@ -65,20 +65,21 @@ let
         cemu
         chiaki
         dolphin-emu
-        # flycast
+        flycast
         gogdl
         goverlay
         heroic
-        lutris
         mangohud
         mgba
         pcsx2
         ppsspp
         prismlauncher
+        rpcs3
         ryubing
         shadps4
         xemu
         ;
+      # inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
     };
 
     development = builtins.attrValues {
