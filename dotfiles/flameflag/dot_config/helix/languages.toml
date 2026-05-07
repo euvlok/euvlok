@@ -73,7 +73,7 @@ enable = true
 lint = true
 unstable = true
 [language-server.deno.config.format.options]
-lineWidth = 100
+lineWidth = 120
 indentWidth = 2
 [language-server.deno.config.javascript.format.options]
 indentWidth = 4
