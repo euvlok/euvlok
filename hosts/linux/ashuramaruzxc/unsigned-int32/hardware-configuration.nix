@@ -90,7 +90,7 @@
       extraEntries = ''
         /Windows
           protocol: efi
-          path: uuid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
+          path: guid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
 
         /Memtest86
           protocol: efi
