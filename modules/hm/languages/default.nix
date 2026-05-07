@@ -113,6 +113,8 @@ let
           pnpm
           eslint
           prettier
+          biome
+          package-version-server
           typescript-language-server
           ;
       };
@@ -170,7 +172,10 @@ let
         ]);
       in
       {
-        packages = builtins.attrValues { python = python313; };
+        packages = builtins.attrValues {
+          inherit (pkgs.unstable) basedpyright;
+          python = python313;
+        };
       };
     ruby = {
       packages = builtins.attrValues {
@@ -190,6 +195,7 @@ let
           cargo-watch
           cargo-edit
           cargo-outdated
+          crates-lsp
           ;
       };
     };
@@ -305,6 +311,8 @@ in
             shfmt
             bash-language-server
             taplo
+            typos-lsp
+            vscode-langservers-extracted
             yaml-language-server
             ;
         })

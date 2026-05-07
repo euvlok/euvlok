@@ -6,12 +6,12 @@
     programs.zed-editor.enable = true;
     programs.zed-editor.extensions = [
       "nix"
+      "unicode"
       "json5"
       "xml"
       "typos"
       "cspell"
       "biome"
-      "unicode"
       "env"
       "csv"
       "toml"
@@ -23,6 +23,7 @@
       "meson"
       "stylelint"
       "http"
+      "markdownlint"
     ];
 
     programs.zed-editor.userSettings = {
@@ -35,6 +36,15 @@
         72
         80
         120
+      ];
+      file_types."XML" = [
+        "*.csproj"
+        "*.fsproj"
+        "*.props"
+        "*.sln"
+        "*.slnx"
+        "*.targets"
+        "*.vbproj"
       ];
     };
 
@@ -51,6 +61,7 @@
         formatter = "language_server";
       };
       "JSON" = {
+        language_servers = [ "json-language-server" ];
         formatter = {
           external = {
             command = "prettier";
@@ -100,6 +111,49 @@
             ];
           };
         };
+      };
+      "TOML" = {
+        language_servers = [ "taplo" ];
+        formatter = "language_server";
+      };
+      "Markdown" = {
+        language_servers = [ "markdownlint" ];
+        formatter = {
+          external = {
+            command = "prettier";
+            arguments = [
+              "--parser"
+              "markdown"
+              "--stdin-filepath"
+              "{buffer_path}"
+            ];
+          };
+        };
+      };
+    };
+
+    programs.zed-editor.userSettings.lsp = {
+      nil.settings.nil.nix.flake.autoArchive = true;
+
+      "json-language-server".binary = {
+        path = "vscode-json-language-server";
+        arguments = [ "--stdio" ];
+      };
+
+      taplo.binary = {
+        path = "taplo";
+        arguments = [
+          "lsp"
+          "stdio"
+        ];
+      };
+
+      typos.binary.path = "typos-lsp";
+
+      markdownlint.settings.config = {
+        MD033 = false;
+        MD041 = false;
+        MD045 = false;
       };
     };
   };

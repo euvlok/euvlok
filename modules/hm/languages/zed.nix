@@ -62,7 +62,6 @@
         "python-snippets"
         "python-requirements"
         "python-refactoring"
-        "basedpyright"
         "django-snippets"
         "flask-snippets"
       ])
@@ -89,6 +88,9 @@
       (lib.optionalAttrs config.hm.languages.cpp.enable {
         "C" = {
           language_servers = [ "clangd" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+          };
           formatter = {
             external = {
               command = "clang-format";
@@ -97,6 +99,9 @@
         };
         "C++" = {
           language_servers = [ "clangd" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+          };
           formatter = {
             external = {
               command = "clang-format";
@@ -108,6 +113,10 @@
       // (lib.optionalAttrs config.hm.languages.csharp.enable {
         "CSharp" = {
           language_servers = [ "omnisharp" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+            "source.organizeImports" = true;
+          };
         };
       })
       # Clojure
@@ -119,6 +128,10 @@
       // (lib.optionalAttrs config.hm.languages.dart.enable {
         "Dart" = {
           language_servers = [ "dart" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+            "source.organizeImports" = true;
+          };
           formatter = "language_server";
         };
       })
@@ -139,6 +152,9 @@
       // (lib.optionalAttrs config.hm.languages.go.enable {
         "Go" = {
           language_servers = [ "gopls" ];
+          code_actions_on_format = {
+            "source.organizeImports" = true;
+          };
           formatter = "language_server";
         };
       })
@@ -163,6 +179,7 @@
           language_servers = [
             "typescript-language-server"
             "eslint_d"
+            "biome"
           ];
           formatter = {
             external = {
@@ -180,6 +197,7 @@
           language_servers = [
             "typescript-language-server"
             "eslint_d"
+            "biome"
           ];
           formatter = {
             external = {
@@ -197,6 +215,7 @@
           language_servers = [
             "typescript-language-server"
             "eslint_d"
+            "biome"
           ];
           formatter = {
             external = {
@@ -214,6 +233,7 @@
           language_servers = [
             "typescript-language-server"
             "eslint_d"
+            "biome"
           ];
           formatter = {
             external = {
@@ -288,18 +308,16 @@
       // (lib.optionalAttrs config.hm.languages.python.enable {
         "Python" = {
           language_servers = [
+            "basedpyright"
             "ruff"
-            "pyright"
           ];
+          code_actions_on_format = {
+            "source.fixAll.ruff" = true;
+            "source.organizeImports.ruff" = true;
+          };
           formatter = {
-            external = {
-              command = "ruff";
-              arguments = [
-                "format"
-                "--stdin-filename"
-                "{buffer_path}"
-                "-"
-              ];
+            language_server = {
+              name = "ruff";
             };
           };
         };
@@ -313,6 +331,10 @@
       // (lib.optionalAttrs config.hm.languages.rust.enable {
         "Rust" = {
           language_servers = [ "rust-analyzer" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+            "source.organizeImports" = true;
+          };
           formatter = "language_server";
         };
       })
@@ -331,6 +353,9 @@
       // (lib.optionalAttrs config.hm.languages.zig.enable {
         "Zig" = {
           language_servers = [ "zls" ];
+          code_actions_on_format = {
+            "source.fixAll" = true;
+          };
           formatter = "language_server";
         };
       });
@@ -351,7 +376,7 @@
       // (lib.optionalAttrs config.hm.languages.csharp.enable {
         omnisharp = {
           binary = {
-            path = "omnisharp";
+            path = "OmniSharp";
             arguments = [ "-lsp" ];
           };
         };
@@ -431,6 +456,12 @@
             path = "eslint_d";
           };
         };
+        biome = {
+          binary = {
+            path = "biome";
+            arguments = [ "lsp-proxy" ];
+          };
+        };
       })
       // (lib.optionalAttrs config.hm.languages.kotlin.enable {
         "kotlin-language-server" = {
@@ -480,12 +511,14 @@
         };
       })
       // (lib.optionalAttrs config.hm.languages.python.enable {
-        pyright = {
-          initialization_options = {
-            python = {
-              analysis = {
-                typeCheckingMode = "strict";
-              };
+        basedpyright = {
+          binary = {
+            path = "basedpyright-langserver";
+            arguments = [ "--stdio" ];
+          };
+          settings = {
+            "basedpyright.analysis" = {
+              typeCheckingMode = "strict";
             };
           };
         };
@@ -500,6 +533,11 @@
         };
       })
       // (lib.optionalAttrs config.hm.languages.rust.enable {
+        "crates-lsp" = {
+          binary = {
+            path = "crates-lsp";
+          };
+        };
         "rust-analyzer" = {
           binary = {
             path = "rust-analyzer";

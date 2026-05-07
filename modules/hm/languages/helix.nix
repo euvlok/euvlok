@@ -55,7 +55,7 @@
             enable = true;
             lint = true;
             unstable = true;
-            format.options.lineWidth = 100;
+            format.options.lineWidth = 120;
             format.options.indentWidth = 2;
             javascript.format.options.indentWidth = 4;
             typescript.format.options.indentWidth = 4;
