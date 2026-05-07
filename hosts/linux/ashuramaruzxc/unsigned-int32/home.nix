@@ -52,7 +52,6 @@ let
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
-        claude.enable = true;
         ghostty.enable = true;
         helix.enable = true;
         mpv.enable = true;
@@ -117,23 +116,10 @@ in
       ]
       ++ ashuramaruHmConfig
       ++ [
-        { services.protonmail-bridge.enable = true; }
         { home.packages = allPackages; }
-        (
-          {
-            inputs,
-            lib,
-            ...
-          }:
-          {
-            # doesn't work with cudaEnable = true;
-            home.packages = builtins.attrValues {
-              inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
-            };
-          }
-        )
         cursorModule
         {
+          services.protonmail-bridge.enable = true;
           programs = {
             rbw = {
               enable = true;
