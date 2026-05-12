@@ -9,11 +9,24 @@ let
 
   browserPackages = {
     chromium = pkgs.chromium.override { enableWideVine = true; };
+    helium-browser = pkgs.eupkgs.helium-browser;
     inherit (pkgs)
       brave
       google-chrome
       ungoogled-chromium
       ;
+  };
+
+  extensions = lib.unique (
+    (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
+  );
+
+  chromiumExternalExtension = ext: {
+    name = "helium/External Extensions/${ext.id}.json";
+    value.text = builtins.toJSON {
+      external_crx = ext.crxPath;
+      external_version = ext.version;
+    };
   };
 in
 {
@@ -50,18 +63,15 @@ in
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
 
-      extensions = lib.unique (
-        (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
-      );
+      extensions = if cfg.browser == "helium-browser" then lib.mkForce [ ] else extensions;
 
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
       ]
-      ++ lib.optionals (lib.elem cfg.browser [
-        "chromium"
-        "google-chrome"
-      ]) [ "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled" ] # Enable mv2 while it's still possible
+      ++ lib.optionals (cfg.browser == "helium-browser") [
+        "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
+      ] # Enable mv2 in Helium.
       ++ lib.optionals pkgs.stdenvNoCC.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
@@ -73,5 +83,9 @@ in
         "--enable-features=TouchpadOverscrollHistoryNavigation"
       ];
     };
+
+    xdg.configFile = lib.mkIf (cfg.browser == "helium-browser") (
+      builtins.listToAttrs (map chromiumExternalExtension extensions)
+    );
   };
 }
