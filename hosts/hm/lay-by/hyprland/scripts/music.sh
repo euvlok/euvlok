@@ -10,7 +10,7 @@ if [ -z "$u" ]; then
     out="${out##}"
 
     # This might seem redundant, but it actually removes extra whitespace from strings.
-    out=$(echo $out | tr -s ' ')
+    out=$(echo "$out" | tr -s ' ')
     echo "$out"
 else
     echo "No Player Found"
