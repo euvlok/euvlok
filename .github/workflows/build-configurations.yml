@@ -73,4 +73,5 @@ jobs:
           configuration-name: ${{ matrix.name }}
           cachix-cache: ${{ env.CACHIX_CACHE }}
           cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ github.actor == 'dependabot[bot]' && secrets.CACHIX_AUTH_TOKEN == '' }}
           github-token: ${{ github.token }}

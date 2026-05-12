@@ -1,3 +1,4 @@
+import { dirname } from 'node:path';
 import artifactClient from '@actions/artifact';
 import * as cache from '@actions/cache';
 import type { WorkflowTemplate } from '@actions/workflow-parser';
@@ -104,7 +105,7 @@ async function uploadWorkflowReport(path: string): Promise<void> {
     return;
   }
 
-  const response = await artifactClient.uploadArtifact('github-workflow-check', [path], '.', {
+  const response = await artifactClient.uploadArtifact('github-workflow-check', [path], dirname(path), {
     retentionDays: 7,
   });
   logger.info(`Uploaded workflow validation artifact ${response.id}.`);
