@@ -21,6 +21,9 @@ let
     (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
   );
 
+  # Helium bundles uBlock Origin
+  heliumExtensions = builtins.filter (ext: ext.id != "cjpalhdlnbpafiamejdnhcphjbkeiagm") extensions;
+
   chromiumExternalExtension = ext: {
     name = "helium/External Extensions/${ext.id}.json";
     value.text = builtins.toJSON {
@@ -85,7 +88,7 @@ in
     };
 
     xdg.configFile = lib.mkIf (cfg.browser == "helium-browser") (
-      builtins.listToAttrs (map chromiumExternalExtension extensions)
+      builtins.listToAttrs (map chromiumExternalExtension heliumExtensions)
     );
   };
 }
