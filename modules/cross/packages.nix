@@ -8,7 +8,12 @@ let
   commonPkgs = (
     builtins.attrValues {
       # Nix Related
-      inherit (pkgs.unstable) nixfmt nil nixd;
+      inherit (pkgs.unstable)
+        cachix
+        nixfmt
+        nil
+        nixd
+        ;
 
       uutils-coreutils-noprefix = (lib.hiPrio pkgs.unstable.uutils-coreutils-noprefix);
       uutils-diffutils = (lib.hiPrio pkgs.unstable.uutils-diffutils);

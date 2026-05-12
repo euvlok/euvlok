@@ -44,6 +44,8 @@ in
 
             substituters = [
               "https://devenv.cachix.org"
+              "https://euvlok.cachix.org"
+              "https://eupkgs.cachix.org"
               "https://hyprland.cachix.org"
               "https://nix-community.cachix.org"
               "https://nixos-raspberrypi.cachix.org"
@@ -51,6 +53,8 @@ in
             ];
             trusted-public-keys = [
               "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+              "euvlok.cachix.org-1:cmFWCSs7rxPiyE1qfaJn8TY7QaRoGOrzKuNvtGw2gcU="
+              "eupkgs.cachix.org-1:V9Y0HdASNNSU9U6EkXhR1j85bZGRtNgW7wSyTiQrwGU="
               "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
               "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
               "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
