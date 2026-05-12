@@ -34,41 +34,92 @@ export async function runCommandResult(cmd: string[], opts?: CommandOptions): Pr
     throw new Error('Cannot execute an empty command.');
   }
 
-  let proc: Bun.Subprocess<'pipe' | 'ignore', 'pipe', 'pipe'>;
+  const command = prepareCommand(opts);
+  const proc = spawnCommand(cmd, command);
+  if (isCommandResult(proc)) return proc;
+
+  writeInput(proc, command.input);
+
+  const [stdout, stderr, exitCode] = await Promise.all([
+    readOutput(proc.stdout, command.mirrorStdout),
+    readOutput(proc.stderr, command.mirrorStderr),
+    proc.exited,
+  ]);
+
+  return commandResult(stdout, stderr, exitCode, command.trimOutput);
+}
+
+interface PreparedCommand {
+  cwd?: string;
+  env: Record<string, string>;
+  input?: string;
+  stdin: 'pipe' | 'ignore';
+  trimOutput: boolean;
+  mirrorStdout?: NodeJS.WriteStream;
+  mirrorStderr?: NodeJS.WriteStream;
+}
+
+function prepareCommand(opts?: CommandOptions): PreparedCommand {
+  const input = opts?.input;
+  return {
+    cwd: opts?.cwd,
+    env: buildEnv(opts?.env),
+    input,
+    stdin: stdinMode(input),
+    trimOutput: shouldTrimOutput(opts),
+    mirrorStdout: mirrorOutput(opts?.inheritOutput, process.stdout),
+    mirrorStderr: mirrorOutput(opts?.inheritOutput, process.stderr),
+  };
+}
+
+function stdinMode(input?: string): 'pipe' | 'ignore' {
+  return input === undefined ? 'ignore' : 'pipe';
+}
+
+function shouldTrimOutput(opts?: CommandOptions): boolean {
+  return opts?.trimOutput ?? true;
+}
+
+function mirrorOutput(inheritOutput: boolean | undefined, stream: NodeJS.WriteStream): NodeJS.WriteStream | undefined {
+  return inheritOutput ? stream : undefined;
+}
+
+function spawnCommand(
+  cmd: string[],
+  command: PreparedCommand,
+): Bun.Subprocess<'pipe' | 'ignore', 'pipe', 'pipe'> | CommandResult {
   try {
-    proc = Bun.spawn(cmd, {
-      cwd: opts?.cwd,
-      env: buildEnv(opts?.env),
-      stdin: opts?.input === undefined ? 'ignore' : 'pipe',
+    return Bun.spawn(cmd, {
+      cwd: command.cwd,
+      env: command.env,
+      stdin: command.stdin,
       stdout: 'pipe',
       stderr: 'pipe',
     });
   } catch (e: unknown) {
-    if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
-      return {
-        stdout: '',
-        stderr: e.message,
-        exitCode: 127,
-      };
-    }
+    return spawnFailure(e);
+  }
+}
 
-    throw e;
+function spawnFailure(e: unknown): CommandResult {
+  if (e instanceof Error && 'code' in e && e.code === 'ENOENT') return commandResult('', e.message, 127, true);
+  throw e;
+}
+
+function isCommandResult(value: unknown): value is CommandResult {
+  return typeof value === 'object' && value !== null && 'exitCode' in value && typeof value.exitCode === 'number';
+}
+
+function writeInput(proc: Bun.Subprocess<'pipe' | 'ignore', 'pipe', 'pipe'>, input?: string): void {
+  if (input === undefined || !proc.stdin || typeof proc.stdin === 'number') {
+    return;
   }
 
-  if (opts?.input !== undefined) {
-    if (proc.stdin && typeof proc.stdin !== 'number') {
-      proc.stdin.write(opts.input);
-      proc.stdin.end();
-    }
-  }
+  proc.stdin.write(input);
+  proc.stdin.end();
+}
 
-  const [stdout, stderr, exitCode] = await Promise.all([
-    readOutput(proc.stdout, opts?.inheritOutput ? process.stdout : undefined),
-    readOutput(proc.stderr, opts?.inheritOutput ? process.stderr : undefined),
-    proc.exited,
-  ]);
-
-  const trim = opts?.trimOutput ?? true;
+function commandResult(stdout: string, stderr: string, exitCode: number, trim: boolean): CommandResult {
   return {
     stdout: trim ? stdout.trim() : stdout,
     stderr: trim ? stderr.trim() : stderr,

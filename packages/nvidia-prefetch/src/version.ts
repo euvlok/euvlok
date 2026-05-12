@@ -11,21 +11,23 @@ function parseNvidiaVersion(version: string): number[] | null {
 }
 
 export function compareNvidiaVersions(a: string, b: string): number {
-  const parsedA = parseNvidiaVersion(a);
-  const parsedB = parseNvidiaVersion(b);
+  const parsedA = parseComparableNvidiaVersion(a, b);
+  const parsedB = parseComparableNvidiaVersion(b, a);
 
-  if (!parsedA || !parsedB) {
-    throw new Error(`Cannot compare invalid NVIDIA driver versions: ${a}, ${b}`);
-  }
+  return compareVersionParts(parsedA, parsedB) ?? 0;
+}
 
-  const length = Math.max(parsedA.length, parsedB.length);
-  for (let index = 0; index < length; index++) {
-    const partA = parsedA[index] ?? 0;
-    const partB = parsedB[index] ?? 0;
-    if (partA !== partB) return partA - partB;
-  }
+function parseComparableNvidiaVersion(version: string, other: string): number[] {
+  const parsed = parseNvidiaVersion(version);
+  if (parsed) return parsed;
+  throw new Error(`Cannot compare invalid NVIDIA driver versions: ${version}, ${other}`);
+}
 
-  return 0;
+function compareVersionParts(a: number[], b: number[]): number | null {
+  const length = Math.max(a.length, b.length);
+  const index = Array.from({ length }).findIndex((_, current) => (a[current] ?? 0) !== (b[current] ?? 0));
+
+  return index === -1 ? null : (a[index] ?? 0) - (b[index] ?? 0);
 }
 
 async function fetchVersionsFromPlatform(url: string, name: string): Promise<string[]> {

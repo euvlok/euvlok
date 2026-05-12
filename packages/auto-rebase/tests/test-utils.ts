@@ -40,12 +40,7 @@ export async function runRealCommandResult(
   const exitCode = await result.exited;
   const stdout = await new Response(result.stdout).text();
   const stderr = await new Response(result.stderr).text();
-  const trim = opts?.trimOutput ?? true;
-  return {
-    stdout: trim ? stdout.trim() : stdout,
-    stderr: trim ? stderr.trim() : stderr,
-    exitCode,
-  };
+  return normalizeCommandResult(stdout, stderr, exitCode, opts?.trimOutput ?? true);
 }
 
 /** Re-implementation of runCommand for use in test setup that should fail fast. */
@@ -54,11 +49,25 @@ export async function runRealCommandOrThrow(
   opts?: { cwd?: string; trimOutput?: boolean },
 ): Promise<string> {
   const result = await runRealCommandResult(cmd, opts);
-  if (result.exitCode !== 0) {
-    throw new Error(`Command failed (exit ${result.exitCode}): ${cmd.join(' ')}\n${result.stderr}`);
-  }
+  if (result.exitCode !== 0) throw commandError(cmd, result);
 
   return result.stdout;
+}
+
+function normalizeCommandResult(stdout: string, stderr: string, exitCode: number, trim: boolean): CommandResult {
+  return {
+    stdout: maybeTrim(stdout, trim),
+    stderr: maybeTrim(stderr, trim),
+    exitCode,
+  };
+}
+
+function maybeTrim(value: string, trim: boolean): string {
+  return trim ? value.trim() : value;
+}
+
+function commandError(cmd: string[], result: CommandResult): Error {
+  return new Error(`Command failed (exit ${result.exitCode}): ${cmd.join(' ')}\n${result.stderr}`);
 }
 
 function tempPath(prefix: string): string {
@@ -72,9 +81,7 @@ async function configureGitUser(dir: string): Promise<void> {
 
 export async function createTempGitRepo(): Promise<string> {
   const dir = tempPath('test-repo');
-  await mkdir(dir, { recursive: true });
-  await runRealCommandOrThrow(['git', '-C', dir, 'init']);
-  await configureGitUser(dir);
+  await initGitRepo(dir);
   await Bun.write(join(dir, '.gitkeep'), '');
   await runRealCommandOrThrow(['git', '-C', dir, 'add', '.']);
   await runRealCommandOrThrow(['git', '-C', dir, 'commit', '-m', 'init']);
@@ -154,9 +161,7 @@ export async function createTempJjRepo(): Promise<JjTestRepo> {
   await runRealCommandOrThrow(['git', 'init', '--bare', remoteDir]);
 
   const dir = tempPath('test-jj');
-  await mkdir(dir, { recursive: true });
-  await runRealCommandOrThrow(['git', '-C', dir, 'init']);
-  await configureGitUser(dir);
+  await initGitRepo(dir);
   await runRealCommandOrThrow(['git', '-C', dir, 'remote', 'add', 'origin', remoteDir]);
   await Bun.write(join(dir, 'README'), 'init\n');
   await runRealCommandOrThrow(['git', '-C', dir, 'add', 'README']);
@@ -169,6 +174,12 @@ export async function createTempJjRepo(): Promise<JjTestRepo> {
   });
 
   return { dir, remoteDir };
+}
+
+async function initGitRepo(dir: string): Promise<void> {
+  await mkdir(dir, { recursive: true });
+  await runRealCommandOrThrow(['git', '-C', dir, 'init']);
+  await configureGitUser(dir);
 }
 
 export async function pushCommitToRemote(remoteDir: string, filename?: string): Promise<void> {

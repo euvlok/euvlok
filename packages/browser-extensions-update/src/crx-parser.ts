@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const CRX_MAGIC = new Uint8Array([0x43, 0x72, 0x32, 0x34]); // "Cr24"
 
-type ManifestInfo = {
+export type ManifestInfo = {
   version: string;
   permissions: string[];
   addonId?: string;

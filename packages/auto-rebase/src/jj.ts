@@ -4,6 +4,7 @@ import { join } from 'pathe';
 import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
 import type { RebaseContext } from './context';
+import { checkoutOriginalBranch, exportJjWorkingCopy, logPersistentJj } from './jj-git';
 import { removeSavedDiffFiles, restoreGitIndexFromBackup } from './staging';
 import { removeState, saveState } from './state';
 
@@ -178,24 +179,6 @@ async function restoreStagingState(ctx: RebaseContext): Promise<void> {
   await clearUnexpectedStaging(ctx);
 }
 
-async function checkoutOriginalBranch(root: string, branch: string): Promise<void> {
-  if (branch === DETACHED_HEAD) return;
-  await simpleGit(root).checkout(branch);
-}
-
-async function exportJjWorkingCopy(root: string): Promise<boolean> {
-  const exported = await runCommandResult(['jj', 'git', 'export'], { cwd: root });
-  if (exported.exitCode === 0) return true;
-
-  logger.warn('Failed to export jj working copy to git');
-  return false;
-}
-
-async function logPersistentJj(root: string): Promise<void> {
-  if (!(await exists(root))) return;
-  logger.info('Keeping .jj directory for future runs (persistent ephemerality)');
-}
-
 export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   const root = ctx.repoRoot;
   const branch = ctx.originalBranch;
@@ -217,12 +200,15 @@ export async function cleanupJj(ctx: RebaseContext): Promise<void> {
   logger.info('Exporting jj working copy back to git...');
 
   await checkoutOriginalBranch(root, branch);
-  if (!(await exportJjWorkingCopy(root))) return;
+  if (!(await exportJjWorkingCopy(root))) {
+    logger.warn('Failed to export jj working copy to git');
+    return;
+  }
 
   await restoreStagingState(ctx);
 
   logger.info('Restored git state from jj working copy');
-  await logPersistentJj(root);
+  if (await exists(root)) logPersistentJj(ctx.jjWasPresent);
 
   await removeSavedDiffFiles(ctx.stagedDiffPath, ctx.unstagedDiffPath);
 

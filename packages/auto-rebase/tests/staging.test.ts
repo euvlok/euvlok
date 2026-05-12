@@ -46,6 +46,18 @@ async function stagedFiles(tmpDir: string): Promise<string> {
   return result.stdout;
 }
 
+async function resetIndex(tmpDir: string): Promise<void> {
+  await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
+}
+
+async function restoreBackupAndListStaged(
+  tmpDir: string,
+  stagedDiff: { diffPath: string; fileList: string },
+): Promise<string> {
+  await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
+  return stagedFiles(tmpDir);
+}
+
 describe('restoreGitIndexFromBackup', () => {
   let tmpDir: string;
 
@@ -61,7 +73,7 @@ describe('restoreGitIndexFromBackup', () => {
     await commitFiles(tmpDir, { 'file.ts': 'line1\n' }, 'add file');
     await stageChanges(tmpDir, { 'file.ts': 'line1\nline2\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
+    await resetIndex(tmpDir);
 
     await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, 'file.ts');
 
@@ -72,11 +84,9 @@ describe('restoreGitIndexFromBackup', () => {
     await commitFiles(tmpDir, { 'a.ts': 'a\n', 'b.ts': 'b\n' }, 'add files');
     await stageChanges(tmpDir, { 'a.ts': 'a modified\n', 'b.ts': 'b modified\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
+    await resetIndex(tmpDir);
 
-    await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
-
-    const staged = await stagedFiles(tmpDir);
+    const staged = await restoreBackupAndListStaged(tmpDir, stagedDiff);
     expect(staged).toContain('a.ts');
     expect(staged).toContain('b.ts');
   });
@@ -85,12 +95,10 @@ describe('restoreGitIndexFromBackup', () => {
     await commitFiles(tmpDir, { 'original.ts': 'original\n', 'unrelated.ts': 'base\n' }, 'add files');
     await stageChanges(tmpDir, { 'original.ts': 'original staged\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
-    await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
+    await resetIndex(tmpDir);
     await stageChanges(tmpDir, { 'unrelated.ts': 'should not stay staged\n' });
 
-    await restoreGitIndexFromBackup(tmpDir, stagedDiff.diffPath, stagedDiff.fileList);
-
-    const staged = await stagedFiles(tmpDir);
+    const staged = await restoreBackupAndListStaged(tmpDir, stagedDiff);
     expect(staged).toContain('original.ts');
     expect(staged).not.toContain('unrelated.ts');
   });
