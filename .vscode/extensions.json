@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "jnoortheen.nix-ide",
+    "ziglang.vscode-zig",
+    "github.vscode-github-actions",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "davidanson.vscode-markdownlint",
+    "timonwong.shellcheck",
+    "mkhl.direnv"
+  ],
+  "unwantedRecommendations": ["esbenp.prettier-vscode"]
+}
