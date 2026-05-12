@@ -49,9 +49,17 @@
         ) 10
       ));
 
-      windowrulev2 = [
-        "suppressevent maximize, class:.*"
-        "immediate, class:^(*.exe)$"
+      windowrule = [
+        {
+          name = "shared-suppress-maximize";
+          "match:class" = ".*";
+          suppress_event = "maximize";
+        }
+        {
+          name = "shared-exe-immediate";
+          "match:class" = "^(*.exe)$";
+          immediate = true;
+        }
       ];
 
       cursor.no_hardware_cursors = 1;

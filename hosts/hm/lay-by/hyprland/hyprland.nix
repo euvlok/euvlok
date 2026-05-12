@@ -122,16 +122,40 @@ _: {
       "$mainMod, mouse:273, resizewindow"
     ];
 
-    windowrulev2 = [
-      "suppressevent maximize, class:.*"
-      "immediate, class:^(Titanfall2.exe)$"
-      "immediate, class:^(helldivers2.exe)$"
-      "fullscreenstate 2 0, class:^(cs2)$"
-      "immediate, class:^(*.exe)$"
+    windowrule = [
+      {
+        name = "lay-by-suppress-maximize";
+        "match:class" = ".*";
+        suppress_event = "maximize";
+      }
+      {
+        name = "lay-by-titanfall2-immediate";
+        "match:class" = "^(Titanfall2.exe)$";
+        immediate = true;
+      }
+      {
+        name = "lay-by-helldivers2-immediate";
+        "match:class" = "^(helldivers2.exe)$";
+        immediate = true;
+      }
+      {
+        name = "lay-by-cs2-fullscreen";
+        "match:class" = "^(cs2)$";
+        fullscreen_state = "2 0";
+      }
+      {
+        name = "lay-by-exe-immediate";
+        "match:class" = "^(*.exe)$";
+        immediate = true;
+      }
     ];
 
     layerrule = [
-      "blur,waybar"
+      {
+        name = "lay-by-waybar-blur";
+        "match:namespace" = "waybar";
+        blur = true;
+      }
     ];
 
     input.follow_mouse = 2;
