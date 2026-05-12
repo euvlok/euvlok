@@ -32,6 +32,36 @@ in
       desktopManager.plasma6.enable = true;
     };
 
+    systemd.user.services = {
+      plasma-login-kwin_wayland = {
+        overrideStrategy = "asDropin";
+        serviceConfig.UnsetEnvironment = [
+          "EGL_PLATFORM"
+          "QT_QPA_PLATFORM"
+        ];
+      };
+      plasma-login = {
+        overrideStrategy = "asDropin";
+        serviceConfig = {
+          Environment = [ "QSG_RHI_BACKEND=opengl" ];
+          UnsetEnvironment = [
+            "EGL_PLATFORM"
+            "QT_QPA_PLATFORM"
+          ];
+        };
+      };
+      plasma-wallpaper = {
+        overrideStrategy = "asDropin";
+        serviceConfig = {
+          Environment = [ "QSG_RHI_BACKEND=opengl" ];
+          UnsetEnvironment = [
+            "EGL_PLATFORM"
+            "QT_QPA_PLATFORM"
+          ];
+        };
+      };
+    };
+
     environment = {
       systemPackages =
         builtins.attrValues {
