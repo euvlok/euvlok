@@ -1,4 +1,5 @@
-_: {
+{ lib, pkgs, ... }:
+{
   programs.zed-editor.extensions = [
     "dockerfile"
     "docker-compose"
@@ -11,7 +12,10 @@ _: {
 
   programs.zed-editor.userSettings = {
     agent_servers."codex-acp" = {
-      type = "registry";
+      type = "custom";
+      command = lib.getExe pkgs.codex-acp;
+      args = [ ];
+      env = { };
     };
     context_servers.openaiDeveloperDocs = {
       url = "https://developers.openai.com/mcp";
@@ -20,7 +24,8 @@ _: {
       after_delay.milliseconds = 1000;
     };
     buffer_font_family = "MesloLGL Nerd Font";
-    buffer_font_size = 19;
+    buffer_font_size = 18;
+    colorize_brackets = true;
     ensure_final_newline_on_save = true;
     format_on_save = "on";
     preferred_line_length = 120;
@@ -32,6 +37,9 @@ _: {
     show_whitespaces = "selection";
     soft_wrap = "editor_width";
     tab_size = 2;
+    title_bar = {
+      button_layout = "platform_default";
+    };
     terminal = {
       blinking = "on";
       cursor_shape = "bar";
