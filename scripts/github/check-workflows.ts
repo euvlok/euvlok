@@ -76,6 +76,10 @@ function isGitHubActions(): boolean {
   return process.env.GITHUB_ACTIONS === 'true';
 }
 
+function canUploadArtifact(): boolean {
+  return Boolean(process.env.ACTIONS_RUNTIME_TOKEN && process.env.ACTIONS_RESULTS_URL);
+}
+
 async function restoreWorkflowCache(): Promise<void> {
   if (!isGitHubActions() || !cache.isFeatureAvailable()) {
     return;
@@ -102,6 +106,11 @@ async function saveWorkflowCache(): Promise<void> {
 
 async function uploadWorkflowReport(path: string): Promise<void> {
   if (!isGitHubActions()) {
+    return;
+  }
+
+  if (!canUploadArtifact()) {
+    logger.warn('Skipping workflow validation artifact upload because the GitHub artifact runtime is unavailable.');
     return;
   }
 
