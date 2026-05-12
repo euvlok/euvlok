@@ -567,11 +567,11 @@
     "homebrew-core-trivial": {
       "flake": false,
       "locked": {
-        "lastModified": 1778585410,
-        "narHash": "sha256-N3ag5yvvbaJDOayHP20aWj3DfNP8GaDhOefRn136I2U=",
+        "lastModified": 1778624434,
+        "narHash": "sha256-I9Q5YNoa4bbQ2SQDfu3gmlXpJfCW1WvRnKAGLNHOTRg=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "2124c5bb28b6a87e41c14cbe0eb256904437284a",
+        "rev": "e244c5d7b663e0de45c3e212192eb8751eaf60e1",
         "type": "github"
       },
       "original": {
