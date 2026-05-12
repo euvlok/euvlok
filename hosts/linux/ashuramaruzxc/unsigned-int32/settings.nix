@@ -4,4 +4,8 @@ _: {
     fstrim.interval = "weekly";
     gvfs.enable = true;
   };
+  nix.settings.trusted-users = [
+    "@wheel"
+    "ashuramaru"
+  ];
 }
