@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
 
   systemd.services.navidrome.serviceConfig = {
     BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];
