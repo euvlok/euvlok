@@ -1,11 +1,5 @@
 import { mkdir, rm } from 'node:fs/promises';
-import {
-  isGitRepo,
-  listStagedFiles,
-  logger,
-  runCommandResult,
-  splitNonEmptyLines,
-} from '@euvlok/core';
+import { isGitRepo, listStagedFiles, logger, runCommandResult, splitNonEmptyLines } from '@euvlok/core';
 import { join } from 'pathe';
 import { ResetMode, type SimpleGit, simpleGit } from 'simple-git';
 import { DEFAULT_REMOTE, DETACHED_HEAD, EUVLOK_TMP_DIR, JJ_DIR } from './constants';
@@ -17,9 +11,17 @@ function exists(root: string): Promise<boolean> {
   return Bun.file(join(root, JJ_DIR, 'repo', 'store', 'type')).exists();
 }
 
+export function assertJjAvailable(): void {
+  if (Bun.which('jj')) return;
+
+  throw new Error(
+    'Jujutsu (jj) is required for auto-rebase, but it was not found in PATH. Install jj or run this through a Nix app/package that includes jujutsu.',
+  );
+}
+
 async function checkJjPresent(root: string): Promise<boolean> {
   if (!(await exists(root))) return false;
-  if (!Bun.which('jj')) return false;
+  assertJjAvailable();
   const log = await runCommandResult(['jj', 'log', '-r', '@', '--limit', '1'], {
     cwd: root,
   });
@@ -95,16 +97,10 @@ async function captureOriginalStaging(ctx: RebaseContext): Promise<void> {
 
   ctx.originalHadStaged = true;
   ctx.originalStagedFiles = (await listStagedFiles(ctx.repoRoot)).join('\n');
-  ctx.stagedDiffPath = await captureDiff(
-    git,
-    join(ctx.repoRoot, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`),
-    ['--cached'],
-  );
-  ctx.unstagedDiffPath = await captureDiff(
-    git,
-    join(ctx.repoRoot, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`),
-    [],
-  );
+  ctx.stagedDiffPath = await captureDiff(git, join(ctx.repoRoot, EUVLOK_TMP_DIR, `staged-${timestamp}.diff`), [
+    '--cached',
+  ]);
+  ctx.unstagedDiffPath = await captureDiff(git, join(ctx.repoRoot, EUVLOK_TMP_DIR, `unstaged-${timestamp}.diff`), []);
 }
 
 async function initJj(ctx: RebaseContext): Promise<void> {
@@ -123,6 +119,7 @@ async function initJj(ctx: RebaseContext): Promise<void> {
 export async function setupJj(ctx: RebaseContext): Promise<void> {
   const root = ctx.repoRoot;
 
+  assertJjAvailable();
   if (await useExistingJjIfValid(ctx)) return;
   if (!(await isGitRepo(root))) throw new Error('Not a git repository. Cannot initialize jujutsu');
 
