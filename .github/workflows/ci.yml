@@ -10,7 +10,38 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  bun:
+    name: Bun
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Bun dependencies
+        uses: ./.github/actions/setup-bun-dependencies
+
+      - name: Check TypeScript and workflow tooling
+        run: bun run check
+
+      - name: Run tests
+        run: bun test
+
+      - name: Audit changed code with Fallow
+        uses: fallow-rs/fallow@f0d35e73de3526e05c3d19f25c785f56b4bee230 # v2.72.0
+        with:
+          command: audit
+          fail-on-issues: true
+          gate: new-only
+          version: 2.72.0
+
   nix:
     name: Nix (${{ matrix.system }})
     runs-on: ${{ matrix.runner }}
@@ -24,7 +55,7 @@ jobs:
             runner: ubuntu-24.04-arm
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 

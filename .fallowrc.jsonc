@@ -1,25 +1,56 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/refs/heads/main/schema.json",
-  "entry": [
-    "packages/*/src/index.ts",
-    "packages/*/tests/**/*.ts",
-    "prettier.config.js",
-    "scripts/**/*.ts"
-  ],
+  "entry": ["packages/*/src/index.ts", "packages/*/tests/**/*.test.ts", "scripts/**/*.ts"],
   "includeEntryExports": true,
   "dynamicallyLoaded": ["hosts/hm/lay-by/hyprland/waybar.css"],
   "ignoreDependencies": ["@tktco/node-actionlint"],
-  "ignoreExports": [{ "file": "prettier.config.js", "exports": ["default"] }],
+  "rules": {
+    "private-type-leaks": "error",
+    "unused-dev-dependencies": "error",
+    "unused-optional-dependencies": "error",
+    "type-only-dependencies": "error",
+    "test-only-dependencies": "error",
+    "coverage-gaps": "off",
+    "stale-suppressions": "error"
+  },
   "duplicates": {
-    "mode": "strict",
-    "minTokens": 35,
+    "mode": "semantic",
+    "minTokens": 60,
     "minLines": 4,
-    "ignore": []
+    "threshold": 1,
+    "ignore": ["**/tests/**"],
+    "ignoreImports": true
   },
   "health": {
-    "maxCyclomatic": 10,
-    "maxCognitive": 15,
-    "maxCrap": 50,
+    "maxCyclomatic": 6,
+    "maxCognitive": 8,
+    "maxCrap": 43,
     "ignore": []
+  },
+  "audit": {
+    "gate": "all"
+  },
+  "boundaries": {
+    "zones": [
+      { "name": "scripts", "patterns": ["scripts/**"] },
+      { "name": "auto-rebase", "patterns": ["packages/auto-rebase/**"] },
+      { "name": "browser-extensions-update", "patterns": ["packages/browser-extensions-update/**"] },
+      { "name": "catppuccin-userstyles", "patterns": ["packages/catppuccin-userstyles/**"] },
+      { "name": "nvidia-prefetch", "patterns": ["packages/nvidia-prefetch/**"] },
+      { "name": "lib", "patterns": ["packages/lib/**"] },
+      { "name": "host-assets", "patterns": ["hosts/**"] }
+    ],
+    "rules": [
+      {
+        "from": "scripts",
+        "allow": ["auto-rebase", "browser-extensions-update", "catppuccin-userstyles", "nvidia-prefetch", "lib"]
+      },
+      { "from": "auto-rebase", "allow": ["lib"] },
+      { "from": "browser-extensions-update", "allow": ["lib"] },
+      { "from": "catppuccin-userstyles", "allow": ["lib"] },
+      { "from": "nvidia-prefetch", "allow": ["lib"] },
+      { "from": "lib", "allow": [] },
+      { "from": "host-assets", "allow": [] }
+    ]
   }
 }

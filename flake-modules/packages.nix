@@ -12,7 +12,8 @@
           runtimeInputs = [
             pkgs.bun
             pkgs.git
-          ] ++ pkgs.lib.optionals (name == "auto-rebase") [
+          ]
+          ++ pkgs.lib.optionals (name == "auto-rebase") [
             pkgs.jujutsu
           ];
           text = ''

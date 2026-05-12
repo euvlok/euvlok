@@ -1,0 +1,53 @@
+name: Dependabot Auto Merge
+
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] Dependabot-only; does not check out or execute PR code.
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  checks: read
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  merge:
+    name: Merge successful Dependabot PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event.pull_request.user.id == 49699333 && !github.event.pull_request.draft
+    steps:
+      - name: Wait for checks and merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          while true; do
+            checks="$(gh api "repos/$GH_REPO/commits/$HEAD_SHA/check-runs" \
+              --jq '[.check_runs[] | select(.name != "Merge successful Dependabot PRs") | {name, status, conclusion}]')"
+
+            count="$(jq 'length' <<< "$checks")"
+            incomplete="$(jq '[.[] | select(.status != "completed")] | length' <<< "$checks")"
+            failed="$(jq '[.[] | select(.conclusion != "success" and .conclusion != "neutral" and .conclusion != "skipped")] | length' <<< "$checks")"
+
+            if [ "$count" -gt 0 ] && [ "$incomplete" -eq 0 ]; then
+              if [ "$failed" -eq 0 ]; then
+                gh pr merge "$PR_URL" --squash --delete-branch
+                exit 0
+              fi
+
+              echo "One or more checks failed for $PR_URL."
+              exit 1
+            fi
+
+            sleep 30
+          done
