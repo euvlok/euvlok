@@ -1,0 +1,17 @@
+name: Set up Nix
+description: Install Nix for repository workflows.
+
+inputs:
+  github-token:
+    description: GitHub token used by the Nix installer for GitHub fetches.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install Nix
+      uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+      with:
+        github_access_token: ${{ inputs.github-token }}
+        extra_nix_config: |
+          accept-flake-config = true

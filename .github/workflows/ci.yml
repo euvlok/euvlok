@@ -60,11 +60,9 @@ jobs:
           persist-credentials: false
 
       - name: Install Nix
-        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        uses: ./.github/actions/setup-nix
         with:
-          github_access_token: ${{ github.token }}
-          extra_nix_config: |
-            accept-flake-config = true
+          github-token: ${{ github.token }}
 
       - name: Check flake inputs
         run: nix flake metadata
