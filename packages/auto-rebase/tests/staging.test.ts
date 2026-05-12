@@ -17,9 +17,7 @@ mock.module('@euvlok/core', () => ({
 import { removeSavedDiffFiles, restoreGitIndexFromBackup } from '../src/staging';
 
 async function writeFiles(tmpDir: string, files: Record<string, string>) {
-  await Promise.all(
-    Object.entries(files).map((entry) => Bun.write(join(tmpDir, entry[0]), entry[1])),
-  );
+  await Promise.all(Object.entries(files).map((entry) => Bun.write(join(tmpDir, entry[0]), entry[1])));
 }
 
 async function commitFiles(tmpDir: string, files: Record<string, string>, message: string) {
@@ -39,26 +37,12 @@ async function captureStagedDiff(tmpDir: string): Promise<{ diffPath: string; fi
     diffPath,
     await runRealCommandOrThrow(['git', '-C', tmpDir, 'diff', '--cached'], { trimOutput: false }),
   );
-  const fileList = await runRealCommandOrThrow([
-    'git',
-    '-C',
-    tmpDir,
-    'diff',
-    '--cached',
-    '--name-only',
-  ]);
+  const fileList = await runRealCommandOrThrow(['git', '-C', tmpDir, 'diff', '--cached', '--name-only']);
   return { diffPath, fileList };
 }
 
 async function stagedFiles(tmpDir: string): Promise<string> {
-  const result = await runRealCommandResult([
-    'git',
-    '-C',
-    tmpDir,
-    'diff',
-    '--cached',
-    '--name-only',
-  ]);
+  const result = await runRealCommandResult(['git', '-C', tmpDir, 'diff', '--cached', '--name-only']);
   return result.stdout;
 }
 
@@ -98,11 +82,7 @@ describe('restoreGitIndexFromBackup', () => {
   });
 
   test('clears unrelated staged files before restoring original staged diff', async () => {
-    await commitFiles(
-      tmpDir,
-      { 'original.ts': 'original\n', 'unrelated.ts': 'base\n' },
-      'add files',
-    );
+    await commitFiles(tmpDir, { 'original.ts': 'original\n', 'unrelated.ts': 'base\n' }, 'add files');
     await stageChanges(tmpDir, { 'original.ts': 'original staged\n' });
     const stagedDiff = await captureStagedDiff(tmpDir);
     await runRealCommandOrThrow(['git', '-C', tmpDir, 'reset']);
@@ -151,10 +131,7 @@ describe('removeSavedDiffFiles', () => {
 
   test('handles non-existent files without error', async () => {
     await expect(
-      removeSavedDiffFiles(
-        join(tmpDir.current(), 'nope1.diff'),
-        join(tmpDir.current(), 'nope2.diff'),
-      ),
+      removeSavedDiffFiles(join(tmpDir.current(), 'nope1.diff'), join(tmpDir.current(), 'nope2.diff')),
     ).resolves.toBeUndefined();
   });
 });

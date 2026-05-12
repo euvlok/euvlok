@@ -105,10 +105,7 @@ function resolveOutputDir(outputDirArg?: string): string {
   return resolve(outputDirArg ?? process.env.OUTPUT_DIR ?? DEFAULT_OUTPUT_DIR);
 }
 
-function filterSourceFiles(
-  files: string[],
-  includedExcludedStyles: Set<ExcludedStyleId>,
-): string[] {
+function filterSourceFiles(files: string[], includedExcludedStyles: Set<ExcludedStyleId>): string[] {
   return files.filter((file) => {
     const styleId = getStyleId(file);
     return !isExcludedStyleId(styleId) || includedExcludedStyles.has(styleId);
@@ -127,9 +124,7 @@ async function buildVariants(outputDir: string, baseData: StylusImport): Promise
   const firstStyle = baseData.find(isStylusUserstyle);
   if (!firstStyle) throw new Error('No UserCSS styles were generated');
 
-  const accents = getSelectOptions(firstStyle.usercssData, 'accentColor').map(
-    (option) => option.name,
-  );
+  const accents = getSelectOptions(firstStyle.usercssData, 'accentColor').map((option) => option.name);
 
   return Promise.all(
     DEFAULT_DARK_FLAVORS.flatMap((darkFlavor) =>
@@ -241,9 +236,7 @@ async function getUserstyleFiles(root: string): Promise<string[]> {
       absolute: true,
       onlyFiles: true,
     }),
-  ).then((files) =>
-    files.sort((a, b) => basename(a).localeCompare(basename(b)) || a.localeCompare(b)),
-  );
+  ).then((files) => files.sort((a, b) => basename(a).localeCompare(basename(b)) || a.localeCompare(b)));
 }
 
 function getStyleId(file: string): string {
@@ -285,10 +278,7 @@ function buildVariant(
       setSelectDefault(entry.usercssData, name, value);
     });
 
-    entry.sourceCode = replaceUserstyleHeader(
-      entry.sourceCode,
-      usercssMeta.stringify(entry.usercssData),
-    );
+    entry.sourceCode = replaceUserstyleHeader(entry.sourceCode, usercssMeta.stringify(entry.usercssData));
     entry.originalDigest = calcStyleDigest(entry.sourceCode);
   });
 

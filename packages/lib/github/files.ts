@@ -6,10 +6,7 @@ export { withTempFile } from '../files';
 /**
  * Recursively list files under a root directory that match a predicate.
  */
-export async function findFiles(
-  root: string,
-  predicate: (path: string) => boolean,
-): Promise<string[]> {
+export async function findFiles(root: string, predicate: (path: string) => boolean): Promise<string[]> {
   if (!(await directoryExists(root))) {
     return [];
   }

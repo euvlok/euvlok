@@ -20,9 +20,7 @@ async function rebaseOnto(ctx: RebaseContext, target: string) {
   });
 }
 
-export async function checkRebaseSafety(
-  ctx: RebaseContext,
-): Promise<{ safe: boolean; rebaseAlreadyApplied: boolean }> {
+export async function checkRebaseSafety(ctx: RebaseContext): Promise<{ safe: boolean; rebaseAlreadyApplied: boolean }> {
   logger.info('Checking if rebase would be safe...');
   const target = await getRemoteBookmark(ctx.repoRoot);
 

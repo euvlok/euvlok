@@ -2,12 +2,7 @@ import { logger, withTempDir } from '@euvlok/core';
 import { buildApplication, buildCommand, run } from '@stricli/core';
 import { fetchDriverSha256Sri, prefetchGithubSourceHash } from './hash';
 import { getCurrentNvidiaVersion, updateNvidiaDriverNix } from './nix-file';
-import {
-  AARCH64_BASE_URL,
-  compareNvidiaVersions,
-  fetchLatestNvidiaVersion,
-  X86_64_BASE_URL,
-} from './version';
+import { AARCH64_BASE_URL, compareNvidiaVersions, fetchLatestNvidiaVersion, X86_64_BASE_URL } from './version';
 
 type NvidiaPrefetchFlags = {
   update: boolean;
@@ -27,11 +22,7 @@ async function resolveVersion(requestedVersion?: string): Promise<string> {
   return version;
 }
 
-async function exitIfCurrent(
-  update: boolean,
-  version: string,
-  requestedVersion?: string,
-): Promise<void> {
+async function exitIfCurrent(update: boolean, version: string, requestedVersion?: string): Promise<void> {
   if (!update) return;
 
   const current = await getCurrentNvidiaVersion();
@@ -97,8 +88,7 @@ async function updateNixIfRequested(update: boolean, version: string, hashes: Dr
 const command = buildCommand<NvidiaPrefetchFlags, [string?]>({
   docs: {
     brief: 'Fetch NVIDIA driver hashes and update the Nix expression',
-    fullDescription:
-      'Fetches and computes SHA256 hashes for NVIDIA driver packages and related repositories.',
+    fullDescription: 'Fetches and computes SHA256 hashes for NVIDIA driver packages and related repositories.',
   },
   parameters: {
     flags: {

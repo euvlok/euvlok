@@ -1,11 +1,6 @@
 import { runCommandResult } from '@euvlok/core';
 import { Octokit } from '@octokit/rest';
-import type {
-  BrowserType,
-  Extension,
-  ExtensionDownloadUrlResult,
-  GithubReleaseConfig,
-} from '../types';
+import type { BrowserType, Extension, ExtensionDownloadUrlResult, GithubReleaseConfig } from '../types';
 import { getBrowserDownloadFileExtension } from '../types';
 
 type GithubRelease = Awaited<ReturnType<Octokit['repos']['getLatestRelease']>>['data'];
@@ -74,12 +69,7 @@ async function releaseByVersion(
   throw new Error(`Failed to find GitHub release ${version}`);
 }
 
-async function resolveRelease(
-  octokit: Octokit,
-  ext: Extension,
-  owner: string,
-  repo: string,
-): Promise<GithubRelease> {
+async function resolveRelease(octokit: Octokit, ext: Extension, owner: string, repo: string): Promise<GithubRelease> {
   const version = ext.version ?? 'latest';
   return version === 'latest'
     ? await latest(octokit, owner, repo)
@@ -93,17 +83,10 @@ function releaseVersion(release: GithubRelease): string {
 }
 
 export function interpolatePattern(pattern: string, version: string, ext: Extension): string {
-  return pattern
-    .replaceAll('{version}', version)
-    .replaceAll('{name}', ext.id)
-    .replaceAll('{id}', ext.id);
+  return pattern.replaceAll('{version}', version).replaceAll('{name}', ext.id).replaceAll('{id}', ext.id);
 }
 
-function releaseAssetUrl(
-  ext: Extension,
-  browser: BrowserType,
-  release: GithubRelease,
-): ExtensionDownloadUrlResult {
+function releaseAssetUrl(ext: Extension, browser: BrowserType, release: GithubRelease): ExtensionDownloadUrlResult {
   const expectedName = `${ext.id}.${getBrowserDownloadFileExtension(browser)}`;
   const asset = release.assets.find((asset) => asset.name === expectedName);
 

@@ -102,12 +102,7 @@ const command = buildCommand<BrowserExtensionsUpdateFlags, [string]>({
     const version = await browserVersion(parsed.browser);
     logBrowser(parsed.browser, version);
 
-    const results = await processExtensionsWithProgress(
-      parsed.extensions,
-      parsed.config,
-      parsed.browser,
-      version,
-    );
+    const results = await processExtensionsWithProgress(parsed.extensions, parsed.config, parsed.browser, version);
 
     exitOnErrors(results);
 

@@ -24,13 +24,8 @@ const firefoxExtensionSchema = z.object({
   sha256: z.string(),
 });
 
-export function summarizeExtension(
-  entry: unknown,
-  browserType: BrowserType,
-): ExtensionSummary | null {
-  return browserType === 'chromium'
-    ? summarizeChromiumExtension(entry)
-    : summarizeFirefoxExtension(entry);
+export function summarizeExtension(entry: unknown, browserType: BrowserType): ExtensionSummary | null {
+  return browserType === 'chromium' ? summarizeChromiumExtension(entry) : summarizeFirefoxExtension(entry);
 }
 
 function summarizeChromiumExtension(entry: unknown): ExtensionSummary | null {
@@ -73,10 +68,7 @@ function buildExtensionSummary(input: {
   };
 }
 
-export function formatUpdatedExtension(
-  oldEntry: ExtensionSummary | undefined,
-  newEntry: ExtensionSummary,
-): string[] {
+export function formatUpdatedExtension(oldEntry: ExtensionSummary | undefined, newEntry: ExtensionSummary): string[] {
   if (!oldEntry) {
     return [];
   }

@@ -1,17 +1,8 @@
 import artifactClient from '@actions/artifact';
 import * as cache from '@actions/cache';
 import type { WorkflowTemplate } from '@actions/workflow-parser';
-import {
-  convertWorkflowTemplate,
-  NoOperationTraceWriter,
-  parseWorkflow,
-} from '@actions/workflow-parser';
-import {
-  hashWorkflowFiles,
-  listWorkflowFiles,
-  actionsLogger as logger,
-  withTempFile,
-} from '@euvlok/github';
+import { convertWorkflowTemplate, NoOperationTraceWriter, parseWorkflow } from '@actions/workflow-parser';
+import { hashWorkflowFiles, listWorkflowFiles, actionsLogger as logger, withTempFile } from '@euvlok/github';
 
 await restoreWorkflowCache();
 const workflowFiles = await listWorkflowFiles();

@@ -1,11 +1,6 @@
 import { describe, expect, mock, test } from 'bun:test';
 import { join } from 'pathe';
-import {
-  pushCommitToRemote,
-  runRealCommandResult,
-  silentLogger,
-  useTempJjRepo,
-} from './test-utils';
+import { pushCommitToRemote, runRealCommandResult, silentLogger, useTempJjRepo } from './test-utils';
 
 mock.module('@euvlok/core', () => ({
   runCommandResult: runRealCommandResult,
@@ -24,15 +19,7 @@ describe('getRemoteBookmark', () => {
   test('falls back to remote_bookmarks() when no common bookmarks exist', async () => {
     const current = repo.current();
     // Rename master to something uncommon on the remote
-    await runRealCommandResult([
-      'git',
-      '-C',
-      current.remoteDir,
-      'branch',
-      '-m',
-      'master',
-      'uncommon-branch',
-    ]);
+    await runRealCommandResult(['git', '-C', current.remoteDir, 'branch', '-m', 'master', 'uncommon-branch']);
     // Re-fetch so jj sees the new branch name
     await runRealCommandResult(['jj', 'git', 'fetch', '--remote', 'origin'], { cwd: current.dir });
     const result = await getRemoteBookmark(current.dir);

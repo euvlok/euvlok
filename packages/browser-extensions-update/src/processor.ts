@@ -1,10 +1,4 @@
-import {
-  computeFileSha256Sri,
-  downloadToFile,
-  logger,
-  runCommandResult,
-  withTempFilePath,
-} from '@euvlok/core';
+import { computeFileSha256Sri, downloadToFile, logger, runCommandResult, withTempFilePath } from '@euvlok/core';
 import { Listr } from 'listr2';
 import { extractManifestInfo } from './crx-parser';
 import { generateExtensionNixEntry } from './nix-entry';
@@ -56,15 +50,7 @@ async function buildExtensionResult(
   const sri = await computeFileSha256Sri(tmp);
   const manifest = await extractManifestInfo(tmp);
   const addon = resolveAddonId(ext, browser, manifest.addonId, addonId);
-  const entry = generateExtensionNixEntry(
-    ext,
-    url,
-    sri,
-    manifest.version,
-    manifest.permissions,
-    browser,
-    addon,
-  );
+  const entry = generateExtensionNixEntry(ext, url, sri, manifest.version, manifest.permissions, browser, addon);
 
   return { extension: ext, nixEntry: entry, version: manifest.version };
 }

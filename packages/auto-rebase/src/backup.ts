@@ -33,9 +33,7 @@ export async function createRebaseBackup(ctx: RebaseContext): Promise<string> {
   });
 
   logger.success(`Backup created: ${file}`);
-  logger.warn(
-    'Note: This backup contains commit history only, not uncommitted working directory changes',
-  );
+  logger.warn('Note: This backup contains commit history only, not uncommitted working directory changes');
   logger.info(`To restore: git clone ${file} <destination>`);
   return file;
 }

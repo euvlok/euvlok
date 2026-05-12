@@ -18,12 +18,9 @@ await group('zizmor', async () => {
     return;
   }
 
-  await runCommand(
-    [...runner, '--offline', '--no-progress', '--format=github', '.github/workflows'],
-    {
-      inheritOutput: true,
-    },
-  );
+  await runCommand([...runner, '--offline', '--no-progress', '--format=github', '.github/workflows'], {
+    inheritOutput: true,
+  });
 });
 
 async function findZizmorRunner(): Promise<string[] | null> {

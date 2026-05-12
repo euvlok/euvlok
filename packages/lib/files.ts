@@ -6,10 +6,7 @@ import type { MaybePromise } from './utils';
 /**
  * Create a temporary directory with the given prefix, pass it to a callback, then remove it.
  */
-export async function withTempDir<T>(
-  prefix: string,
-  callback: (dir: string) => MaybePromise<T>,
-): Promise<T> {
+export async function withTempDir<T>(prefix: string, callback: (dir: string) => MaybePromise<T>): Promise<T> {
   const dir = await mkdtemp(join(tmpdir(), prefix));
 
   try {
@@ -22,10 +19,7 @@ export async function withTempDir<T>(
 /**
  * Create a temporary file path, pass it to a callback, then remove its directory.
  */
-export async function withTempFilePath<T>(
-  suffix: string,
-  callback: (path: string) => MaybePromise<T>,
-): Promise<T> {
+export async function withTempFilePath<T>(suffix: string, callback: (path: string) => MaybePromise<T>): Promise<T> {
   return withTempDir('euvlok-', (dir) => callback(join(dir, `content.${suffix}`)));
 }
 

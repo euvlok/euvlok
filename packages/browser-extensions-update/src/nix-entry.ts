@@ -13,14 +13,7 @@ function chromium(id: string, url: string, hash: string, version: string) {
   }`;
 }
 
-function firefox(
-  id: string,
-  url: string,
-  hash: string,
-  version: string,
-  perms: string[] | undefined,
-  addon: string,
-) {
+function firefox(id: string, url: string, hash: string, version: string, perms: string[] | undefined, addon: string) {
   const meta =
     perms && perms.length > 0
       ? `platforms = platforms.all;
@@ -53,14 +46,6 @@ export function generateExtensionNixEntry(
   const id = escapeNixString(ext.id);
   const escapeNix = (s: string) => escapeNixString(s);
 
-  if (browser === 'chromium')
-    return chromium(id, escapeNix(url), escapeNix(hash), escapeNix(version));
-  return firefox(
-    id,
-    escapeNix(url),
-    escapeNix(hash),
-    escapeNix(version),
-    perms,
-    escapeNix(addon ?? ext.id),
-  );
+  if (browser === 'chromium') return chromium(id, escapeNix(url), escapeNix(hash), escapeNix(version));
+  return firefox(id, escapeNix(url), escapeNix(hash), escapeNix(version), perms, escapeNix(addon ?? ext.id));
 }
