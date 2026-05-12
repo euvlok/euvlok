@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nix:
+    name: Nix (${{ matrix.system }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: x86_64-linux
+            runner: ubuntu-latest
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        with:
+          github_access_token: ${{ github.token }}
+          extra_nix_config: |
+            accept-flake-config = true
+
+      - name: Check flake inputs
+        run: nix flake metadata
+
+      - name: Run pre-commit checks
+        run: nix build --print-build-logs .#checks.${{ matrix.system }}.pre-commit
+
+      - name: Build packages
+        run: |
+          nix build --print-build-logs \
+            .#packages.${{ matrix.system }}.auto-rebase \
+            .#packages.${{ matrix.system }}.browser-extension-update \
+            .#packages.${{ matrix.system }}.nvidia-prefetch
