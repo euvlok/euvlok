@@ -12,6 +12,8 @@
           runtimeInputs = [
             pkgs.bun
             pkgs.git
+          ] ++ pkgs.lib.optionals (name == "auto-rebase") [
+            pkgs.jujutsu
           ];
           text = ''
             cd "$(git rev-parse --show-toplevel)"

@@ -29,25 +29,37 @@ export async function runCommand(cmd: string[], opts?: CommandOptions): Promise<
 /**
  * Run a command without invoking a shell and return its exit result.
  */
-export async function runCommandResult(
-  cmd: string[],
-  opts?: CommandOptions,
-): Promise<CommandResult> {
+export async function runCommandResult(cmd: string[], opts?: CommandOptions): Promise<CommandResult> {
   if (cmd.length === 0) {
     throw new Error('Cannot execute an empty command.');
   }
 
-  const proc = Bun.spawn(cmd, {
-    cwd: opts?.cwd,
-    env: buildEnv(opts?.env),
-    stdin: opts?.input === undefined ? 'ignore' : 'pipe',
-    stdout: 'pipe',
-    stderr: 'pipe',
-  });
+  let proc: Bun.Subprocess<'pipe' | 'ignore', 'pipe', 'pipe'>;
+  try {
+    proc = Bun.spawn(cmd, {
+      cwd: opts?.cwd,
+      env: buildEnv(opts?.env),
+      stdin: opts?.input === undefined ? 'ignore' : 'pipe',
+      stdout: 'pipe',
+      stderr: 'pipe',
+    });
+  } catch (e: unknown) {
+    if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
+      return {
+        stdout: '',
+        stderr: e.message,
+        exitCode: 127,
+      };
+    }
+
+    throw e;
+  }
 
   if (opts?.input !== undefined) {
-    proc.stdin?.write(opts.input);
-    proc.stdin?.end();
+    if (proc.stdin && typeof proc.stdin !== 'number') {
+      proc.stdin.write(opts.input);
+      proc.stdin.end();
+    }
   }
 
   const [stdout, stderr, exitCode] = await Promise.all([
@@ -67,10 +79,7 @@ export async function runCommandResult(
 /**
  * Read an entire process output stream, optionally mirroring chunks as they arrive.
  */
-async function readOutput(
-  stream: ReadableStream<Uint8Array>,
-  mirror?: NodeJS.WriteStream,
-): Promise<string> {
+async function readOutput(stream: ReadableStream<Uint8Array>, mirror?: NodeJS.WriteStream): Promise<string> {
   const chunks: Uint8Array[] = [];
 
   for await (const chunk of stream) {
@@ -96,9 +105,7 @@ function buildEnv(overrides?: Record<string, string | undefined>): Record<string
       return env;
     },
     Object.fromEntries(
-      Object.entries(process.env).filter(
-        (entry): entry is [string, string] => entry[1] !== undefined,
-      ),
+      Object.entries(process.env).filter((entry): entry is [string, string] => entry[1] !== undefined),
     ),
   );
 }

@@ -5,7 +5,7 @@ import { getRemoteBookmark, hasLocalChanges, hasRemoteChanges } from './checks';
 import { cleanupRebaseAfterError } from './cleanup';
 import { createRebaseContext, type RebaseContext } from './context';
 import { assertNoGitLocks, fetchLatestRemoteState, getOriginalBranch } from './git';
-import { cleanupJj, setupJj } from './jj';
+import { assertJjAvailable, cleanupJj, setupJj } from './jj';
 import { checkRebaseSafety, performRebase } from './rebase';
 import { recoverInterruptedRebase } from './recovery';
 
@@ -126,10 +126,7 @@ async function handleUnsafeRebase(ctx: RebaseContext): Promise<void> {
   logger.info(`Backup available at: ${ctx.backupFile}`);
 }
 
-async function handleSafeAutoRebase(
-  ctx: RebaseContext,
-  rebaseAlreadyApplied: boolean,
-): Promise<void> {
+async function handleSafeAutoRebase(ctx: RebaseContext, rebaseAlreadyApplied: boolean): Promise<void> {
   if (rebaseAlreadyApplied) {
     logger.info('Rebase already completed during safety check (optimization)');
     logger.success('Successfully rebased local changes onto latest remote!');
@@ -144,10 +141,7 @@ async function handleSafeAutoRebase(
   logger.success('Successfully rebased local changes onto latest remote!');
 }
 
-async function handleSafeManualRebase(
-  ctx: RebaseContext,
-  rebaseAlreadyApplied: boolean,
-): Promise<void> {
+async function handleSafeManualRebase(ctx: RebaseContext, rebaseAlreadyApplied: boolean): Promise<void> {
   if (rebaseAlreadyApplied) {
     logger.info('Undoing test rebase (--no-auto-rebase is set)');
     await runCommandResult(['jj', 'undo'], { cwd: ctx.repoRoot });
@@ -180,8 +174,9 @@ function logCompletion(ctx: RebaseContext): void {
 
 async function runAutoRebase(args: AutoRebaseFlags): Promise<void> {
   const root = await requireRepositoryRoot();
-  await recoverRepository(root, args.backupDir);
   await requireEuvlokRepository(root);
+  assertJjAvailable();
+  await recoverRepository(root, args.backupDir);
 
   const ctx = createRebaseContext(root, args.dryRun, args.autoRebase, args.backupDir);
   ctx.originalBranch = args.branch ?? (await getOriginalBranch(root));
