@@ -1,4 +1,4 @@
-_: {
+{ pkgs, ... }: {
 
   systemd.services.navidrome.serviceConfig = {
     BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];
@@ -22,7 +22,7 @@ _: {
 
     ollama = {
       enable = true;
-      acceleration = "cuda";
+      package = pkgs.ollama-cuda;
     };
 
     syncthing = {

@@ -25,14 +25,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Set up Bun dependencies
-        uses: ./.github/actions/setup-bun-dependencies
+      - name: Set up Nix and Bun dependencies
+        uses: ./.github/actions/setup-nix-bun-dependencies
 
       - name: Check TypeScript and workflow tooling
         run: bun run check
 
       - name: Run tests
-        run: bun test
+        run: nix develop --impure --command bun test
 
       - name: Audit changed code with Fallow
         uses: fallow-rs/fallow@f0d35e73de3526e05c3d19f25c785f56b4bee230 # v2.72.0

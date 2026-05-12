@@ -26,7 +26,7 @@
         };
         enterShell = config.pre-commit.installationScript;
         packages = builtins.attrValues {
-          inherit (pkgs) git pre-commit bun;
+          inherit (pkgs) git pre-commit bun jujutsu;
           inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
         };
       };
