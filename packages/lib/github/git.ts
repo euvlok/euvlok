@@ -33,12 +33,7 @@ async function hasStagedChanges(): Promise<boolean> {
  */
 async function configureGitHubBot(): Promise<void> {
   await git.addConfig('user.name', 'github-actions[bot]', false, 'local');
-  await git.addConfig(
-    'user.email',
-    '41898282+github-actions[bot]@users.noreply.github.com',
-    false,
-    'local',
-  );
+  await git.addConfig('user.email', '41898282+github-actions[bot]@users.noreply.github.com', false, 'local');
 }
 
 /**
@@ -108,9 +103,7 @@ async function pushWithRebaseRetry(refName: RefName): Promise<void> {
     }
 
     const waitSeconds = 5 * attempt;
-    logger.warn(
-      `Push failed on attempt ${attempt}. Waiting ${waitSeconds}s and retrying after rebase...`,
-    );
+    logger.warn(`Push failed on attempt ${attempt}. Waiting ${waitSeconds}s and retrying after rebase...`);
     await Bun.sleep(waitSeconds * 1000);
     await git.pull('origin', refName, ['--rebase']);
     return false;

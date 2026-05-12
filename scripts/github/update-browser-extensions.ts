@@ -23,10 +23,7 @@ import {
   formatUpdatedExtension,
   summarizeExtension,
 } from '../../packages/browser-extensions-update/src/extension-summary';
-import {
-  type BrowserType,
-  BrowserTypeSchema,
-} from '../../packages/browser-extensions-update/src/types';
+import { type BrowserType, BrowserTypeSchema } from '../../packages/browser-extensions-update/src/types';
 
 const browserFilter = normalizeBrowserFilter(process.env.BROWSER);
 const sourceFiles = await findSourceFiles(browserFilter);
@@ -50,13 +47,9 @@ const changedExtensionFiles = (await listStagedFiles())
   .filter((file) => file.endsWith('extensions.nix'))
   .sort((a, b) => a.localeCompare(b));
 
-const changes = (
-  await Promise.all(changedExtensionFiles.map((file) => analyzeFileChanges(file)))
-).filter(Boolean);
+const changes = (await Promise.all(changedExtensionFiles.map((file) => analyzeFileChanges(file)))).filter(Boolean);
 
-const commitTitle = browserFilter
-  ? `chore(${browserFilter}): update extensions`
-  : 'chore(browsers): update extensions';
+const commitTitle = browserFilter ? `chore(${browserFilter}): update extensions` : 'chore(browsers): update extensions';
 
 await commitAndPush({
   title: commitTitle,
@@ -85,9 +78,7 @@ async function updateExtensionFile(sourceFile: string): Promise<void> {
 async function findSourceFiles(filter: BrowserType | null): Promise<string[]> {
   const roots = ['modules', 'hosts'];
   const files = (
-    await Promise.all(
-      roots.map((root) => findFiles(root, (path) => basename(path) === 'sources.nix')),
-    )
+    await Promise.all(roots.map((root) => findFiles(root, (path) => basename(path) === 'sources.nix')))
   ).flat();
 
   return files.filter((file) => !filter || basename(dirname(file)) === filter);
@@ -95,25 +86,16 @@ async function findSourceFiles(filter: BrowserType | null): Promise<string[]> {
 
 async function analyzeFileChanges(nixFile: string): Promise<string> {
   const browserType: BrowserType = nixFile.includes('firefox') ? 'firefox' : 'chromium';
-  const [headContent, stagedContent] = await Promise.all([
-    readGitBlob('HEAD', nixFile),
-    readGitIndex(nixFile),
-  ]);
+  const [headContent, stagedContent] = await Promise.all([readGitBlob('HEAD', nixFile), readGitIndex(nixFile)]);
 
   const [oldEntries, newEntries] = await Promise.all([
     parseExtensions(headContent, browserType),
     parseExtensions(stagedContent, browserType),
   ]);
 
-  const added = [...newEntries].flatMap(([key, newEntry]) =>
-    oldEntries.has(key) ? [] : [newEntry.id],
-  );
-  const removed = [...oldEntries].flatMap(([key, oldEntry]) =>
-    newEntries.has(key) ? [] : [oldEntry.id],
-  );
-  const updated = [...newEntries].flatMap(([key, newEntry]) =>
-    formatUpdatedExtension(oldEntries.get(key), newEntry),
-  );
+  const added = [...newEntries].flatMap(([key, newEntry]) => (oldEntries.has(key) ? [] : [newEntry.id]));
+  const removed = [...oldEntries].flatMap(([key, oldEntry]) => (newEntries.has(key) ? [] : [oldEntry.id]));
+  const updated = [...newEntries].flatMap(([key, newEntry]) => formatUpdatedExtension(oldEntries.get(key), newEntry));
 
   if (added.length === 0 && removed.length === 0 && updated.length === 0) {
     return '';
@@ -132,10 +114,7 @@ async function analyzeFileChanges(nixFile: string): Promise<string> {
   return lines.join('\n');
 }
 
-async function parseExtensions(
-  nixContent: string,
-  browserType: BrowserType,
-): Promise<Map<string, ExtensionSummary>> {
+async function parseExtensions(nixContent: string, browserType: BrowserType): Promise<Map<string, ExtensionSummary>> {
   if (!nixContent.trim()) {
     return new Map();
   }

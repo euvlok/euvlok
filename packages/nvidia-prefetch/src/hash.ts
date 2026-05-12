@@ -24,16 +24,7 @@ export async function fetchDriverSha256Sri(
 
 export async function prefetchGithubSourceHash(repo: string, version: string): Promise<string> {
   const url = `${GITHUB_BASE_URL}/${repo}/archive/${version}.tar.gz`;
-  const output = await runCommand([
-    'nix',
-    'store',
-    'prefetch-file',
-    '--unpack',
-    '--name',
-    'source',
-    '--json',
-    url,
-  ]);
+  const output = await runCommand(['nix', 'store', 'prefetch-file', '--unpack', '--name', 'source', '--json', url]);
   const result = prefetchResultSchema.parse(JSON.parse(output));
   return result.hash;
 }

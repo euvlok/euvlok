@@ -1,11 +1,5 @@
 import { runCommand } from '@euvlok/core';
-import {
-  commitAndPush,
-  getCurrentRefName,
-  group,
-  hasUnstagedGitDiff,
-  actionsLogger as logger,
-} from '@euvlok/github';
+import { commitAndPush, getCurrentRefName, group, hasUnstagedGitDiff, actionsLogger as logger } from '@euvlok/github';
 import { z } from 'zod';
 
 const FlakeLockedSchema = z.object({
@@ -51,9 +45,7 @@ if (trivialInputs.length === 0) {
 
 logger.info(`Found ${trivialInputs.length} trivial inputs: ${trivialInputs.join(' ')}`);
 
-const oldSnapshots = new Map<string, InputSnapshot>(
-  trivialInputs.map((name) => [name, snapshotInput(name, before)]),
-);
+const oldSnapshots = new Map<string, InputSnapshot>(trivialInputs.map((name) => [name, snapshotInput(name, before)]));
 
 await group('Updating trivial inputs', async () => {
   await runCommand(['nix', 'flake', 'update', ...trivialInputs], {

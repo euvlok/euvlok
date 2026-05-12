@@ -1,10 +1,5 @@
 import { logger, runCommandResult, splitNonEmptyLines } from '@euvlok/core';
-import {
-  COMMON_BRANCH_NAMES,
-  DEFAULT_REMOTE,
-  JJ_TEMPLATE_BOOKMARKS,
-  JJ_TEMPLATE_COMMIT_ID,
-} from './constants';
+import { COMMON_BRANCH_NAMES, DEFAULT_REMOTE, JJ_TEMPLATE_BOOKMARKS, JJ_TEMPLATE_COMMIT_ID } from './constants';
 
 // TODO: Cache result — each call makes up to 4 subprocess calls, and this is called 4+ times per run
 export async function getRemoteBookmark(root: string): Promise<string> {

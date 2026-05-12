@@ -55,10 +55,7 @@ describe('checkRebaseSafety', () => {
     repo = await createTempJjRepo();
     // Create conflicting changes: same file modified both locally and remotely
     // Remote modifies README
-    const tmpClone = join(
-      '/tmp',
-      `test-clone-conflict-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    );
+    const tmpClone = join('/tmp', `test-clone-conflict-${Date.now()}-${Math.random().toString(36).slice(2)}`);
     await runRealCommandResult(['git', 'clone', repo.remoteDir, tmpClone]);
     await runRealCommandResult(['git', '-C', tmpClone, 'config', 'user.email', 'test@test.com']);
     await runRealCommandResult(['git', '-C', tmpClone, 'config', 'user.name', 'Test']);

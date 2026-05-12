@@ -5,9 +5,7 @@ const BPC_REPO = 'https://gitflic.ru/project/magnolia1234/bpc_uploads.git';
 
 export async function fetchBpcUrl(browser: BrowserType): Promise<ExtensionDownloadUrlResult> {
   const filename =
-    browser === 'chromium'
-      ? 'bypass-paywalls-chrome-clean-latest.crx'
-      : 'bypass_paywalls_clean-latest.xpi';
+    browser === 'chromium' ? 'bypass-paywalls-chrome-clean-latest.crx' : 'bypass_paywalls_clean-latest.xpi';
 
   const output = await simpleGit().listRemote([BPC_REPO, 'HEAD']);
   const commit = output.split('\t')[0];

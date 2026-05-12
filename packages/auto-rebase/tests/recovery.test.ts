@@ -1,13 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'pathe';
-import {
-  cleanupTempDir,
-  createTempDir,
-  runRealCommandResult,
-  silentLogger,
-  useTempJjRepo,
-} from './test-utils';
+import { cleanupTempDir, createTempDir, runRealCommandResult, silentLogger, useTempJjRepo } from './test-utils';
 
 mock.module('@euvlok/core', () => ({
   runCommandResult: runRealCommandResult,
@@ -64,10 +58,7 @@ describe('recoverInterruptedRebase with real jj', () => {
 
   test('recovers with real .jj directory present', async () => {
     const current = repo.current();
-    await Bun.write(
-      join(current.dir, '.auto-rebase-state'),
-      JSON.stringify(testState({ originalBranch: 'master' })),
-    );
+    await Bun.write(join(current.dir, '.auto-rebase-state'), JSON.stringify(testState({ originalBranch: 'master' })));
 
     const result = await recoverInterruptedRebase(current.dir);
 

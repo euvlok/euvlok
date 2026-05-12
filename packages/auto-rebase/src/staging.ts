@@ -17,9 +17,7 @@ export async function restoreGitIndexFromBackup(
       .catch(() => false);
 
     if (!check) {
-      logger.warn(
-        'Context changed during rebase. Your staged changes are now unstaged to prevent corruption',
-      );
+      logger.warn('Context changed during rebase. Your staged changes are now unstaged to prevent corruption');
       logger.warn(`Original staged files: ${originalStagedFiles}`);
       logger.info('You may need to manually re-stage files using: git add <file>');
       return;
@@ -49,10 +47,7 @@ async function restageFiles(root: string, originalStagedFiles: string): Promise<
   logger.warn('Restored staging by re-adding files (partial staging may be lost)');
 }
 
-export async function removeSavedDiffFiles(
-  stagedDiffPath: string,
-  unstagedDiffPath: string,
-): Promise<void> {
+export async function removeSavedDiffFiles(stagedDiffPath: string, unstagedDiffPath: string): Promise<void> {
   if (stagedDiffPath && (await Bun.file(stagedDiffPath).exists()))
     await Bun.file(stagedDiffPath)
       .delete()

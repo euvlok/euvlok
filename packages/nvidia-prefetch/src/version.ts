@@ -48,10 +48,7 @@ async function fetchVersionsFromPlatform(url: string, name: string): Promise<str
   return versions;
 }
 
-export function findLatestSharedNvidiaVersion(
-  versions1: string[],
-  versions2: string[],
-): string | null {
+export function findLatestSharedNvidiaVersion(versions1: string[], versions2: string[]): string | null {
   const set2 = new Set(versions2);
   const common = versions1.filter((v) => set2.has(v));
 

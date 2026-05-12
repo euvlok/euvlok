@@ -1,11 +1,5 @@
 import { basename, resolve } from 'node:path';
-import {
-  addGitPaths,
-  escapeNixString,
-  evaluateNixRaw,
-  getStagedShortstat,
-  runCommandResult,
-} from '@euvlok/core';
+import { addGitPaths, escapeNixString, evaluateNixRaw, getStagedShortstat, runCommandResult } from '@euvlok/core';
 import {
   commitAndPush,
   findFiles,
@@ -71,18 +65,14 @@ async function updatePackage(nixFile: string): Promise<void> {
 }
 
 async function isDerivation(absPath: string): Promise<boolean> {
-  const result = await evaluateNixRaw(
-    `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).type`,
-  );
+  const result = await evaluateNixRaw(`with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).type`);
 
   return result === 'derivation';
 }
 
 async function hasSrc(absPath: string): Promise<boolean> {
   return (
-    (await evaluateNixRaw(
-      `with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).src`,
-    )) !== null
+    (await evaluateNixRaw(`with import <nixpkgs> {}; (callPackage "${escapeNixString(absPath)}" {}).src`)) !== null
   );
 }
 

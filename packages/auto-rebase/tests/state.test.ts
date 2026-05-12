@@ -51,10 +51,7 @@ describe('state', () => {
     });
 
     test('handles missing fields with defaults', async () => {
-      await Bun.write(
-        join(tmpDir.current(), '.auto-rebase-state'),
-        JSON.stringify({ timestamp: 1700000000 }),
-      );
+      await Bun.write(join(tmpDir.current(), '.auto-rebase-state'), JSON.stringify({ timestamp: 1700000000 }));
 
       expect(await loadState(tmpDir.current())).toEqual({
         originalBranch: 'HEAD',

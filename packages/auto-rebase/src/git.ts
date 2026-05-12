@@ -32,9 +32,7 @@ export async function assertNoGitLocks(root: string): Promise<void> {
 export async function fetchLatestRemoteState(ctx: RebaseContext): Promise<void> {
   logger.info('Fetching latest changes from remote...');
   if (ctx.dryRun) {
-    logger.info(
-      `  [DRY RUN] Would run: git fetch ${DEFAULT_REMOTE} && jj git fetch --remote ${DEFAULT_REMOTE}`,
-    );
+    logger.info(`  [DRY RUN] Would run: git fetch ${DEFAULT_REMOTE} && jj git fetch --remote ${DEFAULT_REMOTE}`);
     return;
   }
   const git = simpleGit(ctx.repoRoot);
@@ -54,10 +52,7 @@ async function fetchGitRemote(git: ReturnType<typeof simpleGit>): Promise<void> 
   });
 }
 
-async function remoteBookmarkExists(
-  git: ReturnType<typeof simpleGit>,
-  bookmark: string,
-): Promise<boolean> {
+async function remoteBookmarkExists(git: ReturnType<typeof simpleGit>, bookmark: string): Promise<boolean> {
   return git
     .raw(['show-ref', '--verify', '--quiet', `refs/remotes/${DEFAULT_REMOTE}/${bookmark}`])
     .then(() => true)
