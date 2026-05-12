@@ -6,14 +6,23 @@ Thumbs.db
 
 .devenv/
 .direnv/
-.codex
 result
 result-*
 /.pre-commit-config.yaml
 .pre-commit-config.yaml
-node_modules/
 
-# IDEs
-**/.idea/
-**/.vs/
-**/.vscode/
+# SDK junk
+node_modules/
+.zig-cache/
+zig-cache/
+zig-out/
+
+# VS Code workspace junk; keep shared project config
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+
+# AI stuff
+.codex
+.claude
