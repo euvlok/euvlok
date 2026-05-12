@@ -8,7 +8,7 @@
   config = lib.mkIf pkgs.stdenvNoCC.isLinux {
     hm.chromium = {
       enable = true;
-      browser = "chromium";
+      browser = lib.mkDefault "helium-browser";
       extraExtensions = (pkgs.callPackage ./extensions.nix { inherit config; });
     };
   };

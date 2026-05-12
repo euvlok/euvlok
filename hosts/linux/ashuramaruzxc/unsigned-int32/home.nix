@@ -52,6 +52,8 @@ let
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
+        clankers.claude.enable = true;
+
         ghostty.enable = true;
         helix.enable = true;
         mpv.enable = true;

@@ -9,7 +9,6 @@
   '';
   programs.nixcord.config.enableReactDevtools = true;
   programs.nixcord.config.plugins = {
-    betterNotesBox.enable = true;
     betterSessions.enable = true;
     consoleJanitor.disableSpotifyLogger = true;
     copyEmojiMarkdown.enable = true;
