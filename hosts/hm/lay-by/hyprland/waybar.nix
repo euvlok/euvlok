@@ -1,4 +1,7 @@
-{ ... }:
+{ lib, pkgs, ... }:
+let
+  scripts = pkgs.callPackage ./scripts { };
+in
 {
   programs.waybar.enable = true;
   programs.waybar.settings = [
@@ -70,17 +73,17 @@
         format = "󰎇 {} 󰎇";
         interval = 1;
         on-click = "playerctl -p Feishin play-pause";
-        exec = builtins.readFile ./scripts/music.sh;
+        exec = lib.getExe' scripts "lay-by-waybar-music";
       };
       "custom/nvidia" = {
         format = " {}";
         interval = 1;
-        exec = builtins.readFile ./scripts/nvidia.sh;
+        exec = lib.getExe' scripts "lay-by-waybar-nvidia";
       };
       # There might already be a custom module for this but I'm just going to use my old script.
       "custom/weather" = {
         interval = 900;
-        exec = builtins.readFile ./scripts/weather.sh;
+        exec = lib.getExe' scripts "lay-by-waybar-weather";
       };
     }
   ];
