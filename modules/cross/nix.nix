@@ -2,6 +2,7 @@
   inputs,
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -10,6 +11,17 @@ let
   registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
+
+  buildCores =
+    lib.pipe
+      (pkgs.runCommand "cpu-cores" { } ''
+        ${pkgs.writeShellScript "get-cpu-cores" ''${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count())"''} > $out
+      '')
+      [
+        lib.fileContents
+        lib.toInt
+        (x: x - 2) # Max Cores - 2
+      ];
 in
 {
   config = (
@@ -28,6 +40,7 @@ in
         nix = {
           settings = {
             experimental-features = "nix-command flakes";
+            cores = buildCores;
 
             substituters = [
               "https://devenv.cachix.org"
