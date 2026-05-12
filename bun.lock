@@ -22,7 +22,7 @@
         "zod": "^4.4.2",
       },
       "devDependencies": {
-        "@actions/workflow-parser": "^0.3.55",
+        "@actions/workflow-parser": "^0.3.57",
         "@biomejs/biome": "^2.4.14",
         "@tktco/node-actionlint": "^1.6.0",
         "@types/bun": "^1.3.13",
@@ -40,7 +40,7 @@
 
     "@actions/exec": ["@actions/exec@3.0.0", "", { "dependencies": { "@actions/io": "^3.0.2" } }, "sha512-6xH/puSoNBXb72VPlZVm7vQ+svQpFyA96qdDBvhB8eNZOE8LtPf9L4oAsfzK/crCL8YZ+19fKYVnM63Sl+Xzlw=="],
 
-    "@actions/expressions": ["@actions/expressions@0.3.55", "", {}, "sha512-7r2S5SqHKdF53k9X2r+Nux8FOi/i9F3xZ/oPR5kHhHmM4hGqYHX6aq6O0dZCMLfo4Z4qT2zflMdfvaA+Qzt0YQ=="],
+    "@actions/expressions": ["@actions/expressions@0.3.57", "", {}, "sha512-9i38lcz1wsjLYagAMg0wFRf9859oBB2sLjmVjxXHNMzHoovDdxI4xeoWCRrsaUKgKFkffbdA3MiMAfvlXjX1ig=="],
 
     "@actions/github": ["@actions/github@9.1.1", "", { "dependencies": { "@actions/http-client": "^3.0.2", "@octokit/core": "^7.0.6", "@octokit/plugin-paginate-rest": "^14.0.0", "@octokit/plugin-rest-endpoint-methods": "^17.0.0", "@octokit/request": "^10.0.7", "@octokit/request-error": "^7.1.0", "undici": "^6.23.0" } }, "sha512-tL5JbYOBZHc0ngEnCsaDcryUizIUIlQyIMwy1Wkx93H5HzbBJ7TbiPx2PnFjBwZW0Vh05JmfFZhecE6gglYegA=="],
 
@@ -50,7 +50,7 @@
 
     "@actions/io": ["@actions/io@3.0.2", "", {}, "sha512-nRBchcMM+QK1pdjO7/idu86rbJI5YHUKCvKs0KxnSYbVe3F51UfGxuZX4Qy/fWlp6l7gWFwIkrOzN+oUK03kfw=="],
 
-    "@actions/workflow-parser": ["@actions/workflow-parser@0.3.55", "", { "dependencies": { "@actions/expressions": "^0.3.55", "cronstrue": "^2.21.0", "yaml": "^2.0.0-8" } }, "sha512-2TH6h9XBJ30YXJNt4sc/kpvl1JgG3mvrYGj6ZTy1l8whBN8LPCKg9BRZNQREmRUfHimfwdeCg/W8DRmB7kunVg=="],
+    "@actions/workflow-parser": ["@actions/workflow-parser@0.3.57", "", { "dependencies": { "@actions/expressions": "^0.3.57", "cronstrue": "^2.21.0", "yaml": "^2.0.0-8" } }, "sha512-+PXG49BkEXpZfbqiWis9AjG94ygmqr7JD/0bByPG4ZCGLi2ZlYudfB/7iaCItV9yTqXMuC9tDg5AwM0I1n2Mqg=="],
 
     "@azure/abort-controller": ["@azure/abort-controller@2.1.2", "", { "dependencies": { "tslib": "^2.6.2" } }, "sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA=="],
 
