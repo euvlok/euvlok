@@ -18,9 +18,11 @@
     ../shared/system/workstation.nix
     ../shared/system/settings.nix
     ../shared/system/fonts.nix
+    ../shared/system/ollama.nix
     ./hardware-configuration.nix
     ./networking.nix
     ./samba.nix
+    ./settings.nix
     ./users.nix
   ];
 
@@ -103,7 +105,6 @@
     ratbagd.enable = true;
     xserver.wacom.enable = true;
   };
-
   programs.zsh.enable = true;
 
   security.polkit.enable = true;
