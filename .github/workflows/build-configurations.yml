@@ -1,0 +1,76 @@
+name: Build Configurations
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-configurations-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.kind }} / ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    env:
+      CACHIX_CACHE: euvlok
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep this list in sync with the flake's nixosConfigurations and
+        # darwinConfigurations outputs. Each runner must match the host system.
+        include:
+          # x86_64-linux NixOS hosts.
+          - kind: nixos
+            name: blind-faith
+            runner: ubuntu-latest
+          - kind: nixos
+            name: nanachi
+            runner: ubuntu-latest
+          - kind: nixos
+            name: "null"
+            runner: ubuntu-latest
+          - kind: nixos
+            name: nyx
+            runner: ubuntu-latest
+          # aarch64-linux NixOS host.
+          - kind: nixos
+            name: unsigned-int16
+            runner: ubuntu-24.04-arm
+          # x86_64-linux NixOS hosts.
+          - kind: nixos
+            name: unsigned-int32
+            runner: ubuntu-latest
+          - kind: nixos
+            name: unsigned-int64
+            runner: ubuntu-latest
+          # aarch64-darwin nix-darwin hosts.
+          - kind: darwin
+            name: FlameFlags-Mac-mini
+            runner: macos-latest
+          - kind: darwin
+            name: faputa
+            runner: macos-latest
+          - kind: darwin
+            name: unsigned-int8
+            runner: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      # GitHub only loads workflows directly from .github/workflows, so the
+      # reusable Nix/Cachix setup lives in a local composite action instead.
+      - name: Build and cache configuration
+        uses: ./.github/actions/build-nix-flake-target
+        with:
+          configuration-kind: ${{ matrix.kind }}
+          configuration-name: ${{ matrix.name }}
+          cachix-cache: ${{ env.CACHIX_CACHE }}
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          github-token: ${{ github.token }}
