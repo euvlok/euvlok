@@ -2,18 +2,17 @@
   inputs,
   pkgs,
   lib,
-  eulib,
   ...
 }:
 let
-  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
+  inherit (pkgs.stdenvNoCC) isLinux;
 in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   home-manager = {
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs eulib; };
+    extraSpecialArgs = { inherit inputs; };
   };
 
   home-manager.users.faputa =
@@ -30,7 +29,15 @@ in
         ../../../hm/bigshaq9999/ghostty.nix
         ../../../hm/bigshaq9999/ssh.nix
       ]
-      ++ [ (mkCatppuccin hosts.nanachi-darwin) ]
+      ++ [
+        {
+          catppuccin = {
+            enable = true;
+            flavor = "frappe";
+            accent = "rosewater";
+          };
+        }
+      ]
       ++ [
         ../../../hm/ashuramaruzxc/nixcord.nix
       ]
@@ -95,38 +102,37 @@ in
       ]
       ++ [
         {
-          home.packages = builtins.attrValues {
-            inherit (pkgs.unstable)
-              # Make macos useful
-              alt-tab-macos
-              ice-bar
-              iina
-              iterm2
-              raycast
-              stats
-              shottr
-              ;
+          home.packages =
+            builtins.attrValues {
+              inherit (pkgs.unstable)
+                # Make macos useful
+                alt-tab-macos
+                ice-bar
+                iina
+                iterm2
+                raycast
+                stats
+                shottr
+                ;
 
-            # SNS
-            inherit (pkgs) signal-desktop;
+              # SNS
+              inherit (pkgs) signal-desktop;
 
-            # Utilities
-            inherit (pkgs)
-              qbittorrent
-              anki-bin # Japenis
-              audacity
-              # gimp # Image editing
-              inkscape # Vector graphics
-              yubikey-manager # OTP
-              notion-app # Productivity
-              # mullvad-vpn
-              ;
-
-            inherit (pkgs)
-              # nicotine-plus # Broken?
-              prismlauncher
-              ;
-          };
+              # Utilities
+              inherit (pkgs)
+                qbittorrent
+                anki-bin # Japenis
+                audacity
+                # gimp # Image editing
+                inkscape # Vector graphics
+                yubikey-manager # OTP
+                notion-app # Productivity
+                # mullvad-vpn
+                ;
+            }
+            ++ lib.optionals isLinux [
+              pkgs.prismlauncher
+            ];
         }
       ]
       ++ [

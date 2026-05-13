@@ -1,6 +1,5 @@
 {
   inputs,
-  eulib,
   ...
 }:
 {
@@ -8,7 +7,7 @@
 
   home-manager = {
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs eulib; };
+    extraSpecialArgs = { inherit inputs; };
   };
 
   home-manager.users.nanachi =

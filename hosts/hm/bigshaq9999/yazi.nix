@@ -1,6 +1,6 @@
-{ lib, eulib, ... }:
+_:
 let
-  inherit (eulib) genKeyBind;
+  genKeyBind = desc: on: run: { inherit desc on run; };
 
   keymap = [
     (genKeyBind "Go to a directory interactively" [

@@ -25,6 +25,7 @@
     })
     (final: prev: {
       eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
+      kanata-with-cmd = final.kanata.override { withCmd = true; };
     })
     /**
       nixpkgs @507531

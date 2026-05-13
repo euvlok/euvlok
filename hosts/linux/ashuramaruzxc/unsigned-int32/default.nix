@@ -1,7 +1,4 @@
 inputs:
-let
-  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
-in
 inputs.nixpkgs.lib.nixosSystem {
   specialArgs = { inherit inputs; };
   modules = [
@@ -9,7 +6,13 @@ inputs.nixpkgs.lib.nixosSystem {
     ./configuration.nix
     ./home.nix
     { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml; }
-    (mkCatppuccin hosts.unsigned-int32)
+    {
+      catppuccin = {
+        enable = true;
+        flavor = "mocha";
+        accent = "flamingo";
+      };
+    }
     inputs.anime-game-launcher-source.nixosModules.default
     {
       programs.anime-game-launcher.enable = true;

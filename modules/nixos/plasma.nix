@@ -6,7 +6,16 @@
   ...
 }:
 let
-  inherit (import ../../lib/catppuccin.nix) mkCatppuccinGtk;
+  mkCatppuccinGtk =
+    {
+      tweaks ? [ ],
+    }:
+    pkgs.unstable.catppuccin-gtk.override {
+      accents = [ config.catppuccin.accent ];
+      variant = config.catppuccin.flavor;
+      size = "compact";
+      inherit tweaks;
+    };
 in
 {
   #! temp remove plasma from nixos-unstable
@@ -122,10 +131,7 @@ in
             ;
         }
         ++ lib.optionals config.catppuccin.enable [
-          (mkCatppuccinGtk {
-            inherit pkgs config;
-            tweaks = [ "rimless" ];
-          })
+          (mkCatppuccinGtk { tweaks = [ "rimless" ]; })
           (pkgs.unstable.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];

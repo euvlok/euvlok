@@ -1,15 +1,15 @@
 {
   pkgs,
   lib,
-  eulib,
   config,
   ...
 }:
 let
   inherit (pkgs.stdenvNoCC) isDarwin;
-  inherit (eulib) mkSuper mkSuperShift;
 
   superKey = if isDarwin then "super" else "ctrl";
+  mkSuper = key: command: "${superKey}+${key}=${command}";
+  mkSuperShift = key: command: "${superKey}+shift+${key}=${command}";
 
   # Source: https://vt100.net/docs/vt100-ug/chapter3.html
   # Converter: https://www.rapidtables.com/convert/number/hex-to-octal.html

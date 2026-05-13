@@ -6,7 +6,16 @@
   ...
 }:
 let
-  inherit (import ../../lib/catppuccin.nix) mkCatppuccinGtk;
+  mkCatppuccinGtk =
+    {
+      tweaks ? [ ],
+    }:
+    pkgs.unstable.catppuccin-gtk.override {
+      accents = [ config.catppuccin.accent ];
+      variant = config.catppuccin.flavor;
+      size = "compact";
+      inherit tweaks;
+    };
 in
 {
   #! temp remove gnome from nixos-unstable
@@ -48,10 +57,7 @@ in
           inherit (pkgs.unstable.gnomeExtensions) appindicator clipboard-indicator;
         }
         ++ lib.optionals config.catppuccin.enable [
-          (mkCatppuccinGtk {
-            inherit pkgs config;
-            tweaks = [ "normal" ];
-          })
+          (mkCatppuccinGtk { tweaks = [ "normal" ]; })
         ];
 
       gnome.excludePackages = builtins.attrValues {

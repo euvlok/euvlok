@@ -2,11 +2,9 @@
   inputs,
   pkgs,
   lib,
-  eulib,
   ...
 }:
 let
-  inherit (import ../../../../lib/catppuccin.nix) mkCatppuccin hosts;
   commonImports = [
     { home.stateVersion = "25.11"; }
     ../../../hm/ashuramaruzxc/aliases.nix
@@ -17,7 +15,13 @@ let
     ../../../hm/ashuramaruzxc/starship.nix
   ];
 
-  catppuccinConfig = mkCatppuccin hosts.unsigned-int8;
+  catppuccinConfig = {
+    catppuccin = {
+      enable = true;
+      flavor = "mocha";
+      accent = "flamingo";
+    };
+  };
 
   hmModuleConfig = [
     inputs.self.homeModules.default
@@ -188,7 +192,7 @@ in
   home-manager = {
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs eulib; };
+    extraSpecialArgs = { inherit inputs; };
     users.ashuramaru.imports = ashuramaru;
   };
 }

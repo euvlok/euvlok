@@ -3,13 +3,11 @@
   imports = [
     inputs.catppuccin-trivial.nixosModules.catppuccin
     ../cross
-    ../lib
     ./amd.nix
     ./audio.nix
     ./boot.nix
     ./gnome.nix
     ./hardware.nix
-    ./kanata.nix
     ./locale.nix
     ./networking.nix
     ./nix.nix

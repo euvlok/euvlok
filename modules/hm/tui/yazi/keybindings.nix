@@ -1,7 +1,15 @@
-{ pkgs, eulib, ... }:
+{ pkgs, ... }:
 let
-  inherit (eulib) genKeyBind genModBind genGoBind;
   inherit (pkgs.stdenvNoCC) isDarwin;
+
+  mod = key: if isDarwin then "<D-${key}>" else "<C-${key}>";
+  genKeyBind = desc: on: run: { inherit desc on run; };
+  genModBind =
+    desc: on: run:
+    genKeyBind desc [ (mod on) ] run;
+  genGoBind =
+    key: name: path:
+    genKeyBind "Go to the ${name} directory" [ "g" key ] "cd ${path}";
 
   keymap = [
     (genKeyBind "Open help" [ "~" ] "help")

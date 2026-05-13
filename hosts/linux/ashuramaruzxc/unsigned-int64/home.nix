@@ -1,6 +1,5 @@
 {
   inputs,
-  eulib,
   ...
 }:
 let
@@ -68,7 +67,7 @@ in
   home-manager = {
     useUserPackages = true;
     backupFileExtension = "bak";
-    extraSpecialArgs = { inherit inputs eulib; };
+    extraSpecialArgs = { inherit inputs; };
   };
 
   home-manager.users.root = {
