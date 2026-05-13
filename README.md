@@ -18,6 +18,16 @@
   </p>
 
   <p>
+    <a href="#quick-start">Quick Start</a>
+    ·
+    <a href="#host-map">Host Map</a>
+    ·
+    <a href="#published-flake-outputs">Flake Outputs</a>
+    ·
+    <a href="#working-here">Working Here</a>
+  </p>
+
+  <p>
     <a href="https://github.com/euvlok/euvlok/actions/workflows/ci.yml">
       <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=main&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189">
     </a>
@@ -27,7 +37,7 @@
     <a href="https://github.com/euvlok/euvlok/issues">
       <img alt="Open issues" src="https://img.shields.io/github/issues/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=ef9f76">
     </a>
-    <a href="./LICENSE.txt">
+    <a href="https://github.com/euvlok/euvlok">
       <img alt="License" src="https://img.shields.io/github/license/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=8caaee">
     </a>
   </p>
@@ -35,22 +45,18 @@
 
 ---
 
-<table>
+<table align="center">
   <tr>
-    <td><strong>Systems</strong></td>
-    <td>NixOS, nix-darwin, and standalone Home Manager configurations.</td>
+    <th>Systems</th>
+    <th>Dotfiles</th>
+    <th>Modules</th>
+    <th>Tooling</th>
   </tr>
   <tr>
-    <td><strong>Dotfiles</strong></td>
-    <td>Chezmoi-managed user files, templates, scripts, and application config.</td>
-  </tr>
-  <tr>
-    <td><strong>Modules</strong></td>
-    <td>Reusable Nix modules for hosts, homes, terminals, shells, services, themes, and desktop environments.</td>
-  </tr>
-  <tr>
-    <td><strong>Tooling</strong></td>
-    <td>Bun/TypeScript utilities for repository automation, browser extension updates, userstyle builds, and NVIDIA prefetching.</td>
+    <td>NixOS, nix-darwin, and standalone Home Manager.</td>
+    <td>Chezmoi-managed user files, templates, and scripts.</td>
+    <td>Reusable Nix layers for hosts, homes, services, shells, and themes.</td>
+    <td>Bun/TypeScript automation for updates, CI, and local maintenance.</td>
   </tr>
 </table>
 
@@ -68,6 +74,14 @@ real machines, real habits, and shared abstractions that have survived contact
 with daily use. The goal is to make personal infrastructure easier to inspect,
 borrow from, improve, and repair.
 
+> [!NOTE]
+> EUVlok is a living configuration repo. Treat it as a map of useful patterns,
+> not a drop-in installer for someone else's machine.
+
+> [!IMPORTANT]
+> Files under [`secrets/`](./secrets) are SOPS-encrypted and intentionally live
+> beside the hosts that consume them.
+
 ## What Is Inside
 
 | Path                                | Purpose                                                                                            |
@@ -81,6 +95,63 @@ borrow from, improve, and repair.
 | [`packages/`](./packages)           | Bun-powered automation packages and shared TypeScript utilities.                                   |
 | [`scripts/`](./scripts)             | Repository and GitHub workflow automation scripts.                                                 |
 | [`secrets/`](./secrets)             | SOPS-encrypted host and user secrets.                                                              |
+
+## Quick Start
+
+<table>
+  <tr>
+    <th>I want to...</th>
+    <th>Run this</th>
+  </tr>
+  <tr>
+    <td>Enter the development shell</td>
+    <td>
+      <pre><code>nix develop</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>Build a NixOS host</td>
+    <td>
+      <pre><code>nix build .#nixosConfigurations.nyx.config.system.build.toplevel</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>Build a nix-darwin host</td>
+    <td>
+      <pre><code>nix build .#darwinConfigurations.FlameFlags-Mac-mini.system</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>Inspect a standalone Home Manager config</td>
+    <td>
+      <pre><code>nix eval .#homeConfigurations.bigshaq9999.config.home.username</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>Run a local automation tool</td>
+    <td>
+      <pre><code>nix run .#auto-rebase</code></pre>
+    </td>
+  </tr>
+</table>
+
+## Host Map
+
+| Output                | Owner           | Platform   | Entrypoint                                                                                                       |
+| --------------------- | --------------- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| `blind-faith`         | `lay-by`        | NixOS      | [`hosts/linux/lay-by/hushh/default.nix`](./hosts/linux/lay-by/hushh/default.nix)                                 |
+| `nanachi`             | `bigshaq9999`   | NixOS      | [`hosts/linux/bigshaq9999/nanachi/default.nix`](./hosts/linux/bigshaq9999/nanachi/default.nix)                   |
+| `null`                | `sm-idk`        | NixOS      | [`hosts/linux/sm-idk/null/flake.nix`](./hosts/linux/sm-idk/null/flake.nix)                                       |
+| `nyx`                 | `flameflag`     | NixOS      | [`hosts/linux/flameflag/nyx/default.nix`](./hosts/linux/flameflag/nyx/default.nix)                               |
+| `unsigned-int16`      | `ashuramaruzxc` | NixOS      | [`hosts/linux/ashuramaruzxc/unsigned-int16/default.nix`](./hosts/linux/ashuramaruzxc/unsigned-int16/default.nix) |
+| `unsigned-int32`      | `ashuramaruzxc` | NixOS      | [`hosts/linux/ashuramaruzxc/unsigned-int32/default.nix`](./hosts/linux/ashuramaruzxc/unsigned-int32/default.nix) |
+| `unsigned-int64`      | `ashuramaruzxc` | NixOS      | [`hosts/linux/ashuramaruzxc/unsigned-int64/default.nix`](./hosts/linux/ashuramaruzxc/unsigned-int64/default.nix) |
+| `FlameFlags-Mac-mini` | `flameflag`     | nix-darwin | [`hosts/darwin/flameflag/flame/default.nix`](./hosts/darwin/flameflag/flame/default.nix)                         |
+| `faputa`              | `bigshaq9999`   | nix-darwin | [`hosts/darwin/bigshaq9999/nanachi/default.nix`](./hosts/darwin/bigshaq9999/nanachi/default.nix)                 |
+| `unsigned-int8`       | `ashuramaruzxc` | nix-darwin | [`hosts/darwin/ashuramaruzxc/unsigned-int8/default.nix`](./hosts/darwin/ashuramaruzxc/unsigned-int8/default.nix) |
+
+Standalone Home Manager outputs are exposed for `ashuramaruzxc`, `bigshaq9999`,
+`lay-by`, and `sm-idk`.
 
 ## Published Flake Outputs
 
