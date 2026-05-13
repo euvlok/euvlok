@@ -22,6 +22,33 @@ inputs:
   github-token:
     description: GitHub token used by the Nix installer for GitHub fetches.
     required: true
+  build-timeout-seconds:
+    description: Soft deadline for the host build, in seconds.
+    required: false
+    default: "21000"
+  build-started-at-epoch:
+    description: Unix epoch timestamp when the host build started. Defaults to the start of the Nix build step.
+    required: false
+    default: ""
+  build-max-jobs:
+    description: Number of derivations Nix may build in parallel.
+    required: false
+    default: "1"
+  build-cores:
+    description: Number of cores each builder may use. Use 0 to allow all cores.
+    required: false
+    default: "0"
+
+outputs:
+  exit-code:
+    description: Exit code returned by the Nix build process, or 124 after a soft timeout.
+    value: ${{ steps.build.outputs.exit-code }}
+  timed-out:
+    description: Whether the soft deadline killed the Nix build.
+    value: ${{ steps.build.outputs.timed-out }}
+  timeout-drv:
+    description: Last derivation observed in Nix build logs when the soft deadline fired.
+    value: ${{ steps.build.outputs.timeout-drv }}
 
 runs:
   using: composite
@@ -47,11 +74,18 @@ runs:
         extra-nix-config: ${{ inputs.configuration-kind == 'nixos' && 'build-dir = /nix/build' || '' }}
 
     - name: Build flake target
+      id: build
       shell: bash
       env:
         CONFIGURATION_KIND: ${{ inputs.configuration-kind }}
         CONFIGURATION_NAME: ${{ inputs.configuration-name }}
+        BUILD_TIMEOUT_SECONDS: ${{ inputs.build-timeout-seconds }}
+        BUILD_STARTED_AT_EPOCH: ${{ inputs.build-started-at-epoch }}
+        BUILD_MAX_JOBS: ${{ inputs.build-max-jobs }}
+        BUILD_CORES: ${{ inputs.build-cores }}
       run: |
+        set +e
+
         case "${CONFIGURATION_KIND}" in
           nixos)
             target=".#nixosConfigurations.${CONFIGURATION_NAME}.config.system.build.toplevel"
@@ -65,4 +99,64 @@ runs:
             ;;
         esac
 
-        nix build --print-build-logs "${target}"
+        build_log="$(mktemp)"
+        start_time="${BUILD_STARTED_AT_EPOCH:-$(date +%s)}"
+        deadline="$((start_time + BUILD_TIMEOUT_SECONDS))"
+        timed_out=false
+        timeout_drv=""
+        exit_code=0
+
+        nix build --print-build-logs \
+          --option max-jobs "${BUILD_MAX_JOBS}" \
+          --option cores "${BUILD_CORES}" \
+          "${target}" > >(tee "${build_log}") 2>&1 &
+        build_pid="$!"
+
+        while kill -0 "${build_pid}" 2>/dev/null; do
+          now="$(date +%s)"
+
+          if [ "${now}" -ge "${deadline}" ]; then
+            timed_out=true
+            timeout_drv="$(sed -n "s/.*building '\([^']*\.drv\)'.*/\1/p" "${build_log}" | tail -n 1)"
+
+            echo "::error::Nix build exceeded soft timeout of ${BUILD_TIMEOUT_SECONDS}s."
+            if [ -n "${timeout_drv}" ]; then
+              echo "::error::Last observed building derivation: ${timeout_drv}"
+            else
+              echo "::warning::No building derivation was observed before the soft timeout."
+            fi
+
+            kill -TERM "${build_pid}" 2>/dev/null
+
+            for _ in 1 2 3 4 5 6 7 8 9 10; do
+              if ! kill -0 "${build_pid}" 2>/dev/null; then
+                break
+              fi
+
+              sleep 1
+            done
+
+            if kill -0 "${build_pid}" 2>/dev/null; then
+              kill -KILL "${build_pid}" 2>/dev/null
+            fi
+
+            wait "${build_pid}" 2>/dev/null
+            exit_code=124
+            break
+          fi
+
+          sleep 5
+        done
+
+        if [ "${timed_out}" != "true" ]; then
+          wait "${build_pid}"
+          exit_code="$?"
+        fi
+
+        echo "exit-code=${exit_code}" >> "${GITHUB_OUTPUT}"
+        echo "timed-out=${timed_out}" >> "${GITHUB_OUTPUT}"
+        echo "timeout-drv=${timeout_drv}" >> "${GITHUB_OUTPUT}"
+
+        rm -f "${build_log}"
+
+        exit "${exit_code}"
