@@ -275,7 +275,7 @@ flowchart TB
 | --------------------- | --------------- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
 | `blind-faith`         | `lay-by`        | NixOS      | [`hosts/linux/lay-by/hushh/default.nix`](./hosts/linux/lay-by/hushh/default.nix)                                 |
 | `nanachi`             | `bigshaq9999`   | NixOS      | [`hosts/linux/bigshaq9999/nanachi/default.nix`](./hosts/linux/bigshaq9999/nanachi/default.nix)                   |
-| `null`                | `sm-idk`        | NixOS      | [`hosts/linux/sm-idk/null/flake.nix`](./hosts/linux/sm-idk/null/flake.nix)                                       |
+| `null`                | `sm-idk`        | NixOS      | [`hosts/linux/sm-idk/null/hosts/null/default.nix`](./hosts/linux/sm-idk/null/hosts/null/default.nix)                                       |
 | `nyx`                 | `flameflag`     | NixOS      | [`hosts/linux/flameflag/nyx/default.nix`](./hosts/linux/flameflag/nyx/default.nix)                               |
 | `unsigned-int16`      | `ashuramaruzxc` | NixOS      | [`hosts/linux/ashuramaruzxc/unsigned-int16/default.nix`](./hosts/linux/ashuramaruzxc/unsigned-int16/default.nix) |
 | `unsigned-int32`      | `ashuramaruzxc` | NixOS      | [`hosts/linux/ashuramaruzxc/unsigned-int32/default.nix`](./hosts/linux/ashuramaruzxc/unsigned-int32/default.nix) |
