@@ -21,11 +21,17 @@ let
     (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
   );
 
-  # Helium bundles uBlock Origin
-  heliumExtensions = builtins.filter (ext: ext.id != "cjpalhdlnbpafiamejdnhcphjbkeiagm") extensions;
+  # Helium bundles uBlock Origin and supports Kagi natively
+  heliumExtensions = builtins.filter (
+    ext:
+    !(builtins.elem ext.id [
+      "cjpalhdlnbpafiamejdnhcphjbkeiagm"
+      "cdglnehniifkbagbbombnjghhcihifij"
+    ])
+  ) extensions;
 
   chromiumExternalExtension = ext: {
-    name = "helium/External Extensions/${ext.id}.json";
+    name = "net.imput.helium/External Extensions/${ext.id}.json";
     value.text = builtins.toJSON {
       external_crx = ext.crxPath;
       external_version = ext.version;
