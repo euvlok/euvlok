@@ -28,7 +28,7 @@ let
       inherit (pkgs)
         anki
         gImageReader
-        libreoffice-qt6-fresh
+        # libreoffice-qt6-fresh
         obsidian
         pdftk
         treesheets
@@ -61,7 +61,7 @@ let
     gaming = builtins.attrValues {
       inherit (pkgs.unstable) osu-lazer-bin;
       inherit (pkgs)
-        bottles
+        # bottles
         cemu
         chiaki
         dolphin-emu
