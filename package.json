@@ -16,8 +16,8 @@
     "fallow:audit": "fallow audit --gate new-only",
     "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
     "format:check": "bun run check",
-    "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
-    "test": "bun test packages/browser-extensions-update/tests packages/nvidia-prefetch/tests",
+    "nvidia-prefetch": "zig build run-nvidia-prefetch --",
+    "test": "bun test packages/browser-extensions-update/tests",
     "zig:lint": "nix run .#ziglint --"
   },
   "dependencies": {

@@ -1,11 +1,11 @@
 const std = @import("std");
 
-const ChezMoiScript = struct {
+const ZigExecutable = struct {
     name: []const u8,
     path: []const u8,
 };
 
-const chezmoi_scripts = [_]ChezMoiScript{
+const chezmoi_scripts = [_]ZigExecutable{
     .{
         .name = "run_once_zed_install_catppuccin_theme",
         .path = "dotfiles/flameflag/.chezmoiscripts/run_once_zed_install_catppuccin_theme.zig",
@@ -32,13 +32,13 @@ const chezmoi_scripts = [_]ChezMoiScript{
     },
 };
 
-const waybar_scripts = [_]ChezMoiScript{
+const waybar_scripts = [_]ZigExecutable{
     .{ .name = "lay-by-waybar-weather", .path = "hosts/hm/lay-by/hyprland/scripts/src/weather.zig" },
     .{ .name = "lay-by-waybar-nvidia", .path = "hosts/hm/lay-by/hyprland/scripts/src/nvidia.zig" },
     .{ .name = "lay-by-waybar-music", .path = "hosts/hm/lay-by/hyprland/scripts/src/music.zig" },
 };
 
-const packages = [_]ChezMoiScript{
+const packages = [_]ZigExecutable{
     .{ .name = "nvidia-prefetch", .path = "packages/nvidia-prefetch/src/main.zig" },
 };
 
@@ -80,7 +80,7 @@ fn addScript(
     test_step: *std.Build.Step,
     target: anytype,
     optimize: std.builtin.OptimizeMode,
-    script: ChezMoiScript,
+    script: ZigExecutable,
     chezmoi: ?*std.Build.Module,
     install: bool,
 ) void {
@@ -96,7 +96,15 @@ fn addScript(
         .name = script.name,
         .root_module = module,
     });
-    if (install) b.installArtifact(exe);
+    if (install) {
+        b.installArtifact(exe);
+
+        const run = b.addRunArtifact(exe);
+        if (b.args) |args| run.addArgs(args);
+
+        const run_step = b.step(b.fmt("run-{s}", .{script.name}), b.fmt("Run {s}", .{script.name}));
+        run_step.dependOn(&run.step);
+    }
     check_step.dependOn(&exe.step);
 
     const unit_tests = b.addTest(.{
