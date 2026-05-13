@@ -42,6 +42,15 @@
   </p>
 
   <p>
+    <a href="#why-this-exists"><kbd>the commons</kbd></a>
+    <a href="#communal-pulse"><kbd>sharing loop</kbd></a>
+    <a href="#shared-rituals"><kbd>rituals</kbd></a>
+    <a href="#component-matrix"><kbd>matrix</kbd></a>
+    <a href="#host-map"><kbd>machines</kbd></a>
+    <a href="#working-here"><kbd>workbench</kbd></a>
+  </p>
+
+  <p>
     <a href="https://github.com/euvlok/euvlok/actions/workflows/ci.yml">
       <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=main&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189">
     </a>
@@ -62,6 +71,10 @@
     <img alt="Home Manager" src="https://img.shields.io/badge/Home_Manager-homes-a6e3a1?style=flat-square&logo=nixos&logoColor=cdd6f4&labelColor=313244">
     <img alt="Chezmoi" src="https://img.shields.io/badge/Chezmoi-dotfiles-f9e2af?style=flat-square&logo=files&logoColor=11111b&labelColor=313244">
     <img alt="Bun" src="https://img.shields.io/badge/Bun-tooling-f5c2e7?style=flat-square&logo=bun&logoColor=11111b&labelColor=313244">
+  </p>
+
+  <p>
+    <sub>built like a shared notebook, maintained like infrastructure, used like home</sub>
   </p>
 </div>
 
@@ -123,6 +136,36 @@ for that loop to happen in the open.
 | A small automation workshop for the repetitive parts of upkeep.   | A replacement for reading the code before adopting it.           |
 
 </details>
+
+## Shared Rituals
+
+<table>
+  <tr>
+    <th>Ritual</th>
+    <th>Why it matters</th>
+    <th>Where it tends to land</th>
+  </tr>
+  <tr>
+    <td><strong>Bring a finding</strong></td>
+    <td>Someone discovers a tool, option, workflow, or weird fix worth trying.</td>
+    <td><a href="./hosts">hosts</a>, first, while it still belongs to one person's machine.</td>
+  </tr>
+  <tr>
+    <td><strong>Make it legible</strong></td>
+    <td>The useful part gets named, split out, and made easier for another friend to read.</td>
+    <td><a href="./modules">modules</a> or <a href="./lib">lib</a>, once the pattern is real.</td>
+  </tr>
+  <tr>
+    <td><strong>Share the boring work</strong></td>
+    <td>Updates, prefetches, checks, and workflow chores should not be hand-rolled five times.</td>
+    <td><a href="./packages">packages</a>, <a href="./scripts">scripts</a>, and CI.</td>
+  </tr>
+  <tr>
+    <td><strong>Keep the taste visible</strong></td>
+    <td>Personal configuration is allowed to be personal; that is what makes it worth borrowing from.</td>
+    <td><a href="./dotfiles">dotfiles</a> and owner-specific Home Manager files.</td>
+  </tr>
+</table>
 
 ## What Is Inside
 
@@ -194,6 +237,15 @@ flowchart TB
     better," "wait, we should make this reusable."
   </p>
 </blockquote>
+
+## Component Matrix
+
+| Layer    | Shared pieces                                                                   | Personal pieces                                                 | First place to inspect    |
+| -------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------- |
+| Systems  | Cross-platform Nix defaults, package policy, secrets wiring.                    | Hardware, boot, desktop, networking, and host services.         | [`hosts/`](./hosts)       |
+| Homes    | Home Manager module bases for shells, terminals, editors, services, and themes. | Git identity, application taste, keybindings, desktop workflow. | [`hosts/hm/`](./hosts/hm) |
+| Dotfiles | Chezmoi templates, scripts, and reusable user-space conventions.                | Files that should stay close to a particular person or machine. | [`dotfiles/`](./dotfiles) |
+| Tooling  | Bun CLIs, workflow checks, update scripts, shared TypeScript helpers.           | One-off experiments before they earn a reusable interface.      | [`packages/`](./packages) |
 
 ## Quick Start
 
@@ -398,6 +450,18 @@ EUVlok is built around a few preferences:
 - Treat automations as source code, with tests where the behavior can drift.
 - Prefer explicit flake outputs over undocumented local conventions.
 - Keep secrets encrypted and close to the configurations that consume them.
+
+## Borrowed Moves
+
+While polishing this README, we looked at a few strong GitHub READMEs and kept
+the moves that fit EUVlok:
+
+| Move                          | Why it works here                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| Button-like README navigation | Makes a long README feel more like a dashboard than a scroll.                     |
+| Scope tables                  | Helps readers understand what to copy and what to leave alone.                    |
+| Component matrices            | Shows how system, home, dotfile, and tooling layers relate.                       |
+| Friendly warnings             | Keeps the repo welcoming without pretending personal infrastructure is universal. |
 
 <details>
 <summary><strong>Borrowing from EUVlok</strong></summary>
