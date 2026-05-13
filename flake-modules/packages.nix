@@ -84,18 +84,15 @@
         {
           name,
         }:
+        let
+          packageRoot = ../packages + "/${name}";
+        in
         pkgs.stdenv.mkDerivation {
           pname = name;
           version = "0-unstable";
           src = lib.fileset.toSource {
-            root = ../.;
-            fileset = lib.fileset.unions [
-              ../build.zig
-              ../lib/zig
-              (../packages + "/${name}")
-              ../dotfiles/flameflag/.chezmoiscripts
-              ../hosts/hm/lay-by/hyprland/scripts/src
-            ];
+            root = packageRoot;
+            fileset = packageRoot;
           };
 
           nativeBuildInputs = [ pkgs.zig_0_16 ];

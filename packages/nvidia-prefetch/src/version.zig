@@ -4,13 +4,24 @@ pub const x86_64_base_url = "https://download.nvidia.com/XFree86/Linux-x86_64";
 pub const aarch64_base_url = "https://download.nvidia.com/XFree86/Linux-aarch64";
 pub const github_base_url = "https://github.com/NVIDIA";
 
-pub fn fetchLatest(allocator: std.mem.Allocator, client: *std.http.Client) ![]const u8 {
-    std.debug.print("info: Fetching latest NVIDIA driver version from all platforms...\n", .{});
+const initial_versions_capacity = 16;
+const href_attribute = "href=";
+const version_order_less = -1;
+const version_order_equal = 0;
+const version_order_greater = 1;
+const missing_version_part = 0;
 
-    var x86 = try fetchFromPlatform(allocator, client, x86_64_base_url, "x86_64");
+pub fn fetchLatest(
+    allocator: std.mem.Allocator,
+    client: *std.http.Client,
+    stderr: *std.Io.Writer,
+) ![]const u8 {
+    try stderr.writeAll("info: Fetching latest NVIDIA driver version from all platforms...\n");
+
+    var x86 = try fetchFromPlatform(allocator, client, stderr, x86_64_base_url, "x86_64");
     defer deinitVersionList(allocator, &x86);
 
-    var aarch = try fetchFromPlatform(allocator, client, aarch64_base_url, "aarch64");
+    var aarch = try fetchFromPlatform(allocator, client, stderr, aarch64_base_url, "aarch64");
     defer deinitVersionList(allocator, &aarch);
 
     const latest = try findLatestShared(x86.items, aarch.items) orelse return error.NoSharedNvidiaVersion;
@@ -20,10 +31,11 @@ pub fn fetchLatest(allocator: std.mem.Allocator, client: *std.http.Client) ![]co
 fn fetchFromPlatform(
     allocator: std.mem.Allocator,
     client: *std.http.Client,
+    stderr: *std.Io.Writer,
     base_url: []const u8,
     name: []const u8,
 ) !std.ArrayList([]const u8) {
-    std.debug.print("info: Checking {s} platform...\n", .{name});
+    try stderr.print("info: Checking {s} platform...\n", .{name});
 
     const url = try std.fmt.allocPrint(allocator, "{s}/", .{base_url});
     defer allocator.free(url);
@@ -31,7 +43,10 @@ fn fetchFromPlatform(
     var body: std.Io.Writer.Allocating = .init(allocator);
     defer body.deinit();
     const result = try client.fetch(.{ .location = .{ .url = url }, .response_writer = &body.writer });
-    if (result.status != .ok) return error.HttpRequestFailed;
+    if (result.status != .ok) {
+        try stderr.print("error: {s} returned HTTP status {s}\n", .{ url, @tagName(result.status) });
+        return error.HttpRequestFailed;
+    }
 
     var versions = try parseVersionsFromIndex(allocator, body.written());
     errdefer deinitVersionList(allocator, &versions);
@@ -42,12 +57,12 @@ fn fetchFromPlatform(
 }
 
 pub fn parseVersionsFromIndex(allocator: std.mem.Allocator, html: []const u8) !std.ArrayList([]const u8) {
-    var versions = try std.ArrayList([]const u8).initCapacity(allocator, 16);
+    var versions = try std.ArrayList([]const u8).initCapacity(allocator, initial_versions_capacity);
     errdefer deinitVersionList(allocator, &versions);
 
     var index: usize = 0;
-    while (std.mem.indexOfPos(u8, html, index, "href=")) |href_start| {
-        const quote_index = href_start + "href=".len;
+    while (std.mem.indexOfPos(u8, html, index, href_attribute)) |href_start| {
+        const quote_index = href_start + href_attribute.len;
         if (quote_index >= html.len) break;
 
         const quote = html[quote_index];
@@ -106,17 +121,17 @@ pub fn compare(a: []const u8, b: []const u8) !i8 {
     while (true) {
         const a_part = a_parts.next();
         const b_part = b_parts.next();
-        if (a_part == null and b_part == null) return 0;
+        if (a_part == null and b_part == null) return version_order_equal;
 
-        const a_value = if (a_part) |part| try parsePart(part) else 0;
-        const b_value = if (b_part) |part| try parsePart(part) else 0;
-        if (a_value < b_value) return -1;
-        if (a_value > b_value) return 1;
+        const a_value = if (a_part) |part| try parsePart(part) else missing_version_part;
+        const b_value = if (b_part) |part| try parsePart(part) else missing_version_part;
+        if (a_value < b_value) return version_order_less;
+        if (a_value > b_value) return version_order_greater;
     }
 }
 
 pub fn lessThan(_: void, a: []const u8, b: []const u8) bool {
-    return (compare(a, b) catch 0) < 0;
+    return (compare(a, b) catch unreachable) == version_order_less;
 }
 
 pub fn findLatestShared(versions1: []const []const u8, versions2: []const []const u8) !?[]const u8 {

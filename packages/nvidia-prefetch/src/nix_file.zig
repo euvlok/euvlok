@@ -1,27 +1,37 @@
 const std = @import("std");
 const DriverHashes = @import("hash.zig").DriverHashes;
 
+const nvidia_driver_file = "modules/nixos/nvidia-driver.nix";
+const max_nix_file_size = 1024 * 1024;
+const nix_whitespace = " \t";
+
 pub fn currentVersion(allocator: std.mem.Allocator, io: std.Io) !?[]const u8 {
     const path = try find(allocator, io) orelse return null;
     defer allocator.free(path);
 
-    const content = try std.Io.Dir.cwd().readFileAlloc(io, path, allocator, .limited(1024 * 1024));
+    const content = try std.Io.Dir.cwd().readFileAlloc(io, path, allocator, .limited(max_nix_file_size));
     defer allocator.free(content);
 
     return extractStringValue(allocator, content, "version");
 }
 
-pub fn update(allocator: std.mem.Allocator, io: std.Io, driver_version: []const u8, hashes: DriverHashes) !void {
+pub fn update(
+    allocator: std.mem.Allocator,
+    io: std.Io,
+    stderr: *std.Io.Writer,
+    driver_version: []const u8,
+    hashes: DriverHashes,
+) !void {
     const path = try find(allocator, io) orelse return error.NvidiaDriverNixNotFound;
     defer allocator.free(path);
 
-    std.debug.print("info: Updating {s}...\n", .{path});
+    try stderr.print("info: Updating {s}...\n", .{path});
 
     const content = try format(allocator, driver_version, hashes);
     defer allocator.free(content);
 
     try std.Io.Dir.cwd().writeFile(io, .{ .sub_path = path, .data = content });
-    std.debug.print("success: Successfully updated {s}\n", .{path});
+    try stderr.print("success: Successfully updated {s}\n", .{path});
 }
 
 fn find(allocator: std.mem.Allocator, io: std.Io) !?[]const u8 {
@@ -30,7 +40,7 @@ fn find(allocator: std.mem.Allocator, io: std.Io) !?[]const u8 {
 
     var cursor: []const u8 = cwd;
     while (true) {
-        const candidate = try std.fs.path.join(allocator, &.{ cursor, "modules/nixos/nvidia-driver.nix" });
+        const candidate = try std.fs.path.join(allocator, &.{ cursor, nvidia_driver_file });
         std.Io.Dir.cwd().access(io, candidate, .{}) catch |err| {
             allocator.free(candidate);
             switch (err) {
@@ -49,13 +59,13 @@ fn find(allocator: std.mem.Allocator, io: std.Io) !?[]const u8 {
 fn extractStringValue(allocator: std.mem.Allocator, content: []const u8, name: []const u8) !?[]const u8 {
     var lines = std.mem.splitScalar(u8, content, '\n');
     while (lines.next()) |line| {
-        const trimmed = std.mem.trim(u8, line, " \t");
+        const trimmed = std.mem.trim(u8, line, nix_whitespace);
         if (!std.mem.startsWith(u8, trimmed, name)) continue;
 
-        var rest = std.mem.trim(u8, trimmed[name.len..], " \t");
+        var rest = std.mem.trim(u8, trimmed[name.len..], nix_whitespace);
         if (rest.len == 0 or rest[0] != '=') continue;
 
-        rest = std.mem.trim(u8, rest[1..], " \t");
+        rest = std.mem.trim(u8, rest[1..], nix_whitespace);
         if (rest.len == 0 or rest[0] != '"') continue;
 
         const end = std.mem.indexOfScalarPos(u8, rest, 1, '"') orelse continue;

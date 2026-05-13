@@ -1,6 +1,14 @@
 const std = @import("std");
 const version_info = @import("version.zig");
 
+const io_buffer_size = 64 * 1024;
+const temp_path_random_bytes = 12;
+const temp_path_prefix = ".zig-cache/nvidia-prefetch-";
+const github_archive_name = "source.tar.gz";
+const github_source_dir_name = "source";
+const nar_alignment = 8;
+const executable_mode_mask = 0o111;
+
 pub const DriverHashes = struct {
     sha256: []const u8,
     sha256_aarch64: []const u8,
@@ -22,25 +30,26 @@ pub fn fetchAll(
     io: std.Io,
     client: *std.http.Client,
     driver_version: []const u8,
+    stderr: *std.Io.Writer,
 ) !DriverHashes {
-    std.debug.print("info: Fetching hashes for NVIDIA driver version {s}...\n", .{driver_version});
+    try stderr.print("info: Fetching hashes for NVIDIA driver version {s}...\n", .{driver_version});
 
-    const sha256 = try fetchDriverSha256Sri(allocator, io, client, "x86_64", version_info.x86_64_base_url, driver_version);
+    const sha256 = try fetchDriverSha256Sri(allocator, client, stderr, "x86_64", version_info.x86_64_base_url, driver_version);
     errdefer allocator.free(sha256);
 
-    const sha256_aarch64 = try fetchDriverSha256Sri(allocator, io, client, "aarch64", version_info.aarch64_base_url, driver_version);
+    const sha256_aarch64 = try fetchDriverSha256Sri(allocator, client, stderr, "aarch64", version_info.aarch64_base_url, driver_version);
     errdefer allocator.free(sha256_aarch64);
 
-    std.debug.print("info: Fetching NVIDIA open kernel modules...\n", .{});
-    const openSha256 = try prefetchGithubSourceHash(allocator, io, client, "open-gpu-kernel-modules", driver_version);
+    try stderr.writeAll("info: Fetching NVIDIA open kernel modules...\n");
+    const openSha256 = try prefetchGithubSourceHash(allocator, io, client, stderr, "open-gpu-kernel-modules", driver_version);
     errdefer allocator.free(openSha256);
 
-    std.debug.print("info: Fetching nvidia-settings...\n", .{});
-    const settingsSha256 = try prefetchGithubSourceHash(allocator, io, client, "nvidia-settings", driver_version);
+    try stderr.writeAll("info: Fetching nvidia-settings...\n");
+    const settingsSha256 = try prefetchGithubSourceHash(allocator, io, client, stderr, "nvidia-settings", driver_version);
     errdefer allocator.free(settingsSha256);
 
-    std.debug.print("info: Fetching nvidia-persistenced...\n", .{});
-    const persistencedSha256 = try prefetchGithubSourceHash(allocator, io, client, "nvidia-persistenced", driver_version);
+    try stderr.writeAll("info: Fetching nvidia-persistenced...\n");
+    const persistencedSha256 = try prefetchGithubSourceHash(allocator, io, client, stderr, "nvidia-persistenced", driver_version);
 
     return .{
         .sha256 = sha256,
@@ -53,8 +62,8 @@ pub fn fetchAll(
 
 fn fetchDriverSha256Sri(
     allocator: std.mem.Allocator,
-    io: std.Io,
     client: *std.http.Client,
+    stderr: *std.Io.Writer,
     arch: []const u8,
     base_url: []const u8,
     driver_version: []const u8,
@@ -65,15 +74,17 @@ fn fetchDriverSha256Sri(
     const driver_url = try std.fmt.allocPrint(allocator, "{s}/{s}/{s}", .{ base_url, driver_version, driver_name });
     defer allocator.free(driver_url);
 
-    std.debug.print("info: Fetching {s} driver {s}...\n", .{ arch, driver_version });
+    try stderr.print("info: Fetching {s} driver {s}...\n", .{ arch, driver_version });
 
-    var hash_buffer: [64 * 1024]u8 = undefined;
+    var hash_buffer: [io_buffer_size]u8 = undefined;
     var hashing = std.Io.Writer.Hashing(std.crypto.hash.sha2.Sha256).init(&hash_buffer);
     const result = try client.fetch(.{ .location = .{ .url = driver_url }, .response_writer = &hashing.writer });
-    if (result.status != .ok) return error.HttpRequestFailed;
+    if (result.status != .ok) {
+        try stderr.print("error: {s} returned HTTP status {s}\n", .{ driver_url, @tagName(result.status) });
+        return error.HttpRequestFailed;
+    }
     try hashing.writer.flush();
 
-    _ = io;
     return sriFromSha256(allocator, hashing.hasher.finalResult());
 }
 
@@ -81,6 +92,7 @@ fn prefetchGithubSourceHash(
     allocator: std.mem.Allocator,
     io: std.Io,
     client: *std.http.Client,
+    stderr: *std.Io.Writer,
     repo: []const u8,
     driver_version: []const u8,
 ) ![]const u8 {
@@ -93,27 +105,32 @@ fn prefetchGithubSourceHash(
 
     const temp_path = try makeTempPath(allocator, io);
     defer allocator.free(temp_path);
-    defer std.Io.Dir.cwd().deleteTree(io, temp_path) catch {};
+    defer std.Io.Dir.cwd().deleteTree(io, temp_path) catch |err| {
+        stderr.print("warning: failed to remove temporary directory {s}: {s}\n", .{ temp_path, @errorName(err) }) catch {};
+    };
 
     try std.Io.Dir.cwd().createDirPath(io, temp_path);
     var temp_dir = try std.Io.Dir.cwd().openDir(io, temp_path, .{ .iterate = true });
     defer temp_dir.close(io);
 
-    var archive = try temp_dir.createFile(io, "source.tar.gz", .{});
+    var archive = try temp_dir.createFile(io, github_archive_name, .{});
     defer archive.close(io);
-    var file_buffer: [64 * 1024]u8 = undefined;
+    var file_buffer: [io_buffer_size]u8 = undefined;
     var file_writer = archive.writer(io, &file_buffer);
     const result = try client.fetch(.{ .location = .{ .url = url }, .response_writer = &file_writer.interface });
-    if (result.status != .ok) return error.HttpRequestFailed;
+    if (result.status != .ok) {
+        try stderr.print("error: {s} returned HTTP status {s}\n", .{ url, @tagName(result.status) });
+        return error.HttpRequestFailed;
+    }
     try file_writer.interface.flush();
 
-    try temp_dir.createDir(io, "source", .default_dir);
-    var source_dir = try temp_dir.openDir(io, "source", .{ .iterate = true });
+    try temp_dir.createDir(io, github_source_dir_name, .default_dir);
+    var source_dir = try temp_dir.openDir(io, github_source_dir_name, .{ .iterate = true });
     defer source_dir.close(io);
 
-    var archive_reader_file = try temp_dir.openFile(io, "source.tar.gz", .{});
+    var archive_reader_file = try temp_dir.openFile(io, github_archive_name, .{});
     defer archive_reader_file.close(io);
-    var archive_reader_buffer: [64 * 1024]u8 = undefined;
+    var archive_reader_buffer: [io_buffer_size]u8 = undefined;
     var archive_reader = archive_reader_file.reader(io, &archive_reader_buffer);
     var decompress_buffer: [std.compress.flate.max_window_len]u8 = undefined;
     var gzip = std.compress.flate.Decompress.init(&archive_reader.interface, .gzip, &decompress_buffer);
@@ -126,12 +143,12 @@ fn prefetchGithubSourceHash(
 }
 
 fn makeTempPath(allocator: std.mem.Allocator, io: std.Io) ![]u8 {
-    var random: [12]u8 = undefined;
+    var random: [temp_path_random_bytes]u8 = undefined;
     try std.Io.randomSecure(io, &random);
 
     var encoded: [std.base64.url_safe_no_pad.Encoder.calcSize(random.len)]u8 = undefined;
     _ = std.base64.url_safe_no_pad.Encoder.encode(&encoded, &random);
-    return std.fmt.allocPrint(allocator, ".zig-cache/nvidia-prefetch-{s}", .{encoded});
+    return std.fmt.allocPrint(allocator, "{s}{s}", .{ temp_path_prefix, encoded });
 }
 
 fn sriFromSha256(allocator: std.mem.Allocator, digest: [std.crypto.hash.sha2.Sha256.digest_length]u8) ![]const u8 {
@@ -205,7 +222,7 @@ fn writeNarNode(
             try narString(writer, "regular");
             const stat = try dir.statFile(io, path, .{});
             if (std.Io.File.Permissions.has_executable_bit and
-                stat.permissions.toMode() & 0o111 != 0)
+                stat.permissions.toMode() & executable_mode_mask != 0)
             {
                 try narString(writer, "executable");
                 try narString(writer, "");
@@ -214,7 +231,7 @@ fn writeNarNode(
 
             var file = try dir.openFile(io, path, .{});
             defer file.close(io);
-            var buffer: [64 * 1024]u8 = undefined;
+            var buffer: [io_buffer_size]u8 = undefined;
             var reader = file.reader(io, &buffer);
             try narBytesFromReader(writer, &reader.interface, stat.size);
         },
@@ -244,18 +261,18 @@ fn narString(writer: *std.Io.Writer, bytes: []const u8) !void {
 fn narBytesFromReader(writer: *std.Io.Writer, reader: *std.Io.Reader, len: u64) !void {
     try writer.writeInt(u64, len, .little);
     var remaining = len;
-    var buffer: [64 * 1024]u8 = undefined;
+    var buffer: [io_buffer_size]u8 = undefined;
     while (remaining > 0) {
         const want: usize = @intCast(@min(remaining, buffer.len));
         try reader.readSliceAll(buffer[0..want]);
         try writer.writeAll(buffer[0..want]);
         remaining -= want;
     }
-    try narPadding(writer, @intCast(len % 8));
+    try narPadding(writer, @intCast(len % nar_alignment));
 }
 
 fn narPadding(writer: *std.Io.Writer, len: usize) !void {
-    const padding = (8 - (len % 8)) % 8;
+    const padding = (nar_alignment - (len % nar_alignment)) % nar_alignment;
     if (padding == 0) return;
     try writer.splatByteAll(0, padding);
 }
