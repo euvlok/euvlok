@@ -18,6 +18,7 @@
     programs.yazi = {
       enable = true;
       package = pkgs.unstable.yazi;
+      shellWrapperName = "yy";
       plugins =
         let
           pluginsRepo = pkgs.fetchFromGitHub {
