@@ -2,7 +2,7 @@
   perSystem =
     { config, pkgs, ... }:
     {
-      formatter = pkgs.nixfmt;
+      treefmt.programs.nixfmt.enable = true;
 
       pre-commit.settings = {
         excludes = [

@@ -72,6 +72,8 @@
     pre-commit-hooks.inputs.gitignore.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
   outputs =
@@ -117,6 +119,7 @@
         module.imports = [
           inputs.devenv.flakeModule
           inputs.pre-commit-hooks.flakeModule
+          inputs.treefmt-nix.flakeModule
           ./flake-modules/hosts.nix
           ./flake-modules/modules.nix
           ./flake-modules/users/default.nix
@@ -127,6 +130,7 @@
       partitions.dev.module.imports = [
         inputs.devenv.flakeModule
         inputs.pre-commit-hooks.flakeModule
+        inputs.treefmt-nix.flakeModule
         ./flake-modules/dev-shell.nix
       ];
 
