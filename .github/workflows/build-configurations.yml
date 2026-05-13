@@ -64,9 +64,26 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout nothing-but-nix action
+        if: ${{ matrix.kind == 'nixos' }}
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: wimpysworld/nothing-but-nix
+          ref: 687c797a730352432950c707ab493fcc951818d7 # v10
+          path: .github/actions/nothing-but-nix
+          persist-credentials: false
+
+      - name: Pin nothing-but-nix post-run dependency
+        if: ${{ matrix.kind == 'nixos' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          perl -0pi -e 's#srz-zumix/post-run-action@v3#srz-zumix/post-run-action@bd0650d601b47044ae553c558e80fe929b8c2de1#g' \
+            .github/actions/nothing-but-nix/action.yml
+
       - name: Reclaim maximum Nix store space
         if: ${{ matrix.kind == 'nixos' }}
-        uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7 # v10
+        uses: ./.github/actions/nothing-but-nix
         with:
           hatchet-protocol: rampage
           witness-carnage: true
