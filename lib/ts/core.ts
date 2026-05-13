@@ -7,6 +7,7 @@ export {
   escapeNixString,
   evaluateNixJson,
   evaluateNixRaw,
+  nixStringLiteral,
 } from './nix';
 export { findRepoRoot, isGitRepo } from './repo';
 export type { CommandResult } from './shell';

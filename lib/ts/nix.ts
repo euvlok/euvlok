@@ -1,10 +1,22 @@
 import { runCommandResult } from './shell';
 
 /**
- * Escape special characters for Nix string literals: backslash, double quote, dollar sign.
+ * Render a JavaScript string as a Nix double-quoted string literal.
+ *
+ * This mirrors nixpkgs' `lib.strings.escapeNixString`: JSON string escaping is
+ * already valid for Nix double-quoted strings, with `$` additionally escaped to
+ * avoid interpolation.
+ */
+export function nixStringLiteral(s: string): string {
+  return JSON.stringify(s).replace(/\$/g, '\\$');
+}
+
+/**
+ * Escape a string for embedding inside an existing Nix double-quoted string.
  */
 export function escapeNixString(s: string): string {
-  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
+  const literal = nixStringLiteral(s);
+  return literal.slice(1, -1);
 }
 
 /**

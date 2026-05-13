@@ -1,15 +1,15 @@
-import { escapeNixString } from '@euvlok/core';
+import { nixStringLiteral } from '@euvlok/core';
 import type { BrowserType, Extension } from './types';
 
 function chromium(id: string, url: string, hash: string, version: string) {
   return `  {
-    id = "${id}";
+    id = ${nixStringLiteral(id)};
     crxPath = pkgs.fetchurl {
-      url = "${url}";
-      name = "${id}.crx";
-      hash = "${hash}";
+      url = ${nixStringLiteral(url)};
+      name = ${nixStringLiteral(`${id}.crx`)};
+      hash = ${nixStringLiteral(hash)};
     };
-    version = "${version}";
+    version = ${nixStringLiteral(version)};
   }`;
 }
 
@@ -18,16 +18,16 @@ function firefox(id: string, url: string, hash: string, version: string, perms: 
     perms && perms.length > 0
       ? `platforms = platforms.all;
       mozPermissions = [
-${perms.map((p) => `        "${escapeNixString(p)}"`).join('\n')}
+${perms.map((p) => `        ${nixStringLiteral(p)}`).join('\n')}
       ];`
       : 'platforms = platforms.all;';
 
   return `  {
-    pname = "${id}";
-    version = "${version}";
-    addonId = "${addon}";
-    url = "${url}";
-    sha256 = "${hash}";
+    pname = ${nixStringLiteral(id)};
+    version = ${nixStringLiteral(version)};
+    addonId = ${nixStringLiteral(addon)};
+    url = ${nixStringLiteral(url)};
+    sha256 = ${nixStringLiteral(hash)};
     meta = with lib; {
       ${meta}
     };
@@ -43,9 +43,6 @@ export function generateExtensionNixEntry(
   browser: BrowserType,
   addon?: string,
 ) {
-  const id = escapeNixString(ext.id);
-  const escapeNix = (s: string) => escapeNixString(s);
-
-  if (browser === 'chromium') return chromium(id, escapeNix(url), escapeNix(hash), escapeNix(version));
-  return firefox(id, escapeNix(url), escapeNix(hash), escapeNix(version), perms, escapeNix(addon ?? ext.id));
+  if (browser === 'chromium') return chromium(ext.id, url, hash, version);
+  return firefox(ext.id, url, hash, version, perms, addon ?? ext.id);
 }
