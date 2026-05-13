@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "auto-rebase": "bun --bun run packages/auto-rebase/src/index.ts",
+    "auto-rebase": "nix run .#auto-rebase --",
     "browser-extension-update": "bun --bun run packages/browser-extensions-update/src/index.ts",
     "build-catppuccin-userstyles": "bun --bun run scripts/build-catppuccin-userstyles.ts",
     "github:check-workflows": "bun --bun run scripts/github/check-workflows.ts",
@@ -17,7 +17,7 @@
     "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
     "format:check": "bun run check",
     "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
-    "test": "bun test packages/auto-rebase/tests packages/browser-extensions-update/tests packages/nvidia-prefetch/tests"
+    "test": "bun test packages/browser-extensions-update/tests packages/nvidia-prefetch/tests"
   },
   "dependencies": {
     "@actions/artifact": "^6.2.1",

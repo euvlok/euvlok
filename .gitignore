@@ -13,6 +13,9 @@ result-*
 
 # SDK junk
 node_modules/
+target/
+**/target/
+.jj/
 .zig-cache/
 zig-cache/
 zig-out/
