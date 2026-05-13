@@ -1,4 +1,16 @@
-{ inputs, lib, ... }:
+{
+  inputs,
+  lib,
+  ...
+}:
+let
+  peripheralFirmware =
+    lib.findFirst (path: builtins.pathExists (path + "/all_firmware.tar.gz")) null
+      [
+        /boot/asahi
+        /mnt/boot/asahi
+      ];
+in
 {
   imports = [
     ../common
@@ -34,8 +46,11 @@
   boot.kernel.sysctl."vm.mmap_rnd_bits" = lib.mkForce 31;
   security.rtkit.enable = lib.mkForce true;
 
-  # Specify path to peripheral firmware files for declarative management
-  hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+  # The Asahi installer extracts this non-redistributable firmware from macOS
+  # onto the EFI system partition. Use it when present, but keep CI and
+  # cross-builds working on machines that do not have this host's ESP mounted.
+  hardware.asahi.peripheralFirmwareDirectory = peripheralFirmware;
+  hardware.asahi.extractPeripheralFirmware = peripheralFirmware != null;
 
   # Build the heavy asahi packages (kernel, u-boot, m1n1, asahi-fwextract)
   # against nixpkgs-unstable so we hit the nixos-apple-silicon Cachix cache.

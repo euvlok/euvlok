@@ -10,14 +10,15 @@ export async function getChromiumMajorVersion(): Promise<string> {
   const output = await runCommandResult([
     'nix',
     'eval',
+    '--raw',
     '--impure',
     '--expr',
-    'with import <nixpkgs> {}; lib.getVersion chromium',
+    'let flake = builtins.getFlake (toString ./.); system = builtins.currentSystem; pkgs = import flake.inputs.nixpkgs { inherit system; config.allowUnfree = true; }; in pkgs.lib.getVersion pkgs.chromium',
   ]);
-  const version = output.stdout.trim().replace(/"/g, '').split('.')[0];
+  const version = output.stdout.trim().split('.')[0];
   if (output.exitCode === 0 && /^\d+$/.test(version)) return version;
 
-  logger.warn('Could not determine Chromium version, using default: 143');
+  logger.warn('Could not determine pinned Chromium version, using default: 143');
   return '143';
 }
 

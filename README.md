@@ -35,7 +35,7 @@
 
   <p>
     <a href="https://github.com/euvlok/euvlok/actions/workflows/ci.yml">
-      <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=main&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189">
+      <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=master&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189">
     </a>
     <a href="https://github.com/euvlok/euvlok/stargazers">
       <img alt="GitHub stars" src="https://img.shields.io/github/stars/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=ca9ee6">

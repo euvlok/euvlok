@@ -55,6 +55,7 @@ in
             accents = [ cfg.accent ];
           };
         };
+      gtk.gtk4.theme = config.gtk.theme;
       xdg.configFile =
         let
           gtk4Dir = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0";

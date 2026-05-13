@@ -31,22 +31,20 @@ runs:
       id: environment-check
       shell: bash
       run: |
-        # Check for macOS/Darwin - warn but don't fail
-        if [[ "${{ runner.os }}" == "macOS" ]]; then
+        # Check for Windows - warn but don't fail
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
           echo "is_supported=false" >> $GITHUB_OUTPUT
-          echo "⚠️  Nothing but Nix is designed for Ubuntu runners only."
-          echo "ℹ️  macOS/Darwin runners do not require this action - they already provide sufficient space for Nix."
+          echo "⚠️  Nothing but Nix is designed for Ubuntu and macOS runners only."
+          echo "ℹ️  Windows runners do not require this action - they have different filesystem layouts and constraints."
           echo "ℹ️  This action will be skipped and your workflow will continue normally."
           exit 0
         fi
 
-        # Check for Windows - warn but don't fail
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
+        # Check for GitHub Actions environment
+        if [ -z "$GITHUB_ACTIONS" ]; then
           echo "is_supported=false" >> $GITHUB_OUTPUT
-          echo "⚠️  Nothing but Nix is designed for Ubuntu runners only."
-          echo "ℹ️  Windows runners do not require this action - they have different filesystem layouts and constraints."
-          echo "ℹ️  This action will be skipped and your workflow will continue normally."
-          exit 0
+          echo "❌ This action only works on GitHub Actions runners"
+          exit 1
         fi
 
         # Check for Ubuntu on Linux runners
@@ -57,14 +55,13 @@ runs:
             exit 1
           else
             echo "is_supported=true" >> $GITHUB_OUTPUT
+            echo "platform=linux" >> $GITHUB_OUTPUT
           fi
         fi
 
-        # Check for GitHub Actions environment
-        if [ -z "$GITHUB_ACTIONS" ]; then
-          echo "is_supported=false" >> $GITHUB_OUTPUT
-          echo "❌ This action only works on GitHub Actions runners"
-          exit 1
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          echo "is_supported=true" >> $GITHUB_OUTPUT
+          echo "platform=darwin" >> $GITHUB_OUTPUT
         fi
 
         # Check that Nix is not already installed
@@ -104,7 +101,7 @@ runs:
 
         echo "level=${protocol_level}" >> $GITHUB_OUTPUT
     - name: The Setup
-      if: steps.environment-check.outputs.is_supported == 'true' && steps.set-hatchet-protocol.outputs.level > 1
+      if: steps.environment-check.outputs.platform == 'linux' && steps.set-hatchet-protocol.outputs.level > 1
       shell: bash
       run: |
         ARCH=$(uname -m)
@@ -133,7 +130,7 @@ runs:
         sudo mv rmz /usr/bin/rmz
         rmz --version
     - name: The Volume
-      if: steps.environment-check.outputs.is_supported == 'true'
+      if: steps.environment-check.outputs.is_supported == 'true' && steps.environment-check.outputs.platform == 'linux'
       shell: bash
       run: |
         free_space=$(df -m --output=avail /mnt | tail -n 1 | tr -d ' ')
@@ -188,14 +185,14 @@ runs:
         mkdir -p "${HOME}/.expansion"
         echo "Initial volume created" | tee "${HOME}/.expansion/holster_done"
     - name: The Local
-      if: steps.environment-check.outputs.is_supported == 'true' && steps.set-hatchet-protocol.outputs.level >= 2
+      if: steps.environment-check.outputs.is_supported == 'true' && steps.environment-check.outputs.platform == 'linux' && steps.set-hatchet-protocol.outputs.level >= 2
       shell: bash
       run: |
         # Nix is often installed in /usr/local, so we need to ensure that it is purged early
         sudo rmz -f /usr/local
         sudo mkdir -p /usr/local/{bin,doc,include,lib,man,sbin,share,src} || true
     - name: The Purge
-      if: steps.environment-check.outputs.is_supported == 'true'
+      if: steps.environment-check.outputs.is_supported == 'true' && steps.environment-check.outputs.platform == 'linux'
       shell: bash
       run: |
         cat > /tmp/expand_nix_volume.sh << 'EOF'
@@ -392,6 +389,56 @@ runs:
           /tmp/expand_nix_volume.sh > ${HOME}/.expansion/expansion.log 2>&1 &
           echo "📈 Background space expansion started. /nix will grow as space becomes available."
         fi
+    - name: The Darwin Purge
+      if: steps.environment-check.outputs.is_supported == 'true' && steps.environment-check.outputs.platform == 'darwin'
+      shell: bash
+      run: |
+        mkdir -p "${HOME}/.expansion"
+        protocol_level="${{ steps.set-hatchet-protocol.outputs.level }}"
+
+        echo "Initial disk usage:"
+        df -h /
+
+        if [[ "$protocol_level" -ge 2 ]]; then
+          sudo rm -rf \
+            /Applications/Xcode_* \
+            /Library/Developer/CoreSimulator \
+            /Library/Frameworks \
+            "${HOME}/.dotnet" \
+            "${HOME}/.rustup" \
+            "${HOME}/Library/Android" \
+            "${HOME}/Library/Caches" \
+            "${HOME}/Library/Developer/CoreSimulator" \
+            "${HOME}/hostedtoolcache"
+
+          sudo mdutil -i off -a || echo "mdutil failed"
+          sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist \
+            || echo "launchctl unload failed"
+
+          echo "Darwin cleave complete" > "${HOME}/.expansion/darwin_cleave_done"
+        fi
+
+        if [[ "$protocol_level" -ge 3 ]]; then
+          sudo rm -rf \
+            "${HOME}/.cargo" \
+            "${HOME}/.gradle" \
+            "${HOME}/Library/Developer/Xcode/DerivedData" \
+            /Applications/Android\ Studio.app \
+            /Applications/Google\ Chrome.app \
+            /Applications/Microsoft\ Edge.app \
+            /Library/Java/JavaVirtualMachines \
+            /usr/local/lib/android \
+            /usr/local/share/boost \
+            /usr/local/share/chromium \
+            /usr/local/share/dotnet \
+            /usr/local/share/powershell
+
+          echo "Darwin rampage complete" > "${HOME}/.expansion/darwin_rampage_done"
+        fi
+
+        echo "Final disk usage:"
+        df -h /
+        echo "Everything completed" > "${HOME}/.expansion/all_done"
     - name: The Post
       if: runner.os == 'Linux'
       uses: srz-zumix/post-run-action@42756f7452b9439d0365b7e087b2c364f54209c6 # v3

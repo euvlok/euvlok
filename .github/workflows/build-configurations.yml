@@ -65,7 +65,6 @@ jobs:
           persist-credentials: false
 
       - name: Reclaim maximum Nix store space
-        if: ${{ matrix.kind == 'nixos' }}
         uses: ./.github/actions/nothing-but-nix
         with:
           hatchet-protocol: rampage
