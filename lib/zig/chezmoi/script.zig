@@ -10,12 +10,12 @@ pub const Runtime = struct {
     stderr: *std.Io.Writer,
 };
 
-const env = @import("lib/env.zig");
-const fs = @import("lib/fs.zig");
-const process = @import("lib/process.zig");
+const env = @import("env.zig");
+const fs = @import("fs.zig");
+const process = @import("process.zig");
 
-pub const http = @import("lib/http.zig");
-pub const macos = @import("lib/macos.zig");
+pub const http = @import("http.zig");
+pub const macos = @import("macos.zig");
 
 pub const chezmoiContext = env.chezmoiContext;
 pub const writeTextIfChanged = fs.writeTextIfChanged;

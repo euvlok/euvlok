@@ -22,10 +22,10 @@ pub fn extraHeaders(auth: Auth) []const std.http.Header {
 
 pub const Client = struct {
     allocator: Allocator,
-    rt: *@import("../script.zig").Runtime,
+    rt: *@import("script.zig").Runtime,
     http: std.http.Client,
 
-    pub fn init(rt: *@import("../script.zig").Runtime) Client {
+    pub fn init(rt: *@import("script.zig").Runtime) Client {
         return .{
             .allocator = rt.allocator,
             .rt = rt,

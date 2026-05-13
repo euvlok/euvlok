@@ -1,4 +1,5 @@
 .chezmoi-lib/
+.chezmoiscripts/*.zig
 
 {{ if ne .chezmoi.os "darwin" }}
 Library/

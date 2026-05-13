@@ -1,5 +1,5 @@
 const std = @import("std");
-const script = @import("script.zig");
+const script = @import("chezmoi");
 
 const Release = struct { tag_name: []const u8 };
 

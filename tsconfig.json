@@ -13,8 +13,8 @@
     "types": ["bun"],
     "paths": {
       "@euvlok/catppuccin-userstyles": ["./packages/catppuccin-userstyles/src/index.ts"],
-      "@euvlok/github": ["./packages/lib/github/index.ts"],
-      "@euvlok/core": ["./packages/lib/core.ts"]
+      "@euvlok/github": ["./lib/ts/github/index.ts"],
+      "@euvlok/core": ["./lib/ts/core.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]

@@ -1,6 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
-const script = @import("script.zig");
+const script = @import("chezmoi");
 const macos = script.macos;
 
 const domain = "com.raycast.macos";

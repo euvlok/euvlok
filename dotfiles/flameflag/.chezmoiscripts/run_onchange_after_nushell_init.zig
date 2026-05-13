@@ -1,5 +1,5 @@
 const std = @import("std");
-const script = @import("script.zig");
+const script = @import("chezmoi");
 
 pub fn main(init: std.process.Init) !void {
     try script.mainWith(init, run);

@@ -11,10 +11,10 @@
     "github:update-browser-extensions": "bun --bun run scripts/github/update-browser-extensions.ts",
     "github:update-custom-packages": "bun --bun run scripts/github/update-custom-packages.ts",
     "github:update-trivial-flake-inputs": "bun --bun run scripts/github/update-trivial-flake-inputs.ts",
-    "check": "biome check --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts && bun run github:check-workflows && bun run github:lint-workflows",
+    "check": "biome check --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts && bun run github:check-workflows && bun run github:lint-workflows",
     "fallow": "fallow --format compact",
     "fallow:audit": "fallow audit --gate new-only",
-    "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json packages scripts",
+    "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
     "format:check": "bun run check",
     "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
     "test": "bun test packages/auto-rebase/tests packages/browser-extensions-update/tests packages/nvidia-prefetch/tests"

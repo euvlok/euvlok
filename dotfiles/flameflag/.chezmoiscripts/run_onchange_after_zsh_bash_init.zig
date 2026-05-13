@@ -1,5 +1,5 @@
 const std = @import("std");
-const script = @import("script.zig");
+const script = @import("chezmoi");
 
 const Shell = enum { zsh, bash };
 const InitCommand = struct { bin: []const u8, dir: []const u8, suffix: []const []const u8 = &.{} };

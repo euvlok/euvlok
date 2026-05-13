@@ -1,5 +1,5 @@
 const std = @import("std");
-const script = @import("script.zig");
+const script = @import("chezmoi");
 
 const yazi_plugins_repo = "https://github.com/yazi-rs/plugins.git";
 const official_plugins = [_][]const u8{ "diff", "full-border", "smart-enter", "smart-paste", "git" };
