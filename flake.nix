@@ -35,6 +35,8 @@
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
+    noctalia-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    noctalia-trivial.url = "github:noctalia-dev/noctalia-shell";
     nix-homebrew-trivial.url = "github:zhaofengli/nix-homebrew";
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode-trivial.inputs.systems.follows = "flake-utils/systems";
@@ -94,6 +96,8 @@
     disko-rpi.url = "github:nvmd/disko/gpt-attrs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
+    nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-apple-silicon.url = "github:nix-community/nixos-apple-silicon";
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
     nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix2container.url = "github:nlewo/nix2container";
@@ -101,7 +105,8 @@
     pre-commit-hooks.inputs.gitignore.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
-    sm-idk-null.url = "path:./hosts/linux/sm-idk/null";
+    steam-asahi.inputs.nixpkgs.follows = "nixpkgs";
+    steam-asahi.url = "github:sm-idk/steam-asahi";
 
     # Misc / Non Flakes sources (Trivial)
     homebrew-core-trivial = {

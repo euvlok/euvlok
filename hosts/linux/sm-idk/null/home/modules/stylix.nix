@@ -5,7 +5,7 @@
   ...
 }:
 {
-  imports = [ inputs.stylix.homeModules.stylix ];
+  imports = [ inputs.stylix-trivial.homeModules.stylix ];
 
   stylix = {
     enable = true;

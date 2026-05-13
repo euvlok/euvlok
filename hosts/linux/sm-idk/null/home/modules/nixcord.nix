@@ -1,6 +1,6 @@
 { inputs, pkgs, ... }:
 {
-  imports = [ inputs.nixcord.homeModules.nixcord ];
+  imports = [ inputs.nixcord-trivial.homeModules.nixcord ];
 
   programs.nixcord = {
     enable = true;
@@ -19,17 +19,10 @@
       plugins = {
         toastNotifications = {
           enable = true;
-          disableInStreamerMode = true;
-          determineServerNotifications = true;
           friendServerNotifications = true;
-          renderImages = true;
           maxNotifications = 3.0;
-          position = "bottom-left";
-          timeout = 5.0;
-          opacity = 100.0;
           directMessages = true;
           groupMessages = true;
-          streamingTreatment = 0.0;
         };
         # VCSupport.enable = true;
         webpackTarball = {

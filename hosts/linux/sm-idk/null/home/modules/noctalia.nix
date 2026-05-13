@@ -15,10 +15,10 @@ let
     ++ (pkgs.lib.splitString " " cmd);
 in
 {
-  imports = [ inputs.noctalia.homeModules.default ];
+  imports = [ inputs.noctalia-trivial.homeModules.default ];
 
   home.packages = [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.noctalia-trivial.packages.${pkgs.stdenv.hostPlatform.system}.default
     # inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
   programs = {

@@ -7,9 +7,9 @@
     ./hardware-asahi.nix
 
     inputs.home-manager.nixosModules.home-manager
-    inputs.niri.nixosModules.niri
-    inputs.stylix.nixosModules.stylix
-    inputs.apple-silicon.nixosModules.apple-silicon-support
+    inputs.niri-flake-trivial.nixosModules.niri
+    inputs.stylix-trivial.nixosModules.stylix
+    inputs.nixos-apple-silicon.nixosModules.apple-silicon-support
     inputs.steam-asahi.nixosModules.default
   ];
 
@@ -18,7 +18,6 @@
   programs.kdeconnect.enable = true;
 
   home-manager = {
-    useGlobalPkgs = true;
     useUserPackages = true;
     users.bruno = ../../home/home.nix;
     extraSpecialArgs = { inherit inputs; };
@@ -33,6 +32,7 @@
   # Asahi/Apple Silicon systems commonly use 16K pages, where the NixOS
   # default of 33 ASLR bits is invalid. 31 is the maximum for this layout.
   boot.kernel.sysctl."vm.mmap_rnd_bits" = lib.mkForce 31;
+  security.rtkit.enable = lib.mkForce true;
 
   # Specify path to peripheral firmware files for declarative management
   hardware.asahi.peripheralFirmwareDirectory = ./firmware;
@@ -42,10 +42,10 @@
   # The CI at github.com/nix-community/nixos-apple-silicon only publishes
   # builds against unstable variants on `main`, so 25.11-built kernels miss.
   hardware.asahi.pkgs = lib.mkForce (
-    import inputs.nixpkgs-unstable {
+    import inputs.nixpkgs-unstable-small {
       localSystem.system = "aarch64-linux";
       config.allowUnfree = true;
-      overlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
+      overlays = [ inputs.nixos-apple-silicon.overlays.apple-silicon-overlay ];
     }
   );
 

@@ -1,37 +1,46 @@
 {
   pkgs,
   inputs,
+  lib,
   ...
 }:
 {
-  imports = [ inputs.self.homeModules.default ];
+  imports = [
+    inputs.self.homeModules.default
+    inputs.self.homeModules.os
+    ./modules
+  ];
 
-  home.packages = builtins.attrValues {
+  home.packages =
+    (builtins.attrValues {
+      inherit (pkgs)
+        btop
+        file
+        ghostty
+        ;
 
-    inherit (pkgs)
-      btop
-      ghostty
-      file
-      ;
+      inherit (pkgs.unstable)
+        gnome-frog
+        mpv
+        transmission_4-qt
+        yt-dlp
+        ;
+    })
+    ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") (
+      builtins.attrValues {
+        inherit (pkgs.unstable)
+          bottles
+          imhex
+          onlyoffice-desktopeditors
+          prismlauncher
+          rpcs3
+          signal-desktop
+          ;
 
-    octave = pkgs.octaveFull.withPackages (p: [ p.symbolic ]);
-
-    inherit (pkgs.unstable)
-      onlyoffice-desktopeditors
-      transmission_4-qt
-      signal-desktop
-      bottles
-      prismlauncher
-      yt-dlp
-      mpv
-      gnome-frog
-      rpcs3
-
-      imhex
-      ;
-
-    helium = inputs.euvlok-pkgs.legacyPackages.${pkgs.system}.helium-browser;
-  };
+        helium = inputs.eupkgs.legacyPackages.${pkgs.system}.helium-browser;
+        octave = pkgs.octaveFull.withPackages (p: [ p.symbolic ]);
+      }
+    );
 
   programs.bash.enable = true;
   programs.home-manager.enable = true;

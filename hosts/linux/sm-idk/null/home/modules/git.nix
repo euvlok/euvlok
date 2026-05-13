@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   ...
 }:
 let
@@ -14,7 +13,6 @@ in
       inherit name email;
     };
     enable = true;
-    package = pkgs.gitMinimal;
   };
   home.file.".gitconfig".source =
     config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/git/config";
