@@ -53,7 +53,7 @@
         language_servers = [ "nil" ];
         formatter = {
           external = {
-            command = "nixfmt-classic";
+            command = "nixfmt";
           };
         };
       };
