@@ -18,25 +18,25 @@ in
 
       services.xserver.videoDrivers = [ "nvidia" ];
 
-      boot.extraModprobeConfig =
-        "options nvidia "
-        + lib.concatStringsSep " " [
-          "NVreg_UsePageAttributeTable=1"
-          "NVreg_RegistryDwords=RMUseSwI2c=0x01;RMI2cSpeed=100"
-        ];
       environment.sessionVariables = {
         __GLX_VENDOR_LIBRARY_NAME = "nvidia"; # without this NOUVEAU may attempt to be used instead
-        GBM_BACKEND = "nvidia-drm"; # Required to run the correct GBM backend for NVIDIA GPUs on Wayland
         LIBVA_DRIVER_NAME = "nvidia";
         NVD_BACKEND = "direct";
       };
 
       hardware.nvidia = {
         open = true;
-        modesetting.enable = true;
         package = nvidiaDriver;
+        videoAcceleration = true;
+        modesetting.enable = true;
         powerManagement.enable = true;
         powerManagement.finegrained = false;
+        moduleParams = {
+          nvidia = {
+            NVreg_UsePageAttributeTable = 1;
+            NVreg_RegistryDwords = "RMUseSwI2c=0x01;RMI2cSpeed=100";
+          };
+        };
       };
 
       hardware.graphics = {

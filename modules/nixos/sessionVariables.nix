@@ -12,10 +12,6 @@
     # Enable automatic scaling for Qt5/Qt6 applications based on monitor DPI
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
 
-    # Enable Variable Refresh Rate (VRR/G-Sync/FreeSync) for OpenGL and GLX
-    __GL_VRR_ALLOWED = "1";
-    __GLX_VRR_ALLOWED = "1";
-
     EGL_PLATFORM = "wayland";
 
     # Hardware cursors are currently broken on wlroots
