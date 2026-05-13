@@ -3,7 +3,7 @@
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
 
   boot = {
-    kernelPackages = pkgs.linuxAndFirmware.v6_12_44.linuxPackages_rpi5;
+    kernelPackages = pkgs.linuxAndFirmware.v6_12_85.linuxPackages_rpi5;
     tmp.useTmpfs = true;
     supportedFilesystems = [ "zfs" ];
 

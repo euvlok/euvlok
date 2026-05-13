@@ -36,10 +36,7 @@ inputs.nixos-raspberrypi.lib.nixosSystem {
       };
     }
     {
-      nixos = {
-        plasma.enable = true;
-        gnome.enable = true;
-      };
+      nixos.plasma.enable = true;
     }
   ];
 }
