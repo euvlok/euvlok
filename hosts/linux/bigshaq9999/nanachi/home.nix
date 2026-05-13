@@ -30,6 +30,8 @@
         inputs.self.homeModules.os
         ../../../../modules/hm/wm/niri
         {
+          programs.firefox.configPath = ".mozilla/firefox";
+
           hm = {
             chromium.browser = "brave";
             chromium.enable = true;
