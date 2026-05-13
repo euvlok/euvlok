@@ -25,6 +25,7 @@ redhat.vscode-xml
 redhat.vscode-yaml
 sumneko.lua
 svelte.svelte-vscode
+tamasfe.even-better-toml
 thenuprojectcontributors.vscode-nushell-lang
 timonwong.shellcheck
 tomoki1207.pdf

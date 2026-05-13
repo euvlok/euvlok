@@ -17,9 +17,19 @@
       sops = {
         age.keyFile = "/home/nyx/.config/sops/age/keys.txt";
         defaultSopsFile = ../../../../secrets/flameflag.yaml;
-        secrets.github_ssh = {
-          uid = 0;
-          gid = 0;
+        secrets = {
+          github-token = {
+            mode = "0440";
+            group = "users";
+          };
+          github_ssh = {
+            uid = 0;
+            gid = 0;
+          };
+          migadu = {
+            owner = "nyx";
+            mode = "0400";
+          };
         };
       };
     }
@@ -30,6 +40,10 @@
     amdgpuBusId = "PCI:6:0:0";
     nvidiaBusId = "PCI:1:0:0";
   };
+
+  nix.extraOptions = ''
+    !include ${config.sops.secrets.github-token.path}
+  '';
 
   # Users
   sops.secrets.nyx-password.neededForUsers = true;

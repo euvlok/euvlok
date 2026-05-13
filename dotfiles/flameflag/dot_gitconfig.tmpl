@@ -15,7 +15,10 @@ op-ssh-sign
     allowedSignersFile = "{{ .chezmoi.homeDir }}/.ssh/allowed_signers"
 
 [commit]
-    gpgsign = true
+    gpgsign = false
+
+[push]
+    gpgSign = if-asked
 
 [core]
     excludesfile = "{{ .chezmoi.homeDir }}/.gitignore_global"
@@ -42,6 +45,3 @@ op-ssh-sign
 
 [credential "smtp://github%40flameflag.dev@smtp.migadu.com:465"]
     helper = "!f() { echo password=$(cat /run/secrets/migadu); }; f"
-
-[credential "https://github.com"]
-    helper = !gh auth git-credential

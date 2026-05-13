@@ -29,6 +29,7 @@
       jujutsu
       nushell
       starship
+      uv
       yazi
       zed-editor
       vscode
@@ -37,9 +38,11 @@
       ;
 
     inherit (pkgs.eupkgs)
+      agent-statusline
       agent-statusline-pi
       codex
       opencode
+      yt-dlp-script
       ;
 
     git = pkgs.unstable.git.overrideAttrs (old: {

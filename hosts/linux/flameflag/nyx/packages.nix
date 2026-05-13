@@ -28,6 +28,7 @@
       jujutsu
       nushell
       starship
+      uv
       yazi
       zed-editor
       vscode
@@ -36,9 +37,11 @@
       ;
 
     inherit (pkgs.eupkgs)
+      agent-statusline
       agent-statusline-pi
       codex
       opencode
+      yt-dlp-script
       ;
 
     # Linux desktop bits the dotfiles assume
