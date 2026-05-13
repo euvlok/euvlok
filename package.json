@@ -41,8 +41,8 @@
     "@actions/workflow-parser": "^0.3.57",
     "@biomejs/biome": "^2.4.15",
     "@tktco/node-actionlint": "^1.6.0",
-    "@types/bun": "^1.3.13",
-    "fallow": "2.72.0",
+    "@types/bun": "^1.3.14",
+    "fallow": "2.73.0",
     "typescript": "^6.0.3"
   }
 }
