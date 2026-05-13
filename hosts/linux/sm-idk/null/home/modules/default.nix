@@ -1,7 +1,5 @@
-{
+_: {
   imports = [
-    ./chromium
-    ./git.nix
     ./hack.nix
     ./keepassxc.nix
     ./niri.nix
@@ -10,6 +8,13 @@
     ./spicetify.nix
     ./stylix.nix
     ./vicinae.nix
-    ./zed.nix
   ];
+
+  hm = {
+    chromium = {
+      enable = true;
+      browser = "ungoogled-chromium";
+    };
+    zed-editor.enable = true;
+  };
 }

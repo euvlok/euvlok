@@ -8,6 +8,7 @@
   imports = [
     inputs.self.homeModules.default
     inputs.self.homeModules.os
+    ../../../../hm/sm-idk
     ./modules
   ];
 
