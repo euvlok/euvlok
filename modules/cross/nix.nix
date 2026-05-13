@@ -12,15 +12,54 @@ let
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
 
-  buildCores =
+  buildParallelism =
     lib.pipe
-      (pkgs.runCommand "cpu-cores" { } ''
-        ${pkgs.writeShellScript "get-cpu-cores" ''${pkgs.python3}/bin/python3 -c "import os; print(os.cpu_count())"''} > $out
+      (pkgs.runCommand "nix-build-parallelism" { } ''
+        ${pkgs.writeShellScript "get-nix-build-parallelism" ''
+          ${pkgs.python3}/bin/python3 - <<'PY'
+          import json
+          import os
+          import platform
+          import subprocess
+
+
+          def clamp(value, lower, upper):
+              return max(lower, min(value, upper))
+
+
+          def memory_gib():
+              if platform.system() == "Linux":
+                  with open("/proc/meminfo", encoding="utf-8") as meminfo:
+                      for line in meminfo:
+                          if line.startswith("MemTotal:"):
+                              return int(line.split()[1]) // 1024 // 1024
+
+              if platform.system() == "Darwin":
+                  output = subprocess.check_output(["/usr/sbin/sysctl", "-n", "hw.memsize"], text=True)
+                  return int(output) // 1024 // 1024 // 1024
+
+              return 8
+
+
+          threads = os.cpu_count() or 1
+          memory = memory_gib()
+
+          cpu_budget = max(1, threads * 90 // 100)
+          memory_budget = max(1, memory * 70 // 100)
+
+          memory_jobs = max(1, memory_budget // 8)
+          cpu_jobs = clamp(cpu_budget // 8, 1, 4)
+          max_jobs = min(memory_jobs, cpu_jobs)
+
+          cores = max(1, cpu_budget // max_jobs)
+
+          print(json.dumps({"max-jobs": max_jobs, "cores": cores}))
+          PY
+        ''} > $out
       '')
       [
         lib.fileContents
-        lib.toInt
-        (x: x - 2) # Max Cores - 2
+        builtins.fromJSON
       ];
 in
 {
@@ -40,7 +79,8 @@ in
         nix = {
           settings = {
             experimental-features = "nix-command flakes";
-            cores = buildCores;
+            cores = lib.mkDefault buildParallelism.cores;
+            max-jobs = lib.mkDefault buildParallelism."max-jobs";
 
             substituters = [
               "https://devenv.cachix.org"
