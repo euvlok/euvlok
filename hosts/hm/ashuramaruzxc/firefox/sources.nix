@@ -109,6 +109,11 @@
       name = "Translate Web Pages";
       source = "amo";
     }
+    {
+      id = "kagi-translate";
+      name = "Kagi Translate";
+      source = "amo";
+    }
     # --- From Third-Party Sources ---
     {
       id = "magnolia@12.34";

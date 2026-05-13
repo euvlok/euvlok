@@ -9,10 +9,10 @@
 {
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.9.0";
+    version = "1.14.1";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4677798/angular_devtools-1.9.0.xpi";
-    sha256 = "sha256-qZ6jSPkMhARpdjhpDPfrpQiH3oGsei3xF0w//3+EXpg=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4757690/angular_devtools-1.14.1.xpi";
+    sha256 = "sha256-bcfIA/kpBDK0gDtsZHHdJszkXpM4h5MohI29OkU3Vz4=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -52,10 +52,10 @@
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.124";
+    version = "4.9.125";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4748915/darkreader-4.9.124.xpi";
-    sha256 = "sha256-znA8mFRZmc7gtcQW9P1KMIDxQFRA8AXVxc8jrAhovL0=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4783321/darkreader-4.9.125.xpi";
+    sha256 = "sha256-Iamhi8hz4JubEPhBpVmAfOnpBzhnTH7dufY5wGY+ryg=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -142,6 +142,26 @@
         "webRequest"
         "webRequestAuthProvider"
         "<all_urls>"
+      ];
+    };
+  };
+  "kagi-translate" = buildFirefoxXpiAddon {
+    pname = "kagi-translate";
+    version = "0.1.8";
+    addonId = "{bd6be57d-91d7-41d2-b61d-3ba20f7942e5}";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4720796/kagi_translate-0.1.8.xpi";
+    sha256 = "sha256-9dgTQpg4NoetdbfGdRnd9MPopt53moxbt4jF3tZZBoQ=";
+    meta = with lib; {
+      platforms = platforms.all;
+      mozPermissions = [
+        "storage"
+        "contextMenus"
+        "cookies"
+        "scripting"
+        "notifications"
+        "webNavigation"
+        "https://*/*"
+        "http://*/*"
       ];
     };
   };
@@ -586,6 +606,7 @@
         "*://*.lamontagne.fr/*"
         "*://*.lanacion.com.ar/*"
         "*://*.lanazione.it/*"
+        "*://*.lance.com.br/*"
         "*://*.lanuovasardegna.it/*"
         "*://*.laprovincia.es/*"
         "*://*.lardennais.fr/*"
@@ -702,6 +723,8 @@
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
         "*://*.nationalgeographic.com/*"
+        "*://*.nationalgeographic.it/*"
+        "*://*.nationalgeographic.nl/*"
         "*://*.nationalpost.com/*"
         "*://*.nationalreview.com/*"
         "*://*.nature.com/*"
@@ -1287,10 +1310,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.3.19";
+    version = "2.3.22";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4661054/styl_us-2.3.19_qtD9vir.xpi";
-    sha256 = "sha256-/tl9m4y4eT0bH5XJWr+vdmA3fAunHUnsSP/T1nb2avE=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4786206/styl_us-2.3.22.xpi";
+    sha256 = "sha256-Hd9jPCSjUTqtvfHNH436PPIgNMWQdUWJV7TJ78aLNIM=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
