@@ -170,5 +170,9 @@ test "completionArgs places shell between command-specific arguments" {
     }, .zsh);
     defer std.testing.allocator.free(argv);
 
-    try std.testing.expectEqualSlices([]const u8, &.{ "rustup", "completions", "zsh", "cargo" }, argv);
+    const expected = [_][]const u8{ "rustup", "completions", "zsh", "cargo" };
+    try std.testing.expectEqual(expected.len, argv.len);
+    for (&expected, argv) |expected_arg, actual_arg| {
+        try std.testing.expectEqualStrings(expected_arg, actual_arg);
+    }
 }

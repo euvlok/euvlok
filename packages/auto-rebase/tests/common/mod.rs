@@ -50,6 +50,12 @@ pub fn git(cwd: &Path, args: &[&str]) -> Result<String> {
     run(cwd, "git", args)
 }
 
+fn configure_test_identity(repo: &Path) -> Result<()> {
+    git(repo, &["config", "user.name", "Smoke Test"])?;
+    git(repo, &["config", "user.email", "smoke@example.test"])?;
+    Ok(())
+}
+
 pub fn write(path: impl AsRef<Path>, content: &str) -> Result<()> {
     std::fs::write(path.as_ref(), content)
         .with_context(|| format!("failed to write {}", path.as_ref().display()))
@@ -118,6 +124,9 @@ impl Fixture {
                 upstream.to_str().context("non-utf8 upstream path")?,
             ],
         )?;
+        configure_test_identity(&source)?;
+        configure_test_identity(&work)?;
+        configure_test_identity(&upstream)?;
 
         Ok(Self {
             temp_dir: dir,
