@@ -18,20 +18,12 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin";
-    nixos-raspberrypi.inputs.flake-compat.follows = "";
-    nixos-raspberrypi.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
-    # This input is meant to be used for `-source` inputs and is rarely updated
-    # to not cause constant rebuilds when updating generic unstable
-    nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # --- Trivial ---
-    base16-trivial.follows = "stylix-trivial/base16";
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin-trivial.url = "github:catppuccin/nix";
-    flatpak-declerative-trivial.url = "github:in-a-dil-emma/declarative-flatpak";
     niri-flake-trivial.inputs.nixpkgs-stable.follows = "nixpkgs";
     niri-flake-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     niri-flake-trivial.url = "github:sodiboo/niri-flake";
@@ -55,35 +47,12 @@
     nvidia-patch-trivial.url = "github:icewind1991/nvidia-patch-nixos";
     sops-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix-trivial.url = "github:Mic92/sops-nix";
-    spicetify-nix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    spicetify-nix-trivial.inputs.systems.follows = "flake-utils/systems";
-    spicetify-nix-trivial.url = "github:Gerg-L/spicetify-nix";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     stylix-trivial.inputs.systems.follows = "flake-utils/systems";
     stylix-trivial.url = "github:danth/stylix/release-25.11";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";
-
-    # ---- Source ----
-    dis-source.inputs.nixpkgs.follows = "nixpkgs-source";
-    dis-source.url = "github:FlameFlag/dis";
-
-    # DO NOT OVERRIDE NIXPKGS
-    anime-cursors-source.inputs.devenv.follows = "devenv";
-    anime-cursors-source.inputs.flake-parts.follows = "flake-parts";
-    anime-cursors-source.inputs.nixpkgs-python.inputs.flake-compat.follows = "";
-    anime-cursors-source.inputs.mk-shell-bin.follows = "mk-shell-bin";
-    anime-cursors-source.inputs.nix2container.follows = "nix2container";
-    anime-cursors-source.inputs.pre-commit-hooks.follows = "pre-commit-hooks";
-    anime-cursors-source.url = "github:ashuramaruzxc/anime-cursors";
-    anime-game-launcher-source.inputs.flake-compat.follows = "";
-    anime-game-launcher-source.inputs.rust-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    anime-game-launcher-source.url = "github:ezKEa/aagl-gtk-on-nix";
-    # DO NOT override stylix utilities inputs
-    # stylix-trivial.inputs.flake-parts.follows = "";
-    # stylix-trivial.inputs.git-hooks.follows = "pre-commit-hooks";
-    # DO NOT override nixpkgs, it uses it's own fork
 
     # Infra / Shared / Core Inputs
     devenv.inputs.cachix.inputs.flake-compat.follows = "";
@@ -94,38 +63,15 @@
     devenv.inputs.nixd.follows = "";
     devenv.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     devenv.url = "github:cachix/devenv";
-    disko-rpi.inputs.nixpkgs.follows = "nixpkgs";
-    disko-rpi.url = "github:nvmd/disko/gpt-attrs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils-linux.inputs.systems.follows = "linux-systems-trivial";
     flake-utils-linux.url = "github:numtide/flake-utils";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
     linux-systems-trivial.url = "github:nix-systems/default-linux";
-    nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-apple-silicon.url = "github:nix-community/nixos-apple-silicon";
-    mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
-    nix2container.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nix2container.url = "github:nlewo/nix2container";
     pre-commit-hooks.inputs.flake-compat.follows = "";
     pre-commit-hooks.inputs.gitignore.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
-    steam-asahi.inputs.nixpkgs.follows = "nixpkgs";
-    steam-asahi.url = "github:sm-idk/steam-asahi";
-
-    # Misc / Non Flakes sources (Trivial)
-    homebrew-core-trivial = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask-trivial = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-    homebrew-crc-trivial = {
-      url = "github:cfergeau/homebrew-crc";
-      flake = false;
-    };
   };
 
   outputs =
@@ -142,29 +88,47 @@
         ./flake-modules/hosts.nix
         ./flake-modules/packages.nix
         ./flake-modules/modules.nix
-        ./flake-modules/users
       ];
 
-      # Keep devenv + pre-commit-hooks (and their transitive evaluation)
-      # out of the host build path. Hosts only need nixpkgs, home-manager,
-      # nix-darwin, etc. The dev partition is only evaluated when someone
-      # asks for devShells/checks/formatter.
+      # Keep contributor-owned inputs out of the entry path. Host outputs
+      # and host eval checks opt into the user input flake; devShells and
+      # formatter only load the development tooling they need.
       partitionedAttrs = {
+        darwinConfigurations = "users";
         devShells = "dev";
-        checks = "dev";
+        checks = "checks";
         formatter = "dev";
+        homeConfigurations = "users";
+        nixosConfigurations = "users";
       };
       touchup.attr.modules.enable = false;
-      partitions.dev.module = {
-        imports = [
+
+      partitions.users = {
+        extraInputsFlake = ./flake-modules/users;
+        module.imports = [
+          ./flake-modules/hosts.nix
+          ./flake-modules/modules.nix
+          ./flake-modules/users/default.nix
+        ];
+      };
+
+      partitions.checks = {
+        extraInputsFlake = ./flake-modules/users;
+        module.imports = [
           inputs.devenv.flakeModule
           inputs.pre-commit-hooks.flakeModule
           ./flake-modules/hosts.nix
           ./flake-modules/modules.nix
-          ./flake-modules/users
+          ./flake-modules/users/default.nix
           ./flake-modules/dev-shell.nix
         ];
       };
+
+      partitions.dev.module.imports = [
+        inputs.devenv.flakeModule
+        inputs.pre-commit-hooks.flakeModule
+        ./flake-modules/dev-shell.nix
+      ];
 
       systems = [
         "aarch64-darwin"
