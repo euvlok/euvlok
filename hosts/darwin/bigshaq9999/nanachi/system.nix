@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   system = {
     keyboard.enableKeyMapping = true;

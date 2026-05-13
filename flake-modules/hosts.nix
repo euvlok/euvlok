@@ -15,7 +15,7 @@ let
     ;
 
   hostSpec = types.submodule (
-    { name, ... }:
+    { ... }:
     {
       options = {
         path = mkOption {

@@ -1,9 +1,7 @@
 # Hardware acceleration configuration for laptop
 # This file configures GPU drivers and hardware acceleration
 {
-  lib,
   pkgs,
-  config,
   ...
 }:
 

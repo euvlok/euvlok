@@ -11,7 +11,7 @@
   };
 
   home-manager.users.nanachi =
-    { osConfig, ... }:
+    { ... }:
     {
       imports = [
         { home.stateVersion = "25.05"; }

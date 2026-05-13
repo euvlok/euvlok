@@ -12,7 +12,7 @@
   };
 
   home-manager.users.hushh =
-    { osConfig, ... }:
+    { ... }:
     {
       imports = [
         {

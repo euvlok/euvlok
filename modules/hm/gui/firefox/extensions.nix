@@ -2,9 +2,7 @@
 # DO NOT edit manually
 {
   buildFirefoxXpiAddon,
-  fetchurl,
   lib,
-  stdenv,
 }:
 {
   "clearurls" = buildFirefoxXpiAddon {

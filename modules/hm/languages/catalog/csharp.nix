@@ -1,9 +1,8 @@
 {
   pkgs,
-  lib,
   versionMappings,
   getLatestVersion,
-  prettierFormatter,
+  ...
 }:
 {
   packages = builtins.attrValues { inherit (pkgs.unstable) omnisharp-roslyn netcoredbg; };

@@ -7,8 +7,6 @@
 }:
 {
   lib,
-  pkgs,
-  inputs ? null,
   config,
   osConfig,
   ...

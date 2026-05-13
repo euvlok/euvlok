@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  versionMappings,
-  getLatestVersion,
-  prettierFormatter,
-}:
+{ pkgs, ... }:
 {
   packages = builtins.attrValues { inherit (pkgs.unstable) zig zls; };
   vscode.extensions = [ "ziglang.vscode-zig" ];

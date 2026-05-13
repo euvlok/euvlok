@@ -11,7 +11,7 @@
     inputs.nix4vscode-trivial.overlays.default
   ]
   ++ [
-    (final: prev: {
+    (_: prev: {
       unstable = import inputs.nixpkgs-unstable-small {
         inherit (prev.stdenv.hostPlatform) system;
         inherit (config.nixpkgs) config;
@@ -24,7 +24,7 @@
         ];
       };
     })
-    (final: prev: {
+    (final: _prev: {
       eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
       kanata-with-cmd = final.kanata.override { withCmd = true; };
     })
@@ -33,7 +33,7 @@
       nix @6065
       nix @15638
     */
-    (final: prev: {
+    (_: prev: {
       direnv = prev.direnv.overrideAttrs (_: {
         doCheck = false;
       });

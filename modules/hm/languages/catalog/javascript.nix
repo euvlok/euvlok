@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  versionMappings,
-  getLatestVersion,
-  prettierFormatter,
-}:
+{ pkgs, prettierFormatter, ... }:
 {
   packages = builtins.attrValues {
     inherit (pkgs.unstable)

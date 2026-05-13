@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 {
   euvlok.users.sm-idk = {
     nixosHosts = {

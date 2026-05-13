@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  versionMappings,
-  getLatestVersion,
-  prettierFormatter,
-}:
+{ pkgs, ... }:
 let
   python313 = pkgs.python313.withPackages (pip: [
     pip.black

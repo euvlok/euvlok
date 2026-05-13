@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -31,7 +30,7 @@ in
     nixos.gui.enable = lib.mkDefault true;
 
     nixpkgs.overlays = [
-      (_final: prev: {
+      (_: prev: {
         kdePackages = prev.unstable.kdePackages;
       })
     ];

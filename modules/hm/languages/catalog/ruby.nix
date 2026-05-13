@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  versionMappings,
-  getLatestVersion,
-  prettierFormatter,
-}:
+{ pkgs, lib, ... }:
 {
   packages = builtins.attrValues {
     inherit (pkgs.unstable) ruby_4_0 solargraph rubocop;
