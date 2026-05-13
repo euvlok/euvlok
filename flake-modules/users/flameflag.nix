@@ -1,7 +1,6 @@
-{ inputs, ... }:
 {
-  flake = {
-    nixosConfigurations.nyx = import ../../hosts/linux/flameflag/nyx inputs;
-    darwinConfigurations.FlameFlags-Mac-mini = import ../../hosts/darwin/flameflag/flame inputs;
+  euvlok.users.flameflag = {
+    nixosHosts.nyx.path = ../../hosts/linux/flameflag/nyx;
+    darwinHosts.FlameFlags-Mac-mini.path = ../../hosts/darwin/flameflag/flame;
   };
 }

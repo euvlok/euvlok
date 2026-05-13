@@ -101,6 +101,7 @@
     pre-commit-hooks.inputs.gitignore.follows = "";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    sm-idk-null.url = "path:./hosts/linux/sm-idk/null";
 
     # Misc / Non Flakes sources (Trivial)
     homebrew-core-trivial = {
@@ -122,17 +123,16 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.flake-parts.flakeModules.easyOverlay
+        inputs.flake-parts.flakeModules.flakeModules
         inputs.flake-parts.flakeModules.modules
         inputs.flake-parts.flakeModules.partitions
+        inputs.flake-parts.flakeModules.touchup
         inputs.home-manager.flakeModules.default
 
+        ./flake-modules/hosts.nix
         ./flake-modules/packages.nix
         ./flake-modules/modules.nix
-        ./flake-modules/users/ashuramaruzxc.nix
-        ./flake-modules/users/bigshaq9999.nix
-        ./flake-modules/users/flameflag.nix
-        ./flake-modules/users/lay-by.nix
-        ./flake-modules/users/sm-idk.nix
+        ./flake-modules/users
       ];
 
       # Keep devenv + pre-commit-hooks (and their transitive evaluation)
@@ -144,10 +144,14 @@
         checks = "dev";
         formatter = "dev";
       };
+      touchup.attr.modules.enable = false;
       partitions.dev.module = {
         imports = [
           inputs.devenv.flakeModule
           inputs.pre-commit-hooks.flakeModule
+          ./flake-modules/hosts.nix
+          ./flake-modules/modules.nix
+          ./flake-modules/users
           ./flake-modules/dev-shell.nix
         ];
       };
@@ -158,5 +162,13 @@
         "x86_64-darwin"
         "x86_64-linux"
       ];
+
+      flake.flakeModules.default = {
+        imports = [
+          ./flake-modules/hosts.nix
+          ./flake-modules/modules.nix
+          ./flake-modules/packages.nix
+        ];
+      };
     };
 }

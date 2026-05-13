@@ -1,14 +1,11 @@
-{ inputs, ... }:
 {
-  flake = {
-    nixosConfigurations = {
-      unsigned-int16 = import ../../hosts/linux/ashuramaruzxc/unsigned-int16 inputs;
-      unsigned-int32 = import ../../hosts/linux/ashuramaruzxc/unsigned-int32 inputs;
-      unsigned-int64 = import ../../hosts/linux/ashuramaruzxc/unsigned-int64 inputs;
+  euvlok.users.ashuramaruzxc = {
+    nixosHosts = {
+      unsigned-int16.path = ../../hosts/linux/ashuramaruzxc/unsigned-int16;
+      unsigned-int32.path = ../../hosts/linux/ashuramaruzxc/unsigned-int32;
+      unsigned-int64.path = ../../hosts/linux/ashuramaruzxc/unsigned-int64;
     };
-    darwinConfigurations = {
-      unsigned-int8 = import ../../hosts/darwin/ashuramaruzxc/unsigned-int8 inputs;
-    };
+    darwinHosts.unsigned-int8.path = ../../hosts/darwin/ashuramaruzxc/unsigned-int8;
     homeConfigurations.ashuramaruzxc = import ../../hosts/hm/ashuramaruzxc;
   };
 }

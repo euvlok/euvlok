@@ -13,14 +13,6 @@
 
   <h1>EUVlok</h1>
 
-  <pre>
-  _____ _   ___     ___       _
- | ____| | | \ \   / / | ___ | | __
- |  _| | | | |\ \ / /| |/ _ \| |/ /
- | |___| |_| | \ V / | | (_) |   &lt;
- |_____|\___/   \_/  |_|\___/|_|\_\
-  </pre>
-
   <p>
     <strong>A communal Nix flake where friends share systems, homes, dotfiles, and the little tools that keep them moving.</strong>
   </p>
@@ -39,15 +31,6 @@
     <a href="#published-flake-outputs">Flake Outputs</a>
     ·
     <a href="#working-here">Working Here</a>
-  </p>
-
-  <p>
-    <a href="#why-this-exists"><kbd>the commons</kbd></a>
-    <a href="#communal-pulse"><kbd>sharing loop</kbd></a>
-    <a href="#shared-rituals"><kbd>rituals</kbd></a>
-    <a href="#component-matrix"><kbd>matrix</kbd></a>
-    <a href="#host-map"><kbd>machines</kbd></a>
-    <a href="#working-here"><kbd>workbench</kbd></a>
   </p>
 
   <p>
