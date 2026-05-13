@@ -1,14 +1,27 @@
 {
   "recommendations": [
     "biomejs.biome",
-    "jnoortheen.nix-ide",
-    "ziglang.vscode-zig",
-    "github.vscode-github-actions",
-    "redhat.vscode-yaml",
-    "tamasfe.even-better-toml",
     "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "github.vscode-github-actions",
+    "jnoortheen.nix-ide",
+    "kdl-org.kdl",
+    "mkhl.direnv",
+    "mkhl.shfmt",
+    "oven.bun-vscode",
+    "redhat.vscode-yaml",
+    "remcohaszing.schemastore",
+    "rust-lang.rust-analyzer",
+    "streetsidesoftware.code-spell-checker",
+    "sumneko.lua",
+    "tamasfe.even-better-toml",
+    "thenuprojectcontributors.vscode-nushell-lang",
     "timonwong.shellcheck",
-    "mkhl.direnv"
+    "vadimcn.vscode-lldb",
+    "ziglang.vscode-zig"
   ],
-  "unwantedRecommendations": ["esbenp.prettier-vscode"]
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode",
+    "rust-lang.rust"
+  ]
 }

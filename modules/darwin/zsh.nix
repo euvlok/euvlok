@@ -56,7 +56,7 @@ let
     }
   ];
   customPluginsStr = lib.pipe customPlugins [
-    (pluginsList: builtins.map (p: "source ${p.src}") pluginsList)
+    (pluginsList: map (p: "source ${p.src}") pluginsList)
     (builtins.concatStringsSep "\n")
   ];
 
@@ -91,17 +91,17 @@ in
   ];
 
   programs.zsh.promptInit = lib.mkMerge [
-    (lib.optionalString (hmConfig.hm.ghostty.enable) (''
+    (lib.optionalString (hmConfig.hm.ghostty.enable) ''
       if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
         source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
       fi
-    ''))
-    (lib.optionalString (hmConfig.programs.starship.enable) (''
+    '')
+    (lib.optionalString (hmConfig.programs.starship.enable) ''
       if [[ $TERM != "dumb" ]]; then
         eval "$(starship init zsh)"
       fi
-    ''))
-    (lib.optionalString (hmConfig.hm.yazi.enable) (''
+    '')
+    (lib.optionalString (hmConfig.hm.yazi.enable) ''
       function yy() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
         yazi "$@" --cwd-file="$tmp"
@@ -110,8 +110,8 @@ in
         fi
         rm -f -- "$tmp"
       }
-    ''))
-    (lib.optionalString (hmConfig.hm.zoxide.enable) (''eval "$(zoxide init zsh)"''))
+    '')
+    (lib.optionalString (hmConfig.hm.zoxide.enable) ''eval "$(zoxide init zsh)"'')
     (lib.optionalString (hmConfig.services.ssh-agent.enable) ''
       if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
         export SSH_AUTH_SOCK="$(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${hmConfig.services.ssh-agent.socket}"

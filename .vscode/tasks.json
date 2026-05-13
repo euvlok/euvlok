@@ -21,6 +21,104 @@
       "command": "bun run test",
       "group": "test",
       "problemMatcher": []
+    },
+    {
+      "label": "biome: check",
+      "type": "shell",
+      "command": "bunx biome check --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "biome: format",
+      "type": "shell",
+      "command": "bunx biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "github: check workflows",
+      "type": "shell",
+      "command": "bun run github:check-workflows",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "github: lint workflows",
+      "type": "shell",
+      "command": "bun run github:lint-workflows",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "nix: flake check",
+      "type": "shell",
+      "command": "nix flake check",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "nix: format",
+      "type": "shell",
+      "command": "nix fmt",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "nix: develop",
+      "type": "shell",
+      "command": "nix develop",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "rust: check",
+      "type": "shell",
+      "command": "cargo check --workspace --all-targets --all-features",
+      "group": "build",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: clippy",
+      "type": "shell",
+      "command": "cargo clippy --workspace --all-targets --all-features",
+      "group": "build",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "rust: test",
+      "type": "shell",
+      "command": "cargo test --workspace --all-features",
+      "group": "test",
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "zig: fmt check",
+      "type": "shell",
+      "command": "zig fmt --check dotfiles/flameflag/.chezmoiscripts hosts/hm/lay-by/hyprland/scripts/src lib/zig",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "shell: shellcheck",
+      "type": "shell",
+      "command": "find . -path './.git' -prune -o -path './node_modules' -prune -o -path './.direnv' -prune -o -path './.devenv' -prune -o -name '*.sh' -print0 | xargs -0 shellcheck",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "fallow",
+      "type": "shell",
+      "command": "bun run fallow",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "fallow: audit",
+      "type": "shell",
+      "command": "bun run fallow:audit",
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }
