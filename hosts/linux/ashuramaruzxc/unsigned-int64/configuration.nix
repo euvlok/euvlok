@@ -17,10 +17,8 @@
     ./hardware-configuration.nix
     ./services/default.nix
     ./settings.nix
-    ./shadowsocks.nix
     ./users.nix
     ./wireguard.nix
-    ./tailscale.nix
   ];
 
   security = {
@@ -42,9 +40,6 @@
   virtualisation.oci-containers.containers.byparr = {
     image = "ghcr.io/thephaseless/byparr:latest";
     autoStart = true;
-    ports = [
-      "172.16.31.1:8191:8191"
-    ];
     environment = {
       HOST = "172.16.31.1";
       PORT = "8191";

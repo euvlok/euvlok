@@ -126,13 +126,13 @@
       }
       {
         job_name = "prometheus";
-        metrics_path = "/metrics";
+        metrics_path = "/prometheus/metrics";
         static_configs = [ { targets = [ "127.0.0.1:${toString config.services.prometheus.port}" ]; } ];
       }
       {
         job_name = "ecoflow";
         metrics_path = "/metrics";
-        static_configs = [ { targets = [ "172.16.31.1:9981" ]; } ];
+        static_configs = [ { targets = [ "127.0.0.1:9981" ]; } ];
       }
     ];
   };

@@ -87,24 +87,24 @@
         # maps
         ;
       # Camera raw previes
-      camerarawpreviews = pkgs.fetchNextcloudApp {
-        appName = "camerarawpreviews";
-        homepage = "https:2//github.com/ariselseng/camerarawpreviews";
-        description = "Camera Raw Previews app for Nextcloud";
-        url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.7/camerarawpreviews_nextcloud.tar.gz";
-        sha256 = "sha256-aiMUSJQVbr3xlJkqOaE3cNhdZu3CnPEIWTNVOoG4HSo=";
-        license = "${lib.licenses.agpl3Only.shortName}";
-        appVersion = "0.8.7";
-      };
-      integration_paperless = pkgs.fetchNextcloudApp {
-        appName = "integration_paperless";
-        homepage = "https://apps.nextcloud.com/apps/integration_paperless";
-        description = "Integration with the Paperless Document Management System";
-        url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.6/integration_paperless-v1.0.6.tar.gz";
-        sha256 = "sha256-Tw0VZk+ByXLmFdNBgJdFnHUiFarDP+YyulzvCmE3ivw=";
-        license = "${lib.licenses.agpl3Only.shortName}";
-        appVersion = "1.0.6";
-      };
+      # camerarawpreviews = pkgs.fetchNextcloudApp {
+      #   appName = "camerarawpreviews";
+      #   homepage = "https:2//github.com/ariselseng/camerarawpreviews";
+      #   description = "Camera Raw Previews app for Nextcloud";
+      #   url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.7/camerarawpreviews_nextcloud.tar.gz";
+      #   sha256 = "sha256-aiMUSJQVbr3xlJkqOaE3cNhdZu3CnPEIWTNVOoG4HSo=";
+      #   license = "${lib.licenses.agpl3Only.shortName}";
+      #   appVersion = "0.8.7";
+      # };
+      # integration_paperless = pkgs.fetchNextcloudApp {
+      #   appName = "integration_paperless";
+      #   homepage = "https://apps.nextcloud.com/apps/integration_paperless";
+      #   description = "Integration with the Paperless Document Management System";
+      #   url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.6/integration_paperless-v1.0.6.tar.gz";
+      #   sha256 = "sha256-Tw0VZk+ByXLmFdNBgJdFnHUiFarDP+YyulzvCmE3ivw=";
+      #   license = "${lib.licenses.agpl3Only.shortName}";
+      #   appVersion = "1.0.6";
+      # };
     };
     extraAppsEnable = true;
     hostName = "cloud.tenjin-dk.com";
