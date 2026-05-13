@@ -1,143 +1,238 @@
-<p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/European_stars.svg/3840px-European_stars.svg.png" width="400" height="400" />
-</p>
+<div align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/palette/macchiato.png"
+    />
+    <img
+      alt="Catppuccin palette strip"
+      src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/palette/latte.png"
+      width="520"
+    />
+  </picture>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/palette/latte.png" width="400" />
-</p>
+  <h1>EUVlok</h1>
 
-<p align="center">
-  <a href="https://github.com/nixcordia/euvlok/stargazers"><img src="https://img.shields.io/github/stars/nixcordia?colorA=363a4f&colorB=b7bdf8&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij4KPHBhdGggZD0iTTIzNS4yNCw4NC4zOGwtMjguMDYsMjMuNjgsOC41NiwzNS4zOWExMy4zNCwxMy4zNCwwLDAsMS01LjA5LDEzLjkxLDEzLjU0LDEzLjU0LDAsMCwxLTE1LC42OUwxNjQsMTM5bC0zMS42NSwxOS4wNmExMy41MSwxMy41MSwwLDAsMS0xNS0uNjksMTMuMzIsMTMuMzIsMCwwLDEtNS4xLTEzLjkxbDguNTYtMzUuMzlMOTIuNzYsODQuMzhhMTMuMzksMTMuMzksMCwwLDEsNy42Ni0yMy41OGwzNi45NC0yLjkyLDE0LjIxLTMzLjY2YTEzLjUxLDEzLjUxLDAsMCwxLDI0Ljg2LDBsMTQuMjEsMzMuNjYsMzYuOTQsMi45MmExMy4zOSwxMy4zOSwwLDAsMSw3LjY2LDIzLjU4Wk04OC4xMSwxMTEuODlhOCw4LDAsMCwwLTExLjMyLDBMMTguMzQsMTcwLjM0YTgsOCwwLDAsMCwxMS4zMiwxMS4zMmw1OC40NS01OC40NUE4LDgsMCwwLDAsODguMTEsMTExLjg5Wm0tLjUsNjEuMTlMMzQuMzQsMjI2LjM0YTgsOCwwLDAsMCwxMS4zMiwxMS4zMmw1My4yNi01My4yN2E4LDgsMCwwLDAtMTEuMzEtMTEuMzFabTczLTEtNTQuMjksNTQuMjhhOCw4LDAsMCwwLDExLjMyLDExLjMybDU0LjI4LTU0LjI4YTgsOCwwLDAsMC0xMS4zMS0xMS4zMloiIHN0eWxlPSJmaWxsOiAjQ0FEM0Y1OyIvPgo8L3N2Zz4="></a>
-  <a href="https://github.com/nixcordia/euvlok/issues"><img src="https://img.shields.io/github/issues/nixcordia/euvlok?colorA=363a4f&colorB=f5a97f&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij4KPHBhdGggZD0iTTIxNiwzMlYxOTJhOCw4LDAsMCwxLTgsOEg3MmExNiwxNiwwLDAsMC0xNiwxNkgxOTJhOCw4LDAsMCwxLDAsMTZINDhhOCw4LDAsMCwxLTgtOFY1NkEzMiwzMiwwLDAsMSw3MiwyNEgyMDhBOCw4LDAsMCwxLDIxNiwzMloiIHN0eWxlPSJmaWxsOiAjQ0FEM0Y1OyIvPgo8L3N2Zz4="></a>
-    <a href="https://github.com/nixcordia/euvlok/contributors"><img src="https://img.shields.io/github/contributors/nixcordia/euvlok?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
-</p>
+  <p>
+    <strong>A communal Nix flake for shared systems, homes, dotfiles, and the small tools that keep them moving.</strong>
+  </p>
 
-# 🇪🇺 ❄️ EUVlok
-
-**EU** stands for the European Union, while **vlok** comes from the Dutch word
-for "flake".
-
-When choosing the name for this repository, we focused on three factors:
-
-1. It should be short
-2. It should relate to the EU
-3. It should include some Dutch elements
-
-We chose a Dutch word because NixOS was created in the Netherlands by [Eelco
-Dolstra](https://edolstra.github.io/). Additionally, the Netherlands is a
-strong supporter of the EU, shares its values, and has close ties to both Nix
-and NixOS.
-
----
-
-## 👋🏻 👥 Welcome to our communal repository
-
-As friends, we've decided to create this shared repo where we will store
-our dotfiles. This endeavor is more than just a convenient place to keep our
-dotfiles. It's a shared commitment to **deepen our understanding of Nix and
-collectively learn and grow.**
-
-We frequently discuss Nix and share new programs with each other. Previously,
-our repositories were separate, which made instant sharing difficult.
-
-Now, we can immediately access the [modules](/modules/) folder to share
-our latest findings. Also, we can easily tap into each other's dotfiles to
-experiment with and adopt opinionated settings that we like.
-
-Beyond the immediate benefits of sharing _(between ourselves)_, a core
-motivation for this communal repository is our ambition to truly push Nix to its
-limits. Crafting an isolated Nix configuration tailored to a single individual
-is _relatively easy_, you can take as many shortcuts as you like, and design
-choices be damned. **_We, however, aspire to the opposite._**
-
-We want to cultivate a shared "system," so to speak, that is not only robust and
-highly maintainable, but also serves as a practical demonstration of advanced,
-collaborative testament to what can be done with Nix.
+  <p>
+    <a href="https://github.com/euvlok/euvlok/actions/workflows/ci.yml">
+      <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=main&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189">
+    </a>
+    <a href="https://github.com/euvlok/euvlok/stargazers">
+      <img alt="GitHub stars" src="https://img.shields.io/github/stars/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=ca9ee6">
+    </a>
+    <a href="https://github.com/euvlok/euvlok/issues">
+      <img alt="Open issues" src="https://img.shields.io/github/issues/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=ef9f76">
+    </a>
+    <a href="./LICENSE.txt">
+      <img alt="License" src="https://img.shields.io/github/license/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=8caaee">
+    </a>
+  </p>
+</div>
 
 ---
 
-## 🤝🏻 🤲🏻 Open Hands, Open Code
+<table>
+  <tr>
+    <td><strong>Systems</strong></td>
+    <td>NixOS, nix-darwin, and standalone Home Manager configurations.</td>
+  </tr>
+  <tr>
+    <td><strong>Dotfiles</strong></td>
+    <td>Chezmoi-managed user files, templates, scripts, and application config.</td>
+  </tr>
+  <tr>
+    <td><strong>Modules</strong></td>
+    <td>Reusable Nix modules for hosts, homes, terminals, shells, services, themes, and desktop environments.</td>
+  </tr>
+  <tr>
+    <td><strong>Tooling</strong></td>
+    <td>Bun/TypeScript utilities for repository automation, browser extension updates, userstyle builds, and NVIDIA prefetching.</td>
+  </tr>
+</table>
 
-_Sharing is the core motivation behind this repo._ Every single line here was
-made possible by the broader community of Nix users, most of whom have chosen to
-make their work publicly available for everyone.
+## Why This Exists
 
-All of us have practically learned _EVERYTHING_ from reading both official
-and unofficial Nix docs, spending countless hours looking at Nixpkgs source
-code, following PRs and issues, and reading discussions on "NixOS Discourse."
-By casually exploring and sharing knowledge within the Nix community, we have
-collectively improved our understanding of Nix, which has helped us build more
-advanced and "detailed" Nix setups.
+EUVlok is where a few friends keep their machines understandable together.
 
-Now, we believe it is the appropriate time to give back to the community.
-Although some of our code is specifically tailored for our own use, we are
-confident that substantial portions—especially the opinionated sections
-and custom generic functions for modules—will be still useful to anyone who
-discovers this repo.
+The name is half European Union, half Dutch: `EU` for the European Union and
+`vlok` for "flake." The Dutch nod is intentional; Nix began in the Netherlands,
+and this repo is very much in that lineage of declarative systems, careful
+composition, and the occasional strongly held opinion about a shell prompt.
 
----
+This repository is not a pristine starter template. It is a working garden of
+real machines, real habits, and shared abstractions that have survived contact
+with daily use. The goal is to make personal infrastructure easier to inspect,
+borrow from, improve, and repair.
 
-## 🤔 🔍 What do I look for?
+## What Is Inside
 
-We think that you'll find the most use out of the [modules](/modules/) folder;
-it contains all of the module bases we use and extend in our configs.
+| Path                                | Purpose                                                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [`flake.nix`](./flake.nix)          | Top-level flake inputs, partitions, systems, and shared output wiring.                             |
+| [`flake-modules/`](./flake-modules) | Flake-parts modules for packages, exported modules, users, checks, and the development shell.      |
+| [`hosts/`](./hosts)                 | NixOS, nix-darwin, and Home Manager host/user entrypoints.                                         |
+| [`modules/`](./modules)             | Reusable modules for NixOS, nix-darwin, Home Manager, cross-platform defaults, and helper scripts. |
+| [`dotfiles/`](./dotfiles)           | Chezmoi dotfiles and templates for user-space configuration.                                       |
+| [`lib/`](./lib)                     | Shared Nix helpers for Catppuccin, Ghostty, Kanata, Yazi, Zellij, and general module ergonomics.   |
+| [`packages/`](./packages)           | Bun-powered automation packages and shared TypeScript utilities.                                   |
+| [`scripts/`](./scripts)             | Repository and GitHub workflow automation scripts.                                                 |
+| [`secrets/`](./secrets)             | SOPS-encrypted host and user secrets.                                                              |
 
-We also think that you will find value in [pkgs](/pkgs/); it contains a custom
-derivation for packages that do not exist on `nixpkgs`. It's very likely you
-ended up in this repo because of this folder!
+## Published Flake Outputs
 
-## Before you leave
+<details open>
+<summary><strong>Modules</strong></summary>
 
-Before you leave, we want to provide you with a nicely curated list of useful
-nix resources
+```nix
+inputs.euvlok.nixosModules.default
+inputs.euvlok.darwinModules.default
+inputs.euvlok.homeModules.default
+inputs.euvlok.homeModules.os
+```
 
-### Some general Nix resources
+The same modules are also exposed under `flake.modules` for newer consumers.
 
-- [Devenv](https://devenv.sh/)
-- [Learn X in Y minutes - Nix](https://learnxinyminutes.com/nix/)
-- [Offical NixOS Wiki](https://wiki.nixos.org/wiki/NixOS_Wiki)
-- [Nix Dev](https://nix.dev/)
-- [NixOS Discourse](https://discourse.nixos.org/)
-- [Noogle](https://noogle.dev/)
+</details>
 
-- [Nixpkgs](https://github.com/NixOS/nixpkgs)
-  (<https://github.com/NixOS/nixpkgs>)
-- [Nixpkgs Docs](https://github.com/NixOS/nixpkgs/tree/master/doc)
-  (<https://github.com/NixOS/nixpkgs/tree/master/doc>)
-- [Nixpkgs 25.05 Release Notes](https://github.com/NixOS/nixpkgs/blob/master/doc/release-notes/rl-2505.section.md)
+<details>
+<summary><strong>Configurations</strong></summary>
 
-- [Home Manager Unstable Options](https://home-manager-options.extranix.com/?query=&release=master)
+```text
+nixosConfigurations:
+  blind-faith
+  nanachi
+  null
+  nyx
+  unsigned-int8
+  unsigned-int16
+  unsigned-int32
+  unsigned-int64
 
-### Nix & Nix Adjacent YouTube Channels
+darwinConfigurations:
+  FlameFlags-Mac-mini
+  faputa
+  unsigned-int8
 
-- [Vimjoyer](https://www.youtube.com/channel/UC_zBdZ0_H_jn41FDRG7q4Tw)
-- [logaMaster](https://www.youtube.com/channel/UCFzUEe9XUlkDLp6AmtNzmOA)
-- [EmergentMind](https://www.youtube.com/channel/UCsWaVYzOFvEWDsEuvuZJ-8A)
+homeConfigurations:
+  ashuramaruzxc
+  bigshaq9999
+  lay-by
+  sm-idk
+```
 
-### Some Nix blogs
+</details>
 
-- [Flakes aren't real and cannot hurt you: a guide to using Nix flakes the non-flake way](https://jade.fyi/blog/flakes-arent-real/)
-- [Nix Flakes is an experiment that did too much at once…](https://samuel.dionne-riel.com/blog/2023/09/06/flakes-is-an-experiment-that-did-too-much-at-once.html)
-- [Pinning NixOS with npins, or how to kill channels forever without flakes](https://jade.fyi/blog/pinning-nixos-with-npins/)
-- [Stop Using nix-env](https://stop-using-nix-env.privatevoid.net/)
-- [The wonders of Nix remotebuilders](https://heitorpb.github.io/bla/wonders-of-nix-remote-builders/)
-- [Nix vanity store paths](https://fzakaria.com/2025/03/27/nix-vanity-store-paths)
-- [What's in a Nix store path](https://fzakaria.com/2025/03/28/what-s-in-a-nix-store-path)
-- [Chaining Nix stores for fun](https://fzakaria.com/2025/05/07/chaining-nix-stores-for-fun)
-- [Nix derivations by hand](https://fzakaria.com/2025/03/23/nix-derivations-by-hand)
+<details>
+<summary><strong>Apps and packages</strong></summary>
+
+```text
+auto-rebase
+browser-extension-update
+nvidia-prefetch
+```
+
+Each package is also exposed as a flake app, so it can be run with
+`nix run .#auto-rebase`, `nix run .#browser-extension-update`, or
+`nix run .#nvidia-prefetch`.
+
+</details>
+
+## Working Here
+
+Enter the development environment:
+
+```sh
+nix develop
+```
+
+Install JavaScript dependencies when needed:
+
+```sh
+bun install
+```
+
+Run the main checks:
+
+```sh
+bun run check
+bun test
+```
+
+Format the TypeScript workspace:
+
+```sh
+bun run format
+```
+
+Format Nix files through the flake formatter:
+
+```sh
+nix fmt
+```
+
+## Common Operations
+
+Build or inspect a host:
+
+```sh
+nix build .#nixosConfigurations.nyx.config.system.build.toplevel
+nix build .#darwinConfigurations.FlameFlags-Mac-mini.system
+```
+
+Run one of the local automation tools:
+
+```sh
+nix run .#auto-rebase
+nix run .#browser-extension-update
+nix run .#nvidia-prefetch
+```
+
+Work directly with the Bun scripts:
+
+```sh
+bun run github:check-workflows
+bun run github:lint-workflows
+bun run github:update-browser-extensions
+bun run github:update-custom-packages
+bun run github:update-trivial-flake-inputs
+```
+
+## Design Notes
+
+EUVlok is built around a few preferences:
+
+- Keep host files thin and push reusable behavior into modules.
+- Separate shared defaults from personal taste wherever the boundary is useful.
+- Treat automations as source code, with tests where the behavior can drift.
+- Prefer explicit flake outputs over undocumented local conventions.
+- Keep secrets encrypted and close to the configurations that consume them.
+
+## Useful Nix Resources
+
+| Resource                                                           | Why it is useful                                                                 |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| [nix.dev](https://nix.dev/)                                        | The best general-purpose on-ramp for modern Nix.                                 |
+| [NixOS Wiki](https://wiki.nixos.org/wiki/NixOS_Wiki)               | Practical notes for services, hardware, and day-to-day system work.              |
+| [Nixpkgs](https://github.com/NixOS/nixpkgs)                        | The source of truth for packages, modules, and patterns worth copying carefully. |
+| [Nixpkgs manual](https://nixos.org/manual/nixpkgs/stable/)         | Package, override, and library documentation.                                    |
+| [Home Manager options](https://home-manager-options.extranix.com/) | Searchable Home Manager option reference.                                        |
+| [Noogle](https://noogle.dev/)                                      | Search for Nix functions and examples.                                           |
+| [Devenv](https://devenv.sh/)                                       | Reproducible development shells with a friendly interface.                       |
 
 ## Credits
 
-- Catppuccin Shields ⸺ [Catppuccin Org](https://github.com/catppuccin)
-
-&nbsp;
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" />
-</p>
+This repo borrows ideas, patterns, and taste from the wider Nix community. It
+also uses the Catppuccin palette and footer art; see the
+[Catppuccin project](https://github.com/catppuccin/catppuccin) for licensing
+and assets.
 
 <p align="center">
-  <a href="https://github.com/catppuccin/catppuccin/blob/main/LICENSE"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8"/></a>
+  <img
+    alt=""
+    src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true"
+  />
 </p>
-
-<!-- Stars are not just patterns in the sky; they are the universe whispering secrets to those who dare to listen. -->
