@@ -1,5 +1,7 @@
 const std = @import("std");
 
+const stdout_buffer_size = 4096;
+
 const players = [_][]const u8{ "spotify", "rhythmbox", "Feishin" };
 const no_player_message = "No Player Found\n";
 
@@ -30,6 +32,7 @@ const TrackText = struct {
     fn deinit(self: *TrackText, allocator: std.mem.Allocator) void {
         self.artists.deinit(allocator);
         self.titles.deinit(allocator);
+        self.* = undefined;
     }
 
     fn append(self: *TrackText, allocator: std.mem.Allocator, item: MetadataValue) !void {
@@ -43,7 +46,11 @@ const TrackText = struct {
         return self.artists.items.len == 0 and self.titles.items.len == 0;
     }
 
-    fn writeJoined(values: []const []const u8, allocator: std.mem.Allocator, out: *std.ArrayList(u8)) !void {
+    fn writeJoined(
+        allocator: std.mem.Allocator,
+        values: []const []const u8,
+        out: *std.ArrayList(u8),
+    ) !void {
         for (values, 0..) |value, index| {
             if (index != 0) try out.append(allocator, '\n');
             try out.appendSlice(allocator, value);
@@ -54,11 +61,11 @@ const TrackText = struct {
         var out = std.ArrayList(u8).empty;
         defer out.deinit(allocator);
 
-        try writeJoined(self.artists.items, allocator, &out);
+        try writeJoined(allocator, self.artists.items, &out);
         if (self.artists.items.len != 0 and self.titles.items.len != 0) {
             try out.appendSlice(allocator, " - ");
         }
-        try writeJoined(self.titles.items, allocator, &out);
+        try writeJoined(allocator, self.titles.items, &out);
 
         return collapseSpaces(allocator, out.items);
     }
@@ -70,14 +77,14 @@ fn writeNoPlayer(io: std.Io) !void {
 
 fn isWantedPlayer(line: []const u8) bool {
     for (players) |player| {
-        if (std.mem.indexOf(u8, line, player) != null) return true;
+        if (std.mem.find(u8, line, player) != null) return true;
     }
     return false;
 }
 
 fn readMetadata(line: []const u8) ?MetadataValue {
     for (metadata_rules) |rule| {
-        if (std.mem.indexOf(u8, line, rule.key)) |key_start| {
+        if (std.mem.find(u8, line, rule.key)) |key_start| {
             const value_start = key_start + rule.key.len;
             return .{
                 .field = rule.field,
@@ -119,7 +126,7 @@ fn renderTrackText(allocator: std.mem.Allocator, metadata: []const u8) !?[]u8 {
     }
     if (track.isEmpty()) return null;
 
-    return try track.format(allocator);
+    return @as(?[]u8, try track.format(allocator));
 }
 
 pub fn main(init: std.process.Init) !void {
@@ -155,7 +162,7 @@ pub fn main(init: std.process.Init) !void {
     };
     defer allocator.free(compact);
 
-    var buffer: [4096]u8 = undefined;
+    var buffer: [stdout_buffer_size]u8 = undefined;
     var stdout = std.Io.File.stdout().writerStreaming(init.io, &buffer);
     try stdout.interface.print("{s}\n", .{compact});
     try stdout.interface.flush();

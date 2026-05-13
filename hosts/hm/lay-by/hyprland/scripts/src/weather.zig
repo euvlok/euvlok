@@ -1,5 +1,7 @@
 const std = @import("std");
 
+const stdout_buffer_size = 256;
+
 const Config = struct {
     api: []const u8,
     key: []const u8,
@@ -102,7 +104,7 @@ fn cityParam(allocator: std.mem.Allocator, city: []const u8) ![]u8 {
     }
 }
 
-fn fetchWeather(io: std.Io, allocator: std.mem.Allocator, url: []const u8) ![]u8 {
+fn fetchWeather(allocator: std.mem.Allocator, io: std.Io, url: []const u8) ![]u8 {
     var client: std.http.Client = .{
         .allocator = allocator,
         .io = io,
@@ -152,12 +154,12 @@ fn renderWeather(allocator: std.mem.Allocator, body: []const u8, symbol: []const
     const current = parsed.value.weather[0];
     const temp_int = try tempToInt(parsed.value.main.temp);
 
-    return try std.fmt.allocPrint(allocator, "{s} {s}, {d}{s}", .{
+    return @as(?[]u8, try std.fmt.allocPrint(allocator, "{s} {s}, {d}{s}", .{
         iconFor(current.icon),
         current.description,
         temp_int,
         symbol,
-    });
+    }));
 }
 
 pub fn main(init: std.process.Init) !void {
@@ -173,7 +175,7 @@ pub fn main(init: std.process.Init) !void {
     );
     defer allocator.free(url);
 
-    const body = fetchWeather(init.io, allocator, url) catch |err| switch (err) {
+    const body = fetchWeather(allocator, init.io, url) catch |err| switch (err) {
         error.OpenWeatherRequestFailed => return,
         else => |unexpected| return unexpected,
     };
@@ -186,7 +188,7 @@ pub fn main(init: std.process.Init) !void {
     const output = text orelse return;
     defer allocator.free(output);
 
-    var buffer: [256]u8 = undefined;
+    var buffer: [stdout_buffer_size]u8 = undefined;
     var stdout = std.Io.File.stdout().writerStreaming(init.io, &buffer);
     try stdout.interface.print("{s}\n", .{output});
     try stdout.interface.flush();

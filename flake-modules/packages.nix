@@ -79,6 +79,92 @@
             exec bun --bun run ${script} -- "$@"
           '';
         };
+
+      mkZigPackage =
+        {
+          name,
+        }:
+        pkgs.stdenv.mkDerivation {
+          pname = name;
+          version = "0-unstable";
+          src = lib.fileset.toSource {
+            root = ../.;
+            fileset = lib.fileset.unions [
+              ../build.zig
+              ../lib/zig
+              (../packages + "/${name}")
+              ../dotfiles/flameflag/.chezmoiscripts
+              ../hosts/hm/lay-by/hyprland/scripts/src
+            ];
+          };
+
+          nativeBuildInputs = [ pkgs.zig_0_16 ];
+
+          doCheck = true;
+          checkPhase = ''
+            runHook preCheck
+            zig build test
+            runHook postCheck
+          '';
+
+          installPhase = ''
+            runHook preInstall
+            zig build install -Doptimize=ReleaseSafe --prefix "$out"
+            runHook postInstall
+          '';
+
+          meta = {
+            description = "Fetch NVIDIA driver hashes and update the Nix expression";
+            license = lib.licenses.mit;
+            mainProgram = name;
+            platforms = lib.platforms.unix;
+          };
+        };
+
+      mkZiglintPackage =
+        let
+          version = "0.5.2";
+          sources = {
+            aarch64-darwin = {
+              artifact = "ziglint-aarch64-macos.tar.gz";
+              hash = "sha256-7F7Wk4p+iFGdiTtwd6c3O3dRWeTnCNYxSHtZ8FWyM1Y=";
+            };
+            aarch64-linux = {
+              artifact = "ziglint-aarch64-linux.tar.gz";
+              hash = "sha256-Dtjzaah/lji/0OETdGrXkiUu2gaoKsa8P1hIeGQhw0A=";
+            };
+            x86_64-linux = {
+              artifact = "ziglint-x86_64-linux.tar.gz";
+              hash = "sha256-XqxsF1/0iDCg4Nl4SpY8wvNfLVOkZSEsyVNSXo9d9rs=";
+            };
+          };
+          source = sources.${pkgs.stdenvNoCC.hostPlatform.system};
+        in
+        pkgs.stdenvNoCC.mkDerivation {
+          pname = "ziglint";
+          inherit version;
+          src = pkgs.fetchurl {
+            url = "https://github.com/rockorager/ziglint/releases/download/v${version}/${source.artifact}";
+            inherit (source) hash;
+          };
+          sourceRoot = ".";
+          dontBuild = true;
+          dontFixup = true;
+          installPhase = ''
+            runHook preInstall
+
+            install -D -m755 ziglint $out/bin/ziglint
+
+            runHook postInstall
+          '';
+          meta = {
+            description = "Static analysis for Zig";
+            homepage = "https://github.com/rockorager/ziglint";
+            license = lib.licenses.mit;
+            mainProgram = "ziglint";
+            platforms = builtins.attrNames sources;
+          };
+        };
     in
     {
       packages = {
@@ -86,7 +172,8 @@
         browser-extension-update = mkBunPackage {
           name = "browser-extension-update";
         };
-        nvidia-prefetch = mkBunPackage { name = "nvidia-prefetch"; };
+        nvidia-prefetch = mkZigPackage { name = "nvidia-prefetch"; };
+        ziglint = mkZiglintPackage;
       };
 
       overlayAttrs = {
@@ -94,6 +181,7 @@
           auto-rebase
           browser-extension-update
           nvidia-prefetch
+          ziglint
           ;
       };
 

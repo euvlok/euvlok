@@ -17,7 +17,8 @@
     "format": "biome check --write --error-on-warnings --max-diagnostics=none package.json biome.jsonc tsconfig.json lib packages scripts",
     "format:check": "bun run check",
     "nvidia-prefetch": "bun --bun run packages/nvidia-prefetch/src/index.ts",
-    "test": "bun test packages/browser-extensions-update/tests packages/nvidia-prefetch/tests"
+    "test": "bun test packages/browser-extensions-update/tests packages/nvidia-prefetch/tests",
+    "zig:lint": "nix run .#ziglint --"
   },
   "dependencies": {
     "@actions/artifact": "^6.2.1",

@@ -1,0 +1,8 @@
+.{
+    .paths = .{
+        "build.zig",
+        "lib/zig/chezmoi",
+        "dotfiles/flameflag/.chezmoiscripts",
+        "hosts/hm/lay-by/hyprland/scripts/src",
+    },
+}

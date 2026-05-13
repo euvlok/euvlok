@@ -1,6 +1,11 @@
 const std = @import("std");
 
-const threshold = 76;
+const status_buffer_size = 128;
+
+const temperature_style = struct {
+    const hot_threshold_celsius = 76;
+    const hot_color = "#FE3120";
+};
 
 const GpuMetric = struct {
     query: []const u8,
@@ -15,8 +20,9 @@ const GpuStatus = struct {
     utilization_raw: []u8,
     temperature: i64,
 
-    fn deinit(self: GpuStatus, allocator: std.mem.Allocator) void {
+    fn deinit(self: *GpuStatus, allocator: std.mem.Allocator) void {
         allocator.free(self.utilization_raw);
+        self.* = undefined;
     }
 
     fn utilization(self: GpuStatus) []const u8 {
@@ -25,14 +31,17 @@ const GpuStatus = struct {
 };
 
 fn formatGpuStatus(allocator: std.mem.Allocator, utilization: []const u8, temperature: i64) ![]u8 {
-    if (temperature > threshold) {
-        return std.fmt.allocPrint(allocator, "{s} %{{F#FE3120}}{d}°C", .{ utilization, temperature });
+    if (temperature > temperature_style.hot_threshold_celsius) {
+        return std.fmt.allocPrint(allocator, "{s} %{{F" ++ temperature_style.hot_color ++ "}}{d}°C", .{
+            utilization,
+            temperature,
+        });
     }
 
     return std.fmt.allocPrint(allocator, "{s}% {d}°C", .{ utilization, temperature });
 }
 
-fn queryMetric(io: std.Io, allocator: std.mem.Allocator, metric: GpuMetric) ![]u8 {
+fn queryMetric(allocator: std.mem.Allocator, io: std.Io, metric: GpuMetric) ![]u8 {
     const result = try std.process.run(allocator, io, .{
         .argv = &.{
             "nvidia-smi",
@@ -52,7 +61,11 @@ fn queryMetric(io: std.Io, allocator: std.mem.Allocator, metric: GpuMetric) ![]u
     return error.NvidiaSmiFailed;
 }
 
-fn parseGpuStatus(allocator: std.mem.Allocator, temp_raw: []const u8, utilization_raw: []const u8) !GpuStatus {
+fn parseGpuStatus(
+    allocator: std.mem.Allocator,
+    temp_raw: []const u8,
+    utilization_raw: []const u8,
+) !GpuStatus {
     const temp_text = std.mem.trim(u8, temp_raw, " \t\r\n");
     const temperature = std.fmt.parseInt(i64, temp_text, 10) catch return error.NvidiaSmiFailed;
     const utilization_owned = try allocator.dupe(u8, utilization_raw);
@@ -63,20 +76,20 @@ fn parseGpuStatus(allocator: std.mem.Allocator, temp_raw: []const u8, utilizatio
     };
 }
 
-fn readGpuStatus(io: std.Io, allocator: std.mem.Allocator) !GpuStatus {
-    const temp_raw = try queryMetric(io, allocator, metrics.temperature);
+fn readGpuStatus(allocator: std.mem.Allocator, io: std.Io) !GpuStatus {
+    const temp_raw = try queryMetric(allocator, io, metrics.temperature);
     defer allocator.free(temp_raw);
 
-    const utilization_raw = try queryMetric(io, allocator, metrics.utilization);
+    const utilization_raw = try queryMetric(allocator, io, metrics.utilization);
     defer allocator.free(utilization_raw);
 
-    return try parseGpuStatus(allocator, temp_raw, utilization_raw);
+    return parseGpuStatus(allocator, temp_raw, utilization_raw);
 }
 
 pub fn main(init: std.process.Init) !void {
     const allocator = init.gpa;
 
-    const status = readGpuStatus(init.io, allocator) catch |err| switch (err) {
+    var status = readGpuStatus(allocator, init.io) catch |err| switch (err) {
         error.NvidiaSmiFailed, error.FileNotFound, error.AccessDenied => return,
         else => |unexpected| return unexpected,
     };
@@ -85,7 +98,7 @@ pub fn main(init: std.process.Init) !void {
     const text = try formatGpuStatus(allocator, status.utilization(), status.temperature);
     defer allocator.free(text);
 
-    var buffer: [128]u8 = undefined;
+    var buffer: [status_buffer_size]u8 = undefined;
     var stdout = std.Io.File.stdout().writerStreaming(init.io, &buffer);
 
     try stdout.interface.print("{s}\n", .{text});
@@ -107,7 +120,7 @@ test "formatGpuStatus marks hot temperatures" {
 test "GpuStatus trims utilization output" {
     const allocator = std.testing.allocator;
     const utilization_raw = try allocator.dupe(u8, "  35 \n");
-    const status: GpuStatus = .{
+    var status: GpuStatus = .{
         .utilization_raw = utilization_raw,
         .temperature = 40,
     };
@@ -119,7 +132,7 @@ test "GpuStatus trims utilization output" {
 test "parseGpuStatus maps invalid temperature output to expected nvidia error" {
     const allocator = std.testing.allocator;
 
-    const status = try parseGpuStatus(allocator, "  64\n", "  35 \n");
+    var status = try parseGpuStatus(allocator, "  64\n", "  35 \n");
     defer status.deinit(allocator);
     try std.testing.expectEqual(@as(i64, 64), status.temperature);
     try std.testing.expectEqualStrings("35", status.utilization());

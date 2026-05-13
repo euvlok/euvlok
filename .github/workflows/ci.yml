@@ -78,6 +78,83 @@ jobs:
           gate: new-only
           version: 2.72.0
 
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+
+      - name: Check Rust formatting
+        run: cargo fmt --all -- --check
+
+      - name: Check Rust code
+        run: cargo check --workspace --all-targets --all-features
+
+      - name: Lint Rust code
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Test Rust code
+        run: cargo test --workspace --all-features
+
+  zig:
+    name: Zig
+    runs-on: ubuntu-latest
+    env:
+      ZIG_URL: https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz
+      ZIG_SHA256: 70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00
+      ZIGLINT_URL: https://github.com/rockorager/ziglint/releases/download/v0.5.2/ziglint-x86_64-linux.tar.gz
+      ZIGLINT_SHA256: 5eac6c175ff48830a0e0d9784a963cc2f35f2d53a465212cc953525e8f5df6bb
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install Zig
+        run: |
+          mkdir -p "$RUNNER_TEMP/zig"
+          curl --fail --location --silent --show-error "$ZIG_URL" --output "$RUNNER_TEMP/zig.tar.xz"
+          echo "$ZIG_SHA256  $RUNNER_TEMP/zig.tar.xz" | sha256sum --check -
+          tar --extract --xz --file "$RUNNER_TEMP/zig.tar.xz" --directory "$RUNNER_TEMP/zig" --strip-components 1
+          echo "$RUNNER_TEMP/zig" >> "$GITHUB_PATH"
+
+      - name: Check Zig version
+        run: test "$(zig version)" = "0.16.0"
+
+      - name: Check Zig formatting
+        run: |
+          zig fmt --check .ziglint.zon build.zig
+          find \
+            lib/zig/chezmoi \
+            dotfiles/flameflag/.chezmoiscripts \
+            hosts/hm/lay-by/hyprland/scripts/src \
+            -name '*.zig' \
+            -print0 \
+            | xargs -0 zig fmt --check
+
+      - name: Install Zig linter
+        run: |
+          mkdir -p "$RUNNER_TEMP/ziglint"
+          curl --fail --location --silent --show-error "$ZIGLINT_URL" --output "$RUNNER_TEMP/ziglint.tar.gz"
+          echo "$ZIGLINT_SHA256  $RUNNER_TEMP/ziglint.tar.gz" | sha256sum --check -
+          tar --extract --gzip --file "$RUNNER_TEMP/ziglint.tar.gz" --directory "$RUNNER_TEMP/ziglint"
+          echo "$RUNNER_TEMP/ziglint" >> "$GITHUB_PATH"
+
+      - name: Lint Zig code
+        run: ziglint
+
+      - name: Check Zig code
+        run: zig build check
+
+      - name: Test Zig code
+        run: zig build test
+
   nix:
     name: Nix (${{ matrix.system }})
     runs-on: ${{ matrix.runner }}
