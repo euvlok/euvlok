@@ -183,8 +183,8 @@ in
       }
       // lib.optionalAttrs config.hm.languages.ruby.enable {
         "rubyLsp.bundleGemfile" = "";
-        "rubyLsp.customRubyCommand" = "${pkgs.unstable.ruby_3_4}/bin/ruby";
-        "rubyLsp.lspPath" = "${pkgs.unstable.rubyPackages.ruby-lsp}/bin/ruby-lsp";
+        "rubyLsp.customRubyCommand" = lib.getExe' pkgs.unstable.ruby_4_0 "ruby";
+        "rubyLsp.lspPath" = lib.getExe' pkgs.unstable.rubyPackages.ruby-lsp "ruby-lsp";
         "rubyLsp.pullDiagnosticsOn" = "save";
         "rubyLsp.rubyVersionManager" = "none";
         "[ruby]" = {
