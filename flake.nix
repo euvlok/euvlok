@@ -43,7 +43,7 @@
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode-trivial.inputs.systems.follows = "flake-utils/systems";
     nix4vscode-trivial.url = "github:nix-community/nix4vscode";
-    nixos-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils";
+    nixos-vscode-server-trivial.inputs.flake-utils.follows = "flake-utils-linux";
     nixos-vscode-server-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixos-vscode-server-trivial.url = "github:nix-community/nixos-vscode-server";
     nixcord-trivial.inputs.flake-compat.follows = "";
@@ -97,7 +97,10 @@
     disko-rpi.inputs.nixpkgs.follows = "nixpkgs";
     disko-rpi.url = "github:nvmd/disko/gpt-attrs";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-utils-linux.inputs.systems.follows = "linux-systems-trivial";
+    flake-utils-linux.url = "github:numtide/flake-utils";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
+    linux-systems-trivial.url = "github:nix-systems/default-linux";
     nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
     nixos-apple-silicon.url = "github:nix-community/nixos-apple-silicon";
     mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";

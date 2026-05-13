@@ -438,6 +438,26 @@
         "type": "github"
       }
     },
+    "flake-utils-linux": {
+      "inputs": {
+        "systems": [
+          "linux-systems-trivial"
+        ]
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "flatpak-declerative-trivial": {
       "locked": {
         "lastModified": 1777477262,
@@ -624,6 +644,21 @@
       "original": {
         "owner": "cfergeau",
         "repo": "homebrew-crc",
+        "type": "github"
+      }
+    },
+    "linux-systems-trivial": {
+      "locked": {
+        "lastModified": 1689347949,
+        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default-linux",
         "type": "github"
       }
     },
@@ -944,7 +979,7 @@
     "nixos-vscode-server-trivial": {
       "inputs": {
         "flake-utils": [
-          "flake-utils"
+          "flake-utils-linux"
         ],
         "nixpkgs": [
           "nixpkgs-unstable-small"
@@ -1240,11 +1275,13 @@
         "eupkgs": "eupkgs",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
+        "flake-utils-linux": "flake-utils-linux",
         "flatpak-declerative-trivial": "flatpak-declerative-trivial",
         "home-manager": "home-manager_2",
         "homebrew-cask-trivial": "homebrew-cask-trivial",
         "homebrew-core-trivial": "homebrew-core-trivial",
         "homebrew-crc-trivial": "homebrew-crc-trivial",
+        "linux-systems-trivial": "linux-systems-trivial",
         "mk-shell-bin": "mk-shell-bin",
         "niri-flake-trivial": "niri-flake-trivial",
         "nix-darwin": "nix-darwin",
