@@ -46,7 +46,7 @@ in
         lib.optionalAttrs cfg.claude.statusLine.enable {
           statusLine = {
             type = "command";
-            command = "${pkgs.eupkgs.agent-statusline-pi}/bin/agent-statusline-pi";
+            command = lib.getExe pkgs.eupkgs.agent-statusline-pi;
           };
         }
         // {
@@ -76,7 +76,9 @@ in
     })
     (lib.mkIf cfg.codex.enable {
       home.packages = [
+        pkgs.codex-acp
         pkgs.eupkgs.codex
+        pkgs.unstable.opencode
       ]
       ++ lib.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
 
