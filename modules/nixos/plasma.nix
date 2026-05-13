@@ -69,8 +69,6 @@ in
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
-            darkly
-            darkly-qt5
             dconf-editor # if not declaratively
             ;
           inherit (pkgs.unstable.kdePackages)

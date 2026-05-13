@@ -14,7 +14,7 @@
       inherit (pkgs)
         noto-fonts
         noto-fonts-cjk-sans
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         twitter-color-emoji
         ;
       inherit (pkgs.nerd-fonts) jetbrains-mono hack;

@@ -23,7 +23,6 @@
       gnome-tweaks
       gparted
       pop-launcher
-      polonium
       ;
     inherit (pkgs.unstable.kdePackages)
       krohnkite

@@ -25,7 +25,9 @@
       email = "ashuramaru@tenjin-dk.com";
       dnsResolver = "1.1.1.1:53";
       dnsProvider = "cloudflare";
-      credentialsFile = config.sops.secrets.cloudflare-api_token.path;
+      credentialFiles = {
+        CLOUDFLARE_DNS_API_TOKEN_FILE = config.sops.secrets.cloudflare-api_token.path;
+      };
     };
   };
   services.nginx = {
