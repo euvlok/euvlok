@@ -13,14 +13,28 @@
 
   <h1>EUVlok</h1>
 
+  <pre>
+  _____ _   ___     ___       _
+ | ____| | | \ \   / / | ___ | | __
+ |  _| | | | |\ \ / /| |/ _ \| |/ /
+ | |___| |_| | \ V / | | (_) |   &lt;
+ |_____|\___/   \_/  |_|\___/|_|\_\
+  </pre>
+
   <p>
-    <strong>A communal Nix flake for shared systems, homes, dotfiles, and the small tools that keep them moving.</strong>
+    <strong>A communal Nix flake where friends share systems, homes, dotfiles, and the little tools that keep them moving.</strong>
   </p>
 
   <p>
     <a href="#quick-start">Quick Start</a>
     ·
+    <a href="#the-shape">The Shape</a>
+    ·
+    <a href="#communal-pulse">Communal Pulse</a>
+    ·
     <a href="#host-map">Host Map</a>
+    ·
+    <a href="#signal-paths">Signal Paths</a>
     ·
     <a href="#published-flake-outputs">Flake Outputs</a>
     ·
@@ -41,28 +55,39 @@
       <img alt="License" src="https://img.shields.io/github/license/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=8caaee">
     </a>
   </p>
+
+  <p>
+    <img alt="NixOS" src="https://img.shields.io/badge/NixOS-systems-89b4fa?style=flat-square&logo=nixos&logoColor=cdd6f4&labelColor=313244">
+    <img alt="nix-darwin" src="https://img.shields.io/badge/nix--darwin-macOS-cba6f7?style=flat-square&logo=apple&logoColor=cdd6f4&labelColor=313244">
+    <img alt="Home Manager" src="https://img.shields.io/badge/Home_Manager-homes-a6e3a1?style=flat-square&logo=nixos&logoColor=cdd6f4&labelColor=313244">
+    <img alt="Chezmoi" src="https://img.shields.io/badge/Chezmoi-dotfiles-f9e2af?style=flat-square&logo=files&logoColor=11111b&labelColor=313244">
+    <img alt="Bun" src="https://img.shields.io/badge/Bun-tooling-f5c2e7?style=flat-square&logo=bun&logoColor=11111b&labelColor=313244">
+  </p>
 </div>
 
 ---
 
 <table align="center">
   <tr>
-    <th>Systems</th>
-    <th>Dotfiles</th>
-    <th>Modules</th>
-    <th>Tooling</th>
+    <th>shared flake</th>
+    <th>friend atlas</th>
+    <th>home commons</th>
+    <th>tool shed</th>
   </tr>
   <tr>
-    <td>NixOS, nix-darwin, and standalone Home Manager.</td>
-    <td>Chezmoi-managed user files, templates, and scripts.</td>
-    <td>Reusable Nix layers for hosts, homes, services, shells, and themes.</td>
-    <td>Bun/TypeScript automation for updates, CI, and local maintenance.</td>
+    <td><code>flake-parts</code>, pinned inputs, and one place to compare ideas.</td>
+    <td>NixOS and nix-darwin machines shaped by the people who use them.</td>
+    <td>Home Manager modules plus Chezmoi files worth borrowing from each other.</td>
+    <td>Bun/TypeScript helpers for the chores nobody should repeat alone.</td>
   </tr>
 </table>
 
 ## Why This Exists
 
-EUVlok is where a few friends keep their machines understandable together.
+EUVlok is where a few friends keep their machines understandable together. It
+started from a simple itch: we were already talking about Nix, trading programs,
+and peeking into each other's dotfiles, so keeping those discoveries scattered
+across separate repositories felt slower than the friendship itself.
 
 The name is half European Union, half Dutch: `EU` for the European Union and
 `vlok` for "flake." The Dutch nod is intentional; Nix began in the Netherlands,
@@ -72,7 +97,12 @@ composition, and the occasional strongly held opinion about a shell prompt.
 This repository is not a pristine starter template. It is a working garden of
 real machines, real habits, and shared abstractions that have survived contact
 with daily use. The goal is to make personal infrastructure easier to inspect,
-borrow from, improve, and repair.
+borrow from, improve, and repair together.
+
+We like the communal shape of it: one person finds a better shell trick, another
+turns it into a module, someone else stress-tests it on a completely different
+host, and eventually the useful parts become shared ground. EUVlok is a place
+for that loop to happen in the open.
 
 > [!NOTE]
 > EUVlok is a living configuration repo. Treat it as a map of useful patterns,
@@ -82,19 +112,88 @@ borrow from, improve, and repair.
 > Files under [`secrets/`](./secrets) are SOPS-encrypted and intentionally live
 > beside the hosts that consume them.
 
+<details open>
+<summary><strong>What this is / what this is not</strong></summary>
+
+| This repo is...                                                   | This repo is not...                                              |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
+| A shared operating base for real daily machines and real friends. | A generic one-command installer.                                 |
+| A library of reusable Nix, Home Manager, and dotfile patterns.    | A promise that every host fits every laptop, desktop, or server. |
+| A place where experiments become modules once they prove useful.  | A museum of perfectly neutral defaults.                          |
+| A small automation workshop for the repetitive parts of upkeep.   | A replacement for reading the code before adopting it.           |
+
+</details>
+
 ## What Is Inside
 
-| Path                                | Purpose                                                                                            |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [`flake.nix`](./flake.nix)          | Top-level flake inputs, partitions, systems, and shared output wiring.                             |
-| [`flake-modules/`](./flake-modules) | Flake-parts modules for packages, exported modules, users, checks, and the development shell.      |
-| [`hosts/`](./hosts)                 | NixOS, nix-darwin, and Home Manager host/user entrypoints.                                         |
-| [`modules/`](./modules)             | Reusable modules for NixOS, nix-darwin, Home Manager, cross-platform defaults, and helper scripts. |
-| [`dotfiles/`](./dotfiles)           | Chezmoi dotfiles and templates for user-space configuration.                                       |
-| [`lib/`](./lib)                     | Shared Nix helpers for Catppuccin, Ghostty, Kanata, Yazi, Zellij, and general module ergonomics.   |
-| [`packages/`](./packages)           | Bun-powered automation packages and shared TypeScript utilities.                                   |
-| [`scripts/`](./scripts)             | Repository and GitHub workflow automation scripts.                                                 |
-| [`secrets/`](./secrets)             | SOPS-encrypted host and user secrets.                                                              |
+| Path                                | Purpose                                                                                          |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [`flake.nix`](./flake.nix)          | Top-level flake inputs, partitions, systems, and shared output wiring.                           |
+| [`flake-modules/`](./flake-modules) | Flake-parts modules for packages, exported modules, users, checks, and the development shell.    |
+| [`hosts/`](./hosts)                 | NixOS, nix-darwin, and Home Manager entrypoints for the machines friends actually use.           |
+| [`modules/`](./modules)             | Reusable modules grown from shared habits, experiments, and hard-won preferences.                |
+| [`dotfiles/`](./dotfiles)           | Chezmoi dotfiles and templates that make personal taste easy to inspect and borrow from.         |
+| [`lib/`](./lib)                     | Shared Nix helpers for Catppuccin, Ghostty, Kanata, Yazi, Zellij, and general module ergonomics. |
+| [`packages/`](./packages)           | Bun-powered automation packages and TypeScript utilities for shared maintenance work.            |
+| [`scripts/`](./scripts)             | Repository and GitHub workflow automation scripts.                                               |
+| [`secrets/`](./secrets)             | SOPS-encrypted host and user secrets.                                                            |
+
+## The Shape
+
+```mermaid
+flowchart TB
+  flake["flake.nix\ninputs, systems, partitions"]
+  modules["modules/\nreusable Nix layers"]
+  hosts["hosts/\nreal machine entrypoints"]
+  homes["Home Manager\nuser environments"]
+  dotfiles["dotfiles/\nChezmoi templates"]
+  packages["packages/\nBun + TypeScript tools"]
+  secrets["secrets/\nSOPS encrypted material"]
+  ci["GitHub Actions\nchecks, updates, builds"]
+
+  flake --> modules
+  flake --> hosts
+  flake --> packages
+  modules --> hosts
+  modules --> homes
+  dotfiles --> homes
+  secrets --> hosts
+  packages --> ci
+  ci --> flake
+```
+
+<p align="center">
+  <strong>One flake, several friends, many machines, fewer mysteries.</strong>
+</p>
+
+## Communal Pulse
+
+<table>
+  <tr>
+    <th>We share because...</th>
+    <th>That looks like...</th>
+  </tr>
+  <tr>
+    <td>Good dotfiles are easier to understand when you can ask the person who wrote them.</td>
+    <td>Hosts and homes stay close to their owners, but the useful pieces graduate into shared modules.</td>
+  </tr>
+  <tr>
+    <td>Nix rewards careful composition, and careful composition gets better with more than one pair of eyes.</td>
+    <td>One person's experiment can become another person's default after it proves itself.</td>
+  </tr>
+  <tr>
+    <td>The wider Nix community taught us by making its work public.</td>
+    <td>We keep EUVlok public so our own patterns, mistakes, and small wins can be useful too.</td>
+  </tr>
+</table>
+
+<blockquote>
+  <p>
+    <strong>Open hands, open code.</strong> Most of what lives here began as a
+    conversation: "look what I found," "try this module," "your config does that
+    better," "wait, we should make this reusable."
+  </p>
+</blockquote>
 
 ## Quick Start
 
@@ -152,6 +251,23 @@ borrow from, improve, and repair.
 
 Standalone Home Manager outputs are exposed for `ashuramaruzxc`, `bigshaq9999`,
 `lay-by`, and `sm-idk`.
+
+## Signal Paths
+
+<table>
+  <tr>
+    <th>For module readers</th>
+    <th>For host spelunking</th>
+    <th>For dotfile borrowing</th>
+    <th>For automation work</th>
+  </tr>
+  <tr>
+    <td>Start in <a href="./modules">modules</a>, then follow imports into the places where friends reuse them.</td>
+    <td>Pick a row from the host map and read its <code>default.nix</code> outward into the owner's preferences.</td>
+    <td>Browse <a href="./dotfiles">dotfiles</a> for Chezmoi templates, personal taste, and settings worth trying.</td>
+    <td>Use <a href="./packages">packages</a> and <a href="./scripts">scripts</a> to see how we avoid repeating upkeep by hand.</td>
+  </tr>
+</table>
 
 ## Published Flake Outputs
 
@@ -277,10 +393,24 @@ bun run github:update-trivial-flake-inputs
 EUVlok is built around a few preferences:
 
 - Keep host files thin and push reusable behavior into modules.
-- Separate shared defaults from personal taste wherever the boundary is useful.
+- Let personal taste stay visible while shared defaults become easy to reuse.
+- Prefer settings that friends can explain to each other later.
 - Treat automations as source code, with tests where the behavior can drift.
 - Prefer explicit flake outputs over undocumented local conventions.
 - Keep secrets encrypted and close to the configurations that consume them.
+
+<details>
+<summary><strong>Borrowing from EUVlok</strong></summary>
+
+The best way to copy from this repo is to copy slowly:
+
+1. Start with a module or small helper that solves one problem.
+2. Read the host that consumes it and notice whose taste shaped it.
+3. Check which inputs, secrets, or user assumptions it carries with it.
+4. Adapt the idea into your own configuration instead of importing a mystery.
+5. If you improve it, share the better version back with someone.
+
+</details>
 
 ## Useful Nix Resources
 
