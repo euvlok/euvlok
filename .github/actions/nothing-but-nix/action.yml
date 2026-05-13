@@ -396,48 +396,83 @@ runs:
         mkdir -p "${HOME}/.expansion"
         protocol_level="${{ steps.set-hatchet-protocol.outputs.level }}"
 
+        function show_disk_usage() {
+          df -h /
+        }
+
+        function purge_path() {
+          local path="$1"
+
+          if [ ! -e "$path" ]; then
+            return 0
+          fi
+
+          echo "Purging ${path}"
+          sudo rm -rf "$path" || echo "warning: could not fully purge ${path}"
+        }
+
+        function purge_glob() {
+          local pattern="$1"
+          local path
+
+          for path in $pattern; do
+            purge_path "$path"
+          done
+        }
+
+        function purge_directory_contents() {
+          local dir="$1"
+
+          if [ ! -d "$dir" ]; then
+            return 0
+          fi
+
+          echo "Purging contents of ${dir}"
+          find "$dir" -mindepth 1 -maxdepth 1 -exec sudo rm -rf {} + \
+            || echo "warning: could not fully purge contents of ${dir}"
+        }
+
         echo "Initial disk usage:"
-        df -h /
+        show_disk_usage
 
         if [[ "$protocol_level" -ge 2 ]]; then
-          sudo rm -rf \
-            /Applications/Xcode_* \
-            /Library/Developer/CoreSimulator \
-            /Library/Frameworks \
-            "${HOME}/.dotnet" \
-            "${HOME}/.rustup" \
-            "${HOME}/Library/Android" \
-            "${HOME}/Library/Caches" \
-            "${HOME}/Library/Developer/CoreSimulator" \
-            "${HOME}/hostedtoolcache"
-
           sudo mdutil -i off -a || echo "mdutil failed"
           sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist \
             || echo "launchctl unload failed"
+          sudo pkill -9 -f CoreSimulator || true
+
+          purge_glob "/Applications/Xcode_*"
+          purge_path "/Library/Developer/CoreSimulator"
+          purge_path "/Library/Frameworks"
+          purge_path "${HOME}/.dotnet"
+          purge_path "${HOME}/.rustup"
+          purge_path "${HOME}/Library/Android"
+          purge_directory_contents "${HOME}/Library/Caches"
+          purge_path "${HOME}/Library/Developer/CoreSimulator"
+          purge_path "${HOME}/hostedtoolcache"
 
           echo "Darwin cleave complete" > "${HOME}/.expansion/darwin_cleave_done"
         fi
 
         if [[ "$protocol_level" -ge 3 ]]; then
-          sudo rm -rf \
-            "${HOME}/.cargo" \
-            "${HOME}/.gradle" \
-            "${HOME}/Library/Developer/Xcode/DerivedData" \
-            /Applications/Android\ Studio.app \
-            /Applications/Google\ Chrome.app \
-            /Applications/Microsoft\ Edge.app \
-            /Library/Java/JavaVirtualMachines \
-            /usr/local/lib/android \
-            /usr/local/share/boost \
-            /usr/local/share/chromium \
-            /usr/local/share/dotnet \
-            /usr/local/share/powershell
+          purge_path "${HOME}/.cargo"
+          purge_path "${HOME}/.gradle"
+          purge_path "${HOME}/Library/Developer/Xcode/DerivedData"
+          purge_path "/Applications/Android Studio.app"
+          purge_path "/Applications/Google Chrome.app"
+          purge_path "/Applications/Microsoft Edge.app"
+          purge_path "/Library/Java/JavaVirtualMachines"
+          purge_path "/usr/local/lib/android"
+          purge_path "/usr/local/share/boost"
+          purge_path "/usr/local/share/chromium"
+          purge_path "/usr/local/share/dotnet"
+          purge_path "/usr/local/share/powershell"
 
           echo "Darwin rampage complete" > "${HOME}/.expansion/darwin_rampage_done"
         fi
 
         echo "Final disk usage:"
-        df -h /
+        show_disk_usage
         echo "Everything completed" > "${HOME}/.expansion/all_done"
     - name: The Post
       if: runner.os == 'Linux'
