@@ -41,6 +41,7 @@ runs:
       uses: ./.github/actions/setup-nix
       with:
         github-token: ${{ inputs.github-token }}
+        extra-nix-config: ${{ inputs.configuration-kind == 'nixos' && 'build-dir = /nix/build' || '' }}
 
     - name: Configure Cachix
       uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17

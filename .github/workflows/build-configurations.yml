@@ -64,6 +64,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Reclaim maximum Nix store space
+        if: ${{ matrix.kind == 'nixos' }}
+        uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7 # v10
+        with:
+          hatchet-protocol: rampage
+          witness-carnage: true
+
       # GitHub only loads workflows directly from .github/workflows, so the
       # reusable Nix/Cachix setup lives in a local composite action instead.
       - name: Build and cache configuration

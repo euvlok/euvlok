@@ -5,6 +5,10 @@ inputs:
   github-token:
     description: GitHub token used by the Nix installer for GitHub fetches.
     required: true
+  extra-nix-config:
+    description: Additional Nix configuration appended to the installer config.
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -15,3 +19,4 @@ runs:
         github_access_token: ${{ inputs.github-token }}
         extra_nix_config: |
           accept-flake-config = true
+          ${{ inputs.extra-nix-config }}
