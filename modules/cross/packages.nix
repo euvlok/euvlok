@@ -8,6 +8,7 @@ let
   commonPkgs = (
     builtins.attrValues {
       # Nix Related
+      inherit (pkgs) auto-rebase;
       inherit (pkgs.unstable)
         cachix
         nixfmt

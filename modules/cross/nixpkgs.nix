@@ -6,6 +6,7 @@
 {
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = [
+    inputs.self.overlays.default
     inputs.niri-flake-trivial.overlays.niri
     inputs.nix4vscode-trivial.overlays.default
   ]
