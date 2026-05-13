@@ -42,7 +42,6 @@ let
     # ../../../hm/ashuramaruzxc/flatpak.nix
     {
       hm = {
-        chromium.enable = true;
         clankers.codex.enable = true;
         clankers.codex.statusLine.enable = true;
         fastfetch.enable = true;
