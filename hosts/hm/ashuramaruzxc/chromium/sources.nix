@@ -1,5 +1,5 @@
 {
-  browser = "helium-browser";
+  browser = "chromium";
   extensions = [
     {
       id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
