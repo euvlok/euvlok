@@ -1,10 +1,22 @@
 name: Set up Nix
-description: Install Nix for repository workflows.
+description: Install Nix and configure Cachix for repository workflows.
 
 inputs:
   github-token:
     description: GitHub token used by the Nix installer for GitHub fetches.
     required: true
+  cachix-cache:
+    description: Cachix cache name.
+    required: false
+    default: euvlok
+  cachix-auth-token:
+    description: Cachix auth token used to push build results.
+    required: false
+    default: ""
+  cachix-skip-push:
+    description: Only use Cachix as a substituter without pushing build results.
+    required: false
+    default: "true"
   extra-nix-config:
     description: Additional Nix configuration appended to the installer config.
     required: false
@@ -20,3 +32,10 @@ runs:
         extra_nix_config: |
           accept-flake-config = true
           ${{ inputs.extra-nix-config }}
+
+    - name: Configure Cachix
+      uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
+      with:
+        name: ${{ inputs.cachix-cache }}
+        authToken: ${{ inputs.cachix-auth-token }}
+        skipPush: ${{ inputs.cachix-skip-push }}

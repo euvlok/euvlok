@@ -15,6 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  cachix:
+    name: Cachix Auth
+    runs-on: ubuntu-latest
+    outputs:
+      skip-push: ${{ steps.auth.outputs.skip-push }}
+    steps:
+      - name: Check Cachix token availability
+        id: auth
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        run: |
+          if [ -n "${CACHIX_AUTH_TOKEN}" ]; then
+            echo "skip-push=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip-push=true" >> "$GITHUB_OUTPUT"
+          fi
+
   docs:
     name: Docs
     runs-on: ubuntu-latest
@@ -33,6 +50,7 @@ jobs:
   bun:
     name: Bun
     runs-on: ubuntu-latest
+    needs: cachix
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -42,6 +60,9 @@ jobs:
 
       - name: Set up Nix and Bun dependencies
         uses: ./.github/actions/setup-nix-bun-dependencies
+        with:
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Check TypeScript and workflow tooling
         run: bun run check
@@ -60,6 +81,7 @@ jobs:
   nix:
     name: Nix (${{ matrix.system }})
     runs-on: ${{ matrix.runner }}
+    needs: cachix
     strategy:
       fail-fast: false
       matrix:
@@ -78,6 +100,8 @@ jobs:
         uses: ./.github/actions/setup-nix
         with:
           github-token: ${{ github.token }}
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Check flake inputs
         run: nix flake metadata

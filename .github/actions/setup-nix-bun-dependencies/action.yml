@@ -6,6 +6,18 @@ inputs:
     description: Bun version to install.
     required: false
     default: 1.3.13
+  cachix-cache:
+    description: Cachix cache name.
+    required: false
+    default: euvlok
+  cachix-auth-token:
+    description: Cachix auth token used to push build results.
+    required: false
+    default: ""
+  cachix-skip-push:
+    description: Only use Cachix as a substituter without pushing build results.
+    required: false
+    default: "true"
 
 runs:
   using: composite
@@ -14,6 +26,9 @@ runs:
       uses: ./.github/actions/setup-nix
       with:
         github-token: ${{ github.token }}
+        cachix-cache: ${{ inputs.cachix-cache }}
+        cachix-auth-token: ${{ inputs.cachix-auth-token }}
+        cachix-skip-push: ${{ inputs.cachix-skip-push }}
 
     - name: Set up Bun dependencies
       uses: ./.github/actions/setup-bun-dependencies

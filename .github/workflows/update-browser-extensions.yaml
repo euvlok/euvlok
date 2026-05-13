@@ -20,12 +20,32 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  cachix:
+    name: Cachix Auth
+    runs-on: ubuntu-latest
+    outputs:
+      skip-push: ${{ steps.auth.outputs.skip-push }}
+    steps:
+      - name: Check Cachix token availability
+        id: auth
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        run: |
+          if [ -n "${CACHIX_AUTH_TOKEN}" ]; then
+            echo "skip-push=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip-push=true" >> "$GITHUB_OUTPUT"
+          fi
+
   update-extensions:
     name: Update Browser Extensions
     runs-on: ubuntu-latest
+    needs: cachix
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -34,6 +54,9 @@ jobs:
 
       - name: Set up Nix and Bun dependencies
         uses: ./.github/actions/setup-nix-bun-dependencies
+        with:
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update extensions
         run: bun run github:update-browser-extensions
