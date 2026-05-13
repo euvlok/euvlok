@@ -38,6 +38,8 @@
     noctalia-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     noctalia-trivial.url = "github:noctalia-dev/noctalia-shell";
     nix-homebrew-trivial.url = "github:zhaofengli/nix-homebrew";
+    nix4jetbrains-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    nix4jetbrains-trivial.url = "github:nix-community/nix-jetbrains-plugins";
     nix4vscode-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode-trivial.inputs.systems.follows = "flake-utils/systems";
     nix4vscode-trivial.url = "github:nix-community/nix4vscode";
