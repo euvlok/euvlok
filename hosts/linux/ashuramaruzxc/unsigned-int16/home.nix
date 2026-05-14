@@ -12,7 +12,7 @@ let
   };
 
   baseImports = [
-    { home.stateVersion = "25.11"; }
+    { home.stateVersion = "26.05"; }
     ../../../../modules/hm/catppuccin-gtk.nix
   ];
 
@@ -33,29 +33,15 @@ let
       };
     };
 
-  rootHmConfig = {
-    hm = {
-      bash.enable = true;
-      direnv.enable = true;
-      fzf.enable = true;
-      helix.enable = true;
-      nh.enable = true;
-      zellij.enable = true;
-      zsh.enable = true;
-    };
-  };
-
   ashuramaruHmConfig = [
     inputs.self.homeModules.default
     inputs.self.homeModules.os
     inputs.self.homeConfigurations.ashuramaruzxc
+    ../../../hm/ashuramaruzxc/chromium
     {
       hm = {
-        chromium.enable = true;
-        chromium.browser = "chromium";
         fastfetch.enable = true;
         firefox = {
-          floorp.enable = true;
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
@@ -63,17 +49,17 @@ let
         helix.enable = true;
         mpv.enable = true;
         nh.enable = true;
-        vscode.enable = true;
+        zed-editor.enable = true;
         zellij.enable = true;
         zsh.enable = true;
         languages = {
           cpp.enable = true;
-          # csharp.enable = true;
-          # csharp.version = "8";
+          csharp.enable = true;
+          csharp.version = "10";
           go.enable = true;
           haskell.enable = true;
           java.enable = true;
-          java.version = "17";
+          java.version = "25";
           javascript.enable = true;
           kotlin.enable = true;
           lisp.enable = true;
@@ -87,17 +73,7 @@ let
     }
   ];
 
-  allPackages =
-    homePackages.mkPackages [
-      "important"
-      "multimedia"
-      "productivity"
-      "social"
-      "networking"
-      "audio"
-      "nemo"
-    ]
-    ++ [ pkgs.proton-vpn-cli ];
+  allPackages = homePackages.mkPackages [ ];
 in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
@@ -108,16 +84,6 @@ in
     extraSpecialArgs = { inherit inputs; };
   };
 
-  home-manager.users.root = {
-    imports =
-      baseImports
-      ++ [
-        catppuccinConfig
-        rootHmConfig
-      ]
-      ++ ashuramaruHmConfig;
-  };
-
   home-manager.users.ashuramaru = {
     imports =
       baseImports
@@ -126,10 +92,10 @@ in
       ]
       ++ ashuramaruHmConfig
       ++ [
-        { services.protonmail-bridge.enable = true; }
         { home.packages = allPackages; }
         cursorModule
         {
+          services.protonmail-bridge.enable = true;
           programs = {
             rbw = {
               enable = true;
@@ -139,6 +105,10 @@ in
                 lock_timeout = 600;
                 pinentry = pkgs.pinentry-qt;
               };
+            };
+            ghostty.settings = {
+              window-height = 40;
+              window-width = 140;
             };
             btop.enable = true;
             direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
