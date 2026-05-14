@@ -69,7 +69,7 @@ let
           go.enable = true;
           haskell.enable = true;
           java.enable = true;
-          java.version = "21";
+          java.version = "25";
           javascript.enable = true;
           kotlin.enable = true;
           lisp.enable = true;
