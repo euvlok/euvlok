@@ -16,7 +16,6 @@
       # Gaming
       protontricks
       libnvidia-container
-      lutris
       wine
       winetricks
       r2modman
