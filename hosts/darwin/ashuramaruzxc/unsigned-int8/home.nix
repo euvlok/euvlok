@@ -29,18 +29,18 @@ let
     inputs.self.homeConfigurations.ashuramaruzxc
     {
       hm = {
+        clankers.codex.enable = true;
+        clankers.codex.statusLine.enable = true;
         fastfetch.enable = true;
         firefox = {
-          floorp.enable = true;
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
         ghostty.enable = true;
         helix.enable = true;
-        # mpv.enable = true;
+        mpv.enable = true;
         nh.enable = true;
         nixcord.enable = true;
-        # nushell.enable = true;
         vscode.enable = true;
         zed-editor.enable = true;
         zellij.enable = true;
@@ -58,7 +58,6 @@ let
           };
           javascript.enable = true;
           kotlin.enable = true;
-          lisp.enable = true;
           lua.enable = true;
           python.enable = true;
           ruby.enable = true;
@@ -94,7 +93,7 @@ let
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)
-      nicotine-plus
+      # nicotine-plus
       qbittorrent
       ;
   };
@@ -121,7 +120,7 @@ let
       osu-lazer-bin
       prismlauncher
       ryubing
-      winetricks
+      # winetricks
       xemu
       ;
     inherit (pkgs.jetbrains) dataspell datagrip;

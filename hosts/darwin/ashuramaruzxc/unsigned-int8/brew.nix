@@ -16,7 +16,7 @@
       ### --- Socials --- ###
       "telegram" # telegram swift client
       "element" # halo based department?
-      "deltachat"
+      # "deltachat"
       ### --- Socials
       "cemu"
       "ppsspp-emulator"
@@ -30,7 +30,7 @@
       "affinity-designer" # Proffessional soyjak designer program
       "affinity-photo" # Proffessional soyjak drawing program
       "blender"
-      "kdenlive"
+      # "kdenlive"
       "krita"
       "obs"
       ### --- Graphics --- ###

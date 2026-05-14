@@ -94,15 +94,6 @@
       pinentry_mac
       ;
 
-    # gstreamer
-    inherit (pkgs.unstable.gst_all_1)
-      gstreamer
-      gst-plugins-ugly
-      gst-plugins-good
-      gst-plugins-base
-      gst-plugins-bad
-      ;
-
     inherit (pkgs.unstable) soundsource;
   };
   # sops.secrets.gh_token = { };
