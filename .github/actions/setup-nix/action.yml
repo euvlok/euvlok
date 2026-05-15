@@ -9,6 +9,10 @@ inputs:
     description: Cachix cache name.
     required: false
     default: euvlok
+  extra-cachix-caches:
+    description: Additional Cachix cache names used as substituters.
+    required: false
+    default: devenv,eupkgs,hyprland,nix-community,nixos-raspberrypi
   cachix-auth-token:
     description: Cachix auth token used to push build results.
     required: false
@@ -31,18 +35,32 @@ runs:
         github_access_token: ${{ inputs.github-token }}
         extra_nix_config: |
           accept-flake-config = true
-          extra-substituters = https://devenv.cachix.org https://euvlok.cachix.org https://eupkgs.cachix.org https://hyprland.cachix.org https://nix-community.cachix.org https://nixos-raspberrypi.cachix.org https://cache.flox.dev
-          extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= euvlok.cachix.org-1:cmFWCSs7rxPiyE1qfaJn8TY7QaRoGOrzKuNvtGw2gcU= eupkgs.cachix.org-1:V9Y0HdASNNSU9U6EkXhR1j85bZGRtNgW7wSyTiQrwGU= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI= flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=
+          extra-substituters = https://cache.flox.dev
+          extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=
           ${{ inputs.extra-nix-config }}
 
     - name: Configure Cachix
       uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
       with:
         name: ${{ inputs.cachix-cache }}
+        extraPullNames: ${{ inputs.extra-cachix-caches }}
         authToken: ${{ inputs.cachix-auth-token }}
         skipPush: ${{ inputs.cachix-skip-push }}
+
+    - name: Configure Flox binary cache
+      shell: bash
+      run: |
+        flox_nix_config="${RUNNER_TEMP}/flox-nix.conf"
+
+        {
+          echo "extra-substituters = https://cache.flox.dev"
+          echo "extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        } > "${flox_nix_config}"
+
+        export NIX_USER_CONF_FILES="${flox_nix_config}:${NIX_USER_CONF_FILES}"
+        echo "NIX_USER_CONF_FILES=${NIX_USER_CONF_FILES}" >> "${GITHUB_ENV}"
 
     - name: Show Nix cache configuration
       shell: bash
       run: |
-        nix config show substituters trusted-public-keys
+        nix config show | sed -n '/^substituters = /p;/^trusted-public-keys = /p'
