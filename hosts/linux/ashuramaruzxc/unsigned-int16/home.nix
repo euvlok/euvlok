@@ -76,7 +76,7 @@ let
   allPackages = homePackages.mkPackages [
     "important"
     "multimedia"
-    "prductivity"
+    "productivity"
     "social"
     "networking"
     "audio"
