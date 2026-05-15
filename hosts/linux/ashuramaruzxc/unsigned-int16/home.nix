@@ -73,7 +73,14 @@ let
     }
   ];
 
-  allPackages = homePackages.mkPackages [ ];
+  allPackages = homePackages.mkPackages [
+    "important"
+    "multimedia"
+    "prductivity"
+    "social"
+    "networking"
+    "audio"
+  ];
 in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];

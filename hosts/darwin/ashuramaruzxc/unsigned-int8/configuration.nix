@@ -104,4 +104,8 @@
 
   nix.gc.automatic = true;
   nix.gc.options = "--delete-older-than 14d";
+  nix.linux-builder = {
+    enable = true;
+    systems = [ "aarch64-linux" ];
+  };
 }
