@@ -36,7 +36,7 @@
       signupsVerify = true;
       signupsDomainsWhitelist = "fumoposting.com, tenjin-dk.com, riseup.net, meanrin.cat, waifu.club";
 
-      smtpHost = "antila.uberspace.de";
+      smtpHost = "sinope.uberspace.de";
       smtpSecurity = "starttls";
       smtpPort = 587;
       smtpAuthMechanism = "Login";

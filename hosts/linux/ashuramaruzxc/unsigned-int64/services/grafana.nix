@@ -34,7 +34,7 @@
       };
       smtp = {
         enable = true;
-        host = "antila.uberspace.de";
+        host = "sinope.uberspace.de";
         user = "no-reply@cloud.tenjin-dk.com";
         password = "$__file{${config.sops.secrets.mail.path}}";
         from_address = "no-reply@cloud.tenjin-dk.com";

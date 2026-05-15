@@ -30,7 +30,7 @@
         auth = true;
         tls = true;
         port = 587;
-        host = "antila.uberspace.de";
+        host = "sinope.uberspace.de";
         from = "no-reply@cloud.tenjin-dk.com";
         user = "no-reply@cloud.tenjin-dk.com";
         passwordeval = "cat ${toString config.sops.secrets.mail.path}";
