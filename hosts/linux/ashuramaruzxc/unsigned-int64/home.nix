@@ -4,7 +4,7 @@
 }:
 let
   baseImports = [
-    { home.stateVersion = "25.11"; }
+    { home.stateVersion = "26.05"; }
     ../../../../modules/hm/catppuccin-gtk.nix
   ];
 

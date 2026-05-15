@@ -84,18 +84,18 @@
       secureBoot.enable = true;
       validateChecksums = true;
       panicOnChecksumMismatch = true;
-      additionalFiles = {
-        "EFI/memtest86/BOOTX64.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
-      };
-      extraEntries = ''
-        /Windows
-          protocol: efi
-          path: guid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
+      # additionalFiles = {
+      # "EFI/memtest86/BOOTX64.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
+      # };
+      # extraEntries = ''
+      # /Windows
+      # protocol: efi
+      # path: guid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
 
-        /Memtest86
-          protocol: efi
-          path: boot():///EFI/memtest86/BOOTX64.efi
-      '';
+      # /Memtest86
+      # protocol: efi
+      # path: boot():///EFI/memtest86/BOOTX64.efi
+      # '';
     };
     generationsDir.copyKernels = true;
     efi.canTouchEfiVariables = true;
@@ -105,7 +105,7 @@
   # boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/12CE-A600";
+    device = "/dev/nvme0n1p1";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -122,7 +122,7 @@
       mitigateDMAAttacks = true;
       devices = {
         "root" = {
-          device = "/dev/disk/by-uuid/5c64c922-ed1d-4c90-b926-39bc58340188";
+          device = "/dev/nvme0n1p2";
           allowDiscards = true;
           bypassWorkqueues = true;
           yubikey = {
@@ -188,7 +188,7 @@
   };
   ### ---------------/dev/sdc2-------------------- ###
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -199,7 +199,7 @@
     ];
   };
   fileSystems."/var" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -211,7 +211,7 @@
     neededForBoot = true;
   };
   fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -223,7 +223,7 @@
     neededForBoot = true;
   };
   fileSystems."/var/cache" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -235,7 +235,7 @@
     neededForBoot = true;
   };
   fileSystems."/var/lib/machines" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -247,7 +247,7 @@
     neededForBoot = true;
   };
   fileSystems."/var/lib/docker" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -259,7 +259,7 @@
     neededForBoot = true;
   };
   fileSystems."/var/lib/sops" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -271,7 +271,7 @@
     neededForBoot = true;
   };
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -282,7 +282,7 @@
     ];
   };
   fileSystems."/etc" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -293,7 +293,7 @@
     ];
   };
   fileSystems."/Users" = {
-    device = "/dev/disk/by-uuid/250b370c-a699-424c-a89b-3ad7869b7b4e";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
@@ -374,20 +374,20 @@
   ### ---------------/dev/md/hddpool0-------------------- ###
 
   ### --------------- /dev/nvme0n1p3 --------------- ###
-  fileSystems."/Shared/windows" = {
-    device = "/dev/disk/by-uuid/468CC3228CC30B7F";
-    fsType = "ntfs-3g";
-    options = [
-      "acl"
-      "noatime"
-      "discard"
-      "nohidden"
-      "sys_immutable"
-      "windows_names"
-      "uid=0"
-      "gid=100"
-    ];
-  };
+  # fileSystems."/Shared/windows" = {
+  # device = "/dev/disk/by-uuid/468CC3228CC30B7F";
+  # fsType = "ntfs-3g";
+  # options = [
+  # "acl"
+  # "noatime"
+  # "discard"
+  # "nohidden"
+  # "sys_immutable"
+  # "windows_names"
+  # "uid=0"
+  # "gid=100"
+  # ];
+  # };
   ### --------------- /dev/nvme0n1p3 (windows) --------------- ###
   services.btrfs.autoScrub = {
     enable = true;

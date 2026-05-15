@@ -89,6 +89,7 @@ in
       baseImports
       ++ [
         catppuccinConfig
+        { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml; }
       ]
       ++ ashuramaruHmConfig
       ++ [
