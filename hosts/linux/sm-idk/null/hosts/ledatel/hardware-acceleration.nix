@@ -41,7 +41,7 @@
   # If you have Intel integrated graphics:
   # boot.kernelModules = [ "i915" ];
   # environment.variables = {
-  #   VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
+  #   VDPAU_DRIVER = lib.modules.mkIf config.hardware.graphics.enable (lib.modules.mkDefault "va_gl");
   # };
 
   # If you have hybrid graphics (Intel + NVIDIA), you might want:

@@ -21,7 +21,7 @@
         websocat
         ;
     })
-    ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
+    ++ lib.lists.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
       pkgs.unstable.autopsy
     ];
 }

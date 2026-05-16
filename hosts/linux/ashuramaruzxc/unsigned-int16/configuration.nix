@@ -23,7 +23,7 @@
   hardware = {
     gpgSmartcards.enable = true;
     bluetooth = {
-      powerOnBoot = lib.mkForce true;
+      powerOnBoot = lib.modules.mkForce true;
       settings.General = {
         AutoEnable = true;
         Experimental = true;

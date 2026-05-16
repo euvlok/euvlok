@@ -70,7 +70,7 @@
   };
   users.users.transmission = {
     homeMode = "0770";
-    openssh.authorizedKeys.keys = lib.flatten [
+    openssh.authorizedKeys.keys = lib.lists.flatten [
       config.users.users.ashuramaru.openssh.authorizedKeys.keys
       config.users.users.fumono.openssh.authorizedKeys.keys
     ];
@@ -189,7 +189,7 @@
   };
   systemd.services."podman-transmission_private" = {
     serviceConfig = {
-      Restart = lib.mkOverride 500 "always";
+      Restart = lib.modules.mkOverride 500 "always";
     };
     after = [ "podman-network-transmission_openvpn-default.service" ];
     requires = [ "podman-network-transmission_openvpn-default.service" ];
@@ -201,7 +201,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "${lib.getExe' pkgs.podman "podman"} network rm -f transmission_openvpn-default";
+      ExecStop = "${lib.meta.getExe' pkgs.podman "podman"} network rm -f transmission_openvpn-default";
     };
     script = ''
       podman network inspect transmission_openvpn-default || podman network create transmission_openvpn-default --opt isolate=true

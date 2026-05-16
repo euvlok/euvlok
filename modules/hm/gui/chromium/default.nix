@@ -17,7 +17,7 @@ let
       ;
   };
 
-  extensions = lib.unique (
+  extensions = lib.lists.unique (
     (pkgs.callPackage ./extensions.nix { inherit config; }) ++ cfg.extraExtensions
   );
 
@@ -40,15 +40,15 @@ let
 in
 {
   options.hm.chromium = {
-    enable = lib.mkEnableOption "Chromium-based browsers";
+    enable = lib.options.mkEnableOption "Chromium-based browsers";
 
-    browser = lib.mkOption {
-      type = lib.types.enum (lib.attrNames browserPackages);
+    browser = lib.options.mkOption {
+      type = lib.types.enum (lib.attrsets.attrNames browserPackages);
       default = "ungoogled-chromium";
       description = "The browser package to use.";
     };
 
-    extraExtensions = lib.mkOption {
+    extraExtensions = lib.options.mkOption {
       type = lib.types.listOf lib.types.attrs;
       default = [ ];
       description = "A list of extra extensions to append to the base list.";
@@ -58,7 +58,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.modules.mkIf cfg.enable {
     assertions = [
       {
         assertion = pkgs.stdenvNoCC.isLinux;
@@ -72,16 +72,16 @@ in
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
 
-      extensions = if cfg.browser == "helium-browser" then lib.mkForce [ ] else extensions;
+      extensions = if cfg.browser == "helium-browser" then lib.modules.mkForce [ ] else extensions;
 
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
       ]
-      ++ lib.optionals (cfg.browser == "helium-browser") [
+      ++ lib.lists.optionals (cfg.browser == "helium-browser") [
         "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
       ] # Enable mv2 in Helium.
-      ++ lib.optionals pkgs.stdenvNoCC.isLinux [
+      ++ lib.lists.optionals pkgs.stdenvNoCC.isLinux [
         "--ignore-gpu-blocklist"
         "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 
@@ -93,7 +93,7 @@ in
       ];
     };
 
-    xdg.configFile = lib.mkIf (cfg.browser == "helium-browser") (
+    xdg.configFile = lib.modules.mkIf (cfg.browser == "helium-browser") (
       builtins.listToAttrs (map chromiumExternalExtension heliumExtensions)
     );
   };

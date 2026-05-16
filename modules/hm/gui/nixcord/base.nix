@@ -4,11 +4,11 @@
   ...
 }:
 {
-  options.hm.nixcord.basePlugins.enable = lib.mkEnableOption "shared Nixcord plugin set" // {
+  options.hm.nixcord.basePlugins.enable = lib.options.mkEnableOption "shared Nixcord plugin set" // {
     default = config.hm.nixcord.enable;
   };
 
-  config = lib.mkIf config.hm.nixcord.basePlugins.enable {
+  config = lib.modules.mkIf config.hm.nixcord.basePlugins.enable {
     programs.nixcord.config.plugins = {
       alwaysExpandRoles.enable = true;
       betterGifPicker.enable = true;

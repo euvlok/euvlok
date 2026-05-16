@@ -21,7 +21,7 @@ stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/lay-by-waybar-music \
-      --prefix PATH : ${lib.makeBinPath [ playerctl ]}
+      --prefix PATH : ${lib.strings.makeBinPath [ playerctl ]}
     wrapProgram $out/bin/lay-by-waybar-nvidia \
       --prefix PATH : /run/current-system/sw/bin
   '';

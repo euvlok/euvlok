@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.nixos.zram.enable = lib.mkEnableOption "ZRAM Swap";
+  options.nixos.zram.enable = lib.options.mkEnableOption "ZRAM Swap";
 
-  config = lib.mkIf config.nixos.zram.enable {
+  config = lib.modules.mkIf config.nixos.zram.enable {
     zramSwap.enable = true;
     boot.kernel.sysctl = {
       "vm.swappiness" = 180;

@@ -10,10 +10,10 @@ let
   nvidiaDriver = config.boot.kernelPackages.nvidiaPackages.mkDriver nvidiaDriverConfig;
 in
 {
-  options.nixos.nvidia.enable = lib.mkEnableOption "NVIDIA Drivers & Env Variables";
+  options.nixos.nvidia.enable = lib.options.mkEnableOption "NVIDIA Drivers & Env Variables";
 
-  config = lib.mkMerge [
-    (lib.mkIf config.nixos.nvidia.enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf config.nixos.nvidia.enable {
       nixpkgs.config.cudaSupport = true;
 
       services.xserver.videoDrivers = [ "nvidia" ];
@@ -52,7 +52,7 @@ in
 
       nixpkgs.overlays =
         let
-          commandLineArgs = lib.concatStringsSep " " config.programs.chromium.commandLineArgs;
+          commandLineArgs = lib.strings.concatStringsSep " " config.programs.chromium.commandLineArgs;
           browsers = [
             "brave"
             "chromium"

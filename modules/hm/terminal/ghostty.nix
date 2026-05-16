@@ -59,18 +59,18 @@ let
   };
 in
 {
-  options.hm.ghostty.enable = lib.mkEnableOption "Ghostty";
+  options.hm.ghostty.enable = lib.options.mkEnableOption "Ghostty";
 
-  config = lib.mkIf config.hm.ghostty.enable {
+  config = lib.modules.mkIf config.hm.ghostty.enable {
     programs.ghostty = {
       enable = true;
       package = if isDarwin then pkgs.unstable.ghostty-bin else pkgs.ghostty;
-      settings = lib.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
+      settings = lib.attrsets.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
         adjust-underline-position = 4;
         clipboard-paste-protection = false;
         confirm-close-surface = false;
         cursor-style-blink = false;
-        keybind = lib.flatten (lib.attrValues mkKeybindings);
+        keybind = lib.lists.flatten (lib.attrsets.attrValues mkKeybindings);
         quit-after-last-window-closed = true;
         scrollback-limit = 10 * 10000000;
       };

@@ -9,7 +9,7 @@ in
   programs = {
     gh.gitCredentialHelper.enable = true;
     # gh.settings.git_protocol = "ssh";
-    gitui.enable = lib.mkForce false;
+    gitui.enable = lib.modules.mkForce false;
     gh.enable = true;
     git = {
       settings.user.name = name;

@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.hm.fish.enable = lib.mkEnableOption "Fish";
+  options.hm.fish.enable = lib.options.mkEnableOption "Fish";
 
-  config = lib.mkIf config.hm.fish.enable {
+  config = lib.modules.mkIf config.hm.fish.enable {
     programs.fish.enable = true;
     programs.fish.plugins = [
       {

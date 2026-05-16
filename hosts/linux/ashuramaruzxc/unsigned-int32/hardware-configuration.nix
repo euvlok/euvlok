@@ -5,7 +5,7 @@
   ...
 }:
 {
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
 
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod_latest;

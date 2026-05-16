@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.hm.zed-editor.enable = lib.mkEnableOption "Zed Editor";
+  options.hm.zed-editor.enable = lib.options.mkEnableOption "Zed Editor";
 
-  config = lib.mkIf config.hm.zed-editor.enable {
+  config = lib.modules.mkIf config.hm.zed-editor.enable {
     programs.zed-editor.enable = true;
     programs.zed-editor.extensions = [
       "nix"

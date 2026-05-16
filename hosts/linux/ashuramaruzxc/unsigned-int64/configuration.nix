@@ -57,7 +57,7 @@
     extraLocaleSettings = { };
   };
 
-  services.avahi.enable = lib.mkForce false;
+  services.avahi.enable = lib.modules.mkForce false;
   services.displayManager.gdm.autoSuspend = false;
 
   system.stateVersion = config.system.nixos.release;

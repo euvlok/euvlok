@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 let
-  mkScript = name: path: lib.getExe (pkgs.writeScriptBin name (builtins.readFile path));
+  mkScript = name: path: lib.meta.getExe (pkgs.writeScriptBin name (builtins.readFile path));
 
   editor = {
     nvim = "hx";
@@ -19,7 +19,7 @@ let
   };
 
   networking = {
-    myip = lib.mkForce "xh --body 'https://ipinfo.io/ip'";
+    myip = lib.modules.mkForce "xh --body 'https://ipinfo.io/ip'";
     ports = "ss -tulanp";
     fastping = "ping -c 100 -i 0.2";
     listening = "ss -tlnp";
@@ -29,8 +29,8 @@ let
   utility = {
     h = "history";
     j = "jobs -l";
-    sha1 = lib.getExe' pkgs.openssl "sha1";
-    sha256 = lib.getExe' pkgs.openssl "sha256";
+    sha1 = lib.meta.getExe' pkgs.openssl "sha1";
+    sha256 = lib.meta.getExe' pkgs.openssl "sha256";
     uuid = "uuidgen -x | tr '[:lower:]' '[:upper:]'";
     gpg-encrypt = "gpg -c --no-symkey-cache --cipher-algo=AES256";
     gpg-decrypt = "gpg -d";
@@ -54,12 +54,12 @@ let
     video2gif_simple = mkScript "video2gif_simple" ./scripts/video2gif_simple.sh;
   };
 
-  darwin = lib.optionalAttrs (pkgs.stdenvNoCC.isDarwin) {
+  darwin = lib.attrsets.optionalAttrs (pkgs.stdenvNoCC.isDarwin) {
     micfix = "sudo killall coreaudiod";
     flushdns = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
   };
 
-  linux = lib.optionalAttrs (pkgs.stdenvNoCC.isLinux) {
+  linux = lib.attrsets.optionalAttrs (pkgs.stdenvNoCC.isLinux) {
     pbcopy = "xclip -selection clipboard";
     pbpaste = "xclip -selection clipboard -o";
     open = "xdg-open";

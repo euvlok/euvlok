@@ -16,21 +16,21 @@
         {
           prefix,
           action,
-          range ? lib.range 1 9,
+          range ? lib.lists.range 1 9,
         }:
-        lib.pipe range [
+        lib.trivial.pipe range [
           (builtins.map (num: {
             name = "${prefix}${toString num}";
             value = {
               action = action num;
             };
           }))
-          lib.listToAttrs
+          lib.attrsets.listToAttrs
         ];
 
       mkDirectionalBinds =
         { prefix, actions }:
-        lib.mkMerge [
+        lib.modules.mkMerge [
           {
             "${prefix}Left".action = actions.left;
             "${prefix}Down".action = actions.down;
@@ -55,7 +55,7 @@
         };
 
       # Group bindings by functionality
-      workspaceBindings = lib.mkMerge [
+      workspaceBindings = lib.modules.mkMerge [
         # Numbered workspace bindings
         (mkBinds {
           prefix = "Mod+";
@@ -82,7 +82,7 @@
         }
       ];
 
-      focusAndMovementBindings = lib.mkMerge [
+      focusAndMovementBindings = lib.modules.mkMerge [
         # Focus direction
         (mkDirectionalBinds {
           prefix = "Mod+";
@@ -194,7 +194,7 @@
         "Mod+Shift+Slash".action = show-hotkey-overlay;
       };
     in
-    lib.mkMerge [
+    lib.modules.mkMerge [
       workspaceBindings
       focusAndMovementBindings
       mediaControls

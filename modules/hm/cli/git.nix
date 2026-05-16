@@ -6,12 +6,12 @@
 }:
 
 {
-  options.hm.git.enable = lib.mkEnableOption "Git" // {
+  options.hm.git.enable = lib.options.mkEnableOption "Git" // {
     default = true;
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf config.hm.git.enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf config.hm.git.enable {
       programs = {
         gitui.enable = true;
         gh.enable = true;
@@ -61,7 +61,7 @@
         };
       };
     })
-    (lib.mkIf (pkgs.stdenvNoCC.isDarwin) {
+    (lib.modules.mkIf (pkgs.stdenvNoCC.isDarwin) {
       home.file.".gitconfig".source =
         config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/.gitconfig";
     })

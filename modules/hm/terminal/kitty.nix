@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.hm.kitty.enable = lib.mkEnableOption "Kitty";
+  options.hm.kitty.enable = lib.options.mkEnableOption "Kitty";
 
-  config = lib.mkIf config.hm.kitty.enable {
+  config = lib.modules.mkIf config.hm.kitty.enable {
     programs.kitty = {
       enable = true;
       keybindings = {
@@ -27,7 +27,7 @@
         tab_bar_style = "powerline";
         notify_on_cmd_finish = "unfocused 5.0";
       }
-      // lib.optionalAttrs pkgs.stdenvNoCC.isDarwin {
+      // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.isDarwin {
         macos_option_as_alt = "yes";
         macos_quit_when_last_window_closed = "yes";
       };

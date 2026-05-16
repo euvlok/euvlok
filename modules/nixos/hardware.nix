@@ -5,11 +5,11 @@
   ...
 }:
 {
-  config = lib.mkMerge [
-    (lib.mkIf config.nixpkgs.hostPlatform.isx86_64 {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf config.nixpkgs.hostPlatform.isx86_64 {
       hardware.graphics.enable32Bit = true;
     })
-    (lib.mkIf config.nixpkgs.hostPlatform.isx86_64 {
+    (lib.modules.mkIf config.nixpkgs.hostPlatform.isx86_64 {
       hardware.graphics.extraPackages32 = builtins.attrValues {
         inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
       };

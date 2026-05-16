@@ -27,8 +27,8 @@
   gtk = {
     enable = true;
     iconTheme = {
-      name = lib.mkForce iconName;
-      package = lib.mkForce iconPackage;
+      name = lib.modules.mkForce iconName;
+      package = lib.modules.mkForce iconPackage;
     };
   };
 

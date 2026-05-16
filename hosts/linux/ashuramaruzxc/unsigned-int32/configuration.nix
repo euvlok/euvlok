@@ -45,7 +45,7 @@
   };
 
   services = {
-    displayManager.gdm.enable = lib.mkForce false;
+    displayManager.gdm.enable = lib.modules.mkForce false;
     hardware.openrgb = {
       enable = true;
       motherboard = "amd";

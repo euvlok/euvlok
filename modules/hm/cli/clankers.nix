@@ -20,33 +20,33 @@ in
 {
   options.hm.clankers = {
     claude = {
-      enable = lib.mkEnableOption "Claude Code";
-      statusLine.enable = lib.mkEnableOption "agent-statusline-pi for Claude";
+      enable = lib.options.mkEnableOption "Claude Code";
+      statusLine.enable = lib.options.mkEnableOption "agent-statusline-pi for Claude";
     };
     codex = {
-      enable = lib.mkEnableOption "Codex";
-      statusLine.enable = lib.mkEnableOption "agent-statusline-pi for Codex";
+      enable = lib.options.mkEnableOption "Codex";
+      statusLine.enable = lib.options.mkEnableOption "agent-statusline-pi for Codex";
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf cfg.claude.enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf cfg.claude.enable {
       home.packages =
         (builtins.attrValues {
           inherit (pkgs.eupkgs) claude-code;
           inherit (pkgs.unstable) opencode;
         })
-        ++ lib.optional cfg.claude.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
+        ++ lib.lists.optional cfg.claude.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
 
       programs.bash.shellAliases = claudeAliases;
       programs.zsh.shellAliases = claudeAliases;
       programs.nushell.shellAliases = claudeAliases;
 
       home.file.".claude/settings.json".text = builtins.toJSON (
-        lib.optionalAttrs cfg.claude.statusLine.enable {
+        lib.attrsets.optionalAttrs cfg.claude.statusLine.enable {
           statusLine = {
             type = "command";
-            command = lib.getExe pkgs.eupkgs.agent-statusline-pi;
+            command = lib.meta.getExe pkgs.eupkgs.agent-statusline-pi;
           };
         }
         // {
@@ -74,13 +74,13 @@ in
         }
       );
     })
-    (lib.mkIf cfg.codex.enable {
+    (lib.modules.mkIf cfg.codex.enable {
       home.packages = [
         pkgs.codex-acp
         pkgs.eupkgs.codex
         pkgs.unstable.opencode
       ]
-      ++ lib.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
+      ++ lib.lists.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;
 
       programs.bash.shellAliases = codexShellAliases;
       programs.zsh.shellAliases = codexShellAliases;

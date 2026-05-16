@@ -5,11 +5,11 @@
   ...
 }:
 {
-  options.hm.ssh.enable = lib.mkEnableOption "SSH" // {
+  options.hm.ssh.enable = lib.options.mkEnableOption "SSH" // {
     default = true;
   };
 
-  config = lib.mkIf config.hm.ssh.enable {
+  config = lib.modules.mkIf config.hm.ssh.enable {
     programs.ssh = {
       enable = true;
       package = pkgs.openssh_hpn;

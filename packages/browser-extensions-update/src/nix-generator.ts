@@ -28,12 +28,12 @@ export function generateExtensionsNixFile(results: ExtensionResult[], conditiona
   if (browser === 'chromium') {
     lines.push('{', '  pkgs,');
     if (conditional) lines.push('  config,');
-    lines.push('  lib,', '  ...', '}:', 'lib.flatten [');
+    lines.push('  lib,', '  ...', '}:', 'lib.lists.flatten [');
     plain.forEach((e) => {
       lines.push(e.nixEntry);
     });
     gated.forEach((e) => {
-      lines.push(`  (lib.optionals (${escapeNixString(e.extension.condition)}) [`);
+      lines.push(`  (lib.lists.optionals (${escapeNixString(e.extension.condition)}) [`);
       lines.push(e.nixEntry);
       lines.push('  ])');
     });
@@ -47,7 +47,7 @@ export function generateExtensionsNixFile(results: ExtensionResult[], conditiona
   });
   gated.forEach((e) => {
     lines.push(
-      `    (lib.optionals (${escapeNixString(e.extension.condition)}) [\n      buildFirefoxXpiAddon ${e.nixEntry}\n    ]);`,
+      `    (lib.lists.optionals (${escapeNixString(e.extension.condition)}) [\n      buildFirefoxXpiAddon ${e.nixEntry}\n    ]);`,
     );
   });
   lines.push('  }');

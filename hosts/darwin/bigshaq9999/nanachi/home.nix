@@ -47,11 +47,11 @@ in
           programs.vscode = {
             profiles.default = {
               userSettings = {
-                "editor.fontSize" = lib.mkForce 15;
-                "terminal.integrated.fontSize" = lib.mkForce 15;
-                "editor.tabSize" = lib.mkForce 4;
-                "editor.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
-                "terminal.integrated.fontFamily" = lib.mkForce "'Hack Nerd Font Mono'";
+                "editor.fontSize" = lib.modules.mkForce 15;
+                "terminal.integrated.fontSize" = lib.modules.mkForce 15;
+                "editor.tabSize" = lib.modules.mkForce 4;
+                "editor.fontFamily" = lib.modules.mkForce "'Hack Nerd Font Mono'";
+                "terminal.integrated.fontFamily" = lib.modules.mkForce "'Hack Nerd Font Mono'";
               };
             };
           };
@@ -130,7 +130,7 @@ in
                 # mullvad-vpn
                 ;
             }
-            ++ lib.optionals isLinux [
+            ++ lib.lists.optionals isLinux [
               pkgs.prismlauncher
             ];
         }

@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.hm.mpv.enable = lib.mkEnableOption "MPV";
+  options.hm.mpv.enable = lib.options.mkEnableOption "MPV";
 
-  config = lib.mkIf config.hm.mpv.enable {
+  config = lib.modules.mkIf config.hm.mpv.enable {
     programs.mpv.enable = true;
     programs.mpv.config = {
       screenshot-directory = "~/Pictures/mpv_screenshots";

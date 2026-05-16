@@ -4,27 +4,27 @@ let
 in
 {
   options.virtualisation.kvmfr = {
-    enable = lib.mkEnableOption "Kvmfr";
+    enable = lib.options.mkEnableOption "Kvmfr";
 
     shm = {
-      enable = lib.mkEnableOption "shm";
+      enable = lib.options.mkEnableOption "shm";
 
-      size = lib.mkOption {
+      size = lib.options.mkOption {
         type = lib.types.int;
         default = "128";
         description = "Size of the shared memory device in megabytes.";
       };
-      user = lib.mkOption {
+      user = lib.options.mkOption {
         type = lib.types.str;
         default = "root";
         description = "Owner of the shared memory device.";
       };
-      group = lib.mkOption {
+      group = lib.options.mkOption {
         type = lib.types.str;
         default = "root";
         description = "Group of the shared memory device.";
       };
-      mode = lib.mkOption {
+      mode = lib.options.mkOption {
         type = lib.types.str;
         default = "0600";
         description = "Mode of the shared memory device.";
@@ -32,7 +32,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.modules.mkIf cfg.enable {
     boot.extraModulePackages = builtins.attrValues { inherit (config.boot.kernelPackages) kvmfr; };
     boot.initrd.kernelModules = [ "kvmfr" ];
     boot.kernelParams = [ "kvmfr.static_size_mb=${toString cfg.shm.size}" ];

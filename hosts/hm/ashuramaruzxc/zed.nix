@@ -15,10 +15,10 @@ let
     text = ''
       set -a
       # shellcheck disable=SC1091
-      . ${lib.escapeShellArg codexOpenrouterEnvFile}
+      . ${lib.strings.escapeShellArg codexOpenrouterEnvFile}
       set +a
 
-      exec ${lib.getExe pkgs.codex-acp} "$@"
+      exec ${lib.meta.getExe pkgs.codex-acp} "$@"
     '';
   };
 
@@ -41,7 +41,7 @@ let
     "service_tier=\"fast\""
   ];
 in
-lib.mkMerge [
+lib.modules.mkMerge [
   {
     programs.zed-editor.extensions = [
       "docker-compose"
@@ -65,14 +65,14 @@ lib.mkMerge [
       agent_servers = {
         # cline = {
         #   type = "custom";
-        #   command = lib.getExe pkgs.cline;
+        #   command = lib.meta.getExe pkgs.cline;
         #   args = [ "--acp" ];
         #   env = { };
         # };
 
         "codex-acp" = {
           type = "custom";
-          command = lib.getExe pkgs.codex-acp;
+          command = lib.meta.getExe pkgs.codex-acp;
           args = [ ];
           env.CODEX_HOME = codexHome;
         };
@@ -134,7 +134,7 @@ lib.mkMerge [
     };
   }
 
-  (lib.mkIf isUnsignedInt32 {
+  (lib.modules.mkIf isUnsignedInt32 {
     sops.secrets.openrouter_api_key = { };
 
     sops.templates."codex-openrouter.env".content = ''
@@ -158,7 +158,7 @@ lib.mkMerge [
 
       agent_servers.codex_openrouter = {
         type = "custom";
-        command = lib.getExe codexAcpOpenrouter;
+        command = lib.meta.getExe codexAcpOpenrouter;
         args = openrouterArgs;
         env.CODEX_HOME = codexHome;
       };

@@ -6,7 +6,7 @@
 }:
 {
   imports = [ inputs.spicetify-nix-trivial.homeManagerModules.default ];
-  programs.spicetify = lib.mkIf (pkgs.stdenv.hostPlatform.system != "aarch64-linux") {
+  programs.spicetify = lib.modules.mkIf (pkgs.stdenv.hostPlatform.system != "aarch64-linux") {
     enable = true;
     enabledExtensions = builtins.attrValues {
       inherit (inputs.spicetify-nix-trivial.legacyPackages.${pkgs.system}.extensions)

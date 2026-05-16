@@ -9,7 +9,7 @@
 
   boot.extraModprobeConfig =
     "options nvidia "
-    + lib.concatStringsSep " " [
+    + lib.strings.concatStringsSep " " [
       # NVIDIA assumes that by default your CPU doesn't support `PAT`, but this
       # is effectively never the case in 2023
       "NVreg_UsePageAttributeTable=1"
@@ -41,7 +41,7 @@
         }
       '';
     in
-    lib.mkForce (
+    lib.modules.mkForce (
       pkgs.runCommandLocal "nvidia-egl-hack" { } ''
         mkdir -p "$out"
         cp ${nvidia_wayland} "$out/10_nvidia_wayland.json"

@@ -20,7 +20,7 @@ in
       accentSupport = true;
     })
     // {
-      size = lib.mkOption {
+      size = lib.options.mkOption {
         type = lib.types.enum [
           "standard"
           "compact"
@@ -28,7 +28,7 @@ in
         default = "standard";
         description = "Catppuccin size variant for gtk";
       };
-      tweaks = lib.mkOption {
+      tweaks = lib.options.mkOption {
         type = lib.types.listOf (
           lib.types.enum [
             "rimless"
@@ -39,11 +39,11 @@ in
         description = "Catppuccin tweaks for gtk";
       };
     };
-  config = lib.mkMerge [
-    (lib.mkIf enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf enable {
       gtk.theme =
         let
-          gtkTweaks = lib.concatStringsSep "," cfg.tweaks;
+          gtkTweaks = lib.strings.concatStringsSep "," cfg.tweaks;
           themeName =
             "catppuccin-${cfg.flavor}-${cfg.accent}-${cfg.size}+"
             + (if cfg.tweaks == [ ] then "default" else gtkTweaks);

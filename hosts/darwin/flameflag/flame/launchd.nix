@@ -29,7 +29,7 @@
 
     atuin-daemon.serviceConfig = {
       ProgramArguments = [
-        (lib.getExe' pkgs.unstable.atuin "atuin")
+        (lib.meta.getExe' pkgs.unstable.atuin "atuin")
         "daemon"
         "start"
       ];

@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.nixos.steam.enable = lib.mkEnableOption "Steam";
+  options.nixos.steam.enable = lib.options.mkEnableOption "Steam";
 
-  config = lib.mkIf config.nixos.steam.enable {
+  config = lib.modules.mkIf config.nixos.steam.enable {
     hardware.steam-hardware.enable = true;
 
     nixpkgs.overlays = [
@@ -45,8 +45,8 @@
       gamemode = {
         enable = true;
         enableRenice = true;
-        settings.custom.start = "${lib.getExe pkgs.libnotify} 'GameMode started'";
-        settings.custom.end = "${lib.getExe pkgs.libnotify} 'GameMode ended'";
+        settings.custom.start = "${lib.meta.getExe pkgs.libnotify} 'GameMode started'";
+        settings.custom.end = "${lib.meta.getExe pkgs.libnotify} 'GameMode ended'";
       };
       gamescope.enable = true;
       gamescope.capSysNice = true;
@@ -59,7 +59,7 @@
           inherit (pkgs) winetricks protonplus;
           inherit (pkgs.wineWow64Packages) stagingFull;
         })
-        ++ (lib.optionals config.services.desktopManager.gnome.enable (
+        ++ (lib.lists.optionals config.services.desktopManager.gnome.enable (
           builtins.attrValues { inherit (pkgs) adwsteamgtk; }
         ));
     };

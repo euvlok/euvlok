@@ -13,9 +13,11 @@ _: {
             with final.stdenv.hostPlatform; toString (if isILP32 then 32 else parsed.cpu.bits)
           }"
         ]
-        ++ final.lib.optionals (final.stdenv.hostPlatform.isPower && final.stdenv.hostPlatform.isLLVM) [
-          "--with-lg-page=16"
-        ];
+        ++
+          final.lib.lists.optionals (final.stdenv.hostPlatform.isPower && final.stdenv.hostPlatform.isLLVM)
+            [
+              "--with-lg-page=16"
+            ];
       });
     })
   ];

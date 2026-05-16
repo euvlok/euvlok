@@ -5,7 +5,7 @@
   lib,
   ...
 }:
-lib.flatten [
+lib.lists.flatten [
   {
     id = "bhchdcejhohfmigjafbampogmaanbfkg";
     crxPath = pkgs.fetchurl {

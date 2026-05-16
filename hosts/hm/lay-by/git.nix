@@ -26,7 +26,7 @@ in
       behavior = "own";
       backend = "ssh";
       inherit key;
-      backends.ssh.program = lib.getExe' pkgs.openssh_hpn "ssh-keygen";
+      backends.ssh.program = lib.meta.getExe' pkgs.openssh_hpn "ssh-keygen";
       backends.ssh.allowed-signers = "${config.home.homeDirectory}/.ssh/allowed_signers";
     };
   };

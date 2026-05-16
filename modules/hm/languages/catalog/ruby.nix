@@ -10,8 +10,8 @@
   vscode.extensions = [ "shopify.ruby-lsp" ];
   vscode.settings = {
     "rubyLsp.bundleGemfile" = "";
-    "rubyLsp.customRubyCommand" = lib.getExe' pkgs.unstable.ruby_4_0 "ruby";
-    "rubyLsp.lspPath" = lib.getExe' pkgs.unstable.rubyPackages.ruby-lsp "ruby-lsp";
+    "rubyLsp.customRubyCommand" = lib.meta.getExe' pkgs.unstable.ruby_4_0 "ruby";
+    "rubyLsp.lspPath" = lib.meta.getExe' pkgs.unstable.rubyPackages.ruby-lsp "ruby-lsp";
     "rubyLsp.pullDiagnosticsOn" = "save";
     "rubyLsp.rubyVersionManager" = "none";
     "[ruby]" = {

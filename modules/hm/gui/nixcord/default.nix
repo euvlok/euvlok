@@ -11,9 +11,9 @@
     ./base.nix
   ];
 
-  options.hm.nixcord.enable = lib.mkEnableOption "Nixcord";
+  options.hm.nixcord.enable = lib.options.mkEnableOption "Nixcord";
 
-  config = lib.mkIf config.hm.nixcord.enable {
+  config = lib.modules.mkIf config.hm.nixcord.enable {
     assertions = [
       {
         assertion = pkgs.stdenvNoCC.isx86_64 || pkgs.stdenvNoCC.isDarwin;

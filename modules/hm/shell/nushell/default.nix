@@ -14,9 +14,9 @@ let
   paths = import ../paths.nix { inherit lib; };
 in
 {
-  options.hm.nushell.enable = lib.mkEnableOption "Nushell";
+  options.hm.nushell.enable = lib.options.mkEnableOption "Nushell";
 
-  config = lib.mkIf config.hm.nushell.enable {
+  config = lib.modules.mkIf config.hm.nushell.enable {
     programs.nushell = {
       enable = true;
       package = pkgs.unstable.nushell;
@@ -73,7 +73,7 @@ in
           };
           completionTypes =
             let
-              enableComp = n: lib.optionals config.programs.${n}.enable [ n ];
+              enableComp = n: lib.lists.optionals config.programs.${n}.enable [ n ];
             in
             [
               "bat"
@@ -96,8 +96,8 @@ in
           ${paths.hm.shell.binPaths.nushell}
           ${builtins.concatStringsSep "\n" sourceCommands}
           ${builtins.readFile ./aliases.nu}
-          ${lib.optionalString config.programs.jujutsu.enable "source ${jj-completions}"}
-          ${lib.optionalString config.programs.atuin.enable "source ${atuin-completions}"}
+          ${lib.strings.optionalString config.programs.jujutsu.enable "source ${jj-completions}"}
+          ${lib.strings.optionalString config.programs.atuin.enable "source ${atuin-completions}"}
         '';
     };
   };

@@ -4,7 +4,7 @@
   # output would otherwise land on the freeform merger that refuses multiple
   # definitions. Declaring it as a lazyAttrsOf lets user modules each
   # contribute their hosts the same way `nixosConfigurations` works.
-  options.flake.darwinConfigurations = lib.mkOption {
+  options.flake.darwinConfigurations = lib.options.mkOption {
     type = lib.types.lazyAttrsOf lib.types.raw;
     default = { };
   };

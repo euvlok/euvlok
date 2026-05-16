@@ -26,7 +26,7 @@ let
     );
 in
 {
-  config = lib.mkIf pkgs.stdenvNoCC.isLinux {
+  config = lib.modules.mkIf pkgs.stdenvNoCC.isLinux {
     dconf.settings = {
       # App Switcher Configuration
       "org/gnome/shell/app-switcher".current-workspace-only = true;
@@ -67,9 +67,9 @@ in
         ];
       };
       # Shell Keybindings - Disable default app switcher keybindings (Super+1-9)
-      "org/gnome/shell/keybindings" = lib.genAttrs (map (n: "switch-to-application-${toString n}") (
-        lib.range 1 9
-      )) (_: [ ]);
+      "org/gnome/shell/keybindings" = lib.attrsets.genAttrs (map (
+        n: "switch-to-application-${toString n}"
+      ) (lib.lists.range 1 9)) (_: [ ]);
 
       # Mutter Keybindings - Window tiling shortcuts
       "org/gnome/mutter/keybindings" = {
@@ -93,7 +93,7 @@ in
           # Generate Super+Shift+1-6 for moving windows to workspaces
           moveKeybindings = generateKeybindings "move-to-workspace" "<Super>" [ "<Shift>" ] numWorkspaces;
         in
-        lib.mkMerge [
+        lib.modules.mkMerge [
           manualKeybindings
           switchKeybindings
           moveKeybindings

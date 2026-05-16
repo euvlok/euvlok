@@ -9,7 +9,7 @@ let
     "--team"
     (toString cfg.team)
   ]
-  ++ lib.optionals (cfg.user != null) [
+  ++ lib.lists.optionals (cfg.user != null) [
     "--user"
     cfg.user
   ]
@@ -37,8 +37,8 @@ in
 
   systemd.services.foldingathome = {
     serviceConfig.EnvironmentFile = config.sops.templates."foldingathome.env".path;
-    script = lib.mkForce ''
-      exec ${lib.getExe cfg.package} ${lib.escapeShellArgs args} \
+    script = lib.modules.mkForce ''
+      exec ${lib.meta.getExe cfg.package} ${lib.strings.escapeShellArgs args} \
         --passkey "$FOLDINGATHOME_PASSKEY" \
         --account-token "$FOLDINGATHOME_TOKEN"
     '';

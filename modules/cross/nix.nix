@@ -8,12 +8,12 @@
 let
   inherit (config.nixpkgs.hostPlatform) isLinux;
 
-  registry = lib.mapAttrs (_: flake: { inherit flake; }) (
-    lib.filterAttrs (_: lib.isType "flake") inputs
+  registry = lib.attrsets.mapAttrs (_: flake: { inherit flake; }) (
+    lib.attrsets.filterAttrs (_: lib.types.isType "flake") inputs
   );
 
   buildParallelism =
-    lib.pipe
+    lib.trivial.pipe
       (pkgs.runCommand "nix-build-parallelism" { } ''
         ${pkgs.writeShellScript "get-nix-build-parallelism" ''
           ${pkgs.python3}/bin/python3 - <<'PY'
@@ -58,29 +58,29 @@ let
         ''} > $out
       '')
       [
-        lib.fileContents
+        lib.strings.fileContents
         builtins.fromJSON
       ];
 in
 {
   config = (
-    lib.mkMerge [
-      (lib.mkIf isLinux {
+    lib.modules.mkMerge [
+      (lib.modules.mkIf isLinux {
         # Add inputs to legacy (nix2) channels, making legacy nix commands consistent
-        environment.etc = lib.optionalAttrs isLinux (
-          lib.mapAttrs' (name: value: {
+        environment.etc = lib.attrsets.optionalAttrs isLinux (
+          lib.attrsets.mapAttrs' (name: value: {
             name = "nix/path/${name}";
             value.source = value.flake;
           }) config.nix.registry
         );
       })
-      (lib.mkIf isLinux { nix.registry = lib.mkForce registry; })
+      (lib.modules.mkIf isLinux { nix.registry = lib.modules.mkForce registry; })
       {
         nix = {
           settings = {
             experimental-features = "nix-command flakes";
-            cores = lib.mkDefault buildParallelism.cores;
-            max-jobs = lib.mkDefault buildParallelism."max-jobs";
+            cores = lib.modules.mkDefault buildParallelism.cores;
+            max-jobs = lib.modules.mkDefault buildParallelism."max-jobs";
 
             substituters = [
               "https://devenv.cachix.org"
@@ -101,7 +101,7 @@ in
               "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
             ];
           }
-          // lib.optionalAttrs isLinux {
+          // lib.attrsets.optionalAttrs isLinux {
             # Disable global registry
             flake-registry = "";
           };
@@ -111,8 +111,8 @@ in
           channel.enable = false;
 
           # Flake Inputs
-          nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") (
-            lib.filterAttrs (_: lib.isType "flake") inputs
+          nixPath = lib.attrsets.mapAttrsToList (n: _: "${n}=flake:${n}") (
+            lib.attrsets.filterAttrs (_: lib.types.isType "flake") inputs
           );
         };
       }

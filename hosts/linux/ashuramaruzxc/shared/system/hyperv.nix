@@ -63,7 +63,7 @@
         swtpm
         ;
     }
-    ++ lib.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
+    ++ lib.lists.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
       builtins.attrValues { inherit (pkgs) looking-glass-client; }
     )
   );
@@ -91,16 +91,18 @@
     };
   };
   #! wait until the next lts kernel
-  virtualisation.kvmfr = lib.optionalAttrs (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") {
-    enable = true;
-    shm = {
-      enable = true;
-      size = 128;
-      user = "qemu-libvirtd";
-      group = "libvirtd";
-      mode = "0600";
-    };
-  };
+  virtualisation.kvmfr =
+    lib.attrsets.optionalAttrs (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux")
+      {
+        enable = true;
+        shm = {
+          enable = true;
+          size = 128;
+          user = "qemu-libvirtd";
+          group = "libvirtd";
+          mode = "0600";
+        };
+      };
   systemd.services.libvirtd.path = (
     builtins.attrValues {
       inherit (pkgs)
@@ -110,7 +112,7 @@
         swtpm
         ;
     }
-    ++ lib.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
+    ++ lib.lists.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
       builtins.attrValues { inherit (pkgs) looking-glass-client; }
     )
   );

@@ -35,7 +35,7 @@ let
   };
 in
 {
-  config = lib.mkIf config.catppuccin.enable {
+  config = lib.modules.mkIf config.catppuccin.enable {
     programs = {
       firefox.profiles.default.extensions.packages = [ webFileIcons ];
       floorp.profiles.default.extensions.packages = [ webFileIcons ];

@@ -11,22 +11,22 @@ let
   userAliasesPath = ../../hosts/hm/${hmConfig.programs.git.settings.user.name}/aliases.nix;
   shellAliases =
     ((pkgs.callPackage ../../modules/hm/shell/aliases.nix { }).programs.zsh.shellAliases)
-    // lib.optionalAttrs (builtins.pathExists userAliasesPath) (
+    // lib.attrsets.optionalAttrs (builtins.pathExists userAliasesPath) (
       (pkgs.callPackage userAliasesPath { }).programs.zsh.shellAliases
     );
-  shellAliasesStr = lib.pipe shellAliases [
-    (attrs: lib.filterAttrs (_: value: builtins.isString value) attrs)
+  shellAliasesStr = lib.trivial.pipe shellAliases [
+    (attrs: lib.attrsets.filterAttrs (_: value: builtins.isString value) attrs)
     (
       filteredAttrs:
       lib.generators.toKeyValue {
-        mkKeyValue = name: value: "alias ${name}=${lib.escapeShellArg value}";
+        mkKeyValue = name: value: "alias ${name}=${lib.strings.escapeShellArg value}";
       } filteredAttrs
     )
   ];
 
   omzPlugins =
     let
-      enablePlugin = n: lib.optionals hmConfig.programs.${n}.enable [ n ];
+      enablePlugin = n: lib.lists.optionals hmConfig.programs.${n}.enable [ n ];
     in
     [
       "colorize"
@@ -49,21 +49,21 @@ let
       src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
     }
   ]
-  ++ lib.optionals hmConfig.hm.fzf.enable [
+  ++ lib.lists.optionals hmConfig.hm.fzf.enable [
     {
       name = "fzf-tab";
       src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
     }
   ];
-  customPluginsStr = lib.pipe customPlugins [
+  customPluginsStr = lib.trivial.pipe customPlugins [
     (pluginsList: map (p: "source ${p.src}") pluginsList)
     (builtins.concatStringsSep "\n")
   ];
 
-  omzPluginsStr = "plugins=(${lib.concatStringsSep " " omzPlugins})";
+  omzPluginsStr = "plugins=(${lib.strings.concatStringsSep " " omzPlugins})";
 in
 {
-  programs.zsh.interactiveShellInit = lib.concatStringsSep "\n" [
+  programs.zsh.interactiveShellInit = lib.strings.concatStringsSep "\n" [
     "# PATH"
     paths.hm.shell.binPaths.zsh
 
@@ -90,18 +90,18 @@ in
     customPluginsStr
   ];
 
-  programs.zsh.promptInit = lib.mkMerge [
-    (lib.optionalString (hmConfig.hm.ghostty.enable) ''
+  programs.zsh.promptInit = lib.modules.mkMerge [
+    (lib.strings.optionalString (hmConfig.hm.ghostty.enable) ''
       if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
         source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
       fi
     '')
-    (lib.optionalString (hmConfig.programs.starship.enable) ''
+    (lib.strings.optionalString (hmConfig.programs.starship.enable) ''
       if [[ $TERM != "dumb" ]]; then
         eval "$(starship init zsh)"
       fi
     '')
-    (lib.optionalString (hmConfig.hm.yazi.enable) ''
+    (lib.strings.optionalString (hmConfig.hm.yazi.enable) ''
       function yy() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
         yazi "$@" --cwd-file="$tmp"
@@ -111,10 +111,10 @@ in
         rm -f -- "$tmp"
       }
     '')
-    (lib.optionalString (hmConfig.hm.zoxide.enable) ''eval "$(zoxide init zsh)"'')
-    (lib.optionalString (hmConfig.services.ssh-agent.enable) ''
+    (lib.strings.optionalString (hmConfig.hm.zoxide.enable) ''eval "$(zoxide init zsh)"'')
+    (lib.strings.optionalString (hmConfig.services.ssh-agent.enable) ''
       if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-        export SSH_AUTH_SOCK="$(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${hmConfig.services.ssh-agent.socket}"
+        export SSH_AUTH_SOCK="$(${lib.meta.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${hmConfig.services.ssh-agent.socket}"
       fi
     '')
   ];

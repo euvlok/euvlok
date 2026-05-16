@@ -3,11 +3,11 @@ let
   paths = import ./paths.nix { inherit lib; };
 in
 {
-  options.hm.bash.enable = lib.mkEnableOption "Bash" // {
+  options.hm.bash.enable = lib.options.mkEnableOption "Bash" // {
     default = true;
   };
 
-  config = lib.mkIf config.hm.bash.enable {
+  config = lib.modules.mkIf config.hm.bash.enable {
     programs.bash = {
       enable = true;
       enableVteIntegration = true;

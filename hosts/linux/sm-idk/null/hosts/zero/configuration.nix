@@ -5,7 +5,7 @@
 }:
 let
   peripheralFirmware =
-    lib.findFirst (path: builtins.pathExists (path + "/all_firmware.tar.gz")) null
+    lib.lists.findFirst (path: builtins.pathExists (path + "/all_firmware.tar.gz")) null
       [
         /boot/asahi
         /mnt/boot/asahi
@@ -43,8 +43,8 @@ in
 
   # Asahi/Apple Silicon systems commonly use 16K pages, where the NixOS
   # default of 33 ASLR bits is invalid. 31 is the maximum for this layout.
-  boot.kernel.sysctl."vm.mmap_rnd_bits" = lib.mkForce 31;
-  security.rtkit.enable = lib.mkForce true;
+  boot.kernel.sysctl."vm.mmap_rnd_bits" = lib.modules.mkForce 31;
+  security.rtkit.enable = lib.modules.mkForce true;
 
   # The Asahi installer extracts this non-redistributable firmware from macOS
   # onto the EFI system partition. Use it when present, but keep CI and
@@ -56,7 +56,7 @@ in
   # against nixpkgs-unstable so we hit the nixos-apple-silicon Cachix cache.
   # The CI at github.com/nix-community/nixos-apple-silicon only publishes
   # builds against unstable variants on `main`, so 25.11-built kernels miss.
-  hardware.asahi.pkgs = lib.mkForce (
+  hardware.asahi.pkgs = lib.modules.mkForce (
     import inputs.nixpkgs-unstable-small {
       localSystem.system = "aarch64-linux";
       config.allowUnfree = true;

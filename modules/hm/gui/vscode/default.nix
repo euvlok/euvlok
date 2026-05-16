@@ -7,9 +7,9 @@
 {
   imports = [ ./extensions.nix ];
 
-  options.hm.vscode.enable = lib.mkEnableOption "VSCode";
+  options.hm.vscode.enable = lib.options.mkEnableOption "VSCode";
 
-  config = lib.mkIf config.hm.vscode.enable {
+  config = lib.modules.mkIf config.hm.vscode.enable {
     programs.vscode = {
       enable = true;
       package =

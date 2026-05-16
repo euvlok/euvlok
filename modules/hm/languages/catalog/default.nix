@@ -11,7 +11,7 @@ let
           "25"
         ];
       in
-      lib.genAttrs versions (version: pkgs.unstable."jdk${version}");
+      lib.attrsets.genAttrs versions (version: pkgs.unstable."jdk${version}");
 
     dotnet =
       let
@@ -21,10 +21,11 @@ let
           "10"
         ];
       in
-      lib.genAttrs versions (version: pkgs.unstable.dotnetCorePackages."sdk_${version}_0-bin");
+      lib.attrsets.genAttrs versions (version: pkgs.unstable.dotnetCorePackages."sdk_${version}_0-bin");
   };
 
-  getLatestVersion = mapping: lib.last (lib.sort lib.versionOlder (lib.attrNames mapping));
+  getLatestVersion =
+    mapping: lib.lists.last (lib.lists.sort lib.strings.versionOlder (lib.attrsets.attrNames mapping));
 
   prettierFormatter = parser: {
     external = {

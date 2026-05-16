@@ -7,7 +7,7 @@
 }:
 {
   imports = [ inputs.sops-nix-trivial.homeManagerModules.sops ];
-  sops.age.keyFile = lib.mkDefault (
+  sops.age.keyFile = lib.modules.mkDefault (
     if pkgs.stdenvNoCC.isDarwin then
       "${config.home.homeDirectory}/Library/Application Support/sops/age/keys.txt"
     else

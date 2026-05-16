@@ -54,6 +54,6 @@
 
   programs.gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
   programs.kdeconnect.enable = true;
-  programs.ssh.askPassword = lib.mkForce (lib.getExe pkgs.seahorse);
+  programs.ssh.askPassword = lib.modules.mkForce (lib.meta.getExe pkgs.seahorse);
 
 }

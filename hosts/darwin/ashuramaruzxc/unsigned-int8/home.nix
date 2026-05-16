@@ -125,7 +125,7 @@ let
       ;
     inherit (pkgs.jetbrains) dataspell datagrip;
     pcsx2-bin = pkgs.pcsx2-bin.overrideAttrs (oldAttrs: {
-      meta = lib.recursiveUpdate oldAttrs.meta { platforms = lib.platforms.darwin; };
+      meta = lib.attrsets.recursiveUpdate oldAttrs.meta { platforms = lib.platforms.darwin; };
     });
   };
 

@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.hm.fzf.enable = lib.mkEnableOption "FZF" // {
+  options.hm.fzf.enable = lib.options.mkEnableOption "FZF" // {
     default = true;
   };
 
-  config = lib.mkIf config.hm.fzf.enable { programs.fzf.enable = true; };
+  config = lib.modules.mkIf config.hm.fzf.enable { programs.fzf.enable = true; };
 }

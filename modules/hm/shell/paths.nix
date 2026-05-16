@@ -13,8 +13,8 @@ let
     ".local/share/pnpm"
   ];
   binPaths = map (dir: "$HOME/${dir}/bin") binDirs;
-  bashPathStr = lib.concatStringsSep ":" binPaths;
-  nuList = "[ " + (lib.concatStringsSep " " (map (d: "\"${d}\"") binDirs)) + " ]";
+  bashPathStr = lib.strings.concatStringsSep ":" binPaths;
+  nuList = "[ " + (lib.strings.concatStringsSep " " (map (d: "\"${d}\"") binDirs)) + " ]";
 in
 {
   hm.shell.binPaths = {

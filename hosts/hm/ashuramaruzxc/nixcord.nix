@@ -1,6 +1,6 @@
 { lib, config, ... }:
 {
-  programs.nixcord.quickCss = lib.optionalString config.catppuccin.enable ''
+  programs.nixcord.quickCss = lib.strings.optionalString config.catppuccin.enable ''
     /* ----- CATPPUCCIN THEME ----- */
     @import url("https://catppuccin.github.io/discord/dist/catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}.theme.css")
       (prefers-color-scheme: dark);

@@ -11,7 +11,7 @@
     serviceConfig = {
       Type = "simple";
       ExecStart =
-        "${lib.getExe pkgs.slsk-batchdl} "
+        "${lib.meta.getExe pkgs.slsk-batchdl} "
         + "--user autosyncdl "
         + "--pass 'tn8vM%Ua@$VD' "
         + "-p /media/HDD/spotmusic "

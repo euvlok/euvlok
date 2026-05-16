@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.hm.zellij.enable = lib.mkEnableOption "Zellij";
+  options.hm.zellij.enable = lib.options.mkEnableOption "Zellij";
 
-  config = lib.mkIf config.hm.zellij.enable {
+  config = lib.modules.mkIf config.hm.zellij.enable {
     programs.zellij.enable = true;
   };
 }

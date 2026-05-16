@@ -17,7 +17,7 @@
     users = {
       root = {
         initialHashedPassword = "";
-        openssh.authorizedKeys.keys = lib.flatten [
+        openssh.authorizedKeys.keys = lib.lists.flatten [
           config.users.users.ashuramaru.openssh.authorizedKeys.keys
         ];
         shell = pkgs.zsh;

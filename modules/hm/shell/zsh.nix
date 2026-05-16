@@ -8,9 +8,9 @@ let
   paths = import ./paths.nix { inherit lib; };
 in
 {
-  options.hm.zsh.enable = lib.mkEnableOption "Declerative Zsh";
+  options.hm.zsh.enable = lib.options.mkEnableOption "Declerative Zsh";
 
-  config = lib.mkIf config.hm.zsh.enable {
+  config = lib.modules.mkIf config.hm.zsh.enable {
     assertions = [
       {
         message = "You cannot use Home-Manager Zsh on Darwin";

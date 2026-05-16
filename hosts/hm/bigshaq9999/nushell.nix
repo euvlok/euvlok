@@ -22,7 +22,7 @@ in
     htop = "btop";
     neofetch = "fastfetch";
   }
-  // lib.optionalAttrs isDarwin { micfix = "sudo killall coreaudiod"; };
+  // lib.attrsets.optionalAttrs isDarwin { micfix = "sudo killall coreaudiod"; };
   programs.nushell.configFile.text = ''
     # Generic
     $env.EDITOR = "hx";

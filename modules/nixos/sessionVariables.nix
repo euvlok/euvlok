@@ -21,7 +21,7 @@
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
   }
-  // (lib.optionalAttrs
+  // (lib.attrsets.optionalAttrs
     (config.i18n.inputMethod.type == "fcitx5" && config.i18n.inputMethod.fcitx5.waylandFrontend)
     {
       SDL_IM_MODULE = "fcitx";

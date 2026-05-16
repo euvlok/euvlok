@@ -6,18 +6,20 @@
 }:
 let
   languageDefinitions = import ./catalog { inherit pkgs lib; };
-  enabledLanguages = lib.filterAttrs (
+  enabledLanguages = lib.attrsets.filterAttrs (
     name: _: config.hm.languages.${name}.enable or false
   ) languageDefinitions;
-  collectLists = selector: lib.flatten (lib.mapAttrsToList (_: def: selector def) enabledLanguages);
+  collectLists =
+    selector: lib.lists.flatten (lib.attrsets.mapAttrsToList (_: def: selector def) enabledLanguages);
   mergeAttrs =
-    selector: lib.mergeAttrsList (lib.mapAttrsToList (_: def: selector def) enabledLanguages);
+    selector:
+    lib.attrsets.mergeAttrsList (lib.attrsets.mapAttrsToList (_: def: selector def) enabledLanguages);
 in
 {
-  config = lib.mkIf config.hm.zed-editor.enable {
+  config = lib.modules.mkIf config.hm.zed-editor.enable {
     programs.zed-editor.extensions =
-      lib.optionals config.programs.fish.enable [ "fish" ]
-      ++ lib.optionals config.programs.nushell.enable [ "nu" ]
+      lib.lists.optionals config.programs.fish.enable [ "fish" ]
+      ++ lib.lists.optionals config.programs.nushell.enable [ "nu" ]
       ++ collectLists (def: def.zed.extensions or [ ]);
 
     programs.zed-editor.userSettings.languages = mergeAttrs (def: def.zed.languages or { });

@@ -13,7 +13,7 @@ export async function getChromiumMajorVersion(): Promise<string> {
     '--raw',
     '--impure',
     '--expr',
-    'let flake = builtins.getFlake (toString ./.); system = builtins.currentSystem; pkgs = import flake.inputs.nixpkgs { inherit system; config.allowUnfree = true; }; in pkgs.lib.getVersion pkgs.chromium',
+    'let flake = builtins.getFlake (toString ./.); system = builtins.currentSystem; pkgs = import flake.inputs.nixpkgs { inherit system; config.allowUnfree = true; }; in pkgs.lib.strings.getVersion pkgs.chromium',
   ]);
   const version = output.stdout.trim().split('.')[0];
   if (output.exitCode === 0 && /^\d+$/.test(version)) return version;

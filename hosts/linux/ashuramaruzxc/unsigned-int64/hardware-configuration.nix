@@ -6,7 +6,7 @@
   ...
 }:
 {
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
 
   sops.secrets.ssh-initrd-key = { };
 
@@ -68,7 +68,7 @@
         hostKeys = [
           config.sops.secrets.ssh-initrd-key.path
         ];
-        authorizedKeys = lib.flatten [
+        authorizedKeys = lib.lists.flatten [
           config.users.users.ashuramaru.openssh.authorizedKeys.keys
           config.users.users.fumono.openssh.authorizedKeys.keys
         ];

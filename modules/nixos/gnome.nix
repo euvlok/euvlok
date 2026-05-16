@@ -24,10 +24,10 @@ in
   #   ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/gnome.nix")
   # ];
 
-  options.nixos.gnome.enable = lib.mkEnableOption "GNOME";
+  options.nixos.gnome.enable = lib.options.mkEnableOption "GNOME";
 
-  config = lib.mkIf config.nixos.gnome.enable {
-    nixos.gui.enable = lib.mkDefault true;
+  config = lib.modules.mkIf config.nixos.gnome.enable {
+    nixos.gui.enable = lib.modules.mkDefault true;
 
     services = {
       displayManager.gdm.enable = true;
@@ -55,7 +55,7 @@ in
             ;
           inherit (pkgs.unstable.gnomeExtensions) appindicator clipboard-indicator;
         }
-        ++ lib.optionals config.catppuccin.enable [
+        ++ lib.lists.optionals config.catppuccin.enable [
           (mkCatppuccinGtk { tweaks = [ "normal" ]; })
         ];
 

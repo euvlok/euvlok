@@ -99,19 +99,19 @@
       };
     };
     spawn-at-startup = [
-      { command = [ (lib.getExe pkgs.waybar) ]; }
+      { command = [ (lib.meta.getExe pkgs.waybar) ]; }
       {
         command = [
-          (lib.getExe' pkgs.wl-clipboard "wl-paste")
+          (lib.meta.getExe' pkgs.wl-clipboard "wl-paste")
           "--watch"
           "cliphist"
           "store"
         ];
       }
-      { command = [ (lib.getExe pkgs.xwayland-satellite) ]; }
+      { command = [ (lib.meta.getExe pkgs.xwayland-satellite) ]; }
       {
         command = [
-          (lib.getExe pkgs.swaylock)
+          (lib.meta.getExe pkgs.swaylock)
           "-w"
           "timeout"
           "601"

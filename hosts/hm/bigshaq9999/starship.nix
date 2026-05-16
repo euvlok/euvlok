@@ -9,7 +9,7 @@
       in
       secToMin 10;
 
-    format = lib.concatStrings [
+    format = lib.strings.concatStrings [
       "$shell"
       "$os"
       "$directory"
@@ -26,7 +26,7 @@
       "$git_commit"
     ];
 
-    right_format = lib.concatStrings [
+    right_format = lib.strings.concatStrings [
       "$cmd_duration"
       "$time"
     ];

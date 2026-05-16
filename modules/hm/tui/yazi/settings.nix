@@ -53,7 +53,7 @@
           mime = "{audio,video}/*";
           use = [
             (if pkgs.stdenvNoCC.isDarwin then "open" else "")
-            (lib.mkIf pkgs.stdenvNoCC.isDarwin "open")
+            (lib.modules.mkIf pkgs.stdenvNoCC.isDarwin "open")
             "reveal"
           ];
         }

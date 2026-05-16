@@ -34,7 +34,7 @@ in
     };
   };
   virtualisation.oci-containers.backend = "podman";
-  hardware.nvidia-container-toolkit = lib.optionalAttrs (config.nixos.nvidia.enable) {
+  hardware.nvidia-container-toolkit = lib.attrsets.optionalAttrs (config.nixos.nvidia.enable) {
     enable = true;
     mount-nvidia-executables = true;
   };

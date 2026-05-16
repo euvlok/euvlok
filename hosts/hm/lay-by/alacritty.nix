@@ -13,7 +13,7 @@
         shell = "fish";
       };
       font = {
-        size = lib.mkForce 10;
+        size = lib.modules.mkForce 10;
       };
     };
   };

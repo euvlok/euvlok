@@ -7,7 +7,7 @@
 }:
 let
   default = {
-    extensions.packages = builtins.filter (lib.isDerivation) (
+    extensions.packages = builtins.filter (lib.attrsets.isDerivation) (
       builtins.attrValues (
         pkgs.callPackage ./extensions.nix {
           buildFirefoxXpiAddon = (pkgs.callPackage ./firefox-addons.nix { }).buildFirefoxXpiAddon;
@@ -200,18 +200,18 @@ in
   imports = [ inputs.zen-browser-trivial.homeModules.twilight ];
 
   options.hm.firefox = {
-    enable = lib.mkEnableOption "Declarative Firefox-based Browsers";
-    firefox.enable = lib.mkOption {
+    enable = lib.options.mkEnableOption "Declarative Firefox-based Browsers";
+    firefox.enable = lib.options.mkOption {
       default = true;
       description = "Enable Declerative Firefox";
     };
-    floorp.enable = lib.mkEnableOption "Declarative Floorp";
-    librewolf.enable = lib.mkEnableOption "Declarative LibreWolf";
-    zen-browser.enable = lib.mkEnableOption "Declarative Zen Browser";
-    defaultSearchEngine = lib.mkOption {
+    floorp.enable = lib.options.mkEnableOption "Declarative Floorp";
+    librewolf.enable = lib.options.mkEnableOption "Declarative LibreWolf";
+    zen-browser.enable = lib.options.mkEnableOption "Declarative Zen Browser";
+    defaultSearchEngine = lib.options.mkOption {
       default = "google";
       description = "Which Search Engine to set as Default";
-      example = lib.literalExpression "Google";
+      example = lib.options.literalExpression "Google";
       type = lib.types.enum [
         "ddg"
         "google"
@@ -220,8 +220,8 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf config.hm.firefox.enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf config.hm.firefox.enable {
       programs.firefox = {
         enable = true;
         package = pkgs.firefox;
@@ -229,7 +229,7 @@ in
         inherit policies;
       };
     })
-    (lib.mkIf config.hm.firefox.floorp.enable {
+    (lib.modules.mkIf config.hm.firefox.floorp.enable {
       programs.floorp = {
         enable = true;
         package = pkgs.unstable.floorp-bin;
@@ -237,7 +237,7 @@ in
         inherit policies;
       };
     })
-    (lib.mkIf config.hm.firefox.librewolf.enable {
+    (lib.modules.mkIf config.hm.firefox.librewolf.enable {
       programs.librewolf = {
         enable = true;
         package = pkgs.librewolf;
@@ -245,7 +245,7 @@ in
         inherit policies;
       };
     })
-    (lib.mkIf config.hm.firefox.zen-browser.enable {
+    (lib.modules.mkIf config.hm.firefox.zen-browser.enable {
       programs.zen-browser = {
         enable = true;
         profiles.default = default;

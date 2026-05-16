@@ -24,10 +24,10 @@ in
   #   ("${inputs.nixpkgs-unstable-small.outPath}/nixos/modules/services/desktop-managers/plasma6.nix")
   # ];
 
-  options.nixos.plasma.enable = lib.mkEnableOption "KDE Plasma";
+  options.nixos.plasma.enable = lib.options.mkEnableOption "KDE Plasma";
 
-  config = lib.mkIf config.nixos.plasma.enable {
-    nixos.gui.enable = lib.mkDefault true;
+  config = lib.modules.mkIf config.nixos.plasma.enable {
+    nixos.gui.enable = lib.modules.mkDefault true;
 
     nixpkgs.overlays = [
       (_: prev: {
@@ -130,7 +130,7 @@ in
             kservice
             ;
         }
-        ++ lib.optionals config.catppuccin.enable [
+        ++ lib.lists.optionals config.catppuccin.enable [
           (mkCatppuccinGtk { tweaks = [ "rimless" ]; })
           (pkgs.unstable.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];

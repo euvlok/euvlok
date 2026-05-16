@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.nixos.gui.enable = lib.mkEnableOption "graphical session (display server + common GUI daemons)";
+  options.nixos.gui.enable = lib.options.mkEnableOption "graphical session (display server + common GUI daemons)";
 
-  config = lib.mkIf config.nixos.gui.enable {
+  config = lib.modules.mkIf config.nixos.gui.enable {
     services = {
       xserver.enable = true;
       libinput.enable = true;

@@ -73,17 +73,17 @@ in
         format = "󰎇 {} 󰎇";
         interval = 1;
         on-click = "playerctl -p Feishin play-pause";
-        exec = lib.getExe' scripts "lay-by-waybar-music";
+        exec = lib.meta.getExe' scripts "lay-by-waybar-music";
       };
       "custom/nvidia" = {
         format = " {}";
         interval = 1;
-        exec = lib.getExe' scripts "lay-by-waybar-nvidia";
+        exec = lib.meta.getExe' scripts "lay-by-waybar-nvidia";
       };
       # There might already be a custom module for this but I'm just going to use my old script.
       "custom/weather" = {
         interval = 900;
-        exec = lib.getExe' scripts "lay-by-waybar-weather";
+        exec = lib.meta.getExe' scripts "lay-by-waybar-weather";
       };
     }
   ];

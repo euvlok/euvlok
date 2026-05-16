@@ -10,9 +10,9 @@
     ./settings.nix
   ];
 
-  options.hm.yazi.enable = lib.mkEnableOption "Yazi";
+  options.hm.yazi.enable = lib.options.mkEnableOption "Yazi";
 
-  config = lib.mkIf config.hm.yazi.enable {
+  config = lib.modules.mkIf config.hm.yazi.enable {
     home.packages = builtins.attrValues { inherit (pkgs) mediainfo exiftool clipboard-jh; };
     programs.yazi = {
       enable = true;
@@ -41,8 +41,8 @@
             hash = "sha256-8YtYYxNDfQBTyMxn6Q7/BCiTiscpiZFXRuX0riMlRWQ=";
           };
         }
-        // lib.optionalAttrs config.programs.git.enable { git = "${pluginsRepo}/git.yazi"; }
-        // lib.optionalAttrs config.programs.starship.enable {
+        // lib.attrsets.optionalAttrs config.programs.git.enable { git = "${pluginsRepo}/git.yazi"; }
+        // lib.attrsets.optionalAttrs config.programs.starship.enable {
           starship = pkgs.fetchFromGitHub {
             owner = "Rolv-Apneseth";
             repo = "starship.yazi";
@@ -52,8 +52,8 @@
         };
       initLua = builtins.concatStringsSep "\n" (
         [ "require('full-border'):setup()" ]
-        ++ lib.optional config.programs.git.enable ''require("git"):setup()''
-        ++ lib.optional config.programs.starship.enable ''require("starship"):setup()''
+        ++ lib.lists.optional config.programs.git.enable ''require("git"):setup()''
+        ++ lib.lists.optional config.programs.starship.enable ''require("starship"):setup()''
       );
     };
   };

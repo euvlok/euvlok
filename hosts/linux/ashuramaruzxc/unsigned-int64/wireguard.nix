@@ -16,16 +16,16 @@
     listenPort = 51280;
     privateKeyFile = config.sops.secrets.wireguard-server.path;
     postUp = ''
-      ${lib.getExe' pkgs.iptables "iptables"} -t nat -A PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
-      ${lib.getExe' pkgs.iptables "iptables"} -t nat -A POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
-      ${lib.getExe' pkgs.iptables "iptables"} -A FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-      ${lib.getExe' pkgs.iptables "iptables"} -A FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -A PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -A POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -A FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -A FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
     '';
     postDown = ''
-      ${lib.getExe' pkgs.iptables "iptables"} -t nat -D PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
-      ${lib.getExe' pkgs.iptables "iptables"} -t nat -D POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
-      ${lib.getExe' pkgs.iptables "iptables"} -D FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-      ${lib.getExe' pkgs.iptables "iptables"} -D FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -D PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -D POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -D FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+      ${lib.meta.getExe' pkgs.iptables "iptables"} -D FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
     '';
     peers = [
       # Clares@rt-ax86u

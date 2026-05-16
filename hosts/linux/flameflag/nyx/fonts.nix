@@ -19,7 +19,7 @@
         inherit (pkgs) noto-fonts-cjk-sans noto-fonts-color-emoji twemoji-color-font;
         inherit (pkgs.nerd-fonts) monaspace noto;
       }
-      ++ lib.optionals config.nixos.gnome.enable (
+      ++ lib.lists.optionals config.nixos.gnome.enable (
         builtins.attrValues { inherit (pkgs.nerd-fonts) adwaita-mono; }
       );
   };

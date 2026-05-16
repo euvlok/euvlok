@@ -5,10 +5,10 @@
   ...
 }:
 {
-  options.nixos.amd.enable = lib.mkEnableOption "AMD drivers";
+  options.nixos.amd.enable = lib.options.mkEnableOption "AMD drivers";
 
-  config = lib.mkMerge [
-    (lib.mkIf config.nixos.amd.enable {
+  config = lib.modules.mkMerge [
+    (lib.modules.mkIf config.nixos.amd.enable {
       hardware.graphics.extraPackages = builtins.attrValues {
         inherit (pkgs) clinfo;
         inherit (pkgs.rocmPackages.clr) icd;

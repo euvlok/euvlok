@@ -6,7 +6,7 @@
   lib,
   ...
 }:
-lib.flatten [
+lib.lists.flatten [
   {
     id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
     crxPath = pkgs.fetchurl {
@@ -79,7 +79,7 @@ lib.flatten [
     };
     version = "6.1.5";
   }
-  (lib.optionals (config.catppuccin.enable) [
+  (lib.lists.optionals (config.catppuccin.enable) [
     {
       id = "lnjaiaapbakfhlbjenjkhffcdpoompki";
       crxPath = pkgs.fetchurl {

@@ -6,14 +6,16 @@
 }:
 let
   languageDefinitions = import ./catalog { inherit pkgs lib; };
-  enabledLanguages = lib.filterAttrs (
+  enabledLanguages = lib.attrsets.filterAttrs (
     name: _: config.hm.languages.${name}.enable or false
   ) languageDefinitions;
-  collectLists = selector: lib.flatten (lib.mapAttrsToList (_: def: selector def) enabledLanguages);
+  collectLists =
+    selector: lib.lists.flatten (lib.attrsets.mapAttrsToList (_: def: selector def) enabledLanguages);
   mergeAttrs =
-    selector: lib.mergeAttrsList (lib.mapAttrsToList (_: def: selector def) enabledLanguages);
-  extensionStrings = lib.unique (
-    lib.optionals
+    selector:
+    lib.attrsets.mergeAttrsList (lib.attrsets.mapAttrsToList (_: def: selector def) enabledLanguages);
+  extensionStrings = lib.lists.unique (
+    lib.lists.optionals
       (config.hm.languages.cpp.enable or config.hm.languages.rust.enable
         or config.hm.languages.swift.enable
       )
@@ -24,7 +26,7 @@ let
   );
 in
 {
-  config = lib.mkIf config.hm.vscode.enable {
+  config = lib.modules.mkIf config.hm.vscode.enable {
     programs.vscode.profiles.default.extensions =
       pkgs.nix4vscode.forVscodeVersion config.programs.vscode.package.version extensionStrings;
 

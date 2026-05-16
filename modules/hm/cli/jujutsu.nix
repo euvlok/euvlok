@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.hm.jujutsu.enable = lib.mkEnableOption "Jujutsu";
+  options.hm.jujutsu.enable = lib.options.mkEnableOption "Jujutsu";
 
-  config = lib.mkIf config.hm.jujutsu.enable {
+  config = lib.modules.mkIf config.hm.jujutsu.enable {
     home.packages = builtins.attrValues { inherit (pkgs.unstable) watchman; };
     programs.jujutsu = {
       enable = true;

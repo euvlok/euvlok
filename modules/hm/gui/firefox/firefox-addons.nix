@@ -9,7 +9,7 @@ let
   defaultFetchurl = fetchurl;
   defaultStdenv = stdenv;
 
-  buildFirefoxXpiAddon = lib.makeOverridable (
+  buildFirefoxXpiAddon = lib.customisation.makeOverridable (
     {
       stdenv ? defaultStdenv,
       fetchurl ? defaultFetchurl,

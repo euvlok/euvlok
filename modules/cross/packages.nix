@@ -16,9 +16,9 @@ let
         nixd
         ;
 
-      uutils-coreutils-noprefix = (lib.hiPrio pkgs.unstable.uutils-coreutils-noprefix);
-      uutils-diffutils = (lib.hiPrio pkgs.unstable.uutils-diffutils);
-      uutils-findutils = (lib.hiPrio pkgs.unstable.uutils-findutils);
+      uutils-coreutils-noprefix = (lib.meta.hiPrio pkgs.unstable.uutils-coreutils-noprefix);
+      uutils-diffutils = (lib.meta.hiPrio pkgs.unstable.uutils-diffutils);
+      uutils-findutils = (lib.meta.hiPrio pkgs.unstable.uutils-findutils);
 
       # GNU
       inherit (pkgs.unstable)
@@ -128,7 +128,7 @@ let
       inherit (pkgs.unstable) sysstat;
     }
     # Pacakges only meant for Desktops
-    ++ lib.optionals (config.nixos.amd.enable or config.nixos.nvidia.enable) (
+    ++ lib.lists.optionals (config.nixos.amd.enable or config.nixos.nvidia.enable) (
       builtins.attrValues {
         inherit (pkgs.unstable)
           networkmanagerapplet
@@ -145,5 +145,5 @@ let
 in
 {
   environment.systemPackages =
-    commonPkgs ++ lib.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
+    commonPkgs ++ lib.lists.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
 }

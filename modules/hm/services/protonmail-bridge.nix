@@ -9,20 +9,20 @@ let
 in
 {
   options.services.protonmail-bridge = {
-    enable = lib.mkOption {
+    enable = lib.options.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Whether to enable the ProtonMail Bridge service.";
     };
 
-    package = lib.mkOption {
+    package = lib.options.mkOption {
       type = lib.types.package;
       default = pkgs.protonmail-bridge;
-      defaultText = lib.literalExpression "pkgs.protonmail-bridge";
+      defaultText = lib.options.literalExpression "pkgs.protonmail-bridge";
       description = "The protonmail-bridge package to use.";
     };
 
-    logLevel = lib.mkOption {
+    logLevel = lib.options.mkOption {
       type = lib.types.enum [
         "panic"
         "fatal"
@@ -36,9 +36,9 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      (lib.mkIf pkgs.stdenvNoCC.isLinux (
+  config = lib.modules.mkIf cfg.enable (
+    lib.modules.mkMerge [
+      (lib.modules.mkIf pkgs.stdenvNoCC.isLinux (
         let
           wrappedBridge =
             pkgs.runCommand "protonmail-bridge-wrapped"
@@ -47,8 +47,8 @@ in
               }
               ''
                 mkdir -p $out/bin
-                makeWrapper ${lib.getExe cfg.package} $out/bin/protonmail-bridge \
-                  --set PATH ${lib.makeBinPath [ pkgs.gnome-keyring ]}
+                makeWrapper ${lib.meta.getExe cfg.package} $out/bin/protonmail-bridge \
+                  --set PATH ${lib.strings.makeBinPath [ pkgs.gnome-keyring ]}
               '';
         in
         {
@@ -69,12 +69,12 @@ in
           };
         }
       ))
-      (lib.mkIf pkgs.stdenv.isDarwin {
+      (lib.modules.mkIf pkgs.stdenv.isDarwin {
         home.packages = [ cfg.package ];
         launchd.agents.protonmail-bridge = {
           config = {
             ProgramArguments = [
-              "${lib.getExe cfg.package}"
+              "${lib.meta.getExe cfg.package}"
               "--noninteractive"
               "--log-level"
               cfg.logLevel
@@ -82,7 +82,7 @@ in
             RunAtLoad = true;
             KeepAlive = true;
             EnvironmentVariables = {
-              PATH = lib.makeBinPath [ pkgs.coreutils ];
+              PATH = lib.strings.makeBinPath [ pkgs.coreutils ];
             };
           };
         };

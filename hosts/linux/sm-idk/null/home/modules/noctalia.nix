@@ -12,7 +12,7 @@ let
       "ipc"
       "call"
     ]
-    ++ (pkgs.lib.splitString " " cmd);
+    ++ (pkgs.lib.strings.splitString " " cmd);
 in
 {
   imports = [ inputs.noctalia-trivial.homeModules.default ];

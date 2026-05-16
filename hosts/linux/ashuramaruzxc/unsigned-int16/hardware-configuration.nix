@@ -36,7 +36,7 @@ let
   };
 in
 {
-  nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
+  nixpkgs.hostPlatform = lib.modules.mkDefault "aarch64-linux";
 
   boot = {
     loader.raspberry-pi.bootloader = "kernel";

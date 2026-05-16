@@ -6,7 +6,7 @@
 let
   search = {
     force = true;
-    order = lib.mkForce [
+    order = lib.modules.mkForce [
       "kagi"
       "google"
       "ddg"
@@ -107,7 +107,7 @@ let
     "sync.services.mozilla.com"
   ];
 
-  defaultExtensionsList = builtins.filter (lib.isDerivation) (
+  defaultExtensionsList = builtins.filter (lib.attrsets.isDerivation) (
     builtins.attrValues (
       pkgs.callPackage ./extensions.nix {
         buildFirefoxXpiAddon =
@@ -129,7 +129,7 @@ in
       extensions.force = true;
       inherit search settings;
     };
-    nativeMessagingHosts = lib.mkIf pkgs.stdenvNoCC.isLinux (
+    nativeMessagingHosts = lib.modules.mkIf pkgs.stdenvNoCC.isLinux (
       builtins.attrValues { inherit (pkgs) keepassxc; }
     );
     languagePacks = [
@@ -153,7 +153,7 @@ in
       extensions.force = true;
       inherit search;
     };
-    nativeMessagingHosts = lib.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
+    nativeMessagingHosts = lib.modules.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
       builtins.attrValues { inherit (pkgs.unstable) keepassxc; }
     );
     languagePacks = [

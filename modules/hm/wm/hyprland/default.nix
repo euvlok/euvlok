@@ -1,8 +1,8 @@
 { lib, config, ... }:
 {
-  options.hm.hyprland.enable = lib.mkEnableOption "Hyprland";
+  options.hm.hyprland.enable = lib.options.mkEnableOption "Hyprland";
 
-  config = lib.mkIf config.hm.hyprland.enable {
+  config = lib.modules.mkIf config.hm.hyprland.enable {
     wayland.windowManager.hyprland.enable = true;
     wayland.windowManager.hyprland.settings = {
       ecosystem.no_update_news = true;

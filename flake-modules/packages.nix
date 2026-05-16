@@ -10,7 +10,7 @@
         }:
         let
           crateRoot = ../packages + "/${name}";
-          crateManifest = lib.importTOML (crateRoot + "/Cargo.toml");
+          crateManifest = lib.trivial.importTOML (crateRoot + "/Cargo.toml");
         in
         pkgs.rustPlatform.buildRustPackage (finalAttrs: {
           pname = crateManifest.package.name;
@@ -48,7 +48,7 @@
           postInstall = ''
             wrapProgram "$out/bin/${name}" \
               --prefix PATH : ${
-                lib.makeBinPath [
+                lib.strings.makeBinPath [
                   pkgs.git
                   pkgs.jujutsu
                 ]
@@ -182,9 +182,9 @@
           ;
       };
 
-      apps = lib.mapAttrs (_: pkg: {
+      apps = lib.attrsets.mapAttrs (_: pkg: {
         type = "app";
-        program = lib.getExe pkg;
+        program = lib.meta.getExe pkg;
       }) config.packages;
     };
 }
