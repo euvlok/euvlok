@@ -26,7 +26,7 @@
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
     "@octokit/rest": "^22.0.1",
-    "@stricli/core": "1.2.6",
+    "@stricli/core": "1.2.7",
     "cheerio": "^1.2.0",
     "consola": "3.4.2",
     "crx-util": "^1.0.0",

@@ -9,7 +9,7 @@
         "@actions/core": "^3.0.1",
         "@actions/github": "^9.1.1",
         "@octokit/rest": "^22.0.1",
-        "@stricli/core": "1.2.6",
+        "@stricli/core": "1.2.7",
         "cheerio": "^1.2.0",
         "consola": "3.4.2",
         "crx-util": "^1.0.0",
@@ -174,7 +174,7 @@
 
     "@simple-git/argv-parser": ["@simple-git/argv-parser@1.1.1", "", { "dependencies": { "@simple-git/args-pathspec": "^1.0.3" } }, "sha512-Q9lBcfQ+VQCpQqGJFHe5yooOS5hGdLFFbJ5R+R5aDsnkPCahtn1hSkMcORX65J2Z5lxSkD0lQorMsncuBQxYUw=="],
 
-    "@stricli/core": ["@stricli/core@1.2.6", "", {}, "sha512-j5fa1wyOLrP9WJqqLFEJeQviqb3cK46K+FXTuISEkG/H5C820YfKDoVQ3CDVdM5WLhEx1ARdpiW6+hU4tYHjCQ=="],
+    "@stricli/core": ["@stricli/core@1.2.7", "", {}, "sha512-a0HxA/cSWjqHj/9GM+cfc/zGNmBdxVTQQpHIEvY1AbDEgo4ZU84cTCbtywYEQOHw2wIc6Vu+PKv+ZQoqZwkHnQ=="],
 
     "@tktco/node-actionlint": ["@tktco/node-actionlint@1.6.0", "", { "dependencies": { "@babel/code-frame": "^7.27.1", "chalk": "^5.4.1", "fast-glob": "^3.3.3" }, "bin": { "node-actionlint": "bin/node-actionlint.js" } }, "sha512-fk0UKkws3QOnnpwbVtYLW5eZUozktdassXGQYeWvX5sLlPZIby4XRXDnHxaqnfNxH3b3DZJ/xNA23wf2L2Y1JQ=="],
 
