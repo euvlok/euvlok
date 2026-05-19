@@ -79,6 +79,7 @@ in
             adwaita-qt6
             darkly
             dconf-editor # if not declaratively
+            tesseract # spectacle
             ;
           inherit (pkgs.unstable.kdePackages)
             ark
@@ -86,6 +87,7 @@ in
             kclock
             konsole
             merkuro # Calendar
+            spectacle # screenshot OCR
 
             dolphin
             dolphin-plugins
@@ -128,6 +130,10 @@ in
             knotifications
             korganizer
             kservice
+
+            # Misc
+            kolourpaint
+            okular
             ;
         }
         ++ lib.lists.optionals config.catppuccin.enable [
