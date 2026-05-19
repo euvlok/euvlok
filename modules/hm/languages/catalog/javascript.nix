@@ -11,6 +11,7 @@
       sass
       pnpm
       eslint
+      eslint_d
       prettier
       biome
       package-version-server

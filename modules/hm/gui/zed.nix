@@ -1,9 +1,29 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   options.hm.zed-editor.enable = lib.options.mkEnableOption "Zed Editor";
 
   config = lib.modules.mkIf config.hm.zed-editor.enable {
     programs.zed-editor.enable = true;
+    programs.zed-editor.extraPackages = builtins.attrValues {
+      inherit (pkgs.unstable)
+        bash-language-server
+        markdownlint-cli2
+        nil
+        nixfmt
+        prettier
+        shellcheck
+        shfmt
+        taplo
+        typos-lsp
+        vscode-langservers-extracted
+        yaml-language-server
+        ;
+    };
     programs.zed-editor.extensions = [
       "nix"
       "unicode"

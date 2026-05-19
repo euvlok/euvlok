@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   packages = builtins.attrValues {
-    inherit (pkgs.unstable) perl;
-    inherit (pkgs.unstable.perlPackages) PerlLanguageServer PerlCritic PerlTidy;
+    inherit (pkgs.unstable) perl perlnavigator;
+    inherit (pkgs.unstable.perlPackages) PerlCritic PerlTidy;
   };
   vscode.extensions = [ "richterger.perl" ];
   vscode.settings."[perl]" = {
