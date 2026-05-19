@@ -14,8 +14,8 @@
       enable = true;
       package = pkgs.openssh_hpn;
       enableDefaultConfig = false;
-      matchBlocks."*" = {
-        addKeysToAgent = "yes";
+      settings."*" = {
+        AddKeysToAgent = "yes";
       };
     };
   };
