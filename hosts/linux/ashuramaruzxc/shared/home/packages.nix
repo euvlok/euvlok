@@ -1,62 +1,15 @@
 { pkgs }:
 let
   categories = {
-    important = builtins.attrValues {
-      inherit (pkgs.unstable)
-        keepassxc
-        bitwarden-desktop
-        ;
-      inherit (pkgs.unstable) thunderbird;
-    };
-
-    multimedia = builtins.attrValues {
-      inherit (pkgs)
-        nicotine-plus
-        pear-desktop
-        qbittorrent
-        quodlibet-full
-        tenacity
-        vlc
-        ;
-      inherit (pkgs.unstable.kdePackages)
-        k3b
-        kamera
-        ;
-    };
-
-    productivity = builtins.attrValues {
-      inherit (pkgs)
-        anki
-        gImageReader
-        # libreoffice-qt6-fresh
-        obsidian
-        pdftk
-        treesheets
-        ;
-      inherit (pkgs.unstable.kdePackages) francis;
-    };
-
-    social = builtins.attrValues {
-      inherit (pkgs)
-        dino
-        materialgram
-        nextcloud-client
-        signal-desktop
-        ;
-    };
-
-    networking = builtins.attrValues {
-      inherit (pkgs)
-        mullvad-vpn
-        openvpn
-        proton-vpn
-        throne
-        udptunnel
-        v2raya
-        ;
-    };
-
     audio = builtins.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
+
+    development = builtins.attrValues {
+      inherit (pkgs.unstable)
+        android-studio
+        nixd
+        ;
+      inherit (pkgs.unstable.jetbrains) datagrip dataspell;
+    };
 
     gaming = builtins.attrValues {
       inherit (pkgs.unstable) osu-lazer-bin;
@@ -79,22 +32,36 @@ let
         shadps4
         xemu
         ;
-      # inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}) rpcs3;
     };
 
-    development = builtins.attrValues {
+    important = builtins.attrValues {
       inherit (pkgs.unstable)
-        android-studio
-        nixd
+        bitwarden-desktop
+        keepassxc
+        thunderbird
         ;
-      inherit (pkgs.unstable.jetbrains) dataspell datagrip;
     };
 
     jetbrains = [
-      pkgs.unstable.jetbrains.rider
       pkgs.unstable.jetbrains.clion
       pkgs.unstable.jetbrains.idea
+      pkgs.unstable.jetbrains.rider
     ];
+
+    multimedia = builtins.attrValues {
+      inherit (pkgs)
+        nicotine-plus
+        pear-desktop
+        qbittorrent
+        quodlibet-full
+        tenacity
+        vlc
+        ;
+      inherit (pkgs.unstable.kdePackages)
+        k3b
+        kamera
+        ;
+    };
 
     nemo = [
       (pkgs.nemo-with-extensions.override {
@@ -109,6 +76,40 @@ let
         };
       })
     ];
+
+    networking = builtins.attrValues {
+      inherit (pkgs)
+        mullvad-vpn
+        openvpn
+        proton-vpn
+        throne
+        udptunnel
+        v2raya
+        ;
+    };
+
+    productivity = builtins.attrValues {
+      inherit (pkgs)
+        anki
+        gImageReader
+        libreoffice-qt6-fresh
+        obsidian
+        octaveFull
+        pdftk
+        treesheets
+        whisper-cpp
+        ;
+      inherit (pkgs.unstable.kdePackages) francis;
+    };
+
+    social = builtins.attrValues {
+      inherit (pkgs)
+        dino
+        materialgram
+        nextcloud-client
+        signal-desktop
+        ;
+    };
   };
 
   mkPackages =

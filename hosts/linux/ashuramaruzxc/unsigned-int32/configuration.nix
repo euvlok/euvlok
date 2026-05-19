@@ -152,24 +152,18 @@
         fcitx5-gtk
         gpgme
         ;
+      inherit (pkgs.unstable)
+        cargo
+        rust-analyzer
+        rustc
+        rustfmt
+        ;
       inherit (pkgs.unstable.kdePackages)
         bluedevil
         ;
       inherit (pkgs.unstable)
         openrgb-with-all-plugins
         ;
-    };
-  };
-
-  virtualisation.oci-containers.containers.FlareSolverr = {
-    image = "ghcr.io/flaresolverr/flaresolverr:latest";
-    autoStart = true;
-    ports = [ "127.0.0.1:8191:8191" ];
-    environment = {
-      LOG_LEVEL = "info";
-      LOG_HTML = "false";
-      CAPTCHA_SOLVER = "hcaptcha-solver";
-      TZ = "${config.time.timeZone}";
     };
   };
 
