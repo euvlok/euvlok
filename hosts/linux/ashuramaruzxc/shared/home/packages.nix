@@ -89,13 +89,14 @@ let
     };
 
     productivity = builtins.attrValues {
-      inherit (pkgs)
+      inherit (pkgs.unstable)
         anki
         gImageReader
         libreoffice-qt6-fresh
         obsidian
         octaveFull
         pdftk
+        softmaker-office-nx # until euroffice is statble
         treesheets
         whisper-cpp
         ;
