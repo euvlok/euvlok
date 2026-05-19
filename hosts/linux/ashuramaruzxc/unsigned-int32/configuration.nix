@@ -110,6 +110,19 @@
   security.polkit.enable = true;
 
   programs = {
+    ccache = {
+      enable = true;
+      packageNames = [
+        "ansel"
+        "gmic"
+        "libreoffice-qt6-fresh"
+        "mlt"
+        "obs-studio"
+        "octave"
+        "opencv"
+        "whisper-cpp"
+      ];
+    };
     gnupg.dirmngr.enable = true;
     gnupg.agent = {
       enable = true;
@@ -135,6 +148,7 @@
         yubioath-flutter
 
         apfsprogs
+        ccache
         fcitx5-gtk
         gpgme
         ;
@@ -158,6 +172,8 @@
       TZ = "${config.time.timeZone}";
     };
   };
+
+  nix.settings.extra-sandbox-paths = [ config.programs.ccache.cacheDir ];
 
   system.stateVersion = config.system.nixos.release;
 }
