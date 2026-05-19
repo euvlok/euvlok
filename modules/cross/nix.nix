@@ -41,17 +41,39 @@ let
               return 8
 
 
-          threads = os.cpu_count() or 1
+          def parse_cpu_list(cpu_list):
+              cpus = 0
+              for part in cpu_list.split(","):
+                  if "-" in part:
+                      start, end = part.split("-", 1)
+                      cpus += int(end) - int(start) + 1
+                  else:
+                      cpus += 1
+
+              return cpus
+
+
+          def cpu_threads():
+              if platform.system() == "Linux":
+                  try:
+                      with open("/sys/devices/system/cpu/online", encoding="utf-8") as online:
+                          return parse_cpu_list(online.read().strip())
+                  except OSError:
+                      pass
+
+              return os.cpu_count() or 1
+
+
+          threads = cpu_threads()
           memory = memory_gib()
 
-          cpu_budget = max(1, threads * 90 // 100)
           memory_budget = max(1, memory * 70 // 100)
 
-          memory_jobs = max(1, memory_budget // 8)
-          cpu_jobs = clamp(cpu_budget // 8, 1, 4)
+          memory_jobs = max(1, (memory_budget + 7) // 8)
+          cpu_jobs = clamp((threads + 7) // 8, 1, 8)
           max_jobs = min(memory_jobs, cpu_jobs)
 
-          cores = max(1, cpu_budget // max_jobs)
+          cores = max(1, threads // max_jobs)
 
           print(json.dumps({"max-jobs": max_jobs, "cores": cores}))
           PY
