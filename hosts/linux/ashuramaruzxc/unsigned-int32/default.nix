@@ -31,9 +31,10 @@ inputs.nixpkgs.lib.nixosSystem {
     }
     {
       nixos = {
-        plasma.enable = true;
+        cosmic.enable = true;
         gnome.enable = true;
         nvidia.enable = true;
+        plasma.enable = true;
         steam.enable = true;
       };
     }

@@ -6,6 +6,7 @@
     ./amd.nix
     ./audio.nix
     ./boot.nix
+    ./cosmic.nix
     ./gnome.nix
     ./hardware.nix
     ./locale.nix
