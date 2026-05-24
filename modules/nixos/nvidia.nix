@@ -22,6 +22,8 @@ in
         __GLX_VENDOR_LIBRARY_NAME = "nvidia"; # without this NOUVEAU may attempt to be used instead
         LIBVA_DRIVER_NAME = "nvidia";
         NVD_BACKEND = "direct";
+        # __GL_VRR_ALLOWED = "0";
+        # __GLX_VRR_ALLOWED = "0";
       };
 
       hardware.nvidia = {
