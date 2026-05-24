@@ -27,6 +27,10 @@ inputs.nixpkgs.lib.nixosSystem {
           "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
           "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
         };
+        overrides.global.environment = {
+          GSK_RENDERER = "vulkan";
+          QSG_RHI_BACKEND = "vulkan";
+        };
       };
     }
     {

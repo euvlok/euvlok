@@ -27,5 +27,9 @@
       SDL_IM_MODULE = "fcitx";
       GLFW_IM_MODULE = "ibus";
     }
-  );
+  )
+  // (lib.optionalAttrs (config.nixos.gui.enable) {
+    GSK_RENDERER = "vulkan";
+    QSG_RHI_BACKEND = "vulkan";
+  });
 }

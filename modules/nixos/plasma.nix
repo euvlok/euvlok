@@ -40,6 +40,7 @@ in
       desktopManager.plasma6.enable = true;
     };
 
+    # Temp fix for nvidia
     systemd.user.services = {
       plasma-login-kwin_wayland = {
         overrideStrategy = "asDropin";
@@ -51,7 +52,7 @@ in
       plasma-login = {
         overrideStrategy = "asDropin";
         serviceConfig = {
-          Environment = [ "QSG_RHI_BACKEND=opengl" ];
+          Environment = [ "QSG_RHI_BACKEND=vulkan" ];
           UnsetEnvironment = [
             "EGL_PLATFORM"
             "QT_QPA_PLATFORM"
@@ -61,7 +62,7 @@ in
       plasma-wallpaper = {
         overrideStrategy = "asDropin";
         serviceConfig = {
-          Environment = [ "QSG_RHI_BACKEND=opengl" ];
+          Environment = [ "QSG_RHI_BACKEND=vulkan" ];
           UnsetEnvironment = [
             "EGL_PLATFORM"
             "QT_QPA_PLATFORM"
