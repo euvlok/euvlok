@@ -94,9 +94,7 @@ let
         gImageReader
         libreoffice-qt6-fresh
         obsidian
-        octaveFull
         pdftk
-        softmaker-office-nx # until euroffice is statble
         treesheets
         whisper-cpp
         ;

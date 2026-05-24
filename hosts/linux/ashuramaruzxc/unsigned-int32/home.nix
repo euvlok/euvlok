@@ -96,7 +96,13 @@ let
       "jetbrains"
       "nemo"
     ]
-    ++ [ pkgs.unstable.piper ];
+    ++ [
+      pkgs.unstable.piper
+
+      # until euroffice is statble
+      pkgs.unstable.softmaker-office-nx
+      pkgs.unstable.wpsoffice
+    ];
 in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
