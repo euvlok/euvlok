@@ -77,6 +77,7 @@ let
   };
   settings = {
     "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+    "dom.webgpu.enabled" = true;
     "gfx.webrender.all" = true;
     "media.av1.enabled" = true;
   };
