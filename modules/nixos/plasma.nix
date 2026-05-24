@@ -15,6 +15,36 @@ let
       size = "compact";
       inherit tweaks;
     };
+  tesseractLang = [
+    "pol" # Polish
+    "deu" # German
+    "eng" # English
+    "fra" # French
+    "rus" # Russian
+    "ukr" # Ukrainian
+    "jpn" # Japanese
+    "jpn_vert" # Japanese, vertical text
+    "chi_sim" # Chinese, simplified
+    "chi_sim_vert" # Chinese, simplified vertical text
+    "chi_tra" # Chinese, traditional
+    "chi_tra_vert" # Chinese, traditional vertical text
+    "osd" # Orientation and script detection
+    "kor" # Korean
+    "kor_vert" # Korean, vertical text
+    "spa" # Spanish
+    "ita" # Italian
+    "nld" # Dutch
+    "ces" # Czech
+    "slk" # Slovak
+    "por" # Portuguese
+    "tur" # Turkish
+    "aze" # Azerbaijani, Latin script
+    "aze_cyrl" # Azerbaijani, Cyrillic script
+    "yid" # Yiddish
+    "heb" # Hebrew
+    "ara" # Arabic
+    "fas" # Persian/Farsi
+  ];
 in
 {
   #! temp remove plasma from nixos-unstable
@@ -80,15 +110,17 @@ in
             adwaita-qt6
             darkly
             dconf-editor # if not declaratively
-            tesseract # spectacle
+            tesseract # spectacle just in case
             ;
-          inherit (pkgs.unstable.kdePackages)
+          # screenshot OCR
+          spectacle = pkgs.kdePackages.spectacle.override { tesseractLanguages = tesseractLang; };
+          skanpage = pkgs.kdePackages.skanpage.override { tesseractLanguages = tesseractLang; };
+          inherit (pkgs.kdePackages)
             ark
             filelight
             kclock
             konsole
             merkuro # Calendar
-            spectacle # screenshot OCR
 
             dolphin
             dolphin-plugins
