@@ -7,6 +7,23 @@
 let
   cfg = config.hm.chromium;
 
+  chromiumFeatures = [
+    "ForceEnableWebGpuInterop"
+    "ReduceOpsTaskSplitting"
+    "TouchpadOverscrollHistoryNavigation"
+    "VaapiVideoDecoder"
+    "VaapiVideoEncoder"
+  ]
+  ++ lib.lists.optionals (cfg.browser == "helium-browser") [
+    "BrowsingTopics"
+    "InterestGroupStorage"
+  ];
+
+  chromiumDisabledFeatures = lib.lists.optionals (cfg.browser == "helium-browser") [
+    "ExtensionManifestV2Unsupported"
+    "ExtensionManifestV2Disabled"
+  ];
+
   browserPackages = {
     chromium = pkgs.chromium.override { enableWideVine = true; };
     helium-browser = pkgs.eupkgs.helium-browser;
@@ -77,19 +94,17 @@ in
       commandLineArgs = [
         # Debug
         "--enable-logging=stderr"
+        "--enable-features=${lib.strings.concatStringsSep "," chromiumFeatures}"
       ]
-      ++ lib.lists.optionals (cfg.browser == "helium-browser") [
-        "--disable-features=ExtensionManifestV2Unsupported,ExtensionManifestV2Disabled"
-      ] # Enable mv2 in Helium.
+      ++ lib.lists.optionals (chromiumDisabledFeatures != [ ]) [
+        "--disable-features=${lib.strings.concatStringsSep "," chromiumDisabledFeatures}"
+      ]
       ++ lib.lists.optionals pkgs.stdenvNoCC.isLinux [
         "--ignore-gpu-blocklist"
-        "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder"
 
         # Wayland
-        "--ozone-platform-hint=wayland"
         "--enable-wayland-ime"
         "--wayland-text-input-version=3"
-        "--enable-features=TouchpadOverscrollHistoryNavigation"
       ];
     };
 
