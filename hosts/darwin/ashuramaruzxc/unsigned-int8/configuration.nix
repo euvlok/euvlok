@@ -19,6 +19,9 @@
   # }
   # ];
 
+  imports = [
+    ../../../linux/ashuramaruzxc/shared/system/fonts.nix
+  ];
   system.primaryUser = "ashuramaru";
 
   nixpkgs.hostPlatform.system = "aarch64-darwin";

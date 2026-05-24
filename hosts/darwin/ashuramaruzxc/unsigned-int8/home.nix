@@ -6,7 +6,7 @@
 }:
 let
   commonImports = [
-    { home.stateVersion = "25.11"; }
+    { home.stateVersion = "26.05"; }
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/helix.nix

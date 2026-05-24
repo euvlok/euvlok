@@ -4,7 +4,6 @@ inputs.nix-darwin.lib.darwinSystem {
   modules = [
     inputs.self.darwinModules.default
     ../../../../modules/darwin/zsh.nix
-    ./fonts.nix
     ./brew.nix
     ./configuration.nix
     ./home.nix
