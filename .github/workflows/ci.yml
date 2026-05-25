@@ -71,7 +71,7 @@ jobs:
         run: nix develop --impure --command bun test
 
       - name: Audit changed code with Fallow
-        uses: fallow-rs/fallow@195102a4949f221b531d1b62edaa7e5ff1cece52 # v2.75.0
+        uses: fallow-rs/fallow@017658ea7af7473dcc87c921a092f0bd507457fd # v2.80.0
         with:
           command: audit
           fail-on-issues: true
