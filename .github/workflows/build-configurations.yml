@@ -111,7 +111,7 @@ jobs:
       - name: Reclaim maximum Nix store space
         if: >-
           steps.retry-target.outputs.should-build == 'true' &&
-          (matrix.name == 'blind-faith' || matrix.name == 'nyx' || startsWith(matrix.name, 'unsigned-'))
+          (matrix.name == 'blind-faith' || matrix.name == 'nanachi' || matrix.name == 'nyx' || startsWith(matrix.name, 'unsigned-'))
         uses: ./.github/actions/nothing-but-nix
         with:
           hatchet-protocol: rampage
