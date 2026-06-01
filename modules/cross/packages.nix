@@ -11,6 +11,7 @@ let
       inherit (pkgs)
         auto-rebase
         chezmoi-support
+        lldb-mcp-launcher
         zellij-theme-tools
         ;
       inherit (pkgs.unstable)

@@ -26,7 +26,7 @@
     })
     (final: _prev: {
       eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
-      codex-lldb-mcp = final.callPackage ../../packages/codex-lldb-mcp.nix {
+      lldb-mcp-launcher = final.callPackage ../../packages/lldb-mcp-launcher.nix {
         lldb = final.unstable.llvmPackages_22.lldb;
         python3 = final.unstable.python3;
       };
