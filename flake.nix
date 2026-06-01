@@ -13,12 +13,12 @@
     eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     eupkgs.url = "github:euvlok/pkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-master.url = "github:NixOS/nixpkgs";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
 
     # --- Trivial ---
     catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";

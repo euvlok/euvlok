@@ -75,6 +75,11 @@
     nix-index.enable = true;
     # Environment
   };
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
+
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs.unstable)
       # Literally should be bultin but apple being apple

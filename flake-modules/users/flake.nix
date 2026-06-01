@@ -2,7 +2,7 @@
   description = "EUVlok contributor-owned flake inputs";
 
   inputs = {
-    nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-source.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # Ashuramaruzxc
     anime-cursors-source.inputs.devenv.follows = "users-devenv";
@@ -67,7 +67,7 @@
     users-mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
     users-nix2container.inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
     users-nix2container.url = "github:nlewo/nix2container";
-    users-nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    users-nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     users-nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     users-pre-commit-hooks.inputs.flake-compat.follows = "";
     users-pre-commit-hooks.inputs.gitignore.follows = "";
