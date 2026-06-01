@@ -42,13 +42,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Nix and Bun dependencies
-        uses: ./.github/actions/setup-nix-bun-dependencies
+      - name: Set up Nix
+        uses: ./.github/actions/setup-nix
         with:
           cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
           cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update packages
-        run: bun run github:update-custom-packages
+        run: nix develop --impure --command github-maintenance update-custom-packages
         env:
           GITHUB_TOKEN: ${{ github.token }}

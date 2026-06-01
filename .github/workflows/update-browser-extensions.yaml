@@ -52,14 +52,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Nix and Bun dependencies
-        uses: ./.github/actions/setup-nix-bun-dependencies
+      - name: Set up Nix
+        uses: ./.github/actions/setup-nix
         with:
           cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
           cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update extensions
-        run: bun run github:update-browser-extensions
+        run: nix develop --impure --command github-maintenance update-browser-extensions
         env:
           BROWSER: ${{ github.event.inputs.browser || 'all' }}
           GITHUB_TOKEN: ${{ github.token }}

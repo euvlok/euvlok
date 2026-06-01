@@ -22,6 +22,6 @@ pub struct Args {
     pub no_auto_rebase: bool,
 
     /// Directory used for temporary backup manifests.
-    #[arg(long, default_value = "/tmp", value_name = "DIR")]
+    #[arg(long, default_value_os_t = std::env::temp_dir(), value_name = "DIR")]
     pub backup_dir: PathBuf,
 }

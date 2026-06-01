@@ -2,22 +2,34 @@
   lib,
   makeWrapper,
   playerctl,
-  stdenv,
-  zig_0_16,
+  rustPlatform,
 }:
 
-stdenv.mkDerivation {
+rustPlatform.buildRustPackage {
   pname = "lay-by-waybar-scripts";
-  version = "0-unstable";
+  version = "0.1.0";
 
-  src = ./src;
+  src = lib.fileset.toSource {
+    root = ../../../../..;
+    fileset = lib.fileset.unions [
+      ../../../../../Cargo.lock
+      ../../../../../Cargo.toml
+      ../../../../../crates/dotfiles-common
+      ../../../../../hosts/hm/lay-by/hyprland/scripts
+    ];
+  };
+  cargoLock.lockFile = ../../../../../Cargo.lock;
 
-  nativeBuildInputs = [
-    makeWrapper
-    zig_0_16
+  cargoBuildFlags = [
+    "--package"
+    "lay-by-waybar-scripts"
+  ];
+  cargoTestFlags = [
+    "--package"
+    "lay-by-waybar-scripts"
   ];
 
-  doCheck = true;
+  nativeBuildInputs = [ makeWrapper ];
 
   postFixup = ''
     wrapProgram $out/bin/lay-by-waybar-music \
@@ -27,7 +39,7 @@ stdenv.mkDerivation {
   '';
 
   meta = {
-    description = "Zig Waybar scripts for the lay-by Hushh host";
+    description = "Waybar scripts for the lay-by Hushh host";
     license = lib.licenses.mit;
     platforms = lib.platforms.linux;
   };

@@ -41,7 +41,7 @@ jobs:
 
             if [ "$count" -gt 0 ] && [ "$incomplete" -eq 0 ]; then
               if [ "$failed" -eq 0 ]; then
-                gh pr merge "$PR_URL" --squash --delete-branch
+                gh pr merge "$PR_URL" --squash --delete-branch --match-head-commit "$HEAD_SHA"
                 exit 0
               fi
 

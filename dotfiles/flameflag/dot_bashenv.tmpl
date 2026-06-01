@@ -1,0 +1,16 @@
+# Keep user-local tools visible in non-interactive bash.
+for dir in "$HOME/.yarn/bin" "$HOME/.go/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/.npm/bin" "$HOME/.bun/install/global/node_modules/.bin" "$HOME/.bun/bin" "$HOME/.pi/agent/bin"; do
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+done
+if [ -d /run/wrappers/bin ]; then
+  case ":$PATH:" in
+    *":/run/wrappers/bin:"*) ;;
+    *) PATH="/run/wrappers/bin:$PATH" ;;
+  esac
+fi
+export PATH
+
+export UV_PYTHON_PREFERENCE="${UV_PYTHON_PREFERENCE:-only-managed}"

@@ -75,11 +75,9 @@ mod tests {
 
     #[test]
     fn parent_dirs_deduplicates_matching_parents() {
-        let paths = vec![
-            PathBuf::from("/tmp/repo/.git/index.lock"),
-            PathBuf::from("/tmp/repo/.git/HEAD.lock"),
-        ];
+        let git_dir = std::env::temp_dir().join("repo").join(".git");
+        let paths = vec![git_dir.join("index.lock"), git_dir.join("HEAD.lock")];
 
-        assert_eq!(parent_dirs(&paths), vec![PathBuf::from("/tmp/repo/.git")]);
+        assert_eq!(parent_dirs(&paths), vec![git_dir]);
     }
 }

@@ -7,10 +7,24 @@
       mkRustPackage =
         {
           name,
+          cratePath ? "packages/${name}",
+          mainProgram ? name,
+          nativeCheckInputs ? [ ],
+          preCheck ? "",
+          wrapInputs ? [ ],
         }:
         let
-          crateRoot = ../packages + "/${name}";
+          crateRoot = ../. + "/${cratePath}";
           crateManifest = lib.trivial.importTOML (crateRoot + "/Cargo.toml");
+          workspaceManifest = lib.trivial.importTOML ../Cargo.toml;
+          repository =
+            let
+              crateRepository = crateManifest.package.repository or null;
+            in
+            if builtins.isString crateRepository then
+              crateRepository
+            else
+              workspaceManifest.workspace.package.repository;
         in
         pkgs.rustPlatform.buildRustPackage (finalAttrs: {
           pname = crateManifest.package.name;
@@ -20,6 +34,10 @@
             fileset = lib.fileset.unions [
               ../Cargo.toml
               ../Cargo.lock
+              ../bootstrap
+              ../crates
+              ../hosts/hm/lay-by/hyprland/scripts
+              ../packages
               crateRoot
             ];
           };
@@ -35,6 +53,24 @@
             finalAttrs.pname
           ];
           nativeBuildInputs = [ pkgs.makeWrapper ];
+          inherit nativeCheckInputs preCheck;
+          postInstall = lib.strings.optionalString (wrapInputs != [ ]) ''
+            wrapProgram "$out/bin/${mainProgram}" \
+              --prefix PATH : ${lib.strings.makeBinPath wrapInputs}
+          '';
+          meta = {
+            inherit mainProgram;
+            description = crateManifest.package.description or "Rust utility for the euvlok dotfiles";
+            homepage = repository;
+            license = lib.licenses.mit;
+            platforms = lib.platforms.unix;
+          };
+        });
+    in
+    {
+      packages = {
+        auto-rebase = mkRustPackage {
+          name = "auto-rebase";
           nativeCheckInputs = [
             pkgs.git
             pkgs.jujutsu
@@ -45,140 +81,46 @@
             export GIT_COMMITTER_NAME=auto-rebase
             export GIT_COMMITTER_EMAIL=auto-rebase@localhost
           '';
-          postInstall = ''
-            wrapProgram "$out/bin/${name}" \
-              --prefix PATH : ${
-                lib.strings.makeBinPath [
-                  pkgs.git
-                  pkgs.jujutsu
-                ]
-              }
-          '';
-          meta = {
-            mainProgram = finalAttrs.pname;
-            description = crateManifest.package.description;
-            homepage = crateManifest.package.repository;
-            license = lib.licenses.mit;
-            platforms = lib.platforms.unix;
-          };
-        });
-
-      mkBunPackage =
-        {
-          name,
-          script ? name,
-        }:
-        pkgs.writeShellApplication {
-          inherit name;
-          runtimeInputs = [
-            pkgs.bun
+          wrapInputs = [
             pkgs.git
+            pkgs.jujutsu
           ];
-          text = ''
-            cd "$(git rev-parse --show-toplevel)"
-            exec bun --bun run ${script} -- "$@"
-          '';
         };
-
-      mkZigPackage =
-        {
-          name,
-        }:
-        let
-          packageRoot = ../packages + "/${name}";
-        in
-        pkgs.stdenv.mkDerivation {
-          pname = name;
-          version = "0-unstable";
-          src = lib.fileset.toSource {
-            root = packageRoot;
-            fileset = packageRoot;
-          };
-
-          nativeBuildInputs = [ pkgs.zig_0_16 ];
-
-          doCheck = true;
-          checkPhase = ''
-            runHook preCheck
-            zig build test
-            runHook postCheck
-          '';
-
-          installPhase = ''
-            runHook preInstall
-            zig build install -Doptimize=ReleaseSafe --prefix "$out"
-            runHook postInstall
-          '';
-
-          meta = {
-            description = "Fetch NVIDIA driver hashes and update the Nix expression";
-            license = lib.licenses.mit;
-            mainProgram = name;
-            platforms = lib.platforms.unix;
-          };
+        bootstrap = mkRustPackage {
+          name = "bootstrap-cli";
+          cratePath = "crates/bootstrap-cli";
+          mainProgram = "bootstrap";
         };
-
-      mkZiglintPackage =
-        let
-          version = "0.5.2";
-          sources = {
-            aarch64-darwin = {
-              artifact = "ziglint-aarch64-macos.tar.gz";
-              hash = "sha256-7F7Wk4p+iFGdiTtwd6c3O3dRWeTnCNYxSHtZ8FWyM1Y=";
-            };
-            aarch64-linux = {
-              artifact = "ziglint-aarch64-linux.tar.gz";
-              hash = "sha256-Dtjzaah/lji/0OETdGrXkiUu2gaoKsa8P1hIeGQhw0A=";
-            };
-            x86_64-linux = {
-              artifact = "ziglint-x86_64-linux.tar.gz";
-              hash = "sha256-XqxsF1/0iDCg4Nl4SpY8wvNfLVOkZSEsyVNSXo9d9rs=";
-            };
-          };
-          source = sources.${pkgs.stdenvNoCC.hostPlatform.system};
-        in
-        pkgs.stdenvNoCC.mkDerivation {
-          pname = "ziglint";
-          inherit version;
-          src = pkgs.fetchurl {
-            url = "https://github.com/rockorager/ziglint/releases/download/v${version}/${source.artifact}";
-            inherit (source) hash;
-          };
-          sourceRoot = ".";
-          dontBuild = true;
-          dontFixup = true;
-          installPhase = ''
-            runHook preInstall
-
-            install -D -m755 ziglint $out/bin/ziglint
-
-            runHook postInstall
-          '';
-          meta = {
-            description = "Static analysis for Zig";
-            homepage = "https://github.com/rockorager/ziglint";
-            license = lib.licenses.mit;
-            mainProgram = "ziglint";
-            platforms = builtins.attrNames sources;
-          };
+        browser-extension-update = mkRustPackage {
+          name = "browser-extensions-update";
+          mainProgram = "browser-extension-update";
         };
-    in
-    {
-      packages = {
-        auto-rebase = mkRustPackage { name = "auto-rebase"; };
-        browser-extension-update = mkBunPackage {
-          name = "browser-extension-update";
+        catppuccin-userstyles = mkRustPackage {
+          name = "catppuccin-userstyles";
+          mainProgram = "build-catppuccin-userstyles";
         };
-        nvidia-prefetch = mkZigPackage { name = "nvidia-prefetch"; };
-        ziglint = mkZiglintPackage;
+        chezmoi-support = mkRustPackage {
+          name = "chezmoi-support";
+          cratePath = "crates/chezmoi-support";
+        };
+        github-maintenance = mkRustPackage { name = "github-maintenance"; };
+        nvidia-prefetch = mkRustPackage { name = "nvidia-prefetch"; };
+        zellij-theme-tools = mkRustPackage {
+          name = "zellij-theme-tools";
+          mainProgram = "zellij-auto-theme";
+        };
       };
 
       overlayAttrs = {
         inherit (config.packages)
           auto-rebase
+          bootstrap
           browser-extension-update
+          catppuccin-userstyles
+          chezmoi-support
+          github-maintenance
           nvidia-prefetch
-          ziglint
+          zellij-theme-tools
           ;
       };
 

@@ -19,14 +19,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Bun dependencies
-        uses: ./.github/actions/setup-bun-dependencies
+      - name: Set up Nix
+        uses: ./.github/actions/setup-nix
 
       - name: Clone upstream userstyles
         run: git clone --depth 1 https://github.com/catppuccin/userstyles.git /tmp/userstyles
 
       - name: Generate Stylus imports
-        run: bun run build-catppuccin-userstyles /tmp/userstyles /tmp/userstyles-output
+        run: nix develop --impure --command build-catppuccin-userstyles /tmp/userstyles /tmp/userstyles-output
 
       - name: Publish release
         run: |

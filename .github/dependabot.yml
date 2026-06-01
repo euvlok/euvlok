@@ -4,33 +4,18 @@ updates:
     directories:
       - "/"
       - "/.github/actions/build-nix-flake-target"
-      - "/.github/actions/setup-bun-dependencies"
-      - "/.github/actions/setup-nix-bun-dependencies"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
       time: "00:00"
       timezone: "Etc/UTC"
     labels:
       - "dependencies"
       - "github-actions"
 
-  - package-ecosystem: "bun"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "00:00"
-      timezone: "Etc/UTC"
-    labels:
-      - "dependencies"
-      - "bun"
-
   - package-ecosystem: "nix"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
       time: "00:00"
       timezone: "Etc/UTC"
     labels:

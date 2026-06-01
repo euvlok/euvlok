@@ -29,10 +29,14 @@
           inherit (pkgs)
             git
             pre-commit
-            bun
             jujutsu
             ;
           inherit (pkgs) nix-index nix-prefetch-github nix-prefetch-scripts;
+          inherit (config.packages)
+            browser-extension-update
+            catppuccin-userstyles
+            github-maintenance
+            ;
         };
       };
     };

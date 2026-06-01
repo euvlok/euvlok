@@ -1,5 +1,52 @@
 .chezmoi-lib/
-.chezmoiscripts/*.zig
+
+{{- $sopsAgeKey := joinPath .chezmoi.homeDir ".config/sops/age/keys.txt" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{- $sopsAgeKey = joinPath .chezmoi.homeDir "Library/Application Support/sops/age/keys.txt" -}}
+{{- end -}}
+{{- if or (not (lookPath "sops")) (not (stat $sopsAgeKey)) }}
+.ssh/github_key
+dot_ssh/private_github_key.tmpl
+{{ end }}
+
+{{ if eq .chezmoi.os "windows" }}
+.chezmoiexternal.toml.tmpl
+.chezmoiscripts/
+.chezmoiscripts/**
+.bashrc
+.zshrc
+.oh-my-bash/
+.oh-my-zsh/
+.fzf-tab-completion/
+.local/bin/
+.config/atuin/
+.config/ghostty/
+.config/helix/
+.config/kanata/
+.config/nushell/
+.config/raycast/
+.config/yazi/
+.config/zed/
+.config/zellij/
+dot_bashrc.tmpl
+dot_zshrc.tmpl
+dot_config/atuin/
+dot_config/Code/
+dot_config/ghostty/
+dot_config/helix/
+dot_config/kanata/
+dot_config/nushell/
+dot_config/raycast/
+dot_config/yazi/
+dot_config/zed/
+dot_config/zellij/
+dot_local/bin/
+.ssh/config
+.ssh/github_key
+dot_ssh/config.tmpl
+dot_ssh/private_github_key.tmpl
+Library/
+{{ end }}
 
 {{ if ne .chezmoi.os "darwin" }}
 Library/
@@ -8,7 +55,5 @@ Library/
 
 {{ if eq .chezmoi.os "darwin" }}
 .config/Code/
-.config/ghostty/
 .config/kanata/
-.config/nushell/
 {{ end }}

@@ -3,6 +3,21 @@ if [[ "$TERM" == "xterm-ghostty" ]] && ! infocmp xterm-ghostty &>/dev/null; then
   export TERM=xterm-256color
 fi
 
+# Prefer user-local tools installed by bootstrap and language toolchains.
+for dir in "$HOME/.pi/agent/bin" "$HOME/.bun/bin" "$HOME/.bun/install/global/node_modules/.bin" "$HOME/.npm/bin" "$HOME/.local/bin" "$HOME/.cargo/bin" "$HOME/.go/bin" "$HOME/.yarn/bin"; do
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+done
+if [ -d /run/wrappers/bin ]; then
+  case ":$PATH:" in
+    *":/run/wrappers/bin:"*) ;;
+    *) PATH="/run/wrappers/bin:$PATH" ;;
+  esac
+fi
+export PATH
+
 # Bail out for non-interactive shells (e.g. `ssh host cmd`, scp).
 # Everything below assumes an interactive prompt — running it on every
 # non-interactive ssh invocation is both noisy (starship/atuin warnings)
@@ -25,23 +40,29 @@ aliases=()
 source "$OSH/oh-my-bash.sh"
 
 # Tool Integrations (cached init files)
-source "$HOME/.cache/starship/init.bash"
-source "$HOME/.cache/television/init.bash"
+[[ -r "$HOME/.cache/starship/init.bash" ]] && source "$HOME/.cache/starship/init.bash"
+[[ -r "$HOME/.cache/television/init.bash" ]] && source "$HOME/.cache/television/init.bash"
 eval "$(fzf --bash)"
-source "$HOME/.cache/atuin/init.bash"
-atuin-bind -m emacs '\C-r' atuin-search-emacs
+if [[ -r "$HOME/.cache/atuin/init.bash" ]]; then
+  source "$HOME/.cache/atuin/init.bash"
+  atuin-bind -m emacs '\C-r' atuin-search-emacs
+fi
 
 # Completions (cached)
 for f in "$HOME/.cache/bash/completions"/*; do
   [ -f "$f" ] && source "$f"
 done
 
-# 1Password SSH Agent
+# Use 1Password locally, but preserve sshd's forwarded agent in SSH sessions.
 {{- if eq .chezmoi.os "darwin" }}
-export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+_1p_ssh_auth_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 {{- else }}
-export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+_1p_ssh_auth_sock="$HOME/.1password/agent.sock"
 {{- end }}
+if [[ -z "${SSH_CONNECTION:-}" ]]; then
+  export SSH_AUTH_SOCK="$_1p_ssh_auth_sock"
+fi
+unset _1p_ssh_auth_sock
 
 # Environment
 export EDITOR="hx"
@@ -63,21 +84,31 @@ alias neofetch="pfetch"
 alias top="btop"
 
 # yt-dlp shortcuts
-alias m4a="yt-dlp-script m4a"
-alias m4a-cut="yt-dlp-script m4a-cut"
-alias mp3="yt-dlp-script mp3"
-alias mp3-cut="yt-dlp-script mp3-cut"
-alias mp4="yt-dlp-script mp4"
-alias mp4-cut="yt-dlp-script mp4-cut"
+_yt_dlp_script() {
+  env -u PROMPT_MULTILINE_INDICATOR yt-dlp-script "$@"
+}
+alias m4a="_yt_dlp_script m4a"
+alias m4a-cut="_yt_dlp_script m4a-cut"
+alias mp3="_yt_dlp_script mp3"
+alias mp3-cut="_yt_dlp_script mp3-cut"
+alias mp4="_yt_dlp_script mp4"
+alias mp4-cut="_yt_dlp_script mp4-cut"
 
 # Agents Aliases
 alias cc="claude --allow-dangerously-skip-permissions"
 alias oo="opencode"
-alias cx="codex-zellij-theme --sandbox danger-full-access --ask-for-approval never"
+cx() {
+  codex-zellij-theme --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "$@"
+}
 
 # Nix
 alias update="nix flake update --flake \$(readlink -f /etc/nixos/)"
-alias cza="chezmoi apply --force --no-pager"
+{{- if eq .chezmoi.os "darwin" }}
+alias rebuild="nh darwin switch \$(readlink -f /etc/nixos/)"
+{{- else }}
+alias rebuild="nh os switch \$(readlink -f /etc/nixos/)"
+{{- end }}
+alias cza="chezmoi apply --force"
 
 # yazi with cwd sync
 function yy() {
@@ -103,6 +134,14 @@ function pip3() {
   uv pip "$@"
 }
 
+if type complete >/dev/null 2>&1; then
+  if declare -F _fzf_path_completion >/dev/null 2>&1; then
+    complete -o bashdefault -o default -F _fzf_path_completion python python3 pip pip3
+  else
+    complete -o bashdefault -o default -f python python3 pip pip3
+  fi
+fi
+
 # fzf Configuration
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -113,4 +152,4 @@ export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border
   --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
 
 # Zoxide (must be at the end of .bashrc)
-source "$HOME/.cache/zoxide/init.bash"
+[[ -r "$HOME/.cache/zoxide/init.bash" ]] && source "$HOME/.cache/zoxide/init.bash"

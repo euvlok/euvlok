@@ -30,8 +30,7 @@ carefully.
 | [`modules/`](./modules)             | Reusable Nix and Home Manager modules.                           |
 | [`dotfiles/`](./dotfiles)           | Chezmoi dotfiles and templates.                                  |
 | [`lib/`](./lib)                     | Shared Nix helpers.                                              |
-| [`packages/`](./packages)           | Bun/TypeScript automation packages.                              |
-| [`scripts/`](./scripts)             | Repository and GitHub workflow scripts.                          |
+| [`packages/`](./packages)           | Rust automation packages.                                        |
 | [`secrets/`](./secrets)             | SOPS-encrypted host and user secrets.                            |
 
 ## Quick Start
@@ -43,14 +42,14 @@ nix develop
 Run checks:
 
 ```sh
-bun run check
-bun test
+cargo check --workspace
+cargo test --workspace
 ```
 
 Format:
 
 ```sh
-bun run format
+cargo fmt --all
 nix fmt
 ```
 
@@ -66,6 +65,7 @@ Run a local tool:
 ```sh
 nix run .#auto-rebase
 nix run .#browser-extension-update
+nix run .#github-maintenance
 nix run .#nvidia-prefetch
 ```
 
@@ -102,8 +102,13 @@ Apps and packages:
 
 ```text
 auto-rebase
+bootstrap
 browser-extension-update
+catppuccin-userstyles
+chezmoi-support
+github-maintenance
 nvidia-prefetch
+zellij-theme-tools
 ```
 
 ## Working Here

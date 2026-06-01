@@ -1,0 +1,763 @@
+use std::io::{Cursor, Read as _};
+use std::path::{Path, PathBuf};
+
+use base64::Engine as _;
+use clap::Parser;
+use dotfiles_common::http::Client;
+use dotfiles_common::process::{self, argv};
+use serde::Deserialize;
+use sha2::{Digest as _, Sha256};
+
+type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
+#[derive(Debug, Parser)]
+#[command(
+    name = "browser-extension-update",
+    about = "Generate a browser extensions Nix file"
+)]
+struct Cli {
+    /// Output Nix file. Defaults to extensions.nix in the input directory.
+    #[arg(short, long)]
+    output: Option<PathBuf>,
+
+    /// Input Nix source file.
+    input: PathBuf,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "kebab-case")]
+enum Browser {
+    Chromium,
+    Firefox,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+enum Source {
+    ChromeStore,
+    Amo,
+    Bpc,
+    Url,
+    GithubReleases,
+}
+
+#[derive(Debug, Deserialize)]
+struct InputFile {
+    browser: Browser,
+    #[serde(default)]
+    extensions: Vec<Extension>,
+    #[serde(default)]
+    config: Config,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct Config {
+    #[serde(default)]
+    sources: SourceConfig,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct SourceConfig {
+    #[serde(default, rename = "github-releases")]
+    github_releases: GithubReleaseConfig,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+struct GithubReleaseConfig {
+    owner: Option<String>,
+    repo: Option<String>,
+    pattern: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct Extension {
+    id: Option<String>,
+    name: Option<String>,
+    #[serde(default = "default_source")]
+    source: Source,
+    url: Option<String>,
+    condition: Option<String>,
+    owner: Option<String>,
+    repo: Option<String>,
+    pattern: Option<String>,
+    version: Option<String>,
+}
+
+#[derive(Debug)]
+struct ExtensionResult {
+    extension: Extension,
+    nix_entry: String,
+}
+
+#[derive(Debug)]
+struct ManifestInfo {
+    version: String,
+    permissions: Vec<String>,
+    addon_id: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Manifest {
+    version: Option<String>,
+    version_name: Option<String>,
+    #[serde(default)]
+    permissions: Vec<String>,
+    #[serde(default)]
+    optional_permissions: Vec<String>,
+    #[serde(default)]
+    host_permissions: Vec<String>,
+    browser_specific_settings: Option<BrowserSpecificSettings>,
+    applications: Option<BrowserSpecificSettings>,
+}
+
+#[derive(Debug, Deserialize)]
+struct BrowserSpecificSettings {
+    gecko: Option<GeckoSettings>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GeckoSettings {
+    id: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AmoAddon {
+    current_version: Option<AmoVersion>,
+    guid: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AmoVersion {
+    file: Option<AmoFile>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AmoFile {
+    url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GithubRelease {
+    tag_name: Option<String>,
+    name: Option<String>,
+    #[serde(default)]
+    assets: Vec<GithubAsset>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GithubAsset {
+    name: String,
+    browser_download_url: String,
+}
+
+fn main() {
+    if let Err(err) = run() {
+        eprintln!("error: {err}");
+        std::process::exit(1);
+    }
+}
+
+fn run() -> Result<()> {
+    let cli = Cli::parse();
+    if !cli.input.exists() {
+        return Err(format!("input file not found: {}", cli.input.display()).into());
+    }
+    let output = cli.output.unwrap_or_else(|| {
+        cli.input
+            .parent()
+            .unwrap_or(Path::new("."))
+            .join("extensions.nix")
+    });
+    let input = parse_nix_input(&cli.input)?;
+    let extensions = input
+        .extensions
+        .into_iter()
+        .filter(|extension| {
+            if extension.id.is_some() {
+                true
+            } else {
+                eprintln!("warning: extension missing id field, skipping");
+                false
+            }
+        })
+        .collect::<Vec<_>>();
+    if extensions.is_empty() {
+        eprintln!("warning: no extensions found in {}", cli.input.display());
+        return Ok(());
+    }
+
+    let client = Client::new("BrowserExtensionsUpdater")?;
+    let chromium_version = if input.browser == Browser::Chromium {
+        Some(chromium_major_version())
+    } else {
+        None
+    };
+    let results = extensions
+        .into_iter()
+        .map(|extension| {
+            process_extension(
+                &client,
+                extension,
+                &input.config.sources.github_releases,
+                input.browser,
+                chromium_version.as_deref(),
+            )
+        })
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+
+    write_output(&output, &generate_extensions_nix(&results, input.browser))?;
+    eprintln!("success: generated {}", output.display());
+    Ok(())
+}
+
+fn default_source() -> Source {
+    Source::ChromeStore
+}
+
+fn parse_nix_input(path: &Path) -> Result<InputFile> {
+    let output = process::trimmed_text(&argv([
+        "nix",
+        "eval",
+        "--json",
+        "--file",
+        &path.to_string_lossy(),
+    ]))?;
+    Ok(serde_json::from_str(&output)?)
+}
+
+fn chromium_major_version() -> String {
+    let expr = "let flake = builtins.getFlake (toString ./.); system = builtins.currentSystem; pkgs = import flake.inputs.nixpkgs { inherit system; config.allowUnfree = true; }; in pkgs.lib.strings.getVersion pkgs.chromium";
+    if let Ok(output) =
+        process::trimmed_text(&argv(["nix", "eval", "--raw", "--impure", "--expr", expr]))
+    {
+        let major = output.split('.').next().unwrap_or("143").to_owned();
+        if major.bytes().all(|byte| byte.is_ascii_digit()) {
+            return major;
+        }
+    }
+    eprintln!("warning: could not determine pinned Chromium version, using default: 143");
+    "143".to_owned()
+}
+
+fn process_extension(
+    client: &Client,
+    extension: Extension,
+    config: &GithubReleaseConfig,
+    browser: Browser,
+    browser_version: Option<&str>,
+) -> Result<ExtensionResult> {
+    let id = extension_id(&extension)?;
+    eprintln!(
+        "info: processing {}",
+        extension.name.as_deref().unwrap_or(id)
+    );
+    let (url, addon_id) =
+        resolve_download_url(client, &extension, config, browser, browser_version)?;
+    let bytes = client.bytes(&url)?;
+    let hash = sha256_sri(&bytes);
+    let manifest = extract_manifest_info(&bytes)?;
+    let addon = if browser == Browser::Firefox {
+        manifest
+            .addon_id
+            .clone()
+            .or(addon_id)
+            .unwrap_or_else(|| id.to_owned())
+    } else {
+        id.to_owned()
+    };
+    let entry = generate_extension_entry(
+        &extension,
+        &url,
+        &hash,
+        &manifest.version,
+        &manifest.permissions,
+        browser,
+        &addon,
+    )?;
+    Ok(ExtensionResult {
+        extension,
+        nix_entry: entry,
+    })
+}
+
+fn extension_id(extension: &Extension) -> Result<&str> {
+    extension
+        .id
+        .as_deref()
+        .filter(|id| !id.trim().is_empty())
+        .ok_or_else(|| "extension missing id field".into())
+}
+
+fn resolve_download_url(
+    client: &Client,
+    extension: &Extension,
+    config: &GithubReleaseConfig,
+    browser: Browser,
+    browser_version: Option<&str>,
+) -> Result<(String, Option<String>)> {
+    match extension.source {
+        Source::ChromeStore if browser == Browser::Chromium => Ok((
+            chrome_store_url(extension_id(extension)?, browser_version)?,
+            None,
+        )),
+        Source::Amo if browser == Browser::Firefox => amo_url(client, extension_id(extension)?),
+        Source::Bpc => Ok((bpc_url(browser)?, None)),
+        Source::Url => extension.url.clone().map(|url| (url, None)).ok_or_else(|| {
+            format!(
+                "extension {} has source url but no url field",
+                extension_id(extension).unwrap_or("<unknown>")
+            )
+            .into()
+        }),
+        Source::GithubReleases => Ok((
+            github_release_url(client, extension, config, browser)?,
+            None,
+        )),
+        _ => Err(format!(
+            "source {:?} is not supported for {:?}",
+            extension.source, browser
+        )
+        .into()),
+    }
+}
+
+fn chrome_store_url(id: &str, version: Option<&str>) -> Result<String> {
+    let client = Client::new_without_redirects("BrowserExtensionsUpdater")?;
+    let url = format!(
+        "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion={}&x={}",
+        version.unwrap_or("143"),
+        url_query_escape(&format!("id={id}&installsource=ondemand&uc")),
+    );
+    client
+        .redirect_location(&url)?
+        .ok_or_else(|| "Chrome Store did not return a redirect".into())
+}
+
+fn amo_url(client: &Client, slug: &str) -> Result<(String, Option<String>)> {
+    let addon = client.json::<AmoAddon>(&format!(
+        "https://addons.mozilla.org/api/v5/addons/addon/{slug}/"
+    ))?;
+    let url = addon
+        .current_version
+        .and_then(|version| version.file)
+        .and_then(|file| file.url)
+        .ok_or_else(|| format!("AMO addon {slug} does not include a download URL"))?;
+    Ok((url, addon.guid))
+}
+
+fn bpc_url(browser: Browser) -> Result<String> {
+    let filename = match browser {
+        Browser::Chromium => "bypass-paywalls-chrome-clean-latest.crx",
+        Browser::Firefox => "bypass_paywalls_clean-latest.xpi",
+    };
+    let output = process::trimmed_text(&argv([
+        "ls-remote",
+        "https://gitflic.ru/project/magnolia1234/bpc_uploads.git",
+        "HEAD",
+    ]))?;
+    let commit = output
+        .split_whitespace()
+        .next()
+        .ok_or("failed to get latest BPC commit")?;
+    Ok(format!(
+        "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file={filename}&inline=false&commit={commit}"
+    ))
+}
+
+fn github_release_url(
+    client: &Client,
+    extension: &Extension,
+    config: &GithubReleaseConfig,
+    browser: Browser,
+) -> Result<String> {
+    let owner = extension
+        .owner
+        .as_ref()
+        .or(config.owner.as_ref())
+        .ok_or("GitHub release source requires owner")?;
+    let repo = extension
+        .repo
+        .as_ref()
+        .or(config.repo.as_ref())
+        .ok_or("GitHub release source requires repo")?;
+    let version = extension.version.as_deref().unwrap_or("latest");
+    let release = if version == "latest" {
+        github_get::<GithubRelease>(
+            client,
+            &format!("https://api.github.com/repos/{owner}/{repo}/releases/latest"),
+        )?
+    } else {
+        let normalized = version.trim_start_matches('v');
+        github_get::<GithubRelease>(
+            client,
+            &format!("https://api.github.com/repos/{owner}/{repo}/releases/tags/v{normalized}"),
+        )
+        .or_else(|_| {
+            github_get::<GithubRelease>(
+                client,
+                &format!("https://api.github.com/repos/{owner}/{repo}/releases/tags/{normalized}"),
+            )
+        })?
+    };
+    let release_version = release
+        .tag_name
+        .as_deref()
+        .or(release.name.as_deref())
+        .ok_or("GitHub release is missing tag/name")?
+        .trim_start_matches('v')
+        .to_owned();
+    if let Some(pattern) = extension.pattern.as_ref().or(config.pattern.as_ref()) {
+        return Ok(format!(
+            "https://github.com/{owner}/{repo}/{}",
+            pattern
+                .replace("{version}", &release_version)
+                .replace("{name}", extension_id(extension)?)
+                .replace("{id}", extension_id(extension)?)
+        ));
+    }
+    let expected = format!(
+        "{}.{}",
+        extension_id(extension)?,
+        browser_download_extension(browser)
+    );
+    release
+        .assets
+        .into_iter()
+        .find(|asset| asset.name == expected)
+        .map(|asset| asset.browser_download_url)
+        .ok_or_else(|| {
+            format!("GitHub release {release_version} does not include asset {expected}").into()
+        })
+}
+
+fn github_get<T: for<'de> Deserialize<'de>>(client: &Client, url: &str) -> Result<T> {
+    let text = if let Some(token) = github_token() {
+        let response = client.get_bearer_text(url, &token)?;
+        if !response.status.is_success() {
+            return Err(format!("GitHub returned status {} for {url}", response.status).into());
+        }
+        response.body
+    } else {
+        client.text(url)?
+    };
+    Ok(serde_json::from_str(&text)?)
+}
+
+fn github_token() -> Option<String> {
+    std::env::var("GITHUB_TOKEN")
+        .ok()
+        .filter(|token| !token.trim().is_empty())
+        .or_else(|| {
+            process::trimmed_text(&argv(["gh", "auth", "token"]))
+                .ok()
+                .filter(|token| !token.is_empty())
+        })
+}
+
+fn browser_download_extension(browser: Browser) -> &'static str {
+    match browser {
+        Browser::Chromium => "crx",
+        Browser::Firefox => "xpi",
+    }
+}
+
+fn extract_manifest_info(bytes: &[u8]) -> Result<ManifestInfo> {
+    let zip_bytes = crx_zip_contents(bytes)?;
+    let cursor = Cursor::new(zip_bytes);
+    let mut zip = zip::ZipArchive::new(cursor)?;
+    let mut manifest_file = zip.by_name("manifest.json")?;
+    let mut manifest_json = String::new();
+    manifest_file.read_to_string(&mut manifest_json)?;
+    let manifest = serde_json::from_str::<Manifest>(&manifest_json)?;
+    let version = manifest
+        .version
+        .or(manifest.version_name)
+        .ok_or("could not extract version from manifest")?;
+    let mut permissions = manifest.permissions;
+    permissions.extend(if manifest.host_permissions.is_empty() {
+        manifest
+            .optional_permissions
+            .into_iter()
+            .filter(|permission| permission.contains('/') || permission.contains('*'))
+            .collect()
+    } else {
+        manifest.host_permissions
+    });
+    let addon_id = manifest
+        .browser_specific_settings
+        .and_then(|settings| settings.gecko)
+        .and_then(|gecko| gecko.id)
+        .or_else(|| {
+            manifest
+                .applications
+                .and_then(|settings| settings.gecko)
+                .and_then(|gecko| gecko.id)
+        });
+    Ok(ManifestInfo {
+        version,
+        permissions,
+        addon_id,
+    })
+}
+
+fn crx_zip_contents(bytes: &[u8]) -> Result<Vec<u8>> {
+    if bytes.len() < 4 || &bytes[0..4] != b"Cr24" {
+        return Ok(bytes.to_vec());
+    }
+    if bytes.len() < 12 {
+        return Err("invalid CRX header".into());
+    }
+    let version = u32::from_le_bytes(bytes[4..8].try_into()?);
+    let offset = match version {
+        2 => {
+            if bytes.len() < 16 {
+                return Err("invalid CRX2 header".into());
+            }
+            let public_key_len = u32::from_le_bytes(bytes[8..12].try_into()?) as usize;
+            let signature_len = u32::from_le_bytes(bytes[12..16].try_into()?) as usize;
+            16usize
+                .checked_add(public_key_len)
+                .and_then(|value| value.checked_add(signature_len))
+                .ok_or("invalid CRX2 header length")?
+        }
+        3 => {
+            let header_len = u32::from_le_bytes(bytes[8..12].try_into()?) as usize;
+            12usize
+                .checked_add(header_len)
+                .ok_or("invalid CRX3 header length")?
+        }
+        other => return Err(format!("unsupported CRX version {other}").into()),
+    };
+    if offset > bytes.len() {
+        return Err("CRX zip offset is out of bounds".into());
+    }
+    Ok(bytes[offset..].to_vec())
+}
+
+fn generate_extension_entry(
+    extension: &Extension,
+    url: &str,
+    hash: &str,
+    version: &str,
+    permissions: &[String],
+    browser: Browser,
+    addon: &str,
+) -> Result<String> {
+    let id = extension_id(extension)?;
+    Ok(match browser {
+        Browser::Chromium => format!(
+            "  {{\n    id = {};\n    crxPath = pkgs.fetchurl {{\n      url = {};\n      name = {};\n      hash = {};\n    }};\n    version = {};\n  }}",
+            nix_string(id),
+            nix_string(url),
+            nix_string(&format!("{id}.crx")),
+            nix_string(hash),
+            nix_string(version)
+        ),
+        Browser::Firefox => {
+            let meta = if permissions.is_empty() {
+                "platforms = platforms.all;".to_owned()
+            } else {
+                format!(
+                    "platforms = platforms.all;\n      mozPermissions = [\n{}\n      ];",
+                    permissions
+                        .iter()
+                        .map(|permission| format!("        {}", nix_string(permission)))
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                )
+            };
+            format!(
+                "  {{\n    pname = {};\n    version = {};\n    addonId = {};\n    url = {};\n    sha256 = {};\n    meta = with lib; {{\n      {meta}\n    }};\n  }}",
+                nix_string(id),
+                nix_string(version),
+                nix_string(addon),
+                nix_string(url),
+                nix_string(hash)
+            )
+        }
+    })
+}
+
+fn generate_extensions_nix(results: &[ExtensionResult], browser: Browser) -> String {
+    let mut plain = results
+        .iter()
+        .filter(|result| result.extension.condition.is_none())
+        .collect::<Vec<_>>();
+    let mut gated = results
+        .iter()
+        .filter(|result| result.extension.condition.is_some())
+        .collect::<Vec<_>>();
+    plain.sort_by_key(|result| result.extension.id.as_deref().unwrap_or_default());
+    gated.sort_by_key(|result| result.extension.id.as_deref().unwrap_or_default());
+
+    let conditional = !gated.is_empty();
+    let mut lines = vec![
+        "# This file is auto-generated by an update script".to_owned(),
+        "# DO NOT edit manually".to_owned(),
+    ];
+    match browser {
+        Browser::Chromium => {
+            lines.extend(["{".into(), "  pkgs,".into()]);
+            if conditional {
+                lines.push("  config,".into());
+            }
+            lines.extend([
+                "  lib,".into(),
+                "  ...".into(),
+                "}:".into(),
+                "lib.lists.flatten [".into(),
+            ]);
+            lines.extend(plain.into_iter().map(|result| result.nix_entry.clone()));
+            for result in gated {
+                if let Some(condition) = &result.extension.condition {
+                    lines.push(format!(
+                        "  (lib.lists.optionals ({}) [",
+                        escape_nix_inline(condition)
+                    ));
+                    lines.push(result.nix_entry.clone());
+                    lines.push("  ])".into());
+                }
+            }
+            lines.push("]".into());
+        }
+        Browser::Firefox => {
+            lines.extend([
+                "{ buildFirefoxXpiAddon, fetchurl, lib, stdenv }:".into(),
+                "  {".into(),
+            ]);
+            for result in plain {
+                if let Ok(id) = extension_id(&result.extension) {
+                    lines.push(format!(
+                        "    \"{}\" = buildFirefoxXpiAddon {};",
+                        escape_nix_inline(id),
+                        result.nix_entry
+                    ));
+                }
+            }
+            lines.push("  }".into());
+        }
+    }
+    format!("{}\n", lines.join("\n"))
+}
+
+fn write_output(path: &Path, content: &str) -> Result<()> {
+    if let Some(parent) = path.parent() {
+        fs_err::create_dir_all(parent)?;
+    }
+    fs_err::write(path, content)?;
+    let _ = process::run(&argv([
+        "nix",
+        "run",
+        "nixpkgs#nixfmt",
+        "--",
+        &path.to_string_lossy(),
+    ]));
+    process::run(&argv([
+        "nix-instantiate",
+        "--parse",
+        &path.to_string_lossy(),
+    ]))?;
+    Ok(())
+}
+
+fn sha256_sri(bytes: &[u8]) -> String {
+    format!(
+        "sha256-{}",
+        base64::engine::general_purpose::STANDARD.encode(Sha256::digest(bytes))
+    )
+}
+
+fn nix_string(value: &str) -> String {
+    format!("\"{}\"", escape_nix_inline(value))
+}
+
+fn escape_nix_inline(value: &str) -> String {
+    value
+        .replace('\\', "\\\\")
+        .replace('"', "\\\"")
+        .replace('$', "\\$")
+        .replace('\n', "\\n")
+        .replace('\r', "\\r")
+        .replace('\t', "\\t")
+}
+
+fn url_query_escape(value: &str) -> String {
+    value
+        .bytes()
+        .flat_map(|byte| match byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'.' | b'_' | b'~' => {
+                vec![char::from(byte)]
+            }
+            _ => format!("%{byte:02X}").chars().collect(),
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generates_chromium_nix_entries() -> Result<()> {
+        let extension = Extension {
+            id: Some("abc".into()),
+            name: None,
+            source: Source::Url,
+            url: None,
+            condition: None,
+            owner: None,
+            repo: None,
+            pattern: None,
+            version: None,
+        };
+        let entry = generate_extension_entry(
+            &extension,
+            "https://example.test/a.crx",
+            "sha256-test",
+            "1.0",
+            &[],
+            Browser::Chromium,
+            "abc",
+        )?;
+        assert!(entry.contains("id = \"abc\";"));
+        assert!(entry.contains("version = \"1.0\";"));
+        Ok(())
+    }
+
+    #[test]
+    fn parses_manifest_info() -> Result<()> {
+        let cursor = Cursor::new(Vec::<u8>::new());
+        let mut writer = zip::ZipWriter::new(cursor);
+        writer.start_file("manifest.json", zip::write::SimpleFileOptions::default())?;
+        std::io::Write::write_all(
+            &mut writer,
+            br#"{"version":"1.2.3","permissions":["tabs"],"host_permissions":["*://example.test/*"]}"#,
+        )?;
+        let bytes = writer.finish()?.into_inner();
+        let manifest = extract_manifest_info(&bytes)?;
+        assert_eq!(manifest.version, "1.2.3");
+        assert_eq!(manifest.permissions, ["tabs", "*://example.test/*"]);
+        Ok(())
+    }
+
+    #[test]
+    fn generates_conditional_chromium_file() {
+        let results = vec![ExtensionResult {
+            extension: Extension {
+                id: Some("abc".into()),
+                name: None,
+                source: Source::Url,
+                url: None,
+                condition: Some("config.catppuccin.enable".into()),
+                owner: None,
+                repo: None,
+                pattern: None,
+                version: None,
+            },
+            nix_entry: "  { id = \"abc\"; }".into(),
+        }];
+        let nix = generate_extensions_nix(&results, Browser::Chromium);
+        assert!(nix.contains("config,"));
+        assert!(nix.contains("lib.lists.optionals"));
+    }
+}

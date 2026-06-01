@@ -1,0 +1,24 @@
+[package]
+name = "nvidia-prefetch"
+version = "0.1.0"
+edition.workspace = true
+description = "Fetch NVIDIA driver hashes and update the Nix expression."
+repository.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "nvidia-prefetch"
+path = "src/main.rs"
+
+[dependencies]
+base64 = "0.22.1"
+clap.workspace = true
+dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+flate2.workspace = true
+fs-err.workspace = true
+sha2 = "0.11.0"
+tar.workspace = true
+
+[lints]
+workspace = true

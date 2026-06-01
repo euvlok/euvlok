@@ -1,1 +1,1 @@
-{{ (secret (joinPath .chezmoi.sourceDir "../../secrets/flameflag.yaml") | fromYaml).github_ssh }}
+{{ (secret (joinPath .chezmoi.sourceDir "../secrets/secrets.yaml") | fromYaml).github_ssh }}

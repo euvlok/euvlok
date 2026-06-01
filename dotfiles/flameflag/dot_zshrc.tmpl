@@ -3,6 +3,14 @@ if [[ "$TERM" == "xterm-ghostty" ]] && ! infocmp xterm-ghostty &>/dev/null; then
   export TERM=xterm-256color
 fi
 
+# Prefer user-local tools installed by bootstrap and language toolchains.
+typeset -U path PATH
+path=("$HOME/.pi/agent/bin" "$HOME/.bun/bin" "$HOME/.bun/install/global/node_modules/.bin" "$HOME/.npm/bin" "$HOME/.local/bin" "$HOME/.cargo/bin" "$HOME/.go/bin" "$HOME/.yarn/bin" $path)
+if [[ -d /run/wrappers/bin ]]; then
+  path=(/run/wrappers/bin $path)
+fi
+export PATH
+
 # Load Oh My Zsh without its prompt or self-update behavior.
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""  # Disabled — using starship
@@ -28,23 +36,29 @@ plugins=(
   zsh-syntax-highlighting
 )
 
+# Add cached completion definitions before Oh My Zsh runs compinit.
+fpath=("$HOME/.cache/zsh/completions" $fpath)
+
 source $ZSH/oh-my-zsh.sh
 
 # Source pre-generated startup hooks to keep shell startup fast.
-source "$HOME/.cache/starship/init.zsh"
-source "$HOME/.cache/television/init.zsh"
-source "$HOME/.cache/atuin/init.zsh"
-bindkey '^R' atuin-search
+[[ -r "$HOME/.cache/starship/init.zsh" ]] && source "$HOME/.cache/starship/init.zsh"
+[[ -r "$HOME/.cache/television/init.zsh" ]] && source "$HOME/.cache/television/init.zsh"
+if [[ -r "$HOME/.cache/atuin/init.zsh" ]]; then
+  source "$HOME/.cache/atuin/init.zsh"
+  bindkey '^R' atuin-search
+fi
 
-# Add cached completion definitions before Zsh builds its completion path.
-fpath=("$HOME/.cache/zsh/completions" $fpath)
-
-# Point SSH clients at the 1Password agent socket for this platform.
+# Use 1Password locally, but preserve sshd's forwarded agent in SSH sessions.
 {{- if eq .chezmoi.os "darwin" }}
-export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+_1p_ssh_auth_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 {{- else }}
-export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+_1p_ssh_auth_sock="$HOME/.1password/agent.sock"
 {{- end }}
+if [[ -z "${SSH_CONNECTION:-}" ]]; then
+  export SSH_AUTH_SOCK="$_1p_ssh_auth_sock"
+fi
+unset _1p_ssh_auth_sock
 
 # Prefer Helix for command-line editing.
 export EDITOR="hx"
@@ -65,21 +79,31 @@ alias neofetch="pfetch"
 alias top="btop"
 
 # yt-dlp shortcuts
-alias m4a="yt-dlp-script m4a"
-alias m4a-cut="yt-dlp-script m4a-cut"
-alias mp3="yt-dlp-script mp3"
-alias mp3-cut="yt-dlp-script mp3-cut"
-alias mp4="yt-dlp-script mp4"
-alias mp4-cut="yt-dlp-script mp4-cut"
+_yt_dlp_script() {
+  env -u PROMPT_MULTILINE_INDICATOR yt-dlp-script "$@"
+}
+alias m4a="_yt_dlp_script m4a"
+alias m4a-cut="_yt_dlp_script m4a-cut"
+alias mp3="_yt_dlp_script mp3"
+alias mp3-cut="_yt_dlp_script mp3-cut"
+alias mp4="_yt_dlp_script mp4"
+alias mp4-cut="_yt_dlp_script mp4-cut"
 
 # Agents Aliases
 alias cc="claude --allow-dangerously-skip-permissions"
 alias oo="opencode"
-alias cx="codex-zellij-theme --sandbox danger-full-access --ask-for-approval never"
+cx() {
+  codex-zellij-theme --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "$@"
+}
 
 # Nix
 alias update="nix flake update --flake \$(readlink -f /etc/nixos/)"
-alias cza="chezmoi apply --force --no-pager"
+{{- if eq .chezmoi.os "darwin" }}
+alias rebuild="nh darwin switch \$(readlink -f /etc/nixos/)"
+{{- else }}
+alias rebuild="nh os switch \$(readlink -f /etc/nixos/)"
+{{- end }}
+alias cza="chezmoi apply --force"
 
 # yazi with cwd sync
 function yy() {
@@ -114,5 +138,10 @@ function pip3() {
   uv pip "$@"
 }
 
+if type compdef >/dev/null 2>&1; then
+  compdef _python python python3
+  compdef _pip pip pip3
+fi
+
 # Load zoxide last so its directory-jump hook wins over earlier cd aliases.
-source "$HOME/.cache/zoxide/init.zsh"
+[[ -r "$HOME/.cache/zoxide/init.zsh" ]] && source "$HOME/.cache/zoxide/init.zsh"

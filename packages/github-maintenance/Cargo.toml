@@ -1,0 +1,23 @@
+[package]
+name = "github-maintenance"
+version = "0.1.0"
+edition.workspace = true
+description = "GitHub Actions maintenance commands for the dotfiles repository."
+repository.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "github-maintenance"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+fs-err.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+walkdir.workspace = true
+
+[lints]
+workspace = true

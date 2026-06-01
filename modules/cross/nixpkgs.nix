@@ -26,6 +26,18 @@
     })
     (final: _prev: {
       eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
+      codex-lldb-mcp = final.callPackage ../../packages/codex-lldb-mcp.nix {
+        lldb = final.unstable.llvmPackages_22.lldb;
+        python3 = final.unstable.python3;
+      };
+      ghidra-mcp-headless = final.callPackage ../../packages/ghidra-mcp-headless.nix {
+        inherit (final.unstable)
+          ghidra
+          jdk21
+          maven
+          python313
+          ;
+      };
       kanata-with-cmd = final.kanata.override { withCmd = true; };
     })
     /**

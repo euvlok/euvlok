@@ -1,0 +1,25 @@
+[package]
+name = "browser-extension-update"
+version = "0.1.0"
+edition.workspace = true
+description = "Generate browser extension Nix files from source declarations."
+repository.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "browser-extension-update"
+path = "src/main.rs"
+
+[dependencies]
+base64 = "0.22.1"
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2 = "0.11.0"
+fs-err.workspace = true
+zip.workspace = true
+dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+
+[lints]
+workspace = true
