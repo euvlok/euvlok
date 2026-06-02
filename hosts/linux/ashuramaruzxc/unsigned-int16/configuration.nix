@@ -47,6 +47,10 @@
 
   programs.zsh.enable = true;
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
+
   programs = {
     gnupg.dirmngr.enable = true;
     gnupg.agent = {
