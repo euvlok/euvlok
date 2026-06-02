@@ -36,6 +36,8 @@
               ../Cargo.lock
               ../bootstrap
               ../crates
+              (../. + "/dotfiles/flameflag/dot_config/nushell/completions/chezmoi-support.nu")
+              (../. + "/dotfiles/flameflag/Library/Application Support/nushell/completions/chezmoi-support.nu")
               ../hosts/hm/lay-by/hyprland/scripts
               ../packages
               crateRoot

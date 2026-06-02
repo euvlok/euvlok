@@ -297,6 +297,7 @@ fn parse_var(value: &str) -> Option<(String, UsercssVar)> {
     let name = tokens.get(1)?.to_owned();
     let label = tokens.get(2).cloned().unwrap_or_else(|| name.clone());
     let raw_default = tokens.get(3).cloned().unwrap_or_default();
+    let mut default = raw_default.clone();
     let mut options = Vec::new();
     if kind == "select" {
         let option_values = parse_option_list(value).unwrap_or_else(|| {
@@ -309,23 +310,39 @@ fn parse_var(value: &str) -> Option<(String, UsercssVar)> {
         });
         options = option_values
             .iter()
-            .map(|option| UsercssOption {
-                name: option.clone(),
-                label: option.clone(),
-                default: option == &raw_default,
-            })
+            .map(|option| parse_select_option(option))
             .collect();
+        default = options
+            .iter()
+            .find(|option| option.default)
+            .or_else(|| options.iter().find(|option| option.name == raw_default))
+            .or_else(|| options.first())
+            .map(|option| option.name.clone())
+            .unwrap_or(raw_default);
     }
     Some((
         name,
         UsercssVar {
             kind,
             label,
-            value: json!(raw_default),
-            default: json!(raw_default),
+            value: json!(default),
+            default: json!(default),
             options,
         },
     ))
+}
+
+fn parse_select_option(value: &str) -> UsercssOption {
+    let default = value.ends_with('*');
+    let value = value.strip_suffix('*').unwrap_or(value);
+    let (name, label) = value
+        .split_once(':')
+        .map_or((value, value), |(name, label)| (name, label));
+    UsercssOption {
+        name: name.to_owned(),
+        label: label.to_owned(),
+        default,
+    }
 }
 
 fn parse_option_list(value: &str) -> Option<Vec<String>> {
@@ -452,6 +469,29 @@ body {}"#;
         let metadata = parse_usercss_metadata(source)?;
         assert_eq!(metadata.name, "Demo");
         assert_eq!(select_options(&metadata, "accentColor")?.len(), 2);
+        Ok(())
+    }
+
+    #[test]
+    fn parses_stylus_option_labels_and_defaults() -> Result<()> {
+        let source = r#"/* ==UserStyle==
+@name Demo
+@var select lightFlavor "Light Flavor" ["latte:Latte*","mocha:Mocha"]
+==/UserStyle== */
+body {}"#;
+        let metadata = parse_usercss_metadata(source)?;
+        let flavor = metadata
+            .vars
+            .get("lightFlavor")
+            .ok_or("missing lightFlavor variable")?;
+
+        assert_eq!(flavor.default, json!("latte"));
+        assert_eq!(flavor.options[0].name, "latte");
+        assert_eq!(flavor.options[0].label, "Latte");
+        assert!(flavor.options[0].default);
+        assert_eq!(flavor.options[1].name, "mocha");
+        assert_eq!(flavor.options[1].label, "Mocha");
+        assert!(!flavor.options[1].default);
         Ok(())
     }
 
