@@ -298,6 +298,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Reclaim maximum Nix store space
+        if: steps.retry-target.outputs.should-build == 'true'
+        uses: ./.github/actions/nothing-but-nix
+        with:
+          hatchet-protocol: rampage
+          witness-carnage: true
+
       # GitHub only loads workflows directly from .github/workflows, so the
       # reusable Nix/Cachix setup lives in a local composite action instead.
       - name: Build and cache configuration
