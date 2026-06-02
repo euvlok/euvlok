@@ -94,6 +94,7 @@
         browser-extension-update = mkRustPackage {
           name = "browser-extensions-update";
           mainProgram = "browser-extension-update";
+          wrapInputs = [ pkgs.git ];
         };
         catppuccin-userstyles = mkRustPackage {
           name = "catppuccin-userstyles";

@@ -351,6 +351,7 @@ fn bpc_url(browser: Browser) -> Result<String> {
         Browser::Firefox => "bypass_paywalls_clean-latest.xpi",
     };
     let output = process::trimmed_text(&argv([
+        "git",
         "ls-remote",
         "https://gitflic.ru/project/magnolia1234/bpc_uploads.git",
         "HEAD",
