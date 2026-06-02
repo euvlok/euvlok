@@ -2,13 +2,21 @@
 
 {
   lib,
+  options,
   config,
   inputs,
   pkgs,
   ...
 }:
 let
-  catppuccinLib = import (inputs.catppuccin-trivial + /modules/lib) { inherit lib config pkgs; };
+  catppuccinLib = import (inputs.catppuccin-trivial + /modules/lib) {
+    inherit
+      lib
+      options
+      config
+      pkgs
+      ;
+  };
   renamedGtkOption = "i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else";
   cfg = config.catppuccin.${renamedGtkOption};
   enable = cfg.enable && config.gtk.enable;
