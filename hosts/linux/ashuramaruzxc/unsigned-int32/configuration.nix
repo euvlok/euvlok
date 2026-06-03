@@ -43,6 +43,7 @@
       daemon.enable = true;
     };
     i2c.enable = true;
+    steam-hardware.enable = true;
   };
 
   services = {

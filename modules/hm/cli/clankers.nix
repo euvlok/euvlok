@@ -76,8 +76,8 @@ in
     })
     (lib.modules.mkIf cfg.codex.enable {
       home.packages = [
-        pkgs.codex-acp
-        pkgs.eupkgs.codex
+        pkgs.unstable.codex
+        pkgs.unstable.codex-acp
         pkgs.unstable.opencode
       ]
       ++ lib.lists.optional cfg.codex.statusLine.enable pkgs.eupkgs.agent-statusline-pi;

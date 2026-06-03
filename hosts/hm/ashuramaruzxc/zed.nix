@@ -1,18 +1,11 @@
 {
   config,
-  inputs,
   lib,
   osConfig ? null,
   pkgs,
   ...
 }:
 let
-  zedEditor =
-    (import inputs.nixpkgs-master {
-      inherit (pkgs.stdenv.hostPlatform) system;
-      inherit (pkgs) config;
-    }).zed-editor;
-
   codexAcpOpenrouter = pkgs.writeShellApplication {
     name = "codex-acp-openrouter";
     runtimeInputs = [ pkgs.codex-acp ];
@@ -48,7 +41,7 @@ lib.modules.mkMerge [
     programs.zed-editor = {
       enableMcpIntegration = true;
       installRemoteServer = true;
-      package = zedEditor;
+      package = pkgs.unstable.zed-editor;
       extraPackages = [
         pkgs.codex-acp
       ];

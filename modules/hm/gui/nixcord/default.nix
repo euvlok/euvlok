@@ -23,7 +23,7 @@
     programs.nixcord = {
       enable = true;
       discord.vencord.unstable = true;
-      discord.openASAR.enable = false;
+      discord.openASAR.enable = true;
       config.useQuickCss = true;
     };
     programs.nixcord.config.plugins = {
