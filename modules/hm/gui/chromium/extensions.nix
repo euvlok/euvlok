@@ -19,20 +19,20 @@ lib.lists.flatten [
   {
     id = "hlepfoohegkhhmjieoechaddaejaokhf";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcARO9RaYe9U0Wxmf2JsQd5WIPOifJ3mKY7JguZ3wPJ5GYcA39XpF5vBFvde9MYwW2CU8S0-uYW0-xTHMr1wUDhA2j3lUEg23MyvMcPDbolbRIXxZHKqTIj0Ugq0yggAxlKa5QWW_YTaiu2uM514c4YJlWyByYP5/HLEPFOOHEGKHHMJIEOECHADDAEJAOKHF_26_5_10_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcAa5JoKWLHDCUHrodtFf-dWlWaKbn8qWpzAJ1jYpWUr7PNwjMvxv3NChgMTs5b0un8D11GgBpEe3gABU-sub6c33JoIC7rV8igDkrsHf-Vs7q9fHBQsMcCdgeIRkXYAxlKa5e1mTNJhsjiwOKcEb0ywu7JtdLuT/HLEPFOOHEGKHHMJIEOECHADDAEJAOKHF_26_6_1_0.crx";
       name = "hlepfoohegkhhmjieoechaddaejaokhf.crx";
-      hash = "sha256-nXiscMsWkcooowolh7Zrm/LN9s/1StgBVKyjJ/LOCFI=";
+      hash = "sha256-wxz5oV5Hcv6iV23Kcrf1PlsgHmm7Mup81gNAwuIL1Mo=";
     };
-    version = "26.5.10";
+    version = "26.6.1";
   }
   {
     id = "jinjaccalgkegednnccohejagnlnfdag";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcCH5gsU9av0t0pF6AJjy_TUqMZi1gCiugZjmzHBcgzFK0W_Sp3aaYWXdJNAsTvUmLHpIbVbWgnkv8buzoRhZU-NKT__hIBGPoFcSRh-xR89ynChNF_3OdJ0y1rPGGUAxlKa5S3jbRNIpEMsqSrwHYFyzTfdNwOc/JINJACCALGKEGEDNNCCOHEJAGNLNFDAG_2_37_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcDdMsoaRgtKvFcvZCpDUHjPoP2Mzogeu-5UxnIY8go9QQf-a8B5VXagdeoIiHOvcErTTStOGSCZEpXYWn3PQkyu06ZlUJXNitF2Ub_0tuxWH5wqZzhy4yCMPrDajEwAxlKa5ZD9kFHSVAlbu3qp7hqEV8gQsuAU/JINJACCALGKEGEDNNCCOHEJAGNLNFDAG_2_41_0_0.crx";
       name = "jinjaccalgkegednnccohejagnlnfdag.crx";
-      hash = "sha256-fdNSVcq5kDf5lF3XLG2QwJc8c55BX9QVvqE8NwJm4jY=";
+      hash = "sha256-/efOra5ewgYE5TJawrTbxr3hV8JN0VGz9BtHzghx76o=";
     };
-    version = "2.37.0";
+    version = "2.41.0";
   }
   {
     id = "kpaaapnegfaaoimjpagopchdbmenfngl";
@@ -55,20 +55,20 @@ lib.lists.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=ebb0e846a3e8127782e56865efd17353b71fbd5c";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=a1c8afcae32240c8e58a4f72b9eeee0926c53309";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
-      hash = "sha256-R9uzMQX8xvoKkAthqzGC0fPcF1ZdqKJLu0plZpKopZU=";
+      hash = "sha256-NgJxA8v0pqZasamiek1MqidrKT8vD5ug10ZERct7Fc4=";
     };
-    version = "4.3.7.0";
+    version = "4.3.8.2";
   }
   {
     id = "lmkeolibdeeglfglnncmfleojmakecjb";
     crxPath = pkgs.fetchurl {
-      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcA8eX6gp3yEO5bhWtIVKndxA5JxctZsUjuwXK6mFCgUP-y4GS6kVf0tBeHHjT0pwQHdK7QgGJly4nHvZ3yvUbwN2o-uJdOLNjYh2NaszLrlB_9YjkjndKQVh3tp9pwAxlKa5eYP4N93C8CaHaLxZ67ZN2Ro1wsj/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_23_0_0.crx";
+      url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcAtEGv44gGxIW8NA0Q-5FWY8yLjjZ_APgP3Po0mQESUZ-ctJpeVDz1-u_K49OtEQobyCrcBz9wKH7KoBO58gMVPNAtDklPhC80Q1F5CI0xaBkn3T4UAyGPI3RK4RHEAxlKa5QfZ4Yluj8xer5_8a_NzpyhW5iQV/LMKEOLIBDEEGLFGLNNCMFLEOJMAKECJB_2_24_1_0.crx";
       name = "lmkeolibdeeglfglnncmfleojmakecjb.crx";
-      hash = "sha256-fUfW6KV9iDlZ1fE6Bo0PV4voTZvClpN7yYgIvoM4Y2I=";
+      hash = "sha256-S9CN97Do/tVzoGNeyRxHzFRKGw6bpHZnrOoEqBaD5GQ=";
     };
-    version = "2.23.0";
+    version = "2.24.1";
   }
   {
     id = "mnjggcdmjocbbbhaepdhchncahnbgone";

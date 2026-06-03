@@ -2,15 +2,17 @@
 # DO NOT edit manually
 {
   buildFirefoxXpiAddon,
+  fetchurl,
   lib,
+  stdenv,
 }:
 {
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.14.1";
+    version = "1.15.0";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4757690/angular_devtools-1.14.1.xpi";
-    sha256 = "sha256-bcfIA/kpBDK0gDtsZHHdJszkXpM4h5MohI29OkU3Vz4=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4804277/angular_devtools-1.15.0.xpi";
+    sha256 = "sha256-IDV1z1nNXfqBi1TnP5ja/ZqgtgWk0gbYr0KPPH1J86Y=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -24,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.3.0";
+    version = "2026.4.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4749958/bitwarden_password_manager-2026.3.0.xpi";
-    sha256 = "sha256-LcbQdNTcCr0qiWb1BlpV5yUrv15Usjwx2+2r+sDU28Q=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4796063/bitwarden_password_manager-2026.4.0.xpi";
+    sha256 = "sha256-zL32w6EchlXU/pvfz18WxMn/LYcy+tu4U5aiEjJ0rhA=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -165,10 +167,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.6.0";
+    version = "4.3.8.1";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=8f6a7d5db3036493786e682fcc7d4741891b405c";
-    sha256 = "sha256-mJVbkBpXxIwGD8DuE8M32m0qxA1CDchEY6K+1E7L4aU=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=a1c8afcae32240c8e58a4f72b9eeee0926c53309";
+    sha256 = "sha256-pD+R7d3MjfuPojJkl4pGkXXkGa7JvKR6Fp26HFgM1QY=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -262,7 +264,6 @@
         "*://*.bostonglobe.com/*"
         "*://*.bostonherald.com/*"
         "*://*.braunschweiger-zeitung.de/*"
-        "*://*.brill.com/*"
         "*://*.brisbanetimes.com.au/*"
         "*://*.britannica.com/*"
         "*://*.bt.no/*"
@@ -303,6 +304,7 @@
         "*://*.chunichi.co.jp/*"
         "*://*.cicero.de/*"
         "*://*.cincinnati.com/*"
+        "*://*.citeline.com/*"
         "*://*.citywire.com/*"
         "*://*.clarin.com/*"
         "*://*.cleaneatingmag.com/*"
@@ -540,7 +542,6 @@
         "*://*.inc.com/*"
         "*://*.inc42.com/*"
         "*://*.independent.co.uk/*"
-        "*://*.independent.ie/*"
         "*://*.indianexpress.com/*"
         "*://*.indiatimes.com/*"
         "*://*.indiatoday.in/*"
@@ -582,6 +583,7 @@
         "*://*.kansascity.com/*"
         "*://*.kathimerini.gr/*"
         "*://*.kentucky.com/*"
+        "*://*.kleinezeitung.at/*"
         "*://*.kn-online.de/*"
         "*://*.knack.be/*"
         "*://*.knoxnews.com/*"
@@ -681,7 +683,6 @@
         "*://*.macrobusiness.com.au/*"
         "*://*.madison.com/*"
         "*://*.magazyn-kuchnia.pl/*"
-        "*://*.mainichi.jp/*"
         "*://*.mallorcazeitung.es/*"
         "*://*.manoramaonline.com/*"
         "*://*.marca.com/*"
@@ -720,6 +721,7 @@
         "*://*.musicomh.com/*"
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
+        "*://*.nationalgeographic.com.es/*"
         "*://*.nationalgeographic.com/*"
         "*://*.nationalgeographic.it/*"
         "*://*.nationalgeographic.nl/*"
@@ -727,6 +729,7 @@
         "*://*.nationalreview.com/*"
         "*://*.nature.com/*"
         "*://*.nautil.us/*"
+        "*://*.nbcnews.com/*"
         "*://*.ndtvprofit.com/*"
         "*://*.neuepresse.de/*"
         "*://*.newcastleherald.com.au/*"
@@ -1044,6 +1047,7 @@
         "*://*.variety.com/*"
         "*://*.varmatin.com/*"
         "*://*.vegetariantimes.com/*"
+        "*://*.vibilagare.se/*"
         "*://*.vice.com/*"
         "*://*.vikatan.com/*"
         "*://*.vn.at/*"
@@ -1150,6 +1154,7 @@
         "*://*.fnetcore-api-prod.azurewebsites.net/*"
         "*://*.funkemedien.de/*"
         "*://*.mediafin.be/*"
+        "*://*.styria.com/*"
         "*://codebeautify.org/*"
         "*://gitflic.ru/*"
         "*://*/*"
@@ -1292,10 +1297,10 @@
   };
   "steam-database" = buildFirefoxXpiAddon {
     pname = "steam-database";
-    version = "4.33";
+    version = "4.34";
     addonId = "firefox-extension@steamdb.info";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4704123/steam_database-4.33.xpi";
-    sha256 = "sha256-enoGkukwbsG06vIbtKy68NCx9qbprNykCQPfA/2R908=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4803730/steam_database-4.34.xpi";
+    sha256 = "sha256-uBHSyMJDzPWFeWmegVOx4kw6yurBPCbpfaojLFsLS7I=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1308,10 +1313,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.3.22";
+    version = "2.3.29.24";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4786206/styl_us-2.3.22.xpi";
-    sha256 = "sha256-Hd9jPCSjUTqtvfHNH436PPIgNMWQdUWJV7TJ78aLNIM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4827127/styl_us-2.3.29.24.xpi";
+    sha256 = "sha256-SqcRL0kZ6RrODTZxefOYgtQG4IfZ24/zpfvh0SlJl6M=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1411,10 +1416,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.23.0";
+    version = "2.24.1";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4769229/youtube_no_translation-2.23.0.xpi";
-    sha256 = "sha256-OmTjD8g6tmEMAJdlo0RXEllW8nqQbwScfk43ULhuWjA=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4822978/youtube_no_translation-2.24.1.xpi";
+    sha256 = "sha256-fhryVVlutn04ud8eNgsyZBwgBzDUCk+c6wBCFS7qn1Q=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [

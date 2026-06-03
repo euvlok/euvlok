@@ -2,7 +2,9 @@
 # DO NOT edit manually
 {
   buildFirefoxXpiAddon,
+  fetchurl,
   lib,
+  stdenv,
 }:
 {
   "clearurls" = buildFirefoxXpiAddon {
@@ -28,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.6.0";
+    version = "4.3.8.1";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=8f6a7d5db3036493786e682fcc7d4741891b405c";
-    sha256 = "sha256-mJVbkBpXxIwGD8DuE8M32m0qxA1CDchEY6K+1E7L4aU=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=a1c8afcae32240c8e58a4f72b9eeee0926c53309";
+    sha256 = "sha256-pD+R7d3MjfuPojJkl4pGkXXkGa7JvKR6Fp26HFgM1QY=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -125,7 +127,6 @@
         "*://*.bostonglobe.com/*"
         "*://*.bostonherald.com/*"
         "*://*.braunschweiger-zeitung.de/*"
-        "*://*.brill.com/*"
         "*://*.brisbanetimes.com.au/*"
         "*://*.britannica.com/*"
         "*://*.bt.no/*"
@@ -166,6 +167,7 @@
         "*://*.chunichi.co.jp/*"
         "*://*.cicero.de/*"
         "*://*.cincinnati.com/*"
+        "*://*.citeline.com/*"
         "*://*.citywire.com/*"
         "*://*.clarin.com/*"
         "*://*.cleaneatingmag.com/*"
@@ -403,7 +405,6 @@
         "*://*.inc.com/*"
         "*://*.inc42.com/*"
         "*://*.independent.co.uk/*"
-        "*://*.independent.ie/*"
         "*://*.indianexpress.com/*"
         "*://*.indiatimes.com/*"
         "*://*.indiatoday.in/*"
@@ -445,6 +446,7 @@
         "*://*.kansascity.com/*"
         "*://*.kathimerini.gr/*"
         "*://*.kentucky.com/*"
+        "*://*.kleinezeitung.at/*"
         "*://*.kn-online.de/*"
         "*://*.knack.be/*"
         "*://*.knoxnews.com/*"
@@ -467,6 +469,7 @@
         "*://*.lamontagne.fr/*"
         "*://*.lanacion.com.ar/*"
         "*://*.lanazione.it/*"
+        "*://*.lance.com.br/*"
         "*://*.lanuovasardegna.it/*"
         "*://*.laprovincia.es/*"
         "*://*.lardennais.fr/*"
@@ -543,7 +546,6 @@
         "*://*.macrobusiness.com.au/*"
         "*://*.madison.com/*"
         "*://*.magazyn-kuchnia.pl/*"
-        "*://*.mainichi.jp/*"
         "*://*.mallorcazeitung.es/*"
         "*://*.manoramaonline.com/*"
         "*://*.marca.com/*"
@@ -582,11 +584,15 @@
         "*://*.musicomh.com/*"
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
+        "*://*.nationalgeographic.com.es/*"
         "*://*.nationalgeographic.com/*"
+        "*://*.nationalgeographic.it/*"
+        "*://*.nationalgeographic.nl/*"
         "*://*.nationalpost.com/*"
         "*://*.nationalreview.com/*"
         "*://*.nature.com/*"
         "*://*.nautil.us/*"
+        "*://*.nbcnews.com/*"
         "*://*.ndtvprofit.com/*"
         "*://*.neuepresse.de/*"
         "*://*.newcastleherald.com.au/*"
@@ -904,6 +910,7 @@
         "*://*.variety.com/*"
         "*://*.varmatin.com/*"
         "*://*.vegetariantimes.com/*"
+        "*://*.vibilagare.se/*"
         "*://*.vice.com/*"
         "*://*.vikatan.com/*"
         "*://*.vn.at/*"
@@ -1010,6 +1017,7 @@
         "*://*.fnetcore-api-prod.azurewebsites.net/*"
         "*://*.funkemedien.de/*"
         "*://*.mediafin.be/*"
+        "*://*.styria.com/*"
         "*://codebeautify.org/*"
         "*://gitflic.ru/*"
         "*://*/*"
@@ -1018,10 +1026,10 @@
   };
   "refined-github-" = buildFirefoxXpiAddon {
     pname = "refined-github-";
-    version = "26.5.1";
+    version = "26.6.1";
     addonId = "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4787850/refined_github-26.5.1.xpi";
-    sha256 = "sha256-Q3FCeYR6ckwbiLVDlIclHdcSyGN8KLwzhrp6RUK+9Tg=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4831946/refined_github-26.6.1.xpi";
+    sha256 = "sha256-oVqf+irpz2KqP3I37bx1JKXkPpcuU5sVcprUoBzclDc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1054,10 +1062,10 @@
   };
   "ublock-origin" = buildFirefoxXpiAddon {
     pname = "ublock-origin";
-    version = "1.70.0";
+    version = "1.71.0";
     addonId = "uBlock0@raymondhill.net";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4721638/ublock_origin-1.70.0.xpi";
-    sha256 = "sha256-8nMNKHcAV2OkXXZXSYkuk29JyucT0o96puoxRFS4nPE=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4814095/ublock_origin-1.71.0.xpi";
+    sha256 = "sha256-R/eIofwsAUgwswuw75WIYVcBuYxSZfsZuM9Lp3mEn+s=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1077,10 +1085,10 @@
   };
   "violentmonkey" = buildFirefoxXpiAddon {
     pname = "violentmonkey";
-    version = "2.37.0";
+    version = "2.40.0";
     addonId = "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4777100/violentmonkey-2.37.0.xpi";
-    sha256 = "sha256-XQS0AvORw6O4Jq7QZL93HeQclMvIzNj3s6POcMsB1zU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4825194/violentmonkey-2.40.0.xpi";
+    sha256 = "sha256-os5y5mqK67iu3zn1xVbN4s9GHaIUzZ88mxMPDHMHGEE=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
