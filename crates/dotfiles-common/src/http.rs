@@ -2,7 +2,7 @@ use std::path::Path;
 
 use fs_err as fs;
 pub use reqwest::StatusCode;
-use reqwest::blocking::{Client as ReqwestClient, Response};
+use reqwest::blocking::{Client as ReqwestClient, ClientBuilder, Response};
 use reqwest::header::{HeaderMap, LOCATION};
 use reqwest::redirect::Policy;
 use serde::Serialize;
@@ -33,11 +33,8 @@ impl Client {
     ///
     /// Returns an error if the underlying client cannot be built.
     pub fn new(user_agent: impl Into<String>) -> Result<Self, HttpError> {
-        let _ = rustls::crypto::ring::default_provider().install_default();
         Ok(Self {
-            inner: ReqwestClient::builder()
-                .user_agent(user_agent.into())
-                .build()?,
+            inner: client_builder(user_agent.into()).build()?,
         })
     }
 
@@ -47,10 +44,8 @@ impl Client {
     ///
     /// Returns an error if the underlying client cannot be built.
     pub fn new_without_redirects(user_agent: impl Into<String>) -> Result<Self, HttpError> {
-        let _ = rustls::crypto::ring::default_provider().install_default();
         Ok(Self {
-            inner: ReqwestClient::builder()
-                .user_agent(user_agent.into())
+            inner: client_builder(user_agent.into())
                 .redirect(Policy::none())
                 .build()?,
         })
@@ -171,6 +166,11 @@ impl Client {
         response.copy_to(&mut file)?;
         Ok(())
     }
+}
+
+fn client_builder(user_agent: String) -> ClientBuilder {
+    let _ = rustls::crypto::ring::default_provider().install_default();
+    ReqwestClient::builder().user_agent(user_agent).http1_only()
 }
 
 fn header_location(headers: &HeaderMap) -> std::io::Result<Option<String>> {

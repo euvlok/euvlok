@@ -1,3 +1,4 @@
+use std::io::Read as _;
 use std::path::PathBuf;
 
 use base64::Engine as _;
@@ -213,8 +214,17 @@ fn fetch_driver_hash(
     let driver_name = format!("NVIDIA-Linux-{arch}-{driver_version}.run");
     let url = format!("{base_url}/{driver_version}/{driver_name}");
     eprintln!("info: Fetching {arch} driver {driver_version}...");
-    let bytes = client.bytes(&url)?;
-    Ok(sri_from_sha256(Sha256::digest(&bytes).as_slice()))
+    let mut reader = client.reader(&url)?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0; 1024 * 1024];
+    loop {
+        let read = reader.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        hasher.update(&buffer[..read]);
+    }
+    Ok(sri_from_sha256(hasher.finalize().as_slice()))
 }
 
 fn prefetch_github_source_hash(
