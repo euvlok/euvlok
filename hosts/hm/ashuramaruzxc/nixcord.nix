@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  osConfig ? null,
+  ...
+}:
 {
   programs.nixcord.quickCss = lib.strings.optionalString config.catppuccin.enable ''
     /* ----- CATPPUCCIN THEME ----- */
@@ -26,4 +31,6 @@
       enableButtons = true;
     };
   };
+  programs.nixcord.discord.autoscroll.enable =
+    osConfig != null && osConfig.networking.hostName == "unsigned-int32";
 }

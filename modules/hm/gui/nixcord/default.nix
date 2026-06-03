@@ -22,6 +22,7 @@
     ];
     programs.nixcord = {
       enable = true;
+      discord.krisp.enable = true;
       discord.vencord.unstable = true;
       discord.openASAR.enable = true;
       config.useQuickCss = true;
