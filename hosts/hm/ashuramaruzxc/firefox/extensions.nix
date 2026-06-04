@@ -9,10 +9,10 @@
 {
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.15.0";
+    version = "1.15.1";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4804277/angular_devtools-1.15.0.xpi";
-    sha256 = "sha256-IDV1z1nNXfqBi1TnP5ja/ZqgtgWk0gbYr0KPPH1J86Y=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4834732/angular_devtools-1.15.1.xpi";
+    sha256 = "sha256-EAj3k+ikIDHv+3lcSiABNV5A7F0V0PEkuNBInRFe3PE=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -26,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.4.0";
+    version = "2026.5.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4796063/bitwarden_password_manager-2026.4.0.xpi";
-    sha256 = "sha256-zL32w6EchlXU/pvfz18WxMn/LYcy+tu4U5aiEjJ0rhA=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4827854/bitwarden_password_manager-2026.5.0.xpi";
+    sha256 = "sha256-jrtHVRijMLiLTiy6CGTFyhG+05BznLhPvyVuk4yRttk=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1313,10 +1313,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.3.29.24";
+    version = "2.3.30";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4827127/styl_us-2.3.29.24.xpi";
-    sha256 = "sha256-SqcRL0kZ6RrODTZxefOYgtQG4IfZ24/zpfvh0SlJl6M=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4827922/styl_us-2.3.30.xpi";
+    sha256 = "sha256-99/Z/CRcfEUtZl37FkBYXVAVsI+u1BFPCyjvkLZXXb0=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
