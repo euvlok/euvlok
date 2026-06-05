@@ -40,6 +40,7 @@
     inherit (pkgs.eupkgs)
       agent-statusline
       agent-statusline-pi
+      catppuccin-system-theme-pi
       codex
       opencode
       yt-dlp-script
