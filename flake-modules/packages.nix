@@ -107,6 +107,7 @@
           cratePath = "crates/chezmoi-support";
         };
         github-maintenance = mkRustPackage { name = "github-maintenance"; };
+        http-fixture = mkRustPackage { name = "http-fixture"; };
         nvidia-prefetch = mkRustPackage { name = "nvidia-prefetch"; };
         zellij-theme-tools = mkRustPackage {
           name = "zellij-theme-tools";
@@ -122,6 +123,7 @@
           catppuccin-userstyles
           chezmoi-support
           github-maintenance
+          http-fixture
           nvidia-prefetch
           zellij-theme-tools
           ;
