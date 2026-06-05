@@ -83,7 +83,7 @@ lib.lists.flatten [
     {
       id = "lnjaiaapbakfhlbjenjkhffcdpoompki";
       crxPath = pkgs.fetchurl {
-        url = "https://clients2.googleusercontent.com/crx/blobs/AcPRoeqVoQzgzXDQC_k0aqcj645Z4gGj5M7PZ0Athd-Tva-MzFsmDd8s99XWMOFOhvi1R-XUhSbIOfXH_rPpAaf2GFvjtSKp--UJKwbvcopgGWgjO21zHfKBOBnnGbMRzvQAxlKa5fBmUeYv8DSArq7DzaNDGdjQLhWQ/LNJAIAAPBAKFHLBJENJKHFFCDPOOMPKI_1_6_1_0.crx";
+        url = "https://clients2.googleusercontent.com/crx/blobs/AXJDbcAW3zVsAxlwODRzAmBabOaBaMpWpO1r0xjnUNRQwPrsLMBreQzZCjTL9aV1h1mliY-ysun8OPQm12ucIRZZlR2NV6n4CiBytzq9tbMnOxn27Y3Um0znXGggcf8fNqsAxlKa5UAINPOY8U82t_Kda9-P9L6ZipKO/LNJAIAAPBAKFHLBJENJKHFFCDPOOMPKI_1_6_1_0.crx";
         name = "lnjaiaapbakfhlbjenjkhffcdpoompki.crx";
         hash = "sha256-ym0nff+4QNPWR6QXDBzpxvAV4dIc8VV5m14uSs19HzU=";
       };
