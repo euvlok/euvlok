@@ -38,6 +38,31 @@
           python313
           ;
       };
+      kanata =
+        let
+          version = "1.12.0-prerelease-2";
+          src = final.fetchFromGitHub {
+            owner = "FlameFlag";
+            repo = "kanata";
+            rev = "c8c720ded5a34bbc4bdfbfbe33c97b7bb2e60e77";
+            hash = "sha256-xnmoRf+xKRSlKPKnCRYsid4laL5+eCD1IP09RjuyjXY=";
+          };
+        in
+        _prev.kanata.overrideAttrs (old: {
+          inherit version src;
+
+          cargoCheckFeatures =
+            (old.cargoCheckFeatures or [ ])
+            ++ final.lib.lists.optionals final.stdenv.hostPlatform.isLinux [
+              "simulated_output"
+            ];
+
+          cargoDeps = final.rustPlatform.fetchCargoVendor {
+            inherit src;
+            name = "kanata-flameflag-2026-06-05";
+            hash = "sha256-dVQhiEj8izA4lv4lZdLHr6rND8Gm8pvAx6mP6MPK1zk=";
+          };
+        });
       kanata-with-cmd = final.kanata.override { withCmd = true; };
     })
     /**
