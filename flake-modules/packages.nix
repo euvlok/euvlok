@@ -1,8 +1,51 @@
 {
   perSystem =
-    { config, pkgs, ... }:
+    {
+      config,
+      inputs,
+      pkgs,
+      system,
+      ...
+    }:
     let
       lib = pkgs.lib;
+      unstable = import inputs.nixpkgs-unstable-small {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      kanata =
+        let
+          version = "1.12.0-prerelease-2";
+          src = pkgs.fetchFromGitHub {
+            owner = "FlameFlag";
+            repo = "kanata";
+            rev = "c8c720ded5a34bbc4bdfbfbe33c97b7bb2e60e77";
+            hash = "sha256-xnmoRf+xKRSlKPKnCRYsid4laL5+eCD1IP09RjuyjXY=";
+          };
+        in
+        pkgs.kanata.overrideAttrs (old: {
+          inherit version src;
+
+          cargoCheckFeatures =
+            (old.cargoCheckFeatures or [ ])
+            ++ lib.lists.optionals pkgs.stdenv.hostPlatform.isLinux [
+              "simulated_output"
+            ];
+
+          cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+            inherit src;
+            name = "kanata-flameflag-2026-06-05";
+            hash = "sha256-dVQhiEj8izA4lv4lZdLHr6rND8Gm8pvAx6mP6MPK1zk=";
+          };
+        });
+      ghidraMcpHeadless = pkgs.callPackage ../packages/ghidra-mcp-headless.nix {
+        inherit (unstable)
+          ghidra
+          jdk21
+          maven
+          python313
+          ;
+      };
 
       mkRustPackage =
         {
@@ -113,6 +156,17 @@
           name = "zellij-theme-tools";
           mainProgram = "zellij-auto-theme";
         };
+
+        inherit kanata;
+        kanata-with-cmd = kanata.override { withCmd = true; };
+        lldb-mcp-launcher = pkgs.callPackage ../packages/lldb-mcp-launcher.nix {
+          lldb = unstable.llvmPackages_22.lldb;
+          python3 = unstable.python3;
+        };
+
+        ghidra-mcp-headless-bridge = ghidraMcpHeadless.bridge;
+        ghidra-mcp-headless-httpd = ghidraMcpHeadless.httpd;
+        ghidra-mcp-headless-server = ghidraMcpHeadless.server;
       };
 
       overlayAttrs = {

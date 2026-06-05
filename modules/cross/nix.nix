@@ -8,9 +8,9 @@
 let
   inherit (config.nixpkgs.hostPlatform) isLinux;
 
-  registry = lib.attrsets.mapAttrs (_: flake: { inherit flake; }) (
-    lib.attrsets.filterAttrs (_: lib.types.isType "flake") inputs
-  );
+  flakeInputs = lib.attrsets.filterAttrs (_: lib.types.isType "flake") inputs;
+  nixPathEntries = lib.attrsets.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  registry = lib.attrsets.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
 
   buildParallelism =
     lib.trivial.pipe
@@ -122,6 +122,7 @@ in
               "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
               "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
             ];
+            nix-path = nixPathEntries;
           }
           // lib.attrsets.optionalAttrs isLinux {
             # Disable global registry
@@ -133,9 +134,7 @@ in
           channel.enable = false;
 
           # Flake Inputs
-          nixPath = lib.attrsets.mapAttrsToList (n: _: "${n}=flake:${n}") (
-            lib.attrsets.filterAttrs (_: lib.types.isType "flake") inputs
-          );
+          nixPath = nixPathEntries;
         };
       }
     ]
