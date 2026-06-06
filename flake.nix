@@ -50,7 +50,7 @@
     sops-nix-trivial.url = "github:Mic92/sops-nix";
     stylix-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     stylix-trivial.inputs.systems.follows = "flake-utils/systems";
-    stylix-trivial.url = "github:danth/stylix/release-25.11";
+    stylix-trivial.url = "github:danth/stylix/release-26.05";
     zen-browser-trivial.inputs.home-manager.follows = "home-manager";
     zen-browser-trivial.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     zen-browser-trivial.url = "github:0xc000022070/zen-browser-flake";

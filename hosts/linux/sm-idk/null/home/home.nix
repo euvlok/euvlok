@@ -46,7 +46,7 @@
 
   programs.bash.enable = true;
   programs.home-manager.enable = true;
-  gtk.gtk4.theme = config.gtk.theme;
+  gtk.gtk4.theme = lib.modules.mkDefault config.gtk.theme;
 
   # The version should stay at the version you originally installed.
   home.stateVersion = "25.05";
