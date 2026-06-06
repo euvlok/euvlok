@@ -20,6 +20,7 @@
 
       devenv.shells.default = {
         name = "euvlok development shell";
+        devenv.root = toString ./..;
         languages = {
           nix.enable = true;
           shell.enable = true;
