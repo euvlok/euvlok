@@ -23,19 +23,19 @@ rec {
       upstreamText =
         if upstreams != [ ] then lib.concatStringsSep " " upstreams else upstreamsPlaceholder domain;
       tlsConfig = lib.optionalString (scheme == "https") ''
-              tls
-              tls_server_name ${realHost}
+        tls
+        tls_server_name ${realHost}
       '';
     in
     lib.optionalString (passThrough != null) ''
-            (${snippetName domain}) {
-        reverse_proxy ${upstreamText} {
-          header_up Host ${realHost}
-          transport http {
-            ${tlsConfig}
-          }
+          (${snippetName domain}) {
+      reverse_proxy ${upstreamText} {
+        header_up Host ${realHost}
+        transport http {
+          ${tlsConfig}
         }
-            }
+      }
+          }
     '';
 
   passThroughHandles =
@@ -49,28 +49,28 @@ rec {
       websitePrefix = passThrough.website_prefix or null;
       websiteRootRedirect = passThrough.website_root_redirect or false;
       exactPathHandles = lib.concatMapStringsSep "\n" (path: ''
-          handle ${path} {
-            import ${name}
-          }
+        handle ${path} {
+          import ${name}
+        }
       '') exactPaths;
       pathPrefixHandles = lib.concatMapStringsSep "\n" (pathPrefix: ''
-          handle ${pathPrefix}* {
-            import ${name}
-          }
+        handle ${pathPrefix}* {
+          import ${name}
+        }
       '') pathPrefixes;
       websiteHandles = lib.optionalString (websitePrefix != null) ''
-          handle ${websitePrefix} {
-            redir * ${websitePrefix}/ 308
-          }
+        handle ${websitePrefix} {
+          redir * ${websitePrefix}/ 308
+        }
 
-          handle_path ${websitePrefix}/* {
-            import ${name}
-          }
+        handle_path ${websitePrefix}/* {
+          import ${name}
+        }
       '';
       websiteRootRedirectHandles = lib.optionalString (websitePrefix != null && websiteRootRedirect) ''
-          handle @${websiteRootRedirectMatcherName domain} {
-            redir * ${websitePrefix}{uri} 308
-          }
+        handle @${websiteRootRedirectMatcherName domain} {
+          redir * ${websitePrefix}{uri} 308
+        }
       '';
     in
     lib.optionalString (passThrough != null) ''
@@ -111,11 +111,11 @@ rec {
       );
     in
     lib.optionalString (passThrough != null && websitePrefix != null && websiteRootRedirect) ''
-        @${websiteRootRedirectMatcherName domain} {
-          method GET HEAD
-          path /*
-          not path ${lib.concatStringsSep " " excludedPatterns}
-        }
+      @${websiteRootRedirectMatcherName domain} {
+        method GET HEAD
+        path /*
+        not path ${lib.concatStringsSep " " excludedPatterns}
+      }
     '';
 
   siteBlock =
@@ -125,20 +125,20 @@ rec {
       names = [ domain ] ++ (route.aliases or [ ]);
     in
     ''
-            https://${lib.concatStringsSep ", https://" names} {
-        bind 127.0.0.1 ::1
-        tls ${settings.cert} ${settings.key}
+          https://${lib.concatStringsSep ", https://" names} {
+      bind 127.0.0.1 ::1
+      tls ${settings.cert} ${settings.key}
 
-            ${passThroughMatchers domain}
+          ${passThroughMatchers domain}
 
-        route {
-            ${passThroughHandles domain}
+      route {
+          ${passThroughHandles domain}
 
-          handle {
-            reverse_proxy ${route.upstream}
-          }
+        handle {
+          reverse_proxy ${route.upstream}
         }
-            }
+      }
+          }
     '';
 
   passThroughSnippets = lib.concatMapStringsSep "\n" passThroughSnippet (

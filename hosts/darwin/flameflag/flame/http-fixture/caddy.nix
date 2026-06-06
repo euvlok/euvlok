@@ -7,14 +7,14 @@ in
   environment.etc."http-fixture/config.toml".source = settings.configSource;
 
   environment.etc."caddy/http-fixture.caddyfile.template".text = ''
-        {
-      admin off
-      auto_https off
-        }
+      {
+    admin off
+    auto_https off
+      }
 
-        ${lib.trim rendering.passThroughSnippets}
+      ${lib.trim rendering.passThroughSnippets}
 
-        ${lib.trim rendering.sites}
+      ${lib.trim rendering.sites}
   '';
 
   system.activationScripts.postActivation.text = lib.mkAfter ''
