@@ -31,6 +31,7 @@
       enableButtons = true;
     };
   };
-  programs.nixcord.discord.autoscroll.enable =
-    osConfig != null && osConfig.networking.hostName == "unsigned-int32";
+  programs.nixcord.discord.commandLineArgs = lib.lists.optionals (
+    osConfig != null && osConfig.networking.hostName == "unsigned-int32"
+  ) [ "--enable-blink-features=MiddleClickAutoscroll" ];
 }
