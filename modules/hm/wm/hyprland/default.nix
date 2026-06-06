@@ -4,6 +4,7 @@
 
   config = lib.modules.mkIf config.hm.hyprland.enable {
     wayland.windowManager.hyprland.enable = true;
+    wayland.windowManager.hyprland.configType = "hyprlang";
     wayland.windowManager.hyprland.settings = {
       ecosystem.no_update_news = true;
 

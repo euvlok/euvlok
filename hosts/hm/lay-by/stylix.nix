@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -56,5 +57,6 @@
       name = "Breeze-Dark";
       package = pkgs.kdePackages.breeze-gtk;
     };
+    gtk4.theme = lib.modules.mkDefault config.gtk.theme;
   };
 }
