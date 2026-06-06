@@ -39,7 +39,7 @@
           signal-desktop
           ;
 
-        helium = inputs.eupkgs.legacyPackages.${pkgs.system}.helium-browser;
+        helium = inputs.eupkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.helium-browser;
         octave = pkgs.octaveFull.withPackages (p: [ p.symbolic ]);
       }
     );

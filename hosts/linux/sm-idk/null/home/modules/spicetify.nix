@@ -9,7 +9,7 @@
   programs.spicetify = lib.modules.mkIf (pkgs.stdenv.hostPlatform.system != "aarch64-linux") {
     enable = true;
     enabledExtensions = builtins.attrValues {
-      inherit (inputs.spicetify-nix-trivial.legacyPackages.${pkgs.system}.extensions)
+      inherit (inputs.spicetify-nix-trivial.legacyPackages.${pkgs.stdenv.hostPlatform.system}.extensions)
         adblock
         beautifulLyrics # Apple Music like Lyrics
         copyLyrics
