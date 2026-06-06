@@ -1,6 +1,7 @@
 {
   lib,
   inputs,
+  config,
   osClass,
   ...
 }:
@@ -11,4 +12,5 @@
   ++ lib.lists.optionals (osClass == "nixos") [ ./firefox.nix ];
 
   catppuccin.vscode.profiles.default.enable = lib.modules.mkDefault false;
+  catppuccin.autoEnable = lib.modules.mkDefault config.catppuccin.enable;
 }

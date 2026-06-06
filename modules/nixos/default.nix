@@ -1,4 +1,9 @@
-{ inputs, ... }:
+{
+  lib,
+  config,
+  inputs,
+  ...
+}:
 {
   imports = [
     inputs.catppuccin-trivial.nixosModules.catppuccin
@@ -24,4 +29,6 @@
     ./zed-remote.nix
     ./zram.nix
   ];
+
+  catppuccin.autoEnable = lib.modules.mkDefault config.catppuccin.enable;
 }
