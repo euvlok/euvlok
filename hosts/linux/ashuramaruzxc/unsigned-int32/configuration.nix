@@ -119,6 +119,7 @@
   programs = {
     ccache = {
       enable = true;
+      trace = false;
       packageNames = [
         "ansel"
         "gmic"
