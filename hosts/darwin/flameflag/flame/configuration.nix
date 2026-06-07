@@ -1,8 +1,23 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+let
+  systemRunnerLink = "/Users/${config.system.primaryUser}/.local/bin/system-runner";
+  systemRunnerTarget = "/Users/${config.system.primaryUser}/.local/opt/system-run-mcp/latest/bin/system-runner";
+  tailscaleExe = lib.meta.getExe config.services.tailscale.package;
+in
 {
   system.primaryUser = "flame";
 
   nixpkgs.hostPlatform.system = "aarch64-darwin";
+
+  security.sudo.extraConfig = ''
+    Cmnd_Alias SYSTEM_RUNNER = ${systemRunnerLink}, ${systemRunnerTarget}
+    ${config.system.primaryUser} ALL=(ALL) NOPASSWD: SYSTEM_RUNNER
+  '';
 
   users.users.${config.system.primaryUser} = {
     name = config.system.primaryUser;
@@ -12,6 +27,32 @@
 
   services.tailscale.enable = true;
   services.tailscale.package = pkgs.unstable.tailscale;
+
+  launchd.daemons.tailscale-ssh = {
+    script = ''
+      i=0
+      while [ "$i" -lt 30 ]; do
+        if ${tailscaleExe} set --ssh=true; then
+          exit 0
+        fi
+        i=$((i + 1))
+        sleep 2
+      done
+      exit 1
+    '';
+    serviceConfig = {
+      Label = "com.tailscale.tailscale-ssh";
+      RunAtLoad = true;
+      KeepAlive = {
+        Crashed = true;
+        SuccessfulExit = false;
+      };
+      ThrottleInterval = 30;
+      ProcessType = "Background";
+      StandardOutPath = "/var/log/tailscale-ssh.log";
+      StandardErrorPath = "/var/log/tailscale-ssh.log";
+    };
+  };
 
   sops = {
     age.keyFile = "/Users/${config.system.primaryUser}/Library/Application Support/sops/age/keys.txt";

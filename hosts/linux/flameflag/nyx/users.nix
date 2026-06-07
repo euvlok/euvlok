@@ -1,8 +1,34 @@
 { config, pkgs, ... }:
+let
+  systemRunnerLink = "/home/nyx/.local/bin/system-runner";
+  systemRunnerTarget = "/home/nyx/.local/opt/system-run-mcp/latest/bin/system-runner";
+in
 {
   sops.secrets.nyx-password.neededForUsers = true;
 
   users.mutableUsers = false;
+
+  security.sudo-rs.extraRules = [
+    {
+      users = [ "nyx" ];
+      commands = [
+        {
+          command = systemRunnerLink;
+          options = [
+            "NOPASSWD"
+            "SETENV"
+          ];
+        }
+        {
+          command = systemRunnerTarget;
+          options = [
+            "NOPASSWD"
+            "SETENV"
+          ];
+        }
+      ];
+    }
+  ];
 
   users.groups.keys = {
     members = [ "nyx" ];

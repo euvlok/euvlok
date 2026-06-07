@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = builtins.attrValues {
     # Dotfiles
@@ -65,16 +65,4 @@
     # Telegram (was in the old configuration)
     inherit (pkgs) telegram-desktop;
   };
-
-  system.activationScripts.removeBootstrapSelfInstall.text = ''
-    bootstrap_link=/home/nyx/.local/bin/bootstrap
-    if [ -L "$bootstrap_link" ]; then
-      bootstrap_target="$(${lib.meta.getExe' pkgs.coreutils "readlink"} -f "$bootstrap_link" || true)"
-      case "$bootstrap_target" in
-        /home/nyx/.local/opt/bootstrap/*|/home/nyx/.local/opt/nix-dotfiles-bootstrap/*)
-          rm -f "$bootstrap_link"
-          ;;
-      esac
-    fi
-  '';
 }
