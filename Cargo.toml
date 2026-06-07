@@ -13,6 +13,7 @@ members = [
     "packages/lenovo-con-mode",
     "packages/lsp-diagnostic-filter",
     "packages/nvidia-prefetch",
+    "packages/system-run-mcp",
     "packages/zellij-theme-tools",
 ]
 resolver = "3"
@@ -43,6 +44,7 @@ futures = "0.3.32"
 garde = { version = "0.23.0", features = ["derive"] }
 gix = { version = "0.84.0", features = ["blocking-network-client"] }
 hex = "0.4.3"
+indexmap = "2.12.1"
 indicatif = "0.18.4"
 itertools = "0.14.0"
 jj-lib = "0.42.0"
@@ -52,6 +54,7 @@ miette = { version = "7.6.0", features = ["fancy"] }
 notify = "9.0.0-rc.4"
 pollster = "0.4.0"
 reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "json", "rustls"] }
+rmcp = { version = "1.7.0", default-features = false, features = ["macros", "server", "transport-io"] }
 rustix = { version = "1.1.4", features = ["event", "fs", "stdio", "termios"] }
 schemars = { version = "1.2.1", features = ["derive"] }
 secrecy = "0.10.3"
@@ -62,10 +65,13 @@ serde_path_to_error = "0.1.20"
 sha1 = "0.11.0"
 sha2 = "0.11.0"
 shell-words = "1.1.1"
+strum = { version = "0.28.0", features = ["derive"] }
 tar = "0.4.46"
 tempfile = "3.27.0"
 thiserror = "2.0.18"
 tiny_http = "0.12.0"
+tokio = { version = "1.52.3", default-features = false, features = ["io-std", "macros", "rt-multi-thread"] }
+tokio-util = "0.7"
 toml = "1.1.2"
 toml_edit = "0.25.12"
 url = "2.5.8"

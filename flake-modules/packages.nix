@@ -157,9 +157,10 @@
           mainProgram = "nushell-lsp-filter";
         };
         nvidia-prefetch = mkRustPackage { name = "nvidia-prefetch"; };
+        system-run-mcp = mkRustPackage { name = "system-run-mcp"; };
         zellij-theme-tools = mkRustPackage {
           name = "zellij-theme-tools";
-          mainProgram = "zellij-auto-theme";
+          mainProgram = "zellij-theme-run";
         };
       }
       // lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
@@ -191,6 +192,7 @@
           http-fixture
           lsp-diagnostic-filter
           nvidia-prefetch
+          system-run-mcp
           zellij-theme-tools
           ;
       }
