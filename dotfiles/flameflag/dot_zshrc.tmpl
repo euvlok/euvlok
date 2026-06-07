@@ -73,7 +73,6 @@ alias l="eza --icons"
 alias ll="eza -la --icons"
 alias la="eza -la --icons"
 alias lt="eza --tree --icons"
-alias cd="z"
 alias htop="btop"
 alias neofetch="pfetch"
 alias top="btop"
@@ -92,16 +91,44 @@ alias mp4-cut="_yt_dlp_script mp4-cut"
 # Agents Aliases
 alias cc="claude --allow-dangerously-skip-permissions"
 alias oo="opencode"
+free() {
+  local runner
+  runner="$(command -v system-runner)"
+  if [[ -z "$runner" ]]; then
+    print -u2 "free: system-runner is not installed yet; run bootstrap first"
+    return 127
+  fi
+  sudo -n "$runner" "$@"
+}
+f() {
+  free "$@"
+}
 cx() {
-  codex-zellij-theme --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "$@"
+  zellij-theme-run codex "$@"
 }
 
 # Nix
 alias update="nix flake update --flake \$(readlink -f /etc/nixos/)"
 {{- if eq .chezmoi.os "darwin" }}
-alias rebuild="nh darwin switch \$(readlink -f /etc/nixos/)"
+rebuild() {
+  nh darwin switch "$(readlink -f /etc/nixos/)" "$@"
+}
+check() {
+  free darwin-rebuild check --flake "$(readlink -f /etc/nixos/)" "$@"
+}
+micfix() {
+  free killall coreaudiod "$@"
+}
 {{- else }}
-alias rebuild="nh os switch \$(readlink -f /etc/nixos/)"
+rebuild() {
+  free nh os switch "$(readlink -f /etc/nixos/)" "$@"
+}
+check() {
+  nix flake check "$(readlink -f /etc/nixos/)" "$@"
+}
+micfix() {
+  systemctl --user restart pipewire pipewire-pulse wireplumber "$@"
+}
 {{- end }}
 alias cza="chezmoi apply --force"
 
@@ -120,9 +147,10 @@ export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border
-  --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284
-  --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf
-  --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+  --color=bg+:#414559,bg:#303446,spinner:#f4b8e4,hl:#e78284
+  --color=fg:#c6d0f5,header:#e78284,info:#f4b8e4,pointer:#f4b8e4
+  --color=marker:#babbf1,fg+:#c6d0f5,prompt:#f4b8e4,hl+:#e78284
+  --color=selected-bg:#51576d,border:#737994,label:#c6d0f5"
 
 # Shadow system python
 export UV_PYTHON_PREFERENCE="only-managed"
@@ -143,5 +171,6 @@ if type compdef >/dev/null 2>&1; then
   compdef _pip pip pip3
 fi
 
-# Load zoxide last so its directory-jump hook wins over earlier cd aliases.
+# Load zoxide last so its directory-jump hook wins.
 [[ -r "$HOME/.cache/zoxide/init.zsh" ]] && source "$HOME/.cache/zoxide/init.zsh"
+alias cd="z"

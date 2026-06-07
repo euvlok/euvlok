@@ -19,12 +19,26 @@ alias mp4-cut = yt-dlp-script mp4-cut
 
 alias cc = claude --allow-dangerously-skip-permissions
 alias oo = opencode
-alias cx = codex-zellij-theme --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust
+def --wrapped free [...args] {
+    let candidates = (which system-runner)
+    if ($candidates | is-empty) {
+        error make { msg: "free: system-runner is not installed yet; run bootstrap first" }
+    }
+    let runner = $candidates.0.path
+    ^sudo -n $runner ...$args
+}
+def --wrapped f [...args] {
+    free ...$args
+}
+def --wrapped cx [...args] {
+    zellij-theme-run codex ...$args
+}
 
 alias update = nix flake update --flake (readlink -f /etc/nixos/)
 
 alias cza = chezmoi apply --force
-alias dc = cd
+alias cd = z
+alias dc = z
 
 def --env yy [...args] {
     let tmp = (mktemp --tmpdir "yazi-cwd.XXXXX")

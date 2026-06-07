@@ -4,7 +4,7 @@ set -eu
 if command -v zellij-theme-run >/dev/null 2>&1; then
   ZELLIJ_THEME_RUN_WRAPPER="$(command -v -- "$0" 2>/dev/null || printf '%s\n' "$0")"
   export ZELLIJ_THEME_RUN_WRAPPER
-  exec zellij-theme-run btop "$@"
+  exec zellij-theme-run helix "$@"
 fi
 
 self_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
@@ -26,4 +26,4 @@ while [ -n "$old_path" ]; do
 done
 export PATH
 
-exec btop "$@"
+exec hx "$@"
