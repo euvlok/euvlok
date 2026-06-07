@@ -1,6 +1,7 @@
 use std::io::{Cursor, Read as _};
 use std::path::{Path, PathBuf};
 
+use anyhow::{Context as _, Result, anyhow, bail};
 use clap::Parser;
 use dotfiles_common::hash;
 use dotfiles_common::http::Client;
@@ -9,8 +10,6 @@ use dotfiles_common::process::{self, argv};
 use itertools::Itertools;
 use serde::Deserialize;
 use url::Url;
-
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Debug, Parser)]
 #[command(
@@ -162,14 +161,11 @@ fn main() {
 fn run() -> Result<()> {
     let cli = Cli::parse();
     if !cli.input.exists() {
-        return Err(format!("input file not found: {}", cli.input.display()).into());
+        bail!("input file not found: {}", cli.input.display());
     }
-    let output = cli.output.unwrap_or_else(|| {
-        cli.input
-            .parent()
-            .unwrap_or(Path::new("."))
-            .join("extensions.nix")
-    });
+    let output = cli
+        .output
+        .unwrap_or_else(|| default_output_path(&cli.input));
     let input = parse_nix_input(&cli.input)?;
     let extensions = input
         .extensions
@@ -216,6 +212,13 @@ fn default_source() -> Source {
     Source::ChromeStore
 }
 
+fn default_output_path(input: &Path) -> PathBuf {
+    input.parent().map_or_else(
+        || PathBuf::from("extensions.nix"),
+        |parent| parent.join("extensions.nix"),
+    )
+}
+
 fn parse_nix_input(path: &Path) -> Result<InputFile> {
     let output = process::trimmed_text(&argv([
         "nix",
@@ -223,8 +226,9 @@ fn parse_nix_input(path: &Path) -> Result<InputFile> {
         "--json",
         "--file",
         &path.to_string_lossy(),
-    ]))?;
-    Ok(serde_json::from_str(&output)?)
+    ]))
+    .with_context(|| format!("failed to evaluate {}", path.display()))?;
+    serde_json::from_str(&output).context("failed to parse evaluated extension input")
 }
 
 fn chromium_major_version() -> String {
@@ -287,7 +291,7 @@ fn extension_id(extension: &Extension) -> Result<&str> {
         .id
         .as_deref()
         .filter(|id| !id.trim().is_empty())
-        .ok_or_else(|| "extension missing id field".into())
+        .ok_or_else(|| anyhow!("extension missing id field"))
 }
 
 fn resolve_download_url(
@@ -305,21 +309,20 @@ fn resolve_download_url(
         Source::Amo if browser == Browser::Firefox => amo_url(client, extension_id(extension)?),
         Source::Bpc => Ok((bpc_url(browser)?, None)),
         Source::Url => extension.url.clone().map(|url| (url, None)).ok_or_else(|| {
-            format!(
+            anyhow!(
                 "extension {} has source url but no url field",
                 extension_id(extension).unwrap_or("<unknown>")
             )
-            .into()
         }),
         Source::GithubReleases => Ok((
             github_release_url(client, extension, config, browser)?,
             None,
         )),
-        _ => Err(format!(
+        _ => bail!(
             "source {:?} is not supported for {:?}",
-            extension.source, browser
-        )
-        .into()),
+            extension.source,
+            browser
+        ),
     }
 }
 
@@ -328,7 +331,7 @@ fn chrome_store_url(id: &str, version: Option<&str>) -> Result<String> {
     let url = chrome_store_request_url(id, version)?;
     client
         .redirect_location(url.as_str())?
-        .ok_or_else(|| "Chrome Store did not return a redirect".into())
+        .ok_or_else(|| anyhow!("Chrome Store did not return a redirect"))
 }
 
 fn chrome_store_request_url(id: &str, version: Option<&str>) -> Result<Url> {
@@ -342,15 +345,20 @@ fn chrome_store_request_url(id: &str, version: Option<&str>) -> Result<Url> {
 }
 
 fn amo_url(client: &Client, slug: &str) -> Result<(String, Option<String>)> {
-    let addon = client.json::<AmoAddon>(&format!(
-        "https://addons.mozilla.org/api/v5/addons/addon/{slug}/"
-    ))?;
+    let url = amo_api_url(slug)?;
+    let addon = client.json::<AmoAddon>(url.as_str())?;
     let url = addon
         .current_version
         .and_then(|version| version.file)
         .and_then(|file| file.url)
-        .ok_or_else(|| format!("AMO addon {slug} does not include a download URL"))?;
+        .ok_or_else(|| anyhow!("AMO addon {slug} does not include a download URL"))?;
     Ok((url, addon.guid))
+}
+
+fn amo_api_url(slug: &str) -> Result<Url> {
+    let mut url = Url::parse("https://addons.mozilla.org/api/v5/addons/addon")?;
+    append_path_segments(&mut url, [slug, ""])?;
+    Ok(url)
 }
 
 fn bpc_url(browser: Browser) -> Result<String> {
@@ -367,10 +375,17 @@ fn bpc_url(browser: Browser) -> Result<String> {
     let commit = output
         .split_whitespace()
         .next()
-        .ok_or("failed to get latest BPC commit")?;
-    Ok(format!(
-        "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file={filename}&inline=false&commit={commit}"
-    ))
+        .ok_or_else(|| anyhow!("failed to get latest BPC commit"))?;
+    bpc_download_url(filename, commit)
+}
+
+fn bpc_download_url(filename: &str, commit: &str) -> Result<String> {
+    let mut url = Url::parse("https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw")?;
+    url.query_pairs_mut()
+        .append_pair("file", filename)
+        .append_pair("inline", "false")
+        .append_pair("commit", commit);
+    Ok(url.to_string())
 }
 
 fn github_release_url(
@@ -383,28 +398,34 @@ fn github_release_url(
         .owner
         .as_ref()
         .or(config.owner.as_ref())
-        .ok_or("GitHub release source requires owner")?;
+        .ok_or_else(|| anyhow!("GitHub release source requires owner"))?;
     let repo = extension
         .repo
         .as_ref()
         .or(config.repo.as_ref())
-        .ok_or("GitHub release source requires repo")?;
+        .ok_or_else(|| anyhow!("GitHub release source requires repo"))?;
     let version = extension.version.as_deref().unwrap_or("latest");
     let release = if version == "latest" {
         github_get::<GithubRelease>(
             client,
-            &format!("https://api.github.com/repos/{owner}/{repo}/releases/latest"),
+            github_api_release_url(owner, repo, GithubReleaseEndpoint::Latest)?.as_str(),
         )?
     } else {
         let normalized = version.trim_start_matches('v');
         github_get::<GithubRelease>(
             client,
-            &format!("https://api.github.com/repos/{owner}/{repo}/releases/tags/v{normalized}"),
+            github_api_release_url(
+                owner,
+                repo,
+                GithubReleaseEndpoint::Tag(&format!("v{normalized}")),
+            )?
+            .as_str(),
         )
         .or_else(|_| {
             github_get::<GithubRelease>(
                 client,
-                &format!("https://api.github.com/repos/{owner}/{repo}/releases/tags/{normalized}"),
+                github_api_release_url(owner, repo, GithubReleaseEndpoint::Tag(normalized))?
+                    .as_str(),
             )
         })?
     };
@@ -412,17 +433,15 @@ fn github_release_url(
         .tag_name
         .as_deref()
         .or(release.name.as_deref())
-        .ok_or("GitHub release is missing tag/name")?
+        .ok_or_else(|| anyhow!("GitHub release is missing tag/name"))?
         .trim_start_matches('v')
         .to_owned();
     if let Some(pattern) = extension.pattern.as_ref().or(config.pattern.as_ref()) {
-        return Ok(format!(
-            "https://github.com/{owner}/{repo}/{}",
-            pattern
-                .replace("{version}", &release_version)
-                .replace("{name}", extension_id(extension)?)
-                .replace("{id}", extension_id(extension)?)
-        ));
+        let path = pattern
+            .replace("{version}", &release_version)
+            .replace("{name}", extension_id(extension)?)
+            .replace("{id}", extension_id(extension)?);
+        return github_pattern_url(owner, repo, &path);
     }
     let expected = format!(
         "{}.{}",
@@ -435,7 +454,7 @@ fn github_release_url(
         .find(|asset| asset.name == expected)
         .map(|asset| asset.browser_download_url)
         .ok_or_else(|| {
-            format!("GitHub release {release_version} does not include asset {expected}").into()
+            anyhow!("GitHub release {release_version} does not include asset {expected}")
         })
 }
 
@@ -443,13 +462,59 @@ fn github_get<T: for<'de> Deserialize<'de>>(client: &Client, url: &str) -> Resul
     let text = if let Some(token) = github_token() {
         let response = client.get_bearer_text(url, &token)?;
         if !response.status.is_success() {
-            return Err(format!("GitHub returned status {} for {url}", response.status).into());
+            bail!("GitHub returned status {} for {url}", response.status);
         }
         response.body
     } else {
         client.text(url)?
     };
-    Ok(serde_json::from_str(&text)?)
+    serde_json::from_str(&text)
+        .with_context(|| format!("failed to parse GitHub response from {url}"))
+}
+
+#[derive(Debug, Clone, Copy)]
+enum GithubReleaseEndpoint<'a> {
+    Latest,
+    Tag(&'a str),
+}
+
+fn github_api_release_url(
+    owner: &str,
+    repo: &str,
+    endpoint: GithubReleaseEndpoint<'_>,
+) -> Result<Url> {
+    let mut url = Url::parse("https://api.github.com/repos")?;
+    match endpoint {
+        GithubReleaseEndpoint::Latest => {
+            append_path_segments(&mut url, [owner, repo, "releases", "latest"])?;
+        }
+        GithubReleaseEndpoint::Tag(tag) => {
+            append_path_segments(&mut url, [owner, repo, "releases", "tags", tag])?;
+        }
+    }
+    Ok(url)
+}
+
+fn github_pattern_url(owner: &str, repo: &str, path: &str) -> Result<String> {
+    let mut url = Url::parse("https://github.com/")?;
+    append_path_segments(&mut url, [owner, repo])?;
+    {
+        let mut segments = url
+            .path_segments_mut()
+            .map_err(|()| anyhow!("GitHub URL cannot be a base"))?;
+        segments.extend(path.trim_matches('/').split('/'));
+    }
+    Ok(url.to_string())
+}
+
+fn append_path_segments<'a>(
+    url: &mut Url,
+    segments: impl IntoIterator<Item = &'a str>,
+) -> Result<()> {
+    url.path_segments_mut()
+        .map_err(|()| anyhow!("URL cannot be a base"))?
+        .extend(segments);
+    Ok(())
 }
 
 fn github_token() -> Option<String> {
@@ -481,7 +546,7 @@ fn extract_manifest_info(bytes: &[u8]) -> Result<ManifestInfo> {
     let version = manifest
         .version
         .or(manifest.version_name)
-        .ok_or("could not extract version from manifest")?;
+        .ok_or_else(|| anyhow!("could not extract version from manifest"))?;
     let mut permissions = manifest.permissions;
     permissions.extend(if manifest.host_permissions.is_empty() {
         manifest
@@ -514,31 +579,31 @@ fn crx_zip_contents(bytes: &[u8]) -> Result<Vec<u8>> {
         return Ok(bytes.to_vec());
     }
     if bytes.len() < 12 {
-        return Err("invalid CRX header".into());
+        bail!("invalid CRX header");
     }
     let version = u32::from_le_bytes(bytes[4..8].try_into()?);
     let offset = match version {
         2 => {
             if bytes.len() < 16 {
-                return Err("invalid CRX2 header".into());
+                bail!("invalid CRX2 header");
             }
             let public_key_len = u32::from_le_bytes(bytes[8..12].try_into()?) as usize;
             let signature_len = u32::from_le_bytes(bytes[12..16].try_into()?) as usize;
             16usize
                 .checked_add(public_key_len)
                 .and_then(|value| value.checked_add(signature_len))
-                .ok_or("invalid CRX2 header length")?
+                .ok_or_else(|| anyhow!("invalid CRX2 header length"))?
         }
         3 => {
             let header_len = u32::from_le_bytes(bytes[8..12].try_into()?) as usize;
             12usize
                 .checked_add(header_len)
-                .ok_or("invalid CRX3 header length")?
+                .ok_or_else(|| anyhow!("invalid CRX3 header length"))?
         }
-        other => return Err(format!("unsupported CRX version {other}").into()),
+        other => bail!("unsupported CRX version {other}"),
     };
     if offset > bytes.len() {
-        return Err("CRX zip offset is out of bounds".into());
+        bail!("CRX zip offset is out of bounds");
     }
     Ok(bytes[offset..].to_vec())
 }
@@ -736,6 +801,27 @@ mod tests {
                 .find(|(name, _)| name == "x")
                 .map(|(_, value)| value.into_owned()),
             Some("id=abc&installsource=ondemand&uc".to_owned())
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn builds_source_urls_with_url_builder() -> Result<()> {
+        assert_eq!(
+            amo_api_url("ublock-origin")?.as_str(),
+            "https://addons.mozilla.org/api/v5/addons/addon/ublock-origin/"
+        );
+        assert_eq!(
+            bpc_download_url("bypass.xpi", "abc123")?,
+            "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass.xpi&inline=false&commit=abc123"
+        );
+        assert_eq!(
+            github_api_release_url("owner", "repo", GithubReleaseEndpoint::Tag("v1.2.3"))?.as_str(),
+            "https://api.github.com/repos/owner/repo/releases/tags/v1.2.3"
+        );
+        assert_eq!(
+            github_pattern_url("owner", "repo", "releases/download/v1.2.3/addon.xpi")?,
+            "https://github.com/owner/repo/releases/download/v1.2.3/addon.xpi"
         );
         Ok(())
     }
