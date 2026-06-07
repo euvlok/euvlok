@@ -64,3 +64,56 @@ pub(crate) fn internal_error_response() -> FixtureHttpResponse {
         Err(_) => response,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use std::io::Read;
+
+    #[test]
+    fn builds_json_html_headers_and_not_found_responses()
+    -> std::result::Result<(), Box<dyn std::error::Error>> {
+        let mut headers = BTreeMap::new();
+        headers.insert("X-Fixture".into(), "yes".into());
+        let response = FixtureResponse {
+            status: StatusCode(202),
+            content_type: None,
+            headers,
+            body: Body::Json(json!({ "ok": true })),
+        }
+        .to_response()?;
+
+        assert_eq!(response.status_code(), StatusCode(202));
+        assert_header(&response, "Content-Type", "application/json");
+        assert_header(&response, "X-Fixture", "yes");
+        assert_eq!(body_text(response)?, r#"{"ok":true}"#);
+
+        let response = FixtureResponse {
+            status: StatusCode(200),
+            content_type: None,
+            headers: BTreeMap::new(),
+            body: Body::Html("<h1>ok</h1>".into()),
+        }
+        .to_response()?;
+        assert_header(&response, "Content-Type", "text/html; charset=utf-8");
+
+        let response = not_found_response()?;
+        assert_eq!(response.status_code(), StatusCode(404));
+        assert_eq!(body_text(response)?, r#"{"error":"not_found"}"#);
+        Ok(())
+    }
+
+    fn assert_header(response: &FixtureHttpResponse, name: &str, value: &str) {
+        assert!(response.headers().iter().any(|header| {
+            header.field.to_string().eq_ignore_ascii_case(name) && header.value.as_str() == value
+        }));
+    }
+
+    fn body_text(response: FixtureHttpResponse) -> std::io::Result<String> {
+        let mut reader = response.into_reader();
+        let mut body = String::new();
+        reader.read_to_string(&mut body)?;
+        Ok(body)
+    }
+}

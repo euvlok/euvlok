@@ -123,3 +123,70 @@ impl PathMatcher {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn matches_exact_prefix_suffix_and_methods() -> Result<()> {
+        let exact = Route::try_from_config(
+            0,
+            RouteConfig {
+                name: None,
+                method: Some("GET".into()),
+                path: Some("/exact".into()),
+                path_prefix: None,
+                path_suffix: None,
+                status: None,
+                content_type: None,
+                headers: Default::default(),
+                body: None,
+                body_html: None,
+                body_json: None,
+            },
+        )?;
+        assert!(exact.matches(&Method::Get, "/exact"));
+        assert!(!exact.matches(&Method::Post, "/exact"));
+        assert!(!exact.matches(&Method::Get, "/exactly"));
+
+        let prefix = Route::try_from_config(
+            1,
+            RouteConfig {
+                name: None,
+                method: None,
+                path: None,
+                path_prefix: Some("/assets/".into()),
+                path_suffix: None,
+                status: None,
+                content_type: None,
+                headers: Default::default(),
+                body: None,
+                body_html: None,
+                body_json: Some(json!({ "ok": true })),
+            },
+        )?;
+        assert!(prefix.matches(&Method::Get, "/assets/app.js"));
+
+        let suffix = Route::try_from_config(
+            2,
+            RouteConfig {
+                name: None,
+                method: None,
+                path: None,
+                path_prefix: None,
+                path_suffix: Some(".html".into()),
+                status: None,
+                content_type: None,
+                headers: Default::default(),
+                body: None,
+                body_html: Some("<h1>ok</h1>".into()),
+                body_json: None,
+            },
+        )?;
+        assert!(suffix.matches(&Method::Get, "/index.html"));
+        assert!(!suffix.matches(&Method::Get, "/index.json"));
+        Ok(())
+    }
+}
