@@ -1,4 +1,5 @@
 use super::*;
+use crate::platform::Predicate;
 
 #[test]
 fn validates_unique_tool_and_bin_names() -> Result<(), CatalogError> {

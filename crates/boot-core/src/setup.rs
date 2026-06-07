@@ -178,7 +178,7 @@ fn ensure_windows_user_path(ctx: &Context) -> Result<(), SetupError> {
     environment.set_raw_value(
         "Path",
         &RegValue {
-            bytes: encode_windows_registry_string(&updated),
+            bytes: encode_windows_registry_string(&updated).into(),
             vtype: value_type,
         },
     )?;

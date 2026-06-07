@@ -1,6 +1,5 @@
 use comfy_table::{Cell, Table, presets::UTF8_FULL_CONDENSED};
 use dotfiles_common::{fs, process};
-use itertools::Itertools;
 use serde::Serialize;
 use thiserror::Error;
 
@@ -166,6 +165,7 @@ fn sanitize_version(raw: &str) -> String {
         .lines()
         .map(str::trim)
         .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>()
         .join(" ");
     let prefix = collapsed
         .split_once(',')

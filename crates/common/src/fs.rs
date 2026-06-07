@@ -50,7 +50,7 @@ pub fn make_executable(path: impl AsRef<Path>) -> std::io::Result<()> {
         use std::os::unix::fs::PermissionsExt;
         let metadata = fs::metadata(path.as_ref())?;
         let mut permissions = metadata.permissions();
-        permissions.set_mode(permissions.mode() | 0o755);
+        permissions.set_mode(permissions.mode() | 0o111);
         fs::set_permissions(path, permissions)?;
     }
     #[cfg(not(unix))]
@@ -191,6 +191,24 @@ mod tests {
             let mode = fs::metadata(&path).expect("metadata").permissions().mode();
             assert_ne!(mode & 0o111, 0);
         }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn make_executable_preserves_existing_read_write_bits() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let temp = tempfile::tempdir().expect("tempdir");
+        let path = temp.path().join("private-script");
+        fs::write(&path, b"#!/bin/sh\n").expect("write script");
+        let mut permissions = fs::metadata(&path).expect("metadata").permissions();
+        permissions.set_mode(0o600);
+        fs::set_permissions(&path, permissions).expect("set restrictive mode");
+
+        make_executable(&path).expect("make executable");
+
+        let mode = fs::metadata(&path).expect("metadata").permissions().mode() & 0o777;
+        assert_eq!(mode, 0o711);
     }
 
     #[test]

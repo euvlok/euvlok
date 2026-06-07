@@ -1,3 +1,7 @@
+#[cfg(unix)]
+use std::io::Read;
+#[cfg(unix)]
+use std::path::Component;
 use std::path::{Path, PathBuf};
 
 use dotfiles_common::fs;
@@ -142,6 +146,7 @@ fn managed_with_policy(
             Ok(old_target) => {
                 // Only replace links that already point into this tool's managed
                 // opt directory. Anything else may belong to the user or another manager.
+                let old_target = resolved_symlink_target(&link_path, old_target);
                 if policy == ExistingLinkPolicy::ManagedOnly
                     && !fs::relative_under(ctx.opt_dir.join(tool), &old_target)
                 {
@@ -150,17 +155,103 @@ fn managed_with_policy(
                 fse::remove_file(&link_path)?;
             }
             Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
-            Err(_) if policy == ExistingLinkPolicy::AdoptExisting => {
+            Err(_) => {
                 let metadata = fse::symlink_metadata(&link_path)?;
                 if metadata.is_dir() {
                     return Err(LinkError::NonManagedLinkExists(link_path));
                 }
+                if policy == ExistingLinkPolicy::ManagedOnly
+                    && !is_previous_managed_copy(ctx, tool, target, &link_path)?
+                {
+                    return Err(LinkError::NonManagedLinkExists(link_path));
+                }
                 fse::remove_file(&link_path)?;
             }
-            Err(_) => return Err(LinkError::NonManagedLinkExists(link_path)),
         }
         unix_fs::symlink(target, link_path)?;
         Ok(())
+    }
+}
+
+#[cfg(unix)]
+fn resolved_symlink_target(link_path: &Path, target: PathBuf) -> PathBuf {
+    if target.is_absolute() {
+        target
+    } else {
+        link_path
+            .parent()
+            .map_or(target.clone(), |parent| parent.join(target))
+    }
+}
+
+#[cfg(unix)]
+fn is_previous_managed_copy(
+    ctx: &Context,
+    tool: &str,
+    target: &Path,
+    existing: &Path,
+) -> Result<bool, LinkError> {
+    let tool_root = ctx.opt_dir.join(tool);
+    let Ok(target_relative) = target.strip_prefix(&tool_root) else {
+        return Ok(false);
+    };
+    let Some(payload_relative) = path_after_first_component(target_relative) else {
+        return Ok(false);
+    };
+    let metadata = fse::metadata(existing)?;
+    if !metadata.is_file() {
+        return Ok(false);
+    }
+
+    for entry in fse::read_dir(&tool_root)? {
+        let entry = entry?;
+        let candidate = entry.path().join(&payload_relative);
+        if candidate == target || !candidate.is_file() {
+            continue;
+        }
+        if files_equal(existing, &candidate)? {
+            return Ok(true);
+        }
+    }
+
+    Ok(false)
+}
+
+#[cfg(unix)]
+fn path_after_first_component(path: &Path) -> Option<PathBuf> {
+    let mut components = path.components();
+    match components.next()? {
+        Component::Normal(_) => {}
+        _ => return None,
+    }
+    let rest = components.as_path();
+    (!rest.as_os_str().is_empty()).then(|| rest.to_path_buf())
+}
+
+#[cfg(unix)]
+fn files_equal(left: &Path, right: &Path) -> Result<bool, LinkError> {
+    let left_metadata = fse::metadata(left)?;
+    let right_metadata = fse::metadata(right)?;
+    if left_metadata.len() != right_metadata.len() {
+        return Ok(false);
+    }
+
+    let mut left = fse::File::open(left)?;
+    let mut right = fse::File::open(right)?;
+    let mut left_buf = [0; 8192];
+    let mut right_buf = [0; 8192];
+    loop {
+        let left_read = left.read(&mut left_buf)?;
+        let right_read = right.read(&mut right_buf)?;
+        if left_read != right_read {
+            return Ok(false);
+        }
+        if left_read == 0 {
+            return Ok(true);
+        }
+        if left_buf[..left_read] != right_buf[..right_read] {
+            return Ok(false);
+        }
     }
 }
 
@@ -279,6 +370,36 @@ mod tests {
             fse::read_link(ctx.bin_dir.join("demo")).expect("read link"),
             target
         );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn managed_link_replaces_previous_managed_file_copy() {
+        let (_temp, ctx) = context();
+        let previous = write_target(&ctx, "demo", "1", "demo");
+        let current = write_target(&ctx, "demo", "2", "demo");
+        fse::copy(&previous, ctx.bin_dir.join("demo")).expect("copy previous binary");
+
+        managed(&ctx, "demo", &current, "demo").expect("replace previous copy");
+
+        assert_eq!(
+            fse::read_link(ctx.bin_dir.join("demo")).expect("read link"),
+            current
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn managed_link_rejects_unrelated_existing_files() {
+        let (_temp, ctx) = context();
+        let target = write_target(&ctx, "demo", "1", "demo");
+        fse::write(ctx.bin_dir.join("demo"), "external direct install")
+            .expect("write existing file");
+
+        assert!(matches!(
+            managed(&ctx, "demo", &target, "demo"),
+            Err(LinkError::NonManagedLinkExists(_))
+        ));
     }
 
     #[cfg(unix)]
