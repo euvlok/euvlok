@@ -1,49 +1,56 @@
 mod session;
 
-use clap::Parser;
+use std::ffi::OsString;
 
-use crate::{Result, detect_theme, run_inherit};
+use crate::{Result, run_inherit};
 
-#[derive(Debug, Parser)]
-#[command(
-    name = "zellij-auto-theme",
-    version,
-    about = "Start Zellij with a Catppuccin theme matching the current terminal or system theme"
-)]
-struct Cli;
-
-/// Runs `zellij-auto-theme`.
+/// Runs the zellij profile for `zellij-theme-run`.
 ///
 /// # Errors
 ///
-/// Returns an error if the socket directory cannot be created, session naming
-/// fails, or Zellij cannot be executed.
-pub fn run() -> Result<i32> {
-    Cli::parse();
-
-    let selected = detect_theme();
+/// Returns an error if the socket directory cannot be created or Zellij cannot
+/// be executed.
+pub fn run_with_args(extra_args: Vec<OsString>) -> Result<i32> {
     let socket_dir = std::env::temp_dir().join(format!("zellij-{}", session::current_uid()));
     fs_err::create_dir_all(&socket_dir)?;
 
-    let session_name = session::default_session_name()?;
-    let command = duct::cmd(
-        "zellij",
-        [
-            "options",
-            "--theme",
-            selected.name,
-            "--default-layout",
-            "compact",
-            "--attach-to-session",
-            "true",
-            "--on-force-close",
-            "quit",
-            "--session-name",
-            session_name.as_str(),
-        ],
-    )
-    .env("ZELLIJ_DEFAULT_FG", selected.colors.fg)
-    .env("ZELLIJ_DEFAULT_BG", selected.colors.bg)
-    .env("ZELLIJ_SOCKET_DIR", socket_dir);
+    let mut args = default_args();
+    args.extend(extra_args);
+
+    let command = duct::cmd("zellij", args).env("ZELLIJ_SOCKET_DIR", socket_dir);
     run_inherit(&command)
+}
+
+fn default_args() -> Vec<OsString> {
+    vec![
+        OsString::from("options"),
+        OsString::from("--default-layout"),
+        OsString::from("compact"),
+        OsString::from("--attach-to-session"),
+        OsString::from("false"),
+        OsString::from("--mirror-session"),
+        OsString::from("false"),
+        OsString::from("--on-force-close"),
+        OsString::from("quit"),
+    ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ghostty_zellij_launches_fresh_session_by_default() {
+        let args = default_args();
+
+        assert!(
+            args.windows(2)
+                .any(|pair| pair == ["--attach-to-session", "false"])
+        );
+        assert!(
+            args.windows(2)
+                .any(|pair| pair == ["--mirror-session", "false"])
+        );
+        assert!(!args.contains(&OsString::from("--session-name")));
+    }
 }

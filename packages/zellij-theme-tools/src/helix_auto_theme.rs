@@ -3,52 +3,45 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use directories::BaseDirs;
+use toml_edit::{DocumentMut, value};
 
 use crate::{Error, FRAPPE, LATTE, Result, Theme, detect_theme, run_inherit};
 
 const DARK_THEME: &str = "catppuccin_frappe_pink";
 const LIGHT_THEME: &str = "catppuccin_latte_pink";
 
-/// Runs the btop profile for `zellij-theme-run`.
+/// Runs the Helix profile for `zellij-theme-run`.
 ///
 /// # Errors
 ///
-/// Returns an error if config generation fails or the real btop executable
+/// Returns an error if config generation fails or the real Helix executable
 /// cannot be found or executed.
 pub fn run_with_args(args: Vec<OsString>) -> Result<i32> {
-    let btop = find_btop()?;
+    let helix = find_helix()?;
     let base_config_path = config_arg(&args).unwrap_or_else(default_config_path);
     let base_config = read_base_config(&base_config_path)?;
-    let theme = btop_theme_name(detect_theme());
-    let themed_config = with_color_theme(&base_config, theme);
+    let theme = helix_theme_name(detect_theme());
+    let themed_config = with_theme(&base_config, theme)?;
 
     let mut config = tempfile::Builder::new()
-        .prefix("zellij-theme-run-btop-")
-        .suffix(".conf")
+        .prefix("zellij-theme-run-helix-")
+        .suffix(".toml")
         .tempfile()?;
     config.write_all(themed_config.as_bytes())?;
     config.flush()?;
 
-    let mut btop_args = Vec::with_capacity(args.len() + 2);
-    btop_args.push(OsString::from("--config"));
-    btop_args.push(config.path().as_os_str().to_owned());
-    btop_args.extend(strip_config_args(args));
+    let mut helix_args = Vec::with_capacity(args.len() + 2);
+    helix_args.push(OsString::from("--config"));
+    helix_args.push(config.path().as_os_str().to_owned());
+    helix_args.extend(strip_config_args(args));
 
-    run_inherit(&duct::cmd(btop, btop_args))
-}
-
-fn btop_theme_name(theme: Theme) -> &'static str {
-    match theme.name {
-        name if name == FRAPPE.name => DARK_THEME,
-        name if name == LATTE.name => LIGHT_THEME,
-        _ => DARK_THEME,
-    }
+    run_inherit(&duct::cmd(helix, helix_args))
 }
 
 fn default_config_path() -> PathBuf {
     BaseDirs::new()
-        .map(|dirs| dirs.home_dir().join(".config/btop/btop.conf"))
-        .unwrap_or_else(|| PathBuf::from(".config/btop/btop.conf"))
+        .map(|dirs| dirs.home_dir().join(".config/helix/config.toml"))
+        .unwrap_or_else(|| PathBuf::from(".config/helix/config.toml"))
 }
 
 fn read_base_config(path: &Path) -> Result<String> {
@@ -88,41 +81,37 @@ fn strip_config_args(args: Vec<OsString>) -> Vec<OsString> {
     stripped
 }
 
-fn with_color_theme(config: &str, theme: &str) -> String {
-    let replacement = format!("color_theme = \"{theme}\"");
-    let mut changed = false;
-    let mut output = String::with_capacity(config.len() + replacement.len() + 1);
-
-    for line in config.lines() {
-        if line.trim_start().starts_with("color_theme =") {
-            output.push_str(&replacement);
-            changed = true;
-        } else {
-            output.push_str(line);
-        }
-        output.push('\n');
+fn helix_theme_name(theme: Theme) -> &'static str {
+    match theme.name {
+        name if name == FRAPPE.name => DARK_THEME,
+        name if name == LATTE.name => LIGHT_THEME,
+        _ => DARK_THEME,
     }
-
-    if !changed {
-        output.push_str(&replacement);
-        output.push('\n');
-    }
-
-    output
 }
 
-fn find_btop() -> Result<PathBuf> {
+fn with_theme(config: &str, theme: &str) -> Result<String> {
+    let mut doc = if config.trim().is_empty() {
+        DocumentMut::new()
+    } else {
+        config.parse::<DocumentMut>()?
+    };
+    doc["theme"] = value(theme);
+    Ok(doc.to_string())
+}
+
+fn find_helix() -> Result<PathBuf> {
     let skip = skip_paths();
-    which::which_all("btop")
-        .map_err(|_| Error::BtopNotFound)?
+    which::which_all("hx")
+        .or_else(|_| which::which_all("helix"))
+        .map_err(|_| Error::HelixNotFound)?
         .find(|candidate| !skip.iter().any(|path| same_path(candidate, path)))
-        .ok_or(Error::BtopNotFound)
+        .ok_or(Error::HelixNotFound)
 }
 
 fn skip_paths() -> Vec<PathBuf> {
     let mut paths = Vec::new();
     if let Some(wrapper) = std::env::var_os("ZELLIJ_THEME_RUN_WRAPPER")
-        .or_else(|| std::env::var_os("BTOP_AUTO_THEME_WRAPPER"))
+        .or_else(|| std::env::var_os("HELIX_AUTO_THEME_WRAPPER"))
     {
         paths.push(PathBuf::from(wrapper));
     }
@@ -147,22 +136,33 @@ mod tests {
     use super::*;
 
     #[test]
-    fn replaces_existing_color_theme() {
+    fn replaces_existing_theme() -> Result<()> {
         assert_eq!(
-            with_color_theme(
-                "foo = true\ncolor_theme = \"old\"\nbar = false\n",
+            with_theme(
+                "theme = \"dracula\"\n\n[editor]\nline-number = \"relative\"\n",
                 LIGHT_THEME
-            ),
-            "foo = true\ncolor_theme = \"catppuccin_latte_pink\"\nbar = false\n",
+            )?,
+            "theme = \"catppuccin_latte_pink\"\n\n[editor]\nline-number = \"relative\"\n",
         );
+        Ok(())
     }
 
     #[test]
-    fn appends_color_theme_when_missing() {
+    fn appends_theme_when_missing() -> Result<()> {
         assert_eq!(
-            with_color_theme("foo = true\n", DARK_THEME),
-            "foo = true\ncolor_theme = \"catppuccin_frappe_pink\"\n",
+            with_theme("[editor]\nmouse = true\n", DARK_THEME)?,
+            "theme = \"catppuccin_frappe_pink\"\n[editor]\nmouse = true\n",
         );
+        Ok(())
+    }
+
+    #[test]
+    fn creates_config_when_base_config_is_missing() -> Result<()> {
+        assert_eq!(
+            with_theme("", LIGHT_THEME)?,
+            "theme = \"catppuccin_latte_pink\"\n",
+        );
+        Ok(())
     }
 
     #[test]
@@ -173,12 +173,12 @@ mod tests {
             OsString::from("-c"),
             OsString::from("two"),
             OsString::from("--config=three"),
-            OsString::from("--preset"),
-            OsString::from("1"),
+            OsString::from("--health"),
+            OsString::from("all"),
         ];
         assert_eq!(
             strip_config_args(args),
-            vec![OsString::from("--preset"), OsString::from("1")],
+            vec![OsString::from("--health"), OsString::from("all")],
         );
     }
 }
