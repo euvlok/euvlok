@@ -1,5 +1,6 @@
 use crate::context::RebaseContext;
 use anyhow::{Context, Result};
+use fs_err as fs;
 use gix::refs::Target;
 use gix::refs::transaction::{Change, LogChange, PreviousValue, RefEdit, RefLog};
 use std::path::PathBuf;
@@ -35,7 +36,7 @@ impl Backup {
                 format!("failed to inspect backup manifest {}", manifest.display())
             })?
         {
-            std::fs::remove_file(manifest).with_context(|| {
+            fs::remove_file(manifest).with_context(|| {
                 format!("failed to clean up backup manifest {}", manifest.display())
             })?;
         }
@@ -85,7 +86,7 @@ pub fn create(ctx: &RebaseContext) -> Result<Backup> {
     })
     .with_context(|| format!("failed to create backup ref {ref_name}"))?;
 
-    std::fs::create_dir_all(&ctx.backup_dir).with_context(|| {
+    fs::create_dir_all(&ctx.backup_dir).with_context(|| {
         format!(
             "failed to create backup directory {}",
             ctx.backup_dir.display()
@@ -94,7 +95,7 @@ pub fn create(ctx: &RebaseContext) -> Result<Backup> {
     let manifest = ctx
         .backup_dir
         .join(format!("{repo_name}-{backup_id}.auto-rebase-backup"));
-    std::fs::write(
+    fs::write(
         &manifest,
         format!(
             "repo={}\nbranch={}\nhead={}\nref={}\n",

@@ -1,6 +1,7 @@
 use crate::constants::DEFAULT_REMOTE;
 use crate::jj;
 use anyhow::{Context, Result, bail};
+use fs_err as fs;
 use gix::bstr::{BStr, ByteSlice};
 use gix::refs::Target;
 use gix::refs::transaction::{Change, LogChange, PreviousValue, RefEdit};
@@ -97,7 +98,7 @@ impl DeletedTrackedPaths {
             if fs_path.try_exists().with_context(|| {
                 format!("failed to inspect preserved deletion {}", fs_path.display())
             })? {
-                std::fs::remove_file(&fs_path).with_context(|| {
+                fs::remove_file(&fs_path).with_context(|| {
                     format!(
                         "failed to restore deleted file state for {}",
                         fs_path.display()
@@ -213,7 +214,7 @@ impl DirtyFileContents {
             if fs_path.is_file() {
                 files.push(DirtyFile {
                     path,
-                    contents: std::fs::read(&fs_path).with_context(|| {
+                    contents: fs::read(&fs_path).with_context(|| {
                         format!("failed to snapshot dirty file {}", fs_path.display())
                     })?,
                 });
@@ -227,11 +228,11 @@ impl DirtyFileContents {
         for file in &self.files {
             let fs_path = root.join(&file.path);
             if let Some(parent) = fs_path.parent() {
-                std::fs::create_dir_all(parent).with_context(|| {
+                fs::create_dir_all(parent).with_context(|| {
                     format!("failed to create parent directory {}", parent.display())
                 })?;
             }
-            std::fs::write(&fs_path, &file.contents)
+            fs::write(&fs_path, &file.contents)
                 .with_context(|| format!("failed to restore dirty file {}", fs_path.display()))?;
         }
 

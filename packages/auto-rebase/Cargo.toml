@@ -17,6 +17,7 @@ workspace = true
 anyhow.workspace = true
 clap.workspace = true
 futures.workspace = true
+fs-err.workspace = true
 gix.workspace = true
 jj-lib.workspace = true
 notify.workspace = true
