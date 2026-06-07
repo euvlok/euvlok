@@ -133,7 +133,7 @@
         };
         bootstrap = mkRustPackage {
           name = "bootstrap-cli";
-          cratePath = "crates/bootstrap-cli";
+          cratePath = "crates/boot-cli";
           mainProgram = "bootstrap";
         };
         browser-extension-update = mkRustPackage {
@@ -147,15 +147,25 @@
         };
         chezmoi-support = mkRustPackage {
           name = "chezmoi-support";
-          cratePath = "crates/chezmoi-support";
+          cratePath = "crates/chezmoi";
         };
+        gh-hide-comment = mkRustPackage { name = "gh-hide-comment"; };
         github-maintenance = mkRustPackage { name = "github-maintenance"; };
         http-fixture = mkRustPackage { name = "http-fixture"; };
+        lsp-diagnostic-filter = mkRustPackage {
+          name = "lsp-diagnostic-filter";
+          mainProgram = "nushell-lsp-filter";
+        };
         nvidia-prefetch = mkRustPackage { name = "nvidia-prefetch"; };
         zellij-theme-tools = mkRustPackage {
           name = "zellij-theme-tools";
           mainProgram = "zellij-auto-theme";
         };
+      }
+      // lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+        lenovo-con-mode = mkRustPackage { name = "lenovo-con-mode"; };
+      }
+      // {
 
         inherit kanata;
         kanata-with-cmd = kanata.override { withCmd = true; };
@@ -176,11 +186,16 @@
           browser-extension-update
           catppuccin-userstyles
           chezmoi-support
+          gh-hide-comment
           github-maintenance
           http-fixture
+          lsp-diagnostic-filter
           nvidia-prefetch
           zellij-theme-tools
           ;
+      }
+      // lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+        inherit (config.packages) lenovo-con-mode;
       };
 
       apps = lib.attrsets.mapAttrs (_: pkg: {

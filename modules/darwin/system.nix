@@ -1,4 +1,8 @@
 _: {
+  environment.pathsToLink = [
+    "/share/btop"
+  ];
+
   system = {
     # Global macOS System Settings
     defaults = {

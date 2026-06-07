@@ -7,7 +7,7 @@ use crate::response::{Body, FixtureHttpResponse, FixtureResponse};
 #[derive(Debug)]
 pub(crate) struct Route {
     name: Option<String>,
-    method: Option<String>,
+    method: Option<Method>,
     matcher: PathMatcher,
     response: FixtureResponse,
 }
@@ -64,7 +64,9 @@ impl Route {
 
         Ok(Self {
             name,
-            method: method.map(|method| method.to_ascii_uppercase()),
+            method: method
+                .map(|method| parse_method(index, method))
+                .transpose()?,
             matcher,
             response: FixtureResponse {
                 status: StatusCode(status.unwrap_or(200)),
@@ -79,7 +81,7 @@ impl Route {
         let method_matches = self
             .method
             .as_ref()
-            .is_none_or(|configured| configured.eq_ignore_ascii_case(&method.to_string()));
+            .is_none_or(|configured| configured == method);
         method_matches && self.matcher.matches(path)
     }
 
@@ -88,13 +90,20 @@ impl Route {
     }
 
     pub(crate) fn describe(&self) -> String {
-        let method = self.method.as_deref().unwrap_or("*");
+        let method = self.method.as_ref().map_or("*", Method::as_str);
         let matcher = self.matcher.describe();
         match &self.name {
             Some(name) => format!("{method} {matcher} ({name})"),
             None => format!("{method} {matcher}"),
         }
     }
+}
+
+fn parse_method(index: usize, method: String) -> Result<Method> {
+    method
+        .to_ascii_uppercase()
+        .parse()
+        .map_err(|()| Error::InvalidRouteMethod { index, method })
 }
 
 impl PathMatcher {

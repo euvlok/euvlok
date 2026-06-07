@@ -1,12 +1,14 @@
 use std::io::{Cursor, Read as _};
 use std::path::{Path, PathBuf};
 
-use base64::Engine as _;
 use clap::Parser;
+use dotfiles_common::hash;
 use dotfiles_common::http::Client;
+use dotfiles_common::nix;
 use dotfiles_common::process::{self, argv};
+use itertools::Itertools;
 use serde::Deserialize;
-use sha2::{Digest as _, Sha256};
+use url::Url;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -254,7 +256,7 @@ fn process_extension(
     let (url, addon_id) =
         resolve_download_url(client, &extension, config, browser, browser_version)?;
     let bytes = client.bytes(&url)?;
-    let hash = sha256_sri(&bytes);
+    let hash = hash::sha256_sri(&bytes);
     let manifest = extract_manifest_info(&bytes)?;
     let addon = if browser == Browser::Firefox {
         manifest
@@ -323,14 +325,20 @@ fn resolve_download_url(
 
 fn chrome_store_url(id: &str, version: Option<&str>) -> Result<String> {
     let client = Client::new_without_redirects("BrowserExtensionsUpdater")?;
-    let url = format!(
-        "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion={}&x={}",
-        version.unwrap_or("143"),
-        url_query_escape(&format!("id={id}&installsource=ondemand&uc")),
-    );
+    let url = chrome_store_request_url(id, version)?;
     client
-        .redirect_location(&url)?
+        .redirect_location(url.as_str())?
         .ok_or_else(|| "Chrome Store did not return a redirect".into())
+}
+
+fn chrome_store_request_url(id: &str, version: Option<&str>) -> Result<Url> {
+    let mut url = Url::parse("https://clients2.google.com/service/update2/crx")?;
+    url.query_pairs_mut()
+        .append_pair("response", "redirect")
+        .append_pair("acceptformat", "crx2,crx3")
+        .append_pair("prodversion", version.unwrap_or("143"))
+        .append_pair("x", &format!("id={id}&installsource=ondemand&uc"));
+    Ok(url)
 }
 
 fn amo_url(client: &Client, slug: &str) -> Result<(String, Option<String>)> {
@@ -548,11 +556,11 @@ fn generate_extension_entry(
     Ok(match browser {
         Browser::Chromium => format!(
             "  {{\n    id = {};\n    crxPath = pkgs.fetchurl {{\n      url = {};\n      name = {};\n      hash = {};\n    }};\n    version = {};\n  }}",
-            nix_string(id),
-            nix_string(url),
-            nix_string(&format!("{id}.crx")),
-            nix_string(hash),
-            nix_string(version)
+            nix::string_literal_escaping_dollar(id),
+            nix::string_literal_escaping_dollar(url),
+            nix::string_literal_escaping_dollar(&format!("{id}.crx")),
+            nix::string_literal_escaping_dollar(hash),
+            nix::string_literal_escaping_dollar(version)
         ),
         Browser::Firefox => {
             let meta = if permissions.is_empty() {
@@ -562,18 +570,22 @@ fn generate_extension_entry(
                     "platforms = platforms.all;\n      mozPermissions = [\n{}\n      ];",
                     permissions
                         .iter()
-                        .map(|permission| format!("        {}", nix_string(permission)))
-                        .collect::<Vec<_>>()
+                        .map(|permission| {
+                            format!(
+                                "        {}",
+                                nix::string_literal_escaping_dollar(permission)
+                            )
+                        })
                         .join("\n")
                 )
             };
             format!(
                 "  {{\n    pname = {};\n    version = {};\n    addonId = {};\n    url = {};\n    sha256 = {};\n    meta = with lib; {{\n      {meta}\n    }};\n  }}",
-                nix_string(id),
-                nix_string(version),
-                nix_string(addon),
-                nix_string(url),
-                nix_string(hash)
+                nix::string_literal_escaping_dollar(id),
+                nix::string_literal_escaping_dollar(version),
+                nix::string_literal_escaping_dollar(addon),
+                nix::string_literal_escaping_dollar(url),
+                nix::string_literal_escaping_dollar(hash)
             )
         }
     })
@@ -613,7 +625,7 @@ fn generate_extensions_nix(results: &[ExtensionResult], browser: Browser) -> Str
                 if let Some(condition) = &result.extension.condition {
                     lines.push(format!(
                         "  (lib.lists.optionals ({}) [",
-                        escape_nix_inline(condition)
+                        nix::escape_string_and_dollar(condition)
                     ));
                     lines.push(result.nix_entry.clone());
                     lines.push("  ])".into());
@@ -630,7 +642,7 @@ fn generate_extensions_nix(results: &[ExtensionResult], browser: Browser) -> Str
                 if let Ok(id) = extension_id(&result.extension) {
                     lines.push(format!(
                         "    \"{}\" = buildFirefoxXpiAddon {};",
-                        escape_nix_inline(id),
+                        nix::escape_string_and_dollar(id),
                         result.nix_entry
                     ));
                 }
@@ -659,39 +671,6 @@ fn write_output(path: &Path, content: &str) -> Result<()> {
         &path.to_string_lossy(),
     ]))?;
     Ok(())
-}
-
-fn sha256_sri(bytes: &[u8]) -> String {
-    format!(
-        "sha256-{}",
-        base64::engine::general_purpose::STANDARD.encode(Sha256::digest(bytes))
-    )
-}
-
-fn nix_string(value: &str) -> String {
-    format!("\"{}\"", escape_nix_inline(value))
-}
-
-fn escape_nix_inline(value: &str) -> String {
-    value
-        .replace('\\', "\\\\")
-        .replace('"', "\\\"")
-        .replace('$', "\\$")
-        .replace('\n', "\\n")
-        .replace('\r', "\\r")
-        .replace('\t', "\\t")
-}
-
-fn url_query_escape(value: &str) -> String {
-    value
-        .bytes()
-        .flat_map(|byte| match byte {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'.' | b'_' | b'~' => {
-                vec![char::from(byte)]
-            }
-            _ => format!("%{byte:02X}").chars().collect(),
-        })
-        .collect()
 }
 
 #[cfg(test)]
@@ -738,6 +717,26 @@ mod tests {
         let manifest = extract_manifest_info(&bytes)?;
         assert_eq!(manifest.version, "1.2.3");
         assert_eq!(manifest.permissions, ["tabs", "*://example.test/*"]);
+        Ok(())
+    }
+
+    #[test]
+    fn builds_chrome_store_request_url_with_nested_query() -> Result<()> {
+        let url = chrome_store_request_url("abc", Some("144"))?;
+
+        assert_eq!(url.host_str(), Some("clients2.google.com"));
+        assert_eq!(
+            url.query_pairs()
+                .find(|(name, _)| name == "prodversion")
+                .map(|(_, value)| value.into_owned()),
+            Some("144".to_owned())
+        );
+        assert_eq!(
+            url.query_pairs()
+                .find(|(name, _)| name == "x")
+                .map(|(_, value)| value.into_owned()),
+            Some("id=abc&installsource=ondemand&uc".to_owned())
+        );
         Ok(())
     }
 

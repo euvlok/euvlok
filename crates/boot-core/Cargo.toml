@@ -1,0 +1,37 @@
+[package]
+name = "bootstrap-core"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+camino.workspace = true
+comfy-table.workspace = true
+directories.workspace = true
+dotfiles-common = { path = "../common" }
+flate2.workspace = true
+fs-err.workspace = true
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tar.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+toml_edit.workspace = true
+xz2.workspace = true
+zip.workspace = true
+walkdir.workspace = true
+serde_path_to_error.workspace = true
+garde.workspace = true
+indicatif.workspace = true
+itertools.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+winreg.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

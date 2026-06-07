@@ -71,7 +71,7 @@ fn request_path(url: &str) -> String {
     }
 
     if let Ok(base) = Url::parse(REQUEST_URL_BASE)
-        && let Ok(parsed) = base.join(url)
+        && let Ok(parsed) = Url::options().base_url(Some(&base)).parse(url)
     {
         return parsed.path().to_owned();
     }

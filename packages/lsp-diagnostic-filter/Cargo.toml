@@ -1,0 +1,14 @@
+[package]
+name = "lsp-diagnostic-filter"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+lsp-server.workspace = true
+lsp-types.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

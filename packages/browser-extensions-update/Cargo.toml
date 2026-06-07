@@ -12,14 +12,14 @@ name = "browser-extension-update"
 path = "src/main.rs"
 
 [dependencies]
-base64 = "0.22.1"
 clap.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-sha2 = "0.11.0"
 fs-err.workspace = true
+url.workspace = true
 zip.workspace = true
-dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+dotfiles-common = { version = "0.1.0", path = "../../crates/common" }
+itertools.workspace = true
 
 [lints]
 workspace = true

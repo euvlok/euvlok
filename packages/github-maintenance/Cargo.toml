@@ -13,7 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap.workspace = true
-dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+dotfiles-common = { version = "0.1.0", path = "../../crates/common" }
 fs-err.workspace = true
 serde.workspace = true
 serde_json.workspace = true

@@ -13,12 +13,17 @@ path = "src/bin/codex-zellij-theme.rs"
 name = "zellij-auto-theme"
 path = "src/bin/zellij-auto-theme.rs"
 
+[[bin]]
+name = "btop-auto-theme"
+path = "src/bin/btop-auto-theme.rs"
+
 [dependencies]
-dark-light = "2.0.0"
+clap.workspace = true
+dark-light.workspace = true
 directories.workspace = true
-duct = "1.1.1"
+duct.workspace = true
 fs-err.workspace = true
-rustix = { version = "1.1.4", features = ["event", "fs", "stdio", "termios"] }
+rustix.workspace = true
 tempfile.workspace = true
 thiserror.workspace = true
 toml_edit.workspace = true

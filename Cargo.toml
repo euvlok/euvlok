@@ -1,17 +1,19 @@
 [workspace]
 members = [
-    "crates/bootstrap-cli",
-    "crates/bootstrap-core",
-    "crates/chezmoi-support",
-    "crates/dotfiles-common",
+    "crates/boot-cli",
+    "crates/boot-core",
+    "crates/chezmoi",
+    "crates/common",
     "packages/auto-rebase",
     "packages/browser-extensions-update",
     "packages/catppuccin-userstyles",
+    "packages/gh-hide-comment",
     "packages/github-maintenance",
     "packages/http-fixture",
+    "packages/lenovo-con-mode",
+    "packages/lsp-diagnostic-filter",
     "packages/nvidia-prefetch",
     "packages/zellij-theme-tools",
-    "hosts/hm/lay-by/hyprland/scripts",
 ]
 resolver = "3"
 
@@ -21,28 +23,58 @@ license = "MIT"
 repository = "https://github.com/euvlok/euvlok"
 
 [workspace.dependencies]
+anyhow = "1.0.102"
+base64 = "0.22.1"
 camino = { version = "1.2.2", features = ["serde1"] }
 clap = { version = "4.6.1", features = ["derive", "env"] }
+clap-markdown = "0.1.5"
+clap_complete = "4.6.5"
+clap_complete_command = { version = "0.6.1", features = ["nushell"] }
+clap_complete_nushell = "4.6.0"
+clap_mangen = "0.3.0"
 comfy-table = "7.2.2"
+dark-light = "2.0.0"
 directories = "6.0.0"
+duct = { version = "1.1.1", features = ["timeout"] }
 flate2 = "1.1.9"
 fs-err = "3.3.0"
-reqwest = { version = "0.13.3", default-features = false, features = ["blocking", "json", "rustls-no-provider"] }
-rustls = { version = "0.23.40", default-features = false, features = ["ring"] }
+fs-more = "0.8.1"
+futures = "0.3.32"
+garde = { version = "0.23.0", features = ["derive"] }
+gix = { version = "0.84.0", features = ["blocking-network-client"] }
+hex = "0.4.3"
+indicatif = "0.18.4"
+itertools = "0.14.0"
+jj-lib = "0.42.0"
+lsp-server = "0.7.9"
+lsp-types = "0.97.0"
+miette = { version = "7.6.0", features = ["fancy"] }
+notify = "9.0.0-rc.4"
+pollster = "0.4.0"
+reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "json", "rustls"] }
+rustix = { version = "1.1.4", features = ["event", "fs", "stdio", "termios"] }
 schemars = { version = "1.2.1", features = ["derive"] }
+secrecy = "0.10.3"
+semver = "1.0.28"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.149"
+serde_json = "1.0.150"
+serde_path_to_error = "0.1.20"
+sha1 = "0.11.0"
+sha2 = "0.11.0"
+shell-words = "1.1.1"
 tar = "0.4.46"
 tempfile = "3.27.0"
 thiserror = "2.0.18"
 tiny_http = "0.12.0"
 toml = "1.1.2"
-toml_edit = "0.25.11"
+toml_edit = "0.25.12"
 url = "2.5.8"
 walkdir = "2.5.0"
 which = "8.0.2"
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_Security", "Win32_Storage_FileSystem", "Win32_System_IO"] }
+winreg = "0.56.0"
 xz2 = "0.1.7"
-zip = { version = "8.6.0", default-features = false, features = ["deflate"] }
+zip = { version = "9.0.0-pre2", default-features = false, features = ["deflate"] }
 
 [workspace.lints.rust]
 unsafe_code = "deny"

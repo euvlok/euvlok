@@ -1,0 +1,19 @@
+x-euvlok-build: &euvlok-build
+  context: .
+  dockerfile: Dockerfile
+  pull: true
+
+services:
+  alpine:
+    image: euvlok:alpine-test
+    build:
+      <<: *euvlok-build
+      args:
+        BASE_IMAGE: alpine:3.23
+
+  fedora-44:
+    image: euvlok:fedora-44-test
+    build:
+      <<: *euvlok-build
+      args:
+        BASE_IMAGE: fedora:44

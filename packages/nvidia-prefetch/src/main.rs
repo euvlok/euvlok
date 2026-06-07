@@ -1,10 +1,12 @@
 use std::io::Read as _;
 use std::path::PathBuf;
 
-use base64::Engine as _;
 use clap::{ArgAction, Parser};
+use dotfiles_common::hash;
 use dotfiles_common::http::Client;
+use dotfiles_common::nix;
 use dotfiles_common::{fs, process};
+use semver::Version;
 use sha2::{Digest as _, Sha256};
 
 const X86_64_BASE_URL: &str = "https://download.nvidia.com/XFree86/Linux-x86_64";
@@ -43,6 +45,25 @@ struct DriverHashes {
     open_sha256: String,
     settings_sha256: String,
     persistenced_sha256: String,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+struct NvidiaVersion {
+    raw: String,
+    semver: Version,
+}
+
+impl NvidiaVersion {
+    fn parse(raw: &str) -> Option<Self> {
+        Some(Self {
+            raw: raw.to_owned(),
+            semver: parse_nvidia_version(raw)?,
+        })
+    }
+
+    fn as_str(&self) -> &str {
+        &self.raw
+    }
 }
 
 fn main() {
@@ -88,7 +109,7 @@ fn fetch_platform_versions(
     client: &Client,
     base_url: &str,
     name: &str,
-) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+) -> Result<Vec<NvidiaVersion>, Box<dyn std::error::Error>> {
     eprintln!("info: Checking {name} platform...");
     let body = client.text(&format!("{base_url}/"))?;
     let versions = parse_versions_from_index(&body);
@@ -98,7 +119,7 @@ fn fetch_platform_versions(
     Ok(versions)
 }
 
-fn parse_versions_from_index(html: &str) -> Vec<String> {
+fn parse_versions_from_index(html: &str) -> Vec<NvidiaVersion> {
     let mut versions = Vec::new();
     let mut rest = html;
     while let Some(start) = rest.find("href=") {
@@ -115,12 +136,12 @@ fn parse_versions_from_index(html: &str) -> Vec<String> {
             break;
         };
         let candidate = value[..end].trim_matches('/');
-        if is_valid_version(candidate) {
-            versions.push(candidate.to_owned());
+        if let Some(version) = NvidiaVersion::parse(candidate) {
+            versions.push(version);
         }
         rest = &value[end + 1..];
     }
-    versions.sort_by(|a, b| compare_versions(a, b).cmp(&0));
+    versions.sort_by(|left, right| left.semver.cmp(&right.semver));
     versions
 }
 
@@ -135,31 +156,35 @@ fn is_valid_version(version: &str) -> bool {
         && !version.contains("..")
 }
 
-fn compare_versions(left: &str, right: &str) -> i8 {
-    let mut left_parts = left.split('.');
-    let mut right_parts = right.split('.');
-    loop {
-        match (left_parts.next(), right_parts.next()) {
-            (None, None) => return 0,
-            (left, right) => {
-                let left = left.and_then(|part| part.parse::<u64>().ok()).unwrap_or(0);
-                let right = right.and_then(|part| part.parse::<u64>().ok()).unwrap_or(0);
-                if left < right {
-                    return -1;
-                }
-                if left > right {
-                    return 1;
-                }
-            }
-        }
+fn parse_nvidia_version(version: &str) -> Option<Version> {
+    if !is_valid_version(version) {
+        return None;
     }
+    let mut components = version
+        .split('.')
+        .map(|part| part.parse::<u64>())
+        .collect::<Result<Vec<_>, _>>()
+        .ok()?;
+    if components.len() > 3 {
+        return None;
+    }
+    components.resize(3, 0);
+    Version::parse(&format!(
+        "{}.{}.{}",
+        components[0], components[1], components[2]
+    ))
+    .ok()
 }
 
-fn latest_shared<'a>(left: &'a [String], right: &[String]) -> Option<&'a str> {
+fn latest_shared<'a>(left: &'a [NvidiaVersion], right: &[NvidiaVersion]) -> Option<&'a str> {
+    let right = right
+        .iter()
+        .map(|version| &version.semver)
+        .collect::<std::collections::HashSet<_>>();
     left.iter()
-        .filter(|version| right.iter().any(|candidate| candidate == *version))
-        .max_by(|a, b| compare_versions(a, b).cmp(&0))
-        .map(String::as_str)
+        .filter(|version| right.contains(&version.semver))
+        .max_by(|left, right| left.semver.cmp(&right.semver))
+        .map(NvidiaVersion::as_str)
 }
 
 fn exit_if_current(update: bool, driver_version: &str) -> Result<(), Box<dyn std::error::Error>> {
@@ -169,7 +194,16 @@ fn exit_if_current(update: bool, driver_version: &str) -> Result<(), Box<dyn std
     let Some(current) = current_version()? else {
         return Ok(());
     };
-    if compare_versions(driver_version, &current) < 0 {
+    let Some(requested_version) = parse_nvidia_version(driver_version) else {
+        return Err(format!("invalid NVIDIA driver version: {driver_version}").into());
+    };
+    let Some(current_version) = parse_nvidia_version(&current) else {
+        return Err(format!(
+            "invalid current NVIDIA driver version in {NVIDIA_DRIVER_FILE}: {current}"
+        )
+        .into());
+    };
+    if requested_version < current_version {
         eprintln!(
             "Refusing to downgrade NVIDIA driver from {current} to {driver_version}. Specify a version manually if this downgrade is intentional."
         );
@@ -224,7 +258,7 @@ fn fetch_driver_hash(
         }
         hasher.update(&buffer[..read]);
     }
-    Ok(sri_from_sha256(hasher.finalize().as_slice()))
+    Ok(hash::sri_from_sha256_digest(hasher.finalize().as_slice()))
 }
 
 fn prefetch_github_source_hash(
@@ -260,13 +294,6 @@ fn prefetch_github_source_hash(
         "--sri",
         &source_dir.to_string_lossy(),
     ]))?)
-}
-
-fn sri_from_sha256(digest: &[u8]) -> String {
-    format!(
-        "sha256-{}",
-        base64::engine::general_purpose::STANDARD.encode(digest)
-    )
 }
 
 fn current_version() -> Result<Option<String>, Box<dyn std::error::Error>> {
@@ -324,22 +351,13 @@ fn update_nix_file(
 fn format_nix_file(driver_version: &str, hashes: &DriverHashes) -> String {
     format!(
         "{{\n  version = \"{}\";\n  sha256_64bit = \"{}\";\n  sha256_aarch64 = \"{}\";\n  openSha256 = \"{}\";\n  settingsSha256 = \"{}\";\n  persistencedSha256 = \"{}\";\n}}\n",
-        escape_nix_string(driver_version),
-        escape_nix_string(&hashes.sha256),
-        escape_nix_string(&hashes.sha256_aarch64),
-        escape_nix_string(&hashes.open_sha256),
-        escape_nix_string(&hashes.settings_sha256),
-        escape_nix_string(&hashes.persistenced_sha256),
+        nix::escape_string(driver_version),
+        nix::escape_string(&hashes.sha256),
+        nix::escape_string(&hashes.sha256_aarch64),
+        nix::escape_string(&hashes.open_sha256),
+        nix::escape_string(&hashes.settings_sha256),
+        nix::escape_string(&hashes.persistenced_sha256),
     )
-}
-
-fn escape_nix_string(value: &str) -> String {
-    value
-        .replace('\\', "\\\\")
-        .replace('"', "\\\"")
-        .replace('\n', "\\n")
-        .replace('\r', "\\r")
-        .replace('\t', "\\t")
 }
 
 fn log_hashes(hashes: &DriverHashes) {
@@ -357,31 +375,61 @@ fn log_hashes(hashes: &DriverHashes) {
 mod tests {
     use super::*;
 
+    fn parse_versions<const N: usize>(versions: [&str; N]) -> Vec<NvidiaVersion> {
+        let parsed = versions
+            .into_iter()
+            .filter_map(NvidiaVersion::parse)
+            .collect::<Vec<_>>();
+        assert_eq!(parsed.len(), N);
+        parsed
+    }
+
     #[test]
     fn sorts_nvidia_versions_with_leading_zero_components() {
         let mut versions = ["580.126.18", "595.71.05", "575.64.05"];
-        versions.sort_by(|a, b| compare_versions(a, b).cmp(&0));
+        versions.sort_by_key(|version| parse_nvidia_version(version));
         assert_eq!(versions, ["575.64.05", "580.126.18", "595.71.05"]);
+    }
+
+    #[test]
+    fn parses_nvidia_versions_as_semver() {
+        assert_eq!(
+            parse_nvidia_version("595.71.05"),
+            Version::parse("595.71.5").ok()
+        );
+        assert_eq!(
+            parse_nvidia_version("600.1"),
+            Version::parse("600.1.0").ok()
+        );
+        assert_eq!(parse_nvidia_version("600.1.2.3"), None);
+        assert_eq!(parse_nvidia_version("600..1"), None);
     }
 
     #[test]
     fn parses_nvidia_directory_index_hrefs() {
         let html = "<a href='..'>..</a><a href='525.60.13/'>ok</a><a href=\"595.71.05/\">ok</a><a href='latest.txt'>bad</a>";
         assert_eq!(
-            parse_versions_from_index(html),
-            vec!["525.60.13".to_owned(), "595.71.05".to_owned()]
+            parse_versions_from_index(html)
+                .iter()
+                .map(NvidiaVersion::as_str)
+                .collect::<Vec<_>>(),
+            vec!["525.60.13", "595.71.05"]
         );
     }
 
     #[test]
     fn selects_latest_shared_version() {
-        let left = vec![
-            "580.126.18".to_owned(),
-            "595.71.05".to_owned(),
-            "600.1".to_owned(),
-        ];
-        let right = vec!["580.126.18".to_owned(), "595.71.05".to_owned()];
+        let left = parse_versions(["580.126.18", "595.71.05", "600.1"]);
+        let right = parse_versions(["580.126.18", "595.71.05"]);
         assert_eq!(latest_shared(&left, &right), Some("595.71.05"));
+    }
+
+    #[test]
+    fn ignores_invalid_versions_when_selecting_latest_shared() {
+        let left = parse_versions(["580.126.18"]);
+        let right = parse_versions(["580.126.18"]);
+
+        assert_eq!(latest_shared(&left, &right), Some("580.126.18"));
     }
 
     #[test]

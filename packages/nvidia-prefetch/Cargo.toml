@@ -12,12 +12,12 @@ name = "nvidia-prefetch"
 path = "src/main.rs"
 
 [dependencies]
-base64 = "0.22.1"
 clap.workspace = true
-dotfiles-common = { version = "0.1.0", path = "../../crates/dotfiles-common" }
+dotfiles-common = { version = "0.1.0", path = "../../crates/common" }
 flate2.workspace = true
 fs-err.workspace = true
-sha2 = "0.11.0"
+semver.workspace = true
+sha2.workspace = true
 tar.workspace = true
 
 [lints]

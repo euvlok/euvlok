@@ -1,5 +1,6 @@
-use std::fs;
 use std::net::SocketAddr;
+
+use fs_err as fs;
 
 use crate::cli::{Cli, DEFAULT_LISTEN};
 use crate::config::FixtureConfig;

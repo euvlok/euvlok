@@ -97,8 +97,8 @@ file = "rustup-init"
 argv = ["{file}", "-y", "--profile", "minimal", "--default-toolchain", "{toolchain}", "{components}"]
 platforms = [
   { when = "macos-aarch64", url = "https://static.rust-lang.org/rustup/dist/aarch64-apple-darwin/rustup-init" },
-  { when = "linux-aarch64", url = "https://static.rust-lang.org/rustup/dist/aarch64-unknown-linux-gnu/rustup-init" },
-  { when = "linux-x86_64", url = "https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init" },
+  { when = "linux-aarch64", url = "https://static.rust-lang.org/rustup/dist/{host_triple}/rustup-init" },
+  { when = "linux-x86_64", url = "https://static.rust-lang.org/rustup/dist/{host_triple}/rustup-init" },
   { when = "windows-aarch64", url = "https://static.rust-lang.org/rustup/dist/aarch64-pc-windows-msvc/rustup-init.exe", file = "rustup-init.exe" },
   { when = "windows-x86_64", url = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe", file = "rustup-init.exe" },
 ]
@@ -106,6 +106,7 @@ platforms = [
 [[tools]]
 name = "node"
 bins = ["node", "npm", "npx"]
+requires = ["non_musl"]
 
 [tools.action]
 type = "archive"
@@ -131,8 +132,10 @@ source = { type = "github_latest", repo = "oven-sh/bun", tag_prefix = "bun-v", a
 links = [{ name = "bun", path = "bun-{platform}/bun" }, { name = "bunx", path = "bun-{platform}/bun" }]
 platforms = [
   { when = "macos-aarch64", platform = "darwin-aarch64" },
-  { when = "linux-aarch64", platform = "linux-aarch64-musl" },
-  { when = "linux-x86_64", platform = "linux-x64-musl" },
+  { when = { os = "linux", arch = "aarch64", musl = false }, platform = "linux-aarch64" },
+  { when = { os = "linux", arch = "aarch64", musl = true }, platform = "linux-aarch64-musl" },
+  { when = { os = "linux", arch = "x86_64", musl = false }, platform = "linux-x64" },
+  { when = { os = "linux", arch = "x86_64", musl = true }, platform = "linux-x64-musl" },
   { when = "windows-x86_64", platform = "windows-x64", links = [{ name = "bun", path = "bun-{platform}/bun.exe" }, { name = "bunx", path = "bun-{platform}/bun.exe" }] },
 ]
 
@@ -140,6 +143,7 @@ platforms = [
 name = "vscode"
 platforms = ["macos", "linux", "windows"]
 bins = [{ name = "code", version_argv = ["code", "--version"] }]
+requires = ["non_musl"]
 
 [tools.action]
 type = "archive"
@@ -187,7 +191,7 @@ platforms = ["macos", "linux", "windows"]
 
 [tools.action]
 type = "build"
-path = "crates/bootstrap-cli"
+path = "crates/boot-cli"
 
 [[tools]]
 name = "gh-hide-comment"
@@ -195,16 +199,16 @@ platforms = ["macos", "linux", "windows"]
 
 [tools.action]
 type = "build"
-path = "pkgs/gh-hide-comment"
+path = "packages/gh-hide-comment"
 
 [[tools]]
 name = "zellij-theme-tools"
 platforms = ["macos", "linux"]
-bins = ["codex-zellij-theme", "zellij-auto-theme"]
+bins = ["codex-zellij-theme", "zellij-auto-theme", "btop-auto-theme"]
 
 [tools.action]
 type = "build"
-path = "pkgs/zellij-theme-tools"
+path = "packages/zellij-theme-tools"
 
 [[tools]]
 name = "chezmoi-support"
@@ -212,7 +216,7 @@ platforms = ["macos", "linux", "windows"]
 
 [tools.action]
 type = "build"
-path = "crates/chezmoi-support"
+path = "crates/chezmoi"
 
 [[tools]]
 name = "lenovo-con-mode"
@@ -221,4 +225,4 @@ requires = ["lenovo_laptop"]
 
 [tools.action]
 type = "build"
-path = "pkgs/lenovo-con-mode"
+path = "packages/lenovo-con-mode"

@@ -1,6 +1,16 @@
 mod session;
 
-use crate::{Result, detect_theme, run_inherit, wants_version_arg};
+use clap::Parser;
+
+use crate::{Result, detect_theme, run_inherit};
+
+#[derive(Debug, Parser)]
+#[command(
+    name = "zellij-auto-theme",
+    version,
+    about = "Start Zellij with a Catppuccin theme matching the current terminal or system theme"
+)]
+struct Cli;
 
 /// Runs `zellij-auto-theme`.
 ///
@@ -9,10 +19,7 @@ use crate::{Result, detect_theme, run_inherit, wants_version_arg};
 /// Returns an error if the socket directory cannot be created, session naming
 /// fails, or Zellij cannot be executed.
 pub fn run() -> Result<i32> {
-    if wants_version_arg() {
-        println!("zellij-auto-theme {}", env!("CARGO_PKG_VERSION"));
-        return Ok(0);
-    }
+    Cli::parse();
 
     let selected = detect_theme();
     let socket_dir = std::env::temp_dir().join(format!("zellij-{}", session::current_uid()));

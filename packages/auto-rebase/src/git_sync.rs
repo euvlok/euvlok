@@ -12,7 +12,6 @@ use gix::status::plumbing::index_as_worktree_with_renames::Summary;
 use jj_lib::git::{GitExportStats, GitImportOptions, GitImportStats};
 use jj_lib::ref_name::{RefName, RemoteName, WorkspaceName};
 use jj_lib::repo::{ReadonlyRepo, Repo};
-use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
@@ -453,9 +452,9 @@ pub fn import_options(settings: &jj_lib::settings::UserSettings) -> Result<GitIm
     let git_settings = jj_lib::git::GitSettings::from_settings(settings)
         .context("failed to read jj git import settings")?;
     Ok(GitImportOptions {
-        auto_local_bookmark: git_settings.auto_local_bookmark,
         abandon_unreachable_commits: git_settings.abandon_unreachable_commits,
-        remote_auto_track_bookmarks: HashMap::new(),
+        record_synthetic_predecessors: git_settings.record_synthetic_predecessors,
+        remote_auto_track_bookmarks: Default::default(),
     })
 }
 

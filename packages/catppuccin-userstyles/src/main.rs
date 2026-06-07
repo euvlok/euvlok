@@ -445,8 +445,7 @@ fn replace_header(source: &str, header: &str) -> Result<String> {
 }
 
 fn sha1_hex(source: &str) -> String {
-    let digest = Sha1::digest(source.as_bytes());
-    digest.iter().map(|byte| format!("{byte:02x}")).collect()
+    hex::encode(Sha1::digest(source.as_bytes()))
 }
 
 fn write_json(path: &Path, data: &[StylusEntry]) -> Result<()> {

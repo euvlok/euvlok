@@ -1,0 +1,47 @@
+# Start from an empty build context and add back only what the smoke-test
+# Dockerfile needs for Cargo, bootstrap, and the focused chezmoi apply.
+*
+
+!Cargo.lock
+!Cargo.toml
+!Dockerfile
+!.dockerignore
+
+!bootstrap/
+!bootstrap/**
+
+!crates/
+!crates/**
+
+!dotfiles/
+!dotfiles/**
+
+!packages/
+packages/*
+!packages/auto-rebase/
+!packages/auto-rebase/**
+!packages/browser-extensions-update/
+!packages/browser-extensions-update/**
+!packages/catppuccin-userstyles/
+!packages/catppuccin-userstyles/**
+!packages/gh-hide-comment/
+!packages/gh-hide-comment/**
+!packages/github-maintenance/
+!packages/github-maintenance/**
+!packages/http-fixture/
+!packages/http-fixture/**
+!packages/lenovo-con-mode/
+!packages/lenovo-con-mode/**
+!packages/lsp-diagnostic-filter/
+!packages/lsp-diagnostic-filter/**
+!packages/nvidia-prefetch/
+!packages/nvidia-prefetch/**
+!packages/zellij-theme-tools/
+!packages/zellij-theme-tools/**
+
+# Never send local generated state if it appears under an included path.
+**/.DS_Store
+**/__pycache__/
+**/*.pyc
+**/target/
+*.log

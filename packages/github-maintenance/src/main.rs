@@ -55,7 +55,7 @@ fn check_workflows() -> Result<()> {
         eprintln!("warning: no workflow files found");
         return Ok(());
     }
-    let actionlint = find_command("actionlint").or_else(|| {
+    let actionlint = process::path_of("actionlint").or_else(|| {
         PathBuf::from("node_modules/.bin/node-actionlint")
             .exists()
             .then(|| PathBuf::from("node_modules/.bin/node-actionlint"))
@@ -78,7 +78,7 @@ fn check_workflows() -> Result<()> {
 
 fn lint_workflows() -> Result<()> {
     check_workflows()?;
-    if let Some(zizmor) = find_command("zizmor") {
+    if let Some(zizmor) = process::path_of("zizmor") {
         run_command([
             zizmor.to_string_lossy().into_owned(),
             "--offline".into(),
@@ -86,7 +86,7 @@ fn lint_workflows() -> Result<()> {
             "--format=github".into(),
             ".github/workflows".into(),
         ])?;
-    } else if let Some(uvx) = find_command("uvx") {
+    } else if let Some(uvx) = process::path_of("uvx") {
         run_command([
             uvx.to_string_lossy().into_owned(),
             "zizmor".into(),
@@ -95,7 +95,7 @@ fn lint_workflows() -> Result<()> {
             "--format=github".into(),
             ".github/workflows".into(),
         ])?;
-    } else if let Some(pipx) = find_command("pipx") {
+    } else if let Some(pipx) = process::path_of("pipx") {
         run_command([
             pipx.to_string_lossy().into_owned(),
             "run".into(),
@@ -130,7 +130,7 @@ fn update_browser_extensions() -> Result<()> {
     }
     for source in source_files {
         eprintln!("info: updating {}", source.display());
-        if find_command("browser-extension-update").is_some() {
+        if process::path_of("browser-extension-update").is_some() {
             run_command([
                 "browser-extension-update".into(),
                 source.to_string_lossy().into_owned(),
@@ -312,10 +312,6 @@ fn has_staged_changes() -> Result<bool> {
         std::iter::empty::<(String, String)>(),
     )?
     .succeeded())
-}
-
-fn find_command(command: &str) -> Option<PathBuf> {
-    process::path_of(command)
 }
 
 fn run_command(args: impl IntoIterator<Item = impl AsRef<str>>) -> Result<()> {
