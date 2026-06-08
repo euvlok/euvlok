@@ -39,6 +39,16 @@ carefully.
 nix develop
 ```
 
+Bootstrap a machine:
+
+```sh
+bootstrap bootstrap
+```
+
+On Windows, the first bootstrap pass installs managed PowerShell from the
+catalog and writes Windows Terminal settings that make that `pwsh` profile the
+default before installing the rest of the catalog.
+
 Run checks:
 
 ```sh
