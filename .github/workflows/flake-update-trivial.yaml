@@ -50,6 +50,6 @@ jobs:
           cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update trivial inputs
-        run: nix develop --impure --command github-maintenance update-trivial-flake-inputs
+        run: nix run .#github-maintenance -- update-trivial-flake-inputs
         env:
           GITHUB_TOKEN: ${{ github.token }}

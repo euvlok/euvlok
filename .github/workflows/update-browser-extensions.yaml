@@ -59,7 +59,7 @@ jobs:
           cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update extensions
-        run: nix develop --impure --command github-maintenance update-browser-extensions
+        run: nix run .#github-maintenance -- update-browser-extensions
         env:
           BROWSER: ${{ github.event.inputs.browser || 'all' }}
           GITHUB_TOKEN: ${{ github.token }}

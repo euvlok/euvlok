@@ -26,7 +26,7 @@ jobs:
         run: git clone --depth 1 https://github.com/catppuccin/userstyles.git /tmp/userstyles
 
       - name: Generate Stylus imports
-        run: nix develop --impure --command build-catppuccin-userstyles /tmp/userstyles /tmp/userstyles-output
+        run: nix run .#catppuccin-userstyles -- /tmp/userstyles /tmp/userstyles-output
 
       - name: Publish release
         run: |

@@ -49,6 +49,6 @@ jobs:
           cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update packages
-        run: nix develop --impure --command github-maintenance update-custom-packages
+        run: nix run .#github-maintenance -- update-custom-packages
         env:
           GITHUB_TOKEN: ${{ github.token }}

@@ -150,7 +150,15 @@
           cratePath = "crates/chezmoi";
         };
         gh-hide-comment = mkRustPackage { name = "gh-hide-comment"; };
-        github-maintenance = mkRustPackage { name = "github-maintenance"; };
+        github-maintenance = mkRustPackage {
+          name = "github-maintenance";
+          wrapInputs = [
+            config.packages.browser-extension-update
+            pkgs.bash
+            pkgs.git
+            pkgs.nix
+          ];
+        };
         http-fixture = mkRustPackage { name = "http-fixture"; };
         lsp-diagnostic-filter = mkRustPackage {
           name = "lsp-diagnostic-filter";
