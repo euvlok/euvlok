@@ -86,7 +86,6 @@ _: {
       "$mainMod, E, exec, $fileManager"
       "$mainMod, S, togglefloating,"
       "$mainMod, P, pseudo," # dwindle
-      "$mainMod, J, togglesplit," # dwindle
 
       # Move focus with mainMod + arrow keys
       "$mainMod, left, movefocus, l"

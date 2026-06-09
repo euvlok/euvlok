@@ -51,8 +51,8 @@
       swappy
       slurp
       nitch
-      thunderbird
-      libreoffice
+      thunderbird-bin
+      #libreoffice
       p7zip
       # _7zz
       file
