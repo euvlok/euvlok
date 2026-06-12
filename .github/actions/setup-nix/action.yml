@@ -1,26 +1,7 @@
 name: Set up Nix
-description: Install Nix and configure Cachix for repository workflows.
+description: Install Nix for repository workflows.
 
 inputs:
-  github-token:
-    description: GitHub token used by the Nix installer for GitHub fetches.
-    required: true
-  cachix-cache:
-    description: Cachix cache name.
-    required: false
-    default: euvlok
-  extra-cachix-caches:
-    description: Additional Cachix cache names used as substituters.
-    required: false
-    default: devenv,eupkgs,hyprland,nix-community,nixos-raspberrypi
-  cachix-auth-token:
-    description: Cachix auth token used to push build results.
-    required: false
-    default: ""
-  cachix-skip-push:
-    description: Only use Cachix as a substituter without pushing build results.
-    required: false
-    default: "true"
   extra-nix-config:
     description: Additional Nix configuration appended to the installer config.
     required: false
@@ -30,34 +11,26 @@ runs:
   using: composite
   steps:
     - name: Install Nix
-      uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+      uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
       with:
-        github_access_token: ${{ inputs.github-token }}
-        extra_nix_config: |
+        determinate: false
+        extra-conf: |
           accept-flake-config = true
-          extra-substituters = https://cache.flox.dev
-          extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=
+          extra-substituters = https://devenv.cachix.org https://cache.flox.dev
+          extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=
           ${{ inputs.extra-nix-config }}
 
-    - name: Configure Cachix
-      uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
-      with:
-        name: ${{ inputs.cachix-cache }}
-        extraPullNames: ${{ inputs.extra-cachix-caches }}
-        authToken: ${{ inputs.cachix-auth-token }}
-        skipPush: ${{ inputs.cachix-skip-push }}
-
-    - name: Configure Flox binary cache
+    - name: Configure public binary caches
       shell: bash
       run: |
-        flox_nix_config="${RUNNER_TEMP}/flox-nix.conf"
+        public_nix_config="${RUNNER_TEMP}/public-nix-caches.conf"
 
         {
-          echo "extra-substituters = https://cache.flox.dev"
-          echo "extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        } > "${flox_nix_config}"
+          echo "extra-substituters = https://devenv.cachix.org https://cache.flox.dev"
+          echo "extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        } > "${public_nix_config}"
 
-        export NIX_USER_CONF_FILES="${flox_nix_config}:${NIX_USER_CONF_FILES}"
+        export NIX_USER_CONF_FILES="${public_nix_config}:${NIX_USER_CONF_FILES}"
         echo "NIX_USER_CONF_FILES=${NIX_USER_CONF_FILES}" >> "${GITHUB_ENV}"
 
     - name: Show Nix cache configuration

@@ -21,3 +21,5 @@ updates:
     labels:
       - "dependencies"
       - "nix"
+    ignore:
+      - dependency-name: "catppuccin-gtk"

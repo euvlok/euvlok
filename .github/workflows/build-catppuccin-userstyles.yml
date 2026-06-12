@@ -30,15 +30,25 @@ jobs:
 
       - name: Publish release
         run: |
+          retry() {
+            for attempt in 1 2 3; do
+              "$@" && return 0
+              if [ "${attempt}" = 3 ]; then
+                return 1
+              fi
+              sleep "$((attempt * 10))"
+            done
+          }
+
           body="Catppuccin userstyles - latte light with dark flavor/accent variants. Gmail and Shinigami Eyes are excluded by default."
 
           if gh release view catppuccin-userstyles > /dev/null 2>&1; then
-            gh release edit catppuccin-userstyles \
+            retry gh release edit catppuccin-userstyles \
               --title "Catppuccin Userstyles" \
               --notes "$body"
-            gh release upload catppuccin-userstyles /tmp/userstyles-output/* --clobber
+            retry gh release upload catppuccin-userstyles /tmp/userstyles-output/* --clobber
           else
-            gh release create catppuccin-userstyles /tmp/userstyles-output/* \
+            retry gh release create catppuccin-userstyles /tmp/userstyles-output/* \
               --title "Catppuccin Userstyles" \
               --notes "$body" \
               --latest=false

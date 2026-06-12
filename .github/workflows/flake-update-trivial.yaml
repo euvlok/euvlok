@@ -14,27 +14,9 @@ permissions:
   contents: read
 
 jobs:
-  cachix:
-    name: Cachix Auth
-    runs-on: ubuntu-latest
-    outputs:
-      skip-push: ${{ steps.auth.outputs.skip-push }}
-    steps:
-      - name: Check Cachix token availability
-        id: auth
-        env:
-          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        run: |
-          if [ -n "${CACHIX_AUTH_TOKEN}" ]; then
-            echo "skip-push=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip-push=true" >> "$GITHUB_OUTPUT"
-          fi
-
   update-trivial-inputs:
     name: Update Trivial Inputs
     runs-on: ubuntu-latest
-    needs: cachix
     permissions:
       contents: write
     steps:
@@ -45,9 +27,6 @@ jobs:
 
       - name: Set up Nix
         uses: ./.github/actions/setup-nix
-        with:
-          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
-          cachix-skip-push: ${{ needs.cachix.outputs.skip-push }}
 
       - name: Update trivial inputs
         run: nix run .#github-maintenance -- update-trivial-flake-inputs

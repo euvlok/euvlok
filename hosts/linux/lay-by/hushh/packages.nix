@@ -21,7 +21,6 @@
       gcc
       glibc
       jq
-      cachix
       bc
       ninja
 

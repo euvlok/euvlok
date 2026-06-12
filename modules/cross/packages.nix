@@ -15,7 +15,6 @@ let
         zellij-theme-tools
         ;
       inherit (pkgs.unstable)
-        cachix
         nixfmt
         nil
         nixd
