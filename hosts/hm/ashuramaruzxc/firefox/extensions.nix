@@ -9,10 +9,10 @@
 {
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.15.1";
+    version = "1.16.0";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4834732/angular_devtools-1.15.1.xpi";
-    sha256 = "sha256-EAj3k+ikIDHv+3lcSiABNV5A7F0V0PEkuNBInRFe3PE=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4845693/angular_devtools-1.16.0.xpi";
+    sha256 = "sha256-8JpjJ/j5z02ktUkEzapR9lWT98W2KZPdM4HhJegSC5Q=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -26,10 +26,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.5.0";
+    version = "2026.5.1";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4827854/bitwarden_password_manager-2026.5.0.xpi";
-    sha256 = "sha256-jrtHVRijMLiLTiy6CGTFyhG+05BznLhPvyVuk4yRttk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4842111/bitwarden_password_manager-2026.5.1.xpi";
+    sha256 = "sha256-0y9h9PuVcoq0UO2ryI/hlUAK36+rSIypSbWjVSmPJ7g=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1274,10 +1274,10 @@
   };
   "search_by_image" = buildFirefoxXpiAddon {
     pname = "search_by_image";
-    version = "8.5.2";
+    version = "8.5.3";
     addonId = "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4775193/search_by_image-8.5.2.xpi";
-    sha256 = "sha256-flyrHEbbbVl2m1ncSB0dF7BTPyMTQd1nD/cYeS0LZgU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4840197/search_by_image-8.5.3.xpi";
+    sha256 = "sha256-umBEeLUPXEbhMBHqfj4pBqvHsbcst+h7AsT73vpkrjc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1381,10 +1381,10 @@
   };
   "view-page-archive" = buildFirefoxXpiAddon {
     pname = "view-page-archive";
-    version = "7.3.0";
+    version = "7.3.1";
     addonId = "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4695473/view_page_archive-7.3.0.xpi";
-    sha256 = "sha256-28rxrQLBZOikRly9wBNofBa236gPxCsEoul+nzwARHo=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4840220/view_page_archive-7.3.1.xpi";
+    sha256 = "sha256-fuHQz9d2AJo2vmdRnPwV5z3Oom0YD9QEnXYarIx/ZQU=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
