@@ -1313,10 +1313,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.3.30";
+    version = "2.3.34";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4827922/styl_us-2.3.30.xpi";
-    sha256 = "sha256-99/Z/CRcfEUtZl37FkBYXVAVsI+u1BFPCyjvkLZXXb0=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4845329/styl_us-2.3.34.xpi";
+    sha256 = "sha256-dTAALFahBsOKRwPW9b9HbgBZx47Tyfo/vqLZzoTgLtQ=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
