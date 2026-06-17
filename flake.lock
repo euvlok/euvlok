@@ -194,11 +194,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781125447,
-        "narHash": "sha256-MMe3mbPI779WzTQVN1OcKmCf+3z21/d+SlrDBCOz22Y=",
+        "lastModified": 1781647614,
+        "narHash": "sha256-jyAyuS7eQteWcNqb4RrNoAapLmCiMRQx89o1NiGopZQ=",
         "owner": "euvlok",
         "repo": "pkgs",
-        "rev": "672bd2071812761c3bd68d3ebfd8223ef74918c8",
+        "rev": "4fb927b4bda0983f9ddfd9abc7d1a65e6ff56385",
         "type": "github"
       },
       "original": {
