@@ -21,11 +21,6 @@
       };
     };
 
-    ollama = {
-      enable = true;
-      package = pkgs.ollama-cuda;
-    };
-
     syncthing = {
       enable = true;
       settings.folders = {

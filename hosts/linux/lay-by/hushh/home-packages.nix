@@ -31,6 +31,11 @@
       font-manager
       python3
       uv
+      ;
+    inherit (pkgs.jetbrains)
+      pycharm
+      ;
+    inherit (pkgs.unstable)
 
       # nim
       nim
