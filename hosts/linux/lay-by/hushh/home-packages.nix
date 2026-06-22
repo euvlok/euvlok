@@ -18,7 +18,6 @@
       libnvidia-container
       wine
       winetricks
-      r2modman
       prismlauncher
       ;
     inherit (pkgs.unstable)
@@ -90,7 +89,6 @@
       keepassxc
       ;
     inherit (pkgs.unstable.kdePackages)
-      kalgebra
       kcalc
       ark
       okular

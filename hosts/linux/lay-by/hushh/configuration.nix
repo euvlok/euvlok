@@ -57,5 +57,9 @@
 
   virtualisation.libvirtd.enable = true;
 
+  system.fsPackages = with pkgs; [
+    sshfs
+  ];
+
   system.stateVersion = "25.05";
 }

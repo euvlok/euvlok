@@ -21,6 +21,7 @@ _: {
       "systemctl --user start hyprpolkitagent"
       "xrandr --output DP-1 --primary"
       "nicotine -s"
+      "keepassxc --minimized"
     ];
 
     general = {
