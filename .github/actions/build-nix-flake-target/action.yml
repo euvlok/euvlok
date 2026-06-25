@@ -1,5 +1,5 @@
 name: Build Nix flake target
-description: Install Nix and build one flake target.
+description: Install Nix, configure Cachix, and build one flake target.
 
 inputs:
   configuration-kind:
@@ -7,6 +7,20 @@ inputs:
     required: true
   configuration-name:
     description: Configuration name from the flake output.
+    required: true
+  cachix-cache:
+    description: Cachix cache name.
+    required: true
+  cachix-auth-token:
+    description: Cachix auth token used to push build results.
+    required: false
+    default: ""
+  cachix-skip-push:
+    description: Only use Cachix as a substituter without pushing build results.
+    required: false
+    default: "false"
+  github-token:
+    description: GitHub token used by the Nix installer for GitHub fetches.
     required: true
   build-timeout-seconds:
     description: Soft deadline for the host build, in seconds.
@@ -39,9 +53,24 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Check Cachix token
+      shell: bash
+      env:
+        CACHIX_AUTH_TOKEN: ${{ inputs.cachix-auth-token }}
+        CACHIX_SKIP_PUSH: ${{ inputs.cachix-skip-push }}
+      run: |
+        if [ "${CACHIX_SKIP_PUSH}" != "true" ] && [ -z "${CACHIX_AUTH_TOKEN}" ]; then
+          echo "::error::CACHIX_AUTH_TOKEN is required unless cachix-skip-push is true."
+          exit 1
+        fi
+
     - name: Install Nix
       uses: ./.github/actions/setup-nix
       with:
+        github-token: ${{ inputs.github-token }}
+        cachix-cache: ${{ inputs.cachix-cache }}
+        cachix-auth-token: ${{ inputs.cachix-auth-token }}
+        cachix-skip-push: ${{ inputs.cachix-skip-push }}
         extra-nix-config: ${{ inputs.configuration-kind == 'nixos' && 'build-dir = /nix/build' || '' }}
 
     - name: Build flake target

@@ -38,6 +38,8 @@ jobs:
     permissions:
       actions: write
       contents: read
+    env:
+      CACHIX_CACHE: euvlok
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -115,7 +117,9 @@ jobs:
           hatchet-protocol: rampage
           witness-carnage: true
 
-      - name: Build configuration
+      # GitHub only loads workflows directly from .github/workflows, so the
+      # reusable Nix/Cachix setup lives in a local composite action instead.
+      - name: Build and cache configuration
         id: build
         if: steps.retry-target.outputs.should-build == 'true'
         continue-on-error: true
@@ -123,6 +127,10 @@ jobs:
         with:
           configuration-kind: nixos
           configuration-name: ${{ matrix.name }}
+          cachix-cache: ${{ env.CACHIX_CACHE }}
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ github.actor == 'dependabot[bot]' && secrets.CACHIX_AUTH_TOKEN == '' }}
+          github-token: ${{ github.token }}
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
 
       - name: Dispatch retry after soft timeout
@@ -237,6 +245,8 @@ jobs:
     permissions:
       actions: write
       contents: read
+    env:
+      CACHIX_CACHE: euvlok
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -295,7 +305,9 @@ jobs:
           hatchet-protocol: rampage
           witness-carnage: true
 
-      - name: Build configuration
+      # GitHub only loads workflows directly from .github/workflows, so the
+      # reusable Nix/Cachix setup lives in a local composite action instead.
+      - name: Build and cache configuration
         id: build
         if: steps.retry-target.outputs.should-build == 'true'
         continue-on-error: true
@@ -303,6 +315,10 @@ jobs:
         with:
           configuration-kind: darwin
           configuration-name: ${{ matrix.name }}
+          cachix-cache: ${{ env.CACHIX_CACHE }}
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: ${{ github.actor == 'dependabot[bot]' && secrets.CACHIX_AUTH_TOKEN == '' }}
+          github-token: ${{ github.token }}
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
 
       - name: Dispatch retry after soft timeout
