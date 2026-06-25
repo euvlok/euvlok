@@ -169,7 +169,7 @@
     pname = "magnolia@12.34";
     version = "4.3.8.1";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=faf31703f1854e117c59775d77d6363c6d86e1f9";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=bf13a2cc06838773066fcf270653da217447c75b";
     sha256 = "sha256-pD+R7d3MjfuPojJkl4pGkXXkGa7JvKR6Fp26HFgM1QY=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1416,10 +1416,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.24.1";
+    version = "2.24.3";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4822978/youtube_no_translation-2.24.1.xpi";
-    sha256 = "sha256-fhryVVlutn04ud8eNgsyZBwgBzDUCk+c6wBCFS7qn1Q=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4859010/youtube_no_translation-2.24.3.xpi";
+    sha256 = "sha256-I8o4CxNTP7POo8qd6Paetv79VGCMhd8ABdNozR2Q/YU=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
