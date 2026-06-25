@@ -4,7 +4,8 @@ description: Install Nix and configure Cachix for repository workflows.
 inputs:
   github-token:
     description: GitHub token used by the Nix installer for GitHub fetches.
-    required: true
+    required: false
+    default: ""
   cachix-cache:
     description: Cachix cache name.
     required: false
@@ -40,12 +41,20 @@ runs:
           ${{ inputs.extra-nix-config }}
 
     - name: Configure Cachix
+      id: cachix
+      continue-on-error: true
       uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
       with:
         name: ${{ inputs.cachix-cache }}
         extraPullNames: ${{ inputs.extra-cachix-caches }}
         authToken: ${{ inputs.cachix-auth-token }}
         skipPush: ${{ inputs.cachix-skip-push }}
+
+    - name: Report Cachix configuration failure
+      if: steps.cachix.outcome == 'failure'
+      shell: bash
+      run: |
+        echo "::warning::Cachix setup failed. Continuing without pushing build results; rotate CACHIX_AUTH_TOKEN to restore pushes."
 
     - name: Configure Flox binary cache
       shell: bash
