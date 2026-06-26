@@ -35,7 +35,6 @@
       pycharm
       ;
     inherit (pkgs.unstable)
-
       # nim
       nim
       nimble
@@ -43,11 +42,7 @@
       nimlangserver
       nil
       devenv
-      nix-search
       nodejs
-      ;
-    inherit (pkgs.unstable.python313Packages)
-      pip
       ;
     inherit (pkgs.unstable)
       # Misc productivity
@@ -78,8 +73,6 @@
       gimp
       evince
       alsa-utils
-      lsp-plugins
-      calf
       ;
     inherit (pkgs.unstable)
       # Security

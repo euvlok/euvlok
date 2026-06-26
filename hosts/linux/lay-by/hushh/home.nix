@@ -34,7 +34,6 @@
             fps_limit = 200;
             no_display = true;
           };
-          services.easyeffects.enable = true;
           fonts.fontconfig.enable = true;
           xsession.numlock.enable = true;
         }

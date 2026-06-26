@@ -48,6 +48,4 @@
     GEM_HOME = "${config.home.homeDirectory}/.gems";
     GEM_PATH = "${config.home.homeDirectory}/.gems";
   };
-
-  services.easyeffects.enable = true;
 }
