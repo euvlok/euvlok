@@ -167,10 +167,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.8.1";
+    version = "4.3.8.7";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=8855d083fd13909a6867f46322fe1d6d692100b7";
-    sha256 = "sha256-pD+R7d3MjfuPojJkl4pGkXXkGa7JvKR6Fp26HFgM1QY=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=613c7314916ca9e345a6f85b7ae179f081093655";
+    sha256 = "sha256-0tCSU4jq8WyzWhq13E65xrbWXmV5QEnJxD3Exs6l65E=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -378,7 +378,6 @@
         "*://*.diariovasco.com/*"
         "*://*.diepresse.com/*"
         "*://*.digiday.com/*"
-        "*://*.digitimes.com/*"
         "*://*.diplomatique.org.br/*"
         "*://*.discovermagazine.com/*"
         "*://*.dispatch.com/*"
@@ -433,7 +432,6 @@
         "*://*.esquire.com/*"
         "*://*.estadao.com.br/*"
         "*://*.estrepublicain.fr/*"
-        "*://*.etc.se/*"
         "*://*.euobserver.com/*"
         "*://*.european-rubber-journal.com/*"
         "*://*.europower.no/*"
@@ -446,7 +444,6 @@
         "*://*.farodevigo.es/*"
         "*://*.fastcompany.com/*"
         "*://*.faz.net/*"
-        "*://*.fd.nl/*"
         "*://*.femmesdaujourdhui.be/*"
         "*://*.fieldandstream.com/*"
         "*://*.financialexpress.com/*"
@@ -687,7 +684,6 @@
         "*://*.manoramaonline.com/*"
         "*://*.marca.com/*"
         "*://*.margriet.nl/*"
-        "*://*.marianne.net/*"
         "*://*.marketwatch.com/*"
         "*://*.masslive.com/*"
         "*://*.maz-online.de/*"
