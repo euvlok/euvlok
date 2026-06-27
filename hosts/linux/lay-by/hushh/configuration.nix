@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ./fonts.nix
@@ -42,6 +42,8 @@
   };
 
   networking.firewall.enable = false;
+
+  services.pipewire.alsa.support32Bit = lib.mkForce false;
 
   # Set some annoying env vars to make sure gayland and nshitia play nice together
   environment.variables = {
