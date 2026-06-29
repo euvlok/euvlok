@@ -167,10 +167,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.8.7";
+    version = "4.3.9.0";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=b187d9ece0800082438b8032b0a632d1004c5cad";
-    sha256 = "sha256-0tCSU4jq8WyzWhq13E65xrbWXmV5QEnJxD3Exs6l65E=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ecaa1207d0a02a1656600c686b8df566b207569e";
+    sha256 = "sha256-kgSFH53ML3prz3GpY5blmdfalFJ4Ujg1SjPIrgt6zOo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -518,7 +518,6 @@
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
         "*://*.huffingtonpost.it/*"
-        "*://*.humanite.fr/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
         "*://*.iai.tv/*"
