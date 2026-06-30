@@ -167,10 +167,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.6.0";
+    version = "4.3.9.0";
     addonId = "magnolia@12.34";
     url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ecaa1207d0a02a1656600c686b8df566b207569e";
-    sha256 = "sha256-mJVbkBpXxIwGD8DuE8M32m0qxA1CDchEY6K+1E7L4aU=";
+    sha256 = "sha256-kgSFH53ML3prz3GpY5blmdfalFJ4Ujg1SjPIrgt6zOo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -264,7 +264,6 @@
         "*://*.bostonglobe.com/*"
         "*://*.bostonherald.com/*"
         "*://*.braunschweiger-zeitung.de/*"
-        "*://*.brill.com/*"
         "*://*.brisbanetimes.com.au/*"
         "*://*.britannica.com/*"
         "*://*.bt.no/*"
@@ -305,6 +304,7 @@
         "*://*.chunichi.co.jp/*"
         "*://*.cicero.de/*"
         "*://*.cincinnati.com/*"
+        "*://*.citeline.com/*"
         "*://*.citywire.com/*"
         "*://*.clarin.com/*"
         "*://*.cleaneatingmag.com/*"
@@ -378,7 +378,6 @@
         "*://*.diariovasco.com/*"
         "*://*.diepresse.com/*"
         "*://*.digiday.com/*"
-        "*://*.digitimes.com/*"
         "*://*.diplomatique.org.br/*"
         "*://*.discovermagazine.com/*"
         "*://*.dispatch.com/*"
@@ -433,7 +432,6 @@
         "*://*.esquire.com/*"
         "*://*.estadao.com.br/*"
         "*://*.estrepublicain.fr/*"
-        "*://*.etc.se/*"
         "*://*.euobserver.com/*"
         "*://*.european-rubber-journal.com/*"
         "*://*.europower.no/*"
@@ -446,7 +444,6 @@
         "*://*.farodevigo.es/*"
         "*://*.fastcompany.com/*"
         "*://*.faz.net/*"
-        "*://*.fd.nl/*"
         "*://*.femmesdaujourdhui.be/*"
         "*://*.fieldandstream.com/*"
         "*://*.financialexpress.com/*"
@@ -521,7 +518,6 @@
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
         "*://*.huffingtonpost.it/*"
-        "*://*.humanite.fr/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
         "*://*.iai.tv/*"
@@ -542,7 +538,6 @@
         "*://*.inc.com/*"
         "*://*.inc42.com/*"
         "*://*.independent.co.uk/*"
-        "*://*.independent.ie/*"
         "*://*.indianexpress.com/*"
         "*://*.indiatimes.com/*"
         "*://*.indiatoday.in/*"
@@ -584,6 +579,7 @@
         "*://*.kansascity.com/*"
         "*://*.kathimerini.gr/*"
         "*://*.kentucky.com/*"
+        "*://*.kleinezeitung.at/*"
         "*://*.kn-online.de/*"
         "*://*.knack.be/*"
         "*://*.knoxnews.com/*"
@@ -606,6 +602,7 @@
         "*://*.lamontagne.fr/*"
         "*://*.lanacion.com.ar/*"
         "*://*.lanazione.it/*"
+        "*://*.lance.com.br/*"
         "*://*.lanuovasardegna.it/*"
         "*://*.laprovincia.es/*"
         "*://*.lardennais.fr/*"
@@ -682,12 +679,10 @@
         "*://*.macrobusiness.com.au/*"
         "*://*.madison.com/*"
         "*://*.magazyn-kuchnia.pl/*"
-        "*://*.mainichi.jp/*"
         "*://*.mallorcazeitung.es/*"
         "*://*.manoramaonline.com/*"
         "*://*.marca.com/*"
         "*://*.margriet.nl/*"
-        "*://*.marianne.net/*"
         "*://*.marketwatch.com/*"
         "*://*.masslive.com/*"
         "*://*.maz-online.de/*"
@@ -721,11 +716,15 @@
         "*://*.musicomh.com/*"
         "*://*.mv-voice.com/*"
         "*://*.nation.africa/*"
+        "*://*.nationalgeographic.com.es/*"
         "*://*.nationalgeographic.com/*"
+        "*://*.nationalgeographic.it/*"
+        "*://*.nationalgeographic.nl/*"
         "*://*.nationalpost.com/*"
         "*://*.nationalreview.com/*"
         "*://*.nature.com/*"
         "*://*.nautil.us/*"
+        "*://*.nbcnews.com/*"
         "*://*.ndtvprofit.com/*"
         "*://*.neuepresse.de/*"
         "*://*.newcastleherald.com.au/*"
@@ -1043,6 +1042,7 @@
         "*://*.variety.com/*"
         "*://*.varmatin.com/*"
         "*://*.vegetariantimes.com/*"
+        "*://*.vibilagare.se/*"
         "*://*.vice.com/*"
         "*://*.vikatan.com/*"
         "*://*.vn.at/*"
@@ -1149,6 +1149,7 @@
         "*://*.fnetcore-api-prod.azurewebsites.net/*"
         "*://*.funkemedien.de/*"
         "*://*.mediafin.be/*"
+        "*://*.styria.com/*"
         "*://codebeautify.org/*"
         "*://gitflic.ru/*"
         "*://*/*"
