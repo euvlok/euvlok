@@ -9,12 +9,15 @@
 {
   "ai-warning-for-steam" = buildFirefoxXpiAddon {
     pname = "ai-warning-for-steam";
-    version = "1.0.3";
+    version = "1.1.0";
     addonId = "{29428906-aec3-11f0-beb4-6f7e24e82795}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4849322/ai_warning_for_steam-1.0.3.xpi";
-    sha256 = "sha256-BfVw4P9rLrXovmbkZjOuzsiz/JPAOh95eZNLmI6xDJk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4859426/ai_warning_for_steam-1.1.0.xpi";
+    sha256 = "sha256-OYFD0NGp7DS1Gq95X9xc+zKc1g0cjp07zP478oSKjjk=";
     meta = with lib; {
       platforms = platforms.all;
+      mozPermissions = [
+        "storage"
+      ];
     };
   };
   "angular-devtools" = buildFirefoxXpiAddon {
@@ -1168,10 +1171,10 @@
   };
   "multi-account-containers" = buildFirefoxXpiAddon {
     pname = "multi-account-containers";
-    version = "8.3.7";
+    version = "8.3.8";
     addonId = "@testpilot-containers";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4733069/multi_account_containers-8.3.7.xpi";
-    sha256 = "sha256-f29e97EG0z0bmdLF5TogZdB/eEsYUv6bn3g5TptAUWU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4867303/multi_account_containers-8.3.8.xpi";
+    sha256 = "sha256-MGopSEU2PxWnR46WILQ/keoXYQiHJ4COIye//xbBREc=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1386,10 +1389,10 @@
   };
   "view-page-archive" = buildFirefoxXpiAddon {
     pname = "view-page-archive";
-    version = "7.3.1";
+    version = "7.3.3";
     addonId = "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4840220/view_page_archive-7.3.1.xpi";
-    sha256 = "sha256-fuHQz9d2AJo2vmdRnPwV5z3Oom0YD9QEnXYarIx/ZQU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4871262/view_page_archive-7.3.3.xpi";
+    sha256 = "sha256-gcolvUE5LPSwPUwcTDnr1aTqqEDvik0m+Esd05aZmjQ=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1403,6 +1406,7 @@
         "webRequest"
         "webRequestBlocking"
         "<all_urls>"
+        "scripting"
       ];
     };
   };
