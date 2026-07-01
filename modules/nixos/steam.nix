@@ -22,7 +22,10 @@
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
         extraCompatPackages = builtins.attrValues {
-          inherit (pkgs.unstable) proton-ge-bin;
+          inherit (pkgs.unstable)
+            proton-ge-bin
+            steamtinkerlaunch
+            ;
         };
         extraPackages = builtins.attrValues {
           inherit (pkgs)
@@ -34,6 +37,7 @@
             libvorbis
             mangohud
             nwjs
+            steamtinkerlaunch
             thcrap-steam-proton-wrapper
             vkbasalt
             yad
