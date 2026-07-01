@@ -16,6 +16,11 @@
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-master.url = "github:NixOS/nixpkgs";
+    nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
+    nixpkgs-patch-kde-plasma-6-7 = {
+      url = "https://github.com/NixOS/nixpkgs/pull/520160.diff";
+      flake = false;
+    };
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";

@@ -1,5 +1,6 @@
 inputs:
-inputs.nixpkgs.lib.nixosSystem {
+inputs.nixpkgs-patcher.lib.nixosSystem {
+  nixpkgsPatcher.inputs = inputs;
   specialArgs = { inherit inputs; };
   modules = [
     inputs.self.nixosModules.default
@@ -12,12 +13,6 @@ inputs.nixpkgs.lib.nixosSystem {
         flavor = "mocha";
         accent = "flamingo";
       };
-    }
-    inputs.anime-game-launcher-source.nixosModules.default
-    {
-      programs.anime-game-launcher.enable = true;
-      programs.honkers-railway-launcher.enable = true;
-      aagl.enableNixpkgsReleaseBranchCheck = false;
     }
     inputs.flatpak-declerative-trivial.nixosModules.default
     {

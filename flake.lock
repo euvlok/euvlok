@@ -722,6 +722,33 @@
         "type": "github"
       }
     },
+    "nixpkgs-patch-kde-plasma-6-7": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-z9y2ujn5gISzfDiDsgIO6WKPbe4oaZigx6bSIDhGoAA=",
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/pull/520160.diff"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/pull/520160.diff"
+      }
+    },
+    "nixpkgs-patcher": {
+      "locked": {
+        "lastModified": 1781385507,
+        "narHash": "sha256-CG92ljxfoSmphZuFVCHJPiUh4W0q1l1c69CLFcv++as=",
+        "owner": "gepbird",
+        "repo": "nixpkgs-patcher",
+        "rev": "5e3b493622367a11ead8d53134d2dd2be88bd168",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gepbird",
+        "repo": "nixpkgs-patcher",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable-small": {
       "locked": {
         "lastModified": 1782817790,
@@ -848,6 +875,8 @@
         "nixos-vscode-server-trivial": "nixos-vscode-server-trivial",
         "nixpkgs": "nixpkgs",
         "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-patch-kde-plasma-6-7": "nixpkgs-patch-kde-plasma-6-7",
+        "nixpkgs-patcher": "nixpkgs-patcher",
         "nixpkgs-unstable-small": "nixpkgs-unstable-small",
         "noctalia-trivial": "noctalia-trivial",
         "nvidia-patch-trivial": "nvidia-patch-trivial",
