@@ -7,6 +7,16 @@
   stdenv,
 }:
 {
+  "ai-warning-for-steam" = buildFirefoxXpiAddon {
+    pname = "ai-warning-for-steam";
+    version = "1.0.3";
+    addonId = "{29428906-aec3-11f0-beb4-6f7e24e82795}";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4849322/ai_warning_for_steam-1.0.3.xpi";
+    sha256 = "sha256-BfVw4P9rLrXovmbkZjOuzsiz/JPAOh95eZNLmI6xDJk=";
+    meta = with lib; {
+      platforms = platforms.all;
+    };
+  };
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
     version = "1.16.0";

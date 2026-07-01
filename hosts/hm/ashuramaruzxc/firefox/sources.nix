@@ -95,6 +95,11 @@
       source = "amo";
     }
     {
+      id = "ai-warning-for-steam";
+      name = "AI warning for Steam";
+      source = "amo";
+    }
+    {
       id = "styl-us";
       name = "Stylus";
       source = "amo";
