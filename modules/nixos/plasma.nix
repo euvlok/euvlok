@@ -111,6 +111,7 @@ in
             darkly
             dconf-editor # if not declaratively
             tesseract # spectacle just in case
+            drawy
             ;
           # screenshot OCR
           spectacle = pkgs.kdePackages.spectacle.override { tesseractLanguages = tesseractLang; };
