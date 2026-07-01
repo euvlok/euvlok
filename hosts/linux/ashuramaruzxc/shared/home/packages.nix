@@ -18,10 +18,11 @@ let
         cemu
         chiaki
         dolphin-emu
+        eden
         flycast
         gogdl
         goverlay
-        heroic
+        # heroic
         mangohud
         mgba
         pcsx2
@@ -51,7 +52,7 @@ let
     multimedia = builtins.attrValues {
       inherit (pkgs)
         nicotine-plus
-        pear-desktop
+        # pear-desktop
         qbittorrent
         quodlibet-full
         tenacity
@@ -92,7 +93,6 @@ let
       inherit (pkgs.unstable)
         anki
         gImageReader
-        libreoffice-qt6-fresh
         obsidian
         pdftk
         treesheets
@@ -102,11 +102,11 @@ let
     };
 
     social = builtins.attrValues {
-      inherit (pkgs)
+      inherit (pkgs.unstable)
         dino
         materialgram
         nextcloud-client
-        signal-desktop
+        # signal-desktop
         ;
     };
   };
