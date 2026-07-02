@@ -32,7 +32,7 @@
     pname = "magnolia@12.34";
     version = "4.3.9.0";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ecaa1207d0a02a1656600c686b8df566b207569e";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=a17ed96fb7bbf2cde2d71e3218a25b23b8396d6d";
     sha256 = "sha256-kgSFH53ML3prz3GpY5blmdfalFJ4Ujg1SjPIrgt6zOo=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1040,10 +1040,10 @@
   };
   "sponsorblock" = buildFirefoxXpiAddon {
     pname = "sponsorblock";
-    version = "6.1.5";
+    version = "6.1.6";
     addonId = "sponsorBlocker@ajay.app";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4773757/sponsorblock-6.1.5.xpi";
-    sha256 = "sha256-2Owimuywt44weobUNklokbdV+HTCTA9zJFUcf/0bLhQ=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4870235/sponsorblock-6.1.6.xpi";
+    sha256 = "sha256-q45Mwm5oBww8bzebJTMwuVZ34tJbUhSVgNqoec+bqVQ=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1057,10 +1057,10 @@
   };
   "ublock-origin" = buildFirefoxXpiAddon {
     pname = "ublock-origin";
-    version = "1.71.0";
+    version = "1.72.0";
     addonId = "uBlock0@raymondhill.net";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4814095/ublock_origin-1.71.0.xpi";
-    sha256 = "sha256-R/eIofwsAUgwswuw75WIYVcBuYxSZfsZuM9Lp3mEn+s=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4872816/ublock_origin-1.72.0.xpi";
+    sha256 = "sha256-ec1CarWZgBxZ3+mJXLS4AC+vPaBZ9xEcJyGsEBaKO2Q=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
