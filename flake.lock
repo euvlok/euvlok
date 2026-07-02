@@ -736,11 +736,11 @@
     },
     "nixpkgs-patcher": {
       "locked": {
-        "lastModified": 1781385507,
-        "narHash": "sha256-CG92ljxfoSmphZuFVCHJPiUh4W0q1l1c69CLFcv++as=",
+        "lastModified": 1781789965,
+        "narHash": "sha256-ZRlWPq2Qms6KbesJrj7cUe2GN7s8BZISfp9ZbrCi2x0=",
         "owner": "gepbird",
         "repo": "nixpkgs-patcher",
-        "rev": "5e3b493622367a11ead8d53134d2dd2be88bd168",
+        "rev": "d2abed2b94b7955e05b4e2e8a9b8ac45597ecf94",
         "type": "github"
       },
       "original": {
