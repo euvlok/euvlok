@@ -180,10 +180,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.9.0";
+    version = "4.3.9.2";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=828d7c61c855445e177db5a22724746a53a98432";
-    sha256 = "sha256-kgSFH53ML3prz3GpY5blmdfalFJ4Ujg1SjPIrgt6zOo=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=1f121dc11acba8941a8e9cbd2516909e6c332d33";
+    sha256 = "sha256-XJz/4E/Xcpuj9zA9Tnin0mSpoxPrs+HUd/7TvPK5dis=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -209,7 +209,6 @@
         "*://*.aerokurier.de/*"
         "*://*.aerztezeitung.de/*"
         "*://*.afr.com/*"
-        "*://*.aftenposten.no/*"
         "*://*.aisnenouvelle.fr/*"
         "*://*.ajc.com/*"
         "*://*.al-monitor.com/*"
@@ -898,7 +897,6 @@
         "*://*.slate.com/*"
         "*://*.slideshare.net/*"
         "*://*.sloanreview.mit.edu/*"
-        "*://*.sltrib.com/*"
         "*://*.smartcompany.com.au/*"
         "*://*.smh.com.au/*"
         "*://*.sofrep.com/*"
@@ -985,7 +983,6 @@
         "*://*.thehill.com/*"
         "*://*.thehindu.com/*"
         "*://*.thehindubusinessline.com/*"
-        "*://*.theinformation.com/*"
         "*://*.theintercept.com/*"
         "*://*.thejuggernaut.com/*"
         "*://*.thelampmagazine.com/*"
