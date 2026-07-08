@@ -119,10 +119,10 @@
   };
   "floccus" = buildFirefoxXpiAddon {
     pname = "floccus";
-    version = "5.9.1";
+    version = "5.10.1";
     addonId = "floccus@handmadeideas.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4759586/floccus-5.9.1.xpi";
-    sha256 = "sha256-/RCBDIGKYWihxbtn2VrzOintIdXEl4v6ef1bs0I3YmM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4887521/floccus-5.10.1.xpi";
+    sha256 = "sha256-/0KulYMZsvM97t3QIL2R8itXpvOCBA9y8Sc6Q51bITY=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1318,10 +1318,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.4.4";
+    version = "2.4.5";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4886680/styl_us-2.4.4.xpi";
-    sha256 = "sha256-5qBO2AAADDRxf585Njb0OYZ2523ov8I2KwpoSob0ONg=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4887700/styl_us-2.4.5.xpi";
+    sha256 = "sha256-UJVXtULZ3NSWoxaxCNrby9XPqexGpEwfN8Rj1F8yJwo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
