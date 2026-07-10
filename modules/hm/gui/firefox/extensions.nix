@@ -30,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.9.2";
+    version = "4.3.9.4";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=e172a9561b61b4d03dc5125444da6a56600f7066";
-    sha256 = "sha256-XJz/4E/Xcpuj9zA9Tnin0mSpoxPrs+HUd/7TvPK5dis=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=f1f63d195d28a1a09a7c823a53ce88a8ec4071b8";
+    sha256 = "sha256-GgxNJrhgh+hZZUl5JcBCdS6RtDLNGNcWGSKpf4QMXlw=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -249,7 +249,6 @@
         "*://*.dna.fr/*"
         "*://*.dnevnik.bg/*"
         "*://*.doorbraak.be/*"
-        "*://*.dvhn.nl/*"
         "*://*.dwell.com/*"
         "*://*.eastbaytimes.com/*"
         "*://*.eastwest.eu/*"
@@ -357,7 +356,6 @@
         "*://*.gva.be/*"
         "*://*.haaretz.co.il/*"
         "*://*.haaretz.com/*"
-        "*://*.haarlemsdagblad.nl/*"
         "*://*.handelsblatt.com/*"
         "*://*.handelszeitung.ch/*"
         "*://*.harpers.org/*"
@@ -482,7 +480,6 @@
         "*://*.lavoz.com.ar/*"
         "*://*.lavozdigital.es/*"
         "*://*.law.com/*"
-        "*://*.lc.nl/*"
         "*://*.le1hebdo.fr/*"
         "*://*.lecanardenchaine.fr/*"
         "*://*.lecho.be/*"
@@ -492,7 +489,6 @@
         "*://*.lefigaro.fr/*"
         "*://*.legrandcontinent.eu/*"
         "*://*.lehighvalleylive.com/*"
-        "*://*.leidschdagblad.nl/*"
         "*://*.lejdd.fr/*"
         "*://*.lejsl.com/*"
         "*://*.lemagit.fr/*"
@@ -522,7 +518,6 @@
         "*://*.libelle.nl/*"
         "*://*.liberation-champagne.fr/*"
         "*://*.liberation.fr/*"
-        "*://*.limburger.nl/*"
         "*://*.linda.nl/*"
         "*://*.lindependant.fr/*"
         "*://*.linforme.com/*"
@@ -564,7 +559,6 @@
         "*://*.milenio.com/*"
         "*://*.mittelbayerische.de/*"
         "*://*.mlive.com/*"
-        "*://*.mnimarkets.com/*"
         "*://*.moda.it/*"
         "*://*.modernhealthcare.com/*"
         "*://*.modernretail.co/*"
@@ -608,7 +602,6 @@
         "*://*.nikkei.com/*"
         "*://*.nj.com/*"
         "*://*.nola.com/*"
-        "*://*.noordhollandsdagblad.nl/*"
         "*://*.nordlittoral.fr/*"
         "*://*.northerndailyleader.com.au/*"
         "*://*.northjersey.com/*"
@@ -992,7 +985,6 @@
         "*://*.hadrianpaywall.com/*"
         "*://*.ith9ueyuhu.it/*"
         "*://*.mcclatchy.com/*"
-        "*://*.ndcmediagroep.nl/*"
         "*://*.nhst.tech/*"
         "*://*.nyt.com/*"
         "*://*.prisa.com/*"
