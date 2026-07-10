@@ -1302,10 +1302,10 @@
   };
   "steam-database" = buildFirefoxXpiAddon {
     pname = "steam-database";
-    version = "4.34";
+    version = "4.35";
     addonId = "firefox-extension@steamdb.info";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4803730/steam_database-4.34.xpi";
-    sha256 = "sha256-uBHSyMJDzPWFeWmegVOx4kw6yurBPCbpfaojLFsLS7I=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4891926/steam_database-4.35.xpi";
+    sha256 = "sha256-N8HNwur6cB42Xrjg7ypQUblW6h6ZQbOZtas/pCFPwSM=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
