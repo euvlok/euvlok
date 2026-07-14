@@ -1222,10 +1222,10 @@
   };
   "reddit-enhancement-suite" = buildFirefoxXpiAddon {
     pname = "reddit-enhancement-suite";
-    version = "5.24.8";
+    version = "5.24.9";
     addonId = "jid1-xUfzOsOFlzSOXg@jetpack";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4424459/reddit_enhancement_suite-5.24.8.xpi";
-    sha256 = "sha256-FYQFxQcEos0rxXwmipW0Hay6UJtw1x1uooCwQhW7h3M=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4881407/reddit_enhancement_suite-5.24.9.xpi";
+    sha256 = "sha256-2s3gaoKJtVjX86lc2hEkWUMOP6wwQpKeri3tamfkQNg=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
