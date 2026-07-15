@@ -33,7 +33,7 @@
         disableDeepLinks.enable = true;
         webContextMenus.enable = true;
         # friendCloud.enable = true;
-        SaveFavoriteGIFs.enable = true;
+        saveFavoriteGifs.enable = true;
         betterCommands = {
           enable = true;
           autoFillArguments = true;
@@ -56,7 +56,7 @@
           eagerLoad = true;
           organizeMenu = true;
         };
-        ClearURLs.enable = true;
+        clearUrls.enable = true;
         consoleJanitor = {
           enable = true;
           disableSpotifyLogger = true;

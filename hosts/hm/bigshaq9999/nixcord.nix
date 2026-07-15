@@ -8,7 +8,7 @@
     (prefers-color-scheme: light);
   '';
   programs.nixcord.config.plugins = {
-    ClearURLs.enable = true;
+    clearUrls.enable = true;
     fixImagesQuality.enable = true;
     gifPaste.enable = true;
     greetStickerPicker.enable = true;
