@@ -65,10 +65,10 @@
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.128";
+    version = "4.9.129";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4859299/darkreader-4.9.128.xpi";
-    sha256 = "sha256-Mb5p5eeD4w3CVe41fypyM0hvgBy6BhVg8aRN65YDKW8=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4899461/darkreader-4.9.129.xpi";
+    sha256 = "sha256-9PBH/gjkILbSlhdzjqAKe3hIkrImK35vON0JuO6VikQ=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -182,7 +182,7 @@
     pname = "magnolia@12.34";
     version = "4.3.9.4";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=537799a0e4cc641081e4dca39a2642b48c93958c";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=5a96dd87691ba3c8f5184c823b6cdd6fcbd46b8d";
     sha256 = "sha256-GgxNJrhgh+hZZUl5JcBCdS6RtDLNGNcWGSKpf4QMXlw=";
     meta = with lib; {
       platforms = platforms.all;
@@ -1310,10 +1310,10 @@
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.4.5";
+    version = "2.4.6";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4887700/styl_us-2.4.5.xpi";
-    sha256 = "sha256-UJVXtULZ3NSWoxaxCNrby9XPqexGpEwfN8Rj1F8yJwo=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4899605/styl_us-2.4.6.xpi";
+    sha256 = "sha256-aVQICVK/EdrmbZ1Gz3ObqYlmxi1Sq4rl2IhNHmIMdCg=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
