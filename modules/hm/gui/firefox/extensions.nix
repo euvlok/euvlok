@@ -30,10 +30,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.3.9.4";
+    version = "4.4.0.2";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=aaf73871841088bad665cb11f1b2ad69d7426a2f";
-    sha256 = "sha256-GgxNJrhgh+hZZUl5JcBCdS6RtDLNGNcWGSKpf4QMXlw=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=5d144213b4413e5f6bef449a22c86a5c443faa8c";
+    sha256 = "sha256-/m3Mdgs4YjM9ErroEBuTEdxPpkaIkVDXbbs4de0anKY=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -377,7 +377,6 @@
         "*://*.housebeautiful.com/*"
         "*://*.houstonchronicle.com/*"
         "*://*.hoy.es/*"
-        "*://*.huffingtonpost.it/*"
         "*://*.humo.be/*"
         "*://*.hydrogeninsight.com/*"
         "*://*.iai.tv/*"
@@ -559,7 +558,6 @@
         "*://*.milenio.com/*"
         "*://*.mittelbayerische.de/*"
         "*://*.mlive.com/*"
-        "*://*.moda.it/*"
         "*://*.modernhealthcare.com/*"
         "*://*.modernretail.co/*"
         "*://*.monacomatin.mc/*"
@@ -628,7 +626,9 @@
         "*://*.observer.co.uk/*"
         "*://*.ocbj.com/*"
         "*://*.ocregister.com/*"
+        "*://*.ogj.com/*"
         "*://*.oklahoman.com/*"
+        "*://*.oko.press/*"
         "*://*.ole.com.ar/*"
         "*://*.omaha.com/*"
         "*://*.on3.com/*"
@@ -800,6 +800,7 @@
         "*://*.the-independent.com/*"
         "*://*.the-past.com/*"
         "*://*.the-scientist.com/*"
+        "*://*.the-star.co.ke/*"
         "*://*.the-tls.com/*"
         "*://*.theadvocate.com.au/*"
         "*://*.theadvocate.com/*"
@@ -853,6 +854,7 @@
         "*://*.thestar.com/*"
         "*://*.thestate.com/*"
         "*://*.thesun.co.uk/*"
+        "*://*.thesun.ie/*"
         "*://*.thetimes.com/*"
         "*://*.theverge.com/*"
         "*://*.theweek.com/*"
@@ -976,7 +978,6 @@
         "*://*.danzz.ch/*"
         "*://*.emol.cl/*"
         "*://*.epochbase.com/*"
-        "*://*.epochbase.eu/*"
         "*://*.flip-pay.com/*"
         "*://*.ftspecialist-us.com/*"
         "*://*.gjirafa.tech/*"
