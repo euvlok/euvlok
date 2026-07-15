@@ -44,6 +44,7 @@
         inputs.self.homeModules.os
         inputs.self.homeConfigurations.lay-by
         {
+          euvlok.nixpkgs.unstableSource = inputs.nixpkgs-unstable;
           home.shell.enableShellIntegration = true;
           hm = {
             #clankers.codex.enable = true;

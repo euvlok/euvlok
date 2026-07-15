@@ -1,9 +1,20 @@
 {
   inputs,
   config,
+  lib,
   ...
 }:
 {
+  imports = [
+    {
+      options.euvlok.nixpkgs.unstableSource = lib.options.mkOption {
+        type = lib.types.raw;
+        default = inputs.nixpkgs-unstable-small;
+        description = "Nixpkgs source imported as pkgs.unstable.";
+      };
+    }
+  ];
+
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = [
     inputs.self.overlays.default
@@ -12,7 +23,7 @@
   ]
   ++ [
     (_: prev: {
-      unstable = import inputs.nixpkgs-unstable-small {
+      unstable = import config.euvlok.nixpkgs.unstableSource {
         inherit (prev.stdenv.hostPlatform) system;
         inherit (config.nixpkgs) config;
         overlays = [

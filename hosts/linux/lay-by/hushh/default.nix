@@ -6,6 +6,7 @@ inputs.nixpkgs.lib.nixosSystem {
     ./configuration.nix
     ./home.nix
     {
+      euvlok.nixpkgs.unstableSource = inputs.nixpkgs-unstable;
       nixos = {
         gui.enable = true;
         nvidia.enable = true;
