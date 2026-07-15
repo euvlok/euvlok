@@ -11,6 +11,10 @@
 
   nixos.boot.systemd-boot.enable = true;
   boot.loader.systemd-boot.memtest86.enable = true;
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 20;
+    "vm.vfs_cache_pressure" = 75;
+  };
 
   networking.hostName = "blind-faith";
 

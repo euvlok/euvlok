@@ -13,6 +13,7 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
   boot.initrd.availableKernelModules = [
     "xhci_pci"
@@ -31,6 +32,7 @@
     "udev.log_level=3"
     "rd.systemd.show_status=auto"
     "boot.shell_on_fail"
+    "mg_lru.types=7"
   ];
   boot.consoleLogLevel = 3;
   boot.initrd.verbose = false;
@@ -73,7 +75,7 @@
   swapDevices = [
     {
       device = "/var/lib/swapfile";
-      size = 16 * 1024;
+      size = 4 * 1024;
       randomEncryption.enable = true;
     }
   ];

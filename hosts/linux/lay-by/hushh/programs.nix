@@ -19,7 +19,46 @@
 
     fish.enable = true;
 
-    nix-ld.enable = true;
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        stdenv.cc.cc.lib
+        glibc
+        zlib
+        openssl
+        curl
+        expat
+        glib
+        nss
+        nspr
+        dbus
+        atk
+        at-spi2-atk
+        at-spi2-core
+        cairo
+        gtk3
+        pango
+        libx11
+        libxcomposite
+        libxdamage
+        libxext
+        libxfixes
+        libxrandr
+        libxcb
+        libxkbcommon
+        systemd
+        alsa-lib
+        mesa
+        libgbm
+        libxcrypt
+        bzip2
+        xz
+        libffi
+        sqlite
+        ncurses
+        readline
+      ];
+    };
 
     appimage = {
       enable = true;

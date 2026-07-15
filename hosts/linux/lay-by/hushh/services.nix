@@ -49,6 +49,12 @@
     };
 
     # Misc services
+    earlyoom = {
+      enable = true;
+      freeMemThreshold = 5;
+      freeSwapThreshold = 5;
+    };
+
     gvfs.enable = true;
     tumbler.enable = true;
     dbus.enable = true;
