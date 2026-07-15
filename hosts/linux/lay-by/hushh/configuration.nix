@@ -24,7 +24,13 @@
     adminIdentities = [ "unix-group:wheel" ];
   };
 
-  nix.settings.max-jobs = 8;
+  nix.settings = {
+    max-jobs = 8;
+    trusted-users = [
+      "hushh"
+      "@wheel"
+    ];
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.hushh = {
