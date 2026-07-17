@@ -22,10 +22,10 @@
   };
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.16.0";
+    version = "1.17.0";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4845693/angular_devtools-1.16.0.xpi";
-    sha256 = "sha256-8JpjJ/j5z02ktUkEzapR9lWT98W2KZPdM4HhJegSC5Q=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4902165/angular_devtools-1.17.0.xpi";
+    sha256 = "sha256-oaqxXtG/jsbxiKrk3y8Bi/EYso4TSX7Ig6pIMmFPKEM=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -1223,10 +1223,10 @@
   };
   "reddit-enhancement-suite" = buildFirefoxXpiAddon {
     pname = "reddit-enhancement-suite";
-    version = "5.24.9";
+    version = "5.24.10";
     addonId = "jid1-xUfzOsOFlzSOXg@jetpack";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4881407/reddit_enhancement_suite-5.24.9.xpi";
-    sha256 = "sha256-2s3gaoKJtVjX86lc2hEkWUMOP6wwQpKeri3tamfkQNg=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4899821/reddit_enhancement_suite-5.24.10.xpi";
+    sha256 = "sha256-RXPP2xAZNGfpnh3Vp5LyOuaXZFQMLgbQRE8SqBzcTwo=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
