@@ -180,10 +180,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.4.0.2";
+    version = "4.4.0.4";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=ade48158dedff5ec26753a5bab262d7588c958ba";
-    sha256 = "sha256-/m3Mdgs4YjM9ErroEBuTEdxPpkaIkVDXbbs4de0anKY=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=d08ace0347fc512e83f746856ea696021f4829fd";
+    sha256 = "sha256-UvRZqT2iTAi8LpSl7Nne+h/ky8SpRRCqvmx2PNyETYw=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
