@@ -75,7 +75,15 @@ in
         };
     })
     {
-      catppuccin.sources.gtk = inputs.catppuccin-gtk.packages.${pkgs.stdenvNoCC.hostPlatform.system}.gtk;
+      catppuccin.sources.gtk =
+        inputs.catppuccin-gtk.packages.${pkgs.stdenvNoCC.hostPlatform.system}.gtk.overrideAttrs
+          (oldAttrs: {
+            # Python 3.14 rejects `type` for BooleanOptionalAction.
+            postPatch = (oldAttrs.postPatch or "") + ''
+              substituteInPlace sources/build/args.py \
+                --replace-fail '        type=bool,' ""
+            '';
+          });
     }
   ];
 }
