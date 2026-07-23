@@ -110,6 +110,23 @@
   };
   programs.zsh.enable = true;
 
+  security.pam.loginLimits = [
+    {
+      domain = "ashuramaru";
+      type = "hard";
+      item = "nofile";
+      value = 1048576;
+    }
+  ];
+
+  systemd = {
+    settings.Manager.DefaultLimitNOFILE = "1024:1048576";
+    tmpfiles.rules = [
+      "w /sys/kernel/mm/transparent_hugepage/defrag - - - - defer+madvise"
+    ];
+    user.settings.Manager.DefaultLimitNOFILE = "1024:1048576";
+  };
+
   nixpkgs.config.permittedInsecurePackages = [
     "electron-39.8.10"
   ];

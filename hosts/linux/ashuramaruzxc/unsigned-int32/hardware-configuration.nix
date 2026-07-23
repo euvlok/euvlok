@@ -9,6 +9,16 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernel.sysctl = {
+      "kernel.nmi_watchdog" = 1;
+      "vm.compaction_proactiveness" = 20;
+      "vm.defrag_mode" = 1;
+      "vm.dirty_background_bytes" = 536870912;
+      "vm.dirty_bytes" = 4294967296;
+      "vm.min_free_kbytes" = 1048576;
+      "vm.vfs_cache_pressure" = 50;
+      "vm.watermark_scale_factor" = 100;
+    };
     kernelModules = [
       "kvm-amd"
       "zenpower"
@@ -47,6 +57,9 @@
       ### ------------------------------------ ###
       "iommu=pt"
       "amd_pstate=active"
+      ### ------------------------------------ ###
+      "transparent_hugepage=always"
+      "thp_anon=16K:always;2M:always"
       ### ------------------------------------ ###
       "pcie_aspm=default"
     ];
@@ -319,6 +332,7 @@
   fileSystems."/Shared/games" = {
     device = "/dev/disk/by-uuid/5053def6-e6f1-499f-93b2-d1d639644690";
     fsType = "ext4";
+    options = [ "noatime" ];
   };
   ### ---------------/dev/nvme2n1p1-------------------- ###
 
