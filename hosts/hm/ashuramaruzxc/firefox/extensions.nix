@@ -39,10 +39,10 @@
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.6.1";
+    version = "2026.7.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4875950/bitwarden_password_manager-2026.6.1.xpi";
-    sha256 = "sha256-e6FsPUIqsofbF7AUpGg7rONjQeRx5NT9WKwrYWxqwX0=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4915668/bitwarden_password_manager-2026.7.0.xpi";
+    sha256 = "sha256-EYNuudKryZFLsze1fiDFoJz0TyT6Vy9+iGOE/TUKURI=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [
@@ -180,10 +180,10 @@
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.4.0.4";
+    version = "4.4.0.5";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=a296edcd7440014d6f5aa91dd96c30e56d70d9f7";
-    sha256 = "sha256-UvRZqT2iTAi8LpSl7Nne+h/ky8SpRRCqvmx2PNyETYw=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=0141fb57f4712c9e074cfc0682d5dcfc6d12b16b";
+    sha256 = "sha256-aWv6kusp4uC0gjRbfzWJbQx4DRm70gXGGHJvZ0DsDzA=";
     meta = with lib; {
       platforms = platforms.all;
       mozPermissions = [

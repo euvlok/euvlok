@@ -55,11 +55,11 @@ lib.lists.flatten [
   {
     id = "lkbebcjgcmobigpeffafkodonchffocl";
     crxPath = pkgs.fetchurl {
-      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=a296edcd7440014d6f5aa91dd96c30e56d70d9f7";
+      url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass-paywalls-chrome-clean-latest.crx&inline=false&commit=0141fb57f4712c9e074cfc0682d5dcfc6d12b16b";
       name = "lkbebcjgcmobigpeffafkodonchffocl.crx";
-      hash = "sha256-rx1pGt7Q1/3SVp/ZhHfJpwC2U3aW07NWVD+YWO5x/2Y=";
+      hash = "sha256-5bUa8eE58INGr429HMhoaDZwJ57xLE+gsr7wic3aAtU=";
     };
-    version = "4.4.0.4";
+    version = "4.4.0.5";
   }
   {
     id = "lmkeolibdeeglfglnncmfleojmakecjb";
