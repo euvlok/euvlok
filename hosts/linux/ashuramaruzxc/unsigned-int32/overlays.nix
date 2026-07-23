@@ -4,17 +4,20 @@
     (final: _prev: {
       gtk-nocsd = final.stdenv.mkDerivation {
         pname = "gtk-nocsd";
-        version = "4.0";
+        version = "4.4";
 
         src = final.fetchFromGitea {
           domain = "codeberg.org";
           owner = "MorsMortium";
           repo = "GTK-NoCSD";
-          rev = "ecd66fe95850b2416ba85fbfcac9f0d248837dcf";
-          hash = "sha256-PHP5KSld1FrQCHj3Xdt+juBqGU3au7LWh976B1YtFPY=";
+          rev = "981788a080d419057089eb1cfe0eb10d45ab81bb";
+          hash = "sha256-8aLvA5znz9DL+kAlSckOaErS7Xv7enQIoExaad3AQtc=";
         };
 
-        nativeBuildInputs = [ final.pkg-config ];
+        nativeBuildInputs = [
+          final.patchelf
+          final.pkg-config
+        ];
         buildInputs = [
           final.glib
           final.libadwaita
@@ -32,6 +35,13 @@
           install -Dm644 Source/gtk-nocsd.csh "$out/share/doc/gtk-nocsd/examples/profile.d/gtk-nocsd.csh"
 
           runHook postInstall
+        '';
+
+        # Upstream deliberately dlopens GLib instead of linking it. Keep that
+        # behavior while making its bare sonames discoverable in the Nix store.
+        postFixup = ''
+          patchelf --add-rpath ${final.lib.getLib final.glib}/lib \
+            "$out/lib/libgtk-nocsd.so.0"
         '';
 
         meta = {
