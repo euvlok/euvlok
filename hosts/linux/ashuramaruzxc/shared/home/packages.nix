@@ -39,7 +39,7 @@ let
       inherit (pkgs.unstable)
         bitwarden-desktop
         keepassxc
-        thunderbird
+        thunderbird-bin
         ;
     };
 

@@ -100,8 +100,7 @@ let
       pkgs.unstable.piper
 
       # until euroffice is statble
-      pkgs.unstable.softmaker-office-nx
-      pkgs.unstable.wpsoffice
+      # pkgs.unstable.softmaker-office-nx
     ];
 in
 {
