@@ -126,9 +126,7 @@ jobs:
             ${{ github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
       - name: Evaluate all flake outputs and run checks
-        run: >-
-          nix --extra-experimental-features parallel-eval
-          --option eval-cores 1 flake check --all-systems
+        run: bash .github/scripts/check-flake.sh
 
   development:
     name: Development (${{ matrix.system }})
