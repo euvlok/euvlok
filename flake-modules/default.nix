@@ -15,6 +15,7 @@ let
   overlaysModule = flake-parts-lib.importApply ./overlays.nix {
     inherit inputs supportedSystems;
   };
+  packagesModule = ./packages.nix;
   modulesModule = flake-parts-lib.importApply ./modules.nix {
     inherit inputs;
   };
@@ -110,6 +111,7 @@ let
       hostsModule
       modulesModule
       overlaysModule
+      packagesModule
       testsModule
     ];
   };
