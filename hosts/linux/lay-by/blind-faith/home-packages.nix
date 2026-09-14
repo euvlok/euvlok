@@ -13,6 +13,7 @@
       hyprcursor
       htop
       mission-center
+      legcord
       ;
     inherit (pkgs.unstable)
       # Gaming

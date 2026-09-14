@@ -111,8 +111,8 @@ _: {
       "$mainMod, F, fullscreen"
 
       # Discord mute keybind
-      ", Control_r, focuswindow, class:^discord$"
-      ", Control_r, sendshortcut, Control_L&SHIFT, M, class:^discord$"
+      ", Control_r, focuswindow, class:^legcord$"
+      ", Control_r, sendshortcut, Control_L&SHIFT, M, class:^legcord$"
       ", Control_r, focuscurrentorlast"
     ];
 
