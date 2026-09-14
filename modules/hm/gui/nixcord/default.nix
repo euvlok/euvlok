@@ -25,7 +25,7 @@
       useGlobalPkgs = true;
       discord.krisp.enable = true;
       discord.vencord.enable = true;
-      discord.openASAR.enable = true;
+      discord.openASAR.enable = false; # openASAR currently breaks discord on linux. Waiting for upstream patch before re-enabling.
       config.useQuickCss = true;
     };
     programs.nixcord.config.plugins = {
