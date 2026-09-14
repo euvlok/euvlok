@@ -12,6 +12,7 @@
       hyprshot
       hyprcursor
       htop
+      mission-center
       ;
     inherit (pkgs.unstable)
       # Gaming
