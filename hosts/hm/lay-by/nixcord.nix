@@ -1,4 +1,12 @@
-_: {
+{ pkgs, ... }:
+{
+  programs.nixcord.discord.enable = false;
+  programs.nixcord.legcord = {
+    enable = true;
+    package = pkgs.unstable.legcord;
+    vencord.enable = true;
+  };
+
   programs.nixcord.config.enableReactDevtools = true;
   programs.nixcord.config.plugins = {
     betterGifPicker.enable = true;
