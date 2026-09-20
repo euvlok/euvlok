@@ -12,6 +12,7 @@
       hyprshot
       hyprcursor
       htop
+      mission-center
       ;
     inherit (pkgs.unstable)
       # Gaming
@@ -29,8 +30,6 @@
       meson
       cmake
       font-manager
-      python3
-      uv
       ;
     inherit (pkgs.unstable)
       # nim

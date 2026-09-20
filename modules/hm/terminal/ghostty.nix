@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (pkgs.stdenvNoCC) isDarwin;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   superKey = if isDarwin then "super" else "ctrl";
   mkSuper = key: command: "${superKey}+${key}=${command}";

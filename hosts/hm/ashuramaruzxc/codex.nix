@@ -7,7 +7,7 @@
 let
   cfg = config.euvlok.home.codex;
   inherit (config.catppuccin) accent flavor;
-  inherit (pkgs.stdenvNoCC) isDarwin;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   palette = lib.trivial.importJSON "${config.catppuccin.sources.palette}/palette.json";
   lightColors = palette.latte.colors;

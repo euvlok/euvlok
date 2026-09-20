@@ -67,7 +67,7 @@ let
     '';
 
     rebuild =
-      if pkgs.stdenvNoCC.isLinux then
+      if pkgs.stdenvNoCC.hostPlatform.isLinux then
         "nixos-rebuild switch --use-remote-sudo --flake $(readlink -f /etc/nixos)"
       else
         "sudo nix-darwin switch --flake $(readlink -f /etc/nixos)";

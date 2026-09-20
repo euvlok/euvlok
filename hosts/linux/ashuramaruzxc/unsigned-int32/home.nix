@@ -2,7 +2,6 @@
   animeCursorsSource,
   catppuccinModule,
   codexDesktopModule,
-  codexDesktopPackages,
   homeManagerModule,
   personalModule,
   sharedModule,
@@ -14,36 +13,6 @@
 }:
 let
   homePackages = import ../shared/home/packages.nix { inherit pkgs lib; };
-  codexLinuxFeatures = [
-    "appshots"
-    "directory-only-working-tree-watch"
-    "mcp-helper-reaper"
-    "node-repl-reaper"
-    "persistent-status-panel"
-    "remote-control-ui"
-    "ui-tweaks"
-  ];
-  codexDesktopPackage =
-    (codexDesktopPackages.${pkgs.stdenv.hostPlatform.system}.codex-desktop.override {
-      enableComputerUseUi = true;
-      linuxFeatureIds = codexLinuxFeatures ++ [ "remote-mobile-control" ];
-    }).overrideAttrs
-      (_oldAttrs: {
-        # The upstream feature supports archive overrides, but its Nix package
-        # does not yet wire them in. Keep npm registry access out of the sandbox.
-        CODEX_WATCHBOUND_ARCHIVE = pkgs.fetchurl {
-          url = "https://registry.npmjs.org/watchbound/-/watchbound-2.1.1.tgz";
-          hash = "sha256-KVZ0IcHv7gQWWNtLUAk/kVWGBNNSF4yy523TMefFVE0=";
-        };
-        CODEX_WATCHBOUND_NODE_ARCHIVE = pkgs.fetchurl {
-          url = "https://registry.npmjs.org/@gadicc/watchbound-node/-/watchbound-node-2.1.1.tgz";
-          hash = "sha256-H4JB0Idx+M8A1Q74lTJ4k0ST53Eq533LZBhIfhZ/UoQ=";
-        };
-        CODEX_WATCHBOUND_NODE_X64_ARCHIVE = pkgs.fetchurl {
-          url = "https://registry.npmjs.org/@gadicc/watchbound-node-linux-x64-gnu/-/watchbound-node-linux-x64-gnu-2.1.1.tgz";
-          hash = "sha256-CQPJ7sbr4SfLOq57zpLds3XCFQPvVDihMsKKGVF+RMM=";
-        };
-      });
   cursorModule = lib.modules.importApply ../shared/home/cursor.nix {
     cursorName = "touhou-reimu";
     cursorPackage = animeCursorsSource.packages.${pkgs.stdenvNoCC.hostPlatform.system}.cursors;
@@ -69,14 +38,17 @@ let
 
       programs.codexDesktopLinux = {
         enable = true;
-        package = codexDesktopPackage;
         computerUseUi.enable = true;
         remoteMobileControl.enable = true;
-        linuxFeatures = codexLinuxFeatures;
-        remoteControl = {
-          enable = true;
-          package = pkgs.unstable.codex;
-        };
+        linuxFeatures = [
+          "appshots"
+          "codex-micro"
+          "pet-overlay"
+          "tray-usage"
+          "ui-tweaks"
+          "read-aloud"
+        ];
+        cliPackage = pkgs.eupkgs.codex;
       };
     }
   ];
@@ -96,9 +68,9 @@ let
     ]
     ++ [
       pkgs.unstable.piper
+      #until euroffice is statble
+      pkgs.unstable.softmaker-office-nx
 
-      # until euroffice is statble
-      # pkgs.unstable.softmaker-office-nx
     ];
 in
 {
@@ -108,6 +80,7 @@ in
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "bak";
+    overwriteBackup = true;
     sharedModules = [
       sharedModule
       personalModule
@@ -125,6 +98,7 @@ in
         { home.packages = allPackages; }
         cursorModule
         {
+          services.easyeffects.enable = true;
           services.protonmail-bridge.enable = true;
           programs = {
             rbw = {

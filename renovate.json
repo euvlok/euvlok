@@ -1,10 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:best-practices", "group:all"],
+  "timezone": "Europe/Sofia",
   "automerge": true,
   "automergeType": "branch",
   "branchConcurrentLimit": 1,
+  "commitBodyTable": true,
   "dependencyDashboard": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "schedule": ["* 0-5 1 * *"]
+  },
+  "nix": {
+    "enabled": true
+  },
   "platformAutomerge": false,
   "prCreation": "status-success"
 }

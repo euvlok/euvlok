@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  inherit (pkgs.stdenvNoCC) isDarwin;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   genKeyBind = desc: on: run: { inherit desc on run; };
 in

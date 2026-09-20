@@ -38,6 +38,14 @@ nix build .#nixosBuilds.blind-faith
 nix build .#darwinConfigurations.faputa.system
 ```
 
+Update the pinned NVIDIA driver (rewrites `packages/nvidia-driver.nix`
+through [nix-update](https://github.com/Mic92/nix-update)):
+
+```sh
+nix run .#nvidia-prefetch
+nix run .#nvidia-prefetch -- 615.71.09
+```
+
 ## Hosts
 
 | Output           | Owner           | Platform         | CI runner          |
@@ -60,6 +68,7 @@ its matrix from that output rather than duplicating the list
 | [`flake-modules/`](./flake-modules) | Public outputs and the typed host inventory. |
 | [`hosts/`](./hosts)                 | Internal machine and personal profiles.      |
 | [`modules/`](./modules)             | Shared NixOS, nix-darwin, and HM modules.    |
+| [`packages/`](./packages)           | Local packages and the NVIDIA driver pin.    |
 | [`lib/`](./lib)                     | Helpers and overlays.                        |
 | [`secrets/`](./secrets)             | SOPS-encrypted secrets.                      |
 
@@ -134,12 +143,10 @@ EVAL_RUNS=5 ./scripts/eval_performance.sh \
   .#darwinConfigurations.faputa.system.drvPath
 ```
 
-Run Darwin evaluations locally. Run Linux evaluations on the Linux host, from its
-`~/euvlok` checkout:
+Run Darwin evaluations locally. Run Linux evaluations from the repository checkout
+on a Linux host:
 
 ```sh
-ssh evy@100.123.214.78
-cd ~/euvlok
 pinned_nix="$(nix eval --raw \
   .#nixosConfigurations.blind-faith.config.nix.package.outPath)"
 PATH="${pinned_nix}/bin:${PATH}" \

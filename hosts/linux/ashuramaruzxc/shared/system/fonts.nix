@@ -45,5 +45,5 @@
       zed-mono
       ;
   };
-  fonts.fontDir.enable = lib.modules.mkIf pkgs.stdenvNoCC.isLinux true;
+  fonts.fontDir.enable = lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux true;
 }

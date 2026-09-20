@@ -43,7 +43,12 @@ let
           ;
       }
       ++ [
-        (if pkgs.stdenvNoCC.isx86_64 then pkgs.unstable.thunderbird-bin else pkgs.unstable.thunderbird)
+        (
+          if pkgs.stdenvNoCC.hostPlatform.isx86_64 then
+            pkgs.unstable.thunderbird-bin
+          else
+            pkgs.unstable.thunderbird
+        )
       ];
 
     jetbrains = [

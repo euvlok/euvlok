@@ -6,7 +6,27 @@
 }:
 let
   languageDefinitions = import ./catalog { inherit pkgs lib; };
-  editorModule = module: lib.modules.importApply module { inherit languageDefinitions; };
+  enabledLanguages = lib.attrsets.filterAttrs (
+    name: _: config.euvlok.home.languages.${name}.enable or false
+  ) languageDefinitions;
+
+  enabledLanguagePackages = lib.lists.concatAttrValues (
+    lib.attrsets.mapAttrs (
+      name: def:
+      let
+        langCfg = config.euvlok.home.languages.${name};
+      in
+      (def.packages or [ ])
+      ++ lib.lists.optional (def ? versionMap) def.versionMap.${langCfg.version}
+      ++ langCfg.extraPackages
+    ) enabledLanguages
+  );
+
+  editorModule =
+    module:
+    lib.modules.importApply module {
+      inherit enabledLanguages enabledLanguagePackages;
+    };
 in
 {
   imports = [
@@ -52,44 +72,19 @@ in
     }
   ) languageDefinitions;
 
-  config =
-    let
-      enabledLanguages = lib.attrsets.filterAttrs (
-        name: _: config.euvlok.home.languages.${name}.enable or false
-      ) languageDefinitions;
-
-      enabledLanguagePackages = lib.lists.concatLists (
-        lib.attrsets.mapAttrsToList (
-          name: def:
-          let
-            langCfg = config.euvlok.home.languages.${name};
-          in
-          (def.packages or [ ])
-          ++ lib.lists.optional (def ? versionMap) def.versionMap.${langCfg.version}
-          ++ langCfg.extraPackages
-        ) enabledLanguages
-      );
-    in
-    {
-      # assertions = [
-      #   {
-      #     assertion = (config.euvlok.home.languages.haskell.enable && isLinux);
-      #     message = "Haskell is currently not supported on macOS (Darwin)";
-      #   }
-      # ];
-
-      home.packages =
-        (builtins.attrValues {
-          inherit (pkgs.unstable)
-            shellcheck
-            shfmt
-            bash-language-server
-            taplo
-            typos-lsp
-            vscode-langservers-extracted
-            yaml-language-server
-            ;
-        })
-        ++ enabledLanguagePackages;
-    };
+  config = {
+    home.packages =
+      (builtins.attrValues {
+        inherit (pkgs.unstable)
+          shellcheck
+          shfmt
+          bash-language-server
+          taplo
+          typos-lsp
+          vscode-langservers-extracted
+          yaml-language-server
+          ;
+      })
+      ++ enabledLanguagePackages;
+  };
 }

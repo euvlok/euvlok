@@ -1,6 +1,7 @@
 { zenBrowserPackage }:
 { pkgs, ... }:
 {
+  environment.localBinInPath = true;
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
       # Base System
@@ -25,6 +26,7 @@
       cachix
       bc
       ninja
+      uv
 
       # QEMU
       #qemu
@@ -33,6 +35,7 @@
 
       # Security
       wireshark
+      ghidra
 
       # Recording
       gpu-screen-recorder

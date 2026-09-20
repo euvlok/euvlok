@@ -22,7 +22,7 @@ let
     );
 in
 {
-  config = lib.modules.mkIf pkgs.stdenvNoCC.isLinux {
+  config = lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
     dconf.settings = {
       # App Switcher Configuration
       "org/gnome/shell/app-switcher".current-workspace-only = true;

@@ -3,6 +3,7 @@
 {
   imports = [
     ./codex
+    ./opencode.nix
     (lib.modules.importApply ./devenv.nix { inherit euvlokInputs; })
     ./direnv.nix
     ./fastfetch

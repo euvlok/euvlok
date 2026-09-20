@@ -1,0 +1,17 @@
+# Keep source files portable and prevent binary assets from entering text
+# normalization or diff pipelines.
+* text=auto eol=lf
+*.gif binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+
+# Keep generated data out of GitHub's language statistics.
+*.lock linguist-generated
+hosts/**/hardware-configuration.nix linguist-generated
+secrets/*.yaml linguist-generated
+
+# Hidden repository configuration is first-party source.
+.github/** -linguist-vendored
+.vscode/*.json -linguist-vendored linguist-detectable

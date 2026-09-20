@@ -42,7 +42,7 @@ jobs:
   matrix-x86-64-linux:
     name: Host Matrix (x86_64-linux)
     if: inputs['retry-system'] == '' || inputs['retry-system'] == 'x86_64-linux'
-    uses: ./.github/workflows/host-matrix.yml
+    uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
     with:
       runner: ubuntu-latest
       system: x86_64-linux
@@ -58,7 +58,7 @@ jobs:
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
-    uses: ./.github/workflows/build-hosts.yml
+    uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
       hosts: ${{ needs.matrix-x86-64-linux.outputs.matrix }}
       has-hosts: ${{ needs.matrix-x86-64-linux.outputs.has_hosts }}
@@ -70,7 +70,7 @@ jobs:
   matrix-aarch64-linux:
     name: Host Matrix (aarch64-linux)
     if: inputs['retry-system'] == '' || inputs['retry-system'] == 'aarch64-linux'
-    uses: ./.github/workflows/host-matrix.yml
+    uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
     with:
       runner: ubuntu-24.04-arm
       system: aarch64-linux
@@ -86,7 +86,7 @@ jobs:
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
-    uses: ./.github/workflows/build-hosts.yml
+    uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
       hosts: ${{ needs.matrix-aarch64-linux.outputs.matrix }}
       has-hosts: ${{ needs.matrix-aarch64-linux.outputs.has_hosts }}
@@ -98,7 +98,7 @@ jobs:
   matrix-aarch64-darwin:
     name: Host Matrix (aarch64-darwin)
     if: inputs['retry-system'] == '' || inputs['retry-system'] == 'aarch64-darwin'
-    uses: ./.github/workflows/host-matrix.yml
+    uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
     with:
       runner: macos-latest
       system: aarch64-darwin
@@ -114,7 +114,7 @@ jobs:
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
-    uses: ./.github/workflows/build-hosts.yml
+    uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
       hosts: ${{ needs.matrix-aarch64-darwin.outputs.matrix }}
       has-hosts: ${{ needs.matrix-aarch64-darwin.outputs.has_hosts }}

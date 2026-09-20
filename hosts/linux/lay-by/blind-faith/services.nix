@@ -17,8 +17,10 @@ _: {
     # Enable systemd-resolved to properly manage dynamic interfaces like tailscale0
     resolved = {
       enable = true;
-      dnssec = "true";
-      domains = [ "~." ];
+      settings.Resolve = {
+        DNSSEC = "true";
+        Domains = [ "~." ];
+      };
     };
 
     displayManager = {

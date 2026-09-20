@@ -41,6 +41,11 @@ on:
 permissions:
   contents: read
 
+env:
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: master
+
 jobs:
   select:
     name: ${{ inputs.system }}
@@ -87,7 +92,7 @@ jobs:
           echo "has_base=${has_base}" >>"${GITHUB_OUTPUT}"
 
       - name: Install Nix
-        uses: ./.github/actions/setup-nix
+        uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
           cachix-skip-push: true
@@ -112,13 +117,18 @@ jobs:
           if [[ "${EVENT_NAME}" == "push" && "${BASE_AVAILABLE}" == "true" ]]; then
             # Force only derivations native to this runner. Some host modules
             # use import-from-derivation and cannot be evaluated cross-platform.
-            current_checks="$(nix eval --json ".#hostChecksBySystem.${HOST_SYSTEM}")"
+            current_checks="$(
+              nix --extra-experimental-features parallel-eval \
+                eval --json ".#hostChecksBySystem.${HOST_SYSTEM}"
+            )"
 
             # The base of the first rollout does not expose the partitioned
             # output. Treat its native hosts as changed instead of forcing the
             # old cross-platform hostChecks output.
             if previous_checks="$(
-              nix eval --json "./.host-base#hostChecksBySystem.${HOST_SYSTEM}" 2>/dev/null
+              nix --extra-experimental-features parallel-eval \
+                eval --json "./.host-base#hostChecksBySystem.${HOST_SYSTEM}" \
+                2>/dev/null
             )"; then
               :
             else

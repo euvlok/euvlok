@@ -6,7 +6,7 @@
   ...
 }:
 let
-  isLinux = pkgs.stdenvNoCC.isLinux;
+  isLinux = pkgs.stdenvNoCC.hostPlatform.isLinux;
 
   extraSettings =
     lib.attrsets.optionalAttrs (isLinux && osConfig != null && osConfig.xdg.portal.xdgOpenUsePortal) {

@@ -51,7 +51,6 @@
       add_header Strict-Transport-Security $hsts_header;
       add_header 'Referrer-Policy' 'origin-when-cross-origin';
       add_header X-Content-Type-Options nosniff;
-      proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
     '';
     virtualHosts."_" = {
       default = true;

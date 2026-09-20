@@ -54,12 +54,12 @@ let
     video2gif_simple = mkScript "video2gif_simple" ./scripts/video2gif_simple.sh;
   };
 
-  darwin = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.isDarwin {
+  darwin = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isDarwin {
     micfix = "sudo killall coreaudiod";
     flushdns = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
   };
 
-  linux = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.isLinux {
+  linux = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
     pbcopy = "xclip -selection clipboard";
     pbpaste = "xclip -selection clipboard -o";
     open = "xdg-open";

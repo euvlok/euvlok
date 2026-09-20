@@ -527,7 +527,7 @@ export class HydraClient {
 
         return await response.text();
       } catch (error) {
-        core.warning(
+        core.notice(
           `The Zero Hydra Failures index is unavailable (${errorMessage(error)}); continuing.`,
         );
         return null;
@@ -564,7 +564,7 @@ export class HydraClient {
         if (
           !response.headers.get("content-type")?.includes("application/json")
         ) {
-          core.warning(
+          core.notice(
             "Hydra did not return JSON; continuing without the advisory preflight.",
           );
           return null;
@@ -575,7 +575,7 @@ export class HydraClient {
           await response.json(),
         );
         if (!parsedBuild.success) {
-          core.warning(
+          core.notice(
             `Hydra build ${candidate.buildId} returned an unexpected JSON shape; ignoring it.`,
           );
           continue;
@@ -600,7 +600,7 @@ export class HydraClient {
           };
         }
       } catch (error) {
-        core.warning(
+        core.notice(
           `Hydra build ${candidate.buildId} could not be verified (${errorMessage(error)}); ignoring it.`,
         );
         return null;

@@ -1,5 +1,5 @@
 {
-  description = "EUVlok Communal Dotfiles";
+  description = "EUVlok shared NixOS, nix-darwin, and Home Manager configurations";
 
   nixConfig = {
     extra-substituters = [ "https://catppuccin.cachix.org" ];
@@ -13,6 +13,7 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
     eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     eupkgs.url = "github:euvlok/pkgs";
+    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -33,7 +34,6 @@
     nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode.inputs.systems.follows = "flake-utils/systems";
     nix4vscode.url = "github:nix-community/nix4vscode";
-    nixcord.inputs.flake-parts.follows = "flake-parts";
     nixcord.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixcord.url = "github:FlameFlag/nixcord";
     nvidia-patch.inputs.nixpkgs.follows = "nixpkgs-unstable-small";

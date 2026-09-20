@@ -14,20 +14,25 @@
     enable = true;
     package = pkgs.nixfmt;
   };
+  rumdl = {
+    enable = true;
+    settings.configuration.global.disable = [
+      "MD013"
+      "MD033"
+    ];
+  };
   shellcheck.enable = true;
+  statix.enable = true;
   yamllint = {
     enable = true;
     files = "^\\.github/";
-    settings.configuration = ''
-      extends: default
-      rules:
-        document-start: disable
-        line-length: disable
-        truthy: disable
-    '';
   };
   zizmor = {
     enable = true;
+    args = [
+      "--offline"
+      "--persona=pedantic"
+    ];
     files = "^\\.github/(actions|workflows)/";
   };
 }

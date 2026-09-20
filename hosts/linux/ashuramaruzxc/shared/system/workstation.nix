@@ -48,6 +48,6 @@
     monospace = [ "Hack Nerd Font Mono" ];
     sansSerif = [ "Noto Nerd Font" ];
     serif = [ "Noto Nerd Font" ];
-    emoji = [ "Twitter Color Emoji" ];
+    emoji = [ "Noto Color Emoji" ];
   };
 }

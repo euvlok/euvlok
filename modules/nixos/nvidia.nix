@@ -6,8 +6,7 @@
   ...
 }:
 let
-  nvidiaDriverConfig = import ./nvidia-driver.nix;
-  nvidiaDriver = config.boot.kernelPackages.nvidiaPackages.mkDriver nvidiaDriverConfig;
+  nvidiaDriver = config.boot.kernelPackages.nvidiaPackages.mkDriver pkgs.nvidia-driver.mkDriverArgs;
 in
 {
   options.euvlok.nixos.nvidia.enable = lib.options.mkEnableOption "NVIDIA Drivers & Env Variables";

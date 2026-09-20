@@ -13,7 +13,7 @@ inputs:
   extra-cachix-caches:
     description: Additional Cachix cache names used as substituters.
     required: false
-    default: devenv,eupkgs,hyprland,nix-community,nixos-raspberrypi
+    default: eupkgs,hyprland,nix-community,nixos-raspberrypi
   cachix-auth-token:
     description: Cachix auth token used to push build results.
     required: false
@@ -31,14 +31,13 @@ runs:
   using: composite
   steps:
     - name: Install Nix
-      # Action v3.21.9, installing Determinate Nix v3.22.0.
-      uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858
+      # v3.22.3
+      uses: DeterminateSystems/determinate-nix-action@021c8a1bd3570eb21f5c20a054812b0c4d9ca614
       with:
         github-token: ${{ inputs.github-token }}
-        source-tag: v3.22.0
+        source-tag: v3.22.3
         extra-conf: |
           accept-flake-config = true
-          extra-experimental-features = parallel-eval
           extra-substituters = https://cache.flox.dev https://cache.nixos-cuda.org
           extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs= cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=
           ${{ inputs.extra-nix-config }}
@@ -49,7 +48,7 @@ runs:
       # that promise to populate Cachix must stop if upload setup fails.
       continue-on-error: ${{ inputs.cachix-skip-push == 'true' }}
       # v17
-      uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71
+      uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866
       with:
         name: ${{ inputs.cachix-cache }}
         extraPullNames: ${{ inputs.extra-cachix-caches }}

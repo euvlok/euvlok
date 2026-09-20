@@ -11,6 +11,7 @@ _: {
     # media
     ./torrent.nix
     ./jellyfin.nix
+    ./immich.nix
     ./anki.nix
 
     # db

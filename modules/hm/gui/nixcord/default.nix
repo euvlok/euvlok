@@ -16,7 +16,7 @@
   config = lib.modules.mkIf config.euvlok.home.nixcord.enable {
     assertions = [
       {
-        assertion = pkgs.stdenvNoCC.isx86_64 || pkgs.stdenvNoCC.isDarwin;
+        assertion = pkgs.stdenvNoCC.hostPlatform.isx86_64 || pkgs.stdenvNoCC.hostPlatform.isDarwin;
         message = "You cannot use Nixcord (Discord) on aarch64-linux";
       }
     ];
@@ -25,7 +25,7 @@
       useGlobalPkgs = true;
       discord.krisp.enable = true;
       discord.vencord.enable = true;
-      discord.openASAR.enable = true;
+      discord.openASAR.enable = false; # openASAR currently breaks discord on linux. Waiting for upstream patch before re-enabling.
       config.useQuickCss = true;
     };
     programs.nixcord.config.plugins = {

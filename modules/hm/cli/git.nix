@@ -56,7 +56,7 @@
         };
       };
       vscode.profiles.default.userSettings = {
-        git.enableCommitSigning = if (config.programs.git.signing.key != null) then true else false;
+        git.enableCommitSigning = config.programs.git.signing.key != null;
       };
     };
   };

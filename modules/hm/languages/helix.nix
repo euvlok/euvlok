@@ -1,13 +1,10 @@
-{ languageDefinitions }:
+{ enabledLanguages, ... }:
 {
   lib,
   config,
   ...
 }:
 let
-  enabledLanguages = lib.attrsets.filterAttrs (
-    name: _: config.euvlok.home.languages.${name}.enable or false
-  ) languageDefinitions;
   collectLists = selector: lib.lists.concatMap selector (lib.attrsets.attrValues enabledLanguages);
   mergeAttrs = selector: lib.attrsets.concatMapAttrs (_: selector) enabledLanguages;
 in

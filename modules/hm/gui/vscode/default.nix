@@ -21,7 +21,7 @@
     programs.vscode = {
       enable = true;
       package =
-        if pkgs.unstable.stdenvNoCC.isLinux then
+        if pkgs.unstable.stdenvNoCC.hostPlatform.isLinux then
           (pkgs.unstable.vscode.override {
             commandLineArgs = "--wayland-text-input-version=3 --enable-wayland-ime";
           })

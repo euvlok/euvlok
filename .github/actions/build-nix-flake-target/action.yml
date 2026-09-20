@@ -44,7 +44,7 @@ inputs:
   hydra-user-agent:
     description: User agent used for advisory Zero Hydra Failures and Hydra requests.
     required: false
-    default: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36
+    default: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
 
 outputs:
   exit-code:
@@ -94,7 +94,7 @@ runs:
       run: sudo install -d -m 0755 -o root -g root /var/cache/ccache
 
     - name: Install Nix
-      uses: ./.github/actions/setup-nix
+      uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
       with:
         github-token: ${{ inputs.github-token }}
         cachix-cache: ${{ inputs.cachix-cache }}
@@ -110,10 +110,10 @@ runs:
       run: sudo install -d -m 0770 -o root -g nixbld /var/cache/ccache
 
     - name: Install Bun
-      # v2
+      # v2.2.0
       uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
       with:
-        bun-version: 1.3.14
+        bun-version: 1.4.1
 
     - name: Install build helper dependencies
       shell: bash
@@ -123,6 +123,7 @@ runs:
       id: build
       shell: bash
       env:
+        NIX_CONFIG: extra-experimental-features = parallel-eval
         CONFIGURATION_KIND: ${{ inputs.configuration-kind }}
         CONFIGURATION_NAME: ${{ inputs.configuration-name }}
         CONFIGURATION_SYSTEM: ${{ inputs.configuration-system }}

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (pkgs.stdenvNoCC) isLinux;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isLinux;
 in
 {
   imports = [

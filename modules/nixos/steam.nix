@@ -10,6 +10,14 @@
   config = lib.modules.mkIf config.euvlok.nixos.steam.enable {
     hardware.steam-hardware.enable = true;
 
+    # nixpkgs.config replaces lists, so preserve host-specific exceptions while
+    # allowing the NW.js runtime required by games using its bundled Chromium.
+    nixpkgs.config.allowInsecurePredicate =
+      pkg:
+      builtins.elem (pkg.name or "${pkg.pname}-${pkg.version}") (
+        [ "nwjs-0.102.1" ] ++ (config.nixpkgs.config.permittedInsecurePackages or [ ])
+      );
+
     nixpkgs.overlays = [
       (_: super: { bottles = super.bottles.override { removeWarningPopup = true; }; })
     ];

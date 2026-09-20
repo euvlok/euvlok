@@ -151,7 +151,7 @@ in
       extensions.force = true;
       inherit search settings;
     };
-    nativeMessagingHosts = lib.modules.mkIf pkgs.stdenvNoCC.isLinux (
+    nativeMessagingHosts = lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux (
       builtins.attrValues { inherit (pkgs) keepassxc; }
     );
   };
@@ -169,8 +169,8 @@ in
       extensions.force = true;
       inherit search;
     };
-    nativeMessagingHosts = lib.modules.mkIf (pkgs.stdenvNoCC.isLinux && pkgs.stdenvNoCC.isx86_64) (
-      builtins.attrValues { inherit (pkgs.unstable) keepassxc; }
-    );
+    nativeMessagingHosts = lib.modules.mkIf (
+      pkgs.stdenvNoCC.hostPlatform.isLinux && pkgs.stdenvNoCC.hostPlatform.isx86_64
+    ) (builtins.attrValues { inherit (pkgs.unstable) keepassxc; });
   };
 }

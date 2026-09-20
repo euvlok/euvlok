@@ -69,7 +69,6 @@ in
               inputs.home-manager.nixosModules.home-manager
               {
                 codexDesktopModule = inputs.codex-desktop-linux.homeManagerModules.default;
-                codexDesktopPackages = inputs.codex-desktop-linux.packages;
               };
           flatpakModule = inputs.flatpak-declarative.nixosModules.default;
         })

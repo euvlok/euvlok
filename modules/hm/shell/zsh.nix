@@ -11,7 +11,7 @@
     assertions = [
       {
         message = "You cannot use Home-Manager Zsh on Darwin";
-        assertion = pkgs.stdenvNoCC.isLinux;
+        assertion = pkgs.stdenvNoCC.hostPlatform.isLinux;
       }
     ];
     programs.zsh = {

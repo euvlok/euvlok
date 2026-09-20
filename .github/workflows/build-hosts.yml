@@ -29,6 +29,11 @@ on:
 permissions:
   contents: read
 
+env:
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: init.defaultBranch
+  GIT_CONFIG_VALUE_0: master
+
 jobs:
   build:
     name: ${{ matrix.class }} / ${{ matrix.owner }} / ${{ matrix.name }}
@@ -57,15 +62,15 @@ jobs:
           persist-credentials: false
 
       - name: Reclaim maximum Nix store space
-        # v4 is the last release without an unpinned transitive action.
-        uses: wimpysworld/nothing-but-nix@9158d9c31bf7650c681de426def914646d9a8b7f
+        # euvlok fork: pin transitive actions and optimize Holster storage.
+        uses: euvlok/nothing-but-nix@ff759c08462436ca9f60d41ff9d0150a63384444
         with:
           hatchet-protocol: rampage
 
       - name: Build and cache configuration
         id: build
         continue-on-error: true
-        uses: ./.github/actions/build-nix-flake-target
+        uses: ./.github/actions/build-nix-flake-target # zizmor: ignore[self-repository]
         with:
           configuration-kind: ${{ matrix.class }}
           configuration-name: ${{ matrix.name }}

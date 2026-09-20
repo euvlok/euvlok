@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   packages = builtins.attrValues {
-    inherit (pkgs.unstable) php intelephense;
-    inherit (pkgs.unstable.phpPackages) composer psalm phpstan;
+    inherit (pkgs.unstable) php intelephense phpstan;
+    inherit (pkgs.unstable.phpPackages) composer psalm;
   };
   vscode.extensions = [
     "devsense.phptools-vscode"

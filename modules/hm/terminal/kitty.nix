@@ -11,7 +11,7 @@
     programs.kitty = {
       enable = true;
       keybindings = {
-        "kitty_mod" = if pkgs.stdenvNoCC.isDarwin then "cmd" else "ctrl";
+        "kitty_mod" = if pkgs.stdenvNoCC.hostPlatform.isDarwin then "cmd" else "ctrl";
         "kitty_mod+shift+c" = "copy_to_clipboard";
         "kitty_mod+shift+v" = "paste_from_clipboard";
         "kitty_mod+t" = "new_window";
@@ -27,7 +27,7 @@
         tab_bar_style = "powerline";
         notify_on_cmd_finish = "unfocused 5.0";
       }
-      // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.isDarwin {
+      // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isDarwin {
         macos_option_as_alt = "yes";
         macos_quit_when_last_window_closed = "yes";
       };
