@@ -1,3 +1,4 @@
+# Lay-by's personal theme, shared only between their machines.
 { pkgs, ... }:
 let
   monospace = {

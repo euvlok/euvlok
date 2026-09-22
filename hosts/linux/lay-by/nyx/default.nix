@@ -11,7 +11,7 @@ _: {
     configurationModule
     homeModule
     stylixModule
-    ./stylix.nix
+    ../shared/stylix.nix
     {
       euvlok.nixpkgs.unstableSource = unstableSource;
       euvlok.nixos = {
