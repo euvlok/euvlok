@@ -39,6 +39,8 @@
     nvidia-patch.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nvidia-patch.inputs.utils.follows = "flake-utils";
     nvidia-patch.url = "github:icewind1991/nvidia-patch-nixos";
+    pared.inputs.nixpkgs.follows = "nixpkgs";
+    pared.url = "github:4evy/pared";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
     zen-browser.inputs.home-manager.follows = "home-manager";

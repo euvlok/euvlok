@@ -10,5 +10,6 @@
     ./nix.nix
     (lib.modules.importApply ./sops.nix { inherit euvlokInputs; })
     ./system.nix
+    (lib.modules.importApply ./apple-intelligence.nix { inherit euvlokInputs; })
   ];
 }
