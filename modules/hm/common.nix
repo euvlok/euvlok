@@ -13,7 +13,7 @@
   ++ [
     (lib.modules.importApply ./catppuccin { inherit euvlokInputs; })
     (lib.modules.importApply ./sops.nix { inherit euvlokInputs; })
-    (lib.modules.importApply ./cli { inherit euvlokInputs; })
+    ./cli
     (lib.modules.importApply ./gui { inherit euvlokInputs; })
     ./languages
     ./shell

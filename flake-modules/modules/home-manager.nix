@@ -22,7 +22,7 @@
     ];
   };
   sops = applyEuvlokInputs ../../modules/hm/sops.nix;
-  cli = applyEuvlokInputs ../../modules/hm/cli;
+  cli = ../../modules/hm/cli;
   chromium = applyEuvlokInputs ../../modules/hm/gui/chromium;
   firefox = applyEuvlokInputs ../../modules/hm/gui/firefox;
   gui = applyEuvlokInputs ../../modules/hm/gui;

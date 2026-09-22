@@ -1,10 +1,8 @@
-{ euvlokInputs }:
-{ lib, ... }:
 {
   imports = [
     ./codex
     ./opencode.nix
-    (lib.modules.importApply ./devenv.nix { inherit euvlokInputs; })
+    ./devenv.nix
     ./direnv.nix
     ./fastfetch
     ./fzf.nix
