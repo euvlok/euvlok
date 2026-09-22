@@ -6,10 +6,10 @@
 }:
 {
   imports = [
-    ./fonts.nix
+    ../shared/fonts.nix
     ./hardware-configuration.nix
     (lib.modules.importApply ./packages.nix { inherit zenBrowserPackage; })
-    ./programs.nix
+    ../shared/programs.nix
     ./services.nix
   ];
 
