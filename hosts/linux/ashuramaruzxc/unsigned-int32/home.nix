@@ -97,27 +97,7 @@ in
       ++ [
         { home.packages = allPackages; }
         cursorModule
-        {
-          services.easyeffects.enable = true;
-          services.protonmail-bridge.enable = true;
-          programs = {
-            rbw = {
-              enable = true;
-              settings = {
-                email = "ashuramaru@tenjin-dk.com";
-                base_url = "https://bitwarden.tenjin-dk.com";
-                lock_timeout = 600;
-                pinentry = pkgs.pinentry-qt;
-              };
-            };
-            ghostty.settings = {
-              window-height = 40;
-              window-width = 140;
-            };
-            btop.enable = true;
-            direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
-          };
-        }
+        { services.easyeffects.enable = true; }
       ];
   };
 }
