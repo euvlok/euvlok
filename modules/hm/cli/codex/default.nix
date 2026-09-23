@@ -19,13 +19,13 @@ let
   };
 
   codexSettings = {
-    model = "gpt-5.6-sol";
-    model_reasoning_effort = "high";
+    model = "gpt-6-sol";
+    model_reasoning_effort = "medium";
+    plan_mode_reasoning_effort = "high";
     approval_policy = "never";
     default_permissions = "unrestricted";
     web_search = "live";
     check_for_update_on_startup = lib.modules.mkDefault false;
-    suppress_unstable_features_warning = true;
     tool_output_token_limit = lib.modules.mkDefault (32 * 1024);
 
     permissions.unrestricted = {
@@ -72,10 +72,7 @@ let
       default_tools_approval_mode = "approve";
     };
 
-    notice = {
-      hide_full_access_warning = true;
-      hide_world_writable_warning = true;
-    };
+    notice.hide_full_access_warning = true;
   };
 in
 {
@@ -91,6 +88,11 @@ in
       package = pkgs.unstable.codex;
       settings = codexSettings;
       profiles = {
+        plan = {
+          model = "gpt-6-astra";
+          model_reasoning_effort = "high";
+          plan_mode_reasoning_effort = "high";
+        };
         review = {
           approval_policy = "never";
           default_permissions = ":read-only";

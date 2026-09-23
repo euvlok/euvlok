@@ -35,8 +35,9 @@ in
 
     programs.codex.settings = {
       personality = "pragmatic";
-      model = "gpt-5.6-sol";
-      model_reasoning_effort = "high";
+      model = "gpt-6-sol";
+      model_reasoning_effort = "medium";
+      plan_mode_reasoning_effort = "high";
       approvals_reviewer = "auto_review";
       check_for_update_on_startup = false;
       service_tier = "fast";
