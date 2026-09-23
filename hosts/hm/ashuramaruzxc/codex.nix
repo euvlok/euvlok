@@ -33,6 +33,11 @@ in
   config = lib.modules.mkIf cfg.enable {
     programs.ghostty.settings.font-family = terminalFont;
 
+    home.packages = [ pkgs.glab.unstable ];
+
+    home.file.".agents/skills/glab".source =
+      "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
+
     programs.codex.settings = {
       personality = "pragmatic";
       model = "gpt-6-sol";
@@ -40,7 +45,6 @@ in
       plan_mode_reasoning_effort = "high";
       approvals_reviewer = "auto_review";
       check_for_update_on_startup = false;
-      service_tier = "fast";
       web_search = "live";
 
       history = {
@@ -52,6 +56,11 @@ in
       tool_output_token_limit = 25000;
 
       analytics.enabled = false;
+
+      hooks.state = {
+        "/Users/marie/.codex/hooks.json:session_start:0:0".trusted_hash =
+          "sha256:2a61f926476e40d817404de6e64f7ef8025e34d46260182a26605e61e2320186";
+      };
 
       memories = {
         generate_memories = true;
@@ -66,6 +75,24 @@ in
       };
 
       mcp_servers = {
+        gitlab = {
+          command = lib.meta.getExe pkgs.glab;
+          args = [
+            "mcp"
+            "serve"
+          ];
+          # Otherwise use glab's host configuration and stored credentials.
+          env_vars = [
+            "GITLAB_HOST"
+            "GITLAB_TOKEN"
+            "GLAB_CONFIG_DIR"
+          ];
+          enabled = true;
+          startup_timeout_sec = 20;
+          tool_timeout_sec = 120;
+          default_tools_approval_mode = "auto";
+        };
+
         nixos = {
           command = lib.meta.getExe pkgs.mcp-nixos;
           enabled = true;
