@@ -5,6 +5,8 @@
     enableJIT = true;
     enableTCPIP = true;
     settings = {
+      # Leave four physical cores available for Immich's API and the other
+      # services while allowing parallel vector queries and index maintenance.
       max_worker_processes = 16;
       max_parallel_workers = 12;
       max_parallel_workers_per_gather = 4;
