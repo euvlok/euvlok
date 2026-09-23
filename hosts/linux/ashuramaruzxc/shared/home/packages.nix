@@ -12,9 +12,7 @@ let
     };
 
     gaming = builtins.attrValues {
-      inherit (pkgs.unstable) osu-lazer-bin;
-      inherit (pkgs)
-        # bottles
+      inherit (pkgs.unstable)
         cemu
         chiaki
         dolphin-emu
@@ -25,6 +23,7 @@ let
         heroic
         mangohud
         mgba
+        osu-lazer-bin
         pcsx2
         ppsspp
         prismlauncher
