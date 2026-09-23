@@ -84,10 +84,6 @@ in
     imports = baseImports ++ workstationImports ++ globalImports ++ workstationHmConfig;
   };
 
-  home-manager.users.fumono = {
-    imports = baseImports ++ workstationImports ++ globalImports ++ workstationHmConfig;
-  };
-
   home-manager.users.minecraft = {
     imports =
       baseImports

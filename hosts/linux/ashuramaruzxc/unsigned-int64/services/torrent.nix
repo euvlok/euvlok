@@ -182,10 +182,7 @@ in
   };
   users.users.transmission = {
     homeMode = "0770";
-    openssh.authorizedKeys.keys = lib.lists.concatLists [
-      config.users.users.ashuramaru.openssh.authorizedKeys.keys
-      config.users.users.fumono.openssh.authorizedKeys.keys
-    ];
+    openssh.authorizedKeys.keys = config.users.users.ashuramaru.openssh.authorizedKeys.keys;
     group = "${config.users.groups.transmission.name}";
     extraGroups = [
       "jellyfin"
