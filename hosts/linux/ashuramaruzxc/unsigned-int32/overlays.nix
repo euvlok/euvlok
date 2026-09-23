@@ -4,14 +4,14 @@
     (final: _prev: {
       gtk-nocsd = final.stdenv.mkDerivation {
         pname = "gtk-nocsd";
-        version = "4.7";
+        version = "4.8";
 
         src = final.fetchFromGitea {
           domain = "codeberg.org";
           owner = "MorsMortium";
           repo = "GTK-NoCSD";
-          rev = "0fd0613242a8338bd6ba712d2f45773147fae155";
-          hash = "sha256-oPBGS8/oqdVEBqVBMTEl7Umygr27hHlUd51jR3BbfRM=";
+          rev = "0fcd023e67d44dadcf3ab9fe0d7985c797f1f52e";
+          hash = "sha256-ZFKTHPolSMWQd03LzHB/n6SdvNQy+NBRAxMQLGgZNOg=";
         };
 
         nativeBuildInputs = [
