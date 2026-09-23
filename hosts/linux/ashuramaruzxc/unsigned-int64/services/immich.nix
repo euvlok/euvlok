@@ -1,14 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
-let
-  cfg = config.services.immich;
-  domain = "photos.tenjin-dk.com";
-  mediaLocation = "/mnt/media/immich";
-  renderDevice = "/dev/dri/renderD128";
-in
+{ lib, ... }:
 {
   services.immich = {
     enable = true;
@@ -17,8 +7,8 @@ in
     # Nginx is the only public entry point.
     openFirewall = false;
 
-    inherit mediaLocation;
-    accelerationDevices = [ renderDevice ];
+    mediaLocation = "/mnt/media/immich";
+    accelerationDevices = [ "/dev/dri/renderD128" ];
 
     database = {
       enable = true;
@@ -30,30 +20,29 @@ in
       # The 7950X3D has 16 physical cores. Leaving SMT capacity outside this
       # budget keeps the API and the other services on this host responsive.
       CPU_CORES = "16";
-      IMMICH_TRUSTED_PROXIES = "${cfg.host},::1";
+      IMMICH_TRUSTED_PROXIES = "127.0.0.1,::1";
       LIBVA_DRIVER_NAME = "radeonsi";
-      TZ = config.time.timeZone;
+      TZ = "Europe/Berlin";
     };
 
     machine-learning.environment = {
-      # A second worker would load another copy of every model into memory.
+      # One worker avoids loading a second copy of every model into memory.
       MACHINE_LEARNING_WORKERS = "1";
       MACHINE_LEARNING_REQUEST_THREADS = "8";
       MACHINE_LEARNING_MODEL_INTER_OP_THREADS = "1";
       MACHINE_LEARNING_MODEL_INTRA_OP_THREADS = "4";
       MACHINE_LEARNING_MODEL_TTL = "1800";
-      # The pinned NixOS module still sets 120 seconds at normal priority.
       MACHINE_LEARNING_WORKER_TIMEOUT = lib.mkForce "300";
     };
 
     settings = {
       newVersionCheck.enabled = false;
-      server.externalDomain = "https://${domain}";
+      server.externalDomain = "https://photos.tenjin-dk.com";
 
       ffmpeg = {
         accel = "vaapi";
         accelDecode = true;
-        preferredHwDevice = renderDevice;
+        preferredHwDevice = "/dev/dri/renderD128";
         preset = "slow";
         targetResolution = "1080";
         targetVideoCodec = "h264";
@@ -107,31 +96,29 @@ in
       settings = {
         maxmemory-policy = "noeviction";
         aof-use-rdb-preamble = true;
+        lazyfree-lazy-eviction = true;
         lazyfree-lazy-expire = true;
         lazyfree-lazy-server-del = true;
       };
     };
   };
 
-  users.users.${cfg.user}.extraGroups = [
+  users.users.immich.extraGroups = [
     "render"
     "video"
   ];
 
-  systemd = {
-    tmpfiles.settings.immich.${mediaLocation}.d = {
-      mode = "0700";
-      inherit (cfg) user group;
-    };
-    services.immich-server.unitConfig.RequiresMountsFor = mediaLocation;
-  };
+  systemd.tmpfiles.rules = [
+    "d /mnt/media/immich 0700 immich immich -"
+  ];
+  systemd.services.immich-server.unitConfig.RequiresMountsFor = "/mnt/media/immich";
 
-  services.nginx.virtualHosts.${domain} = {
+  services.nginx.virtualHosts."photos.tenjin-dk.com" = {
     enableACME = true;
     forceSSL = true;
 
     locations."/" = {
-      proxyPass = "http://${cfg.host}:${toString cfg.port}";
+      proxyPass = "http://127.0.0.1:2283";
       proxyWebsockets = true;
       recommendedProxySettings = true;
 
@@ -139,12 +126,9 @@ in
         client_max_body_size 50000M;
         client_body_buffer_size 1024k;
         proxy_request_buffering off;
-
         proxy_read_timeout 600s;
         proxy_send_timeout 600s;
         send_timeout 600s;
-
-        proxy_cookie_path off;
       '';
     };
   };
