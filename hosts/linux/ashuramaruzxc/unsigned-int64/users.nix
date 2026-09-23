@@ -8,12 +8,10 @@
   users.mutableUsers = false;
   users.groups = {
     ashuramaru.gid = config.users.users.ashuramaru.uid;
-    fumono.gid = config.users.users.fumono.uid;
     minecraft = {
       gid = config.users.users.minecraft.uid;
       members = [
         "ashuramaru"
-        "fumono"
         "minecraft"
         "nginx"
       ];
@@ -36,7 +34,9 @@
     nginx.extraGroups = [ "minecraft" ];
     root = {
       initialHashedPassword = "";
-      openssh.authorizedKeys.keys = config.users.users.ashuramaru.openssh.authorizedKeys.keys;
+      openssh.authorizedKeys.keys = config.users.users.ashuramaru.openssh.authorizedKeys.keys ++ [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSS01C9Um/08HZJH8CCTdUvkJK8RUmZ4QD91V5KAFfd faputa@faputas-Mac-mini.local"
+      ];
       shell = pkgs.zsh;
     };
     ashuramaru = {
@@ -49,27 +49,9 @@
         "ashuramaru"
         "wheel"
         "docker"
-        "podman"
         "minecraft"
       ];
       openssh.authorizedKeys.keys = import ../../../keys/ashuramaru.nix;
-      shell = pkgs.zsh;
-    };
-    fumono = {
-      isNormalUser = true;
-      home = "/Users/fumono";
-      description = "Fumono";
-      initialHashedPassword = "";
-      extraGroups = [
-        "fumono"
-        "docker"
-        "podman"
-        "minecraft"
-        "wheel"
-      ];
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAHBeBj6thLiVFNGZI1NuTHKIPvh332Szad2zsgjdzhR mc-server"
-      ];
       shell = pkgs.zsh;
     };
   };

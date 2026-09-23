@@ -7,7 +7,6 @@
 {
   sops.secrets.wireguard-server = { };
   sops.secrets.wireguard-shared = { };
-  sops.secrets.wireguard-shared_fumono = { };
   networking.wg-quick.interfaces.wireguard0 = {
     address = [
       "172.16.31.1/24"
@@ -43,15 +42,6 @@
         allowedIPs = [
           "172.16.31.5/32"
           "fd17:216b:31bc:1::5/128"
-        ];
-      }
-      {
-        # reisen@signed-int16
-        publicKey = "ZTGv1F/RgFxt/UxTf/gAxz5yP51VqjEz9ISaL3Pnmh8=";
-        presharedKeyFile = config.sops.secrets.wireguard-shared_fumono.path;
-        allowedIPs = [
-          "172.16.31.10/32"
-          "fd17:216b:31bc:1::10/128"
         ];
       }
     ];
