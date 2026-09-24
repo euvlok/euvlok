@@ -1,3 +1,4 @@
+{ containerPackage }:
 {
   pkgs,
   ...
@@ -69,6 +70,8 @@
   ];
 
   environment.systemPackages = builtins.attrValues {
+    container = containerPackage;
+
     inherit (pkgs.unstable)
       # Literally should be bultin but apple being apple
       # Utils
@@ -76,7 +79,6 @@
       smartmontools
       # Virtualization
       colima
-      container
       docker
       podman
       podman-compose

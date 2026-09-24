@@ -484,6 +484,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-container": {
+      "locked": {
+        "lastModified": 1790262900,
+        "narHash": "sha256-W1zZey+EnFhZN8atuGK1O86BMwAlOTzoivXfhw8fWro=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "effde15db00a42d69287edb45404728b2318a3eb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/566547/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1788057806,
@@ -573,6 +589,7 @@
         "homebrew-crc-source": "homebrew-crc-source",
         "nix-homebrew": "nix-homebrew",
         "nixos-raspberrypi": "nixos-raspberrypi",
+        "nixpkgs-container": "nixpkgs-container",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "spicetify-nix": "spicetify-nix",
         "stylix": "stylix",

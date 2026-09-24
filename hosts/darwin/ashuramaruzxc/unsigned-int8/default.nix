@@ -1,13 +1,15 @@
 {
+  containerPackage,
   homeModule,
   homebrewModule,
   homebrewTaps,
   sharedModules,
 }:
-_: {
+{ lib, ... }:
+{
   imports = sharedModules ++ [
     ./brew.nix
-    ./configuration.nix
+    (lib.modules.importApply ./configuration.nix { inherit containerPackage; })
     homeModule
     ./system.nix
     homebrewModule
