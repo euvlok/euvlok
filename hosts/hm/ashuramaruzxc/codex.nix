@@ -33,7 +33,7 @@ in
   config = lib.modules.mkIf cfg.enable {
     programs.ghostty.settings.font-family = terminalFont;
 
-    home.packages = [ pkgs.glab.unstable ];
+    home.packages = [ pkgs.unstable.glab ];
 
     home.file.".agents/skills/glab".source =
       "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
@@ -76,7 +76,7 @@ in
 
       mcp_servers = {
         gitlab = {
-          command = lib.meta.getExe pkgs.glab;
+          command = lib.meta.getExe pkgs.unstable.glab;
           args = [
             "mcp"
             "serve"
