@@ -24,17 +24,17 @@ let
 
   hmModuleConfig = [
     {
+      programs.fastfetch.enable = true;
+      programs.ghostty.enable = true;
+      programs.mpv.enable = true;
+      programs.nh.enable = true;
       euvlok.home = {
         codex.enable = true;
-        fastfetch.enable = true;
         firefox = {
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
-        ghostty.enable = true;
         helix.enable = true;
-        mpv.enable = true;
-        nh.enable = true;
         nixcord.enable = true;
         vscode.enable = true;
         zed-editor.enable = true;

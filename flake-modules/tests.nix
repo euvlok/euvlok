@@ -65,10 +65,10 @@ let
           homeDirectory = "/home/consumer";
           stateVersion = "26.11";
         };
+        programs.fastfetch.enable = true;
+        programs.nh.enable = true;
         euvlok.home = {
-          fastfetch.enable = true;
           helix.enable = true;
-          nh.enable = true;
           yazi.enable = true;
         };
       }

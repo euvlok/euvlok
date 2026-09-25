@@ -68,6 +68,5 @@ let
   aliases = editor // rustdogshit // networking // utility // git // scripts // darwin // linux;
 in
 {
-  programs.bash.shellAliases = aliases;
-  programs.zsh.shellAliases = aliases;
+  home.shellAliases = aliases;
 }

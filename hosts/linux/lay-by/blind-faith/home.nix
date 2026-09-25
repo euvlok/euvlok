@@ -51,15 +51,15 @@
         {
           home.shell.enableShellIntegration = true;
           programs.codex.settings = lib.modules.mkForce { };
+          programs.fastfetch.enable = true;
+          programs.bash.enable = true;
+          programs.fish.enable = true;
+          programs.mpv.enable = true;
           euvlok.home = {
             codex.enable = true;
-            fastfetch.enable = true;
             firefox.zen-browser.enable = true;
-            bash.enable = true;
-            fish.enable = true;
             helix.enable = true;
             hyprland.enable = true;
-            mpv.enable = true;
             zed-editor.enable = true;
             #vscode.enable = true; # This is a massive pain in the ass if you change your vscode config json frequently. Just going to manage it normally instead of declaratively.
             nixcord.enable = true;

@@ -19,18 +19,18 @@
     direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
   };
 
+  programs.fastfetch.enable = true;
+  programs.ghostty.enable = true;
+  programs.mpv.enable = true;
+  programs.nh.enable = true;
+  programs.zsh.enable = true;
   euvlok.home = {
-    fastfetch.enable = true;
     firefox = {
       zen-browser.enable = true;
       defaultSearchEngine = "kagi";
     };
-    ghostty.enable = true;
     helix.enable = true;
-    mpv.enable = true;
-    nh.enable = true;
     zed-editor.enable = true;
-    zsh.enable = true;
     languages = {
       cpp.enable = true;
       csharp = {

@@ -109,9 +109,7 @@ in
       };
     };
 
-    programs.bash.shellAliases = codexShellAliases;
-    programs.fish.shellAliases = codexShellAliases;
-    programs.zsh.shellAliases = codexShellAliases;
+    home.shellAliases = codexShellAliases;
 
     home.file = lib.attrsets.optionalAttrs config.catppuccin.enable {
       "${codexConfigDir}/themes/catppuccin-frappe-pink.tmTheme".source = ./catppuccin-frappe-pink.tmTheme;

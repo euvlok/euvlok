@@ -5,27 +5,20 @@
   ...
 }:
 {
-  options.euvlok.home.zsh.enable = lib.options.mkEnableOption "declarative Zsh";
-
-  config = lib.modules.mkIf config.euvlok.home.zsh.enable {
+  config = lib.modules.mkIf config.programs.zsh.enable {
     assertions = [
-      {
-        message = "You cannot use Home-Manager Zsh on Darwin";
-        assertion = pkgs.stdenvNoCC.hostPlatform.isLinux;
-      }
+      (lib.hm.assertions.assertPlatform "euvlok Zsh" pkgs lib.platforms.linux)
     ];
     programs.zsh = {
-      enable = true;
       autosuggestion.enable = true;
+      fastSyntaxHighlighting.enable = true;
       autocd = true;
       historySubstringSearch.enable = true;
       oh-my-zsh = {
         enable = true;
         plugins = [
           "colorize"
-          "direnv"
           "dotnet"
-          "fzf"
           "gitfast"
           "podman"
           "ssh"
@@ -37,11 +30,12 @@
           name = "nix-shell";
           src = pkgs.zsh-nix-shell;
         }
+        {
+          name = "fzf-tab";
+          src = pkgs.zsh-fzf-tab;
+          file = "share/fzf-tab/fzf-tab.plugin.zsh";
+        }
       ];
-      initContent = ''
-        source "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
-        source "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
-      '';
     };
   };
 }

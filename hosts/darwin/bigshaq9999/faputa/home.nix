@@ -55,12 +55,15 @@
       ]
       ++ [
         {
+          programs.fastfetch.enable = true;
+          programs.ghostty.enable = true;
+          programs.mpv.enable = true;
+          programs.nh.enable = true;
           euvlok.home = {
             chromium = {
               enable = true;
               browser = "helium-browser";
             };
-            fastfetch.enable = true;
             firefox = {
               enable = true;
               acceptedLanguages = [
@@ -80,15 +83,11 @@
               ];
               zen-browser.enable = true;
             };
-            ghostty.enable = true;
             helix.enable = true;
-            mpv.enable = true;
-            nh.enable = true;
             nixcord.enable = true;
             vscode.enable = true;
             # yazi.enable = true;
             zed-editor.enable = true;
-            # zsh.enable = false;
             languages = {
               # cpp.enable = true;
               # csharp.enable = true;

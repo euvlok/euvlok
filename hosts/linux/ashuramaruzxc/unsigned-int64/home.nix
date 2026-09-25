@@ -20,34 +20,34 @@ let
   ];
 
   rootHmConfig = {
+    programs.bash.enable = true;
+    programs.direnv.enable = true;
+    programs.fastfetch.enable = true;
+    programs.fzf.enable = true;
+    programs.nh.enable = true;
+    programs.zsh.enable = true;
     euvlok.home = {
-      bash.enable = true;
-      direnv.enable = true;
-      fastfetch.enable = true;
-      fzf.enable = true;
       helix.enable = true;
-      nh.enable = true;
       yazi.enable = true;
-      zsh.enable = true;
     };
   };
 
   serverHmConfig = {
+    programs.fastfetch.enable = true;
+    programs.nh.enable = true;
     euvlok.home = {
-      fastfetch.enable = true;
       helix.enable = true;
-      nh.enable = true;
       yazi.enable = true;
     };
   };
 
   workstationHmConfig = [
     {
+      programs.fastfetch.enable = true;
+      programs.ghostty.enable = true;
+      programs.nh.enable = true;
       euvlok.home = {
-        fastfetch.enable = true;
-        ghostty.enable = true;
         helix.enable = true;
-        nh.enable = true;
         vscode.enable = true;
         yazi.enable = true;
       };

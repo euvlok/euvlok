@@ -39,15 +39,15 @@
         {
           home.shell.enableShellIntegration = true;
           programs.codex.settings = lib.modules.mkForce { };
+          programs.fastfetch.enable = true;
+          programs.bash.enable = true;
+          programs.fish.enable = true;
+          programs.mpv.enable = true;
           euvlok.home = {
             codex.enable = true;
-            fastfetch.enable = true;
             firefox.zen-browser.enable = true;
-            bash.enable = true;
-            fish.enable = true;
             helix.enable = true;
             hyprland.enable = true;
-            mpv.enable = true;
             nixcord.enable = true;
           };
         }

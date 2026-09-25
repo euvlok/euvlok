@@ -15,12 +15,6 @@ let
     ll = "eza --long --icons auto";
     ld = "ls -d .*";
 
-    # Time
-    now = "date +'%T'";
-    nowtime = "now";
-    nowdate = "date +'%d-%m-%Y'";
-    nowunix = "date +%s";
-
     # File Operations
     mv = "mv -iv";
     cp = "cp -iv";
@@ -43,12 +37,19 @@ let
     htop = "btop";
     neofetch = "fastfetch";
 
+    now = "date +'%T'";
+    nowtime = "now";
+    nowdate = "date +'%d-%m-%Y'";
+    nowunix = "date +%s";
+
     # Utility
     bc = "bc -l";
 
     # Misc
     myip = "curl 'https://ipinfo.io/ip'";
+  };
 
+  bourneAliases = {
     # Nix Aliases
     nix-build-file = ''
       __02fda1f0() {
@@ -100,6 +101,7 @@ let
   };
 in
 {
-  programs.bash.shellAliases = aliases;
-  programs.zsh.shellAliases = aliases;
+  home.shellAliases = aliases;
+  programs.bash.shellAliases = bourneAliases;
+  programs.zsh.shellAliases = bourneAliases;
 }

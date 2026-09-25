@@ -39,7 +39,7 @@ let
       src = "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh";
     }
   ]
-  ++ lib.lists.optional hmConfig.euvlok.home.fzf.enable {
+  ++ lib.lists.optional hmConfig.programs.fzf.enable {
     name = "fzf-tab";
     src = "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh";
   };
@@ -75,7 +75,7 @@ in
     ];
 
     promptInit = lib.strings.concatStrings [
-      (lib.strings.optionalString hmConfig.euvlok.home.ghostty.enable ''
+      (lib.strings.optionalString hmConfig.programs.ghostty.enable ''
         if [[ -r "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration ]]; then
           source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
         fi
@@ -95,7 +95,7 @@ in
           rm -f -- "$tmp"
         }
       '')
-      (lib.strings.optionalString hmConfig.euvlok.home.zoxide.enable ''eval "$(zoxide init zsh)"'')
+      (lib.strings.optionalString hmConfig.programs.zoxide.enable ''eval "$(zoxide init zsh)"'')
     ];
   };
 

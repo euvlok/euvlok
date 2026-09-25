@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  config,
   ...
 }:
 let
@@ -59,21 +58,16 @@ let
   };
 in
 {
-  options.euvlok.home.ghostty.enable = lib.options.mkEnableOption "Ghostty";
-
-  config = lib.modules.mkIf config.euvlok.home.ghostty.enable {
-    programs.ghostty = {
-      enable = true;
-      package = if isDarwin then pkgs.unstable.ghostty-bin else pkgs.ghostty;
-      settings = lib.attrsets.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
-        adjust-underline-position = 4;
-        clipboard-paste-protection = false;
-        confirm-close-surface = false;
-        cursor-style-blink = false;
-        keybind = lib.lists.concatLists (lib.attrsets.attrValues mkKeybindings);
-        quit-after-last-window-closed = true;
-        scrollback-limit = 10 * 10000000;
-      };
+  programs.ghostty = {
+    package = if isDarwin then pkgs.unstable.ghostty-bin else pkgs.ghostty;
+    settings = lib.attrsets.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
+      adjust-underline-position = 4;
+      clipboard-paste-protection = false;
+      confirm-close-surface = false;
+      cursor-style-blink = false;
+      keybind = lib.lists.concatLists (lib.attrsets.attrValues mkKeybindings);
+      quit-after-last-window-closed = true;
+      scrollback-limit = 10 * 10000000;
     };
   };
 }
