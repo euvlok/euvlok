@@ -1,531 +1,203 @@
-#!/usr/bin/env nix-shell
-#!nix-shell --pure -i bash -p gifski ffmpeg_8-full parallel fd
-# shellcheck shell=bash
-
+#!/usr/bin/env bash
+# Convert videos to GIFs with ffmpeg and gifski.
+# Requires Bash 5+, GNU coreutils, fd and GNU Parallel.
 set -euo pipefail
 
-# ═══════════════════════════════════════════════════════════════════
-# CONSTANTS
-# ═══════════════════════════════════════════════════════════════════
+if ((BASH_VERSINFO[0] < 5)); then
+  printf 'video2gif: Bash 5 or newer is required\n' >&2
+  exit 1
+fi
 
-readonly SCRIPT_NAME="video2gif"
-# shellcheck disable=SC2034
-readonly VERSION="1.0.0"
-
-# Default values
-readonly DEFAULT_FPS=24
-readonly DEFAULT_QUALITY=90
-readonly MIN_QUALITY=1
-readonly MAX_QUALITY=100
-
-# Supported video extensions
-readonly -a VIDEO_EXTENSIONS=(mp4 mov webm mkv)
-
-# shellcheck disable=SC2034
-readonly COLOR_RESET='\033[0m'
-# shellcheck disable=SC2034
-readonly COLOR_RED='\033[0;31m'
-# shellcheck disable=SC2034
-readonly COLOR_GREEN='\033[0;32m'
-# shellcheck disable=SC2034
-readonly COLOR_YELLOW='\033[0;33m'
-# shellcheck disable=SC2034
-readonly COLOR_BLUE='\033[0;34m'
-
-# ═══════════════════════════════════════════════════════════════════
-# GLOBAL VARIABLES
-# ═══════════════════════════════════════════════════════════════════
-
-declare -a input_files=()
-directory_mode=false
-search_dir=""
-fps=$DEFAULT_FPS
-quality=$DEFAULT_QUALITY
-remove_source=false
-output_path=""
-parallel_jobs=""
-
-# ═══════════════════════════════════════════════════════════════════
-# OUTPUT FUNCTIONS
-# ═══════════════════════════════════════════════════════════════════
-
-log_info() {
-  echo "[~] $*"
+# Print a diagnostic and exit unsuccessfully.
+die() {
+  printf 'video2gif: %s\n' "$*" >&2
+  exit 1
 }
-
-log_success() {
-  echo "[OK] $*"
-}
-
-log_error() {
-  echo "[!!] Error: $*" >&2
-}
-
-log_skip() {
-  echo "[SKIP] $*"
-}
-
-log_process() {
-  echo "[>>] $*"
-}
-
-print_banner() {
-  cat <<'EOF'
-╔══════════════════════════════════════════════════════════════════╗
-║                                                                  ║
-║   ██╗   ██╗██╗██████╗ ███████╗ ██████╗  ██████╗ ██╗███████╗   ║
-║   ██║   ██║██║██╔══██╗██╔════╝██╔═══██╗██╔════╝ ██║██╔════╝   ║
-║   ██║   ██║██║██║  ██║█████╗  ██║   ██║╚█████╗  ██║█████╗     ║
-║   ╚██╗ ██╔╝██║██║  ██║██╔══╝  ██║   ██║ ╚═══██╗ ██║██╔══╝     ║
-║    ╚████╔╝ ██║██████╔╝███████╗╚██████╔╝██████╔╝ ██║██║        ║
-║     ╚═══╝  ╚═╝╚═════╝ ╚══════╝ ╚═════╝ ╚═════╝  ╚═╝╚═╝        ║
-║                                                                  ║
-║              High-Quality Video to GIF Converter                ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
-EOF
-}
-
-print_separator() {
-  echo "────────────────────────────────────────────────────────────"
-}
-
-print_summary_box() {
-  local total=$1
-  cat <<EOF
-┌────────────────────────────────────────────────────────────┐
-│ Files to process: $total
-│ FPS: $fps | Quality: $quality | Remove source: $remove_source
-│ Parallel jobs: ${parallel_jobs:-auto}
-└────────────────────────────────────────────────────────────┘
-EOF
-}
-
-print_completion_box() {
-  local elapsed=$1
-  local count=$2
-  cat <<EOF
-
-╔══════════════════════════════════════════════════════════════╗
-║                    CONVERSION COMPLETE!                      ║
-║  Total time: ${elapsed}s | Processed: ${count} file(s)              ║
-╚══════════════════════════════════════════════════════════════╝
-EOF
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# HELP & USAGE
-# ═══════════════════════════════════════════════════════════════════
 
 usage() {
-  cat <<-EOF
-		Usage: $SCRIPT_NAME [FILES...] [OPTIONS]
-		       $SCRIPT_NAME --directory <dir> [OPTIONS]
+  cat <<'EOF'
+  Usage: video2gif [options] FILE...
+        video2gif --directory DIR [options]
 
-		Convert video files to high-quality GIF format.
-
-		MODES:
-		  FILES...              Convert specific video files
-		  -d, --directory DIR   Convert all videos in directory
-
-		OPTIONS:
-		  -f, --fps <fps>        Set output FPS (default: $DEFAULT_FPS)
-		  -q, --quality <1-100>  Set GIF quality (default: $DEFAULT_QUALITY)
-		  -o, --output <path>    Output path/directory (optional)
-		  -r, --remove           Remove source files after conversion
-		  -j, --jobs <N>         Parallel jobs (default: auto)
-		  -h, --help             Show this help message
-
-		EXAMPLES:
-		  # Convert single file
-		  $SCRIPT_NAME video.mp4
-		  
-		  # Convert with custom quality
-		  $SCRIPT_NAME video.mp4 --fps 30 --quality 95
-		  
-		  # Convert all videos in directory
-		  $SCRIPT_NAME --directory ~/Videos --fps 30
-		  
-		  # Custom output location
-		  $SCRIPT_NAME video.mp4 -o output.gif
-
-		Supported formats: ${VIDEO_EXTENSIONS[*]}
-	EOF
-  exit 0
+  -d, --directory DIR  Recursively find MP4, MOV, WebM and MKV files
+  -f, --fps N          Frames per second (default: 24; positive integer)
+  -q, --quality N      GIF quality from 1 to 100 (default: 90)
+  -o, --output FILE    Output path for a single input (default: beside input)
+  -r, --remove         Delete sources only after successful conversion
+  -j, --jobs N         Parallel jobs (default: CPU count; 0 means unlimited)
+  -h, --help           Show this help
+  --                   Treat remaining arguments as filenames
+EOF
 }
 
-# ═══════════════════════════════════════════════════════════════════
-# VALIDATION FUNCTIONS
-# ═══════════════════════════════════════════════════════════════════
+# Encode in a subshell so traps and temporary files belong to this job.
+# Arguments: fps, quality, remove_source, input, output.
+encode_video() (
+  set -euo pipefail
+  local fps="$1" quality="$2" remove_source="$3" input="$4" output="$5"
+  local work_dir
+  local -a frames
 
-check_dependencies() {
-  local -a missing_tools=()
-  local -a required_tools=(ffmpeg gifski parallel fd)
-
-  for tool in "${required_tools[@]}"; do
-    if ! command -v "$tool" &>/dev/null; then
-      missing_tools+=("$tool")
-    fi
-  done
-
-  if [[ ${#missing_tools[@]} -gt 0 ]]; then
-    log_error "Missing required tools: ${missing_tools[*]}"
-    echo "This script should be run with nix-shell (see shebang)."
-    exit 1
-  fi
-}
-
-validate_number() {
-  local value=$1
-  local name=$2
-
-  if [[ -z "$value" ]] || ! [[ "$value" =~ ^[0-9]+$ ]]; then
-    log_error "$name requires a numeric argument"
-    exit 1
-  fi
-}
-
-validate_quality() {
-  local value=$1
-
-  if [[ -z "$value" ]] || ! [[ "$value" =~ ^[0-9]+$ ]] ||
-    [[ "$value" -lt $MIN_QUALITY || "$value" -gt $MAX_QUALITY ]]; then
-    log_error "--quality requires a number between $MIN_QUALITY and $MAX_QUALITY"
-    exit 1
-  fi
-}
-
-validate_file() {
-  local file=$1
-
-  if [[ ! -f "$file" ]]; then
-    log_error "File not found: '$file'"
-    exit 1
-  fi
-}
-
-validate_directory() {
-  local dir=$1
-
-  if [[ ! -d "$dir" ]]; then
-    log_error "'$dir' is not a directory"
-    exit 1
-  fi
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# ARGUMENT PARSING
-# ═══════════════════════════════════════════════════════════════════
-
-parse_args() {
-  [[ $# -eq 0 ]] && usage
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -d | --directory)
-        shift
-        [[ -z "${1:-}" ]] && {
-          log_error "--directory requires an argument"
-          exit 1
-        }
-        directory_mode=true
-        search_dir="$1"
-        validate_directory "$search_dir"
-        ;;
-      -f | --fps)
-        shift
-        validate_number "${1:-}" "--fps"
-        fps="$1"
-        ;;
-      -q | --quality)
-        shift
-        validate_quality "${1:-}"
-        quality="$1"
-        ;;
-      -o | --output)
-        shift
-        [[ -z "${1:-}" ]] && {
-          log_error "--output requires an argument"
-          exit 1
-        }
-        output_path="$1"
-        ;;
-      -r | --remove)
-        remove_source=true
-        ;;
-      -j | --jobs)
-        shift
-        validate_number "${1:-}" "--jobs"
-        parallel_jobs="$1"
-        ;;
-      -h | --help)
-        usage
-        ;;
-      -*)
-        log_error "Unknown option '$1'"
-        usage
-        ;;
-      *)
-        validate_file "$1"
-        input_files+=("$1")
-        ;;
-    esac
-    shift
-  done
-
-  validate_args
-}
-
-validate_args() {
-  if [[ "$directory_mode" == true ]] && [[ ${#input_files[@]} -gt 0 ]]; then
-    log_error "Cannot use both --directory and file arguments"
-    exit 1
-  fi
-
-  if [[ "$directory_mode" == false ]] && [[ ${#input_files[@]} -eq 0 ]]; then
-    log_error "No input files specified"
-    usage
-  fi
-
-  if [[ -n "$output_path" ]] && [[ ${#input_files[@]} -gt 1 ]]; then
-    log_error "--output can only be used with a single input file"
-    exit 1
-  fi
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# FILE OPERATIONS
-# ═══════════════════════════════════════════════════════════════════
-
-build_extension_pattern() {
-  local pattern=""
-  for ext in "${VIDEO_EXTENSIONS[@]}"; do
-    pattern+=" -e $ext -e ${ext^^}"
-  done
-  echo "$pattern"
-}
-
-normalize_extensions() {
-  local dir="$1"
-  local count=0
-  local ext_pattern
-
-  ext_pattern=$(build_extension_pattern)
-
-  log_info "Normalizing file extensions..."
-
-  # shellcheck disable=SC2086
-  while IFS= read -r file; do
-    ext="${file##*.}"
-    base="${file%.*}"
-    lower_ext="${ext,,}"
-
-    if [[ "$file" != "$base.$lower_ext" ]]; then
-      mv -v -- "$file" "$base.$lower_ext"
-      ((count++)) || true
-    fi
-  done < <(fd . "$dir" -t f $ext_pattern)
-
-  if [[ $count -gt 0 ]]; then
-    log_success "Normalized $count file extension(s)"
-  else
-    log_success "All extensions already normalized"
-  fi
-  echo
-}
-
-find_videos_in_directory() {
-  local dir="$1"
-  local ext_args=""
-
-  for ext in "${VIDEO_EXTENSIONS[@]}"; do
-    ext_args+=" -e $ext"
-  done
-
-  # shellcheck disable=SC2086
-  mapfile -t input_files < <(fd . "$dir" -t f $ext_args)
-}
-
-get_file_size() {
-  du -h "$1" | cut -f1
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# VIDEO PROCESSING
-# ═══════════════════════════════════════════════════════════════════
-
-extract_frames() {
-  local input="$1"
-  local tmpdir="$2"
-  local filters="fps=${fps}"
-
-  ffmpeg -hide_banner -loglevel error \
-    -i "$input" \
-    -vf "$filters" \
-    "$tmpdir/frame%04d.png" 2>&1
-}
-
-create_gif() {
-  local tmpdir="$1"
-  local output="$2"
-
-  gifski --quality "$quality" \
-    --fps "$fps" \
-    -o "$output" \
-    "$tmpdir"/frame*.png 2>&1
-}
-
-cleanup_temp() {
-  local tmpdir="$1"
-  [[ -d "$tmpdir" ]] && rm -rf "$tmpdir"
-}
-
-handle_completion() {
-  local input="$1"
-  local output="$2"
-  local input_size="$3"
-  local output_size="$4"
-
-  if [[ "$remove_source" == true ]]; then
-    rm -- "$input"
-    log_success "$input ($input_size) -> $output ($output_size) [source removed]"
-  else
-    log_success "$input ($input_size) -> $output ($output_size) [source kept]"
-  fi
-}
-
-encode_video() {
-  local input="$1"
-  local output="$2"
-  local tmpdir
-
-  # Skip if output exists
-  if [[ -f "$output" ]]; then
-    log_skip "'$input' -> output already exists"
+  if [[ -e "${output}" || -L "${output}" ]]; then
+    printf 'Skipping existing output: %s\n' "${output}"
     return 0
   fi
 
-  # Create temporary directory
-  tmpdir=$(mktemp -d)
-  trap 'cleanup_temp "$tmpdir"' EXIT
+  # Stage on the destination filesystem for atomic, no-clobber publication.
+  work_dir=$(mktemp -d -- "${output%/*}/.video2gif.XXXXXXXXXX")
+  trap 'rm -rf -- "${work_dir}"' EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  trap 'exit 129' HUP
 
-  log_process "Processing: $input"
+  printf 'Converting: %s\n' "${input}"
+  ffmpeg -nostdin -hide_banner -loglevel error -i "${input}" \
+    -vf "fps=${fps}" "${work_dir}/frame%010d.png" \
+    || die "Failed to extract frames: ${input}"
 
-  # Extract frames
-  if ! extract_frames "$input" "$tmpdir"; then
-    log_error "Failed to extract frames from '$input'"
-    cleanup_temp "$tmpdir"
-    return 1
+  shopt -s nullglob
+  frames=("${work_dir}"/frame*.png)
+  ((${#frames[@]} > 0)) || die "No frames extracted: ${input}"
+  gifski --quiet --quality "${quality}" --fps "${fps}" \
+    -o "${work_dir}/output.gif" "${frames[@]}" \
+    || die "Failed to encode GIF: ${input}"
+  [[ -s "${work_dir}/output.gif" ]] || die "Empty GIF: ${input}"
+
+  # A competing conversion must not overwrite an output or delete our source.
+  ln -T -- "${work_dir}/output.gif" "${output}" \
+    || die "Could not publish GIF (source kept): ${output}"
+  if [[ "${remove_source}" == true ]]; then
+    rm -- "${input}"
   fi
+  printf 'Created: %s\n' "${output}"
+)
 
-  # Verify frames were created
-  if ! compgen -G "$tmpdir/frame*.png" >/dev/null; then
-    log_error "No frames extracted from '$input'"
-    cleanup_temp "$tmpdir"
-    return 1
-  fi
-
-  # Create GIF
-  if ! create_gif "$tmpdir" "$output"; then
-    log_error "Failed to encode GIF for '$input'"
-    cleanup_temp "$tmpdir"
-    return 1
-  fi
-
-  cleanup_temp "$tmpdir"
-
-  # Report completion
-  local input_size output_size
-  input_size=$(get_file_size "$input")
-  output_size=$(get_file_size "$output")
-
-  handle_completion "$input" "$output" "$input_size" "$output_size"
-  return 0
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# BATCH PROCESSING
-# ═══════════════════════════════════════════════════════════════════
-
-get_output_filename() {
-  local input="$1"
-  echo "$(dirname "$input")/$(basename "$input" | sed 's/\.[^.]*$/.gif/')"
-}
-
-process_single_file() {
-  local input="${input_files[0]}"
-  local output="${output_path:-${input%.*}.gif}"
-
-  encode_video "$input" "$output"
-}
-
-process_multiple_files() {
-  local job_args="${parallel_jobs:+-j $parallel_jobs}"
-
-  # Export for parallel
-  export fps quality remove_source
-  export -f encode_video extract_frames create_gif cleanup_temp
-  export -f handle_completion get_file_size get_output_filename
-  export -f log_info log_success log_error log_skip log_process
-
-  # shellcheck disable=SC2086
-  parallel --halt now,fail=1 --line-buffer $job_args \
-    encode_video {} "$(get_output_filename {})" \
-    ::: "${input_files[@]}"
-}
-
-process_files() {
-  local total=${#input_files[@]}
-
-  if [[ $total -eq 0 ]]; then
-    log_error "No video files to process"
-    return 1
-  fi
-
-  print_summary_box "$total"
-  echo
-
-  if [[ $total -eq 1 ]]; then
-    process_single_file
-  else
-    process_multiple_files
-  fi
-}
-
-# ═══════════════════════════════════════════════════════════════════
-# MAIN
-# ═══════════════════════════════════════════════════════════════════
-
+# Parse arguments, validate the complete batch, and dispatch conversion jobs.
 main() {
-  check_dependencies
+  local fps=24 quality=90 jobs='' directory='' output='' remove_source=false
+  local option value input destination filename tool index
+  local -a inputs=() outputs=() job_args=()
+  local -A destinations=()
 
-  print_banner
-  echo
-
-  parse_args "$@"
-
-  # Handle directory mode
-  if [[ "$directory_mode" == true ]]; then
-    log_info "Directory mode: $search_dir"
-    echo
-    normalize_extensions "$search_dir"
-    find_videos_in_directory "$search_dir"
+  if (($# == 0)); then
+    usage
+    return 0
   fi
 
-  # Process files
-  local start_time end_time elapsed
-  start_time=$(date +%s)
+  while (($# > 0)); do
+    case "$1" in
+      -h | --help)
+        usage
+        return 0
+        ;;
+      -d | --directory | -f | --fps | -q | --quality | -o | --output | \
+        -j | --jobs)
+        option="$1"
+        (($# >= 2)) && [[ -n "$2" ]] \
+          || die "${option} requires a value"
+        value="$2"
+        case "${option}" in
+          -d | --directory) directory="${value}" ;;
+          -o | --output) output="${value}" ;;
+          *)
+            # Bound decimal input before arithmetic; avoid octal and overflow.
+            [[ "${value}" =~ ^[0-9]{1,9}$ ]] \
+              || die "${option} requires an integer of at most 9 digits"
+            value=$((10#${value}))
+            case "${option}" in
+              -f | --fps) fps="${value}" ;;
+              -q | --quality) quality="${value}" ;;
+              -j | --jobs) jobs="${value}" ;;
+            esac
+            ;;
+        esac
+        shift 2
+        ;;
+      -r | --remove)
+        remove_source=true
+        shift
+        ;;
+      --)
+        shift
+        inputs+=("$@")
+        break
+        ;;
+      -*) die "Unknown option: $1 (see --help)" ;;
+      *)
+        inputs+=("$1")
+        shift
+        ;;
+    esac
+  done
 
-  process_files
+  ((fps > 0)) || die '--fps must be positive'
+  ((quality >= 1 && quality <= 100)) \
+    || die '--quality must be between 1 and 100'
+  if [[ -n "${directory}" ]]; then
+    ((${#inputs[@]} == 0)) \
+      || die 'Cannot combine --directory with file arguments'
+    [[ -d "${directory}" ]] || die "Not a directory: ${directory}"
+  fi
+  for tool in ffmpeg gifski realpath mktemp ln rm; do
+    command -v "${tool}" >/dev/null || die "Missing dependency: ${tool}"
+  done
 
-  end_time=$(date +%s)
-  elapsed=$((end_time - start_time))
+  if [[ -n "${directory}" ]]; then
+    command -v fd >/dev/null || die 'Missing dependency: fd'
+    mapfile -d '' -t inputs < <(
+      fd --type f --ignore-case --print0 \
+        -e mp4 -e mov -e webm -e mkv -- . "${directory}"
+    )
+    # mapfile cannot report producer errors; $! is the substitution's PID.
+    wait "$!" || die "Could not search directory: ${directory}"
+  fi
 
-  print_completion_box "$elapsed" "${#input_files[@]}"
+  ((${#inputs[@]} > 0)) || die 'No input videos found'
+  if [[ -n "${output}" ]] && ((${#inputs[@]} != 1)); then
+    die '--output requires exactly one input video'
+  fi
+
+  for index in "${!inputs[@]}"; do
+    input="${inputs[index]}"
+    [[ -f "${input}" ]] || die "Not a file: ${input}"
+    # Absolute paths also prevent option/protocol interpretation by encoders.
+    # Preserve symlinks so --remove deletes the supplied name, not its target.
+    if [[ "${input}" != /* ]]; then
+      input="${PWD}/${input}"
+    fi
+    inputs[index]="${input}"
+    filename="${input##*/}"
+    destination="${output:-${input%/*}/${filename%.*}.gif}"
+    if [[ "${destination}" != /* ]]; then
+      destination="${PWD}/${destination}"
+    fi
+    # NUL-delimited read preserves trailing newlines and fails on empty output.
+    IFS= read -r -d '' value < <(realpath -zm -- "${destination}")
+    [[ -z "${destinations[${value}]:-}" ]] \
+      || die "Multiple inputs would write: ${destination}"
+    destinations["${value}"]=1
+    outputs+=("${destination}")
+  done
+
+  if ((${#inputs[@]} == 1)); then
+    encode_video "${fps}" "${quality}" "${remove_source}" \
+      "${inputs[0]}" "${outputs[0]}"
+  else
+    command -v parallel >/dev/null || die 'Missing dependency: parallel'
+    if [[ -n "${jobs}" ]]; then
+      job_args=(--jobs "${jobs}")
+    fi
+    # GNU Parallel launches Bash explicitly; login SHELL may be zsh or fish.
+    export -f encode_video die
+    SHELL="${BASH}" PARALLEL_SHELL="${BASH}" parallel --plain --null \
+      --halt soon,fail=1 --line-buffer "${job_args[@]}" \
+      encode_video "${fps}" "${quality}" "${remove_source}" '{1}' '{2}' \
+      ::: "${inputs[@]}" :::+ "${outputs[@]}"
+  fi
 }
 
-# ═══════════════════════════════════════════════════════════════════
-# ENTRY POINT
-# ═══════════════════════════════════════════════════════════════════
-
+# Defer signal handling until the foreground worker has finished its cleanup.
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
 main "$@"

@@ -1,6 +1,21 @@
 { pkgs, lib, ... }:
 let
-  mkScript = name: path: lib.meta.getExe (pkgs.writeScriptBin name (builtins.readFile path));
+  video2gif = pkgs.writeShellApplication {
+    name = "video2gif";
+    runtimeInputs = with pkgs; [
+      coreutils
+      fd
+      ffmpeg_8-full
+      gifski
+      parallel
+    ];
+    text = builtins.readFile ./scripts/video2gif.sh;
+  };
+  video2gifSimple = pkgs.writeShellApplication {
+    name = "video2gif_simple";
+    runtimeInputs = [ video2gif ];
+    text = builtins.readFile ./scripts/video2gif_simple.sh;
+  };
 
   editor = {
     nvim = "hx";
@@ -50,8 +65,8 @@ let
   };
 
   scripts = {
-    video2gif = mkScript "video2gif" ./scripts/video2gif.sh;
-    video2gif_simple = mkScript "video2gif_simple" ./scripts/video2gif_simple.sh;
+    video2gif = lib.meta.getExe video2gif;
+    video2gif_simple = lib.meta.getExe video2gifSimple;
   };
 
   darwin = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isDarwin {
