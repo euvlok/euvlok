@@ -21,7 +21,7 @@
 
     theme = ./rofi.rasi;
   };
-  home.file.".local/share/rofi/themes/colors.rasi".text = ''
+  xdg.dataFile."rofi/themes/colors.rasi".text = ''
     * {
     background:     #${config.lib.stylix.colors.base00};
     background-alt: #${config.lib.stylix.colors.base01};
