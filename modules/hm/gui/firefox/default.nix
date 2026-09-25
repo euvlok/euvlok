@@ -233,41 +233,30 @@ in
     };
   };
 
-  config = lib.modules.mkMerge [
-    (lib.modules.mkIf config.euvlok.home.firefox.enable {
-      programs.firefox = {
-        enable = true;
-        package = pkgs.firefox;
-        profiles.default = default;
-        inherit (config.euvlok.home.firefox) languagePacks;
-        inherit policies;
+  config.programs =
+    lib.attrsets.mapAttrs
+      (
+        name: package:
+        lib.modules.mkIf
+          (
+            if name == "firefox" then
+              config.euvlok.home.firefox.enable
+            else
+              config.euvlok.home.firefox.${name}.enable
+          )
+          (
+            {
+              enable = true;
+              profiles.default = default;
+              inherit (config.euvlok.home.firefox) languagePacks;
+              inherit policies;
+            }
+            // lib.attrsets.optionalAttrs (package != null) { inherit package; }
+          )
+      )
+      {
+        inherit (pkgs) firefox librewolf;
+        floorp = pkgs.unstable.floorp-bin;
+        zen-browser = null;
       };
-    })
-    (lib.modules.mkIf config.euvlok.home.firefox.floorp.enable {
-      programs.floorp = {
-        enable = true;
-        package = pkgs.unstable.floorp-bin;
-        profiles.default = default;
-        inherit (config.euvlok.home.firefox) languagePacks;
-        inherit policies;
-      };
-    })
-    (lib.modules.mkIf config.euvlok.home.firefox.librewolf.enable {
-      programs.librewolf = {
-        enable = true;
-        package = pkgs.librewolf;
-        profiles.default = default;
-        inherit (config.euvlok.home.firefox) languagePacks;
-        inherit policies;
-      };
-    })
-    (lib.modules.mkIf config.euvlok.home.firefox.zen-browser.enable {
-      programs.zen-browser = {
-        enable = true;
-        profiles.default = default;
-        inherit (config.euvlok.home.firefox) languagePacks;
-        inherit policies;
-      };
-    })
-  ];
 }

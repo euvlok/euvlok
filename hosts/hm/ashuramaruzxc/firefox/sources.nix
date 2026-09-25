@@ -119,11 +119,5 @@
       name = "Kagi Translate";
       source = "amo";
     }
-    # --- From Third-Party Sources ---
-    {
-      id = "magnolia@12.34";
-      name = "Bypass Paywalls Clean";
-      source = "bpc";
-    }
   ];
 }

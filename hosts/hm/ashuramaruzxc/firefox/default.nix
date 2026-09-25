@@ -107,10 +107,15 @@ let
     "sync.services.mozilla.com"
   ];
 
+  inherit (pkgs.callPackage ../../../../lib/firefox-addons.nix { }) buildFirefoxXpiAddon;
+  sharedExtensions = pkgs.callPackage ../../../../modules/hm/gui/firefox/extensions.nix {
+    inherit buildFirefoxXpiAddon;
+  };
   defaultExtensionsList = lib.lists.filter lib.attrsets.isDerivation (
     lib.attrsets.attrValues (
-      pkgs.callPackage ./extensions.nix {
-        inherit ((pkgs.callPackage ../../../../lib/firefox-addons.nix { })) buildFirefoxXpiAddon;
+      (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
+      // {
+        inherit (sharedExtensions) "magnolia@12.34";
       }
     )
   );
