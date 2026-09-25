@@ -12,21 +12,6 @@ let
     "x86_64-linux"
   ];
 
-  overlaysModule = flake-parts-lib.importApply ./overlays.nix {
-    inherit inputs supportedSystems;
-  };
-  packagesModule = ./packages.nix;
-  modulesModule = flake-parts-lib.importApply ./modules.nix {
-    inherit inputs;
-  };
-  hostsModule = flake-parts-lib.importApply ./hosts.nix {
-    providerInputs = inputs;
-    inherit supportedSystems;
-  };
-  testsModule = flake-parts-lib.importApply ./tests.nix {
-    providerInputs = inputs;
-  };
-
   mkChildren = children: { inherit children; };
   mkValueSchema = doc: what: check: {
     version = 1;
@@ -108,11 +93,14 @@ let
       inputs.flake-parts.flakeModules.modules
       inputs.home-manager.flakeModules.default
       inputs.nix-darwin.flakeModules.default
-      hostsModule
-      modulesModule
-      overlaysModule
-      packagesModule
-      testsModule
+      (flake-parts-lib.importApply ./hosts.nix {
+        providerInputs = inputs;
+        inherit supportedSystems;
+      })
+      (flake-parts-lib.importApply ./modules.nix { inherit inputs; })
+      (flake-parts-lib.importApply ./overlays.nix { inherit inputs supportedSystems; })
+      ./packages.nix
+      (flake-parts-lib.importApply ./tests.nix { providerInputs = inputs; })
     ];
   };
 in
