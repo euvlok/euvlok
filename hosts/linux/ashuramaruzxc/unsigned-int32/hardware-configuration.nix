@@ -5,6 +5,41 @@
   ...
 }:
 {
+  imports = [
+    {
+      fileSystems =
+        lib.attrsets.mapAttrs
+          (
+            mount: subvolume:
+            {
+              device = "/dev/mapper/root";
+              fsType = "btrfs";
+              options = [
+                "noatime"
+                "autodefrag"
+                "subvol=${subvolume}"
+                "space_cache=v2"
+                "compress=zstd"
+              ];
+            }
+            // lib.attrsets.optionalAttrs (lib.strings.hasPrefix "/var" mount) {
+              neededForBoot = true;
+            }
+          )
+          {
+            "/" = "root";
+            "/var" = "var";
+            "/var/log" = "log";
+            "/var/cache" = "cache";
+            "/var/lib/machines" = "machines";
+            "/var/lib/docker" = "docker";
+            "/var/lib/sops" = "sops";
+            "/etc" = "etc";
+            "/Users" = "Users";
+          };
+    }
+  ];
+
   nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
 
   boot = {
@@ -218,89 +253,6 @@
     };
   };
   ### ---------------/dev/sdc2-------------------- ###
-  fileSystems."/" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=root"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-  };
-  fileSystems."/var" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=var"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/log" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=log"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/cache" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=cache"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/lib/machines" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=machines"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/lib/docker" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=docker"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/lib/sops" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=sops"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-    neededForBoot = true;
-  };
   fileSystems."/nix" = {
     device = "/dev/mapper/root";
     fsType = "btrfs";
@@ -308,28 +260,6 @@
       "noatime"
       "subvol=nix"
       "autodefrag"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-  };
-  fileSystems."/etc" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=etc"
-      "space_cache=v2"
-      "compress=zstd"
-    ];
-  };
-  fileSystems."/Users" = {
-    device = "/dev/mapper/root";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=Users"
       "space_cache=v2"
       "compress=zstd"
     ];

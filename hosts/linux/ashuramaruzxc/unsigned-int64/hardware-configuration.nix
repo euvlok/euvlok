@@ -5,6 +5,37 @@
   ...
 }:
 {
+  imports = [
+    {
+      fileSystems =
+        lib.attrsets.mapAttrs
+          (
+            mount: subvolume:
+            {
+              device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
+              fsType = "btrfs";
+              options = [
+                "noatime"
+                "autodefrag"
+                "subvol=${subvolume}"
+                "space_cache=v2"
+                "compress=zstd:1"
+              ];
+            }
+            // lib.attrsets.optionalAttrs (lib.strings.hasPrefix "/var" mount) {
+              neededForBoot = true;
+            }
+          )
+          {
+            "/" = "root";
+            "/var" = "var";
+            "/var/log" = "log";
+            "/persist" = "persist";
+            "/Users" = "Users";
+          };
+    }
+  ];
+
   nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
 
   sops.secrets.ssh-initrd-key = { };
@@ -113,41 +144,6 @@
     ];
   };
   ### ---------------/dev/sda2-------------------- ###
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=root"
-      "space_cache=v2"
-      "compress=zstd:1"
-    ];
-  };
-  fileSystems."/var" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=var"
-      "space_cache=v2"
-      "compress=zstd:1"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=log"
-      "space_cache=v2"
-      "compress=zstd:1"
-    ];
-    neededForBoot = true;
-  };
   fileSystems."/nix" = {
     device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
     fsType = "btrfs";
@@ -155,28 +151,6 @@
       "noatime"
       "subvol=nix"
       "autodefrag"
-      "space_cache=v2"
-      "compress=zstd:1"
-    ];
-  };
-  fileSystems."/persist" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=persist"
-      "space_cache=v2"
-      "compress=zstd:1"
-    ];
-  };
-  fileSystems."/Users" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
-    fsType = "btrfs";
-    options = [
-      "noatime"
-      "autodefrag"
-      "subvol=Users"
       "space_cache=v2"
       "compress=zstd:1"
     ];
