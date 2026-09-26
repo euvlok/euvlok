@@ -61,8 +61,4 @@ or `homeModules.default`. Individual modules are available too; run
 
 For Home Manager under NixOS or nix-darwin, use `homeModules.integrated` with
 `home-manager.useGlobalPkgs = true`. Use `homeModules.default` for standalone
-Home Manager. The [module reference](docs/reference.md#modules) covers the
-smaller profiles and option names.
-
-Maintenance: [update NVIDIA](docs/reference.md#updating-the-nvidia-driver) or
-[benchmark evaluation](docs/reference.md#benchmarking-evaluation).
+Home Manager.
