@@ -50,6 +50,7 @@ jobs:
   select:
     name: ${{ inputs.system }}
     runs-on: ${{ inputs.runner }}
+    timeout-minutes: 30
     outputs:
       matrix: ${{ steps.hosts.outputs.matrix }}
       has_hosts: ${{ steps.hosts.outputs.has-hosts }}
