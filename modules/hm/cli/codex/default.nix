@@ -85,7 +85,7 @@ in
 
     programs.codex = {
       enable = true;
-      package = pkgs.unstable.codex;
+      package = pkgs.eupkgs.codex;
       settings = codexSettings;
       profiles = {
         plan = {
