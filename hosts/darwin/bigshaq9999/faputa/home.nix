@@ -1,6 +1,9 @@
 {
   homeManagerModule,
   personalModule,
+  raycastManager,
+  raycastModule,
+  raycastPackage,
   sharedModule,
 }:
 {
@@ -25,6 +28,11 @@
     {
       imports = [
         { home.stateVersion = "26.05"; }
+        (import ../../../../modules/hm/gui/raycast.nix {
+          avatarId = "97749920";
+          fallbackName = "nanachi-gh";
+          inherit raycastManager raycastModule raycastPackage;
+        })
       ]
       ++ [
         {
@@ -117,7 +125,6 @@
               ice-bar
               iina
               iterm2
-              raycast
               stats
               shottr
               ;
