@@ -96,7 +96,6 @@ let
 
     networking = builtins.attrValues {
       inherit (pkgs)
-        mullvad-vpn
         openvpn
         proton-vpn
         throne

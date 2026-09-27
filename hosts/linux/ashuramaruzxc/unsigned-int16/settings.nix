@@ -68,10 +68,6 @@
   };
   services.wg-netmanager.enable = true;
   networking.wireguard.enable = true;
-  services.mullvad-vpn = {
-    enable = true;
-    enableExcludeWrapper = false;
-  };
   services.v2raya.enable = true;
   # services.tailscale = {
   #   enable = true;
