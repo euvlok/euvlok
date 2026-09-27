@@ -7,7 +7,7 @@
   programs.rofi = {
     enable = true;
     package = pkgs.unstable.rofi;
-    extraConfig = {
+    settings = {
       modi = "drun,run,filebrowser,ssh,window";
       show-icons = true;
       display-drun = " Apps";
