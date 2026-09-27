@@ -35,7 +35,7 @@
     nix4vscode.inputs.systems.follows = "flake-utils/systems";
     nix4vscode.url = "github:nix-community/nix4vscode";
     nixcord.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nixcord.url = "github:FlameFlag/nixcord";
+    nixcord.url = "github:4evy/nixcord";
     nvidia-patch.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nvidia-patch.inputs.utils.follows = "flake-utils";
     nvidia-patch.url = "github:icewind1991/nvidia-patch-nixos";
