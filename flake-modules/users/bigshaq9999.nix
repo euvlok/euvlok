@@ -22,7 +22,6 @@
           personalModule = ../../hosts/hm/bigshaq9999;
           raycastModule = inputs.raycast.homeManagerModules.default;
           raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
-          raycastManager = inputs.raycast.packages.aarch64-darwin.raycast-manager;
           sharedModule = config.flake.homeModules.integrated;
         };
       })

@@ -1,14 +1,11 @@
 {
   avatarId,
   fallbackName,
-  raycastManager,
   raycastModule,
   raycastPackage,
 }:
 {
   config,
-  lib,
-  pkgs,
   ...
 }:
 let
@@ -73,6 +70,7 @@ in
         avatarUrl = "https://avatars.githubusercontent.com/u/${avatarId}?v=4";
       };
       appAliases = wantedAppAliases;
+      clipboardHistoryDuration = "unlimited";
       commandAliases = [
         {
           id = "c:r:clipboard-history::-::history";
@@ -84,13 +82,4 @@ in
       disableAi = true;
     };
   };
-
-  home.activation.raycastClipboard = lib.hm.dag.entryAfter [ "raycast" ] ''
-    clipboard=$(${lib.meta.getExe raycastManager} db call settings.getInternalExtensionSettings '["e:r:clipboard-history"]')
-    clipboard_update=$(printf '%s\n' "$clipboard" | ${lib.meta.getExe pkgs.jq} -ce \
-      'select(.result != null) | ["e:r:clipboard-history", { syncedMeta: ((.result.syncedMeta // {}) + { historyDuration: "unlimited" }) }]')
-    ${lib.meta.getExe raycastManager} db call settings.updateInternalExtensionSettings "$clipboard_update" > /dev/null
-    ${lib.meta.getExe raycastManager} db call settings.getInternalExtensionSettings '["e:r:clipboard-history"]' \
-      | ${lib.meta.getExe pkgs.jq} -e '.result.syncedMeta.historyDuration == "unlimited"' > /dev/null
-  '';
 }

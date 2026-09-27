@@ -1,7 +1,6 @@
 {
   homeManagerModule,
   personalModule,
-  raycastManager,
   raycastModule,
   raycastPackage,
   sharedModule,
@@ -31,7 +30,7 @@
         (import ../../../../modules/hm/gui/raycast.nix {
           avatarId = "97749920";
           fallbackName = "nanachi-gh";
-          inherit raycastManager raycastModule raycastPackage;
+          inherit raycastModule raycastPackage;
         })
       ]
       ++ [

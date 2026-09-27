@@ -1,7 +1,6 @@
 {
   homeManagerModule,
   personalModule,
-  raycastManager,
   raycastModule,
   raycastPackage,
   sharedModule,
@@ -194,7 +193,7 @@ in
       (import ../../../../modules/hm/gui/raycast.nix {
         avatarId = "72100551";
         fallbackName = "ashuramaruzxc";
-        inherit raycastManager raycastModule raycastPackage;
+        inherit raycastModule raycastPackage;
       })
     ]
     ++ ashuramaru;
