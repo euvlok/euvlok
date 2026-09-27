@@ -612,11 +612,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790510244,
-        "narHash": "sha256-PhfAFQO51eyBoQmDmQMbIaiAm8shq6Rb1I9GJBT2OyM=",
+        "lastModified": 1790512055,
+        "narHash": "sha256-DoFUq93kP9CVbJ1zjrJcvcLtc0ldXAJ30g36FytTLb8=",
         "owner": "4evy",
         "repo": "raycast",
-        "rev": "0471cc8deef2e07ab644e0b9ba3f0834a4092aab",
+        "rev": "7e0b7853b1d783ff1a2b1565398baa669338db8e",
         "type": "github"
       },
       "original": {
