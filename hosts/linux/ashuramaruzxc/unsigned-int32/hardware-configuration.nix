@@ -163,9 +163,6 @@
   ### ----------------BOOT------------------- ###
 
   boot.initrd = {
-    # This host still uses the legacy YubiKey LUKS slots below. Migrating to
-    # systemd stage 1 requires enrolling replacement slots on the machine with
-    # systemd-cryptenroll before this can be enabled safely.
     systemd.enable = false;
     ### ---------------------LUKS--------------------- ###
     luks = {
@@ -237,9 +234,7 @@
     ];
     supportedFilesystems = config.boot.supportedFilesystems;
   };
-
-  # Safe transition path for the scripted-initrd removal. Enroll both devices
-  # with systemd-cryptenroll before selecting this boot entry.
+  # Enroll both LUKS devices with systemd-cryptenroll before selecting this boot entry.
   specialisation.systemd-initrd.configuration = {
     boot.initrd = {
       systemd.enable = lib.modules.mkForce true;
@@ -334,23 +329,6 @@
     ];
   };
   ### ---------------/dev/md/hddpool0-------------------- ###
-
-  ### --------------- /dev/nvme0n1p3 --------------- ###
-  # fileSystems."/Shared/windows" = {
-  # device = "/dev/disk/by-uuid/468CC3228CC30B7F";
-  # fsType = "ntfs-3g";
-  # options = [
-  # "acl"
-  # "noatime"
-  # "discard"
-  # "nohidden"
-  # "sys_immutable"
-  # "windows_names"
-  # "uid=0"
-  # "gid=100"
-  # ];
-  # };
-  ### --------------- /dev/nvme0n1p3 (windows) --------------- ###
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";

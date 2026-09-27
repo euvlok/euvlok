@@ -294,9 +294,6 @@ in
       "--security-opt=no-new-privileges"
       "--network-alias=transmission-ovpn"
       "--network=transmission_openvpn-default"
-
-      # Mullvad specific no longer needed
-      # "--sysctl=net.ipv6.conf.all.disable_ipv6=0"
     ];
   };
   systemd.services."podman-transmission_private" = {
