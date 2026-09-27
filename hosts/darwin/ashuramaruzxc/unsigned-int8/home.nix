@@ -102,7 +102,7 @@ let
 
   multimediaPackages = builtins.attrValues {
     inherit (pkgs)
-      # nicotine-plus
+      nicotine-plus
       qbittorrent
       ;
   };
