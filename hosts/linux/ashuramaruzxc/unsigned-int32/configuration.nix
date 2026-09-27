@@ -70,6 +70,9 @@
         inherit (pkgs.unstable) opentabletdriver;
       };
       extraRules = ''
+        # Prevent USB devices from waking the machine from suspend.
+        ACTION=="add|change", SUBSYSTEM=="usb", TEST=="power/wakeup", ATTR{power/wakeup}="disabled"
+
         # XP-Pen CT1060
         SUBSYSTEM=="hidraw", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="28bd", ATTRS{idProduct}=="0932", MODE="0644"

@@ -13,6 +13,7 @@
     networkmanager = {
       enable = true;
       unmanaged = [ "interface-name:ve-*" ];
+      ensureProfiles.profiles.ethernet.ethernet.wake-on-lan = 64;
     };
     firewall = {
       enable = true;
