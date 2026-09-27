@@ -13,8 +13,8 @@
     enable = true;
     enableImagemagick = true;
     database.createLocally = true;
-    # Nextcloud upgrades must proceed one major version at a time. Keep version
-    # 33 pinned until its migration completes before advancing this host to 34.
+    # Nextcloud upgrades must proceed one major version at a time
+    # Keep 34 pinned until its migration completes before advancing to 35
     package = pkgs.nextcloud34;
     settings = {
       enablePreview = true;
@@ -84,21 +84,9 @@
         cookbook
         cospend
         music
+        onlyoffice
         # maps
         ;
-      # The pinned app metadata has a placeholder source hash for 10.2.0.
-      onlyoffice =
-        let
-          app = config.services.nextcloud.package.packages.apps.onlyoffice;
-        in
-        if app.name == "nextcloud-app-onlyoffice-10.2.0" then
-          app.overrideAttrs (old: {
-            src = old.src.overrideAttrs {
-              outputHash = "sha256-QX2OJKoArx9pFoZBdeXXSc6K0UGzpUCZ6imZJSnBeQc=";
-            };
-          })
-        else
-          app;
       # Camera raw previes
       # camerarawpreviews = pkgs.fetchNextcloudApp {
       #   appName = "camerarawpreviews";
