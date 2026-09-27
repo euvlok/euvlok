@@ -27,6 +27,14 @@
       url = "github:nvmd/disko/gpt-attrs";
     };
     flatpak-declarative.url = "github:in-a-dil-emma/declarative-flatpak";
+    nix-jetbrains-plugins = {
+      inputs = {
+        flake-compat.follows = "";
+        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        systems.follows = "users-flake-utils/systems";
+      };
+      url = "github:nix-community/nix-jetbrains-plugins";
+    };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     nixos-raspberrypi = {
       inputs = {

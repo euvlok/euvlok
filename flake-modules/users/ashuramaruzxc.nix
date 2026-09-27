@@ -22,6 +22,7 @@ let
           personalModule
           ;
         animeCursorsSource = inputs.anime-cursors-source;
+        jetbrainsPlugins = inputs.nix-jetbrains-plugins;
         sharedModule = sharedHomeModule;
       }
       // extraArgs
@@ -113,6 +114,7 @@ in
           homeModule = lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8/home.nix {
             inherit personalModule;
             homeManagerModule = inputs.home-manager.darwinModules.home-manager;
+            jetbrainsPlugins = inputs.nix-jetbrains-plugins;
             raycastModule = inputs.raycast.homeManagerModules.default;
             raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
             sharedModule = sharedHomeModule;

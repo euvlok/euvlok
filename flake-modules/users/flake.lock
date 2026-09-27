@@ -419,6 +419,31 @@
         "type": "github"
       }
     },
+    "nix-jetbrains-plugins": {
+      "inputs": {
+        "flake-compat": [],
+        "nixpkgs": [
+          "users-nixpkgs-unstable-small"
+        ],
+        "systems": [
+          "users-flake-utils",
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790504362,
+        "narHash": "sha256-3g5OmEj5Q5/QtvK/LjJTRmC5Pf2bpug+gcczsyOqHLo=",
+        "owner": "nix-community",
+        "repo": "nix-jetbrains-plugins",
+        "rev": "f45baff00a9181da327fc6db8047264fafdb1ef2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-jetbrains-plugins",
+        "type": "github"
+      }
+    },
     "nixos-images": {
       "inputs": {
         "nixos-stable": [
@@ -588,6 +613,7 @@
         "homebrew-core-source": "homebrew-core-source",
         "homebrew-crc-source": "homebrew-crc-source",
         "nix-homebrew": "nix-homebrew",
+        "nix-jetbrains-plugins": "nix-jetbrains-plugins",
         "nixos-raspberrypi": "nixos-raspberrypi",
         "nixpkgs-container": "nixpkgs-container",
         "nixpkgs-unstable": "nixpkgs-unstable",

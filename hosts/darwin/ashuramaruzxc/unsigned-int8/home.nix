@@ -1,5 +1,6 @@
 {
   homeManagerModule,
+  jetbrainsPlugins,
   personalModule,
   raycastModule,
   raycastPackage,
@@ -132,35 +133,13 @@ let
       # winetricks
       xemu
       ;
-    inherit (pkgs.jetbrains) dataspell datagrip;
+    inherit (jetbrainsPackages) dataspell datagrip;
   };
 
-  jetbrainsPackages =
-    let
-      inherit (pkgs.unstable.jetbrains) rider clion idea;
-      # inherit (pkgs.jetbrains.plugins) addPlugins;
-      # commonPlugins = [
-      #   "better-direnv"
-      #   "catppuccin-icons"
-      #   "catppuccin-theme"
-      #   "csv-editor"
-      #   "ini"
-      #   "nixidea"
-      #   "rainbow-brackets"
-      # ];
-    in
-    [
-      rider
-      clion
-      idea
-    ];
-  # builtins.attrValues {
-  #   riderWithPlugins = addPlugins rider (commonPlugins ++ [ "python-community-edition" ]);
-  #   clionWithPlugins = addPlugins clion (commonPlugins ++ [ "rust" ]);
-  #   ideaUltimateWithPlugins = addPlugins idea-ultimate (
-  #     commonPlugins ++ [ "go" "minecraft-development" "python" "rust" "scala" ]
-  #   );
-  # };
+  jetbrainsPackages = import ../../../hm/ashuramaruzxc/jetbrains.nix {
+    inherit jetbrainsPlugins;
+    pkgs = pkgs.unstable;
+  };
 
   allPackages =
     macosPackages
@@ -169,7 +148,7 @@ let
     ++ authPackages
     ++ productivityPackages
     ++ gamingPackages
-    ++ jetbrainsPackages;
+    ++ (builtins.attrValues { inherit (jetbrainsPackages) rider clion idea; });
 
   userExtras = [
     { home.packages = allPackages; }
