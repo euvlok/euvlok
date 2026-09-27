@@ -1,5 +1,18 @@
-{ pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  home.activation.bitwardenBrowserDirectories = lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run mkdir -p -- \
+        ${lib.escapeShellArg "${config.home.homeDirectory}/.mozilla/native-messaging-hosts"} \
+        ${lib.escapeShellArg "${config.home.homeDirectory}/.config/net.imput.helium/NativeMessagingHosts"}
+    ''
+  );
+
   services.protonmail-bridge.enable = true;
   programs = {
     rbw = {

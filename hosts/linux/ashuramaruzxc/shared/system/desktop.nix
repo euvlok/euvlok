@@ -16,6 +16,7 @@
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs.unstable)
+      bitwarden-desktop
       gnome-boxes
       gnome-themes-extra
       gnome-tweaks
