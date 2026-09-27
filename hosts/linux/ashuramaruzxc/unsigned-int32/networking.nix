@@ -13,6 +13,8 @@
     networkmanager = {
       enable = true;
       unmanaged = [ "interface-name:ve-*" ];
+      # Wake from suspend only on a magic packet, not ordinary Ethernet traffic.
+      ensureProfiles.profiles.ethernet.ethernet.wake-on-lan = 64;
     };
     firewall = {
       enable = true;
@@ -63,12 +65,12 @@
     useRoutingFeatures = "both";
     openFirewall = true;
     authKeyFile = config.sops.secrets.tailscale_auth.path;
-    # Apply the identity on first login and on already enrolled machines.
-    extraUpFlags = config.services.tailscale.extraSetFlags;
-    extraSetFlags = [
+    # Tag requests are supported by `tailscale up`, not `tailscale set`.
+    extraUpFlags = [
       "--advertise-tags=tag:unsigned-int32"
       "--ssh=false"
     ];
+    extraSetFlags = [ "--ssh=false" ];
   };
   systemd.services.NetworkManager-wait-online.enable = lib.modules.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.modules.mkForce false;

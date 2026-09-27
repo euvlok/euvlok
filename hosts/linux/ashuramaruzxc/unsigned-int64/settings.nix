@@ -5,11 +5,12 @@
     enable = true;
     openFirewall = true;
     authKeyFile = config.sops.secrets.tailscale_auth.path;
-    extraUpFlags = config.services.tailscale.extraSetFlags;
-    extraSetFlags = [
+    # Tag requests are supported by `tailscale up`, not `tailscale set`.
+    extraUpFlags = [
       "--advertise-tags=tag:unsigned-int64"
       "--ssh=false"
     ];
+    extraSetFlags = [ "--ssh=false" ];
   };
   networking = {
     hostName = "unsigned-int64";
