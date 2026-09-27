@@ -96,6 +96,7 @@ let
   productivityPackages = builtins.attrValues {
     inherit (pkgs)
       anki-bin
+      chatgpt
       inkscape
       audacity
       ;
