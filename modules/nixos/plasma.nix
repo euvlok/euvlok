@@ -5,16 +5,11 @@
   ...
 }:
 let
-  mkCatppuccinGtk =
-    {
-      tweaks ? [ ],
-    }:
-    pkgs.unstable.catppuccin-gtk.override {
-      accents = [ config.catppuccin.accent ];
-      variant = config.catppuccin.flavor;
-      size = "compact";
-      inherit tweaks;
-    };
+  catppuccinGtk = pkgs.catppuccin-gtk-fausto.override {
+    accent = config.catppuccin.accent;
+    flavor = config.catppuccin.flavor;
+    size = "compact";
+  };
   tesseractLang = [
     "pol" # Polish
     "deu" # German
@@ -165,7 +160,7 @@ in
             ;
         }
         ++ lib.lists.optionals config.catppuccin.enable [
-          (mkCatppuccinGtk { tweaks = [ "rimless" ]; })
+          catppuccinGtk
           (pkgs.unstable.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];

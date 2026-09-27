@@ -32,14 +32,10 @@
     };
   };
 
-  catppuccin.i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else = {
+  euvlok.catppuccinGtk = {
     enable = true;
     inherit (osConfig.catppuccin) accent flavor;
     size = "standard";
-    tweaks = [
-      "rimless"
-      "normal"
-    ];
   };
 
   home.sessionVariables = {

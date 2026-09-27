@@ -1,0 +1,17 @@
+From 51cb54a75c5168a948a2ed7aa64bc343002e4191 Mon Sep 17 00:00:00 2001
+Subject: [PATCH] Support the documented --accent flag
+
+Backport of https://github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme/pull/93
+
+diff --git a/themes/lib/parser.sh b/themes/lib/parser.sh
+--- a/themes/lib/parser.sh
++++ b/themes/lib/parser.sh
+@@ -122,7 +122,7 @@ parse_args() {
+                 ;;
+ 
+                 # Accent color variant
+-            -a | --theme)
++            -a | --accent | --theme)
+                 accent='true'
+                 shift
+                 for variant in "$@"; do

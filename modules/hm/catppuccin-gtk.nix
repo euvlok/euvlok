@@ -1,80 +1,64 @@
-# workaround for https://github.com/catppuccin/nix/pull/644
-
-{ euvlokInputs }:
 {
   config,
   lib,
-  options,
   pkgs,
   ...
 }:
 let
-  catppuccinLib = import (euvlokInputs.catppuccin + /modules/lib) {
-    inherit
-      lib
-      options
-      config
-      pkgs
-      ;
+  cfg = config.euvlok.catppuccinGtk;
+  package = pkgs.callPackage ../../packages/catppuccin-gtk.nix {
+    inherit (cfg) accent flavor size;
   };
-  renamedGtkOption = "i-still-want-to-use-the-archived-gtk-theme-because-it-works-better-than-everything-else";
-  cfg = config.catppuccin.${renamedGtkOption};
-  enable = cfg.enable && config.gtk.enable;
 in
 {
-  options.catppuccin.${renamedGtkOption} =
-    (catppuccinLib.mkCatppuccinOption {
-      name = "gtk";
-      accentSupport = true;
-    })
-    // {
-      size = lib.options.mkOption {
-        type = lib.types.enum [
-          "standard"
-          "compact"
-        ];
-        default = "standard";
-        description = "Catppuccin size variant for gtk";
-      };
-      tweaks = lib.options.mkOption {
-        type = lib.types.listOf (
-          lib.types.enum [
-            "rimless"
-            "normal"
-          ]
-        );
-        default = [ ];
-        description = "Catppuccin tweaks for gtk";
-      };
+  options.euvlok.catppuccinGtk = {
+    enable = lib.mkEnableOption "Catppuccin GTK theme by Fausto-Korpsvart";
+    flavor = lib.mkOption {
+      type = lib.types.enum [
+        "latte"
+        "frappe"
+        "macchiato"
+        "mocha"
+      ];
+      default = "mocha";
+      description = "Catppuccin color palette used by the GTK theme.";
     };
-  config = lib.modules.mkMerge [
-    (lib.modules.mkIf enable {
-      gtk.theme =
-        let
-          gtkTweaks = lib.strings.concatStringsSep "," cfg.tweaks;
-          themeName =
-            "catppuccin-${cfg.flavor}-${cfg.accent}-${cfg.size}+"
-            + (if cfg.tweaks == [ ] then "default" else gtkTweaks);
-        in
-        {
-          name = themeName;
-          package = config.catppuccin.sources.gtk.override {
-            inherit (cfg) flavor size tweaks;
-            accents = [ cfg.accent ];
-          };
-        };
-      gtk.gtk4.theme = lib.modules.mkDefault config.gtk.theme;
-    })
-    {
-      catppuccin.sources.gtk =
-        euvlokInputs.catppuccin-gtk.packages.${pkgs.stdenvNoCC.hostPlatform.system}.gtk.overrideAttrs
-          (oldAttrs: {
-            # Python 3.14 rejects `type` for BooleanOptionalAction.
-            postPatch = (oldAttrs.postPatch or "") + ''
-              substituteInPlace sources/build/args.py \
-                --replace-fail '        type=bool,' ""
-            '';
-          });
-    }
-  ];
+    accent = lib.mkOption {
+      type = lib.types.enum [
+        "blue"
+        "flamingo"
+        "green"
+        "lavender"
+        "maroon"
+        "mauve"
+        "peach"
+        "pink"
+        "red"
+        "rosewater"
+        "sapphire"
+        "sky"
+        "teal"
+        "yellow"
+      ];
+      default = "mauve";
+      description = "Accent color used by the GTK theme.";
+    };
+    size = lib.mkOption {
+      type = lib.types.enum [
+        "standard"
+        "compact"
+      ];
+      default = "standard";
+      description = "Widget size of the GTK theme.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    gtk.enable = lib.mkDefault true;
+    gtk.theme = {
+      name = package.themeName;
+      inherit package;
+    };
+    gtk.gtk4.theme = lib.mkDefault config.gtk.theme;
+  };
 }

@@ -25,6 +25,7 @@ let
   };
 
   localPackagesOverlay = final: _prev: {
+    catppuccin-gtk-fausto = final.callPackage ./packages/catppuccin-gtk.nix { };
     euvlokVscodeExtensions =
       { version, extensions }:
       import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {

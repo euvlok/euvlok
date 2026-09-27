@@ -5,16 +5,11 @@
   ...
 }:
 let
-  mkCatppuccinGtk =
-    {
-      tweaks ? [ ],
-    }:
-    pkgs.unstable.catppuccin-gtk.override {
-      accents = [ config.catppuccin.accent ];
-      variant = config.catppuccin.flavor;
-      size = "compact";
-      inherit tweaks;
-    };
+  catppuccinGtk = pkgs.catppuccin-gtk-fausto.override {
+    accent = config.catppuccin.accent;
+    flavor = config.catppuccin.flavor;
+    size = "compact";
+  };
 in
 {
 
@@ -49,9 +44,7 @@ in
             ;
           inherit (pkgs.unstable.gnomeExtensions) appindicator clipboard-indicator;
         }
-        ++ lib.lists.optional config.catppuccin.enable (mkCatppuccinGtk {
-          tweaks = [ "normal" ];
-        });
+        ++ lib.lists.optional config.catppuccin.enable catppuccinGtk;
 
       gnome.excludePackages = builtins.attrValues {
         inherit (pkgs.unstable)

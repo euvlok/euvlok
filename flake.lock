@@ -46,27 +46,6 @@
         "type": "github"
       }
     },
-    "catppuccin-gtk": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-unstable-small"
-        ]
-      },
-      "locked": {
-        "lastModified": 1737579274,
-        "narHash": "sha256-8kBIYfn8TI9jbffhDNS12SdbQHb9ITXflwcgIJBeGqw=",
-        "owner": "catppuccin",
-        "repo": "nix",
-        "rev": "06f0ea19334bcc8112e6d671fd53e61f9e3ad63a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "catppuccin",
-        "repo": "nix",
-        "rev": "06f0ea19334bcc8112e6d671fd53e61f9e3ad63a",
-        "type": "github"
-      }
-    },
     "determinate": {
       "inputs": {
         "determinate-nixd-aarch64-darwin": "determinate-nixd-aarch64-darwin",
@@ -629,7 +608,6 @@
       "inputs": {
         "browser": "browser",
         "catppuccin": "catppuccin",
-        "catppuccin-gtk": "catppuccin-gtk",
         "determinate": "determinate",
         "eupkgs": "eupkgs",
         "flake-parts": "flake-parts_2",

@@ -27,8 +27,6 @@
     browser.inputs.nix-darwin.follows = "nix-darwin";
     browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     browser.url = "github:4evy/browser";
-    catppuccin-gtk.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    catppuccin-gtk.url = "github:catppuccin/nix/06f0ea19334bcc8112e6d671fd53e61f9e3ad63a";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin.url = "github:catppuccin/nix";
     nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";

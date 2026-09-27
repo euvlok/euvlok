@@ -18,7 +18,7 @@
   catppuccin-gtk = {
     imports = [
       (applyEuvlokInputs ../../modules/hm/os)
-      (applyEuvlokInputs ../../modules/hm/catppuccin-gtk.nix)
+      ../../modules/hm/catppuccin-gtk.nix
     ];
   };
   sops = applyEuvlokInputs ../../modules/hm/sops.nix;
