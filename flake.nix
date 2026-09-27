@@ -41,6 +41,8 @@
     nvidia-patch.url = "github:icewind1991/nvidia-patch-nixos";
     pared.inputs.nixpkgs.follows = "nixpkgs";
     pared.url = "github:4evy/pared";
+    raycast.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    raycast.url = "github:4evy/raycast";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
     zen-browser.inputs.home-manager.follows = "home-manager";

@@ -605,6 +605,26 @@
         "type": "github"
       }
     },
+    "raycast": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable-small"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790510244,
+        "narHash": "sha256-PhfAFQO51eyBoQmDmQMbIaiAm8shq6Rb1I9GJBT2OyM=",
+        "owner": "4evy",
+        "repo": "raycast",
+        "rev": "0471cc8deef2e07ab644e0b9ba3f0834a4092aab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "4evy",
+        "repo": "raycast",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "browser": "browser",
@@ -624,6 +644,7 @@
         "nixpkgs-unstable-small": "nixpkgs-unstable-small",
         "nvidia-patch": "nvidia-patch",
         "pared": "pared",
+        "raycast": "raycast",
         "sops-nix": "sops-nix",
         "zen-browser": "zen-browser"
       }
