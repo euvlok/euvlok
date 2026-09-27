@@ -23,13 +23,6 @@
     reverseImageSearch.enable = true;
     roleColorEverywhere.enable = true;
     viewRaw.enable = true;
-    ### utils
-    appleMusicRichPresence = {
-      enable = true;
-      activityType = 2;
-      enableTimestamps = true;
-      enableButtons = true;
-    };
   };
   programs.nixcord.discord.commandLineArgs = lib.lists.optionals (
     osConfig != null && osConfig.networking.hostName == "unsigned-int32"
