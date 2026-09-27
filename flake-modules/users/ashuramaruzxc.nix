@@ -113,6 +113,9 @@ in
           homeModule = lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8/home.nix {
             inherit personalModule;
             homeManagerModule = inputs.home-manager.darwinModules.home-manager;
+            raycastModule = inputs.raycast.homeManagerModules.default;
+            raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
+            raycastManager = inputs.raycast.packages.aarch64-darwin.raycast-manager;
             sharedModule = sharedHomeModule;
           };
           homebrewModule = inputs.nix-homebrew.darwinModules.nix-homebrew;

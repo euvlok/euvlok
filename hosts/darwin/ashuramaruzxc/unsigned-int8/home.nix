@@ -1,6 +1,9 @@
 {
   homeManagerModule,
   personalModule,
+  raycastManager,
+  raycastModule,
+  raycastPackage,
   sharedModule,
 }:
 { pkgs, ... }:
@@ -73,7 +76,6 @@ let
       ice-bar
       iina
       keka
-      raycast
       shottr
       stats
       the-unarchiver
@@ -187,6 +189,13 @@ in
       sharedModule
       personalModule
     ];
-    users.ashuramaru.imports = ashuramaru;
+    users.ashuramaru.imports = [
+      (import ../../../../modules/hm/gui/raycast.nix {
+        avatarId = "72100551";
+        fallbackName = "ashuramaruzxc";
+        inherit raycastManager raycastModule raycastPackage;
+      })
+    ]
+    ++ ashuramaru;
   };
 }
