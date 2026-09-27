@@ -137,6 +137,7 @@
               qbittorrent
               anki-bin # Japenis
               audacity
+              chatgpt
               # gimp # Image editing
               inkscape # Vector graphics
               yubikey-manager # OTP
