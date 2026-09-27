@@ -5,7 +5,7 @@
   raycastPackage,
   sharedModule,
 }:
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   commonImports = [
     { home.stateVersion = "26.05"; }
@@ -26,6 +26,19 @@ let
 
   hmModuleConfig = [
     {
+      programs.ssh.settings = {
+        "unsigned-int32" = {
+          HostName = "unsigned-int32";
+          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          User = "ashuramaru";
+        };
+        "unsigned-int64" = {
+          HostName = "unsigned-int64";
+          Port = 57255;
+          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          User = "ashuramaru";
+        };
+      };
       programs.fastfetch.enable = true;
       programs.ghostty.enable = true;
       programs.mpv.enable = true;

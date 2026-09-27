@@ -1,4 +1,16 @@
-_: {
+{ config, ... }:
+{
+  sops.secrets.tailscale_auth = { };
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+    authKeyFile = config.sops.secrets.tailscale_auth.path;
+    extraUpFlags = config.services.tailscale.extraSetFlags;
+    extraSetFlags = [
+      "--advertise-tags=tag:unsigned-int64"
+      "--ssh=false"
+    ];
+  };
   networking = {
     hostName = "unsigned-int64";
     interfaces = {
@@ -92,9 +104,9 @@ _: {
         # Proxy
         1080
         3128
-        # ssh
-        57255
       ];
+      # The tailnet policy permits SSH only from tag:unsigned-int8.
+      interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [ 57255 ];
       interfaces."podman+" = {
         allowedTCPPorts = [ 53 ];
         allowedUDPPorts = [ 53 ];
@@ -118,16 +130,12 @@ _: {
       };
     };
   };
-  # # Ensures sshd starts after WireGuard0
-  systemd.services.sshd = {
-    after = [ "wg-quick-wireguard0.service" ];
-    wants = [ "wg-quick-wireguard0.service" ];
-  };
   services = {
     openssh = {
       enable = true;
       allowSFTP = true;
-      openFirewall = true;
+      openFirewall = false;
+      ports = [ 57255 ];
       settings = {
         UseDns = true;
         PasswordAuthentication = false;
@@ -142,15 +150,6 @@ _: {
         {
           addr = "[::]";
           port = 57255;
-        }
-        # wireguard0
-        {
-          addr = "172.16.31.1";
-          port = 22;
-        }
-        {
-          addr = "[fd17:216b:31bc:1::1]";
-          port = 22;
         }
       ];
     };

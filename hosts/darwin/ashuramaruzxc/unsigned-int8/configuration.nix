@@ -28,6 +28,7 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
   services.openssh.enable = true;
+  services.tailscale.enable = true;
   networking = {
     computerName = "Marie's Macbook Pro 16 M4 Max unsigned-int8";
     hostName = "unsigned-int8";

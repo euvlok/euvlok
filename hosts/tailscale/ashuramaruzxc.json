@@ -1,0 +1,80 @@
+{
+  "tagOwners": {
+    "tag:unsigned-int8": ["autogroup:admin"],
+    "tag:unsigned-int32": ["autogroup:admin"],
+    "tag:unsigned-int64": ["autogroup:admin"]
+  },
+  "acls": [],
+  "grants": [
+    {
+      "src": ["*"],
+      "dst": ["*"],
+      "ip": ["tcp:1-21", "tcp:23-57254", "tcp:57256-65535", "udp:*", "icmp:*"]
+    },
+    {
+      "src": ["*"],
+      "dst": ["autogroup:member", "tag:unsigned-int8"],
+      "ip": ["tcp:22", "tcp:57255"]
+    },
+    {
+      "src": ["tag:unsigned-int8"],
+      "dst": ["tag:unsigned-int32"],
+      "ip": ["tcp:22"]
+    },
+    {
+      "src": ["tag:unsigned-int8"],
+      "dst": ["tag:unsigned-int64"],
+      "ip": ["tcp:57255"]
+    }
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot", "root"]
+    }
+  ],
+  "nodeAttrs": [
+    {
+      "target": ["autogroup:member"],
+      "attr": ["funnel"]
+    }
+  ],
+  "tests": [
+    {
+      "src": "tag:unsigned-int8",
+      "proto": "tcp",
+      "accept": ["tag:unsigned-int32:22", "tag:unsigned-int64:57255"],
+      "deny": ["tag:unsigned-int32:57255", "tag:unsigned-int64:22"]
+    },
+    {
+      "src": "tag:unsigned-int32",
+      "proto": "tcp",
+      "accept": ["tag:unsigned-int64:443"],
+      "deny": ["tag:unsigned-int64:22", "tag:unsigned-int64:57255"]
+    },
+    {
+      "src": "tag:unsigned-int64",
+      "proto": "tcp",
+      "accept": ["tag:unsigned-int32:443"],
+      "deny": ["tag:unsigned-int32:22", "tag:unsigned-int32:57255"]
+    },
+    {
+      "src": "100.64.0.1",
+      "proto": "tcp",
+      "accept": ["tag:unsigned-int32:443", "tag:unsigned-int64:443"],
+      "deny": [
+        "tag:unsigned-int32:22",
+        "tag:unsigned-int32:57255",
+        "tag:unsigned-int64:22",
+        "tag:unsigned-int64:57255"
+      ]
+    },
+    {
+      "src": "fd7a:115c:a1e0::1",
+      "proto": "tcp",
+      "deny": ["tag:unsigned-int32:22", "tag:unsigned-int64:57255"]
+    }
+  ]
+}
