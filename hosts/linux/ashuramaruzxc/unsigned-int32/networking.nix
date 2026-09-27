@@ -13,8 +13,6 @@
     networkmanager = {
       enable = true;
       unmanaged = [ "interface-name:ve-*" ];
-      # Wake from suspend only on a magic packet, not ordinary Ethernet traffic.
-      ensureProfiles.profiles.ethernet.ethernet.wake-on-lan = 64;
     };
     firewall = {
       enable = true;
