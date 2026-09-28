@@ -14,7 +14,7 @@ _: {
   ]
   ++ raspberryPiModules
   ++ [
-    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml; }
+    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
     {
       catppuccin = {
         enable = true;

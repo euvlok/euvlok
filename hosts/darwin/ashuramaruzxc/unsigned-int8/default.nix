@@ -13,6 +13,7 @@
     homeModule
     ./system.nix
     homebrewModule
+    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
     {
       nix-homebrew = {
         enable = true;

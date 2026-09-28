@@ -54,7 +54,7 @@ in
     imports =
       baseImports
       ++ [
-        { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int16.yaml; }
+        { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
       ]
       ++ ashuramaruHmConfig
       ++ [

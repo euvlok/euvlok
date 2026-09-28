@@ -1,18 +1,9 @@
 keys:
   - &ashuramaruzxc_unsigned-int64 age1a4cshc8aq9v9ez57r4mljddls3wfzchpc2uhmvjvnzk4wvr2mdequaej6d # @ashuramaruzxc server
-  - &ashuramaruzxc_unsigned-int16 age13vhcu73jxnp8uc06fu6lzf0a0h3h8wd8hdzwc0v7u8zp0lrwk5ks9kcchc # @ashuramaruzxc rpi5
-  - &ashuramaruzxc_unsigned-int32 age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
-  - &ashuramaruzxc_unsigned-int8 age1z5xkrf7tpcs58c53nzjgm7tegv9jk3z73zeyec0q7sjzuvth2dxqz6znnj # @ashuramaruzxc macos
-  # - &bigshaq9999 age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @bigshaq9999
-  # - &lay-by age1kxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # @lay-by
+  - &ashuramaruzxc_shared age1lt87d4wz67kng3enp0wx4yqwr47pe5xrqatggmhxucyed6rkh4hqphyk56 # @ashuramaruzxc home machine
 creation_rules:
   - path_regex: secrets/.*\.ya?ml$
     key_groups:
       - age:
           - *ashuramaruzxc_unsigned-int64
-          - *ashuramaruzxc_unsigned-int32
-          - *ashuramaruzxc_unsigned-int16
-          - *ashuramaruzxc_unsigned-int8
-          # - *float-pointer32
-          # - *bigshaq9999
-          # - *lay-by
+          - *ashuramaruzxc_shared

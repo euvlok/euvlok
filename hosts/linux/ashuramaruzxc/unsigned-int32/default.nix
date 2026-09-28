@@ -8,7 +8,7 @@ _: {
     sharedModule
     ./configuration.nix
     homeModule
-    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int32.yaml; }
+    { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
     {
       catppuccin = {
         enable = true;
