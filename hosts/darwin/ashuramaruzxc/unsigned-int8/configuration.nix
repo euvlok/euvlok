@@ -1,24 +1,11 @@
 { containerPackage }:
 {
+  config,
+  lib,
   pkgs,
   ...
 }:
 {
-  # imports = [
-  # {
-  # sops = {
-  # age.keyFile = "/var/lib/sops/age/keys.txt";
-  # age.sshKeyPaths = [ ]; # we don't need this shit here
-  # defaultSopsFile = ../../../../secrets/ashuramaruzxc_unsigned-int8.yaml;
-  # secrets.id_ecdsa-sk_github = {
-  #  mode = "0600";
-  # owner = config.users.users.ashuramaru.name;
-  # neededForUsers = true;
-  # };
-  # };
-  # }
-  # ];
-
   imports = [
     ../../../linux/ashuramaruzxc/shared/system/fonts.nix
   ];
@@ -29,6 +16,50 @@
   security.pam.services.sudo_local.touchIdAuth = true;
   services.openssh.enable = true;
   services.tailscale.enable = true;
+
+  sops.secrets.tailscale_auth = { };
+
+  # nix-darwin has no authKeyFile option. Retry until SOPS and tailscaled are ready.
+  launchd.daemons.tailscale-autoconnect = {
+    path = [ pkgs.jq ];
+    script = ''
+      set -euo pipefail
+
+      tailscale() {
+        ${lib.getExe' config.services.tailscale.package "tailscale"} \
+          --socket=/var/run/tailscaled.socket "$@"
+      }
+
+      state="$(tailscale status --json | jq -er '.BackendState')"
+      case "$state" in
+        NeedsLogin)
+          test -r ${lib.escapeShellArg config.sops.secrets.tailscale_auth.path}
+          tailscale up \
+            --auth-key=${lib.escapeShellArg "file:${config.sops.secrets.tailscale_auth.path}"} \
+            --advertise-tags=tag:unsigned-int8 \
+            --timeout=30s
+          ;;
+        Stopped)
+          tailscale up --timeout=30s
+          ;;
+        Running) ;;
+        *)
+          echo "Waiting for Tailscale to be ready (state: $state)"
+          exit 1
+          ;;
+      esac
+
+      tailscale set --advertise-tags=tag:unsigned-int8
+    '';
+    serviceConfig = {
+      RunAtLoad = true;
+      KeepAlive.SuccessfulExit = false;
+      ThrottleInterval = 30;
+      StandardOutPath = "/var/log/tailscale-autoconnect.log";
+      StandardErrorPath = "/var/log/tailscale-autoconnect.log";
+    };
+  };
+
   networking = {
     computerName = "Marie's Macbook Pro 16 M4 Max unsigned-int8";
     hostName = "unsigned-int8";
