@@ -224,11 +224,11 @@
     },
     "flatpak-declarative": {
       "locked": {
-        "lastModified": 1786463886,
-        "narHash": "sha256-E9bldG7z949Qon/urP8VCjTOLSS+etmtiQEE8rsnVFg=",
+        "lastModified": 1790077299,
+        "narHash": "sha256-f+8I22YoTNq4ypaOy2Ff4Bs+lMpytbqzSDqeSDxYx2E=",
         "owner": "in-a-dil-emma",
         "repo": "declarative-flatpak",
-        "rev": "9148482f3ca70353c91a362ce31463e9e7001041",
+        "rev": "9d2fab1660cac480f26799e55c2e4c1615564c1c",
         "type": "github"
       },
       "original": {
@@ -697,11 +697,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1787771653,
-        "narHash": "sha256-DkkJSBOXWV/mja5Vy8az5g1KpZlsbUwlmH0BsQhowaQ=",
+        "lastModified": 1789937675,
+        "narHash": "sha256-/F9gQpAlPCxheQ9ht/5Fka2JEr/FfuOh9R7ySa9SAGc=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "5e3809851f486e7fc7e84b40f174c74b60ecc784",
+        "rev": "abff36bfab11cbdcd0723f41c1b0921e211be6ac",
         "type": "github"
       },
       "original": {
