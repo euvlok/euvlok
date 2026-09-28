@@ -6,12 +6,10 @@ _: {
   system = {
     # Global macOS System Settings
     defaults = {
-      CustomUserPreferences = {
-        "FeatureFlags/Domain/UIKit".redesigned_text_cursor.enable = false;
-        "com.colliderli.iina".enableThumbnailForRemoteFiles = true;
-        ".GlobalPreferences".TSMLanguageIndicatorEnabled = 0;
-        "com.apple.SwiftUI".DisableSolarium = true;
-      };
+      CustomUserPreferences."com.colliderli.iina".enableThumbnailForRemoteFiles = true;
+      # "FeatureFlags/Domain/UIKit".redesigned_text_cursor.enable = false; # no need
+      # ".GlobalPreferences".TSMLanguageIndicatorEnabled = 0; # makes input change laggy on newer macos
+      # "com.apple.SwiftUI".DisableSolarium = true; #! outdated
       LaunchServices.LSQuarantine = false; # Disable Quarantine for Downloaded Applications
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
       NSGlobalDomain = {
