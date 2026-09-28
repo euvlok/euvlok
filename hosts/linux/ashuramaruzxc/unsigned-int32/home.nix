@@ -92,7 +92,12 @@ in
     imports =
       baseImports
       ++ [
-        { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
+        {
+          sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml;
+          sops.secrets.gitlab_token = { };
+          sops.secrets.gitlab_host = { };
+          sops.secrets.context7_api_key = { };
+        }
       ]
       ++ ashuramaruHmConfig
       ++ [
