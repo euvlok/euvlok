@@ -134,7 +134,7 @@ let
       # winetricks
       xemu
       ;
-    inherit (jetbrainsPackages) dataspell datagrip;
+    inherit (jetbrainsPackages) dataspell;
   };
 
   jetbrainsPackages = import ../../../hm/ashuramaruzxc/jetbrains.nix {

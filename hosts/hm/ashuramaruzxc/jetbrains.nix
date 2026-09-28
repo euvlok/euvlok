@@ -63,6 +63,5 @@ in
     ];
   };
 
-  datagrip = withPlugins pkgs.jetbrains.datagrip { };
   dataspell = withPlugins pkgs.jetbrains.dataspell { };
 }

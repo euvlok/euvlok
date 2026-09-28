@@ -17,7 +17,7 @@ let
         android-studio
         nixd
         ;
-      inherit (jetbrainsPackages) datagrip dataspell;
+      inherit (jetbrainsPackages) dataspell;
     };
 
     gaming = builtins.attrValues {
