@@ -54,6 +54,7 @@ let
         nixcord.enable = true;
         vscode.enable = true;
         zed-editor.enable = true;
+        zellij.enable = true;
         languages = {
           # cpp.enable = true;
           csharp = {

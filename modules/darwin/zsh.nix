@@ -81,7 +81,7 @@ in
       customPluginsStr
     ];
 
-    promptInit = lib.strings.concatStrings [
+    promptInit = lib.strings.concatStringsSep "\n" [
       (lib.strings.optionalString hmConfig.programs.ghostty.enable ''
         if [[ -r "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration ]]; then
           source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
@@ -103,6 +103,16 @@ in
         }
       '')
       (lib.strings.optionalString hmConfig.programs.zoxide.enable ''eval "$(zoxide init zsh)"'')
+      (lib.strings.optionalString
+        (hmConfig.programs.zellij.enable && hmConfig.programs.zellij.enableZshIntegration)
+        ''
+          # Zsh startup is owned by nix-darwin, so run Home Manager's Zellij
+          # integration here, after loading its session environment.
+          if [[ "$USER" == ${lib.strings.escapeShellArg config.system.primaryUser} && "$TERM" != "dumb" ]]; then
+            eval "$(${lib.getExe hmConfig.programs.zellij.finalPackage} setup --generate-auto-start zsh)"
+          fi
+        ''
+      )
     ];
   };
 

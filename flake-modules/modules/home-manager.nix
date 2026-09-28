@@ -39,4 +39,5 @@
   terminal = ../../modules/hm/terminal;
   tui = ../../modules/hm/tui;
   wm = ../../modules/hm/wm;
+  zellij = ../../modules/hm/tui/zellij;
 }
