@@ -102,7 +102,10 @@ in
       };
 
       hooks.state = {
-        "${config.home.homeDirectory}/.codex/hooks.json:session_start:0:0".enabled = false;
+        "${config.home.homeDirectory}/.codex/hooks.json:session_start:0:0" = {
+          enabled = true;
+          trusted_hash = "sha256:2a61f926476e40d817404de6e64f7ef8025e34d46260182a26605e61e2320186";
+        };
       };
 
       memories = {
