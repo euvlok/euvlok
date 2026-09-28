@@ -51,5 +51,6 @@
   };
   services.ssh-agent = {
     enable = true;
+    package = config.programs.ssh.package;
   };
 }

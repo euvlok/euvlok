@@ -58,6 +58,13 @@ in
       "# Home Manager session environment"
       ". ${hmConfig.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
+      (lib.optionalString hmConfig.sshAuthSock.enable ''
+        # These system-owned shell files replace Home Manager's shell integration.
+        if [ -z "$SSH_AUTH_SOCK" ] || [ -z "$SSH_CONNECTION" ]; then
+          ${hmConfig.sshAuthSock.initialization.zsh}
+        fi
+      '')
+
       "# Oh My Zsh"
       omzPluginsStr
       "source ${pkgs.oh-my-zsh}/share/oh-my-zsh/oh-my-zsh.sh"
