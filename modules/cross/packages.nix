@@ -82,7 +82,7 @@ let
       ;
 
     inherit (pkgs.unstable)
-      ffmpeg_8-full
+      ffmpeg_9-full
       imagemagick
       mediainfo
       ;
