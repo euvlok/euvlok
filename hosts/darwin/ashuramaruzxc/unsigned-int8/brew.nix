@@ -9,12 +9,15 @@
     };
     caskArgs = {
       appdir = "/Applications";
-      no_quarantine = true;
       require_sha = false;
     };
     casks = [
+      ### --- Gay --- ###
+      "notion"
+      "stats"
+      ### --- Gay --- ###
       ### --- Socials --- ###
-      "telegram" # telegram swift client
+      "deltachat"
       "element" # halo based department?
       # "deltachat"
       ### --- Socials
@@ -30,7 +33,7 @@
       "affinity-designer" # Proffessional soyjak designer program
       "affinity-photo" # Proffessional soyjak drawing program
       "blender"
-      # "kdenlive"
+      "kdenlive"
       "krita"
       "obs"
       ### --- Graphics --- ###

@@ -9,7 +9,7 @@
 { lib, pkgs, ... }:
 let
   commonImports = [
-    { home.stateVersion = "26.05"; }
+    { home.stateVersion = "26.11"; }
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/helix.nix
@@ -52,11 +52,11 @@ let
         };
         helix.enable = true;
         nixcord.enable = true;
-        vscode.enable = true;
+        yazi.enable = true;
         zed-editor.enable = true;
         zellij.enable = true;
         languages = {
-          # cpp.enable = true;
+          cpp.enable = true;
           csharp = {
             enable = true;
             version = "10";
@@ -87,18 +87,21 @@ let
     inherit (pkgs.unstable)
       alt-tab-macos
       betterdisplay
-      ice-bar
       iina
       keka
       shottr
-      stats
+      thaw
       the-unarchiver
       ;
-    inherit (pkgs.eupkgs) aldente;
+    inherit (pkgs.eupkgs) aldente raycast;
   };
 
   socialPackages = builtins.attrValues {
-    inherit (pkgs) signal-desktop materialgram;
+    inherit (pkgs.unstable)
+      signal-desktop
+      telegram-desktop
+      whatsapp-for-mac
+      ;
   };
 
   multimediaPackages = builtins.attrValues {
@@ -119,7 +122,6 @@ let
 
   authPackages = builtins.attrValues {
     inherit (pkgs)
-      bitwarden-desktop
       keepassxc
       yubikey-manager
       ;
@@ -131,7 +133,7 @@ let
       osu-lazer-bin
       prismlauncher
       ryubing
-      # winetricks
+      winetricks
       xemu
       ;
     inherit (jetbrainsPackages) dataspell;
