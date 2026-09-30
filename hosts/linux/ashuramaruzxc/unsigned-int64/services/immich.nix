@@ -1,5 +1,7 @@
-{ lib, ... }:
+{ ... }:
 {
+  imports = [ (import ../../../../../slop.nix).nixos.unsignedInt64 ];
+
   services.immich = {
     enable = true;
     host = "127.0.0.1";
@@ -25,16 +27,6 @@
       TZ = "Europe/Berlin";
     };
 
-    machine-learning.environment = {
-      # One worker avoids loading a second copy of every model into memory.
-      MACHINE_LEARNING_WORKERS = "1";
-      MACHINE_LEARNING_REQUEST_THREADS = "8";
-      MACHINE_LEARNING_MODEL_INTER_OP_THREADS = "1";
-      MACHINE_LEARNING_MODEL_INTRA_OP_THREADS = "4";
-      MACHINE_LEARNING_MODEL_TTL = "1800";
-      MACHINE_LEARNING_WORKER_TIMEOUT = lib.mkForce "300";
-    };
-
     settings = {
       newVersionCheck.enabled = false;
       server.externalDomain = "https://photos.tenjin-dk.com";
@@ -53,15 +45,12 @@
       # stay below the core count, and VA-API conversion remains conservative.
       job = {
         backgroundTask.concurrency = 8;
-        faceDetection.concurrency = 4;
         library.concurrency = 8;
         metadataExtraction.concurrency = 12;
         migration.concurrency = 8;
         notifications.concurrency = 8;
-        ocr.concurrency = 2;
         search.concurrency = 8;
         sidecar.concurrency = 8;
-        smartSearch.concurrency = 4;
         thumbnailGeneration.concurrency = 12;
         videoConversion.concurrency = 2;
       };

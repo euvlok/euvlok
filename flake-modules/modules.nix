@@ -22,6 +22,7 @@ let
     };
     darwin = import ./modules/darwin.nix {
       inherit applyEuvlokInputs;
+      euvlokInputs = inputs;
     };
     homeManager = import ./modules/home-manager.nix {
       inherit applyEuvlokInputs applyEuvlokInputsWith;

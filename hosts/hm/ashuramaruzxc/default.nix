@@ -2,7 +2,7 @@ _: {
   imports = [
     ./aliases.nix
     ./chromium
-    ./codex.nix
+    (import ../../../slop.nix).homeManager.personal
     ./dconf.nix
     ./firefox
     ./git.nix

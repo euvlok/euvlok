@@ -12,11 +12,6 @@ let
   homeApps = "${config.home.homeDirectory}/${config.targets.darwin.copyApps.directory}";
   wantedAppAliases = [
     {
-      names = [ "ChatGPT" ];
-      alias = "codex";
-      fallbackPath = "${homeApps}/ChatGPT.app";
-    }
-    {
       names = [
         "Zen Browser (Twilight)"
         "Zen Browser"
@@ -52,7 +47,10 @@ let
   ];
 in
 {
-  imports = [ raycastModule ];
+  imports = [
+    raycastModule
+    (import ../../../slop.nix).homeManager.raycast
+  ];
 
   programs.raycast = {
     enable = true;
@@ -79,7 +77,6 @@ in
           enabled = true;
         }
       ];
-      disableAi = true;
     };
   };
 }

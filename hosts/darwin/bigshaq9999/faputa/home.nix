@@ -27,6 +27,7 @@
     {
       imports = [
         { home.stateVersion = "26.05"; }
+        (import ../../../../slop.nix).homeManager.hosts.faputa
         (import ../../../../modules/hm/gui/raycast.nix {
           avatarId = "97749920";
           fallbackName = "nanachi-gh";
@@ -136,14 +137,13 @@
               qbittorrent
               anki-bin # Japenis
               audacity
-              chatgpt
               # gimp # Image editing
               inkscape # Vector graphics
               yubikey-manager # OTP
               notion-app # Productivity
               ;
 
-            inherit (pkgs.eupkgs) helium-browser codex opencode;
+            inherit (pkgs.eupkgs) helium-browser;
 
             # Gaming
             inherit (pkgs) prismlauncher;

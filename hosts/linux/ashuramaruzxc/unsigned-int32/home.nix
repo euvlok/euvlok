@@ -23,33 +23,20 @@ let
   baseImports = [
     { home.stateVersion = "26.11"; }
     catppuccinModule
+    (import ../../../../slop.nix).homeManager.hosts.linuxProductivity
   ];
 
   ashuramaruHmConfig = [
-    codexDesktopModule
+    ((import ../../../../slop.nix).homeManager.hosts.unsignedInt32 {
+      inherit codexDesktopModule;
+    })
     ../../../hm/ashuramaruzxc/graphics.nix
     ../../../hm/ashuramaruzxc/workstation.nix
     {
       euvlok.home = {
-        codex.enable = true;
         firefox.floorp.enable = true;
         nixcord.enable = true;
         vscode.enable = true;
-      };
-
-      programs.codexDesktopLinux = {
-        enable = true;
-        computerUseUi.enable = true;
-        remoteMobileControl.enable = true;
-        linuxFeatures = [
-          "appshots"
-          "codex-micro"
-          "pet-overlay"
-          "tray-usage"
-          "ui-tweaks"
-          "read-aloud"
-        ];
-        cliPackage = pkgs.eupkgs.codex;
       };
     }
   ];
@@ -96,7 +83,6 @@ in
           sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml;
           sops.secrets.gitlab_token = { };
           sops.secrets.gitlab_host = { };
-          sops.secrets.context7_api_key = { };
         }
       ]
       ++ ashuramaruHmConfig

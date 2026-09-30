@@ -22,6 +22,7 @@ let
   baseImports = [
     { home.stateVersion = "26.05"; }
     catppuccinModule
+    (import ../../../../slop.nix).homeManager.hosts.linuxProductivity
   ];
 
   ashuramaruHmConfig = [

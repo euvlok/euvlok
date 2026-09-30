@@ -23,7 +23,6 @@
             editor.defaultFormatter = "tamasfe.even-better-toml";
             editor.formatOnSave = true;
           };
-          chat.disableAIFeatures = true;
         }
       ]
       ++ lib.attrsets.mapAttrsToList (_: def: def.vscode.settings or { }) enabledLanguages

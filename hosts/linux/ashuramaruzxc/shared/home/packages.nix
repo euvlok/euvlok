@@ -107,11 +107,9 @@ let
     productivity = builtins.attrValues {
       inherit (pkgs.unstable)
         anki
-        gImageReader
         obsidian
         pdftk
         treesheets
-        whisper-cpp
         ;
       inherit (pkgs.unstable.kdePackages) francis;
     };

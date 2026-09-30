@@ -95,11 +95,6 @@
       source = "amo";
     }
     {
-      id = "ai-warning-for-steam";
-      name = "AI warning for Steam";
-      source = "amo";
-    }
-    {
       id = "styl-us";
       name = "Stylus";
       source = "amo";
@@ -119,5 +114,6 @@
       name = "Kagi Translate";
       source = "amo";
     }
-  ];
+  ]
+  ++ (import ../../../../slop.nix).firefoxSources;
 }
