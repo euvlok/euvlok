@@ -21,6 +21,7 @@ in
 {
 
   imports = [
+    (import ../../../slop.nix).homeManager.catppuccin
     (lib.modules.importApply ./firefox.nix { inherit paletteSource; })
     ./zen-browser.nix
   ];

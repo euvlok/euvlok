@@ -21,6 +21,6 @@ _: {
     # Misc
     ./vaultwarden.nix
     ./nextcloud.nix
-    ./cvat.nix
+    (import ../../../../../slop.nix).nixos.cvat
   ];
 }

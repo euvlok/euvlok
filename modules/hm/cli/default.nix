@@ -1,7 +1,6 @@
 {
   imports = [
-    ./codex
-    ./opencode.nix
+    (import ../../../slop.nix).homeManager.cli
     ./devenv.nix
     ./direnv.nix
     ./fastfetch

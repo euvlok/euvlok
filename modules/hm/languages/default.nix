@@ -32,6 +32,7 @@ in
   imports = [
     (editorModule ./helix.nix)
     (editorModule ./vscode.nix)
+    (import ../../../slop.nix).homeManager.vscode
     (editorModule ./zed.nix)
   ];
 

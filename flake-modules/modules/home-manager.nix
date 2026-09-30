@@ -22,6 +22,7 @@
     ];
   };
   sops = applyEuvlokInputs ../../modules/hm/sops.nix;
+  slop = (import ../../slop.nix).homeManager.cli;
   cli = ../../modules/hm/cli;
   chromium = applyEuvlokInputs ../../modules/hm/gui/chromium;
   firefox = applyEuvlokInputs ../../modules/hm/gui/firefox;

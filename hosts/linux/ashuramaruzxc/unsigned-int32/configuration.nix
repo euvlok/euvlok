@@ -18,7 +18,7 @@
     ../shared/system/workstation.nix
     ../shared/system/settings.nix
     ../shared/system/fonts.nix
-    ../shared/system/ollama.nix
+    (import ../../../../slop.nix).nixos.unsignedInt32
     ./hardware-configuration.nix
     ./networking.nix
     ./overlays.nix
@@ -146,10 +146,7 @@
         "mlt"
         "obs-studio"
         "octave"
-        "onnxruntime"
-        "opencv"
         "spectacle"
-        "whisper-cpp"
       ];
     };
     gnupg.dirmngr.enable = true;

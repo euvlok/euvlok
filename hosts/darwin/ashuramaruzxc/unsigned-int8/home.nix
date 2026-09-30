@@ -10,6 +10,7 @@
 let
   commonImports = [
     { home.stateVersion = "26.11"; }
+    (import ../../../../slop.nix).homeManager.hosts.unsignedInt8
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
     ../../../hm/ashuramaruzxc/helix.nix
@@ -45,7 +46,6 @@ let
       programs.mpv.enable = true;
       programs.nh.enable = true;
       euvlok.home = {
-        codex.enable = true;
         firefox = {
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
@@ -113,7 +113,6 @@ let
   productivityPackages = builtins.attrValues {
     inherit (pkgs)
       anki-bin
-      chatgpt
       inkscape
       audacity
       ;
