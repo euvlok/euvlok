@@ -48,6 +48,7 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     # Infra / Shared / Core Inputs
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
   };
