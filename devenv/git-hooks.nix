@@ -10,7 +10,7 @@
     ];
     settings.noLambdaPatternNames = true;
   };
-  nixfmt-rfc-style = {
+  nixfmt = {
     enable = true;
     package = pkgs.nixfmt;
   };
