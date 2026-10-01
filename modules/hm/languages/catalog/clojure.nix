@@ -5,6 +5,7 @@
       clojure
       leiningen
       clj-kondo
+      clojure-lsp
       babashka
       ;
   };

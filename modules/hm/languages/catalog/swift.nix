@@ -1,6 +1,13 @@
 { pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) swift swift-format sourcekit-lsp; };
+  packages = builtins.attrValues {
+    inherit (pkgs.unstable)
+      swift
+      swiftpm
+      swift-format
+      sourcekit-lsp
+      ;
+  };
   vscode.extensions = [
     "swift-server.swift"
     "vknabel.swift-coverage"
