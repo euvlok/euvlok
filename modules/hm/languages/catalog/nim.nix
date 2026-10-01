@@ -9,12 +9,12 @@
     editor.defaultFormatter = "kosz78.nim";
     editor.formatOnSave = true;
   };
-  helix.languageServers.nimlangserver.command = "nimlangserver";
+  helix.languageServers.nimlsp.command = "nimlsp";
   helix.languages = [
     {
       name = "nim";
       auto-format = true;
-      language-servers = [ "nimlangserver" ];
+      language-servers = [ "nimlsp" ];
     }
   ];
   zed.extensions = [ "nim" ];

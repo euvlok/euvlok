@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   packages = builtins.attrValues {
     inherit (pkgs.unstable)
@@ -32,7 +32,7 @@
     };
     "C_Cpp.default.cppStandard" = "c++23";
     "C_Cpp.default.cStandard" = "c23";
-    "C_Cpp.default.intelliSenseMode" = "linux-gcc-x64";
+    "C_Cpp.default.compilerPath" = lib.meta.getExe' pkgs.unstable.clang "clang";
   };
   helix.languageServers.clangd.command = "clangd";
   helix.languages = [

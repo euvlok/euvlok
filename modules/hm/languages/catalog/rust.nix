@@ -3,6 +3,7 @@
   packages = builtins.attrValues {
     inherit (pkgs.unstable)
       rustc
+      cargo
       rustfmt
       rust-analyzer
       cargo-watch

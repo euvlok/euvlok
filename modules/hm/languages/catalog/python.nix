@@ -10,7 +10,9 @@ let
     pip.pylint
     pip.ruff
     pip.jedi
+    pip.jedi-language-server
     pip.python-lsp-server
+    pip.pylsp-mypy
   ]);
 in
 {
@@ -48,8 +50,10 @@ in
     };
     pylsp = {
       command = "pylsp";
-      plugins.pylsp_mypy.enable = true;
-      plugins.pylsp_mypy.live_mode = true;
+      config.pylsp.plugins.pylsp_mypy = {
+        enabled = true;
+        live_mode = true;
+      };
     };
     jedi.command = "jedi-language-server";
   };
