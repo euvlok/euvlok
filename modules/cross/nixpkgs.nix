@@ -6,9 +6,16 @@
   ...
 }:
 let
-  hostPlatform = lib.attrsets.attrByPath [ "nixpkgs" "hostPlatform" "system" ] (
-    if osConfig == null then null else osConfig.nixpkgs.hostPlatform.system
-  ) config;
+  hostPlatform = lib.attrsets.attrByPath [
+    "nixpkgs"
+    "hostPlatform"
+    "system"
+  ] (osConfig.nixpkgs.hostPlatform.system or null) config;
+  buildPlatform = lib.attrsets.attrByPath [
+    "nixpkgs"
+    "buildPlatform"
+    "system"
+  ] (osConfig.nixpkgs.buildPlatform.system or hostPlatform) config;
 in
 {
   options.euvlok.nixpkgs.unstableSource = lib.options.mkOption {
@@ -21,7 +28,7 @@ in
     nixpkgs.config.allowUnfree = true;
     nixpkgs.overlays = [
       (import ../../overlay.nix {
-        inherit hostPlatform;
+        inherit hostPlatform buildPlatform;
         inputs = euvlokInputs;
         unstableSource = config.euvlok.nixpkgs.unstableSource;
       })
