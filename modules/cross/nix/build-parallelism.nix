@@ -6,13 +6,10 @@
 }:
 let
   cfg = config.euvlok.nix.buildParallelism;
-  settings =
-    lib.attrsets.optionalAttrs (cfg.cores != 0) {
-      cores = lib.modules.mkDefault cfg.cores;
-    }
-    // lib.attrsets.optionalAttrs (cfg.maxJobs != "auto") {
-      max-jobs = lib.modules.mkDefault cfg.maxJobs;
-    };
+  settings = {
+    cores = lib.modules.mkIf (cfg.cores != 0) (lib.modules.mkDefault cfg.cores);
+    max-jobs = lib.modules.mkIf (cfg.maxJobs != "auto") (lib.modules.mkDefault cfg.maxJobs);
+  };
 in
 {
 
