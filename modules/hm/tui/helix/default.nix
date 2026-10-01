@@ -15,7 +15,17 @@
   config = lib.modules.mkIf config.euvlok.home.helix.enable {
     programs.helix = {
       enable = true;
-      extraPackages = [ pkgs.unstable.rumdl ];
+      extraPackages = builtins.attrValues {
+        inherit (pkgs.unstable)
+          bash-language-server
+          nil
+          nixfmt
+          rumdl
+          shfmt
+          taplo
+          yaml-language-server
+          ;
+      };
     };
   };
 }
