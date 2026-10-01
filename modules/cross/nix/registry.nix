@@ -47,7 +47,6 @@ in
             # unrelated host registry entries.
             inherit registry;
             settings.nix-path = nixPathEntries;
-            nixPath = nixPathEntries;
           };
         }
     )
