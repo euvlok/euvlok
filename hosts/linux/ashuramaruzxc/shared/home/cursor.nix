@@ -36,6 +36,7 @@
     enable = true;
     inherit (osConfig.catppuccin) accent flavor;
     size = "standard";
+    rimless = true;
   };
 
   home.sessionVariables = {

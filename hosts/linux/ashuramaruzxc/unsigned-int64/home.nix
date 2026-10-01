@@ -42,7 +42,7 @@ let
   };
 
   workstationHmConfig = [
-    {
+    ({ osConfig, ... }: {
       programs.fastfetch.enable = true;
       programs.ghostty.enable = true;
       programs.nh.enable = true;
@@ -51,7 +51,13 @@ let
         vscode.enable = true;
         yazi.enable = true;
       };
-    }
+      euvlok.catppuccinGtk = {
+        enable = true;
+        inherit (osConfig.catppuccin) accent flavor;
+        size = "standard";
+        rimless = true;
+      };
+    })
   ];
 
   globalImports = [

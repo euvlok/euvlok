@@ -7,7 +7,12 @@
 let
   cfg = config.euvlok.catppuccinGtk;
   package = pkgs.callPackage ../../packages/catppuccin-gtk.nix {
-    inherit (cfg) accent flavor size;
+    inherit (cfg)
+      accent
+      flavor
+      size
+      rimless
+      ;
   };
 in
 {
@@ -51,6 +56,7 @@ in
       default = "standard";
       description = "Widget size of the GTK theme.";
     };
+    rimless = lib.mkEnableOption "GTK windows and menus without border rims";
   };
 
   config = lib.mkIf cfg.enable {

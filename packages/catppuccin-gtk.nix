@@ -7,6 +7,7 @@
   flavor ? "mocha",
   accent ? "mauve",
   size ? "standard",
+  rimless ? false,
 }:
 let
   pname = "catppuccin-gtk-fausto";
@@ -18,9 +19,11 @@ let
       "-Macchiato"
     else
       "";
+  tweaks = lib.optionals (base != "") [ flavor ] ++ lib.optional rimless "rimless";
   themeName =
     "Catppuccin${base}-${lib.strings.toSentenceCase accent}-${color}"
-    + lib.optionalString (size == "compact") "-Compact";
+    + lib.optionalString (size == "compact") "-Compact"
+    + lib.optionalString rimless "-R";
 in
 lib.checkListOfEnum "${pname}: flavor"
   [
@@ -68,7 +71,10 @@ lib.checkListOfEnum "${pname}: flavor"
       hash = "sha256-bSEWm62EWHC9zcYA+YoQp2cuSFt2FDsjalapnjYdoYU=";
     };
 
-    patches = [ ./patches/catppuccin-gtk-accent.patch ];
+    patches = [
+      ./patches/catppuccin-gtk-accent.patch
+      ./patches/catppuccin-gtk-rimless.patch
+    ];
 
     nativeBuildInputs = [
       bash
@@ -85,7 +91,7 @@ lib.checkListOfEnum "${pname}: flavor"
         --accent ${accent} \
         --mode ${lib.toLower color} \
         --size ${size} \
-        ${lib.optionalString (base != "") "--tweaks ${flavor}"}
+        ${lib.optionalString (tweaks != [ ]) "--tweaks ${lib.escapeShellArgs tweaks}"}
       runHook postInstall
     '';
 
