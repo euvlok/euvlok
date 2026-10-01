@@ -6,6 +6,33 @@
   unstableSource ? inputs.nixpkgs-unstable-small,
 }:
 let
+  packageFixesOverlay = _final: prev: {
+    lazarus-qt6 = prev.lazarus-qt6.overrideAttrs (old: {
+      # Removing rpaths leaves empty segments rejected by makeBinaryWrapper
+      postInstall =
+        builtins.replaceStrings
+          [ "sed -re 's/-rpath [^ ]+//g'" ]
+          [ "sed -re 's/-rpath [^ ]+//g' -e 's/ +/ /g; s/^ //; s/ $//'" ]
+          old.postInstall;
+    });
+    nvtopPackages = prev.nvtopPackages // {
+      full = prev.nvtopPackages.full.override {
+        cudaPackages = prev.cudaPackages // {
+          cuda_nvml_dev = prev.cudaPackages.cuda_nvml_dev.overrideAttrs (old: {
+            # Clear CUDA's array before exporting space-separated output names
+            preFixup = (old.preFixup or "") + ''
+              fixupPropagatedBuildOutputsForMultipleOutputs() {
+                local outputNames="''${propagatedBuildOutputs[*]}"
+                unset propagatedBuildOutputs
+                export propagatedBuildOutputs="$outputNames"
+              }
+            '';
+          });
+        };
+      };
+    };
+  };
+
   packageSetArgs =
     prev:
     let
@@ -31,6 +58,7 @@ let
       packageSetArgs prev
       // {
         config = prev.config or { };
+        overlays = [ packageFixesOverlay ];
       }
     );
   };
@@ -60,7 +88,21 @@ let
   };
 
   eupkgsOverlay = final: _prev: {
-    eupkgs = final.unstable.extend inputs.eupkgs.overlays.default;
+    eupkgs = final.unstable.extend (
+      inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
+        inputs.eupkgs.overlays.default
+        (_final: prev: {
+          # Keep newer Nixpkgs sources paired with their own node_modules
+          opencode =
+            if
+              inputs.nixpkgs.lib.versionAtLeast final.unstable.opencode.version prev.opencode.upstreamVersion
+            then
+              final.unstable.opencode
+            else
+              prev.opencode;
+        })
+      ]
+    );
   };
 
   localPackagesOverlay = final: _prev: {
@@ -84,6 +126,7 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   unstableOverlay
   stableOverlay
   eupkgsOverlay
+  packageFixesOverlay
   localPackagesOverlay
   inputs.nix4vscode.overlays.default
 ]
