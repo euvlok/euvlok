@@ -6,7 +6,25 @@
   unstableSource ? inputs.nixpkgs-unstable-small,
 }:
 let
+  fixCudaOutputPropagation =
+    package:
+    package.overrideAttrs (old: {
+      # Clear CUDA's array before exporting space-separated output names
+      preFixup = (old.preFixup or "") + ''
+        fixupPropagatedBuildOutputsForMultipleOutputs() {
+          local outputNames="''${propagatedBuildOutputs[*]}"
+          unset propagatedBuildOutputs
+          export propagatedBuildOutputs="$outputNames"
+        }
+      '';
+    });
+
   packageFixesOverlay = _final: prev: {
+    cudaPackages = prev.cudaPackages.overrideScope (
+      _cudaFinal: cudaPrev: {
+        libnpp = fixCudaOutputPropagation cudaPrev.libnpp;
+      }
+    );
     lazarus-qt6 = prev.lazarus-qt6.overrideAttrs (old: {
       # Removing rpaths leaves empty segments rejected by makeBinaryWrapper
       postInstall =
@@ -18,16 +36,7 @@ let
     nvtopPackages = prev.nvtopPackages // {
       full = prev.nvtopPackages.full.override {
         cudaPackages = prev.cudaPackages // {
-          cuda_nvml_dev = prev.cudaPackages.cuda_nvml_dev.overrideAttrs (old: {
-            # Clear CUDA's array before exporting space-separated output names
-            preFixup = (old.preFixup or "") + ''
-              fixupPropagatedBuildOutputsForMultipleOutputs() {
-                local outputNames="''${propagatedBuildOutputs[*]}"
-                unset propagatedBuildOutputs
-                export propagatedBuildOutputs="$outputNames"
-              }
-            '';
-          });
+          cuda_nvml_dev = fixCudaOutputPropagation prev.cudaPackages.cuda_nvml_dev;
         };
       };
     };
