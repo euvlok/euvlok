@@ -13,5 +13,5 @@
     "types": ["bun"],
     "verbatimModuleSyntax": true
   },
-  "include": ["build.ts", "build.test.ts"]
+  "include": ["build.ts", "build.test.ts", "triage.ts"]
 }
