@@ -43,7 +43,10 @@ let
       name = "bash";
       auto-format = true;
       diagnostic-severity = "warning";
-      formatter.args = [ "-w" ];
+      formatter.args = [
+        "-i"
+        "2"
+      ];
       formatter.command = "shfmt";
       language-servers = [ "bash-language-server" ];
     }
