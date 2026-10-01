@@ -254,17 +254,14 @@
     "nixpkgs_3": {
       "locked": {
         "lastModified": 1790573947,
-        "narHash": "sha256-zfer1SLJvACKM0J7c9AusGvIp4q4B6l1Z1KgiVInG8Y=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
+        "narHash": "sha256-jEM5snk620AVrd9LX3k9ucA2tJkwaiV3TQSf2DGMzgw=",
         "rev": "e6025a0259c7e80f81b11effc15f65d95b708cba",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1080820.e6025a0259c7/nixexprs.tar.zst"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable-small",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst"
       }
     },
     "root": {

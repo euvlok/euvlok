@@ -37,6 +37,9 @@
 
   services.postgresqlBackup = {
     enable = true;
+    # Restore a dump with: zstd -dc DATABASE.sql.zstd | psql postgres
+    compression = "zstd";
+    compressionLevel = 3;
     databases = [
       "nextcloud"
       "vaultwarden"
