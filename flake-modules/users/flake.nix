@@ -57,7 +57,7 @@
     };
 
     # Lay-by
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     spicetify-nix = {
       inputs = {
         nixpkgs.follows = "users-nixpkgs-unstable-small";
@@ -88,8 +88,8 @@
     };
     users-flake-parts.url = "github:hercules-ci/flake-parts";
     users-flake-utils.url = "github:numtide/flake-utils";
-    users-nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    users-nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    users-nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
+    users-nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
   };
 
   outputs = _: { };

@@ -20,7 +20,7 @@ let
     cp = "cp -iv";
     rm = "rm -v";
     mkdir = "mkdir -pv";
-    untar = "tar -zxvf";
+    untar = "tar -xvf";
 
     # Video
     # yt-dlp-script is our own custom package

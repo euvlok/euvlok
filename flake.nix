@@ -16,9 +16,9 @@
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
-    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.zst";
+    nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin";
 

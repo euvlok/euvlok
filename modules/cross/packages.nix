@@ -57,7 +57,12 @@ let
       ;
 
     # Compression
-    inherit (pkgs.unstable) unrar unzip zip;
+    inherit (pkgs.unstable)
+      unrar
+      unzip
+      zip
+      zstd
+      ;
     inherit (pkgs.unstable)
       lz4
       ncdu
