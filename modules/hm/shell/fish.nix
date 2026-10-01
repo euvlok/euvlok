@@ -72,30 +72,17 @@
       };
 
       update = {
-        description = "Update personal inputs";
+        description = "Update shared flake inputs";
         body = ''
-          set nix_user (whoami)
-          set raw_host (hostname)
-          set uname_str (uname -s)
+          nix flake update --flake (path resolve /etc/nixos) $argv
+        '';
+      };
 
-          if string match -q -i "*darwin*" -- "$uname_str"
-              set nix_host (string replace -r '\.local$' "" -- "$raw_host")
-              set flake_attr "darwinConfigurations"
-          else
-              set nix_host "$raw_host"
-              set flake_attr "nixosConfigurations"
-          end
-
-          set flake_path (readlink -f "/etc/nixos")
-          set nix_user_escaped (string replace '"' '\\"' -- "$nix_user")
-          set nix_host_escaped (string replace '"' '\\"' -- "$nix_host")
-
-          set nix_expr "let flake = builtins.getFlake \"$flake_path\"; host = flake.$flake_attr.\"$nix_host_escaped\"; user = \"$nix_user_escaped\"; in host.config.home-manager.users.\''${user}.programs.git.settings.user.name"
-
-          set github_username (nix eval --raw --impure --expr "$nix_expr" | string lower | string trim)
-
-          set matching_inputs (nix eval --json --impure --expr "(builtins.attrNames (builtins.getFlake \"$flake_path\").inputs)" | jq -r --arg pattern "-$github_username" '.[] | select(endswith($pattern))' | string join ' ')
-          nix flake update $matching_inputs --flake "$flake_path"
+      update-users = {
+        description = "Update contributor flake inputs";
+        body = ''
+          set flake_path (path resolve /etc/nixos)
+          nix flake update --flake "$flake_path/flake-modules/users" $argv
         '';
       };
     };

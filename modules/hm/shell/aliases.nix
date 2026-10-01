@@ -73,31 +73,9 @@ let
       else
         "sudo nix-darwin switch --flake $(readlink -f /etc/nixos)";
 
-    update = ''
-      __nixos_flake_update_func() {
-        nix_user="$(whoami)"
-        nix_host="$(hostname | sed 's/\.local$//')"
-        flake_eval_path="$(perl -MCwd -e 'print Cwd::abs_path(shift)' "/etc/nixos")"
-        if [[ "$(uname -s)" == "Darwin" ]]; then
-          flake_attr="darwinConfigurations"
-        else
-          flake_attr="nixosConfigurations"
-        fi
-        github_username=$(nix eval --raw --impure \
-          --expr "
-            let
-              flake = builtins.getFlake \"$flake_eval_path\";
-              host = flake.''${flake_attr}.\"''${nix_host}\";
-              user = \"''${nix_user}\";
-            in
-              host.config.home-manager.users.\''${user}.programs.git.settings.user.name
-          " | tr '[:upper:]' '[:lower:]')
-        matching_inputs=$(nix eval --json --impure \
-          --expr '(builtins.attrNames (builtins.getFlake "'"$flake_eval_path"'").inputs)' \
-          | jq -r --arg pattern "-''${github_username}" '.[] | select(endswith($pattern))')
-        nix flake update $matching_inputs --flake "$flake_eval_path"
-      }; __nixos_flake_update_func
-    '';
+    # Shared and contributor inputs have independent lockfiles
+    update = ''nix flake update --flake "$(readlink -f /etc/nixos)"'';
+    update-users = ''nix flake update --flake "$(readlink -f /etc/nixos)/flake-modules/users"'';
   };
 in
 {
