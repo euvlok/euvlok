@@ -1,0 +1,152 @@
+name: Build Catppuccin Userstyles
+
+on:
+  workflow_dispatch:
+    inputs:
+      include:
+        description: "Opt excluded styles back in: gmail, shinigami-eyes, or both separated by a comma"
+        type: string
+        default: ""
+  schedule:
+    - cron: "0 */6 * * *"
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/build-catppuccin-userstyles.yml
+      - .github/actions/setup-nix/**
+      - packages/catppuccin-userstyles/**
+      - flake-modules/packages.nix
+      - flake.nix
+      - flake.lock
+  pull_request:
+    paths:
+      - .github/workflows/build-catppuccin-userstyles.yml
+      - .github/actions/setup-nix/**
+      - packages/catppuccin-userstyles/**
+      - flake-modules/packages.nix
+      - flake.nix
+      - flake.lock
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Stylus imports
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Install Bun
+        # v2.2.0
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.2
+
+      - name: Install pinned dependencies
+        working-directory: packages/catppuccin-userstyles
+        run: bun install --frozen-lockfile
+
+      - name: Check builder
+        working-directory: packages/catppuccin-userstyles
+        run: bun run check
+
+      - name: Install Nix
+        uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
+        with:
+          github-token: ${{ github.token }}
+
+      - name: Build generator package
+        run: nix build .#catppuccin-userstyles --out-link "$RUNNER_TEMP/catppuccin-userstyles"
+
+      - name: Clone upstream userstyles
+        run: git clone --depth 1 --branch main https://github.com/catppuccin/userstyles.git "$RUNNER_TEMP/userstyles"
+
+      - name: Generate Stylus imports
+        env:
+          INCLUDED_STYLES: ${{ inputs.include || '' }}
+        run: |
+          args=()
+          if [[ -n "$INCLUDED_STYLES" ]]; then
+            args+=(--include "$INCLUDED_STYLES")
+          fi
+          "$RUNNER_TEMP/catppuccin-userstyles/bin/catppuccin-userstyles" \
+            "${args[@]}" "$RUNNER_TEMP/userstyles" "$RUNNER_TEMP/userstyles-output"
+          jq -r '"Built \(.assets | length) Stylus imports with \(.styleCount) styles from upstream `\(.revision)`"' \
+            "$RUNNER_TEMP/userstyles-output/manifest.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload build artifacts
+        # v7.0.1
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: catppuccin-userstyles
+          path: ${{ runner.temp }}/userstyles-output/
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish rolling release
+    needs: build
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # Create the rolling release and replace its generated assets
+    steps:
+      - name: Download build artifacts
+        # v8.0.1
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: catppuccin-userstyles
+          path: ${{ runner.temp }}/userstyles-output
+
+      - name: Publish rolling release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          output="$RUNNER_TEMP/userstyles-output"
+          notes="$RUNNER_TEMP/userstyles-release.md"
+          jq -r '.assets[] | "\(.sha256)  \(.name)"' "$output/manifest.json" |
+            (cd "$output" && sha256sum --check --strict)
+          jq -r '
+            "Catppuccin Stylus imports: Latte light mode with Frappé, Macchiato, and Mocha dark variants and all upstream accents.",
+            "",
+            "Built from [catppuccin/userstyles](\(.upstream)/tree/\(.revision)) with \(.styleCount) styles.",
+            "Excluded styles: \(if (.excluded | length) == 0 then "none" else (.excluded | join(", ")) end).",
+            "",
+            "Download one `catppuccin-*-import.json` file and import it in Stylus → Manage → Import.",
+            "`catppuccin-import.json` keeps upstream defaults. `manifest.json` records the source revision and SHA-256 checksums."
+          ' "$output/manifest.json" > "$notes"
+          if gh release view catppuccin-userstyles > /dev/null 2>&1; then
+            gh release upload catppuccin-userstyles "$output"/*.json --clobber
+            gh release edit catppuccin-userstyles --notes-file "$notes" --latest=false
+          else
+            gh release create catppuccin-userstyles "$output"/*.json \
+              --target "$GITHUB_SHA" \
+              --title "Catppuccin Userstyles" \
+              --notes-file "$notes" \
+              --latest=false
+          fi
+          # Remove obsolete generated imports after uploading their replacements
+          gh release view catppuccin-userstyles --json assets > "$RUNNER_TEMP/release-assets.json"
+          jq -r --slurpfile manifest "$output/manifest.json" '
+            ($manifest[0].assets | map(.name)) as $current |
+            .assets[].name |
+            select(test("^catppuccin-(.*-)?import\\.json$")) |
+            select(. as $name | $current | index($name) | not)
+          ' "$RUNNER_TEMP/release-assets.json" > "$RUNNER_TEMP/obsolete-imports.txt"
+          while IFS= read -r asset; do
+            gh release delete-asset catppuccin-userstyles "$asset" --yes
+          done < "$RUNNER_TEMP/obsolete-imports.txt"

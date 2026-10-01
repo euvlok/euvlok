@@ -1,0 +1,24 @@
+{
+  "name": "@euvlok/catppuccin-userstyles",
+  "version": "0.1.0",
+  "description": "Generate Catppuccin Stylus imports with flavor and accent variants",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "catppuccin-userstyles": "build.ts"
+  },
+  "scripts": {
+    "build": "bun build.ts",
+    "check": "tsc --noEmit && biome lint --error-on-warnings build.ts && prettier --check build.ts usercss-meta.d.ts package.json tsconfig.json"
+  },
+  "dependencies": {
+    "usercss-meta": "0.12.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@types/bun": "1.4.0",
+    "prettier": "3.9.6",
+    "typescript": "7.0.2"
+  }
+}

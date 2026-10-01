@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "exactOptionalPropertyTypes": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "types": ["bun"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["build.ts", "usercss-meta.d.ts"]
+}

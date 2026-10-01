@@ -116,6 +116,7 @@ let
 
   localPackagesOverlay = final: _prev: {
     catppuccin-gtk-fausto = final.callPackage ./packages/catppuccin-gtk.nix { };
+    catppuccin-userstyles = final.callPackage ./packages/catppuccin-userstyles { };
     euvlokVscodeExtensions =
       { version, extensions }:
       import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {
