@@ -1,23 +1,62 @@
 {
   inputs,
   hostPlatform ? null,
+  buildPlatform ? hostPlatform,
   stableSource ? inputs.nixpkgs-stable,
   unstableSource ? inputs.nixpkgs-unstable-small,
 }:
 let
+  packageSetArgs =
+    prev:
+    let
+      lib = inputs.nixpkgs.lib;
+      # Keep secondary imports independent of the parent's elaborated platforms
+      localSystem = if buildPlatform == null then prev.stdenvNoCC.buildPlatform.system else buildPlatform;
+      targetSystem = if hostPlatform == null then prev.stdenvNoCC.hostPlatform.system else hostPlatform;
+      isNative = lib.systems.equals (lib.systems.elaborate localSystem) (
+        lib.systems.elaborate targetSystem
+      );
+    in
+    {
+      inherit localSystem;
+    }
+    # An explicit native crossSystem survives Nixpkgs' i686 re-import and turns
+    # it back into x86_64, making multilib packages recurse into themselves
+    // lib.attrsets.optionalAttrs (!isNative) { crossSystem = targetSystem; };
+
   # Keep the package-set layers independently readable even though consumers
   # normally install the composed overlay exported as `overlays.default`
   unstableOverlay = _final: prev: {
-    unstable = import unstableSource {
-      config = prev.config or { };
-      localSystem = if hostPlatform == null then prev.stdenv.hostPlatform else hostPlatform;
-    };
+    unstable = import unstableSource (
+      packageSetArgs prev
+      // {
+        config = prev.config or { };
+      }
+    );
   };
 
   stableOverlay = _final: prev: {
-    stable = import stableSource {
-      localSystem = if hostPlatform == null then prev.stdenv.hostPlatform else hostPlatform;
-    };
+    stable = import stableSource (
+      packageSetArgs prev
+      // {
+        # Share package policy without feeding newer Nixpkgs' evaluated
+        # defaults into older options whose types may have changed
+        config = inputs.nixpkgs.lib.attrsets.filterAttrs (
+          name: _:
+          builtins.elem name [
+            "allowUnfree"
+            "allowUnfreePredicate"
+            "allowBroken"
+            "allowUnsupportedSystem"
+            "allowInsecurePredicate"
+            "permittedInsecurePackages"
+            "checkMeta"
+            "cudaSupport"
+            "rocmSupport"
+          ]
+        ) (prev.config or { });
+      }
+    );
   };
 
   eupkgsOverlay = final: _prev: {
