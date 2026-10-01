@@ -4,7 +4,6 @@
     {
       hostPlatform ? null,
       buildPlatform ? hostPlatform,
-      stableSource ? inputs.nixpkgs-stable,
       unstableSource ? inputs.nixpkgs-unstable-small,
     }:
     import ../overlay.nix {
@@ -12,7 +11,6 @@
         inputs
         hostPlatform
         buildPlatform
-        stableSource
         unstableSource
         ;
     };
