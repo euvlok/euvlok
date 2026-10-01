@@ -6,6 +6,7 @@
   ...
 }:
 let
+  cfg = config.euvlok.home.firefox;
   default = {
     extensions.packages = lib.lists.filter lib.attrsets.isDerivation (
       lib.attrsets.attrValues (
@@ -238,12 +239,7 @@ in
       (
         name: package:
         lib.modules.mkIf
-          (
-            if name == "firefox" then
-              config.euvlok.home.firefox.enable
-            else
-              config.euvlok.home.firefox.${name}.enable
-          )
+          (if name == "firefox" then cfg.enable && cfg.firefox.enable else cfg.${name}.enable)
           (
             {
               enable = true;

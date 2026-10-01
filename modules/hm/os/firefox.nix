@@ -2,47 +2,41 @@
   pkgs,
   lib,
   config,
+  options,
   osConfig ? null,
   ...
 }:
 let
   isLinux = pkgs.stdenvNoCC.hostPlatform.isLinux;
+  nvidia = osConfig.euvlok.nixos.nvidia.enable or false;
+  amd = osConfig.euvlok.nixos.amd.enable or false;
+  browsers = builtins.filter (name: builtins.hasAttr name options.programs) [
+    "firefox"
+    "floorp"
+    "librewolf"
+    "zen-browser"
+  ];
 
   extraSettings =
-    lib.attrsets.optionalAttrs (isLinux && osConfig != null && osConfig.xdg.portal.xdgOpenUsePortal) {
+    lib.attrsets.optionalAttrs (isLinux && (osConfig.xdg.portal.xdgOpenUsePortal or false)) {
       "widget.use-xdg-desktop-portal.file-picker" = 1;
     }
-    //
-      lib.attrsets.optionalAttrs
-        (
-          isLinux
-          && osConfig != null
-          && (osConfig.euvlok.nixos.nvidia.enable || osConfig.euvlok.nixos.amd.enable)
-        )
-        {
-          "media.ffmpeg.vaapi.enabled" = true;
-          "media.gpu-process.enabled" = true;
-        }
-    // lib.attrsets.optionalAttrs (isLinux && osConfig != null && osConfig.euvlok.nixos.nvidia.enable) {
+    // lib.attrsets.optionalAttrs (isLinux && (nvidia || amd)) {
+      "media.ffmpeg.vaapi.enabled" = true;
+      "media.gpu-process.enabled" = true;
+    }
+    // lib.attrsets.optionalAttrs (isLinux && nvidia) {
       "media.hardware-video-decoding.force-enabled" = true;
       "media.rdd-ffmpeg.enabled" = true;
     };
 in
 {
-  config = lib.modules.mkIf isLinux (
-    lib.modules.mkMerge [
-      (lib.modules.mkIf config.euvlok.home.firefox.firefox.enable {
-        programs.firefox.profiles.default.settings = extraSettings;
-      })
-      (lib.modules.mkIf config.euvlok.home.firefox.floorp.enable {
-        programs.floorp.profiles.default.settings = extraSettings;
-      })
-      (lib.modules.mkIf config.euvlok.home.firefox.librewolf.enable {
-        programs.librewolf.profiles.default.settings = extraSettings;
-      })
-      (lib.modules.mkIf config.euvlok.home.firefox.zen-browser.enable {
-        programs.zen-browser.profiles.default.settings = extraSettings;
-      })
-    ]
-  );
+  config = lib.modules.mkIf isLinux {
+    programs = lib.attrsets.genAttrs browsers (
+      name:
+      lib.modules.mkIf config.programs.${name}.enable {
+        profiles.default.settings = extraSettings;
+      }
+    );
+  };
 }
