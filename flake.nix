@@ -10,7 +10,8 @@
 
   inputs = {
     # --- Shared ---
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
+    # Determinate Nix 3.23.0 doubles CPU time for nixosBuilds evaluation
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.22.5";
     eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     eupkgs.url = "github:euvlok/pkgs";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";
