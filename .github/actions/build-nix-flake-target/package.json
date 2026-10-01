@@ -5,13 +5,15 @@
   "scripts": {
     "build": "bun build --target=bun --minify --outfile=dist/build.js build.ts",
     "check": "bun run typecheck && bun run lint && bun run format:check",
-    "format:check": "prettier --check build.ts build.test.ts package.json tsconfig.json",
-    "lint": "biome lint --error-on-warnings build.ts build.test.ts",
+    "format:check": "prettier --check build.ts build.test.ts triage.ts package.json tsconfig.json",
+    "lint": "biome lint --error-on-warnings build.ts build.test.ts triage.ts",
+    "triage": "bun run triage.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
+    "@typesafe-ai/sdk": "0.6.0",
     "entities": "8.0.0",
     "valibot": "1.4.2"
   },

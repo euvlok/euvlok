@@ -132,4 +132,17 @@ runs:
         BUILD_MAX_JOBS: ${{ inputs.build-max-jobs }}
         BUILD_CORES: ${{ inputs.build-cores }}
         HYDRA_USER_AGENT: ${{ inputs.hydra-user-agent }}
-      run: bun run "${GITHUB_ACTION_PATH}/build.ts"
+      run: |
+        bun run "${GITHUB_ACTION_PATH}/build.ts" 2>&1 |
+          tee "${RUNNER_TEMP}/nix-build.log"
+
+    - name: Classify failed build logs
+      if: failure() && steps.build.outcome == 'failure'
+      continue-on-error: true
+      shell: bash
+      env:
+        TRIAGE_FAILURE_KIND: ${{ steps.build.outputs.failure-kind }}
+        TRIAGE_FAILED_DRV: ${{ steps.build.outputs.failed-drv }}
+        TRIAGE_HYDRA_URL: ${{ steps.build.outputs.hydra-url }}
+        TRIAGE_RETRYABLE: ${{ steps.build.outputs.retryable }}
+      run: bun run "${GITHUB_ACTION_PATH}/triage.ts" "${RUNNER_TEMP}/nix-build.log"
