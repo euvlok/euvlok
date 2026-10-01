@@ -389,18 +389,23 @@ let
           exec "$client" turn-ended "$@"
         fi
       '';
+      launcherExecutable = pkgs.writeShellApplication {
+        name = "codex";
+        runtimeInputs = [ pkgs.git ];
+        runtimeEnv = {
+          CODEX_REAL_BIN = cli;
+          CODEX_HOME = configDir;
+        };
+        text = ''
+          exec ${lib.getExe pkgs.python3} ${./slop/launcher.py} "$@"
+        '';
+      };
       launcher = pkgs.symlinkJoin {
         name = "codex-euvlok";
         inherit (cfg.package) version;
         paths = [ cfg.package ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          rm "$out/bin/codex"
-          makeWrapper ${lib.getExe pkgs.python3} "$out/bin/codex" \
-            --add-flags ${./slop/launcher.py} \
-            --set CODEX_REAL_BIN ${cli} \
-            --prefix PATH : ${lib.makeBinPath [ pkgs.git ]} \
-            --set CODEX_HOME ${lib.escapeShellArg configDir}
+          ln -sfn ${lib.getExe launcherExecutable} "$out/bin/codex"
         '';
         meta = cfg.package.meta // {
           mainProgram = "codex";
@@ -608,14 +613,30 @@ let
       enabledPluginNames = lib.lists.filter (
         name: settings.plugins."${name}@${marketplaceName}".enabled or false
       ) pluginNames;
+      syncPlugins = pkgs.writeShellApplication {
+        name = "codex-sync-bundled-plugins";
+        runtimeEnv = environment;
+        text = ''
+          exec ${lib.getExe pkgs.ruby} ${./slop/sync-plugins.rb} \
+            ${lib.escapeShellArgs (
+              [
+                "${resources}/plugins/openai-bundled"
+                marketplaceName
+              ]
+              ++ enabledPluginNames
+            )}
+        '';
+      };
       configFileNames = [
         "config.toml"
       ]
       ++ map (name: "${name}.config.toml") (builtins.attrNames config.programs.codex.profiles);
-      configFileKeys = map (name: "${configKeyDir}/${name}") configFileNames;
-      configFiles = lib.attrsets.filterAttrs (
-        name: file: lib.lists.elem name configFileKeys && file.enable
-      ) config.home.file;
+      configFileKeys = lib.attrsets.genAttrs (map (name: "${configKeyDir}/${name}") configFileNames) (
+        _: null
+      );
+      configFiles = lib.attrsets.filterAttrs (_: file: file.enable) (
+        builtins.intersectAttrs configFileKeys config.home.file
+      );
       desktopEnv =
         environment
         // lib.attrsets.optionalAttrs (isDarwin && cfg.desktop.enable && resources != null) {
@@ -645,7 +666,7 @@ let
                   config.home.preferXdgDirectories && lib.strings.hasPrefix "${configKeyDir}/" name
                 ) (lib.modules.mkOverride 900 "${configDir}/${lib.strings.removePrefix "${configKeyDir}/" name}");
                 # Activation replaces these links with writable copies
-                force = lib.modules.mkIf (lib.lists.elem name configFileKeys) (lib.modules.mkDefault true);
+                force = lib.modules.mkIf (builtins.hasAttr name configFileKeys) (lib.modules.mkDefault true);
               };
             }
           )
@@ -734,17 +755,7 @@ let
         );
         home.activation.codexBundledPlugins = lib.modules.mkIf (cfg.desktop.enable && resources != null) (
           lib.hm.dag.entryAfter [ "codexWritableConfig" ] ''
-            run ${lib.getExe' pkgs.coreutils "env"} ${
-              lib.escapeShellArgs (lib.attrsets.mapAttrsToList (name: value: "${name}=${value}") environment)
-            } \
-              ${lib.getExe pkgs.ruby} ${./slop/sync-plugins.rb} \
-              ${lib.escapeShellArgs (
-                [
-                  "${resources}/plugins/openai-bundled"
-                  marketplaceName
-                ]
-                ++ enabledPluginNames
-              )}
+            run ${lib.getExe syncPlugins}
           ''
         );
       };
@@ -774,14 +785,17 @@ let
       app = lib.strings.removeSuffix "/Contents/Resources" resources;
       inherit (codexLib { inherit config lib; }) configDir;
       patcher = pkgs.callPackage patchComputerUse { };
-      patch = pkgs.writeShellScript "patch-codex-computer-use" ''
-        if [[ ! -d ${lib.escapeShellArg resources} ]]; then
-          echo "patch-chatgpt-computer-use: ChatGPT is absent; skipping" >&2
-          exit 0
-        fi
-        export CODEX_HOME=${lib.escapeShellArg configDir}
-        exec ${lib.getExe patcher} ${lib.escapeShellArg app}
-      '';
+      patch = pkgs.writeShellApplication {
+        name = "patch-codex-computer-use";
+        runtimeEnv.CODEX_HOME = configDir;
+        text = ''
+          if [[ ! -d ${lib.escapeShellArg resources} ]]; then
+            echo "patch-chatgpt-computer-use: ChatGPT is absent; skipping" >&2
+            exit 0
+          fi
+          exec ${lib.getExe patcher} ${lib.escapeShellArg app}
+        '';
+      };
     in
     {
       options.euvlok.home.codex.desktop.patchComputerUse.enable =
@@ -803,13 +817,13 @@ let
           {
             home.packages = [ patcher ];
             home.activation.codexComputerUsePolicy = lib.hm.dag.entryAfter [ "codexBundledPlugins" ] ''
-              run ${patch}
+              run ${lib.getExe patch}
             '';
             launchd.agents.codex-computer-use-policy = {
               enable = true;
               config = {
                 Label = "org.euvlok.codex-computer-use-policy";
-                ProgramArguments = [ (toString patch) ];
+                ProgramArguments = [ (lib.getExe patch) ];
                 WatchPaths = [ resources ];
                 ThrottleInterval = 15;
                 RunAtLoad = true;

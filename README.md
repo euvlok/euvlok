@@ -48,6 +48,7 @@ Nix](https://docs.determinate.systems/determinate-nix/). `nixosBuilds` needs its
 | [`flake-modules/`](flake-modules/) | Flake outputs and host definitions                 |
 | [`packages/`](packages/)           | Local packages and the NVIDIA driver pin           |
 | [`lib/`](lib/)                     | Helpers and overlays                               |
+| [`slop.nix`](slop.nix)             | Codex/OpenCode configuration and desktop integration |
 | [`secrets/`](secrets/)             | SOPS-encrypted secrets                             |
 
 Run `nix eval .#hostMetadata --json` to list hosts, owners, platforms, and CI
@@ -62,3 +63,20 @@ or `homeModules.default`. Individual modules are available too; run
 For Home Manager under NixOS or nix-darwin, use `homeModules.integrated` with
 `home-manager.useGlobalPkgs = true`. Use `homeModules.default` for standalone
 Home Manager.
+
+## Codex configuration
+
+Enable `euvlok.home.codex.enable`; `euvlok.home.codex.package` selects the native
+CLI used by the launcher and desktop integration. The launcher preserves the
+package's other executables and resources. Shell applications use Nixpkgs'
+`writeShellApplication` for their environment and runtime dependencies.
+
+Override individual defaults through `programs.codex.settings` and
+`programs.codex.profiles`. Home Manager generates the TOML, including shared MCP
+integration. Activation replaces the main and profile configs with writable
+mode-0600 copies, resetting runtime edits to the declared configuration.
+
+Desktop plugins are synchronized from
+`euvlok.home.codex.desktop.resourcesPath` at activation time; an absent app is
+skipped. The runtime synchronizer is separate from Home Manager's declarative
+plugins because the desktop app owns and updates these resources.
