@@ -18,6 +18,7 @@
       "redhat.vscode-xml"
       "redhat.vscode-yaml"
       "tamasfe.even-better-toml"
+      "esbenp.prettier-vscode"
       "yzhang.markdown-all-in-one"
       "zainchen.json"
       "dbaeumer.vscode-eslint"
