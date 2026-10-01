@@ -2,6 +2,9 @@
   "nodes": {
     "browser": {
       "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
         "home-manager": [
           "home-manager"
         ],
@@ -13,11 +16,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790412012,
-        "narHash": "sha256-Qgw10hXOJHMejvLvgGGCGkcOLe/JaEUW9dhrgs+9WMQ=",
+        "lastModified": 1790860500,
+        "narHash": "sha256-5Yh1dxfeZ1MFGfCcfIbWpiHexSSzEA4AMybByozjLhQ=",
         "owner": "4evy",
         "repo": "browser",
-        "rev": "33224a8926d41f43a7a7fe5fa05d8eb98d8f81e4",
+        "rev": "c0bf92b618cdf721674ac10cb47da176d180cc69",
         "type": "github"
       },
       "original": {
@@ -375,11 +378,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1790827994,
-        "narHash": "sha256-WrOFioPhBn+ksK50dBOujd+7YWwRGMVellN7VV6dQW0=",
+        "lastModified": 1790853817,
+        "narHash": "sha256-rSM4eJPO0WrBfdtIetGXwpXV+d4FraGyLo3lZhg1x4M=",
         "owner": "4evy",
         "repo": "nixcord",
-        "rev": "727448ed51079b988fb581e3028db11a9cf9074a",
+        "rev": "97659c26a9ec3525f632dc79a7f4e5257f577c9c",
         "type": "github"
       },
       "original": {
