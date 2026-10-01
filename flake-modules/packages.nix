@@ -3,17 +3,21 @@
     { pkgs, ... }:
     let
       nvidia-driver = pkgs.callPackage ../packages/nvidia-driver.nix { };
-    in
-    {
-      packages = {
+      localPackages = {
         inherit nvidia-driver;
         nvidia-prefetch = pkgs.callPackage ../packages/nvidia-prefetch.nix {
           inherit nvidia-driver;
         };
-      }
-      // (import ../slop.nix).packages { inherit pkgs; }
-      // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
         catppuccin-gtk = pkgs.callPackage ../packages/catppuccin-gtk.nix { };
+        linux-rt-upscaler = pkgs.callPackage ../packages/linux-rt-upscaler.nix { };
+        lsfg-vk = pkgs.callPackage ../packages/lsfg-vk.nix { };
       };
+    in
+    {
+      packages =
+        pkgs.lib.filterAttrs (
+          _: package: pkgs.lib.meta.availableOn pkgs.stdenv.hostPlatform package
+        ) localPackages
+        // (import ../slop.nix).packages { inherit pkgs; };
     };
 }
