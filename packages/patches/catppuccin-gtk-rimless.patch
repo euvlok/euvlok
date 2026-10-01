@@ -1,0 +1,854 @@
+diff --git a/themes/install.sh b/themes/install.sh
+index e1549c4..d99ec06 100755
+--- a/themes/install.sh
++++ b/themes/install.sh
+@@ -68,13 +68,13 @@ install_theme_variant() {
+         cat <<EOF >> "${THEME_DIR}/index.theme"
+ [Desktop Entry]
+ Type=X-GNOME-Metatheme
+-Name=${name}${ctype}${theme}${color}${size}
++Name=${name}${ctype}${theme}${color}${size}${tweaks_tag}
+ Comment=A Flat Gtk+ theme based on Elegant Design
+ Encoding=UTF-8
+ 
+ [X-GNOME-Metatheme]
+-GtkTheme=${name}${ctype}${theme}${color}${size}
+-MetacityTheme=${name}${ctype}${theme}${color}${size}
++GtkTheme=${name}${ctype}${theme}${color}${size}${tweaks_tag}
++MetacityTheme=${name}${ctype}${theme}${color}${size}${tweaks_tag}
+ IconTheme=Tela-circle${ELSE_DARK:-}
+ CursorTheme=${name}-cursors
+ ButtonLayout=close,minimize,maximize:menu
+diff --git a/themes/lib/config.sh b/themes/lib/config.sh
+index 4f7be87..4c7640a 100755
+--- a/themes/lib/config.sh
++++ b/themes/lib/config.sh
+@@ -36,6 +36,7 @@ macchiato="false"       # Catppuccin Macchiato background scheme
+ blackness="false"       # OLED-friendly black background
+ float="false"           # Floating GNOME Shell panel style
+ border="false"          # 2px contrasting window border style
++rimless="false"         # Remove window and menu edge rims
+ macos="false"           # macOS-style window controls layout
+ tweaks_tag=""           # Concatenated suffix tags representing active tweaks
+ ctype=""                # Suffix for active background scheme
+diff --git a/themes/lib/parser.sh b/themes/lib/parser.sh
+index 9e13da1..5cfc8e5 100755
+--- a/themes/lib/parser.sh
++++ b/themes/lib/parser.sh
+@@ -39,9 +39,10 @@ OPTIONS:
+                            1. [frappe|macchiato] Colour scheme versions
+                            2. black         Pure black background version
+                            3. border        Windows with 2px border style
+-                           4. macos         macOS-style window buttons
+-                           5. radius        Set custom border radius (0 to 32)
+-                           6. files-legacy  Nautilus classic legacy style
++                           4. rimless       Remove window and menu edge rims
++                           5. macos         macOS-style window buttons
++                           6. radius        Set custom border radius (0 to 32)
++                           7. files-legacy  Nautilus classic legacy style
+ 
+   -h, --help              Show this help message
+ EOF
+@@ -227,6 +228,7 @@ parse_args() {
+                         macchiato) macchiato="true"; ctype="-Macchiato";   shift ;;
+                         black) blackness="true"; shift ;;
+                         border) border="true"; shift ;;
++                        rimless) rimless="true"; shift ;;
+ 
+                         macos)
+                             macos="true"
+@@ -306,6 +308,7 @@ build_tweaks_tag() {
+     fi
+ 
+     # Canonical order of additional tweaks
++    [[ "${rimless}"             == "true" ]] && parts+=("R")
+     [[ "${blackness}"           == "true" ]] && parts+=("BK")
+     [[ "${macos}"               == "true" ]] && parts+=("MB")
+     [[ "${legacy_buttons:-}"    == "true" ]] && parts+=("LB")
+diff --git a/themes/lib/tweaks.sh b/themes/lib/tweaks.sh
+index c240964..482dc10 100755
+--- a/themes/lib/tweaks.sh
++++ b/themes/lib/tweaks.sh
+@@ -41,6 +41,11 @@ border_style() {
+     run_safe sed -i "/\$border:/s/false/true/" "${SRC_DIR}/sass/_tweaks-temp.scss"
+ }
+ 
++# Removes window and menu edge rims
++rimless_style() {
++    run_safe sed -i "/\$rimless:/s/false/true/" "${SRC_DIR}/sass/_tweaks-temp.scss"
++}
++
+ # Configures window controls to macOS style.
+ macos_winbutton() {
+     run_safe sed -i "/\$window_button:/s/normal/mac/" "${SRC_DIR}/sass/_tweaks-temp.scss"
+@@ -103,6 +108,7 @@ apply_theme_tweaks() {
+         if [[ "$blackness"  == "true" ]]; then blackness_color;  fi
+         if [[ "$float"      == "true" ]]; then float_panel;      fi
+         if [[ "$border"     == "true" ]]; then border_style;     fi
++        if [[ "$rimless"    == "true" ]]; then rimless_style;    fi
+         if [[ "$macos"      == "true" ]]; then macos_winbutton;  fi
+         if [[ "${files_legacy:-}" == "true" ]]; then files_legacy; fi
+         apply_shell_opacity
+diff --git a/themes/lib/uninstall.sh b/themes/lib/uninstall.sh
+index 300b9cb..f4656d8 100755
+--- a/themes/lib/uninstall.sh
++++ b/themes/lib/uninstall.sh
+@@ -21,6 +21,7 @@ uninstall_link() {
+ #   4: color - Color scheme suffix
+ #   5: size  - Size variant suffix
+ #   6: ctype - Background scheme suffix
++#   7: tweaks_tag - Active tweaks tag suffix
+ uninstall_theme_folder() {
+     local dest="${1}"
+     local name="${2}"
+@@ -28,15 +29,18 @@ uninstall_theme_folder() {
+     local color="${4}"
+     local size="${5}"
+     local ctype="${6}"
++    local tweaks_tag="${7:-}"
+ 
+-    local THEME_DIR="${dest}/${name}${ctype}${theme}${color}${size}"
++    local THEME_DIR="${dest}/${name}${ctype}${theme}${color}${size}${tweaks_tag}"
+ 
+-    if [[ -d "${THEME_DIR}" ]]; then
+-        # Normalise path for console logs
+-        local display_dir=$(get_display_path "${THEME_DIR}")
+-        log_info "Uninstalling ${COLOR_BOLD}${display_dir}${COLOR_RESET}... "
+-        run_safe rm -rf "${THEME_DIR}"
+-    fi
++    for suffix in "" "-hdpi" "-xhdpi"; do
++        if [[ -d "${THEME_DIR}${suffix}" ]]; then
++            # Normalise path for console logs
++            local display_dir=$(get_display_path "${THEME_DIR}${suffix}")
++            log_info "Uninstalling ${COLOR_BOLD}${display_dir}${COLOR_RESET}... "
++            run_safe rm -rf "${THEME_DIR}${suffix}"
++        fi
++    done
+ }
+ 
+ # Iterates and removes all selected theme variant folders.
+@@ -45,7 +49,7 @@ uninstall_themes() {
+     for theme in "${themes[@]}"; do
+         for color in "${colors[@]}"; do
+             for size in "${sizes[@]}"; do
+-                uninstall_theme_folder "${dest:-$DEST_DIR}" "${name:-$THEME_NAME}" "$theme" "$color" "$size" "$ctype"
++                uninstall_theme_folder "${dest:-$DEST_DIR}" "${name:-$THEME_NAME}" "$theme" "$color" "$size" "$ctype" "$tweaks_tag"
+             done
+         done
+     done
+diff --git a/themes/src/sass/_tweaks.scss b/themes/src/sass/_tweaks.scss
+index a310552..dda97b0 100644
+--- a/themes/src/sass/_tweaks.scss
++++ b/themes/src/sass/_tweaks.scss
+@@ -24,6 +24,9 @@ $blackness: 'false';
+ // Windows outline style
+ $border: 'false';
+ 
++// Remove window and menu edge rims
++$rimless: 'false';
++
+ // Roundness style
+ $roundness: 12;
+ 
+diff --git a/themes/src/sass/_variables.scss b/themes/src/sass/_variables.scss
+index 8b006fc..f26c1bd 100644
+--- a/themes/src/sass/_variables.scss
++++ b/themes/src/sass/_variables.scss
+@@ -49,25 +49,42 @@ $shadow-z3:
+ 	0 4px 10px rgba(black, 0.08),
+ 	0 1px 4px rgba(black, 0.06),
+ 	inset 0 0 0 0.5px rgba(black, 0.05);
++$shadow-z3-rimless:
++	0 4px 10px rgba(black, 0.08),
++	0 1px 4px rgba(black, 0.06);
+ $shadow-z4:
+ 	0 6px 12px rgba(black, 0.16),
+ 	0 3px 6px rgba(black, 0.12),
+ 	0 1px 3px rgba(black, 0.08),
+ 	inset 0 0 0 0.5px rgba(black, 0.1);
++$shadow-z4-rimless:
++	0 6px 12px rgba(black, 0.16),
++	0 3px 6px rgba(black, 0.12),
++	0 1px 3px rgba(black, 0.08);
+ $shadow-z5:
+ 	0 4px 6px rgba(black, 0.16),
+ 	0 2px 4px rgba(black, 0.12),
+ 	inset 0 0 0 0.5px rgba(black, 0.12);
++$shadow-z5-rimless:
++	0 4px 6px rgba(black, 0.16),
++	0 2px 4px rgba(black, 0.12);
+ $shadow-z6:
+ 	0 16px 34px rgba(black, 0.2),
+ 	0 4px 14px rgba(black, 0.12),
+ 	inset 0 0 0 0.5px rgba(black, 0.15);
++$shadow-z6-rimless:
++	0 16px 34px rgba(black, 0.2),
++	0 4px 14px rgba(black, 0.12);
+ $shadow-z12:
+ 	0 20px 50px rgba(black, 0.28),
+ 	0 6px 20px rgba(black, 0.16),
+ 	inset 0 0 0 0.5px rgba(black, 0.15);
+ $shadow-z16:
+ 	0 6px 10px rgba(black, 0.22),
+ 	0 3px 6px rgba(black, 0.18),
+ 	0 1px 3px rgba(black, 0.12),
+ 	inset 0 0 0 0.5px rgba(black, 0.15);
++$shadow-z16-rimless:
++	0 6px 10px rgba(black, 0.22),
++	0 3px 6px rgba(black, 0.18),
++	0 1px 3px rgba(black, 0.12);
+diff --git a/themes/src/sass/gtk3/apps/_budgie.scss b/themes/src/sass/gtk3/apps/_budgie.scss
+index bb8efd3..4a199b2 100644
+--- a/themes/src/sass/gtk3/apps/_budgie.scss
++++ b/themes/src/sass/gtk3/apps/_budgie.scss
+@@ -30,7 +30,10 @@
+ 
+ // Budgie popover
+ .budgie-popover {
+-	@if $border == 'false' {
++	@if $rimless == 'true' {
++		border: none;
++		box-shadow: $shadow-z4-rimless;
++	} @else if $border == 'false' {
+ 		border: none;
+ 		box-shadow: $shadow-z4;
+ 	} @else {
+@@ -165,7 +168,9 @@
+ 			margin: $space-size;
+ 			border: none;
+ 
+-			@if $border == 'false' {
++			@if $rimless == 'true' {
++				box-shadow: $shadow-z4-rimless;
++			} @else if $border == 'false' {
+ 				box-shadow: $shadow-z4;
+ 			} @else {
+ 				box-shadow:
+@@ -716,7 +721,7 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
+ // Raven
+ .raven {
+ 	background-color: $surface;
+-	box-shadow: $shadow-z16;
++	box-shadow: if($rimless == 'true', $shadow-z16-rimless, $shadow-z16);
+ 
+ 	> box {
+ 		margin-bottom: -10px;
+@@ -972,6 +977,9 @@ image.raven-mpris {
+ 	box-shadow:
+ 		$shadow-z4,
+ 		inset 0 1px highlight($surface);
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z4-rimless;
++	}
+ 	background-color: $surface;
+ 
+ 	button {
+@@ -1009,6 +1017,9 @@ image.raven-mpris {
+ 		box-shadow:
+ 			$shadow-z16,
+ 			0 0 0 1px $window-border;
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z16-rimless;
++		}
+ 	}
+ 
+ 	label:not(:last-child),
+diff --git a/themes/src/sass/gtk3/apps/_chromium.scss b/themes/src/sass/gtk3/apps/_chromium.scss
+index 010369a..f426088 100644
+--- a/themes/src/sass/gtk3/apps/_chromium.scss
++++ b/themes/src/sass/gtk3/apps/_chromium.scss
+@@ -72,7 +72,11 @@ window.background.chromium {
+ 
+ 	menu {
+ 		background-color: $titlebar;
+-		border: 1px solid if($variant == 'light', $solid-border, $window-border);
++		border: if(
++			$rimless == 'true',
++			none,
++			1px solid if($variant == 'light', $solid-border, $window-border)
++		);
+ 		border-radius: 0;
+ 
+ 		menuitem {
+diff --git a/themes/src/sass/gtk3/apps/_gnome.scss b/themes/src/sass/gtk3/apps/_gnome.scss
+index 61fa43d..2534b6f 100644
+--- a/themes/src/sass/gtk3/apps/_gnome.scss
++++ b/themes/src/sass/gtk3/apps/_gnome.scss
+@@ -112,7 +112,7 @@
+ 		border-radius: $corner-radius;
+ 		background-color: $primary;
+ 		color: on($primary);
+-		box-shadow: $shadow-z3;
++		box-shadow: if($rimless == 'true', $shadow-z3-rimless, $shadow-z3);
+ 
+ 		button {
+ 			margin: (32px - $small-size) / 2;
+@@ -471,7 +471,9 @@
+ 	background-color: $surface;
+ 	border-radius: 0 0 $menu-radius $menu-radius;
+ 
+-	@if $border == 'false' {
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z5-rimless;
++	} @else if $border == 'false' {
+ 		box-shadow: $shadow-z5;
+ 	} @else {
+ 		box-shadow:
+@@ -2371,7 +2373,7 @@ window.background.csd.unified {
+ 
+ 	// ...and add it on the window itself
+ 	> decoration-overlay {
+-		box-shadow: inset 0 1px highlight($titlebar);
++		box-shadow: if($rimless == 'true', none, inset 0 1px highlight($titlebar));
+ 	}
+ 
+ 	&,
+diff --git a/themes/src/sass/gtk3/apps/_lightdm.scss b/themes/src/sass/gtk3/apps/_lightdm.scss
+index 1241a35..7658629 100644
+--- a/themes/src/sass/gtk3/apps/_lightdm.scss
++++ b/themes/src/sass/gtk3/apps/_lightdm.scss
+@@ -46,6 +46,9 @@
+ 	box-shadow:
+ 		$shadow-z4,
+ 		inset 0 1px highlight($surface);
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z4-rimless;
++	}
+ 	background-color: $surface;
+ }
+ 
+diff --git a/themes/src/sass/gtk3/apps/_mate.scss b/themes/src/sass/gtk3/apps/_mate.scss
+index 33ab25b..da10964 100644
+--- a/themes/src/sass/gtk3/apps/_mate.scss
++++ b/themes/src/sass/gtk3/apps/_mate.scss
+@@ -163,9 +163,9 @@ PanelApplet.wnck-applet .wnck-pager {
+ }
+ 
+ #MatePanelPopupWindow {
+-	border: 1px solid $frame;
++	border: if($rimless == 'true', none, 1px solid $frame);
+ 	border-radius: $corner-radius + 1px;
+-	box-shadow: inset 0 1px highlight($surface);
++	box-shadow: if($rimless == 'true', none, inset 0 1px highlight($surface));
+ 	background-color: $surface;
+ 
+ 	frame > border {
+@@ -215,9 +215,9 @@ na-tray-applet {
+ 
+ // volume applet, brightness applet
+ .mate-panel-applet-slider {
+-	border: 1px solid $frame;
++	border: if($rimless == 'true', none, 1px solid $frame);
+ 	border-radius: $corner-radius + 1px;
+-	box-shadow: inset 0 1px highlight($surface);
++	box-shadow: if($rimless == 'true', none, inset 0 1px highlight($surface));
+ 	background-color: $surface;
+ 
+ 	frame > border {
+@@ -241,7 +241,7 @@ na-tray-applet {
+ 
+ #mate-menu {
+ 	// FIXME, does not work
+-	border: 1px solid $frame;
++	border: if($rimless == 'true', none, 1px solid $frame);
+ 	background-color: $surface;
+ 
+ 	button {
+@@ -279,7 +279,7 @@ na-tray-applet {
+ 
+ // brisk-menu
+ .brisk-menu {
+-	box-shadow: inset 0 1px highlight($surface);
++	box-shadow: if($rimless == 'true', none, inset 0 1px highlight($surface));
+ 	background-color: $surface;
+ 
+ 	entry {
+@@ -514,11 +514,13 @@ na-tray-applet {
+ 
+ /* mate-screensaver lock dialog */
+ .lock-dialog {
+-	border: 1px solid $frame;
++	border: if($rimless == 'true', none, 1px solid $frame);
+ 	border-radius: $corner-radius + 1px;
+-	box-shadow:
+-		$shadow-z4,
+-		inset 0 1px highlight($surface); // not sure if box-shadow works here
++	box-shadow: if(
++		$rimless == 'true',
++		$shadow-z4-rimless,
++		($shadow-z4, inset 0 1px highlight($surface))
++	); // not sure if box-shadow works here
+ 	background-color: $surface;
+ 
+ 	frame > border {
+diff --git a/themes/src/sass/gtk3/apps/_misc.scss b/themes/src/sass/gtk3/apps/_misc.scss
+--- a/themes/src/sass/gtk3/apps/_misc.scss
++++ b/themes/src/sass/gtk3/apps/_misc.scss
+@@ -5,7 +5,7 @@ overlay > revealer {
+ 	&.left > scrolledwindow.frame,
+ 	&.right > scrolledwindow.frame {
+ 		border-style: none;
+-		box-shadow: $shadow-z16;
++		box-shadow: if($rimless == 'true', $shadow-z16-rimless, $shadow-z16);
+ 	}
+ 
+ 	&.left > scrolledwindow.frame {
+diff --git a/themes/src/sass/gtk3/apps/_unity.scss b/themes/src/sass/gtk3/apps/_unity.scss
+--- a/themes/src/sass/gtk3/apps/_unity.scss
++++ b/themes/src/sass/gtk3/apps/_unity.scss
+@@ -27,7 +27,7 @@
+ 		padding: 0 2px;
+ 		border-style: none;
+ 		border-radius: $window-radius $window-radius 0 0;
+-		box-shadow: inset 0 1px highlight($titlebar);
++		box-shadow: if($rimless == 'true', none, inset 0 1px highlight($titlebar));
+ 		background-color: $titlebar;
+ 		color: $titlebar-text;
+ 
+diff --git a/themes/src/sass/gtk3/apps/_xfce.scss b/themes/src/sass/gtk3/apps/_xfce.scss
+index 7563e57..a6c7fe5 100644
+--- a/themes/src/sass/gtk3/apps/_xfce.scss
++++ b/themes/src/sass/gtk3/apps/_xfce.scss
+@@ -103,7 +103,9 @@ window#whiskermenu-window {
+ 		border: none;
+ 		background-color: $popover;
+ 
+-		@if $border == 'false' {
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z4-rimless;
++		} @else if $border == 'false' {
+ 			box-shadow:
+ 				$shadow-z4,
+ 				inset 0 1px highlight($popover);
+diff --git a/themes/src/sass/gtk3/widgets/_color-chooser.scss b/themes/src/sass/gtk3/widgets/_color-chooser.scss
+index ab418e0..7e583ad 100644
+--- a/themes/src/sass/gtk3/widgets/_color-chooser.scss
++++ b/themes/src/sass/gtk3/widgets/_color-chooser.scss
+@@ -115,11 +115,17 @@ colorchooser .popover.osd {
+ 	box-shadow:
+ 		$shadow-z4,
+ 		inset 0 1px highlight($surface);
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z4-rimless;
++	}
+ 	background-color: $surface;
+ 
+ 	&:backdrop {
+ 		box-shadow:
+ 			$shadow-z2,
+ 			inset 0 1px highlight($surface);
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z2;
++		}
+ 	}
+ }
+diff --git a/themes/src/sass/gtk3/widgets/_header-bar.scss b/themes/src/sass/gtk3/widgets/_header-bar.scss
+--- a/themes/src/sass/gtk3/widgets/_header-bar.scss
++++ b/themes/src/sass/gtk3/widgets/_header-bar.scss
+@@ -282,7 +282,7 @@
+ 		border: none;
+ 		background-color: $titlebar;
+ 		background-image: none;
+-		box-shadow: inset 0 1px highlight($titlebar);
++		box-shadow: if($rimless == 'true', none, inset 0 1px highlight($titlebar));
+ 
+ 		&:backdrop {
+ 			background-color: $titlebar-backdrop;
+diff --git a/themes/src/sass/gtk3/widgets/_menus.scss b/themes/src/sass/gtk3/widgets/_menus.scss
+index 85ebcbe..49f420c 100644
+--- a/themes/src/sass/gtk3/widgets/_menus.scss
++++ b/themes/src/sass/gtk3/widgets/_menus.scss
+@@ -74,10 +74,12 @@ menu {
+ 
+ 	.csd & {
+ 		border: none;
+-		box-shadow: inset 0 0 0 1px highlight($surface);
++		box-shadow: if($rimless == 'true', none, inset 0 0 0 1px highlight($surface));
+ 	}
+ 
+-	@if $border == 'true' {
++	@if $rimless == 'true' {
++		border: none;
++	} @else if $border == 'true' {
+ 		border: 2px solid $primary;
+ 	}
+ 
+diff --git a/themes/src/sass/gtk3/widgets/_popovers.scss b/themes/src/sass/gtk3/widgets/_popovers.scss
+index 2baed77..e764045 100644
+--- a/themes/src/sass/gtk3/widgets/_popovers.scss
++++ b/themes/src/sass/gtk3/widgets/_popovers.scss
+@@ -5,14 +5,18 @@ popover.background {
+ 	padding: 0;
+ 	background-color: $menu;
+ 	border-radius: $menu-radius;
+-	box-shadow:
++	box-shadow: if(
++		$rimless == 'true',
+ 		0 3px 6px 0 rgba(black, 0.15),
+-		0 0 0 1px if($variant== 'light', rgba(black, 0.03), rgba(black, 0.65));
++		(0 3px 6px 0 rgba(black, 0.15), 0 0 0 1px if($variant== 'light', rgba(black, 0.03), rgba(black, 0.65)))
++	);
+ 	transition: $transition-shadow;
+ 
+ 	&,
+ 	.csd & {
+-		@if $border == 'false' {
++		@if $rimless == 'true' {
++			border: none;
++		} @else if $border == 'false' {
+ 			border: 1px
+ 				solid
+ 				if($variant== 'light', gtkalpha(black, 0.2), gtkmix(white, $menu, 8%));
+diff --git a/themes/src/sass/gtk3/widgets/_toolbars.scss b/themes/src/sass/gtk3/widgets/_toolbars.scss
+--- a/themes/src/sass/gtk3/widgets/_toolbars.scss
++++ b/themes/src/sass/gtk3/widgets/_toolbars.scss
+@@ -19,15 +19,19 @@ toolbar {
+ 		transition: $transition-shadow;
+ 		padding: $space-size;
+ 		border-radius: $window-radius;
+-		box-shadow:
+-			$shadow-z4,
+-			inset 0 1px highlight($surface);
++		box-shadow: if(
++			$rimless == 'true',
++			$shadow-z4-rimless,
++			($shadow-z4, inset 0 1px highlight($surface))
++		);
+ 		background-color: $surface;
+ 
+ 		&:backdrop {
+-			box-shadow:
+-				$shadow-z2,
+-				inset 0 1px highlight($surface);
++			box-shadow: if(
++				$rimless == 'true',
++				$shadow-z2,
++				($shadow-z2, inset 0 1px highlight($surface))
++			);
+ 		}
+ 
+ 		&.left,
+diff --git a/themes/src/sass/gtk3/widgets/_tooltip.scss b/themes/src/sass/gtk3/widgets/_tooltip.scss
+index d8c865f..f497ba3 100644
+--- a/themes/src/sass/gtk3/widgets/_tooltip.scss
++++ b/themes/src/sass/gtk3/widgets/_tooltip.scss
+@@ -9,7 +9,7 @@ tooltip {
+ 
+ 	&.background.csd {
+ 		border-radius: $corner-radius;
+-		box-shadow: $shadow-z3;
++		box-shadow: if($rimless == 'true', $shadow-z3-rimless, $shadow-z3);
+ 	}
+ 
+ 	// padding: 4px; /* not working */
+diff --git a/themes/src/sass/gtk3/widgets/_window.scss b/themes/src/sass/gtk3/widgets/_window.scss
+index 42880e2..f78b611 100644
+--- a/themes/src/sass/gtk3/widgets/_window.scss
++++ b/themes/src/sass/gtk3/widgets/_window.scss
+@@ -3,7 +3,9 @@ decoration {
+ 	border-radius: $window-radius $window-radius 0 0;
+ 	margin: 10px;
+ 
+-	@if $border == 'true' {
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z16-rimless;
++	} @else if $border == 'true' {
+ 		box-shadow:
+ 			0 0 0 2px $primary,
+ 			$shadow-z16;
+@@ -25,7 +27,9 @@ decoration {
+ 		transition: $transition-shadow;
+ 		margin: 10px;
+ 
+-		@if $border == 'true' {
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z16-rimless;
++		} @else if $border == 'true' {
+ 			box-shadow:
+ 				0 0 0 2px $primary,
+ 				$shadow-z16;
+@@ -57,7 +61,9 @@ decoration {
+ 
+ 	// server-side decorations as used by mutter
+ 	.ssd & {
+-		@if $border == 'true' {
++		@if $rimless == 'true' {
++			box-shadow: none;
++		} @else if $border == 'true' {
+ 			border: none;
+ 			border-radius: $window-radius $window-radius 0 0;
+ 			box-shadow:
+@@ -68,7 +74,9 @@ decoration {
+ 		}
+ 
+ 		&:backdrop {
+-			@if $border == 'true' {
++			@if $rimless == 'true' {
++				box-shadow: none;
++			} @else if $border == 'true' {
+ 				border: none;
+ 				border-radius: $window-radius $window-radius 0 0;
+ 
+@@ -92,7 +100,9 @@ decoration {
+ 		border: none;
+ 		margin: 20px;
+ 
+-		@if $border == 'true' {
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z5-rimless;
++		} @else if $border == 'true' {
+ 			box-shadow:
+ 				0 0 0 2px $primary,
+ 				$shadow-z4;
+@@ -113,7 +123,7 @@ decoration {
+ 		border-radius: $window-radius;
+ 
+ 		@if $variant == 'dark' {
+-			border: 1px solid highlight($surface);
++			border: if($rimless == 'true', none, 1px solid highlight($surface));
+ 			background-color: $surface;
+ 			background-clip: border-box;
+ 		}
+@@ -125,7 +135,7 @@ decoration {
+ 		border-radius: 0;
+ 		box-shadow: none;
+ 		background-color: $titlebar;
+-		border: 1px solid $solid-border;
++		border: if($rimless == 'true', none, 1px solid $solid-border);
+ 
+ 		&:backdrop {
+ 			background-color: $titlebar-backdrop;
+diff --git a/themes/src/sass/gtk4/_common.scss b/themes/src/sass/gtk4/_common.scss
+index 715bd87..695c534 100644
+--- a/themes/src/sass/gtk4/_common.scss
++++ b/themes/src/sass/gtk4/_common.scss
+@@ -48,9 +48,13 @@ dnd {
+ 	background-clip: padding-box;
+ 	border-radius: $corner-radius;
+ 	border: none;
+-	box-shadow:
+-		$shadow-z4,
+-		inset 0 1px highlight($surface);
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z4-rimless;
++	} @else {
++		box-shadow:
++			$shadow-z4,
++			inset 0 1px highlight($surface);
++	}
+ }
+ 
+ .osd {
+diff --git a/themes/src/sass/gtk4/apps/_chrome.scss b/themes/src/sass/gtk4/apps/_chrome.scss
+index 72de164..0f00500 100644
+--- a/themes/src/sass/gtk4/apps/_chrome.scss
++++ b/themes/src/sass/gtk4/apps/_chrome.scss
+@@ -142,6 +142,19 @@ window.background.chromium {
+ 		}
+ 	}
+ 
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z16-rimless, 0 0 36px transparent;
++
++		&:backdrop {
++			box-shadow: $shadow-z16-rimless, 0 0 36px transparent;
++		}
++
++		&.maximized,
++		&.fullscreen {
++			box-shadow: none;
++		}
++	}
++
+ 	headerbar.header-bar.titlebar {
+ 		background-color: $titlebar;
+ 		color: $text;
+diff --git a/themes/src/sass/gtk4/apps/_files.scss b/themes/src/sass/gtk4/apps/_files.scss
+--- a/themes/src/sass/gtk4/apps/_files.scss
++++ b/themes/src/sass/gtk4/apps/_files.scss
+@@ -98,8 +98,8 @@
+ 		border-style: none;
+ 		border-radius: $modal-radius;
+ 		background-color: rgba($base, 0.95);
+ 		color: $primary;
+-		box-shadow: $shadow-z3;
++		box-shadow: if($rimless == 'true', $shadow-z3-rimless, $shadow-z3);
+ 
+ 		button {
+ 			margin: (32px - $small-size) / 2;
+diff --git a/themes/src/sass/gtk4/widgets/_color-chooser.scss b/themes/src/sass/gtk4/widgets/_color-chooser.scss
+index 902c0cf..11dfca1 100644
+--- a/themes/src/sass/gtk4/widgets/_color-chooser.scss
++++ b/themes/src/sass/gtk4/widgets/_color-chooser.scss
+@@ -117,11 +117,17 @@ colorchooser .popover.osd {
+ 	box-shadow:
+ 		$shadow-z4,
+ 		inset 0 1px highlight($surface);
++	@if $rimless == 'true' {
++		box-shadow: $shadow-z4-rimless;
++	}
+ 	background-color: $surface;
+ 
+ 	&:backdrop {
+ 		box-shadow:
+ 			$shadow-z2,
+ 			inset 0 1px highlight($surface);
++		@if $rimless == 'true' {
++			box-shadow: $shadow-z2;
++		}
+ 	}
+ }
+diff --git a/themes/src/sass/gtk4/widgets/_header-bar.scss b/themes/src/sass/gtk4/widgets/_header-bar.scss
+--- a/themes/src/sass/gtk4/widgets/_header-bar.scss
++++ b/themes/src/sass/gtk4/widgets/_header-bar.scss
+@@ -112,7 +112,7 @@ headerbar {
+ 	&:backdrop {
+ 		background-color: $titlebar-backdrop;
+ 		color: $titlebar-text-secondary;
+-		box-shadow: inset 0 1px highlight($titlebar);
++		box-shadow: if($rimless == 'true', none, inset 0 1px highlight($titlebar));
+ 
+ 		&:disabled {
+ 			color: $titlebar-text-secondary-disabled;
+diff --git a/themes/src/sass/gtk4/widgets/_misc.scss b/themes/src/sass/gtk4/widgets/_misc.scss
+--- a/themes/src/sass/gtk4/widgets/_misc.scss
++++ b/themes/src/sass/gtk4/widgets/_misc.scss
+@@ -64,9 +64,11 @@ toast {
+ 	border-radius: $circular-radius;
+ 	border-spacing: $space-size;
+ 	padding: $space-size;
+-	box-shadow:
+-		$shadow-z6,
+-		inset 0 1px highlight($popover);
++	box-shadow: if(
++		$rimless == 'true',
++		$shadow-z6-rimless,
++		($shadow-z6, inset 0 1px highlight($popover))
++	);
+ 	background-color: $popover;
+ 	color: on($popover);
+ 	border: none;
+diff --git a/themes/src/sass/gtk4/widgets/_popovers.scss b/themes/src/sass/gtk4/widgets/_popovers.scss
+index a05d412..5f82bd8 100644
+--- a/themes/src/sass/gtk4/widgets/_popovers.scss
++++ b/themes/src/sass/gtk4/widgets/_popovers.scss
+@@ -29,7 +29,13 @@ popover {
+ 			0 0 0 1px if($variant == 'light', gtkalpha(black, 0.03), $window_border);
+ 		transition: $transition-shadow;
+ 
+-		@if $border == 'false' {
++		@if $rimless == 'true' {
++			box-shadow: 0 3px 6px 0 transparentize(black, 0.85);
++		}
++
++		@if $rimless == 'true' {
++			border: none;
++		} @else if $border == 'false' {
+ 			border: 1px
+ 				solid
+ 				if($variant== 'light', gtkalpha(black, 0.2), gtkmix(white, $menu, 8%));
+@@ -39,7 +45,9 @@ popover {
+ 	}
+ 
+ 	> arrow {
+-		@if $border == 'false' {
++		@if $rimless == 'true' {
++			border: none;
++		} @else if $border == 'false' {
+ 			border: 1px
+ 				solid
+ 				if($variant == 'light', gtkalpha(black, 0.2), gtkmix(white, $menu, 8%));
+diff --git a/themes/src/sass/gtk4/widgets/_tab-view.scss b/themes/src/sass/gtk4/widgets/_tab-view.scss
+--- a/themes/src/sass/gtk4/widgets/_tab-view.scss
++++ b/themes/src/sass/gtk4/widgets/_tab-view.scss
+@@ -252,7 +252,13 @@ dnd tab {
+-	box-shadow:
+-		0 1px 5px 1px transparentize(black, 0.91),
+-		0 2px 14px 3px transparentize(black, 0.95),
+-		0 0 0 1px transparentize(black, 0.95);
+-
+-	outline: 1px solid $window-border;
++	@if $rimless == 'true' {
++		box-shadow:
++			0 1px 5px 1px transparentize(black, 0.91),
++			0 2px 14px 3px transparentize(black, 0.95);
++		outline: none;
++	} @else {
++		box-shadow:
++			0 1px 5px 1px transparentize(black, 0.91),
++			0 2px 14px 3px transparentize(black, 0.95),
++			0 0 0 1px transparentize(black, 0.95);
++		outline: 1px solid $window-border;
++	}
+ 	outline-offset: -1px;
+diff --git a/themes/src/sass/gtk4/widgets/_toolbars.scss b/themes/src/sass/gtk4/widgets/_toolbars.scss
+--- a/themes/src/sass/gtk4/widgets/_toolbars.scss
++++ b/themes/src/sass/gtk4/widgets/_toolbars.scss
+@@ -33,15 +33,19 @@
+ 		transition: $transition-shadow;
+ 		padding: $space-size;
+ 		border-radius: $corner-radius + $space-size;
+-		box-shadow:
+-			$shadow-z4,
+-			inset 0 1px highlight($surface);
++		box-shadow: if(
++			$rimless == 'true',
++			$shadow-z4-rimless,
++			($shadow-z4, inset 0 1px highlight($surface))
++		);
+ 		background-color: $surface;
+ 		color: $text;
+ 
+ 		&:backdrop {
+-			box-shadow:
+-				$shadow-z2,
+-				inset 0 1px highlight($surface);
++			box-shadow: if(
++				$rimless == 'true',
++				$shadow-z2,
++				($shadow-z2, inset 0 1px highlight($surface))
++			);
+ 		}
+ 
+diff --git a/themes/src/sass/gtk4/widgets/_tooltip.scss b/themes/src/sass/gtk4/widgets/_tooltip.scss
+index 2aaf9ce..c916fe8 100644
+--- a/themes/src/sass/gtk4/widgets/_tooltip.scss
++++ b/themes/src/sass/gtk4/widgets/_tooltip.scss
+@@ -8,7 +8,7 @@ tooltip {
+ 		// see https://bugzilla.gnome.org/show_bug.cgi?id=736155 for details.
+ 		background-color: $tooltip;
+ 		color: on($tooltip);
+-		box-shadow: $shadow-z5;
++		box-shadow: if($rimless == 'true', $shadow-z5-rimless, $shadow-z5);
+ 		border-radius: $corner-radius;
+ 		margin: 2px 6px 8px 6px;
+ 	}
+diff --git a/themes/src/sass/gtk4/widgets/_window.scss b/themes/src/sass/gtk4/widgets/_window.scss
+index 1d6696f..896f446 100644
+--- a/themes/src/sass/gtk4/widgets/_window.scss
++++ b/themes/src/sass/gtk4/widgets/_window.scss
+@@ -78,4 +78,24 @@ window {
+ 		// just doing borders, wm draws actual shadows
+ 		box-shadow: 0 0 0 1px $border-color;
+ 	}
++
++	@if $rimless == 'true' {
++		&.csd,
++		&.csd:backdrop {
++			outline: none;
++		}
++
++		&.csd:not(.maximized):not(.fullscreen),
++		&.csd:not(.maximized):not(.fullscreen):backdrop {
++			box-shadow: $shadow-z16-rimless, 0 0 36px transparent;
++		}
++
++		&.ssd {
++			box-shadow: none;
++		}
++
++		&.solid-csd {
++			border: none;
++		}
++	}
+ }

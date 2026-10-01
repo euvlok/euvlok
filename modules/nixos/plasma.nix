@@ -9,6 +9,7 @@ let
     accent = config.catppuccin.accent;
     flavor = config.catppuccin.flavor;
     size = "compact";
+    rimless = true;
   };
 in
 {
