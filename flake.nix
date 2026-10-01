@@ -23,6 +23,7 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin";
 
     # --- Trivial ---
+    browser.inputs.flake-parts.follows = "flake-parts";
     browser.inputs.home-manager.follows = "home-manager";
     browser.inputs.nix-darwin.follows = "nix-darwin";
     browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
