@@ -60,7 +60,8 @@ in
 {
   programs.ghostty = {
     package = if isDarwin then pkgs.unstable.ghostty-bin else pkgs.ghostty;
-    settings = lib.attrsets.optionalAttrs isDarwin { macos-option-as-alt = true; } // {
+    settings = {
+      macos-option-as-alt = lib.modules.mkIf isDarwin true;
       adjust-underline-position = 4;
       clipboard-paste-protection = false;
       confirm-close-surface = false;
