@@ -1,0 +1,26 @@
+{
+  "name": "@euvlok/workspace",
+  "private": true,
+  "engines": {
+    "node": "24.21.0"
+  },
+  "packageManager": "bun@1.4.2",
+  "workspaces": [
+    ".github/actions/build-nix-flake-target",
+    ".github/renovate",
+    "packages/catppuccin-userstyles"
+  ],
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/bun": "1.4.2",
+    "prettier": "3.9.9",
+    "typescript": "7.0.2"
+  },
+  "trustedDependencies": [
+    "re2"
+  ],
+  "scripts": {
+    "check": "bun run --workspaces --if-present check",
+    "validate:renovate": "bun run --cwd .github/renovate validate"
+  }
+}

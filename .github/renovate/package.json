@@ -1,0 +1,11 @@
+{
+  "name": "@euvlok/renovate",
+  "private": true,
+  "scripts": {
+    "validate": "node -e \"require('re2')\" && cd ../.. && renovate-config-validator --strict --no-global renovate.json && renovate-config-validator --strict .github/renovate/config.js"
+  },
+  "dependencies": {
+    "re2": "1.27.0",
+    "renovate": "44.145.3"
+  }
+}
