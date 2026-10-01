@@ -30,7 +30,7 @@ let
   '';
 in
 {
-  home.packages = builtins.attrValues { inherit (pkgs.stable) watchman; };
+  home.packages = [ pkgs.watchman ];
 
   programs = {
     gh.gitCredentialHelper.enable = true;

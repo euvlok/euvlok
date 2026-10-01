@@ -2,7 +2,6 @@
   inputs,
   hostPlatform ? null,
   buildPlatform ? hostPlatform,
-  stableSource ? inputs.nixpkgs-stable,
   unstableSource ? inputs.nixpkgs-unstable-small,
 }:
 let
@@ -72,47 +71,28 @@ let
     );
   };
 
-  stableOverlay = _final: prev: {
-    stable = import stableSource (
-      packageSetArgs prev
-      // {
-        # Share package policy without feeding newer Nixpkgs' evaluated
-        # defaults into older options whose types may have changed
-        config = inputs.nixpkgs.lib.attrsets.filterAttrs (
-          name: _:
-          builtins.elem name [
-            "allowUnfree"
-            "allowUnfreePredicate"
-            "allowBroken"
-            "allowUnsupportedSystem"
-            "allowInsecurePredicate"
-            "permittedInsecurePackages"
-            "checkMeta"
-            "cudaSupport"
-            "rocmSupport"
-          ]
-        ) (prev.config or { });
-      }
-    );
-  };
-
-  eupkgsOverlay = final: _prev: {
-    eupkgs = final.unstable.extend (
-      inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
-        inputs.eupkgs.overlays.default
-        (_final: prev: {
-          # Keep newer Nixpkgs sources paired with their own node_modules
-          opencode =
-            if
-              inputs.nixpkgs.lib.versionAtLeast final.unstable.opencode.version prev.opencode.upstreamVersion
-            then
-              final.unstable.opencode
-            else
-              prev.opencode;
-        })
-      ]
-    );
-  };
+  # Extend only the callPackage scope for eupkgs instead of rebuilding the
+  # complete unstable Nixpkgs fixed point
+  eupkgsOverlay =
+    final: _prev:
+    let
+      base = final.unstable;
+      additions = upstreamAdditions // {
+        # Keep newer Nixpkgs sources paired with their own node_modules
+        opencode =
+          if
+            inputs.nixpkgs.lib.versionAtLeast base.opencode.version upstreamAdditions.opencode.upstreamVersion
+          then
+            base.opencode
+          else
+            upstreamAdditions.opencode;
+      };
+      scoped = base // additions // { callPackage = base.newScope additions; };
+      upstreamAdditions = inputs.eupkgs.overlays.default scoped base;
+    in
+    {
+      eupkgs = scoped;
+    };
 
   localPackagesOverlay = final: _prev: {
     catppuccin-gtk-fausto = final.callPackage ./packages/catppuccin-gtk.nix { };
@@ -134,7 +114,6 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   # extend the final package set. This keeps stdenv evaluation acyclic on
   # custom platform bootstraps such as nixos-raspberrypi.
   unstableOverlay
-  stableOverlay
   eupkgsOverlay
   packageFixesOverlay
   localPackagesOverlay
