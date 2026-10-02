@@ -498,6 +498,16 @@ function listFiles(root: string): string[] {
     }
     for (const entry of entries) {
       const path = join(dir, entry.name);
+      // Git's fsmonitor socket cannot be resolved on some mounted filesystems
+      // and special entries can never contain patch targets
+      if (
+        entry.isBlockDevice() ||
+        entry.isCharacterDevice() ||
+        entry.isFIFO() ||
+        entry.isSocket()
+      ) {
+        continue;
+      }
       let real: string;
       try {
         real = realpathSync(path);
