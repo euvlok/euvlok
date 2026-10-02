@@ -7,22 +7,25 @@
 let
   fixCudaOutputPropagation =
     package:
-    package.overrideAttrs (old: {
-      # Clear CUDA's array before exporting space-separated output names
-      preFixup = (old.preFixup or "") + ''
-        fixupPropagatedBuildOutputsForMultipleOutputs() {
-          local outputNames="''${propagatedBuildOutputs[*]}"
-          unset propagatedBuildOutputs
-          export propagatedBuildOutputs="$outputNames"
-        }
-      '';
-    });
+    if
+      inputs.nixpkgs.lib.isDerivation package && builtins.isList (package.propagatedBuildOutputs or null)
+    then
+      package.overrideAttrs (old: {
+        # Clear CUDA's array before exporting space-separated output names
+        preFixup = (old.preFixup or "") + ''
+          fixupPropagatedBuildOutputsForMultipleOutputs() {
+            local outputNames="''${propagatedBuildOutputs[*]}"
+            unset propagatedBuildOutputs
+            export propagatedBuildOutputs="$outputNames"
+          }
+        '';
+      })
+    else
+      package;
 
   packageFixesOverlay = _final: prev: {
     cudaPackages = prev.cudaPackages.overrideScope (
-      _cudaFinal: cudaPrev: {
-        libnpp = fixCudaOutputPropagation cudaPrev.libnpp;
-      }
+      _cudaFinal: cudaPrev: builtins.mapAttrs (_: fixCudaOutputPropagation) cudaPrev
     );
     lazarus-qt6 = prev.lazarus-qt6.overrideAttrs (old: {
       # Removing rpaths leaves empty segments rejected by makeBinaryWrapper
