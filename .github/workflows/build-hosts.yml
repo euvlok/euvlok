@@ -63,7 +63,7 @@ jobs:
 
       - name: Reclaim maximum Nix store space
         # euvlok fork: pin transitive actions and optimize Holster storage.
-        uses: euvlok/nothing-but-nix@baf7355748bb5651f08b839669d6bb39051b2874
+        uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9
         with:
           hatchet-protocol: rampage
 
