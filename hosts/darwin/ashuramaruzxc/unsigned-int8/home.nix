@@ -93,7 +93,7 @@ let
       thaw
       the-unarchiver
       ;
-    inherit (pkgs.eupkgs) aldente raycast;
+    inherit (pkgs.eupkgs) aldente;
   };
 
   socialPackages = builtins.attrValues {
