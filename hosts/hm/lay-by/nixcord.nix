@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
-  programs.nixcord.discord.enable = false;
+  programs.nixcord.discord.enable = true;
+  #legcord doesn't really provide any memory savings in practice. Will keep for now but regular discord will also remain.
   programs.nixcord.legcord = {
     enable = true;
     package = pkgs.unstable.legcord;
