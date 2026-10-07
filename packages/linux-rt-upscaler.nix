@@ -15,14 +15,14 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "linux-rt-upscaler";
-  version = "1.1.1.post1";
+  version = "1.1.4";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "baronsmv";
     repo = "linux-rt-upscaler";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6kVcjGgqbByHJrO3jZP7US+bzmQLHkAye4YEBR29+Jw=";
+    hash = "sha256-/QbSzUsP2yMy+d/OHHqBC2/RW+/4swtk3azguHUeaeM=";
   };
 
   postPatch = ''
