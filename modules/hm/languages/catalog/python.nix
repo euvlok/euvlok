@@ -1,70 +1,76 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
-  python313 = pkgs.python313.withPackages (pip: [
-    pip.black
-    pip.flake8
-    pip.ipython
-    pip.isort
-    pip.jupyter
-    pip.mypy
-    pip.pylint
-    pip.ruff
-    pip.jedi
-    pip.jedi-language-server
-    pip.python-lsp-server
-    pip.pylsp-mypy
-  ]);
+  ruffSettings = {
+    configurationPreference = "filesystemFirst";
+    configuration = {
+      "line-length" = 80;
+      lint."extend-select" = [ "I" ];
+    };
+  };
+  tySettings.diagnosticMode = "workspace";
 in
 {
   packages = builtins.attrValues {
-    inherit (pkgs.unstable) basedpyright;
-    python = python313;
+    inherit (pkgs.unstable) uv ty ruff;
+    python = pkgs.python313.withPackages (pythonPackages: [
+      pythonPackages.ipython
+      pythonPackages.jupyter
+    ]);
   };
   vscode.extensions = [
+    "astral-sh.ty"
     "charliermarsh.ruff"
     "ms-python.debugpy"
     "ms-python.python"
-    "ms-python.vscode-pylance"
+    "ms-python.vscode-python-envs"
     "ms-toolsai.jupyter"
   ];
   vscode.settings = {
+    "python.languageServer" = "None";
+    "python.useEnvironmentsExtension" = true;
+    "python-envs.alwaysUseUv" = true;
+    "ty.path" = [ (lib.meta.getExe pkgs.unstable.ty) ];
+    "ty.diagnosticMode" = tySettings.diagnosticMode;
+    "ruff.path" = [ (lib.meta.getExe pkgs.unstable.ruff) ];
     "ruff.nativeServer" = "on";
+    "ruff.configurationPreference" = ruffSettings.configurationPreference;
+    "ruff.configuration" = ruffSettings.configuration;
     "[python]" = {
-      editor.defaultFormatter = "charliermarsh.ruff";
-      editor.codeActionsOnSave = {
-        source.fixAll.ruff = "explicit";
-        source.organizeImports.ruff = "explicit";
+      "editor.defaultFormatter" = "charliermarsh.ruff";
+      "editor.codeActionsOnSave" = {
+        "source.fixAll.ruff" = "explicit";
+        "source.organizeImports.ruff" = "explicit";
       };
-      editor.formatOnSave = true;
+      "editor.formatOnSave" = true;
+      "editor.insertSpaces" = true;
     };
   };
   helix.languageServers = {
     ruff = {
-      command = "ruff";
-      args = [
-        "server"
-        "--preview"
-      ];
-      config.lineLength = 100;
-      config.lint.extendSelect = [ "I" ];
+      command = lib.meta.getExe pkgs.unstable.ruff;
+      args = [ "server" ];
+      config.settings = ruffSettings;
     };
-    pylsp = {
-      command = "pylsp";
-      config.pylsp.plugins.pylsp_mypy = {
-        enabled = true;
-        live_mode = true;
-      };
+    ty = {
+      command = lib.meta.getExe pkgs.unstable.ty;
+      args = [ "server" ];
+      config.ty = tySettings;
     };
-    jedi.command = "jedi-language-server";
   };
   helix.languages = [
     {
       name = "python";
       auto-format = true;
       language-servers = [
-        "ruff"
-        "pylsp"
-        "jedi"
+        "ty"
+        {
+          name = "ruff";
+          only-features = [
+            "diagnostics"
+            "code-action"
+            "format"
+          ];
+        }
       ];
     }
   ];
@@ -77,7 +83,7 @@ in
   ];
   zed.languages."Python" = {
     language_servers = [
-      "basedpyright"
+      "ty"
       "ruff"
     ];
     code_actions_on_format = {
@@ -87,19 +93,19 @@ in
     formatter.language_server.name = "ruff";
   };
   zed.lsp = {
-    basedpyright = {
+    ty = {
       binary = {
-        path = "basedpyright-langserver";
-        arguments = [ "--stdio" ];
+        path = lib.meta.getExe pkgs.unstable.ty;
+        arguments = [ "server" ];
       };
-      settings."basedpyright.analysis".typeCheckingMode = "strict";
+      settings = tySettings;
     };
-    ruff.binary = {
-      path = "ruff";
-      arguments = [
-        "server"
-        "--preview"
-      ];
+    ruff = {
+      binary = {
+        path = lib.meta.getExe pkgs.unstable.ruff;
+        arguments = [ "server" ];
+      };
+      initialization_options.settings = ruffSettings;
     };
   };
 }

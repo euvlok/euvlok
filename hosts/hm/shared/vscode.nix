@@ -30,15 +30,9 @@ let
 
     ## -- Python Utils -- ##
     "batisteo.vscode-django"
-    "donjayamanne.python-environment-manager"
     "kaih2o.python-resource-monitor"
     "kevinrose.vsc-python-indent"
-    "ms-python.black-formatter"
-    "ms-python.flake8"
     "ms-python.gather"
-    "ms-python.isort"
-    "ms-python.mypy-type-checker"
-    "ms-python.pylint"
     "wholroyd.jinja"
     ## -- Python Utils -- ##
 
@@ -121,23 +115,6 @@ in
           "ja" = true;
           "　" = true;
         };
-
-        # Python
-        "[python]" = {
-          "editor.defaultFormatter" = "charliermarsh.ruff";
-          "editor.formatOnSave" = true;
-          "editor.insertSpaces" = true;
-          "editor.codeActionsOnSave" = {
-            "source.fixAll.ruff" = "explicit";
-            "source.organizeImports.ruff" = "explicit";
-          };
-        };
-        "isort.args" = [
-          "--profile"
-          "black"
-        ];
-        "ruff.nativeServer" = "on";
-        "ruff.lineLength" = 120;
 
         # JS / TS
         "javascript.suggest.paths" = false;
