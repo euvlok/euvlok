@@ -1,7 +1,7 @@
 {
   lib,
   stdenv,
-  fetchFromGitHub,
+  fetchzip,
   cmake,
   ninja,
   pkg-config,
@@ -10,15 +10,13 @@
   qt6,
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation (finalAttrs: {
   pname = "lsfg-vk";
-  version = "2.0.0-dev-unstable-2026-06-28";
+  version = "2.0.0";
 
-  src = fetchFromGitHub {
-    owner = "PancakeTAS";
-    repo = "lsfg-vk";
-    rev = "8b0da2661c6f3473a7fccc8ba643880050e71642";
-    hash = "sha256-SDZXT+eYkOPr/qqZgCip9YSSf6SWwuvv1Y20+hlqGCw=";
+  src = fetchzip {
+    url = "https://git.lsfg-vk.dev/lsfg-vk/snapshot/lsfg-vk-${finalAttrs.version}.tar.xz";
+    hash = "sha256-vp0/adJdVV73C2RFjcEE90KjWiZJQhiqqOlYQ89RG+Y=";
   };
 
   nativeBuildInputs = [
@@ -38,18 +36,22 @@ stdenv.mkDerivation {
   ];
 
   cmakeFlags = [
-    "-DLSFGVK_BUILD_VK_LAYER=ON"
+    "-DLSFGVK_BUILD_LAYER=ON"
     "-DLSFGVK_BUILD_UI=ON"
     "-DLSFGVK_BUILD_CLI=ON"
-    "-DLSFGVK_INSTALL_XDG_FILES=ON"
+    "-DLSFGVK_MANAGED=ON"
     "-DLSFGVK_LAYER_LIBRARY_PATH=${placeholder "out"}/lib/liblsfg-vk-layer.so"
   ];
 
+  postFixup = ''
+    patchelf --add-rpath "${lib.getLib vulkan-loader}/lib" "$out/bin/lsfg-vk-cli"
+  '';
+
   meta = {
     description = "Lossless Scaling frame generation Vulkan layer";
-    homepage = "https://github.com/PancakeTAS/lsfg-vk";
-    license = lib.licenses.gpl3Only;
+    homepage = "https://lsfg-vk.dev";
+    license = lib.licenses.cc-by-nc-nd-40;
     mainProgram = "lsfg-vk-ui";
     platforms = [ "x86_64-linux" ];
   };
-}
+})
