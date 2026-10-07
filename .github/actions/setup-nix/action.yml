@@ -31,11 +31,11 @@ runs:
   using: composite
   steps:
     - name: Install Nix
-      # v3.22.3
-      uses: DeterminateSystems/determinate-nix-action@021c8a1bd3570eb21f5c20a054812b0c4d9ca614
+      # v3.23.1
+      uses: DeterminateSystems/determinate-nix-action@d0c908e6cbe9f89f36ed8205a3ab6f092636916a
       with:
         github-token: ${{ inputs.github-token }}
-        source-tag: v3.22.3
+        source-tag: v3.23.1
         extra-conf: |
           accept-flake-config = true
           extra-substituters = https://cache.flox.dev https://cache.nixos-cuda.org
