@@ -41,7 +41,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 360
     permissions:
-      actions: write  # Required to dispatch an isolated retry via the API.
+      actions: write # Required to dispatch an isolated retry via the API.
       contents: read
     env:
       CACHIX_CACHE: euvlok
@@ -81,6 +81,9 @@ jobs:
           cachix-skip-push: false
           github-token: ${{ github.token }}
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
+          # Tensile workers consume several GiB each on the int64 configuration
+          # Keep generation within the hosted runner's 16 GiB memory budget
+          build-cores: ${{ matrix.name == 'unsigned-int64' && '2' || '0' }}
 
       - name: Dispatch isolated retry
         if: >-
