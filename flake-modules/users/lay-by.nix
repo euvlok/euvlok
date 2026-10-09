@@ -13,7 +13,7 @@ in
     owner = "lay-by";
     class = "nixos";
     system = "x86_64-linux";
-    runner = "ubuntu-latest";
+    runner = "ubuntu-26.04";
     modules = [
       (lib.modules.importApply ../../hosts/linux/lay-by/blind-faith {
         sharedModule = config.flake.nixosModules.default;
@@ -39,7 +39,7 @@ in
     owner = "lay-by";
     class = "nixos";
     system = "x86_64-linux";
-    runner = "ubuntu-latest";
+    runner = "ubuntu-26.04";
     modules = [
       (lib.modules.importApply ../../hosts/linux/lay-by/nyx {
         sharedModule = config.flake.nixosModules.default;

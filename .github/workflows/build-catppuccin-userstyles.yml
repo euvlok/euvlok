@@ -41,7 +41,7 @@ concurrency:
 jobs:
   build:
     name: Build Stylus imports
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     steps:
       - name: Checkout repository
@@ -100,7 +100,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' &&
       github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
       contents: write # Create the rolling release and replace its generated assets
