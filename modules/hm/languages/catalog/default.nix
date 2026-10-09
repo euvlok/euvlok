@@ -51,14 +51,7 @@ let
         ;
     };
 in
-lib.trivial.pipe (builtins.readDir ./.) [
-  (lib.attrsets.filterAttrs (
-    name: type: type == "regular" && name != "default.nix" && lib.strings.hasSuffix ".nix" name
-  ))
-  (lib.attrsets.mapAttrs' (
-    name: _type:
-    lib.attrsets.nameValuePair (lib.strings.removeSuffix ".nix" name) (
-      callLanguage (lib.path.append ./. name)
-    )
-  ))
-]
+builtins.removeAttrs (lib.filesystem.packagesFromDirectoryRecursive {
+  directory = ./.;
+  callPackage = file: _: callLanguage file;
+}) [ "default" ]
