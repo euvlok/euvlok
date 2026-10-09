@@ -325,6 +325,7 @@
 # I do not want to generate another one
 let
   codexEnabled.euvlok.home.codex.enable = true;
+  claudeCodeEnabled.euvlok.home.claude-code.enable = true;
   codexLib =
     { config, lib }:
     let
@@ -1082,6 +1083,124 @@ let
         );
       };
     };
+  claudeCode =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      cfg = config.euvlok.home.claude-code;
+      mkDefaults = lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
+      environment = lib.attrsets.filterAttrs (_: value: value != null) cfg.environment;
+      configDir =
+        if (environment.CLAUDE_CONFIG_DIR or "") != "" then
+          environment.CLAUDE_CONFIG_DIR
+        else if config.home.preferXdgDirectories then
+          "${config.xdg.configHome}/claude"
+        else
+          "${config.home.homeDirectory}/.claude";
+      launcher = pkgs.symlinkJoin {
+        name = "claude-code-euvlok";
+        version = cfg.package.version or "";
+        paths = [ cfg.package ];
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        postBuild = ''
+          # Export startup-only variables before Claude reads settings
+          wrapProgram "$out/bin/claude" ${
+            lib.strings.concatMapAttrsStringSep " " (
+              name: value:
+              lib.strings.escapeShellArgs [
+                "--set"
+                name
+                value
+              ]
+            ) (environment // { CLAUDE_CONFIG_DIR = config.programs.claude-code.configDir; })
+          }
+        '';
+        meta = cfg.package.meta;
+      };
+    in
+    {
+      options.euvlok.home.claude-code = {
+        enable = lib.options.mkEnableOption "Claude Code";
+        package = lib.options.mkPackageOption pkgs "claude-code" {
+          default = [
+            "unstable"
+            "claude-code"
+          ];
+        };
+        environment = lib.options.mkOption {
+          type = lib.types.addCheck (lib.types.attrsOf (lib.types.nullOr lib.types.str)) (
+            variables:
+            lib.lists.all (name: builtins.match "[A-Za-z_][A-Za-z0-9_]*" name != null) (
+              builtins.attrNames variables
+            )
+          );
+          default = { };
+          example = {
+            API_TIMEOUT_MS = "1200000";
+            CLAUDE_CODE_EFFORT_LEVEL = "high";
+            DISABLE_TELEMETRY = null;
+          };
+          description = ''
+            Environment variables exported by the Claude launcher. Names must
+            be valid shell identifiers; null omits a default without removing
+            an inherited value. CLAUDE_CONFIG_DIR must be absolute; an empty
+            value uses the default directory. Set credentials in the launching
+            environment instead, since these values are public in the Nix store.
+          '';
+        };
+      };
+
+      config = lib.modules.mkIf cfg.enable {
+        assertions = [
+          {
+            assertion = lib.strings.hasPrefix "/" config.programs.claude-code.configDir;
+            message = "Claude Code configDir must be an absolute path";
+          }
+        ];
+
+        # https://code.claude.com/docs/en/env-vars
+        # Telemetry opt-out also disables feature-flag fetching
+        # null omits our default but preserves an inherited opt-out
+        euvlok.home.claude-code.environment = mkDefaults {
+          DISABLE_AUTOUPDATER = "1";
+          DISABLE_UPDATES = "1";
+          DISABLE_INSTALLATION_CHECKS = "1";
+          FORCE_AUTOUPDATE_PLUGINS = "0";
+          USE_BUILTIN_RIPGREP = "0";
+          DISABLE_TELEMETRY = "1";
+          DISABLE_ERROR_REPORTING = "1";
+          DISABLE_FEEDBACK_COMMAND = "1";
+          CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY = "1";
+          CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL = "1";
+          CLAUDE_CODE_ENABLE_TELEMETRY = "0";
+          OTEL_LOG_USER_PROMPTS = "0";
+          OTEL_LOG_ASSISTANT_RESPONSES = "0";
+          OTEL_LOG_TOOL_CONTENT = "0";
+          OTEL_LOG_TOOL_DETAILS = "0";
+          OTEL_LOG_RAW_API_BODIES = "0";
+        };
+
+        programs.claude-code = {
+          enable = true;
+          package = lib.modules.mkDefault launcher;
+          configDir = lib.modules.mkDefault configDir;
+          mutableSettings = lib.modules.mkDefault true;
+          settings = mkDefaults {
+            # https://code.claude.com/docs/en/settings-reference#attribution
+            attribution = {
+              commit = "";
+              pr = "";
+              sessionUrl = false;
+            };
+            includeGitInstructions = false;
+          };
+        };
+      };
+    };
   # another prompt box to fucking bury
   #
   # Another costume for the prompt box. Another leaderboard trophy for an answer
@@ -1501,6 +1620,7 @@ in
     cli = {
       imports = [
         codex
+        claudeCode
         opencode
       ];
     };
@@ -1885,6 +2005,7 @@ in
         ];
       };
     codex = codexEnabled;
+    claude-code = claudeCodeEnabled;
     # the same fucking corpse on every machine
     #
     # One machine wasn't enough. The same unwanted paragraph gets another
@@ -1898,11 +2019,17 @@ in
     # ecosystem
     hosts = {
       unsignedInt8 = { pkgs, ... }: {
-        imports = [ codexEnabled ];
+        imports = [
+          codexEnabled
+          claudeCodeEnabled
+        ];
         home.packages = [ pkgs.chatgpt ];
       };
       faputa = { pkgs, ... }: {
-        imports = [ codexEnabled ];
+        imports = [
+          codexEnabled
+          claudeCodeEnabled
+        ];
         home.packages = [
           pkgs.chatgpt
           pkgs.eupkgs.opencode
@@ -1918,6 +2045,7 @@ in
         imports = [
           codexDesktopModule
           codexEnabled
+          claudeCodeEnabled
         ];
         sops.secrets.context7_api_key = { };
         programs.codexDesktopLinux = {
