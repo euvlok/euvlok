@@ -181,7 +181,8 @@ const TRANSIENT_FAILURES = [
   },
   {
     description: "connection failure",
-    pattern: /ETIMEDOUT|ECONNRESET|Connection (?:timed out|reset|refused)/i,
+    pattern:
+      /ETIMEDOUT|ECONNRESET|Connection (?:timed out|reset|refused)|Failed sending data to the peer/i,
   },
   {
     description: "truncated network response",
