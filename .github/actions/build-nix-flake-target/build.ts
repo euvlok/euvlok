@@ -133,6 +133,8 @@ type BuildResult = Readonly<{
 type FailureContext = Readonly<{
   failedDrv: string;
   hydraFailure: HydraFailure | null;
+  output: string;
+  system: string;
   transientFailure: TransientFailure | undefined;
 }>;
 
@@ -181,8 +183,9 @@ const TRANSIENT_FAILURES = [
   },
   {
     description: "connection failure",
+    // Match errno tokens without treating test filenames as network errors
     pattern:
-      /ETIMEDOUT|ECONNRESET|Connection (?:timed out|reset|refused)|Failed sending data to the peer/i,
+      /(?<![\w./-])(?:ETIMEDOUT|ECONNRESET)(?![\w./-])|Connection (?:timed out|reset|refused)|Failed sending data to the peer/i,
   },
   {
     description: "truncated network response",
@@ -232,6 +235,14 @@ const FAILURE_RULES = [
     retryable: false,
     summary: ({ hydraFailure }) =>
       `Nixpkgs Hydra failed this exact derivation (status ${hydraFailure?.status ?? "unknown"}).`,
+  },
+  {
+    kind: "transient",
+    matches: ({ failedDrv, output, system }) =>
+      isKnownDarwinTwistedTcpTimeout(output, failedDrv, system),
+    retryable: true,
+    summary: () =>
+      "Twisted's known flaky Darwin TCP buffer test timed out (twisted/twisted#12151).",
   },
   {
     kind: "transient",
@@ -659,6 +670,25 @@ function transientFailure(output: string): TransientFailure | undefined {
   return TRANSIENT_FAILURES.find(({ pattern }) => pattern.test(output));
 }
 
+// The macOS test assumes its outgoing chunk fills the OS buffer and can hang
+// https://github.com/twisted/twisted/issues/12151
+export function isKnownDarwinTwistedTcpTimeout(
+  output: string,
+  failedDrv: string,
+  system: string,
+): boolean {
+  return (
+    system.endsWith("-darwin") &&
+    derivationName(failedDrv) === "python3.13-twisted-26.4.0" &&
+    /TestTimeoutError: reactor still running after 120\.0 seconds/u.test(
+      output,
+    ) &&
+    /twisted\.internet\.test\.test_tcp\.AbortConnectionTests_AsyncioSelectorReactorTests\.test_fullWriteBuffer(?:\s|$)/u.test(
+      output,
+    )
+  );
+}
+
 export function containsTransientFailure(output: string): boolean {
   return transientFailure(output) !== undefined;
 }
@@ -741,6 +771,8 @@ async function classifyBuild(build: BuildExecution): Promise<BuildResult> {
   const context: FailureContext = {
     failedDrv,
     hydraFailure: failedDrv ? await exactHydraFailure([failedDrv]) : null,
+    output: build.output,
+    system: runtime.CONFIGURATION_SYSTEM,
     transientFailure: transientFailure(build.output),
   };
   const rule = FAILURE_RULES.find(({ matches }) => matches(context));
