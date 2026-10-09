@@ -2,8 +2,9 @@
 set -euo pipefail
 
 # Release the evaluator heap between hosts while retaining the normal flake
-# schemas and checks for every output.
+# schemas and checks for every output
 project_root="$(git rev-parse --show-toplevel)"
+native_system="$(nix eval --raw --impure --expr builtins.currentSystem)"
 check_dir="$(mktemp -d)"
 trap 'rm -rf "${check_dir}"' EXIT
 
@@ -37,7 +38,7 @@ cat >"${check_dir}/flake.nix" <<'NIX'
 }
 NIX
 
-# JSON strings are valid Nix strings once interpolation markers are escaped.
+# JSON strings are valid Nix strings once interpolation markers are escaped
 PROJECT_ROOT="${project_root}" CHECK_DIR="${check_dir}" python3 - <<'PY'
 import json
 import os
@@ -51,7 +52,9 @@ PY
 printf 'null\n' >"${check_dir}/selection.json"
 echo '::group::Shared flake outputs'
 nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-  flake check "path:${check_dir}" --all-systems
+  flake check "path:${check_dir}" --all-systems --no-build
+nix --extra-experimental-features parallel-eval --option eval-cores 1 \
+  flake check "path:${check_dir}"
 echo '::endgroup::'
 
 host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
@@ -59,6 +62,8 @@ while IFS= read -r host; do
   printf '%s\n' "${host}" >"${check_dir}/selection.json"
   echo "::group::Host $(jq -r .name <<<"${host}")"
   nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-    flake check "path:${check_dir}" --all-systems
+    flake check "path:${check_dir}"
   echo '::endgroup::'
-done < <(jq -c 'to_entries[] | {name: .key, system: .value.system}' <<<"${host_metadata}")
+done < <(jq -c --arg system "${native_system}" \
+  'to_entries[] | select(.value.system == $system) | {name: .key, system: .value.system}' \
+  <<<"${host_metadata}")

@@ -121,16 +121,26 @@ jobs:
         run: bun run build
 
   flake:
-    name: Flake
+    name: Flake (${{ matrix.system }})
     if: >-
       github.event_name != 'pull_request' ||
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association) ||
       (github.event.pull_request.user.type == 'Bot' &&
       contains(fromJSON('[29139614, 41898282, 49699333]'), github.event.pull_request.user.id))
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: x86_64-linux
+            runner: ubuntu-latest
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - system: aarch64-darwin
+            runner: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -147,7 +157,9 @@ jobs:
             ${{ github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
       - name: Check the generated contributor manifest
-        run: nix build ./flake-modules/users#checks.x86_64-linux.check-flake-file --no-link
+        env:
+          CHECK_SYSTEM: ${{ matrix.system }}
+        run: nix build "./flake-modules/users#checks.${CHECK_SYSTEM}.check-flake-file" --no-link
 
       - name: Evaluate all flake outputs and run checks
         run: bash .github/scripts/check-flake.sh
