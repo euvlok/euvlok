@@ -125,6 +125,9 @@ jobs:
           cachix-skip-push: >-
             ${{ github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
+      - name: Check the generated contributor manifest
+        run: nix build ./flake-modules/users#checks.x86_64-linux.check-flake-file --no-link
+
       - name: Evaluate all flake outputs and run checks
         run: bash .github/scripts/check-flake.sh
 

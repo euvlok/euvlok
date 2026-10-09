@@ -110,6 +110,7 @@ in
     inputs.flake-parts.flakeModules.partitions
     inputs.flake-parts.flakeModules.touchup
     euvlokModule
+    ./inputs
   ];
 
   systems = supportedSystems;

@@ -1,5 +1,118 @@
+#                                                                        ⢰⣆
+#                                                                       ⢀⡟⡿⡄
+#                                        ⢀                              ⠸⡄⣇⡟                              ⡀
+#                                        ⣸⣄                              ⢙⡏                              ⢀⣧⡀
+#                                        ⠸                         ⢀⣠⣴⡶⢀⡴⣻⠟⢦⡀⢶⣦⣄⡀                         ⠇
+#                          ⣀                                  ⣀⣀⣤⣖⣲⣻⣿⠟⣵⣋⣼⡿⣷⡢⣙⣮⡻⣿⣟⣖⣲⣤⣀⣀                                  ⣀
+#                       ⢀⡴⣺⣿⡙⠳⣄              ⡀ ⢀⣀⢀⣀⣀⣀⣠⢤⣤⣴⣲⡶⠾⠽⠟⠛⠚⣁⣤⡯⠝⠁ ⢿⠹⣿⣲⣗⣿⡟⣿ ⠈⠫⢽⣤⣈⠓⠛⠻⠯⠷⢶⣖⣦⣤⡤⣄⣀⣀⣀⡀⣀⡀ ⢀              ⣠⠞⢋⣿⣗⢦⡀
+#                      ⣠⢏⢤⡽⣿⢿⣿⣼⣻⡿⠽⠿⠻⠽⠿⠿⠽⠿⠻⠽⠟⠻⠽⠛⠛⠚⠛⠛⠚⠉⠉⠉⠁ ⠁  ⢀⡠⢤⡾⠖⠋    ⠸⡿⢿⣷⣿⠿⢷⡇    ⠙⠲⢷⡤⢄⡀  ⠈ ⠈⠉⠉⠉⠓⠛⠛⠓⠛⠛⠯⠟⠻⠯⠟⠿⠯⠿⠿⠯⠟⠿⠯⢿⣟⣧⣿⣿⢟⢯⡤⡹⣄
+#                     ⣰⣯⡼⠉⣠⣟⡀⠙⡿⣿⣿⣶⣤⡤⣀⡀⣀         ⡤⢄   ⣀ ⣀⢤⣤⣾⡹⠟⠉⠉        ⠛⢦⡹⢏⡤⠞        ⠉⠉⠻⢏⣷⣤⡤⣀ ⣀   ⡠⢤         ⣀⢀⣀⢤⣤⣶⣿⣿⣿⠋⢀⣿⡃⠉⢳⢽⣆
+#                    ⢠⡿⣿⣥⣴⡿⣿⣾⣢⣼⣿⠄⠘⢯⡉⠉⠛⠿⠻⠷⢽⠶⢶⣲⡶⢶⣲⣾⡿⣽⠾⠟⠜⠛⠉⠉⠁            ⠠⣶⣶⣿⣿⣶⣶⡄            ⠈⠉⠉⠛⠣⠻⠷⣯⢿⣷⣖⡶⢶⣖⡶⠶⡯⠾⠟⠿⠛⠉⢉⡽⠃ ⣿⣧⣴⣿⢻⢯⣢⣬⣿⣿⡄
+#                    ⡿⠘⣿⠈⣿⡇⣿⣽⣿⠐⡿⣆ ⠈⢳⡄           ⢳⡟⢼⡄                  ⠐⢿⣿⣿⣿⣿⣿⠆                  ⢠⣧⢹⡞           ⢠⡞⠁ ⣠⢯⡃⣻⣯⢾⣽⣿⠇⣿⠃⢿
+#                   ⣸⠃⢠⣟⡎⠛⢿⣿⡟⠛⣜⡇⠙⢦⡀ ⠹⣦          ⢞⡧⠘                    ⢸⡷⢚⣛⣩⡇                    ⠃⢼⡳          ⣴⠏ ⢀⡴⠋⢸⣣⠛⢿⣿⡿⠛⢱⣻⡄⠘⣇
+#                  ⢀⡟ ⣾⣏⡿⣲⣄⢿⣠⣺⡃  ⠈⠳⣄ ⠈⢷⡀        ⣼⡇                     ⢸⣟⣩⣭⠴⡇                     ⣸⣇        ⢀⡾⠁ ⣠⠞⠁  ⢈⣗⣤⡻⣣⣖⢿⣹⣷ ⢻⡀
+#                  ⢸⡇⣴⣷⠃  ⢸⣿⣿⡿⢧⣧⢠  ⠘⢧⡀ ⠙⣦     ⢴⣾⣟⣿⣧⣦                   ⢸⣯⠴⠶⢚⡇                   ⢴⣾⡟⣿⣦⣶     ⣴⠋ ⢀⡼⠃  ⡄⣼⡼⢿⣿⣿⡇  ⠘⣾⣦⢸⡇
+#          ⡀       ⣸⣞⣿⠁⢠⢶⠄⣼⣿⣿⣿⣦⣽⣾⣆⡇⢀ ⠙⢦⡀⠈⠳⣄ ⢀⢤⢠⣿⣿⣿⣿⡅⣤⡀                 ⢸⡷⢚⣛⣩⡇                 ⢀⣤⢠⣿⣿⣷⣿⡇⡤⡀ ⣠⠞⠁⢀⡴⠋ ⡀⢸⣰⣷⣯⣴⣿⣿⣿⣧⠠⡶⡄⠈⣿⣳⣇       ⢀⡀
+#         ⢠⣧      ⢀⣿⢼⡏⢠⣾⠋ ⣿⣿⢹⡍⣿⣿⣿⣌⣿⣾⡄⡆⣀⠻⢦⡀⠈⠳⣌⣿ ⠈⢻⡟⠁ ⣿⠁                 ⢸⣟⣩⣭⠴⡇                 ⠈⣿ ⠈⢻⡟⠁ ⣿⣡⠞⠁⢀⡴⠟⣀⢰⢠⣷⣿⣡⣿⣿⣿⢩⡏⣿⣿ ⠙⣷⡄⢹⡧⣿⡀      ⣰⣇
+#          ⠇     ⢰⢛⡇⢸⢡⣷⠋ ⢰⡟⢽⣘⣏⣿⢸⡏⣿⢿⣺⣿⣿⢿⡰⣆⣙⢦⡀⢸⣿⢦⡀⢻⣧⣄⡀⣿⠃                 ⢸⣯⣴⢶⣚⡇                 ⠘⣿ ⣀⣼⡟⢀⡴⣿⡇⢀⡴⣋⣰⢆⡿⣿⣿⣗⡿⣿⢹⡇⣿⣹⣃⡯⢻⡆ ⠙⣾⡌⡇⢸⡛⡆     ⠨⠇
+#               ⢀⣮⢻⡇⣿⣯⠇  ⢸⡇⣹⣇⣷⣻⡀⡧⣿⠬⡇⣿⢹⡽⣿⣿⣻⡰⣿⣶⣿⠈⠛⢾⣇⠙⣿⣿⠏⢳⣦⢤⣴⣆⣀⣠⣤⢤⣤⣴⣶⣶⣶⣶⡤⣤⡷⠋⢹⡏⠙⢾⣦⢤⣶⣶⣶⣶⣦⣤⡤⣤⣄⣀⣠⣦⡤⣴⡞⢹⣿⣿⠏⣸⡷⠛⠁⣿⣶⣿⢆⣟⣿⣿⢯⡏⣿⢸⠥⣿⢼⢀⣟⣾⣸⣏⢸⡇  ⠸⣽⣿⢸⡟⣵⡀
+#               ⢧⠞⢸⢁⣿⡏   ⣾⢁⡟⢻⣼⣾⣧⢿⢽⡕⣯⣿⠘⣇⣿⢸⡞⣿⢿⢽⣿⣿⣦⣸⡏⠻⢧⣿⣷⡟⠛⠻⣿⣿⠿⠿⣿⣿⣟⠛⢻⣿⣿⠛⠛⡾⢁⣴⣿⣯⣂⠈⢳⠛⠛⣿⣿⡟⠛⢻⣿⣿⡿⠿⣿⣿⠟⠛⢻⣶⣿⡽⠟⢹⣇⣴⣿⣿⡯⡿⣿⢳⡇⣿⣸⠃⣿⣽⢪⡯⡿⣼⣷⣧⡟⢻⡈⣷   ⢹⣿⡈⡇⠳⡼
+#              ⡞⡯ ⣿⣸⡏    ⣿⣸⠃⢠⣿⣿⣿⣿⣿⣷⣺⣺⡆⣧⣿⠬⡧⣿⢘⣯⢿⣿⣻⣿⣿⣧⣤⡿⣿⣷⣤⣄⠘⠃  ⠻⣿⠃  ⠘⠁ ⢴⡫⢻⣿⢥⡯⣷⡟⢹⡣ ⠈⠋  ⠘⣿⡟  ⠈⠃⣠⣤⣾⣿⡿⣤⣼⣿⣿⣟⣿⡿⣽⡃⣿⢼⠥⣿⣼⢰⣗⣗⣾⣿⣿⣿⣿⣿⡄⠘⣇⣿    ⢹⣇⣿ ⢽⢳
+#             ⣰⡹⠁⢠⣿⣽⡇   ⢠⣗⡟ ⣸⠃⢻⡇⠹⣿⣿⣿⣿⣿⣽⣽⣇⣻⣹⡐⡿⡗⣿⡇⣿⣿⡭⣿⣟⣿⡇ ⠙⠓⢦⣤⣀        ⢀⣧⠸⢿⣧⣿⡿⠇⣼⡁        ⣀⣤⡴⠚⠋ ⢸⣿⡗⣿⢭⣿⣿⢸⣿⢿⢻⢂⣏⣟⣸⣯⣯⣿⣿⣿⣿⣿⠏⢸⡟⠘⣇ ⢻⣺⡄   ⢸⣯⣿⡄⠈⢏⣆
+#            ⢐⣧⠇ ⣸⣿⢿⡇   ⢸⣿⡇ ⡿ ⣼⠁⢸⡏⠈⡿⣿⡇⢿⣿⣿⣾⣿⣷⣽⣺⡏⣿⣿⣽⣇⣿⢻⣿⣷⣀ ⢀⣠⠴⠋         ⠙⢧⡀⢻⡏⢀⣴⠋         ⠙⠦⣄⡀ ⣀⣾⣿⡟⣿⣸⣿⣽⣿⢹⣗⣯⣾⣿⣷⣿⣿⡿⢸⣿⢿⠁⢹⡇⠈⣧ ⢿ ⢸⣿⡇   ⢸⡿⣿⣇ ⠸⣼⡂
+#            ⡼⡎  ⣿⣿⢸    ⣼⢾⠁⢸⡇ ⣿ ⣸⠁⢸⡇⢈⣿⣾⣟⢿⡽⣿⡟⣿⣿⣿⣼⣮⣼⣳⣻⡸⣿⣿⣶⢞⣿⠁        ⢠⢶⡄ ⢹⡏⠻⡝⢛⣏ ⢠⡶⡄        ⠈⣿⡳⣶⣿⣿⢇⣟⣞⣯⣽⣧⣿⣿⣿⢻⣿⢯⡿⣻⣷⣿⡁⢸⡇⠈⣇ ⣿ ⢸⡇⠈⡷⣧    ⡇⣿⣿  ⢱⢧
+#           ⢠⣻⠁ ⢀⣿⣿⢸    ⣿⢾ ⢸⡇⢀⡏ ⣿ ⣼⠁⢸⡇⢹⣿⡜⣧⢸⡆⢸⡿⢿⣿⣿⣿⣾⣾⣷⣿⣿⣿⠁⢻        ⢀⣼⠏ ⢠⡟⡇⠘⠃⢸⡿⡆ ⠹⣧⡀        ⡟⠈⣿⣿⣿⣾⣷⣷⣿⣿⣿⡿⢿⡇⢰⡇⣼⢣⣿⡏⢸⡇⠈⣧ ⣿ ⢹⡀⢸⡇ ⡷⣿    ⡇⣿⣿⡀ ⠈⣟⡄
+#           ⣎⡹  ⣼⡇⣿⢸   ⢠⡏⢸ ⢸ ⢸⡇ ⡏ ⣿ ⣸ ⢸⡏⢿⣿⣌⣧⢸⡇⢸⡇⢻⡇⠹⣿⡟⣿⣿⣿⠄⢺⡄    ⡰⠖⠊⣽⣞⡱ ⡾⢸⠃   ⡇⢻⡀⢎⣳⣯⠑⠲⢆⡀   ⢠⡗⠠⣿⣿⣿⢻⣿⠏⢸⡟⢸⡇⢸⡇⣼⣡⣿⡿⢹⡇ ⣇ ⣿ ⢹ ⢸⡇ ⡇ ⡇⢹⡄   ⡇⣿⢸⣧  ⢏⣱
+#          ⢀⣯⡃ ⢀⢿⡇⣿⢸   ⢸⡇⢻⡄⢸⡄⢸⡇⢸⡇ ⣿ ⣿ ⢸ ⢸⡟⣿⣼⣆⣷⠘⣇⢘⡇ ⣿⠁⣿⣿⣿ ⣸⡇ ⢀⠔⠉⢀⢤⣾⣽⣿⠦⣼⣇⣼    ⢻⣸⣧⠴⣿⣯⣷⡠⣀⠈⠢⠄ ⢸⣇ ⣿⣿⣿⠈⣿ ⢸⡃⣸⠃⣾⣰⣧⣿⢻⡇ ⡇ ⣿ ⣿ ⢸⡇⢸⡇⢠⡇⢠⡟⢸⡇   ⡇⣿⢸⡿⡀ ⢘⣽⡀
+#          ⢸⢶⠁ ⢸⣾⡇⣿⢹   ⣸⡇⢸⡗⢸⡇⢸⡇⢸⡇ ⡏ ⣿ ⣿ ⢸⠁⢸⠿⣿⣼⡆⢿⡀⣧ ⣿ ⣿⢇⢻⣳⢸⣇⠔⠁⡠⠊⣡⡯⢇⣿⠓⢦⢸⡾⣧    ⣸⢷⡏⡴⠚⣿⡸⢽⣌⠑⢄ ⠁⣸⡇⣞⡟⡸⣿ ⣿ ⣼⢀⡿⢰⣧⣿⠿⡇⠈⡇ ⣿ ⣿ ⢹ ⢸⡇⢸⡇⢸⡇⢺⡇⢸⣇   ⡏⣿⢸⣷⡇ ⠈⡶⡇
+#          ⡜⢣  ⣎⠇⡗⢻⣽   ⣿⣷⠸⣇⠘⡧⢘⡇⠸⡇ ⣗ ⣿ ⣿ ⢺ ⢸ ⢹⣿⣿⡹⡇⢻⡀⣿ ⣿⣾⢸⡝⣿⣧⣠⣮⣤⠯⠟⢀⣯⠏⠳⠞⡿⣧⢸⡀   ⡏⣸⢿⠳⠞⠹⣽⡀⠻⠽⣤⣵⣄⣼⣿⣫⡇⣷⣿ ⣿⢀⡟⢸⢏⣿⣿⡏ ⡇ ⡗ ⣿ ⣿ ⣺ ⢸⠇⢸⡃⢼⠃⣸⠇⣾⣿   ⣯⡟⢺⠸⣱  ⡜⢣
+#          ⣟⡇ ⢀⢿ ⣷⢸⡝  ⢀⣿⣿⡗⣿⠘⣷ ⣷ ⣿ ⣿ ⣿ ⣿ ⢸ ⢸ ⢸⡇⢻⣿⣿⡸⡇⢹⡄⢹⣏⡾⡟⣀⡷⠉⠉⠁ ⢠⣚⠇  ⢸⠃⢻⡘⡇  ⢰⠇⡿⠘⡇  ⠸⣓⡄ ⠈⠉⠉⢻⣀⢻⣷⣹⡏⢠⡏⢸⢇⣿⣿⡟⢸⡇ ⡇ ⡇ ⣿ ⣿ ⣿ ⣿ ⣾ ⣾⠃⣿⢺⣿⣿⡀  ⢫⡇⣾ ⡿⡀ ⢸⣻
+#         ⠐⣧⡇ ⢸⡾ ⢿⢸⡇  ⢸⡟⢻⣷⣿⣇⣻⡆⣿ ⣿ ⣿ ⣿ ⣿ ⣸ ⢸⠃⢸⡇ ⣿⢿⣷⢿⡌⣇⢸⡟⡿⡏⡰⡇   ⡠⡿⠁   ⢸⣦⢸⡇⣷  ⣸⢸⡇⣰⡇   ⠈⢿⢄   ⢸⢧⢹⢿⢻⡇⣸⢡⡿⣾⡿⣿ ⢸⡇⠘⡇ ⣇ ⣿ ⣿ ⣿ ⣿ ⣿⢰⣟⣸⣿⣾⡟⢻⡇  ⢸⡇⡿ ⢷⡇ ⢸⣼⠂
+#         ⢀⠷⡇ ⣎⡗ ⢸⡎⡇  ⣸⣿⢸⡞⣿⣿⣸⣇⢸⡇⢹⡂⢼⡀⢻⡀⢸ ⢸⡄⢸ ⢸⡇ ⣿⠘⠿⣿⣧⣹⡄⣷⠙⣿⡧⣷⢀⡤⡾⠋⠁     ⠙⢺⡇⣿  ⣿⢸⡗⠋     ⠈⠙⢷⢤⡀⣾⢤⣿⠋⣿⢠⣏⣼⣿⠿⠃⣿ ⢸⡇ ⡇⢠⡇ ⡇⢀⡟⢀⡧⢐⡏⢸⡇⣸⣇⣿⣿⢳⡇⣿⣇  ⢸⢱⡇ ⢺⣱ ⢸⠾⡀
+#         ⠈⡶⡇⢀⡿⡃ ⠈⣧⣷  ⣿⣿⢸⡇⣿⢻⣿⣿⡾⣯⠸⡇⢸⡇⢸⡄⢹⡄⢸⡇⢸⡇⢸⡇ ⢸  ⡟⢿⣏⣧⢹⣄⣻⢝⣿⡉⠉         ⢸⡇⣿⠰⠇⣻⢸⡇         ⠉⠉⣿⣫⣟⣠⡏⣼⣹⡿⢻  ⡇ ⢸⡇⢸⡇⢸⡇⢠⡏⢠⡇⢸⡇⢸⠇⣽⢷⣿⣿⡟⣿⢸⡇⣿⣿  ⣾⣼⠁ ⢘⢿⡀⢸⢶⠁
+#         ⠠⡟⡧⠈⣿⠁  ⢻⣿  ⣿⢻⢸⡇⣿⢸⡿⣿⣧⣿⡄⣿⠌⣧⠘⡇⢸⡇⢸⡇⢸⡇⢸⡇ ⢸  ⣿ ⠹⣿⢿⠚⢹⡇⠑⣧⣄         ⢸⡇⣿⢡⡔⣻⢸⡇         ⣠⣼⠚⣹⡏⠑⡿⣿⠏ ⣿  ⡇ ⢸⡇⢸⡇⢸⡇⢸⡇⢸⠃⣼⠡⣿⢠⣿⣼⣿⢿⡇⣿⢸⡇⡟⣿  ⣿⡟  ⠈⣿⠁⢼⢻⠄
+#          ⢫⣇⠰⣹   ⠘⣿⡇⢸⣿⢸⡇⣇⢿⢸⡇⣿⢹⣿⣯⢻⡆⢻⡀⣿⠐⣧⠘⡇⠈⡇⠘⡇ ⢸⡂ ⣿  ⢹⣧⣴⡿⣷⣤⡜⣇         ⢸⡇⣿ ⡇⣿⢸⡇         ⣸⣧⣴⡿⣷⣤⣼⣏  ⣿ ⢐⡇ ⢸⠃⢸⠁⢸⠃⣼⠂⣿⢀⡟⢰⡟⣽⣿⡏⣿⢸⡇⡿⣸⢸⡇⣿⡇⢸⣿⠃   ⣏⠆⣸⡝
+#          ⢫⣼⢸⢿    ⢻⡇⢸⣹⡎⡇⣿⢸⡌⡇⣿⢸⣿⣿⣼⣷⣸⡇⢻⡄⢿ ⣿ ⣷ ⣿ ⢸⡇ ⢿  ⢱⡇⣼⣿⣿⣿⢈⡞         ⢸⡇⣿⠈⡇⣿⢸⡇         ⢱⡇⣼⣿⣿⣿⢸⡞  ⡿ ⢸⡇ ⣿ ⣾ ⣿ ⡿⢠⡟⢸⣇⣾⣧⣿⣿⡇⣿⢸⢡⡇⣿⢸⢱⣏⡇⢸⡟    ⡿⡇⢧⡝
+#         ⢀⣼⣧⢸⣾    ⠈⣷⣿⣏⣧⣿⢹⡸⡇⣧⢹⠸⡇⣿⢻⣿⡆⣿⠘⣧⢸⡆⢹⡀⢻ ⣿  ⡇ ⣸  ⣘⢿⣄⢹⡟⣀⡿⣃⡀        ⢸⡇⣿⢀⡄⣿⢸⡇        ⢀⣘⢷⣈⢻⡏⣀⡿⣃  ⣇ ⢸  ⣿ ⡟⢀⡏⢰⡇⣼⠃⣿⢰⣿⡟⣿⢸⠇⡏⣼⢸⢇⡏⣿⣼⣹⣿⣾⠁    ⣷⣧⣾⣇
+#        ⠈⢻⣯⣿⣿⣿     ⢹⣿⣿⣽⣼⡼⡇⣇⣿⢸⡇⡇⢿⢸⡿⣿⣿⣗⢿⡀⣷⠘⣇⢸⡇⢸⡄ ⣇ ⢸⡇⠈⣾⠈⡟⢻⡟⠓⠁⣷⠃        ⢸⡇⣿⠌⠑⣾⢸⡇        ⠘⣾⠈⠚⢻⡟⢓⠃⣷⠁⢸⡇ ⣸ ⢠⡇⢸⡇⣸⠃⣾⢀⡿⣺⣿⣿⢿⡇⡿⢸⢸⡇⣿⣸⢸⢧⣧⣯⣿⣿⡏     ⣟⣿⣿⣿⡿⠃
+#         ⠻⢿⣿⢿⢿⡀     ⢻⣿⣿⡏⣇⣧⢿⢸⡜⡇⣷⢸⡈⡇⣿⢿⣿⣸⣇⢹⡅⢿⠈⣷⠸⣇ ⢿ ⢸⡇⠰⣿ ⠘⣼⡽⠄ ⣯⠆        ⢸⡇⣿⠘⡇⣾⢸⡇        ⠰⣽ ⢠⢯⣇⠎ ⣿⠆⢸⡇ ⡿ ⣸⠇⣾⠁⡿⢨⡏⣸⣇⣿⡿⣿⢸⢁⡇⣾⢸⢣⡇⡿⣼⣸⢹⣿⣿⡟     ⢀⡿⡿⣿⡿⠟
+#          ⢘⢟⠈⣿⠁     ⠈⢿⣿⣿⣹⣹⣼⡎⡇⣧⢻⢸⡇⣿⢹⠘⡟⣿⣿⡝⣧⢸⡆⢿⡀⣿ ⢸⣀⢸⡇⢠⣿  ⢻⣇⠈⢢⡿⡄        ⢸⡇⣿⠠⡇⣿⢸⡇        ⢠⢿⡠⠁⣸⡟  ⣿⡄⢸⡇⣀⡇ ⣿⢀⡿⢰⡇⣼⢫⣿⣿⢻⠃⡏⣿⢸⡇⡟⣼⢸⢱⣧⣏⣏⣿⣿⡿⠁     ⠈⣿⠁⡸⡇
+#          ⣸⢯⣀⣿⡂      ⠈⣿⣿⣿⣿⣇⣧⣿⢻⢸⡏⡇⣿⢸⡆⡇⢻⣿⣷⣿⡮⣷⠸⣇⢸⡄⠘⡇ ⡇ ⣿  ⢸⡏⢢ ⣿⣄   ⣀⣤⣤⣀⡀⢸⡇⣿ ⠃⣿⢸⡇⢀⣀⣤⣤⣀   ⢠⣿ ⡰⢻⡇  ⣿ ⢸ ⢸⠃⢠⡇⣸⠇⣾⢵⣿⣾⣿⡟⢸⢰⡇⣿⢸⢹⡇⡟⣿⣼⣸⣿⣿⣿⣿⠁      ⢀⣿⣀⡽⣇
+#        ⢀⡾⢡⣦⡟⣴⡹⡄      ⠘⢿⣿⣿⣿⣿⣸⣼⡏⣇⣷⢸⣸⡇⣷⢸⡟⠻⣿⣧⢻⡆⣿⠘⣇ ⣧ ⣿⠈⣾  ⢸⡎ ⠘⣷⡃⠑⠤⣼⠁⣀ ⠈⠉⣿⡇⣿⠰⢆⣿⢸⣿⠉⠁ ⣀⠈⣧⠠⠊⢘⣾⠊ ⢱⡇  ⣷⠁⣿ ⣼ ⣸⠃⣿⢰⡟⣼⣿⠟⢻⡇⣾⢸⣇⡇⣾⣸⢹⣧⣇⣿⣿⣿⣿⡿⠃      ⢠⢏⣦⣻⣴⡌⢷⡀
+#        ⢸⠣⣿⢿⣏⠿⢫⠇       ⠈⢿⣿⣿⣿⣏⣷⣧⢿⢸⢸⡇⣇⢿⢸⡇ ⢹⣿⣾⣿⢸⡇⢹⡄⢹⡠⣿ ⣿  ⢸⡷  ⣽⡍⠢⢄⣹⡑⠫⢧⢀⡞⢱⡇⣿⢃⡠⣿⢸⡏⢳⡀⡾⠍⢊⣏⣀⠔⢉⣿  ⢾⡇  ⣿ ⣿⢄⡏⢠⡏⢸⡇⣿⣷⣿⡏ ⢸⡇⡿⣸⢸⡇⡇⡿⣼⣾⣹⣿⣿⣿⡿⠁       ⠸⡝⠿⣻⣿⣿⠜⡇
+#        ⠘⣇⠹⠟⢩⡟⠉         ⠈⢿⣿⣿⣿⣿⣿⣼⡿⡇⣇⢿⢸⡎⡇  ⠹⣿⣿⣇⣿⣘⣇⢸⡆⣿⡞⣍⢷⡀⢸⢇ ⡼⣩⣳⡄⠈⠉⠙⠲⢋⡞ ⢸⡇⣿⠈⡇⣿⢸⡇ ⢳⡙⠶⠛⠉⠁⢠⣞⣍⢧ ⡸⡇⢀⡞⣭⣳⣿⢰⡇⣸⣃⣿⣸⣿⣿⠏  ⢸⢱⡇⡿⣸⢸⢿⣧⣿⣿⣿⣿⣿⡿⠁         ⠉⢻⡍⠻⠋⣸⠃
+#         ⠈⠛⠚⠉             ⢻⣿⣿⣿⣯⣷⣧⣷⢿⢸⡜⡇⣷   ⣟⢿⣿⣿⣇⢿⡈⣇⢹⡺⣿⢿⠇⢸⡇⠸⡟⣯⢗⡇    ⣸  ⢸⡇⣿⠘⡇⣿⢸⡇  ⣇    ⢸⡺⣿⢻⠇⢸⡇⠸⡟⣯⢷⡏⣸⢁⡿⣸⣿⣿⡿⣻   ⣾⢸⢣⡇⡿⣾⣼⣾⣽⣿⣿⣿⡟             ⠉⠓⠛⠁
+#                           ⢻⣿⣿⣿⣿⣿⣼⣼⣞⡇⣧⢻   ⢻ ⠈⣿⣿⣸⣷⢿⢸⡟⠖⠋ ⢪⡕ ⢹⡿⠋     ⣿  ⢸⡇⣿ ⡀⣿⢸⡇  ⣿     ⠙⢿⡏ ⢪⡕ ⠙⠲⢻⡇⡿⣾⣇⣿⣿⠁ ⡟   ⡟⣼⢸⣳⣧⣧⣿⣿⣿⣿⣿⡟
+#                            ⠹⣿⣿⣿⣿⣿⣧⣧⣷⢻⢸⡄  ⢸⡄ ⠘⢿⣿⣿⡼⣾⡇  ⣴⢋⡙⢦⡼⡇      ⠾⣷ ⢸⡇⣿⡜⠃⣿⢸⡇ ⣾⠷      ⢸⢧⡴⢫⡙⣦  ⢸⣷⢧⣿⣿⡿⠃ ⢠⡇  ⢠⡇⡟⣾⣼⣼⣿⣿⣿⣿⣿⠏
+#                             ⠹⣿⣿⣿⣿⣿⣼⣿⡾⡏⣇  ⠘⡇  ⢸⡟⣿⣿⣯⣇ ⢰⢃⣿⣿⣜⣿⠁       ⠈⠁⢸⡇⣿⠰⡎⣿⢸⡇⠈⠁       ⠈⣿⣣⣿⣿⡘⡆ ⣸⣽⣿⣿⢻⡇  ⢸⠃  ⣸⢹⢷⣿⣧⣿⣿⣿⣿⣿⠏
+#        ⢠                     ⠘⣿⣿⣿⣿⣿⣇⣧⣿⣿   ⣷   ⣇⠙⠛⣿⣿ ⠸⡆⢻⠾⢻⡿          ⢸⡇⣿⢀⡇⣿⢸⡇          ⢿⡟⢿⠾⢱⠇ ⣿⣿⠛⠋⣸   ⣾   ⣿⣿⣼⣸⣿⣿⣿⣿⣿⠃                     ⢤
+#        ⢾⠆                     ⠹⣿⣿⣿⣿⣿⣿⣼⡼⡇  ⢸⡀ ⡀⣿  ⢻⣿  ⠙⠲⠶⡿⡇          ⢸⡇⣿ ⠃⣿⢸⡇          ⢸⢿⠶⠖⠋  ⣿⡟  ⣿⢀ ⢀⡇  ⢸⢧⣧⣿⣿⣿⣿⣿⣿⠏                     ⠠⣿⠄
+#        ⠘                       ⠘⣿⣿⣿⣿⣿⣿⣧⣯  ⠘⡇  ⢹⡀  ⠛     ⣿           ⢸⡇⣿⢠⡆⢿⢸⡇           ⣿     ⠛  ⢀⡏  ⢸⠃  ⣽⣼⣿⣿⣿⣿⣿⣿⠃                       ⠚
+#                                 ⠘⣿⣿⣿⣿⣿⣿⣿⡆  ⣷  ⠸⡇       ⢸⣽⠂          ⢸⡇⣿⢀⡨⢿⢸⡇          ⠐⣯⡇       ⢸⠇  ⣾  ⢰⣿⣿⣿⣿⣿⣿⣿⠃
+#                                   ⢻⣿⣿⣿⣿⣿⣧  ⢸⡀  ⣧       ⢸⢿           ⢸⡇⣿⠈⡇⣿⢸⡇           ⡿⡇       ⣼  ⢀⡇  ⣼⣿⣿⣿⣿⣿⡟
+#                                   ⠈⢿⣿⣿⣿⣿⣿⡄ ⠈⣇  ⢻       ⢸⡫           ⢸⡇⣿⠐⡇⣿⢸⡇           ⢝⡇       ⡟  ⣸⠁ ⢠⣿⣿⣿⣿⣿⡿⠁
+#                                     ⢻⣿⣿⣿⣿⣷  ⢹⠄⠊⢸⡇      ⢸⡽           ⢸⡇⣿ ⠁⣿⢸⡇           ⢯⡇      ⢸⡇⠑⠠⡏  ⣾⣿⣿⣿⣿⡟
+#                                      ⢻⣿⣿⣿⣿⡇ ⠘⡇  ⣧      ⠘⣋           ⢸⡇⣿⡘⠣⣿⢸⡇           ⢙⡃      ⣼  ⢸⠃ ⢸⣿⣿⣿⣿⡟
+#                                       ⠹⣿⣿⣿⣷  ⢷  ⢻      ⣸⣯           ⢸⡇⣿⠱⡔⣿⢸⡇          ⢀⣾⡇      ⡟  ⡾  ⣾⣿⣿⣿⠏
+#                                        ⠹⣿⣿⣿⣇ ⠘⡆ ⢸⡇    ⢻⣯⣿⣿⠗         ⢸⡇⣿⢀⡇⣿⢸⡇         ⠘⣿⣽⣿⡿⠂   ⢸⡇ ⢰⠃ ⣸⣿⣿⣿⠏
+#                                         ⠙⣿⣿⣿⡆ ⣳⣀⠄⣧    ⠺⢿⣿⠿⠂     ⢀⣀⡀ ⢸⡇⣿ ⠇⣿⢸⡇ ⢀⣀⡀     ⠐⠿⣿⡿⠗    ⣼⠠⣀⣞ ⢰⣿⣿⣿⠋
+#                                          ⠘⣿⣿⣿⡀⠘⡇ ⢻     ⢰⣿      ⡼⢋⠉⠉⠛⣶⡇⣿⢀⡄⣿⢸⣷⠛⠉⠉⡙⢧      ⣾⡇     ⡟ ⢸⠃⢀⣿⣿⣿⠃
+#                                           ⠈⢿⣿⣧ ⢻ ⠸⡇    ⢸⣿      ⢻⡈⢹⣄⡼⢱⡇⣿⠎⢈⣿⢸⡏⢧⣠⡏⢁⡟      ⣿⡇    ⢸⠇ ⡟ ⣼⣿⡿⠁
+#                                            ⠈⢿⣿⣆⠈⣇ ⣷    ⢸⣾       ⠙⠛⡽⠁⢸⡇⣿⠘⡇⣿⢸⡇⠈⢯⠛⠋       ⣷⡇    ⣾ ⣸⠁⣰⣿⡿⠁
+#                                              ⢻⣿⡄⢸⡄⢸⡆   ⢸⣽        ⢰⡇ ⢸⡇⣿⠰⡇⣿⢸⡇ ⢸⡆        ⣯⡇   ⢰⡇⢠⡇⢠⣿⡟
+#                                               ⢻⣿⡈⢯⠈⣇   ⢸⣻        ⢘⣧ ⢸⡇⣿ ⠁⣿⢸⡇ ⣼⡃        ⣟⡇   ⣸⠁⡽⢁⣿⡟
+#                                                ⢻⣷⠘⡆⢻⡀  ⢰⣷         ⠙⠇⢸⡇⣿⠰⢇⣻⢸⡇⠰⠋         ⣾⡆  ⢀⡟⢰⠃⣾⡟
+#                                                 ⢻⣧⢹⡸⡇ ⢠⢞⣝⢦          ⢸⡇⣿⢠⡔⣻⢸⡇          ⡴⣫⡳⡄ ⢸⢇⡏⣼⡟
+#                                                  ⠹⣇⢧⢿ ⣿⢾⣿⢾⡇         ⢸⡇⣿ ⡇⣿⢸⡇         ⢸⡷⣿⡷⣿ ⡿⡼⣸⠏
+#                                                   ⠹⣿⣿⡇⠹⣬⣫⡼⠁         ⢸⡇⣿⠈⡇⣿⢸⡇         ⠈⢧⣝⣥⠏⢸⢷⣿⠏
+#                                                   ⠠⢽⣿⣷              ⢸⡇⣿⢀⡄⣿⢸⡇              ⣾⣿⡯⠄
+#                                                     ⡟⣿⡆             ⢸⡇⣿⡌⠑⣿⢸⡇             ⢰⣿⠋⡇
+#                                                      ⠈⠁              ⣧⢹⠘⡇⣿⢸⠃             ⠈⠁
+#                                                                      ⢿⣼⠠⡇⣿⣿
+#                                                                      ⢸⣿ ⠃⣿⡏
+#                                                                      ⠘⣿⡀ ⣿⡇
+#                                                                       ⣿⡇⢠⣿
+#                                          ⢸⡇                           ⢻⡇⢸⣿                            ⡇
+#                       ⡄                  ⢻⡇                           ⢸⣿⣼⡇                           ⠘⡟                   ⡄
+#                      ⠴⡧                  ⠈⠁                            ⣿⣿⠃                            ⠃                  ⢴⡧
+#                       ⠇                                                ⢻⣿                                                 ⠃
+#                                                                        ⢸⡇
+#                                                                        ⡨⢇
+#                                                ⠠⣶⠴⡷⣔⡄    ⣀⡤⠖⠛⠉⠉⠉⠙⠓⠲⢤⣀  ⢹⡏  ⢀⡤⠖⠚⠋⠉⠉⠉⠛⠲⢤⣀    ⢠⣢⢾⡷⣶
+#                                               ⠰⡽⢁⣼⣏ ⢫⡆ ⣠⠞⠁   ⣀⣠⠤⠤⢤⣄⡀⠉  ⢫⡝  ⠉⢀⣠⡤⠤⠤⣄⡀⡀  ⠈⠳⣄ ⠰⡽⢁⣼⣇⠈⢯⠆
+#                                               ⠸⡗⣻⣿⣿⣿⠳⡷⢰⠟⠋⠉⠳⡄⣠⣟ ⡀   ⠉⡷  ⣜⣣  ⢾⠉   ⢀ ⣻⣇⢠⠞⠉⠙⠻⡆⢾⡟⣻⣿⣿⣟⢻⡷
+#                                               ⠰⢵⣙⢻⣟⢋⣮⠇⢸    ⢻⠈⣧ ⠉⢳⡀⢠⡞⠁⡀⣀⣼⣣⣀⡀⡈⢳⡄⢀⡞⠉ ⣼⠇⡟    ⡇⠸⢵⡙⢻⡟⣋⡮⠆
+#                                                 ⠛⣷⣱⢿⠃ ⠘⢧⡀  ⣼ ⠈⠧⣄⡼⢣⠏⢀⡼⠋⠁⣸⡇ ⠙⢿⡀⠹⡜⢧⣠⠼⠁ ⣧  ⢀⡼⠃ ⠘⡾⣾⣿⠛
+#                                                  ⣹⢿⣟⣦   ⠙⢓⣚⡁   ⣠⣤⣾⣔⡎ ⢠⣾⣿⣟⢦⡀ ⢹⣢⣷⣤⣄   ⢈⣓⡚⠋   ⣴⣻⡿⣏
+#                                                 ⣼⣱⣮⢻⡽⢆  ⡞⢉⠉⠉⢓⡦⡾⠁⢸⠇⣿⣀⣴⣿⡿⠋⡏⢷⡻⠦⣀⢻⠘⡇⠈⢷⢰⡚⠉⠉⡉⢳  ⡰⢯⡟⣵⣎⣧
+#                                     ⢸⡀          ⢯⠻⠼⣹⠙⢞⣆ ⢷⡈⢱⢠⠞ ⣷ ⢸⣤⣯⢹⣿⣿⠦⣀⣇⠴⣿⣿⡟⢹⣢⡇ ⣾ ⠳⡄⡎⢁⡾ ⣰⡳⠋⣇⢿⠟⡿           ⣇
+#                                     ⢹⠉          ⠈⠓⠚⣿⡄⠈⠧⡷⡀⠉⢩⡏  ⠘⢦⠰⢿⣇ ⣿⣿⣖⠊⡗⣦⣿⣿⠃⢸⡿⠆⡴⠃  ⢹⡍⠉⢀⢾⠼⠁⢠⣿⠓⠚⠁          ⠈⡏⠁
+#                                                    ⠸⣽⡀ ⠙⢭⡧⣸⠁   ⠈⠓⢦⣽⡌⠛⢿⣿⣷⣷⣿⡿⠛⢡⣯⡴⠚⠁   ⠈⣇⢼⡭⠋ ⢀⣯⠇
+#                                                     ⢸⡳⡄  ⠙⢿⣷⣤⣀⡀   ⠈⣹⣄⡀⠙⢿⡿⠋⢀⣠⣞⠁   ⢀⣀⣤⣾⡿⠋  ⢠⢞⡇
+#                                                      ⠙⣷⣄  ⢀⣼⣿⣴⡿⠿⣽⠶⠿⠼⠛⠛⠦⣼⣧⠴⠚⠚⠧⠿⠶⣯⠿⢻⣶⣿⣥⡄  ⣠⣾⠋
+#                                                       ⠈⠺⣦⣀ ⠿⣿⠿⠂  ⢀⡤⠶⠦⣤⣀⢸⡇⣀⣤⠴⠶⢤⡀  ⠐⠿⣿⠿ ⣀⣴⠗⠁
+#                                                         ⠙⠺⢦⡤⡙⠁   ⣸⣇⣶⡾⣻⠋⢳⡞⠙⣟⢷⣶⣸⣇    ⢛⢤⡴⠗⠋
+#                                                            ⢉⣿⡛⠭⠶⠚⠛⠛⠶⣳⠃ ⣜⣣ ⠘⣞⠶⠛⠛⠓⠶⠭⢛⣿⡉
+#                                                            ⣞⣶⣽⡄     ⡏  ⢸⡇  ⢹     ⢠⣯⣦⣷
+#                                                            ⢧⣓⡽⠃     ⣧  ⣸⣇  ⣼     ⠘⢯⣛⡿
+#                                                          ⢠  ⠉       ⠈⣧⣾⠟⡿⣅⣼⠁       ⠉  ⢠
+#                                                         ⠐⣿⠂          ⠈⣿⡲⣗⣿⡏           ⢾⠆
+#                                                          ⠘           ⠘⠻⣿⣿⠟⠃           ⠘
+#                                                                        ⢸⡇
+#                                                                       ⢀⡼⢧⡀
+#                                                                       ⣾⣼⣧⣷
+#                                                                       ⠻⣝⣫⠟
+#                                                                        ⠈⠁
+#
+# DO NOT EDIT THIS FILE BY HAND
+# HAND EDITS WILL BE OVERWRITTEN AND WILL FAIL THE FLAKE-FILE CHECK
+#
+# Generated by flake-file from flake-modules/inputs
+# EDIT THOSE MODULES, then run `nix run .#write-flake` from the repo root
 {
   description = "EUVlok shared NixOS, nix-darwin, and Home Manager configurations";
+
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./flake-modules;
 
   nixConfig = {
     extra-substituters = [ "https://catppuccin.cachix.org" ];
@@ -9,49 +122,77 @@
   };
 
   inputs = {
-    # --- Shared ---
+    browser = {
+      url = "github:4evy/browser";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
+        nix-darwin.follows = "nix-darwin";
+        nixpkgs.follows = "nixpkgs-unstable-small";
+      };
+    };
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.23.1";
-    eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    eupkgs.url = "github:euvlok/pkgs";
+    eupkgs = {
+      url = "github:euvlok/pkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
+    flake-file.url = "github:denful/flake-file";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
+    flake-utils.url = "github:numtide/flake-utils";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix4vscode = {
+      url = "github:nix-community/nix4vscode";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable-small";
+        systems.follows = "flake-utils/systems";
+      };
+    };
+    nixcord = {
+      url = "github:4evy/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
-
-    # --- Trivial ---
-    browser.inputs.flake-parts.follows = "flake-parts";
-    browser.inputs.home-manager.follows = "home-manager";
-    browser.inputs.nix-darwin.follows = "nix-darwin";
-    browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    browser.url = "github:4evy/browser";
-    catppuccin.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    catppuccin.url = "github:catppuccin/nix";
-    nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nix4vscode.inputs.systems.follows = "flake-utils/systems";
-    nix4vscode.url = "github:nix-community/nix4vscode";
-    nixcord.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nixcord.url = "github:4evy/nixcord";
-    nvidia-patch.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    nvidia-patch.inputs.utils.follows = "flake-utils";
-    nvidia-patch.url = "github:icewind1991/nvidia-patch-nixos";
-    pared.inputs.nixpkgs.follows = "nixpkgs";
-    pared.url = "github:4evy/pared";
-    raycast.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    raycast.url = "github:4evy/raycast";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    sops-nix.url = "github:Mic92/sops-nix";
-    zen-browser.inputs.home-manager.follows = "home-manager";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-
-    # Infra / Shared / Core Inputs
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-utils.url = "github:numtide/flake-utils"; # ONLY Exists to override inputs (NOT TO BE USED)
+    nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
+    nvidia-patch = {
+      url = "github:icewind1991/nvidia-patch-nixos";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable-small";
+        utils.follows = "flake-utils";
+      };
+    };
+    pared = {
+      url = "github:4evy/pared";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    raycast = {
+      url = "github:4evy/raycast";
+      inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs-unstable-small";
+      };
+    };
   };
-
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./flake-modules;
 }

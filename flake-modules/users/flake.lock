@@ -618,6 +618,7 @@
         "spicetify-nix": "spicetify-nix",
         "stylix": "stylix",
         "users-devenv": "users-devenv",
+        "users-flake-file": "users-flake-file",
         "users-flake-parts": "users-flake-parts",
         "users-flake-utils": "users-flake-utils",
         "users-nixpkgs": "users-nixpkgs",
@@ -814,6 +815,21 @@
       "original": {
         "owner": "cachix",
         "repo": "devenv",
+        "type": "github"
+      }
+    },
+    "users-flake-file": {
+      "locked": {
+        "lastModified": 1791311177,
+        "narHash": "sha256-5ShQ10Jlfmge8emgwENj/1/2OXl8hN6mre05ZwxSkE8=",
+        "owner": "denful",
+        "repo": "flake-file",
+        "rev": "ef875de213a2f093ecb351c1e764797baa98e044",
+        "type": "github"
+      },
+      "original": {
+        "owner": "denful",
+        "repo": "flake-file",
         "type": "github"
       }
     },
