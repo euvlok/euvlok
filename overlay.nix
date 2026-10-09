@@ -25,6 +25,23 @@ let
       package;
 
   packageFixesOverlay = _final: prev: {
+    pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+      (_pythonFinal: pythonPrev: {
+        anyio =
+          if pythonPrev.anyio.version == "4.14.2" then
+            pythonPrev.anyio.overridePythonAttrs (old: {
+              # Preserve server-side wrapping when Python rejects client-only
+              # hostnames, including Python 3.12.15, 3.13.16, and 3.14.8
+              postPatch = (old.postPatch or "") + ''
+                substituteInPlace src/anyio/streams/tls.py \
+                  --replace-fail 'if hostname is not None:' \
+                  'if hostname is not None and not server_side:'
+              '';
+            })
+          else
+            pythonPrev.anyio;
+      })
+    ];
     cudaPackages = prev.cudaPackages.overrideScope (
       _cudaFinal: cudaPrev: builtins.mapAttrs (_: fixCudaOutputPropagation) cudaPrev
     );
