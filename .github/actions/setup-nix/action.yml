@@ -31,8 +31,7 @@ runs:
   using: composite
   steps:
     - name: Install Nix
-      # v3.23.1
-      uses: DeterminateSystems/determinate-nix-action@d0c908e6cbe9f89f36ed8205a3ab6f092636916a
+      uses: DeterminateSystems/determinate-nix-action@d0c908e6cbe9f89f36ed8205a3ab6f092636916a # v3.23.1
       with:
         github-token: ${{ inputs.github-token }}
         source-tag: v3.23.1
@@ -47,8 +46,7 @@ runs:
       # Read-only consumers may fall back to building locally, but builders
       # that promise to populate Cachix must stop if upload setup fails.
       continue-on-error: ${{ inputs.cachix-skip-push == 'true' }}
-      # v17
-      uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866
+      uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
       with:
         name: ${{ inputs.cachix-cache }}
         extraPullNames: ${{ inputs.extra-cachix-caches }}

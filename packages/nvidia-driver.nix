@@ -6,6 +6,7 @@
   stdenvNoCC,
 }:
 let
+  # renovate: datasource=github-tags depName=nvidia-driver packageName=NVIDIA/open-gpu-kernel-modules
   version = "615.71.09";
 
   src = fetchurl {

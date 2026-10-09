@@ -15,6 +15,7 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "linux-rt-upscaler";
+  # renovate: datasource=github-releases depName=linux-rt-upscaler packageName=baronsmv/linux-rt-upscaler
   version = "1.1.4";
   pyproject = true;
 

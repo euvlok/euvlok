@@ -45,14 +45,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout repository
-        # v7.0.1
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Install Bun
-        # v2.2.0
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.4.2
 
@@ -89,8 +87,7 @@ jobs:
             "$RUNNER_TEMP/userstyles-output/manifest.json" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload build artifacts
-        # v7.0.2
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: catppuccin-userstyles
           path: ${{ runner.temp }}/userstyles-output/
@@ -109,8 +106,7 @@ jobs:
       contents: write # Create the rolling release and replace its generated assets
     steps:
       - name: Download build artifacts
-        # v8.0.2
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: catppuccin-userstyles
           path: ${{ runner.temp }}/userstyles-output

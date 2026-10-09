@@ -110,8 +110,7 @@ runs:
       run: sudo install -d -m 0770 -o root -g nixbld /var/cache/ccache
 
     - name: Install Bun
-      # v2.2.0
-      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       with:
         bun-version: 1.4.2
 

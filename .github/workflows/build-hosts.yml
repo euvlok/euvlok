@@ -56,14 +56,13 @@ jobs:
         run: echo "epoch=$(date +%s)" >>"${GITHUB_OUTPUT}"
 
       - name: Checkout repository
-        # v7.0.1
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Reclaim maximum Nix store space
         # euvlok fork: pin transitive actions and optimize Holster storage.
-        uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9
+        uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9 # main
         with:
           hatchet-protocol: rampage
 

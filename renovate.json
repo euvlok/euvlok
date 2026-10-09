@@ -1,20 +1,186 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices", "group:all"],
+  "extends": ["config:best-practices"],
   "timezone": "Europe/Sofia",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency maintenance",
+  "enabledManagers": ["nix", "bun", "github-actions", "custom.regex"],
+  "ignorePaths": ["**/node_modules/**", "**/.devenv/**", "**/.host-base/**"],
   "automerge": true,
-  "automergeType": "branch",
-  "branchConcurrentLimit": 1,
+  "automergeType": "pr",
+  "platformAutomerge": false,
+  "prCreation": "immediate",
+  "branchConcurrentLimit": 4,
+  "prConcurrentLimit": 4,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "behind-base-branch",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "deps:",
   "commitBodyTable": true,
-  "dependencyDashboard": false,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "automerge": true,
-    "schedule": ["* 0-5 1 * *"]
-  },
   "nix": {
     "enabled": true
   },
-  "platformAutomerge": false,
-  "prCreation": "status-success"
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 0-5 * * 1"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track package versions; refresh fixed-output hashes before committing",
+      "managerFilePatterns": [
+        "/^packages\\/(linux-rt-upscaler|lsfg-vk|nvidia-driver)\\.nix$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[^ ]+) depName=(?<depName>[^ ]+) packageName=(?<packageName>[^\\s]+)\\s+version = \"(?<currentValue>[^\"]+)\";"
+      ],
+      "versioningTemplate": "semver-coerced",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the GTK theme branch and refresh its source hash",
+      "managerFilePatterns": ["/^packages\\/catppuccin-gtk\\.nix$/"],
+      "matchStrings": [
+        "repo = \"Catppuccin-GTK-Theme\";\\s+rev = \"(?<currentDigest>[a-f0-9]{40})\";"
+      ],
+      "depNameTemplate": "catppuccin-gtk",
+      "packageNameTemplate": "https://github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme",
+      "datasourceTemplate": "git-refs",
+      "versioningTemplate": "git",
+      "currentValueTemplate": "HEAD"
+    },
+    {
+      "customType": "regex",
+      "description": "Keep the exact FlakeHub release and the CI installer on the same Determinate version",
+      "managerFilePatterns": [
+        "/^flake-modules\\/inputs\\/core\\.nix$/",
+        "/^\\.github\\/actions\\/setup-nix\\/action\\.yml$/"
+      ],
+      "matchStrings": [
+        "https://flakehub\\.com/f/DeterminateSystems/determinate/=(?<currentValue>[0-9.]+)",
+        "source-tag: v(?<currentValue>[0-9.]+)"
+      ],
+      "depNameTemplate": "Determinate Nix",
+      "packageNameTemplate": "DeterminateSystems/determinate",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)$",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Refresh shared flake inputs and the development environment weekly",
+      "matchManagers": ["nix"],
+      "matchFileNames": ["flake.nix"],
+      "groupName": "shared flake inputs",
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts flake"],
+        "fileFilters": ["flake.lock", "devenv.lock"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "description": "Keep contributor inputs separate from shared inputs",
+      "matchManagers": ["nix"],
+      "matchFileNames": ["flake-modules/users/flake.nix"],
+      "groupName": "contributor flake inputs"
+    },
+    {
+      "description": "Group compatible action updates while preserving immutable commit pins",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action", "workflow"],
+      "matchUpdateTypes": ["digest", "pin", "patch", "minor"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Update Bun and its typings together across the workspace and CI",
+      "matchPackageNames": ["bun", "@types/bun"],
+      "groupName": "Bun runtime and types"
+    },
+    {
+      "description": "Update shared developer tools together",
+      "matchManagers": ["bun"],
+      "matchPackageNames": ["@biomejs/biome", "prettier", "typescript"],
+      "matchUpdateTypes": ["patch", "minor", "digest", "pin"],
+      "groupName": "TypeScript tooling"
+    },
+    {
+      "description": "Keep compatible Renovate runner dependency updates together",
+      "matchManagers": ["bun"],
+      "matchFileNames": [".github/renovate/package.json"],
+      "matchUpdateTypes": ["patch", "minor", "digest", "pin"],
+      "groupName": "Renovate runner"
+    },
+    {
+      "description": "Maintain the shared Bun workspace lock weekly",
+      "matchManagers": ["bun"],
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "groupName": "Bun workspace lock file"
+    },
+    {
+      "description": "Keep Determinate runtime, flake lock, and installer action together",
+      "matchPackageNames": [
+        "DeterminateSystems/determinate",
+        "DeterminateSystems/determinate-nix-action"
+      ],
+      "groupName": "Determinate Nix",
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts determinate"],
+        "fileFilters": [
+          "flake-modules/inputs/core.nix",
+          "flake.nix",
+          "flake-modules/users/flake.nix",
+          "flake.lock"
+        ],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["linux-rt-upscaler"],
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts linux-rt-upscaler"],
+        "fileFilters": ["packages/linux-rt-upscaler.nix"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["lsfg-vk"],
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts lsfg-vk"],
+        "fileFilters": ["packages/lsfg-vk.nix"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["nvidia-driver"],
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts nvidia-driver"],
+        "fileFilters": ["packages/nvidia-driver.nix"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["catppuccin-gtk"],
+      "postUpgradeTasks": {
+        "commands": ["euvlokRenovatePostUpgrade.ts catppuccin-gtk"],
+        "fileFilters": ["packages/catppuccin-gtk.nix"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "description": "Leave breaking releases visible for review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "description": "Driver and patched theme updates need human review after hash refresh",
+      "matchDepNames": ["nvidia-driver", "catppuccin-gtk"],
+      "automerge": false
+    }
+  ]
 }

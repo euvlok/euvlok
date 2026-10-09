@@ -13,5 +13,10 @@
     "types": ["bun"],
     "verbatimModuleSyntax": true
   },
-  "include": ["build.ts", "build.test.ts", "triage.ts"]
+  "include": [
+    "build.ts",
+    "build.test.ts",
+    "triage.ts",
+    "../../renovate/postUpgrade.ts"
+  ]
 }

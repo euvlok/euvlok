@@ -12,6 +12,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "lsfg-vk";
+  # renovate: datasource=git-tags depName=lsfg-vk packageName=https://git.lsfg-vk.dev/lsfg-vk.git
   version = "2.0.0";
 
   src = fetchzip {
