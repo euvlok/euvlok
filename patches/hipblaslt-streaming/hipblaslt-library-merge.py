@@ -14,6 +14,8 @@ def main():
     args.destination.mkdir(parents=True, exist_ok=True)
     mapping_name = "TensileLiteLibrary_lazy_Mapping.dat"
     combined_mapping = {}
+    # CMake rebuilds these shared outputs for all requested architectures
+    shared_outputs = {"hipblasltExtOpLibrary.dat", "hipblasltTransform.hsaco"}
 
     for library in args.libraries:
         architecture, source_name = library.split("=", 1)
@@ -33,7 +35,10 @@ def main():
         combined_mapping.update(mapping)
 
         for file in sorted(source.iterdir()):
-            if file.name in (mapping_name, ".tensile-solution-index"):
+            if file.name in shared_outputs or file.name in (
+                mapping_name,
+                ".tensile-solution-index",
+            ):
                 continue
             if not file.is_file():
                 raise ValueError(f"Unexpected library entry: {file}")
