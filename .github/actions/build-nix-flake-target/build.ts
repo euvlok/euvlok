@@ -670,6 +670,27 @@ function transientFailure(output: string): TransientFailure | undefined {
   return TRANSIENT_FAILURES.find(({ pattern }) => pattern.test(output));
 }
 
+export function failedPackageOutput(output: string, failedDrv: string): string {
+  const failedName = derivationName(failedDrv);
+  if (!failedName) {
+    return output;
+  }
+  const failedPackage = failedName.replace(/-[^a-z].*$/iu, "");
+
+  // Match Nix's versionless builder label to exclude other packages' warnings
+  return output
+    .split("\n")
+    .filter((line) => {
+      const packageName = /^([^\s>]+)>/u.exec(line)?.[1];
+      return (
+        !packageName ||
+        failedName === packageName ||
+        failedPackage === packageName
+      );
+    })
+    .join("\n");
+}
+
 // The macOS test assumes its outgoing chunk fills the OS buffer and can hang
 // https://github.com/twisted/twisted/issues/12151
 export function isKnownDarwinTwistedTcpTimeout(
@@ -810,7 +831,9 @@ async function classifyBuild(build: BuildExecution): Promise<BuildResult> {
     hydraFailure: failedDrv ? await exactHydraFailure([failedDrv]) : null,
     output: build.output,
     system: runtime.CONFIGURATION_SYSTEM,
-    transientFailure: transientFailure(build.output),
+    transientFailure: transientFailure(
+      failedPackageOutput(build.output, failedDrv),
+    ),
   };
   const rule = FAILURE_RULES.find(({ matches }) => matches(context));
   if (!rule) {
