@@ -40,6 +40,22 @@ let
             })
           else
             pythonPrev.anyio;
+        black =
+          if
+            prev.stdenv.hostPlatform.isDarwin
+            && pythonPrev.black.version == "26.5.1"
+            && pythonPrev.pytest.version == "9.1.1"
+          then
+            pythonPrev.black.override {
+              pytestCheckHook = pythonPrev.pytestCheckHook.override {
+                pytest = pythonPrev.pytest.overridePythonAttrs (old: {
+                  # Close pytest's cleanup iterator if traversal ends early
+                  patches = (old.patches or [ ]) ++ [ ./patches/pytest-scandir/pytest-scandir.patch ];
+                });
+              };
+            }
+          else
+            pythonPrev.black;
       })
     ];
     cudaPackages = prev.cudaPackages.overrideScope (

@@ -1,0 +1,16 @@
+diff --git a/src/_pytest/pathlib.py b/src/_pytest/pathlib.py
+--- a/src/_pytest/pathlib.py
++++ b/src/_pytest/pathlib.py
+@@ -172,8 +172,9 @@
+ def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+     """Find all elements in root that begin with the prefix, case-insensitive."""
+     l_prefix = prefix.lower()
+-    for x in os.scandir(root):
+-        if x.name.lower().startswith(l_prefix):
+-            yield x
++    with os.scandir(root) as entries:
++        for x in entries:
++            if x.name.lower().startswith(l_prefix):
++                yield x
+ 
+ 
