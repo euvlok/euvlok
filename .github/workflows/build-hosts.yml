@@ -60,6 +60,23 @@ jobs:
         with:
           persist-credentials: false
 
+      # Give store-built Nix the namespace permissions its sandbox requires
+      - name: Allow Nix user namespaces
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          if [[ "$(cat /sys/module/apparmor/parameters/enabled 2>/dev/null)" != Y ]]; then
+            exit 0
+          fi
+
+          sudo tee /etc/apparmor.d/ci-nix-userns >/dev/null <<'PROFILE'
+          abi <abi/4.0>,
+          profile ci-nix-userns /nix/store/*/bin/nix flags=(unconfined) {
+            userns,
+          }
+          PROFILE
+          sudo apparmor_parser --replace /etc/apparmor.d/ci-nix-userns
+
       - name: Reclaim maximum Nix store space
         # euvlok fork: pin transitive actions and optimize Holster storage.
         uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9 # main
