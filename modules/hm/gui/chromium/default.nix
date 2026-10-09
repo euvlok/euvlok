@@ -86,21 +86,26 @@ let
       };
   browserProfileRoot = browserProfileRoots.${cfg.browser};
 
-  chromiumCommandLineArgs = [
-    # Debug
-    "--enable-logging=stderr"
-    "--enable-features=${lib.strings.concatStringsSep "," chromiumFeatures}"
-  ]
-  ++ lib.lists.optional (
-    chromiumDisabledFeatures != [ ]
-  ) "--disable-features=${lib.strings.concatStringsSep "," chromiumDisabledFeatures}"
-  ++ lib.lists.optionals isLinux [
-    "--ignore-gpu-blocklist"
+  chromiumCommandLineArgs = lib.cli.toCommandLineGNU { } {
+    enable-logging = "stderr";
+    enable-features = lib.strings.concatStringsSep "," chromiumFeatures;
+    disable-features =
+      if chromiumDisabledFeatures == [ ] then
+        null
+      else
+        lib.strings.concatStringsSep "," chromiumDisabledFeatures;
+    ignore-gpu-blocklist = isLinux;
+    enable-wayland-ime = isLinux;
+    wayland-text-input-version = if isLinux then 3 else null;
+  };
 
-    # Wayland
-    "--enable-wayland-ime"
-    "--wayland-text-input-version=3"
-  ];
+  extensionType = lib.types.submodule {
+    freeformType = (pkgs.formats.json { }).type;
+    options.id = lib.options.mkOption {
+      type = lib.types.strMatching "[a-p]{32}";
+      description = "The Chromium extension ID, consisting of 32 letters from a to p.";
+    };
+  };
 
   browserSettings = {
     name = cfg.browser;
@@ -160,7 +165,10 @@ in
     };
 
     extraExtensions = lib.options.mkOption {
-      type = lib.types.attrsOf (lib.types.listOf lib.types.attrs);
+      type = lib.types.attrsWith {
+        placeholder = "source";
+        elemType = lib.types.listOf extensionType;
+      };
       default = { };
       description = "Extra 4evy/browser extension catalog entries to append to the base catalog.";
       example = lib.options.literalExpression ''
@@ -185,6 +193,20 @@ in
   imports = [ euvlokInputs.browser.homeModules.default ];
 
   config = lib.modules.mkIf cfg.enable {
+    euvlok.home.chromium.extraExtensions.chrome_store =
+      lib.modules.mkIf
+        (
+          (config.euvlok.home.codex.enable or false)
+          && (config.euvlok.home.codex.desktop.enable or false)
+          && (config.euvlok.home.codex.desktop.helium.enable or false)
+          && (config.programs.codex.settings.plugins."chrome@euvlok-chatgpt-bundled".enabled or false)
+        )
+        [
+          {
+            id = "hehggadaopoacecdllhhajmbjkdcmajg";
+            name = "ChatGPT";
+          }
+        ];
     assertions = [
       {
         assertion = isLinux || isDarwin;
