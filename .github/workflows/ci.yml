@@ -114,7 +114,13 @@ jobs:
 
       - name: Run build helper tests
         working-directory: .github/actions/build-nix-flake-target
-        run: bun run test
+        run: |
+          # Fixtures exercise annotation logging; keep their commands as plain
+          # test output while preserving the test process's exit status
+          stop_token="$(uuidgen)"
+          echo "::stop-commands::${stop_token}"
+          trap 'echo "::${stop_token}::"' EXIT
+          bun run test
 
       - name: Verify bundle generation
         working-directory: .github/actions/build-nix-flake-target
