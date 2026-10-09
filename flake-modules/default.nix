@@ -83,6 +83,8 @@ let
         }) output
       );
   };
+  packagesModule = flake-parts-lib.importApply ./packages.nix { providerInputs = inputs; };
+
   # Keep the project module importable as `flakeModules.default` as well as
   # using it to build this flake. Its own flake-parts extensions are included
   # so consumers do not have to rediscover those implementation details. Use
@@ -99,8 +101,7 @@ let
       })
       (flake-parts-lib.importApply ./modules.nix { inherit inputs; })
       (flake-parts-lib.importApply ./overlays.nix { inherit inputs supportedSystems; })
-      ./packages.nix
-      (flake-parts-lib.importApply ./tests.nix { providerInputs = inputs; })
+      packagesModule
     ];
   };
 in
@@ -111,13 +112,19 @@ in
     inputs.flake-parts.flakeModules.touchup
     euvlokModule
     ./inputs
+    (flake-parts-lib.importApply ./tests.nix { providerInputs = inputs; })
   ];
 
   systems = supportedSystems;
 
   perSystem =
-    { pkgs, ... }:
+    { pkgs, system, ... }:
     {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
       formatter = pkgs.nixfmt-tree;
     };
 
@@ -149,7 +156,10 @@ in
   };
 
   flake = {
-    flakeModules.default = euvlokModule;
+    flakeModules = {
+      default = euvlokModule;
+      packages = packagesModule;
+    };
 
     schemas = inputs.flake-schemas.schemas // {
       flakeModules = mkValueSchema "Importable flake-parts modules." "flake-parts module" isModule;

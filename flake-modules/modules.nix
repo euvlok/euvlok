@@ -31,16 +31,13 @@ let
 in
 {
   config.flake = {
-    # Feed raw modules to each output. flake-parts, Home Manager, and the
-    # flake.modules extension add their own source/class wrapper where needed.
+    # flake.modules owns the class/location wrappers and merges additions
+    # made by downstream flake modules
     modules = moduleCatalogs;
 
-    # Conventional aliases for external consumers and internal hosts/**/*.nix.
-    nixosModules = moduleCatalogs.nixos;
-    # nix-darwin does not declare a typed `darwinModules` flake-parts option.
-    # Reuse the class/location wrapper from `flake.modules` for this conventional
-    # alias instead of publishing the raw catalog.
+    # Conventional aliases reuse the merged catalogs for consumers and hosts
+    nixosModules = config.flake.modules.nixos;
     darwinModules = config.flake.modules.darwin;
-    homeModules = moduleCatalogs.homeManager;
+    homeModules = config.flake.modules.homeManager;
   };
 }

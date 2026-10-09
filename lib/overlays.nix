@@ -5,6 +5,7 @@
       hostPlatform ? null,
       buildPlatform ? hostPlatform,
       unstableSource ? inputs.nixpkgs-unstable-small,
+      localPackagesOverlay ? inputs.self.overlays.packages,
     }:
     import ../overlay.nix {
       inherit
@@ -12,6 +13,7 @@
         hostPlatform
         buildPlatform
         unstableSource
+        localPackagesOverlay
         ;
     };
 }

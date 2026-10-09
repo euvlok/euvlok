@@ -5,6 +5,7 @@
 {
   config,
   lib,
+  flake-parts-lib,
   ...
 }:
 let
@@ -114,12 +115,19 @@ let
   hostChecks =
     lib.attrsets.mapAttrs (_: build: build.drvPath) nixosBuilds
     // lib.attrsets.mapAttrs (_: host: host.system.drvPath) darwinConfigurations;
-
-  hostChecksBySystem = lib.attrsets.genAttrs supportedSystems (
-    system: lib.attrsets.filterAttrs (name: _: hostSpecs.${name}.system == system) hostChecks
-  );
 in
 {
+  imports = [
+    (flake-parts-lib.mkTransposedPerSystemModule {
+      name = "hostChecksBySystem";
+      file = ./hosts.nix;
+      option = lib.options.mkOption {
+        type = lib.types.lazyAttrsOf lib.types.str;
+        default = { };
+        description = "Native host derivation paths used for CI change detection.";
+      };
+    })
+  ];
 
   options.euvlok.hosts = lib.options.mkOption {
     type = lib.types.attrsOf hostType;
@@ -127,11 +135,16 @@ in
     description = "Typed inventory of all NixOS and nix-darwin machines.";
   };
 
+  config.perSystem = { system, ... }: {
+    hostChecksBySystem = lib.attrsets.filterAttrs (
+      name: _: hostSpecs.${name}.system == system
+    ) hostChecks;
+  };
+
   config.flake = {
     inherit
       darwinConfigurations
       hostChecks
-      hostChecksBySystem
       hostMetadata
       nixosBuilds
       nixosConfigurations

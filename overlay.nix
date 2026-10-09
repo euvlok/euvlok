@@ -3,6 +3,7 @@
   hostPlatform ? null,
   buildPlatform ? hostPlatform,
   unstableSource ? inputs.nixpkgs-unstable-small,
+  localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let
   fixCudaOutputPropagation =
@@ -96,21 +97,6 @@ let
     {
       eupkgs = scoped;
     };
-
-  localPackagesOverlay = final: _prev: {
-    catppuccin-gtk-fausto = final.callPackage ./packages/catppuccin-gtk.nix { };
-    catppuccin-userstyles = final.callPackage ./packages/catppuccin-userstyles { };
-    euvlokVscodeExtensions =
-      { version, extensions }:
-      import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {
-        inherit extensions version;
-        pkgs = final.unstable;
-      };
-    linux-rt-upscaler = final.callPackage ./packages/linux-rt-upscaler.nix { };
-    lsfg-vk = final.callPackage ./packages/lsfg-vk.nix { };
-    nvidia-driver = final.callPackage ./packages/nvidia-driver.nix { };
-    nvidia-prefetch = final.callPackage ./packages/nvidia-prefetch.nix { };
-  };
 in
 inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   # Establish the independent package sets before overlays that inspect or
@@ -120,5 +106,13 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   eupkgsOverlay
   packageFixesOverlay
   localPackagesOverlay
+  (final: _prev: {
+    euvlokVscodeExtensions =
+      { version, extensions }:
+      import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {
+        inherit extensions version;
+        pkgs = final.unstable;
+      };
+  })
   inputs.nix4vscode.overlays.default
 ]
