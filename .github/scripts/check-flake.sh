@@ -51,10 +51,12 @@ PY
 
 printf 'null\n' >"${check_dir}/selection.json"
 echo '::group::Shared flake outputs'
-nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-  flake check "path:${check_dir}" --all-systems --no-build
+# Run writable evaluation first so partition inputs exist in the store before
+# --no-build switches evaluation to read-only mode
 nix --extra-experimental-features parallel-eval --option eval-cores 1 \
   flake check "path:${check_dir}"
+nix --extra-experimental-features parallel-eval --option eval-cores 1 \
+  flake check "path:${check_dir}" --all-systems --no-build
 echo '::endgroup::'
 
 host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
