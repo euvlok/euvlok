@@ -334,24 +334,27 @@ async function mirrorAndCapture(
   return appendCapture(captured, decoder.decode());
 }
 
-async function runCommand(command: string[]): Promise<CommandResult> {
+function capturedCommand(command: string[]) {
   const processHandle = Bun.spawn(command, {
     env: process.env,
     stderr: "pipe",
     stdout: "pipe",
   });
-  const [exitCode, stdout, stderr] = await Promise.all([
+  const result = Promise.all([
     processHandle.exited,
     mirrorAndCapture(processHandle.stdout, process.stdout),
     mirrorAndCapture(processHandle.stderr, process.stderr),
-  ]);
-
-  return {
+  ]).then(([exitCode, stdout, stderr]): CommandResult => ({
     exitCode,
     output: appendCapture(stdout, `\n${stderr}`),
     stderr,
     stdout,
-  };
+  }));
+  return { processHandle, result };
+}
+
+async function runCommand(command: string[]): Promise<CommandResult> {
+  return capturedCommand(command).result;
 }
 
 function writeResult(result: BuildResult): void {
@@ -385,16 +388,24 @@ export function derivationName(drvPath: string): string | null {
   return result.output.slice(nameStart, -".drv".length);
 }
 
-export function plannedDerivations(output: string): string[] {
-  const drvPaths = Array.from(
-    output.matchAll(DERIVATION_PATH_IN_TEXT_PATTERN),
-    (match) => match.groups?.drvPath,
-  ).flatMap((drvPath) => {
-    const result = v.safeParse(DerivationPathSchema, drvPath);
+function validDerivationPaths(paths: Iterable<string | undefined>): string[] {
+  return Array.from(paths).flatMap((path) => {
+    const result = v.safeParse(DerivationPathSchema, path);
     return result.success ? [result.output] : [];
   });
+}
 
-  return [...new Set(drvPaths)];
+export function plannedDerivations(output: string): string[] {
+  return [
+    ...new Set(
+      validDerivationPaths(
+        Array.from(
+          output.matchAll(DERIVATION_PATH_IN_TEXT_PATTERN),
+          (match) => match.groups?.drvPath,
+        ),
+      ),
+    ),
+  ];
 }
 
 function parseHydraBuildId(href: string | null): string {
@@ -623,26 +634,24 @@ export async function exactHydraFailure(
 }
 
 export function failedDerivation(output: string): string {
-  for (const pattern of DIRECT_FAILURE_PATTERNS) {
-    const drvPath = output.match(pattern)?.groups?.drvPath;
-    const result = v.safeParse(DerivationPathSchema, drvPath);
-    if (result.success) {
-      return result.output;
-    }
-  }
-  return "";
+  return (
+    validDerivationPaths(
+      DIRECT_FAILURE_PATTERNS.map(
+        (pattern) => output.match(pattern)?.groups?.drvPath,
+      ),
+    )[0] ?? ""
+  );
 }
 
 export function lastBuildingDerivation(output: string): string {
-  const drvPaths = Array.from(
-    output.matchAll(BUILDING_DERIVATION_PATTERN),
-    (match) => match.groups?.drvPath,
-  ).flatMap((drvPath) => {
-    const result = v.safeParse(DerivationPathSchema, drvPath);
-    return result.success ? [result.output] : [];
-  });
-
-  return drvPaths.at(-1) ?? "";
+  return (
+    validDerivationPaths(
+      Array.from(
+        output.matchAll(BUILDING_DERIVATION_PATTERN),
+        (match) => match.groups?.drvPath,
+      ),
+    ).at(-1) ?? ""
+  );
 }
 
 function transientFailure(output: string): TransientFailure | undefined {
@@ -658,21 +667,13 @@ async function runBuild(targetDrv: string): Promise<BuildExecution> {
     "nix",
     "build",
     "--print-build-logs",
-    "--option",
-    "max-jobs",
-    String(runtime.BUILD_MAX_JOBS),
-    "--option",
-    "cores",
-    String(runtime.BUILD_CORES),
+    ...Object.entries({
+      "max-jobs": runtime.BUILD_MAX_JOBS,
+      cores: runtime.BUILD_CORES,
+    }).flatMap(([name, value]) => ["--option", name, String(value)]),
     `${targetDrv}^*`,
   ];
-  const processHandle = Bun.spawn(command, {
-    env: process.env,
-    stderr: "pipe",
-    stdout: "pipe",
-  });
-  const stdout = mirrorAndCapture(processHandle.stdout, process.stdout);
-  const stderr = mirrorAndCapture(processHandle.stderr, process.stderr);
+  const { processHandle, result } = capturedCommand(command);
   const startSeconds =
     runtime.BUILD_STARTED_AT_EPOCH ?? Math.floor(Date.now() / 1000);
   const remainingMilliseconds = Math.max(
@@ -708,18 +709,10 @@ async function runBuild(targetDrv: string): Promise<BuildExecution> {
     clearTimeout(timeoutHandle);
   }
 
-  const [processExitCode, stdoutText, stderrText] = await Promise.all([
-    processHandle.exited,
-    stdout,
-    stderr,
-  ]);
-  const output = stripVTControlCharacters(
-    appendCapture(stdoutText, `\n${stderrText}`),
-  );
-
+  const completed = await result;
   return {
-    exitCode: timedOut ? 124 : processExitCode,
-    output,
+    exitCode: timedOut ? 124 : completed.exitCode,
+    output: stripVTControlCharacters(completed.output),
     timedOut,
   };
 }

@@ -248,8 +248,7 @@ async function main(): Promise<void> {
     logLevel: "off",
     fetch: (url, init) => fetch(url, { ...init, redirect: "error" }),
   });
-  const classified = [];
-  for (const path of paths) {
+  const classified = await Array.fromAsync(paths, async (path) => {
     const file = Bun.file(path);
     if (!(await file.exists())) {
       throw new Error(`Log file does not exist: ${path}`);
@@ -286,7 +285,7 @@ async function main(): Promise<void> {
     })
       .filter(([, required]) => required)
       .map(([reason]) => reason);
-    classified.push({
+    return {
       path,
       model,
       cause,
@@ -300,8 +299,8 @@ async function main(): Promise<void> {
         evidence.choice === "direct cause shown"
           ? CAUSE.options[cause.choice].nextStep
           : CAUSE.options["other or unclear"].nextStep,
-    });
-  }
+    };
+  });
   console.log(
     JSON.stringify(
       {
@@ -323,13 +322,18 @@ async function main(): Promise<void> {
       );
     for (const result of classified) {
       core.summary
-        .addList([
-          `Cause: ${result.cause.choice}`,
-          `Cause confidence: ${result.cause.confidence === null ? "unscored" : `${Math.round(result.cause.confidence * 100)}%`}`,
-          `Evidence: ${result.evidence.choice}`,
-          `Review required: ${result.reviewRequired}`,
-          `Next investigation: ${result.nextStep}`,
-        ])
+        .addList(
+          Object.entries({
+            Cause: result.cause.choice,
+            "Cause confidence":
+              result.cause.confidence === null
+                ? "unscored"
+                : `${Math.round(result.cause.confidence * 100)}%`,
+            Evidence: result.evidence.choice,
+            "Review required": result.reviewRequired,
+            "Next investigation": result.nextStep,
+          }).map(([label, value]) => `${label}: ${value}`),
+        )
         .addCodeBlock(JSON.stringify(result, null, 2), "json");
       if (result.hydraLogUrl) {
         core.summary.addLink("Upstream Hydra log", result.hydraLogUrl).addEOL();
