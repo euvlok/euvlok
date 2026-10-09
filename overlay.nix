@@ -25,6 +25,81 @@ let
       package;
 
   packageFixesOverlay = _final: prev: {
+    rocmPackages = prev.rocmPackages.overrideScope (
+      _rocmFinal: rocmPrev: {
+        hipblaslt =
+          if rocmPrev.hipblaslt.version == "7.2.3" then
+            let
+              lib = inputs.nixpkgs.lib;
+              targets = lib.sort builtins.lessThan (
+                lib.intersectLists (rocmPrev.clr.localGpuTargets or rocmPrev.clr.gpuTargets) [
+                  "gfx908"
+                  "gfx90a"
+                  "gfx942"
+                  "gfx950"
+                  "gfx1100"
+                  "gfx1101"
+                  "gfx1150"
+                  "gfx1151"
+                  "gfx1200"
+                  "gfx1201"
+                ]
+              );
+              base = rocmPrev.hipblaslt.overrideAttrs (old: {
+                patches = (old.patches or [ ]) ++ [
+                  ./patches/hipblaslt-streaming/hipblaslt-streaming.patch
+                ];
+              });
+              # Carry the next solution index between cached architecture builds
+              deviceLibraries =
+                (lib.foldl'
+                  (
+                    state: target:
+                    let
+                      package = (base.override { gpuTargets = [ target ]; }).overrideAttrs (old: {
+                        outputs = old.outputs ++ [ "device" ];
+                        env =
+                          (old.env or { })
+                          // {
+                            TENSILE_RECORD_SOLUTION_INDEX = "1";
+                          }
+                          // lib.optionalAttrs (state.previous != null) {
+                            TENSILE_SOLUTION_INDEX_START_FILE = "${state.previous}/.tensile-solution-index";
+                          };
+                        postInstall = (old.postInstall or "") + ''
+                          mkdir -p "$device"
+                          cp -r Tensile/library/. "$device/"
+                        '';
+                      });
+                    in
+                    {
+                      previous = package.device;
+                      libraries = state.libraries ++ [ "${target}=${package.device}" ];
+                    }
+                  )
+                  {
+                    previous = null;
+                    libraries = [ ];
+                  }
+                  targets
+                ).libraries;
+            in
+            if builtins.length targets <= 1 then
+              base
+            else
+              base.overrideAttrs (old: {
+                # Cache each architecture separately instead of retaining all
+                # ten parsed libraries in one process on the hosted runner
+                preBuild = (old.preBuild or "") + ''
+                  python3 ${./patches/hipblaslt-streaming/hipblaslt-library-merge.py} \
+                    Tensile/library ${lib.escapeShellArgs deviceLibraries}
+                  touch device-library/Tensile.stamp
+                '';
+              })
+          else
+            rocmPrev.hipblaslt;
+      }
+    );
     pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
       (_pythonFinal: pythonPrev: {
         anyio =

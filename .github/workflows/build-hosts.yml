@@ -65,6 +65,17 @@ jobs:
         uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9 # main
         with:
           hatchet-protocol: rampage
+          root-safe-haven: ${{ matrix.name == 'unsigned-int64' && '24576' || '2048' }}
+
+      - name: Add swap for Tensile generation
+        if: matrix.name == 'unsigned-int64'
+        shell: bash
+        run: |
+          sudo fallocate -l 16G /ci-tensile-swapfile
+          sudo chmod 600 /ci-tensile-swapfile
+          sudo mkswap /ci-tensile-swapfile
+          sudo swapon /ci-tensile-swapfile
+          free -h
 
       - name: Build and cache configuration
         id: build
@@ -81,8 +92,7 @@ jobs:
           cachix-skip-push: false
           github-token: ${{ github.token }}
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
-          # Tensile workers consume several GiB each on the int64 configuration
-          # Keep generation within the hosted runner's 16 GiB memory budget
+          # Bound compiler and kernel-generation workers for the hosted runner
           build-cores: ${{ matrix.name == 'unsigned-int64' && '2' || '0' }}
 
       - name: Dispatch isolated retry

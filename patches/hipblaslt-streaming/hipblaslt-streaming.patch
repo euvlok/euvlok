@@ -1,0 +1,60 @@
+diff --git a/tensilelite/Tensile/Common/Parallel.py b/tensilelite/Tensile/Common/Parallel.py
+--- a/tensilelite/Tensile/Common/Parallel.py
++++ b/tensilelite/Tensile/Common/Parallel.py
+@@ -195,6 +195,8 @@
+     from .GlobalParameters import globalParameters
+ 
+     threadCount = CPUThreadCount(enable)
++    if maxWorkers > 0:
++        threadCount = min(maxWorkers, threadCount)
+ 
+     if not hasattr(objects, "__len__"):
+         objects = list(objects)
+@@ -218,11 +220,8 @@
+     print(f"ParallelMap {message}{extra_message}")
+ 
+     if threadCount <= 1:
+-        result = [f(x) for x in objects]
+-        return result if return_as == "list" else iter(result)
+-
+-    if maxWorkers > 0:
+-        threadCount = min(maxWorkers, threadCount)
++        result = map(f, objects)
++        return list(result) if return_as == "list" else result
+ 
+     chunksize = max(minChunkSize, objLen // 2000)
+     worker = partial(worker_function, function=function, multiArg=multiArg)
+diff --git a/tensilelite/Tensile/TensileCreateLibrary/Run.py b/tensilelite/Tensile/TensileCreateLibrary/Run.py
+--- a/tensilelite/Tensile/TensileCreateLibrary/Run.py
++++ b/tensilelite/Tensile/TensileCreateLibrary/Run.py
+@@ -604,7 +604,7 @@
+         parseLogicFn, logicFiles, "Loading Logics...",
+         return_as="generator_unordered",
+         minChunkSize=24,
+-        maxWorkers=32,
++        maxWorkers=1,
+         maxtasksperchild=1,
+         multiArg=False,
+     ):
+@@ -623,7 +623,8 @@
+     gc.collect()
+ 
+     # Sort masterLibraries to make global soln index values deterministic
+-    solnReIndex = 0
++    indexStartFile = os.environ.get("TENSILE_SOLUTION_INDEX_START_FILE")
++    solnReIndex = int(Path(indexStartFile).read_text()) if indexStartFile else 0
+     masterLibraries = dict(sorted(masterLibraries.items()))
+     for _, masterLibrary in masterLibraries.items():
+         for _, sol in masterLibrary.solutions.items():
+@@ -641,6 +642,11 @@
+                 sol.index = solnReIndex
+                 solnReIndex += 1
+ 
++    if os.environ.get("TENSILE_RECORD_SOLUTION_INDEX") == "1":
++        indexPath = Path(args["OutputPath"]) / "library" / ".tensile-solution-index"
++        indexPath.parent.mkdir(parents=True, exist_ok=True)
++        indexPath.write_text(str(solnReIndex))
++
+     if args["GenSolTable"]:
+         matchTable = {}
+         # Match yaml file solutions to solution index
