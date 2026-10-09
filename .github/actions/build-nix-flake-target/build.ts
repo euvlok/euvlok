@@ -693,6 +693,30 @@ export function containsTransientFailure(output: string): boolean {
   return transientFailure(output) !== undefined;
 }
 
+async function reportRunnerResources(): Promise<void> {
+  try {
+    const snapshot = await runCommand([
+      "timeout",
+      "5s",
+      "sh",
+      "-c",
+      `date --utc --iso-8601=seconds
+awk '/^(MemAvailable|SwapTotal|SwapFree|Shmem):/' /proc/meminfo
+awk '$1 == "oom_kill"' /proc/vmstat
+cat /proc/pressure/memory
+df -h / /nix /nix/build "$RUNNER_TEMP"
+ps -eo comm,rss --sort=-rss | head -n 8`,
+    ]);
+    if (snapshot.exitCode !== 0) {
+      core.warning(
+        `Runner resource snapshot exited with ${snapshot.exitCode}.`,
+      );
+    }
+  } catch (error) {
+    core.warning(`Could not report runner resources: ${String(error)}`);
+  }
+}
+
 async function runBuild(targetDrv: string): Promise<BuildExecution> {
   const command = [
     "nix",
@@ -704,7 +728,20 @@ async function runBuild(targetDrv: string): Promise<BuildExecution> {
     }).flatMap(([name, value]) => ["--option", name, String(value)]),
     `${targetDrv}^*`,
   ];
+  // Keep evidence in streamed logs if Linux loses contact with GitHub
+  const monitorResources =
+    process.platform === "linux" && process.env.GITHUB_ACTIONS === "true";
+  if (monitorResources) {
+    await reportRunnerResources();
+  }
   const { processHandle, result } = capturedCommand(command);
+  if (monitorResources) {
+    const resourceInterval = setInterval(() => {
+      void reportRunnerResources();
+    }, 60_000);
+    const stopMonitoring = () => clearInterval(resourceInterval);
+    void processHandle.exited.then(stopMonitoring, stopMonitoring);
+  }
   const startSeconds =
     runtime.BUILD_STARTED_AT_EPOCH ?? Math.floor(Date.now() / 1000);
   const remainingMilliseconds = Math.max(
