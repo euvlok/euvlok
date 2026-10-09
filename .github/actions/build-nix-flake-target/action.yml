@@ -117,7 +117,7 @@ runs:
 
     - name: Install build helper dependencies
       shell: bash
-      run: bun install --cwd="${GITHUB_ACTION_PATH}" --frozen-lockfile
+      run: bun install --cwd="${GITHUB_ACTION_PATH}" --frozen-lockfile --ignore-scripts
 
     - name: Build flake target
       id: build

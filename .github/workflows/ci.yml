@@ -83,8 +83,7 @@ jobs:
           bun-version: 1.4.2
 
       - name: Install pinned dependencies
-        working-directory: .github/actions/build-nix-flake-target
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Type-check and lint with TypeScript 7
         working-directory: .github/actions/build-nix-flake-target
