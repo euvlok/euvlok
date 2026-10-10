@@ -2,6 +2,7 @@
 {
 
   home.packages = builtins.attrValues {
+    inherit (pkgs) photocraft;
     inherit (pkgs.unstable)
       # Base apps
       pavucontrol
@@ -47,6 +48,7 @@
       slurp
       nitch
       thunderbird-bin
+      telegram-desktop
       #libreoffice
       p7zip
       # _7zz

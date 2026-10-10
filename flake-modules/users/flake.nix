@@ -126,6 +126,10 @@
         pre-commit-hooks.follows = "users-devenv/git-hooks";
       };
     };
+    artcraft = {
+      url = "github:Hy4ri/artcraft-flake";
+      inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
+    };
     codex-desktop-linux = {
       url = "github:ilysenko/codex-desktop-linux";
       inputs = {

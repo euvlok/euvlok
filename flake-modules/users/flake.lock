@@ -47,6 +47,26 @@
         "type": "github"
       }
     },
+    "artcraft": {
+      "inputs": {
+        "nixpkgs": [
+          "users-nixpkgs-unstable-small"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791535454,
+        "narHash": "sha256-PzFOo+8J/KV5ZIGiD4rUGobQz+iCpZwdysjFBLFlDEk=",
+        "owner": "Hy4ri",
+        "repo": "artcraft-flake",
+        "rev": "e88bf71914e1bb4bee6ac2f08aa3c15e357e12bc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Hy4ri",
+        "repo": "artcraft-flake",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -604,6 +624,7 @@
     "root": {
       "inputs": {
         "anime-cursors-source": "anime-cursors-source",
+        "artcraft": "artcraft",
         "codex-desktop-linux": "codex-desktop-linux",
         "disko-rpi": "disko-rpi",
         "flatpak-declarative": "flatpak-declarative",
