@@ -110,7 +110,7 @@ jobs:
           github-token: ${{ github.token }}
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
           # Bound compiler and kernel-generation workers for the hosted runner
-          build-cores: ${{ matrix.name == 'unsigned-int64' && '2' || '0' }}
+          build-cores: ${{ matrix.name == 'unsigned-int64' && '4' || '0' }}
 
       - name: Dispatch isolated retry
         if: >-
