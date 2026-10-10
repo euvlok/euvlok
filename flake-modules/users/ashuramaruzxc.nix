@@ -35,7 +35,7 @@ in
       owner = "ashuramaruzxc";
       class = "nixos";
       system = "aarch64-linux";
-      runner = "ubuntu-26.04-arm";
+      runner = "ubuntu-24.04-arm";
       builder = inputs.nixos-raspberrypi.lib.nixosSystem;
       modules = [
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int16 {

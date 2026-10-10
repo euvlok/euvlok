@@ -72,7 +72,7 @@ jobs:
     if: inputs['retry-system'] == '' || inputs['retry-system'] == 'aarch64-linux'
     uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
     with:
-      runner: ubuntu-26.04-arm
+      runner: ubuntu-24.04-arm
       system: aarch64-linux
       event-name: ${{ github.event_name }}
       before-revision: ${{ github.event.before || '' }}
