@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import resource
 import shutil
 import stat
@@ -245,13 +246,57 @@ def prune_source(
             if (source / relative).exists():
                 content.add(relative)
                 metadata.add(relative)
-    for relative in list(metadata):
-        metadata.update(parent.as_posix() for parent in Path(relative).parents)
-    destination.mkdir()
     before = after = kept = placeholders = 0
+    notice_paths = set()
+
+    def preserve_notice(path: Path) -> None:
+        pending = [path]
+        while pending:
+            item = pending.pop()
+            relative = item.relative_to(source).as_posix()
+            if relative in notice_paths:
+                continue
+            notice_paths.add(relative)
+            parent = source
+            for part in item.relative_to(source).parts[:-1]:
+                parent /= part
+                if parent.is_symlink():
+                    pending.append(parent)
+                    target = Path(
+                        os.path.normpath(
+                            parent.parent
+                            / os.readlink(parent)
+                            / item.relative_to(parent)
+                        )
+                    )
+                    if target.is_relative_to(source):
+                        pending.append(target)
+                    break
+            else:
+                if not item.exists() and not item.is_symlink():
+                    continue
+                content.add(relative)
+                metadata.add(relative)
+                if item.is_symlink():
+                    target = Path(os.path.normpath(item.parent / os.readlink(item)))
+                    if target.is_relative_to(source):
+                        pending.append(target)
+                elif item.is_dir():
+                    pending.extend(item.iterdir())
+
+    # Preserve upstream distribution notices and their in-tree symlink targets
     for path in source.rglob("*"):
         if path.is_file() and not path.is_symlink():
             before += path.stat().st_size
+        if re.fullmatch(
+            r"(?:licen[sc]es?|copying|copyright|notices?|unlicense)(?:[._-].*)?",
+            path.name,
+            re.IGNORECASE,
+        ):
+            preserve_notice(path)
+    for relative in list(metadata):
+        metadata.update(parent.as_posix() for parent in Path(relative).parents)
+    destination.mkdir()
     for relative in sorted(metadata, key=lambda item: (len(Path(item).parts), item)):
         path = source / relative
         target = destination / relative
