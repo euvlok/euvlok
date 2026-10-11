@@ -28,7 +28,7 @@ struct InputTraceAccessor : ForwardingSourceAccessor {
         provenance = next->provenance;
     }
 
-    ~InputTraceAccessor() override { ::close(output); }
+    ~InputTraceAccessor() override;
 
     void record(const char *operation, const CanonPath &path) {
         auto physical = next->getPhysicalPath(path);
@@ -86,5 +86,7 @@ struct InputTraceAccessor : ForwardingSourceAccessor {
         return next->getProvenance(path);
     }
 };
+
+InputTraceAccessor::~InputTraceAccessor() { ::close(output); }
 
 } // namespace nix
