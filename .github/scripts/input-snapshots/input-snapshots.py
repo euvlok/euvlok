@@ -227,11 +227,8 @@ def trace(project: Path, inventory_path: Path, system: str, nix: str, output: Pa
 def prune_source(
     source: Path, destination: Path, usage: dict, flake_dirs: set[str]
 ) -> dict:
-    if usage["whole"] or not any(usage[op] for op in ("read", "stat", "list", "link")):
-        return {
-            "pruned": False,
-            "reason": "whole-tree dependency or no observed accesses",
-        }
+    if usage["whole"]:
+        return {"pruned": False, "reason": "Whole-tree build dependency"}
     content = set(usage["read"]) | set(usage["link"])
     metadata = set(usage["stat"]) | content | set(usage["list"]) | {"."}
     # Preserve directory entry names/types even if their contents were unused
