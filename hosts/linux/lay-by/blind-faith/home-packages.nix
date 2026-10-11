@@ -26,6 +26,7 @@
     inherit (pkgs.unstable)
       # Development
       vscode-fhs
+      lmstudio
       gnumake
       nixfmt
       meson
