@@ -132,6 +132,8 @@ def evaluate(project: Path, system: str, nix: str = "nix", **kwargs) -> dict:
         projection = ["--apply", expression] if expression else []
         result = run(
             nix,
+            "--extra-experimental-features",
+            "parallel-eval",
             "--no-lazy-trees",
             "--no-eval-cache",
             "--eval-cores",
@@ -582,6 +584,8 @@ def verify(
         for _, directory in built_checks:
             run(
                 "nix",
+                "--extra-experimental-features",
+                "parallel-eval",
                 "--eval-cores",
                 "2",
                 "--cores",

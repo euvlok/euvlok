@@ -84,7 +84,9 @@ jobs:
         run: |
           script=.github/scripts/input-snapshots/input-snapshots.py
           python3 "$script" inventory --output "$RUNNER_TEMP/inventory.json"
-          tracer="$(nix build .#input-trace-nix --no-link --print-out-paths --cores 2)"
+          tracer="$(nix --extra-experimental-features parallel-eval \
+            --eval-cores 2 --cores 2 --max-jobs 2 \
+            build .#input-trace-nix --no-link --print-out-paths)"
           python3 "$script" trace --inventory "$RUNNER_TEMP/inventory.json" \
             --system "$NATIVE_SYSTEM" --nix "$tracer/bin/nix" \
             --output "$RUNNER_TEMP/trace"
