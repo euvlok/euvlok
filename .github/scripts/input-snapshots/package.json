@@ -1,0 +1,8 @@
+{
+  "name": "@euvlok/input-snapshots",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && biome lint --error-on-warnings input-snapshots.ts && prettier --check input-snapshots.ts package.json tsconfig.json"
+  }
+}

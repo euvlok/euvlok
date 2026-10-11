@@ -5,6 +5,8 @@ on:
     branches: [inputs/pruned-zstd]
     paths:
       - "**.nix"
+      - package.json
+      - bun.lock
       - "**/flake.lock"
       - .github/scripts/input-snapshots/**
       - .github/workflows/input-snapshots.yml
@@ -35,6 +37,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
       - uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
@@ -42,7 +47,7 @@ jobs:
         id: inventory
         shell: bash
         run: |
-          python3 .github/scripts/input-snapshots/input-snapshots.py inventory \
+          bun .github/scripts/input-snapshots/input-snapshots.ts inventory \
             --output "$RUNNER_TEMP/inventory.json"
           {
             jq -r '"digest=\(.lockDigest)"' "$RUNNER_TEMP/inventory.json"
@@ -74,6 +79,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
       - uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
@@ -82,12 +90,12 @@ jobs:
         env:
           NATIVE_SYSTEM: ${{ matrix.system }}
         run: |
-          script=.github/scripts/input-snapshots/input-snapshots.py
-          python3 "$script" inventory --output "$RUNNER_TEMP/inventory.json"
+          script=.github/scripts/input-snapshots/input-snapshots.ts
+          bun "$script" inventory --output "$RUNNER_TEMP/inventory.json"
           tracer="$(nix --extra-experimental-features parallel-eval \
             --eval-cores 2 --cores 2 --max-jobs 2 \
             build .#input-trace-nix --no-link --print-out-paths)"
-          python3 "$script" trace --inventory "$RUNNER_TEMP/inventory.json" \
+          bun "$script" trace --inventory "$RUNNER_TEMP/inventory.json" \
             --system "$NATIVE_SYSTEM" --nix "$tracer/bin/nix" \
             --output "$RUNNER_TEMP/trace"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -111,6 +119,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
       - uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
@@ -128,7 +139,7 @@ jobs:
           SOURCE_ID: ${{ matrix.id }}
         run: |
           nix shell --inputs-from . nixpkgs#zstd --command \
-            python3 .github/scripts/input-snapshots/input-snapshots.py pack \
+            bun .github/scripts/input-snapshots/input-snapshots.ts pack \
             --inventory "$RUNNER_TEMP/inventory/inventory.json" \
             --traces "$RUNNER_TEMP/traces" \
             --id "$SOURCE_ID" --output "$RUNNER_TEMP/assets"
@@ -158,6 +169,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
       - uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
@@ -179,7 +193,7 @@ jobs:
         env:
           NATIVE_SYSTEM: ${{ matrix.system }}
         run: |
-          python3 .github/scripts/input-snapshots/input-snapshots.py verify \
+          bun .github/scripts/input-snapshots/input-snapshots.ts verify \
             --inventory "$RUNNER_TEMP/inventory/inventory.json" \
             --assets "$RUNNER_TEMP/assets" \
             --baseline "$RUNNER_TEMP/trace/baseline.json" \
@@ -202,6 +216,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: input-inventory
@@ -221,7 +238,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           tag="inputs-${LOCK_DIGEST}"
-          python3 .github/scripts/input-snapshots/input-snapshots.py locks \
+          bun .github/scripts/input-snapshots/input-snapshots.ts locks \
             --inventory "$RUNNER_TEMP/inventory/inventory.json" \
             --assets "$RUNNER_TEMP/assets" \
             --base-url "https://github.com/${REPOSITORY}/releases/download/${tag}" \
