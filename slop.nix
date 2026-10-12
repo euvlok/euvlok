@@ -327,7 +327,11 @@ let
   codexEnabled.euvlok.home.codex.enable = true;
   claudeCodeEnabled.euvlok.home.claude-code.enable = true;
   codexLib =
-    { config, lib }:
+    {
+      config,
+      lib,
+      pkgs,
+    }:
     let
       configDir =
         if config.home.preferXdgDirectories then
@@ -340,6 +344,8 @@ let
 
       environment = {
         CODEX_HOME = configDir;
+      }
+      // lib.attrsets.optionalAttrs (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {
         CODEX_CLI_PATH = lib.getExe config.euvlok.home.codex.package;
       };
 
@@ -556,11 +562,11 @@ let
     }:
     let
       cfg = config.euvlok.home.codex;
-      inherit (codexLib { inherit config lib; }) configDir environment mkDefaults;
+      inherit (codexLib { inherit config lib pkgs; }) configDir environment mkDefaults;
       launcherExecutable = pkgs.writeShellApplication {
         name = "codex";
         runtimeEnv = {
-          CODEX_REAL_BIN = environment.CODEX_CLI_PATH;
+          CODEX_REAL_BIN = lib.getExe cfg.package;
           CODEX_HOME = configDir;
         };
         text = ''
@@ -643,10 +649,15 @@ let
   # when it stayed politely inside the chat. The safety paperwork doesn't make
   # the bullshit worth reading
   profiles =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.euvlok.home.codex;
-      inherit (codexLib { inherit config lib; }) mkDefaults settings;
+      inherit (codexLib { inherit config lib pkgs; }) mkDefaults settings;
       servers =
         lib.attrsets.optionalAttrs (
           config.programs.codex.enableMcpIntegration && config.programs.mcp.enable
@@ -701,7 +712,7 @@ let
     }:
     let
       cfg = config.euvlok.home.codex;
-      inherit (codexLib { inherit config lib; }) configDir configKeyDir;
+      inherit (codexLib { inherit config lib pkgs; }) configDir configKeyDir;
       # Home Manager merges the main config when mutableSettings is enabled
       # Profiles still need writable copies for app-server config/batchWrite
       configFileKeys =
@@ -839,7 +850,7 @@ let
     let
       cfg = config.euvlok.home.codex;
       isDarwin = pkgs.stdenvNoCC.hostPlatform.isDarwin;
-      inherit (codexLib { inherit config lib; })
+      inherit (codexLib { inherit config lib pkgs; })
         environment
         mkDefaults
         settings
@@ -898,8 +909,7 @@ let
           ${lib.optionalString isDarwin ''
             if [[ -n "''${CODEX_NODE_REPL_APP_BUNDLE:-}" ]]; then
               /usr/bin/codesign --verify --strict "$CODEX_NODE_REPL_APP_BUNDLE"
-              # Sky checks the broker's parent signature; each kernel still
-              # uses CODEX_CLI_PATH from Nixpkgs for its requested sandbox
+              # Sky checks the broker's parent signature
               exec "$CODEX_NODE_REPL_APP_BUNDLE/Contents/MacOS/codex" \
                 sandbox -P :danger-full-access -- \
                 ${lib.escapeShellArg "${resources}/cua_node/bin/node_repl"} "$@"
@@ -940,7 +950,7 @@ let
           ' ${cfg.desktop.pluginsPackage}/.agents/plugins/marketplace.json)
           while IFS= read -r name; do
             [[ -n "$name" ]] || continue
-            "$CODEX_CLI_PATH" plugin add "$name@${marketplaceName}"
+            ${lib.getExe cfg.package} plugin add "$name@${marketplaceName}"
           done <<< "$plugins"
         '';
       };
@@ -1635,10 +1645,15 @@ in
     # announcing that the unwanted chatbot has been removed. Dress the dead
     # product however you like. I'm interested in the part where it stays dead
     catppuccin =
-      { config, lib, ... }:
+      {
+        config,
+        lib,
+        pkgs,
+        ...
+      }:
       let
         cfg = config.catppuccin.codex;
-        inherit (codexLib { inherit config lib; }) configDir mkDefaults;
+        inherit (codexLib { inherit config lib pkgs; }) configDir mkDefaults;
         darkFlavor = if cfg.flavor == "latte" then "frappe" else cfg.flavor;
         palette = lib.trivial.importJSON "${config.catppuccin.sources.palette}/palette.json";
         appearances = {
@@ -1872,7 +1887,7 @@ in
         ...
       }:
       let
-        inherit (codexLib { inherit config lib; }) configDir;
+        inherit (codexLib { inherit config lib pkgs; }) configDir;
         models = {
           subscribed = {
             inherit (codexSettings) model;
