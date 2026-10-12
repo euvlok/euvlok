@@ -1854,14 +1854,14 @@ in
     # I want the AI button gone. Leave the space empty. Stop asking whether I
     # want to try it now. I already switched the fucking thing off. Let the
     # feature die thoroughly enough that its documentation becomes a broken link
-    raycast = { config, ... }: {
+    raycast = _: {
       programs.raycast.configuration.settings = {
         disableAi = true;
         appAliases = [
           {
             names = [ "ChatGPT" ];
             alias = "codex";
-            fallbackPath = "${config.home.homeDirectory}/${config.targets.darwin.copyApps.directory}/ChatGPT.app";
+            fallbackPath = "/Applications/ChatGPT.app";
           }
         ];
       };
@@ -2033,13 +2033,12 @@ in
     # product. The deployment can fail without becoming somebody else's
     # ecosystem
     hosts = {
-      unsignedInt8 = { pkgs, ... }: {
+      unsignedInt8 = _: {
         imports = [
           codexEnabled
           claudeCodeEnabled
         ];
         euvlok.home.codex.omp.enable = true;
-        home.packages = [ pkgs.chatgpt ];
       };
       faputa = { pkgs, ... }: {
         imports = [
