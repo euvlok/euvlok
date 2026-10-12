@@ -2047,6 +2047,7 @@ in
           codexEnabled
           claudeCodeEnabled
         ];
+        euvlok.home.codex.omp.enable = true;
         sops.secrets.context7_api_key = { };
         programs.codexDesktopLinux = {
           enable = true;
