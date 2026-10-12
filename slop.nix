@@ -2023,6 +2023,7 @@ in
           codexEnabled
           claudeCodeEnabled
         ];
+        euvlok.home.codex.omp.enable = true;
         home.packages = [ pkgs.chatgpt ];
       };
       faputa = { pkgs, ... }: {
