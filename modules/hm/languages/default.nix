@@ -5,77 +5,143 @@
   ...
 }:
 let
-  languageDefinitions = import ./catalog { inherit pkgs lib; };
-  enabledLanguages = lib.attrsets.filterAttrs (
-    name: _: config.euvlok.home.languages.${name}.enable or false
-  ) languageDefinitions;
-
-  enabledLanguagePackages = lib.lists.concatAttrValues (
-    lib.attrsets.mapAttrs (
-      name: def:
-      let
-        langCfg = config.euvlok.home.languages.${name};
-      in
-      (def.packages or [ ])
-      ++ lib.lists.optional (def ? versionMap) def.versionMap.${langCfg.version}
-      ++ langCfg.extraPackages
-    ) enabledLanguages
-  );
-
-  editorModule =
-    module:
-    lib.modules.importApply module {
-      inherit enabledLanguages enabledLanguagePackages;
-    };
-in
-{
-  imports = [
-    (editorModule ./helix.nix)
-    (editorModule ./vscode.nix)
-    (import ../../../slop.nix).homeManager.vscode
-    (editorModule ./zed.nix)
-  ];
-
-  options.euvlok.home.languages = lib.attrsets.mapAttrs (
-    name: def:
+  catalog = import ./catalog { inherit pkgs lib; };
+  languageType = lib.types.submodule (
+    { name, config, ... }:
     let
+      definition = catalog.${name} or { };
       displayName = lib.strings.toSentenceCase name;
+      jsonType = (pkgs.formats.json { }).type;
+      tomlType = (pkgs.formats.toml { }).type;
+      # Default each leaf so overriding one setting preserves the rest
+      defaultSettings = lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
     in
-    lib.options.mkOption {
-      default = { };
-      description = "Manages the development environment for the ${displayName} language.";
-      type = lib.types.submodule {
-        options = {
-          enable = lib.options.mkEnableOption "the ${displayName} development environment and tools";
-          extraPackages = lib.options.mkOption {
-            type = lib.types.listOf lib.types.package;
+    {
+      options = {
+        enable = lib.options.mkEnableOption "the ${displayName} development environment and tools";
+        packages = lib.options.mkOption {
+          type = lib.types.listOf lib.types.package;
+          default = [ ];
+          description = "Standard ${displayName} toolchain packages";
+        };
+        extraPackages = lib.options.mkOption {
+          type = lib.types.listOf lib.types.package;
+          default = [ ];
+          description = "Extra packages to install alongside the ${displayName} toolchain";
+        };
+        helix = {
+          languageServers = lib.options.mkOption {
+            type = tomlType;
+            default = { };
+            description = "Helix language server definitions for ${displayName}";
+          };
+          languages = lib.options.mkOption {
+            type = lib.types.listOf tomlType;
             default = [ ];
-            description = "Extra packages to install alongside the standard ${displayName} toolchain.";
+            description = "Helix language definitions for ${displayName}";
           };
-        }
-        // lib.attrsets.optionalAttrs (def ? versionMap) {
-          version = lib.options.mkOption {
-            type = lib.types.enum (lib.attrsets.attrNames def.versionMap);
-            default = def.defaultVersion;
-            description = ''
-              Select the version of the ${displayName} SDK to install.
-
-              **Available versions:**
-              ${lib.strings.concatMapStringsSep "\n" (version: "- `${version}`") (
-                lib.attrsets.attrNames def.versionMap
-              )}
-
-              The default is `${def.defaultVersion}`.
-            '';
+        };
+        vscode = {
+          extensions = lib.options.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "VS Code extension IDs for ${displayName}";
           };
+          settings = lib.options.mkOption {
+            type = jsonType;
+            default = { };
+            description = "VS Code settings for ${displayName}";
+          };
+        };
+        zed = {
+          extensions = lib.options.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Zed extensions for ${displayName}";
+          };
+          languages = lib.options.mkOption {
+            type = jsonType;
+            default = { };
+            description = "Zed language settings for ${displayName}";
+          };
+          lsp = lib.options.mkOption {
+            type = jsonType;
+            default = { };
+            description = "Zed language server settings for ${displayName}";
+          };
+        };
+        versions = lib.options.mkOption {
+          type = lib.types.attrsOf lib.types.package;
+          default = { };
+          description = "Available ${displayName} SDK versions";
+        };
+        version = lib.options.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = definition.defaultVersion or null;
+          apply =
+            version:
+            if version == null || lib.attrsets.hasAttr version config.versions then
+              version
+            else
+              throw "Unknown ${displayName} SDK version ${version}; available versions: ${lib.strings.concatStringsSep ", " (lib.attrsets.attrNames config.versions)}";
+          description = "SDK version to install, or null for no additional SDK";
+        };
+      };
+
+      config = {
+        packages =
+          (definition.packages or [ ])
+          ++ lib.lists.optional (config.version != null) config.versions.${config.version};
+        versions = lib.attrsets.mapAttrs (_: lib.modules.mkDefault) (definition.versionMap or { });
+        helix = {
+          languageServers = defaultSettings (definition.helix.languageServers or { });
+          languages = definition.helix.languages or [ ];
+        };
+        vscode = {
+          extensions = definition.vscode.extensions or [ ];
+          settings = defaultSettings (definition.vscode.settings or { });
+        };
+        zed = {
+          extensions = definition.zed.extensions or [ ];
+          languages = defaultSettings (definition.zed.languages or { });
+          lsp = defaultSettings (definition.zed.lsp or { });
         };
       };
     }
-  ) languageDefinitions;
+  );
+  enabledLanguages = lib.attrsets.filterAttrs (
+    _: language: language.enable
+  ) config.euvlok.home.languages;
+  enabledLanguagePackages = lib.lists.concatMap (
+    language: language.packages ++ language.extraPackages
+  ) (lib.attrsets.attrValues enabledLanguages);
+in
+{
+  imports = [
+    ./helix.nix
+    ./vscode.nix
+    (import ../../../slop.nix).homeManager.vscode
+    ./zed.nix
+  ];
+
+  options.euvlok.home = {
+    languages = lib.options.mkOption {
+      type = lib.types.attrsOf languageType;
+      default = { };
+      description = "Language toolchains and their editor integrations";
+    };
+    languagePackages = lib.options.mkOption {
+      type = lib.types.listOf lib.types.package;
+      internal = true;
+      readOnly = true;
+      description = "Packages for enabled language toolchains and shared development tools";
+    };
+  };
 
   config = {
-    home.packages =
-      (builtins.attrValues {
+    euvlok.home.languages = lib.attrsets.mapAttrs (_: _: { }) catalog;
+    euvlok.home.languagePackages =
+      (lib.attrsets.attrValues {
         inherit (pkgs.unstable)
           shellcheck
           shfmt
@@ -87,5 +153,6 @@ in
           ;
       })
       ++ enabledLanguagePackages;
+    home.packages = config.euvlok.home.languagePackages;
   };
 }

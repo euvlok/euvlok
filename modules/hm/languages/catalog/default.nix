@@ -51,7 +51,15 @@ let
         ;
     };
 in
-builtins.removeAttrs (lib.filesystem.packagesFromDirectoryRecursive {
-  directory = ./.;
-  callPackage = file: _: callLanguage file;
-}) [ "default" ]
+lib.attrsets.mapAttrs'
+  (
+    name: _:
+    lib.attrsets.nameValuePair (lib.strings.removeSuffix ".nix" name) (
+      callLanguage (lib.path.append ./. name)
+    )
+  )
+  (
+    lib.attrsets.filterAttrs (
+      name: type: type == "regular" && lib.strings.hasSuffix ".nix" name && name != "default.nix"
+    ) (lib.filesystem.readDir ./.)
+  )

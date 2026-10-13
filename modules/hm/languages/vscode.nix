@@ -1,9 +1,13 @@
-{ enabledLanguages, ... }:
 {
   config,
   lib,
   ...
 }:
+let
+  enabledLanguages = lib.attrsets.filterAttrs (
+    _: language: language.enable
+  ) config.euvlok.home.languages;
+in
 {
   config = lib.modules.mkIf config.euvlok.home.vscode.enable {
     euvlok.home.vscode.extensionIds =
