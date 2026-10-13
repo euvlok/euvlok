@@ -10,7 +10,10 @@
     nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode.inputs.systems.follows = "flake-utils/systems";
     nix4vscode.url = "github:nix-community/nix4vscode";
+    nixcord.inputs.home-manager.follows = "home-manager";
+    nixcord.inputs.nix-darwin.follows = "nix-darwin";
     nixcord.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    nixcord.inputs.nixpkgs-ci.follows = "nixcord/nixpkgs-packages";
     nixcord.url = "github:4evy/nixcord";
     nvidia-patch.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nvidia-patch.inputs.utils.follows = "flake-utils";
