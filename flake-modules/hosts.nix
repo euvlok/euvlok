@@ -135,6 +135,34 @@ in
     description = "Typed inventory of all NixOS and nix-darwin machines.";
   };
 
+  options.flake = {
+    hostMetadata = lib.options.mkOption {
+      type = lib.types.lazyAttrsOf (
+        lib.types.submodule {
+          options = lib.attrsets.genAttrs [ "name" "owner" "runner" "system" "class" ] (
+            field:
+            lib.options.mkOption {
+              type = lib.types.nonEmptyStr;
+              description = "Host ${field} from the evaluated inventory";
+            }
+          );
+        }
+      );
+      default = { };
+      description = "Evaluated host inventory";
+    };
+    hostChecks = lib.options.mkOption {
+      type = lib.types.lazyAttrsOf lib.types.str;
+      default = { };
+      description = "Host derivation paths used for change detection";
+    };
+    nixosBuilds = lib.options.mkOption {
+      type = lib.types.lazyAttrsOf lib.types.package;
+      default = { };
+      description = "NixOS system derivations";
+    };
+  };
+
   config.perSystem = { system, ... }: {
     hostChecksBySystem = lib.attrsets.filterAttrs (
       name: _: hostSpecs.${name}.system == system
