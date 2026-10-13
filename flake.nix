@@ -122,15 +122,6 @@
   };
 
   inputs = {
-    browser = {
-      url = "github:4evy/browser";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        home-manager.follows = "home-manager";
-        nix-darwin.follows = "nix-darwin";
-        nixpkgs.follows = "nixpkgs-unstable-small";
-      };
-    };
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -191,6 +182,15 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    };
+    tweezle = {
+      url = "github:4evy/tweezle";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        home-manager.follows = "home-manager";
+        nix-darwin.follows = "nix-darwin";
+        nixpkgs.follows = "nixpkgs-unstable-small";
+      };
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";

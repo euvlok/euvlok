@@ -1,10 +1,10 @@
 {
   flake-file.inputs = {
-    browser.inputs.flake-parts.follows = "flake-parts";
-    browser.inputs.home-manager.follows = "home-manager";
-    browser.inputs.nix-darwin.follows = "nix-darwin";
-    browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
-    browser.url = "github:4evy/browser";
+    tweezle.inputs.flake-parts.follows = "flake-parts";
+    tweezle.inputs.home-manager.follows = "home-manager";
+    tweezle.inputs.nix-darwin.follows = "nix-darwin";
+    tweezle.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    tweezle.url = "github:4evy/tweezle";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin.url = "github:catppuccin/nix";
     nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";

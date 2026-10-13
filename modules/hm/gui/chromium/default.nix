@@ -9,7 +9,6 @@ let
   cfg = config.euvlok.home.chromium;
   isDarwin = pkgs.stdenvNoCC.hostPlatform.isDarwin;
   isLinux = pkgs.stdenvNoCC.hostPlatform.isLinux;
-  platform = if isDarwin then "macos" else "linux";
 
   chromiumFeatures = [
     "ForceEnableWebGpuInterop"
@@ -142,7 +141,7 @@ let
     cfg.extraExtensions
   ];
 
-  # Helium bundles uBlock Origin and supports Kagi natively.
+  # Helium bundles uBlock Origin and supports Kagi natively
   heliumExtensionIds = [
     "cjpalhdlnbpafiamejdnhcphjbkeiagm"
     "cdglnehniifkbagbbombnjghhcihifij"
@@ -170,7 +169,7 @@ in
         elemType = lib.types.listOf extensionType;
       };
       default = { };
-      description = "Extra 4evy/browser extension catalog entries to append to the base catalog.";
+      description = "Extra Tweezle extension catalog entries to append to the base catalog.";
       example = lib.options.literalExpression ''
         {
           chrome_store = [
@@ -182,15 +181,9 @@ in
         }
       '';
     };
-
-    configureOnActivation = lib.options.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Install and update extensions with 4evy/browser during Home Manager activation.";
-    };
   };
 
-  imports = [ euvlokInputs.browser.homeModules.default ];
+  imports = [ euvlokInputs.tweezle.homeModules.default ];
 
   config = lib.modules.mkIf cfg.enable {
     euvlok.home.chromium.extraExtensions.chrome_store =
@@ -220,17 +213,15 @@ in
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
 
-      # 4evy/browser is the single extension installer.
+      # Tweezle is the single extension installer
       extensions = lib.modules.mkForce [ ];
 
       commandLineArgs = chromiumCommandLineArgs;
     };
 
-    programs.browser = {
+    programs.tweezle = {
       enable = true;
-      settings = {
-        browser = browserSettings;
-
+      configurations.chromium.chromium = browserSettings // {
         extensions = managedExtensions // {
           chrome_store_update_url = "https://clients2.google.com/service/update2/crx";
         };
@@ -238,14 +229,5 @@ in
     };
 
     home.packages = lib.lists.optional isDarwin browserPackage;
-
-    home.activation.configureChromium = lib.modules.mkIf cfg.configureOnActivation (
-      lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        run ${lib.meta.getExe config.programs.browser.package} apply \
-          ${config.programs.browser.configFile} \
-          --platform ${platform} \
-          --no-profile
-      ''
-    );
   };
 }

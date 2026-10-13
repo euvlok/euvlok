@@ -17,35 +17,6 @@
         "type": "github"
       }
     },
-    "browser": {
-      "inputs": {
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "home-manager": [
-          "home-manager"
-        ],
-        "nix-darwin": [
-          "nix-darwin"
-        ],
-        "nixpkgs": [
-          "nixpkgs-unstable-small"
-        ]
-      },
-      "locked": {
-        "lastModified": 1791282391,
-        "narHash": "sha256-YHcZ0QIslff9EOM2lCEbN+YLHv6OS40gXrgrvCZI+dA=",
-        "owner": "4evy",
-        "repo": "browser",
-        "rev": "98965d2c9925a8c29517a100559563e712762695",
-        "type": "github"
-      },
-      "original": {
-        "owner": "4evy",
-        "repo": "browser",
-        "type": "github"
-      }
-    },
     "catppuccin": {
       "inputs": {
         "nixpkgs": [
@@ -551,7 +522,6 @@
     },
     "root": {
       "inputs": {
-        "browser": "browser",
         "catppuccin": "catppuccin",
         "determinate": "determinate",
         "eupkgs": "eupkgs",
@@ -569,6 +539,7 @@
         "pared": "pared",
         "raycast": "raycast",
         "sops-nix": "sops-nix",
+        "tweezle": "tweezle",
         "zen-browser": "zen-browser"
       }
     },
@@ -625,6 +596,35 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "tweezle": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "nix-darwin": [
+          "nix-darwin"
+        ],
+        "nixpkgs": [
+          "nixpkgs-unstable-small"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791810000,
+        "narHash": "sha256-RiOIH+Vkk6EaNMd2L+ekrsRQarAdGSOluNs/B4xeNP8=",
+        "owner": "4evy",
+        "repo": "tweezle",
+        "rev": "b2d520bd45ef5a07c0a40aeb24a0468d90605b5c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "4evy",
+        "repo": "tweezle",
         "type": "github"
       }
     },
