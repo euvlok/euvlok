@@ -1,5 +1,5 @@
 {
-  animeCursorsSource,
+  animeCursorsPackage,
   catppuccinModule,
   homeManagerModule,
   jetbrainsPlugins,
@@ -13,9 +13,10 @@
 }:
 let
   homePackages = import ../shared/home/packages.nix { inherit pkgs lib jetbrainsPlugins; };
+  cursorPackage = animeCursorsPackage pkgs;
   cursorModule = lib.modules.importApply ../shared/home/cursor.nix {
-    cursorName = "touhou-reimu";
-    cursorPackage = animeCursorsSource.packages.${pkgs.stdenvNoCC.hostPlatform.system}.cursors;
+    inherit cursorPackage;
+    cursorName = cursorPackage.themeName;
     iconPackage = pkgs.unstable.kdePackages.breeze-icons;
   };
 

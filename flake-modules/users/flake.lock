@@ -1,32 +1,17 @@
 {
   "nodes": {
     "anime-cursors-source": {
-      "inputs": {
-        "devenv": [
-          "users-devenv"
-        ],
-        "flake-parts": [
-          "users-flake-parts"
-        ],
-        "mk-shell-bin": [],
-        "nix2container": [],
-        "nixpkgs": "nixpkgs",
-        "nixpkgs-python": "nixpkgs-python",
-        "pre-commit-hooks": [
-          "users-devenv",
-          "git-hooks"
-        ]
-      },
+      "flake": false,
       "locked": {
-        "lastModified": 1746567420,
-        "narHash": "sha256-2WlOlUpFk5CggZ8IYsvHgpIXhr46xWuMbTWGeKulOPY=",
-        "owner": "ashuramaruzxc",
+        "lastModified": 1791224100,
+        "narHash": "sha256-zh9LC/AtUj7Goxda+HUG6EfMYDMLvWKOzWcxBMqtT1Y=",
+        "owner": "4evy",
         "repo": "anime-cursors",
-        "rev": "bd16f5aa072069bfb9d627c94e4fd28f79d00484",
+        "rev": "579ab17ed775222ab5458b5a23a0e51817e7f306",
         "type": "github"
       },
       "original": {
-        "owner": "ashuramaruzxc",
+        "owner": "4evy",
         "repo": "anime-cursors",
         "type": "github"
       }
@@ -202,6 +187,22 @@
       "original": {
         "owner": "ilysenko",
         "repo": "codex-desktop-linux",
+        "type": "github"
+      }
+    },
+    "cursorgen-source": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791215100,
+        "narHash": "sha256-qY+77FTYiL3VHOUWQNQ9YvCf+WUUMKtpXkmPq4QRnRo=",
+        "owner": "4evy",
+        "repo": "cursorgen",
+        "rev": "fcc2edd176dc12141d0cb0e445f48ba0e14416dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "4evy",
+        "repo": "cursorgen",
         "type": "github"
       }
     },
@@ -514,22 +515,6 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
-      "locked": {
-        "lastModified": 1746328495,
-        "narHash": "sha256-uKCfuDs7ZM3QpCE/jnfubTg459CnKnJG/LwqEVEdEiw=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "979daf34c8cacebcd917d540070b52a3c2b9b16e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1790477367,
@@ -542,28 +527,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs-python": {
-      "inputs": {
-        "flake-compat": [],
-        "nixpkgs": [
-          "anime-cursors-source",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1746223523,
-        "narHash": "sha256-BH27BJZNbR0zQAL/mFCxDPR6K6mbrmjJ66lxVDTNPXU=",
-        "owner": "cachix",
-        "repo": "nixpkgs-python",
-        "rev": "3f5f1dbe0122a1741907aa5ab76f7337ffcd2ccb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cachix",
-        "repo": "nixpkgs-python",
         "type": "github"
       }
     },
@@ -610,6 +573,7 @@
         "anime-cursors-source": "anime-cursors-source",
         "artcraft": "artcraft",
         "codex-desktop-linux": "codex-desktop-linux",
+        "cursorgen-source": "cursorgen-source",
         "disko-rpi": "disko-rpi",
         "flatpak-declarative": "flatpak-declarative",
         "homebrew-cask-source": "homebrew-cask-source",

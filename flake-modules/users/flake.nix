@@ -116,15 +116,8 @@
 
   inputs = {
     anime-cursors-source = {
-      url = "github:ashuramaruzxc/anime-cursors";
-      inputs = {
-        devenv.follows = "users-devenv";
-        flake-parts.follows = "users-flake-parts";
-        mk-shell-bin.follows = "";
-        nix2container.follows = "";
-        nixpkgs-python.inputs.flake-compat.follows = "";
-        pre-commit-hooks.follows = "users-devenv/git-hooks";
-      };
+      url = "github:4evy/anime-cursors";
+      flake = false;
     };
     artcraft = {
       url = "github:Hy4ri/artcraft-flake";
@@ -136,6 +129,10 @@
         flake-utils.follows = "users-flake-utils";
         nixpkgs.follows = "users-nixpkgs-unstable-small";
       };
+    };
+    cursorgen-source = {
+      url = "github:4evy/cursorgen";
+      flake = false;
     };
     disko-rpi = {
       url = "github:nvmd/disko/gpt-attrs";

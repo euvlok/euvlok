@@ -1,15 +1,12 @@
 {
   flake-file.inputs = {
     anime-cursors-source = {
-      inputs = {
-        devenv.follows = "users-devenv";
-        flake-parts.follows = "users-flake-parts";
-        mk-shell-bin.follows = "";
-        nix2container.follows = "";
-        nixpkgs-python.inputs.flake-compat.follows = "";
-        pre-commit-hooks.follows = "users-devenv/git-hooks";
-      };
-      url = "github:ashuramaruzxc/anime-cursors";
+      flake = false;
+      url = "github:4evy/anime-cursors";
+    };
+    cursorgen-source = {
+      flake = false;
+      url = "github:4evy/cursorgen";
     };
     codex-desktop-linux = {
       inputs = {

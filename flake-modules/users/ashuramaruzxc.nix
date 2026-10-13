@@ -21,7 +21,25 @@ let
           homeManagerModule
           personalModule
           ;
-        animeCursorsSource = inputs.anime-cursors-source;
+        animeCursorsPackage =
+          pkgs:
+          let
+            cursorPackages =
+              (pkgs.callPackage "${inputs.anime-cursors-source}/pkgs" {
+                cursorgenSrc = inputs.cursorgen-source;
+              }).overrideScope
+                (
+                  final: _: {
+                    cursorgen = pkgs.python314Packages.callPackage "${inputs.cursorgen-source}/pkgs/cursorgen.nix" { };
+                    # Scope the newer dependencies to the converter
+                    converter = pkgs.python314Packages.callPackage "${inputs.anime-cursors-source}/pkgs/converter.nix" {
+                      inherit (final) cursorgen;
+                      inherit (final.pythonPackages) msgspec platformdirs;
+                    };
+                  }
+                );
+          in
+          (cursorPackages.cursors.override { themes = [ "hakurei-reimu" ]; }).variants.hakurei-reimu;
         jetbrainsPlugins = inputs.nix-jetbrains-plugins;
         sharedModule = sharedHomeModule;
       }
