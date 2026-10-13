@@ -117,13 +117,13 @@ jobs:
             # Force only derivations native to this runner. Some host modules
             # use import-from-derivation and cannot be evaluated cross-platform.
             current_checks="$(
-              nix --extra-experimental-features parallel-eval \
-                eval --json ".#hostChecksBySystem.${HOST_SYSTEM}"
+              nix eval --json ".#hostChecksBySystem.${HOST_SYSTEM}"
             )"
 
             # The base of the first rollout does not expose the partitioned
             # output. Treat its native hosts as changed instead of forcing the
-            # old cross-platform hostChecks output.
+            # old cross-platform hostChecks output
+            # Historical bases may still need the explicit parallel evaluator
             if previous_checks="$(
               nix --extra-experimental-features parallel-eval \
                 eval --json "./.host-base#hostChecksBySystem.${HOST_SYSTEM}" \

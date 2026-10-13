@@ -84,23 +84,9 @@ let
   nixosConfigurations = lib.attrsets.mapAttrs mkConfiguration nixosSpecs;
   darwinConfigurations = lib.attrsets.mapAttrs mkConfiguration darwinSpecs;
 
-  # Determinate Nix can evaluate independent values on its evaluator worker
-  # pool. Start the expensive system, Home Manager package, and activation
-  # branches in parallel, then return the conventional toplevel derivation.
-  mkNixosBuild =
-    _: host:
-    let
-      cfg = host.config;
-      homeUsers = lib.attrsets.attrByPath [ "home-manager" "users" ] { } cfg;
-      work = [
-        cfg.system.path.drvPath
-      ]
-      ++ lib.attrsets.mapAttrsToList (_: user: user.home.path.drvPath) homeUsers
-      ++ lib.attrsets.mapAttrsToList (_: user: user.home.activationPackage.drvPath) homeUsers;
-    in
-    builtins.parallel work cfg.system.build.toplevel;
-
-  nixosBuilds = lib.attrsets.mapAttrs mkNixosBuild nixosConfigurations;
+  nixosBuilds = lib.attrsets.mapAttrs (
+    _: host: host.config.system.build.toplevel
+  ) nixosConfigurations;
 
   hostMetadata = lib.attrsets.mapAttrs (name: host: {
     inherit name;

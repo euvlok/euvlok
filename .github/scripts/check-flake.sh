@@ -4,16 +4,18 @@ set -euo pipefail
 # Release the evaluator heap between hosts while retaining the normal flake
 # schemas and checks for every output
 project_root="$(git rev-parse --show-toplevel)"
-native_system="$(nix eval --raw --impure --expr builtins.currentSystem)"
+native_system="$(nix config show --json | jq -r .system.value)"
 check_dir="$(mktemp -d)"
 trap 'rm -rf "${check_dir}"' EXIT
 
 cat >"${check_dir}/flake.nix" <<'NIX'
 {
   inputs.project.url = "path:PROJECT_ROOT";
-  outputs = { project, ... }:
+  outputs =
+    { project, ... }:
     let
-      selection = builtins.fromJSON (builtins.readFile ./selection.json);
+      lib = project.inputs.nixpkgs.lib;
+      selection = lib.trivial.importJSON ./selection.json;
       hostOutputs = [
         "nixosConfigurations"
         "darwinConfigurations"
@@ -21,19 +23,21 @@ cat >"${check_dir}/flake.nix" <<'NIX'
         "hostChecks"
         "hostChecksBySystem"
       ];
-      selectHost = name: builtins.intersectAttrs { ${name} = null; };
+      selectHost = name: lib.attrsets.intersectAttrs { ${name} = null; };
     in
     if selection == null then
-      builtins.removeAttrs project.outputs hostOutputs
+      lib.attrsets.removeAttrs project.outputs hostOutputs
     else
-      { schemas = project.schemas; }
-      // builtins.listToAttrs (map (output: {
-        name = output;
-        value = selectHost selection.name project.${output};
-      }) (builtins.filter (output: output != "hostChecksBySystem") hostOutputs))
+      {
+        schemas = project.schemas;
+      }
+      // lib.attrsets.genAttrs (lib.lists.remove "hostChecksBySystem" hostOutputs) (
+        output: selectHost selection.name project.${output}
+      )
       // {
         hostChecksBySystem.${selection.system} =
-          selectHost selection.name project.hostChecksBySystem.${selection.system};
+          selectHost selection.name
+            project.hostChecksBySystem.${selection.system};
       };
 }
 NIX
@@ -53,18 +57,15 @@ printf 'null\n' >"${check_dir}/selection.json"
 echo '::group::Shared flake outputs'
 # Run writable evaluation first so partition inputs exist in the store before
 # --no-build switches evaluation to read-only mode
-nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-  flake check "path:${check_dir}"
-nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-  flake check "path:${check_dir}" --all-systems --no-build
+nix flake check "path:${check_dir}"
+nix flake check "path:${check_dir}" --all-systems --no-build
 echo '::endgroup::'
 
 host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
 while IFS= read -r host; do
   printf '%s\n' "${host}" >"${check_dir}/selection.json"
   echo "::group::Host $(jq -r .name <<<"${host}")"
-  nix --extra-experimental-features parallel-eval --option eval-cores 1 \
-    flake check "path:${check_dir}"
+  nix flake check "path:${check_dir}"
   echo '::endgroup::'
 done < <(jq -c --arg system "${native_system}" \
   'to_entries[] | select(.value.system == $system) | {name: .key, system: .value.system}' \

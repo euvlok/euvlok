@@ -6,10 +6,6 @@ let
     # lazy-trees). Keep only deliberate overrides in nix.custom.conf.
     warn-dirty = false;
 
-    # Allow the flake's nixosBuilds output to overlap the system environment
-    # and integrated Home Manager evaluation.
-    extra-experimental-features = [ "parallel-eval" ];
-
     # Preserve Determinate Nix's managed caches. nix.custom.conf is included
     # from its generated nix.conf, so bare list settings would replace the
     # managed values instead of extending them.

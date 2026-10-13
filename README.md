@@ -81,8 +81,6 @@ host on its matching platform:
 nix build .#nixosBuilds.blind-faith
 ```
 
-`nixosBuilds` needs Determinate Nix's `parallel-eval` feature.
-
 </details>
 
 <details>

@@ -122,7 +122,6 @@ runs:
       id: build
       shell: bash
       env:
-        NIX_CONFIG: extra-experimental-features = parallel-eval
         CONFIGURATION_KIND: ${{ inputs.configuration-kind }}
         CONFIGURATION_NAME: ${{ inputs.configuration-name }}
         CONFIGURATION_SYSTEM: ${{ inputs.configuration-system }}
