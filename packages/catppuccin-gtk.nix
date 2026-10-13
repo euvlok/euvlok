@@ -3,6 +3,7 @@
   stdenvNoCC,
   fetchFromGitHub,
   bash,
+  nix-update-script,
   sassc,
   flavor ? "mocha",
   accent ? "mauve",
@@ -60,7 +61,7 @@ lib.trivial.checkListOfEnum "${pname}: flavor"
   ]
   [ size ]
   stdenvNoCC.mkDerivation
-  {
+  (finalAttrs: {
     inherit pname;
     version = "unstable-2026-06-25";
 
@@ -95,7 +96,21 @@ lib.trivial.checkListOfEnum "${pname}: flavor"
       runHook postInstall
     '';
 
-    passthru = { inherit themeName; };
+    passthru = {
+      inherit themeName;
+      # Refresh hashes even when two Renovate revisions share a commit date
+      updateSource = finalAttrs.finalPackage;
+      updateScript = nix-update-script {
+        attrPath = "catppuccin-gtk";
+        extraArgs = [
+          "--flake"
+          "--format"
+          "--version=branch"
+          "--version-regex=.*-(unstable-.*)"
+          "--subpackage=updateSource"
+        ];
+      };
+    };
 
     meta = {
       description = "Catppuccin GTK theme by Fausto-Korpsvart";
@@ -103,4 +118,4 @@ lib.trivial.checkListOfEnum "${pname}: flavor"
       license = lib.licenses.gpl3Only;
       platforms = lib.systems.doubles.linux;
     };
-  }
+  })

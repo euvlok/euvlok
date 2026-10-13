@@ -2,7 +2,7 @@
   lib,
   fetchurl,
   fetchFromGitHub,
-  nix-update,
+  nix-update-script,
   stdenvNoCC,
 }:
 let
@@ -41,7 +41,7 @@ let
   };
 
   # nix-update --subpackage needs a derivation whose `src` is declared in this
-  # file. Raw fetchurl/fetchFromGitHub FODs report their position in nixpkgs.
+  # file because raw fetchers report their position in nixpkgs
   mkPin =
     {
       pname,
@@ -60,23 +60,6 @@ let
       '';
     };
 
-  # Version discovery still goes through NVIDIA's directory indexes (see
-  # nvidia-prefetch). GitHub is only the release oracle nix-update understands
-  # for a .run src.
-  updateArgs = [
-    "--flake"
-    "--format"
-    "--url"
-    "https://github.com/NVIDIA/open-gpu-kernel-modules"
-    "--subpackage"
-    "aarch64"
-    "--subpackage"
-    "open"
-    "--subpackage"
-    "settings"
-    "--subpackage"
-    "persistenced"
-  ];
 in
 stdenvNoCC.mkDerivation {
   pname = "nvidia-driver";
@@ -110,7 +93,6 @@ stdenvNoCC.mkDerivation {
       pname = "nvidia-driver-persistenced";
       src = persistenced;
     };
-    inherit updateArgs;
     mkDriverArgs = {
       inherit version;
       sha256_64bit = src.outputHash;
@@ -119,9 +101,17 @@ stdenvNoCC.mkDerivation {
       settingsSha256 = settings.outputHash;
       persistencedSha256 = persistenced.outputHash;
     };
-    updateScript = nix-update.passthru.nix-update-script {
-      extraArgs = updateArgs;
+    updateScript = nix-update-script {
       attrPath = "nvidia-driver";
+      extraArgs = [
+        "--flake"
+        "--format"
+        "--url=https://github.com/NVIDIA/open-gpu-kernel-modules"
+        "--subpackage=aarch64"
+        "--subpackage=open"
+        "--subpackage=settings"
+        "--subpackage=persistenced"
+      ];
     };
   };
 

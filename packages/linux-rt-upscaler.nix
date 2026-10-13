@@ -6,6 +6,7 @@
   libXext,
   libXfixes,
   libxcb,
+  nix-update-script,
   python3Packages,
   qt6,
   vulkan-headers,
@@ -74,6 +75,14 @@ python3Packages.buildPythonApplication (finalAttrs: {
   '';
 
   pythonImportsCheck = [ "upscaler" ];
+
+  passthru.updateScript = nix-update-script {
+    attrPath = "linux-rt-upscaler";
+    extraArgs = [
+      "--flake"
+      "--format"
+    ];
+  };
 
   meta = {
     description = "Real-time SRCNN upscaler for X11 and XWayland windows";

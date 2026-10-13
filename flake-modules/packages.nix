@@ -24,7 +24,6 @@
         linux-rt-upscaler = final.callPackage ../packages/linux-rt-upscaler.nix { };
         lsfg-vk = final.callPackage ../packages/lsfg-vk.nix { };
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
-        nvidia-prefetch = final.callPackage ../packages/nvidia-prefetch.nix { };
       }
       // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
         chatgpt = final.callPackage (import ../slop.nix).packages.chatgpt { };

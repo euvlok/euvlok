@@ -4,6 +4,7 @@
   fetchzip,
   cmake,
   ninja,
+  nix-update-script,
   pkg-config,
   vulkan-headers,
   vulkan-loader,
@@ -47,6 +48,16 @@ stdenv.mkDerivation (finalAttrs: {
   postFixup = ''
     patchelf --add-rpath "${lib.attrsets.getLib vulkan-loader}/lib" "$out/bin/lsfg-vk-cli"
   '';
+
+  # Renovate selects cgit tags; nix-update refreshes the corresponding hash
+  passthru.updateScript = nix-update-script {
+    attrPath = "lsfg-vk";
+    extraArgs = [
+      "--flake"
+      "--format"
+      "--version=skip"
+    ];
+  };
 
   meta = {
     description = "Lossless Scaling frame generation Vulkan layer";

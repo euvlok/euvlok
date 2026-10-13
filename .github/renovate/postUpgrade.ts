@@ -1,57 +1,14 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
 
 type Command = Readonly<{ command: string; args: readonly string[] }>;
-type Task = Readonly<{ commands: readonly Command[]; prepare?: () => void }>;
-type SourcePackage = Readonly<{
-  name: string;
-  subpackages?: readonly string[];
-  prepare?: () => void;
-}>;
+type Task = Readonly<{ commands: readonly Command[] }>;
 
-function updateThemeDate(): void {
-  const file = "packages/catppuccin-gtk.nix";
-  const content = readFileSync(file, "utf8");
-  const revision = content.match(/^\s*rev = "([a-f0-9]{40})";$/m)?.[1];
-  if (!revision) {
-    throw new Error("Cannot find the GTK theme revision");
-  }
-  const date = execFileSync(
-    "gh",
-    [
-      "api",
-      `repos/Fausto-Korpsvart/Catppuccin-GTK-Theme/commits/${revision}`,
-      "--jq",
-      ".commit.committer.date[:10]",
-    ],
-    { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] },
-  ).trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    throw new Error("Cannot determine the GTK theme commit date");
-  }
-  const updated = content.replace(
-    /version = "unstable-[0-9-]+";/,
-    `version = "unstable-${date}";`,
-  );
-  writeFileSync(file, updated);
-}
-
-const sourcePackages: readonly SourcePackage[] = [
-  { name: "linux-rt-upscaler" },
-  { name: "lsfg-vk" },
-  {
-    name: "nvidia-driver",
-    subpackages: ["aarch64", "open", "settings", "persistenced"],
-  },
-  { name: "catppuccin-gtk", prepare: updateThemeDate },
-];
-const sourceArguments = [
-  "--flake",
-  "--version=skip",
-  "--src-only",
-  "--system",
-  "x86_64-linux",
+const sourcePackages = [
+  "linux-rt-upscaler",
+  "lsfg-vk",
+  "nvidia-driver",
+  "catppuccin-gtk",
 ];
 const tasks = new Map<string, Task>([
   // Renovate's Nix manager only maintains flake.lock, so refresh devenv too
@@ -66,24 +23,38 @@ const tasks = new Map<string, Task>([
     },
   ],
   ...sourcePackages.map(
-    ({ name, subpackages = [], prepare }) =>
+    (name) =>
       [
         name,
         {
           commands: [
             {
-              command: "nix-update",
+              command: "nix",
               args: [
-                ...sourceArguments,
-                ...subpackages.flatMap((subpackage) => [
-                  "--subpackage",
-                  subpackage,
-                ]),
-                name,
+                "run",
+                "--impure",
+                "--expr",
+                `let
+                  flake = builtins.getFlake (toString ./.);
+                  pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; };
+                  package = flake.packages.x86_64-linux.${name};
+                  version = ${
+                    name === "catppuccin-gtk"
+                      ? '"--version=branch=" + package.src.rev'
+                      : '"--version=skip"'
+                  };
+                in pkgs.writeShellApplication {
+                  name = "euvlok-package-update";
+                  runtimeInputs = [ pkgs.nixfmt ];
+                  text = pkgs.lib.strings.escapeShellArgs (package.updateScript ++ [
+                    version
+                    "--src-only"
+                    "--system=x86_64-linux"
+                  ]);
+                }`,
               ],
             },
           ],
-          ...(prepare ? { prepare } : {}),
         },
       ] as const,
   ),
@@ -92,7 +63,6 @@ const tasks = new Map<string, Task>([
 const name = process.argv[2] ?? "missing";
 const task = tasks.get(name);
 if (!task) throw new Error(`Unsupported Renovate post-upgrade task: ${name}`);
-task.prepare?.();
 for (const { command, args } of task.commands) {
   execFileSync(command, args, { stdio: "inherit" });
 }
