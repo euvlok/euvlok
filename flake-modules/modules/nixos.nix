@@ -12,6 +12,7 @@
   hardware = ../../modules/nixos/hardware.nix;
   locale = ../../modules/nixos/locale.nix;
   networking = ../../modules/nixos/networking.nix;
+  nix-ld = ../../modules/nixos/nix-ld/nix-ld.nix;
   nix = ../../modules/nixos/nix.nix;
   nvidia = applyEuvlokInputs ../../modules/nixos/nvidia.nix;
   plasma = mkDesktopModule ../../modules/nixos/plasma.nix;

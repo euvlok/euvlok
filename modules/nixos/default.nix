@@ -21,6 +21,7 @@
     ./hardware.nix
     ./locale.nix
     ./networking.nix
+    ./nix-ld/nix-ld.nix
     ./nix.nix
     (lib.modules.importApply ./nvidia.nix { inherit euvlokInputs; })
     ./plasma.nix
