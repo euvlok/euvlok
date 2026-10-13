@@ -1440,7 +1440,16 @@ in
           license = lib.licenses.unfree;
           platforms = lib.attrsets.attrNames sources;
         };
+        passthru = { inherit updateSources; };
       };
+      # Refresh both RPM hashes with native fetchers, including unchanged
+      # versions, without requiring a builder for the other architecture
+      updateSources = lib.attrsets.mapAttrs (
+        system: _:
+        payload.overrideAttrs {
+          src = fetchSource system;
+        }
+      ) sources;
       fhsArgs = {
         inherit version;
         multiArch = false;
@@ -1570,20 +1579,19 @@ in
           print(versions[0])
           PY
           )
-          update=(${
-            lib.escapeShellArgs (nix-update-script {
+          exec ${
+            lib.strings.escapeShellArgs (nix-update-script {
+              attrPath = "chatgpt.unwrapped";
               extraArgs = [
                 "--flake"
+                "--format"
                 "--override-filename=slop.nix"
                 "--system=${stdenvNoCC.buildPlatform.system}"
+                "--subpackage=updateSources.x86_64-linux"
+                "--subpackage=updateSources.aarch64-linux"
               ];
             })
-          })
-          "''${update[@]}" chatgpt.unwrapped --version="$version" "$@"
-          # Refresh both hashes even when the shared version is already current
-          for system in x86_64-linux aarch64-linux; do
-            "''${update[@]}" "chatgpt.updateSources.$system" --version=skip "$@"
-          done
+          } --version="$version" "$@"
         '';
       };
     in
@@ -1606,16 +1614,8 @@ in
         '';
         passthru = {
           unwrapped = payload;
-          inherit node extensionHost;
-          updateScript = lib.getExe updater;
-          # Fetch either RPM with native tools so refreshing the ARM hash
-          # does not require an ARM builder on an x86_64 machine
-          updateSources = lib.attrsets.mapAttrs (
-            system: _:
-            payload.overrideAttrs {
-              src = fetchSource system;
-            }
-          ) sources;
+          inherit node extensionHost updateSources;
+          updateScript = lib.meta.getExe updater;
         };
         meta = {
           description = "ChatGPT desktop with Work and Codex in an FHS environment";
