@@ -2,7 +2,7 @@
   flake-file.inputs = {
     artcraft.inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
     artcraft.url = "github:Hy4ri/artcraft-flake";
-    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
+    nixpkgs-unstable.follows = "users-nixpkgs";
     spicetify-nix = {
       inputs = {
         nixpkgs.follows = "users-nixpkgs-unstable-small";

@@ -167,7 +167,7 @@
         nixpkgs.follows = "users-nixpkgs";
       };
     };
-    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
+    nixpkgs-unstable.follows = "users-nixpkgs";
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs = {
@@ -183,19 +183,11 @@
         systems.follows = "users-flake-utils/systems";
       };
     };
-    users-devenv = {
-      url = "github:cachix/devenv";
-      inputs = {
-        cachix.inputs.flake-compat.follows = "";
-        crate2nix.follows = "";
-        flake-compat.follows = "";
-        flake-parts.follows = "users-flake-parts";
-        nixd.follows = "";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
-      };
-    };
     users-flake-file.url = "github:denful/flake-file";
-    users-flake-parts.url = "github:hercules-ci/flake-parts";
+    users-flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "users-nixpkgs";
+    };
     users-flake-utils.url = "github:numtide/flake-utils";
     users-nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     users-nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
