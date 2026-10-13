@@ -530,22 +530,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-container": {
-      "locked": {
-        "lastModified": 1791042000,
-        "narHash": "sha256-OqskN+k9KNbaOKvzycqQrxKSoUrfw0Anmp7O2oYQRZc=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "818407823cce3ed88e0f0b543c9a82d37472f56a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "pull/566547/head",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1790477367,
@@ -634,7 +618,6 @@
         "nix-homebrew": "nix-homebrew",
         "nix-jetbrains-plugins": "nix-jetbrains-plugins",
         "nixos-raspberrypi": "nixos-raspberrypi",
-        "nixpkgs-container": "nixpkgs-container",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "spicetify-nix": "spicetify-nix",
         "stylix": "stylix",
@@ -892,11 +875,11 @@
     },
     "users-nixpkgs": {
       "locked": {
-        "lastModified": 1791260994,
-        "narHash": "sha256-MFBjw66d4h06MvpW6lIl7RwarLteD0sk859CncGwb1Q=",
-        "rev": "151fa4e8ddfdd8dd25d945ad94ed54a13de9f6e4",
+        "lastModified": 1791734076,
+        "narHash": "sha256-0dNcyVeoD61zhucIpt5BAQ+ytd6JzF641Z+A9bgltLo=",
+        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1086391.151fa4e8ddfd/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1090327.7fd4004d0511/nixexprs.tar.zst"
       },
       "original": {
         "type": "tarball",
@@ -905,11 +888,11 @@
     },
     "users-nixpkgs-unstable-small": {
       "locked": {
-        "lastModified": 1791350842,
-        "narHash": "sha256-IlSEw8qzFSNG5Kxlmlxm7+6TVi5QsIW0Mpi0R7tliRU=",
-        "rev": "43f27d9653e613193f89b835af97d081f575b6ee",
+        "lastModified": 1791832894,
+        "narHash": "sha256-2sEUhTwA216Ti50tv5hfUBgo4uF1NfYrWeCp4PBscSM=",
+        "rev": "6aa7ad7f840d5a5bf17020b231d1c8d87a71995b",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1087008.43f27d9653e6/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1091088.6aa7ad7f840d/nixexprs.tar.zst"
       },
       "original": {
         "type": "tarball",

@@ -6,24 +6,6 @@
   localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let
-  fixCudaOutputPropagation =
-    package:
-    if
-      inputs.nixpkgs.lib.isDerivation package && builtins.isList (package.propagatedBuildOutputs or null)
-    then
-      package.overrideAttrs (old: {
-        # Clear CUDA's array before exporting space-separated output names
-        preFixup = (old.preFixup or "") + ''
-          fixupPropagatedBuildOutputsForMultipleOutputs() {
-            local outputNames="''${propagatedBuildOutputs[*]}"
-            unset propagatedBuildOutputs
-            export propagatedBuildOutputs="$outputNames"
-          }
-        '';
-      })
-    else
-      package;
-
   packageFixesOverlay = _final: prev: {
     rocmPackages = prev.rocmPackages.overrideScope (
       _rocmFinal: rocmPrev: {
@@ -133,24 +115,6 @@ let
             pythonPrev.black;
       })
     ];
-    cudaPackages = prev.cudaPackages.overrideScope (
-      _cudaFinal: cudaPrev: builtins.mapAttrs (_: fixCudaOutputPropagation) cudaPrev
-    );
-    lazarus-qt6 = prev.lazarus-qt6.overrideAttrs (old: {
-      # Removing rpaths leaves empty segments rejected by makeBinaryWrapper
-      postInstall =
-        builtins.replaceStrings
-          [ "sed -re 's/-rpath [^ ]+//g'" ]
-          [ "sed -re 's/-rpath [^ ]+//g' -e 's/ +/ /g; s/^ //; s/ $//'" ]
-          old.postInstall;
-    });
-    nvtopPackages = prev.nvtopPackages // {
-      full = prev.nvtopPackages.full.override {
-        cudaPackages = prev.cudaPackages // {
-          cuda_nvml_dev = fixCudaOutputPropagation prev.cudaPackages.cuda_nvml_dev;
-        };
-      };
-    };
   };
 
   packageSetArgs =

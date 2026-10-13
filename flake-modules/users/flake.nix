@@ -170,7 +170,6 @@
         nixpkgs.follows = "users-nixpkgs";
       };
     };
-    nixpkgs-container.url = "github:NixOS/nixpkgs/pull/566547/head";
     nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";

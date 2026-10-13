@@ -1,6 +1,5 @@
 {
   flake-file.inputs = {
-    nixpkgs-container.url = "github:NixOS/nixpkgs/pull/566547/head";
     anime-cursors-source = {
       inputs = {
         devenv.follows = "users-devenv";

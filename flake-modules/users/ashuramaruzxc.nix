@@ -106,7 +106,7 @@ in
       runner = "macos-latest";
       modules = [
         (lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8 {
-          containerPackage = inputs.nixpkgs-container.legacyPackages.aarch64-darwin.container;
+          containerPackage = inputs.nixpkgs.legacyPackages.aarch64-darwin.container;
           sharedModules = [
             config.flake.darwinModules.default
             config.flake.darwinModules.zsh
