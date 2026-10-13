@@ -29,9 +29,28 @@ binary.overrideAttrs (old: {
   };
   passthru = old.passthru // {
     unbranded = true;
+    # Native fetchers can refresh both artifacts without a Darwin builder
+    updateSources = lib.attrsets.mapAttrs (
+      _: source:
+      binary.overrideAttrs {
+        src = pkgs.fetchurl { inherit (source) url sha256; };
+      }
+    ) sources.platforms;
+    # Taskcluster discovery supplies URLs and a version; nix-update owns the
+    # version and hash replacements in the existing JSON source pins
     updateScript = [
-      "python3"
-      (toString ./update.py)
-    ];
+      (lib.meta.getExe pkgs.python3)
+      ./discover.py
+    ]
+    ++ pkgs.nix-update-script {
+      attrPath = "firefox-unbranded";
+      extraArgs = [
+        "--flake"
+        "--override-filename=lib/firefox-unbranded/source.json"
+        "--system=${pkgs.stdenvNoCC.buildPlatform.system}"
+        "--subpackage=updateSources.x86_64-linux"
+        "--subpackage=updateSources.aarch64-darwin"
+      ];
+    };
   };
 })

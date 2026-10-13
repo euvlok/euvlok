@@ -25,6 +25,14 @@
         lsfg-vk = final.callPackage ../packages/lsfg-vk.nix { };
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
       }
+      //
+        lib.attrsets.optionalAttrs
+          (lib.lists.elem pkgs.stdenvNoCC.hostPlatform.system (
+            lib.attrsets.attrNames (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms
+          ))
+          {
+            firefox-unbranded = final.callPackage ../lib/firefox-unbranded/firefox-unbranded.nix { };
+          }
       // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
         chatgpt = final.callPackage (import ../slop.nix).packages.chatgpt { };
       };
