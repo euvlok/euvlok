@@ -137,7 +137,7 @@
           pkgs.writeShellApplication {
             name = "write-contributor-flake";
             runtimeInputs = [
-              inputs.determinate.packages.${pkgs.stdenv.hostPlatform.system}.default
+              inputs.determinate.inputs.nix.packages.${pkgs.stdenv.hostPlatform.system}.default
             ];
             text = ''
               cd flake-modules/users

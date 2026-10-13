@@ -18,7 +18,7 @@
       time
       ;
     nix-prefetch-github = pkgs.nix-prefetch-github.override {
-      nix = inputs.determinate.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      nix = inputs.determinate.inputs.nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
     };
   };
 
