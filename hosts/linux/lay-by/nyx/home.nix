@@ -7,6 +7,7 @@
 }:
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -26,7 +27,7 @@
       {
         home.stateVersion = "26.05";
         home.sessionVariables = {
-          DEFAULT_BROWSER = "${zenBrowserPackage}/bin/zen";
+          DEFAULT_BROWSER = lib.meta.getExe zenBrowserPackage;
           SHELL = "fish";
           TERM = "alacritty";
         };

@@ -1,0 +1,17 @@
+{
+  "version": "158.0",
+  "platforms": {
+    "x86_64-linux": {
+      "taskId": "CjIk25zlTwOt3j7I5Fc28A",
+      "buildId": "20261007201254",
+      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/CjIk25zlTwOt3j7I5Fc28A/artifacts/public/build/target.tar.xz",
+      "sha256": "sha256-62Uj0VTYzjzHBNVnED7eSZ4WMUuhRvt77YuoJ7Fpq7s="
+    },
+    "aarch64-darwin": {
+      "taskId": "NcIPXVd8RCuXQ0FfqJn5bw",
+      "buildId": "20261007201254",
+      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/NcIPXVd8RCuXQ0FfqJn5bw/artifacts/public/build/target.dmg",
+      "sha256": "sha256-0LwBbLOXeveN1pT49qv/vxYFh76SCniaERZjywuLglU="
+    }
+  }
+}

@@ -13,8 +13,6 @@ in
   config = lib.attrsets.optionalAttrs (options.programs ? zen-browser) (
     lib.modules.mkIf (config.catppuccin.enable && config.programs.zen-browser.enable) {
       programs.zen-browser.profiles.default = {
-        extensions.packages = [ (import ./web-file-icons.nix { inherit lib pkgs; }) ];
-
         settings."toolkit.legacyUserProfileCustomizations.stylesheets" = true;
       };
 

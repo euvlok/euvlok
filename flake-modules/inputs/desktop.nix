@@ -24,8 +24,7 @@
     raycast.url = "github:4evy/raycast";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
-    zen-browser.inputs.home-manager.follows = "home-manager";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
+    zen-browser.flake = false;
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 }

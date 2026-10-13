@@ -107,23 +107,30 @@ let
     "sync.services.mozilla.com"
   ];
 
-  inherit (pkgs.callPackage ../../../../lib/firefox-addons.nix { }) buildFirefoxXpiAddon;
+  inherit (pkgs.callPackage ../../../../lib/firefox-addons.nix { })
+    buildFirefoxXpiAddon
+    toTweezleExtension
+    ;
   sharedExtensions = pkgs.callPackage ../../../../modules/hm/gui/firefox/extensions.nix {
     inherit buildFirefoxXpiAddon;
   };
-  defaultExtensionsList = lib.lists.filter lib.attrsets.isDerivation (
-    lib.attrsets.attrValues (
-      (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
-      // (import ../../../../slop.nix).firefoxExtensions { inherit buildFirefoxXpiAddon lib; }
-      // {
-        inherit (sharedExtensions) "magnolia@12.34";
-      }
+  defaultExtensionsList = map toTweezleExtension (
+    lib.lists.filter lib.attrsets.isDerivation (
+      lib.attrsets.attrValues (
+        (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
+        // (import ../../../../slop.nix).firefoxExtensions { inherit buildFirefoxXpiAddon lib; }
+        // {
+          inherit (sharedExtensions) "magnolia@12.34";
+        }
+      )
     )
   );
 in
 {
 
   euvlok.home.firefox = {
+    floorp.extraExtensions = defaultExtensionsList;
+    zen-browser.extraExtensions = defaultExtensionsList;
     acceptedLanguages = [
       "en-US"
       "en"
@@ -147,14 +154,10 @@ in
 
   programs.floorp = {
     profiles.default = {
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
       inherit search settings;
     };
     profiles.backup = {
       id = 1;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
       inherit search settings;
     };
     nativeMessagingHosts = lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux (
@@ -164,15 +167,11 @@ in
   programs.zen-browser = {
     profiles.default = {
       settings = zenSettings;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
       inherit search;
     };
     profiles.backup = {
       id = 1;
       settings = zenSettings;
-      extensions.packages = defaultExtensionsList;
-      extensions.force = true;
       inherit search;
     };
     nativeMessagingHosts = lib.modules.mkIf (

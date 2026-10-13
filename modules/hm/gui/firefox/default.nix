@@ -7,16 +7,22 @@
 }:
 let
   cfg = config.euvlok.home.firefox;
+  unbrandedFirefox = pkgs.callPackage ../../../../lib/firefox-unbranded/firefox-unbranded.nix { };
+  addons = pkgs.callPackage ../../../../lib/firefox-addons.nix { };
+  extensionType = lib.types.submodule {
+    freeformType = (pkgs.formats.json { }).type;
+    options.id = lib.options.mkOption {
+      type = lib.types.nonEmptyStr;
+      description = "The Firefox add-on ID";
+    };
+  };
+  browserNames = [
+    "firefox"
+    "floorp"
+    "librewolf"
+    "zen-browser"
+  ];
   default = {
-    extensions.packages = lib.lists.filter lib.attrsets.isDerivation (
-      lib.attrsets.attrValues (
-        pkgs.callPackage ./extensions.nix {
-          inherit ((pkgs.callPackage ../../../../lib/firefox-addons.nix { })) buildFirefoxXpiAddon;
-        }
-      )
-    );
-
-    extensions.force = true;
     search = {
       force = true;
       default = config.euvlok.home.firefox.defaultSearchEngine;
@@ -182,6 +188,7 @@ let
     settings = {
       "browser.urlbar.suggest.calculator" = true;
       "browser.urlbar.update2.engineAliasRefresh" = true;
+      "xpinstall.signatures.required" = false;
     }
     // lib.attrsets.optionalAttrs (config.euvlok.home.firefox.acceptedLanguages != [ ]) {
       "intl.accept_languages" =
@@ -202,16 +209,20 @@ let
   };
 in
 {
-  imports = [ euvlokInputs.zen-browser.homeModules.twilight ];
+  imports = [
+    euvlokInputs.tweezle.homeModules.default
+    (lib.modules.importApply ./zen-browser.nix { inherit euvlokInputs; })
+    (lib.modules.importApply ./extension-policies.nix { inherit euvlokInputs; })
+    ./tweezle.nix
+  ];
 
   options.euvlok.home.firefox = {
     enable = lib.options.mkEnableOption "declarative Firefox-based browsers";
-    firefox.enable = lib.options.mkEnableOption "declarative Firefox" // {
-      default = true;
+    extraExtensions = lib.options.mkOption {
+      type = lib.types.listOf extensionType;
+      default = [ ];
+      description = "Additional Tweezle extension declarations for every enabled Firefox-family browser";
     };
-    floorp.enable = lib.options.mkEnableOption "declarative Floorp";
-    librewolf.enable = lib.options.mkEnableOption "declarative LibreWolf";
-    zen-browser.enable = lib.options.mkEnableOption "declarative Zen Browser";
     defaultSearchEngine = lib.options.mkOption {
       default = "google";
       description = "Search engine used by default in normal and private windows.";
@@ -232,7 +243,39 @@ in
       default = [ ];
       description = "Firefox language-pack identifiers to install for each enabled browser.";
     };
-  };
+  }
+  // lib.attrsets.genAttrs browserNames (name: {
+    enable =
+      lib.options.mkEnableOption "declarative ${name}"
+      // lib.attrsets.optionalAttrs (name == "firefox") {
+        default = true;
+      };
+    extraExtensions = lib.options.mkOption {
+      type = lib.types.listOf extensionType;
+      default = [ ];
+      description = "Additional Tweezle extension declarations for ${name}";
+    };
+    extensionConfigFile = lib.options.mkOption {
+      type = lib.types.nullOr lib.types.pathInStore;
+      readOnly = true;
+      description = "Tweezle extension configuration rendered for ${name}";
+    };
+    policiesFile = lib.options.mkOption {
+      type = lib.types.nullOr lib.types.pathInStore;
+      readOnly = true;
+      description = "Browser policies rendered by Tweezle for ${name}";
+    };
+  });
+
+  config.euvlok.home.firefox.extraExtensions = map addons.toTweezleExtension (
+    lib.lists.filter lib.attrsets.isDerivation (
+      builtins.attrValues (
+        pkgs.callPackage ./extensions.nix {
+          inherit (addons) buildFirefoxXpiAddon;
+        }
+      )
+    )
+  );
 
   config.programs =
     lib.attrsets.mapAttrs
@@ -244,14 +287,33 @@ in
             {
               enable = true;
               profiles.default = default;
-              inherit (config.euvlok.home.firefox) languagePacks;
               inherit policies;
             }
-            // lib.attrsets.optionalAttrs (package != null) { inherit package; }
+            // lib.attrsets.optionalAttrs (name == "firefox" && pkgs.stdenv.hostPlatform.isDarwin) {
+              darwinDefaultsId = "org.mozilla.nightlyunofficial";
+              configPath = "Library/Application Support/Firefox";
+            }
+            // lib.attrsets.optionalAttrs (package != null) {
+              package =
+                if pkgs.stdenv.hostPlatform.isDarwin && name == "firefox" then
+                  package
+                else
+                  package.override (old: {
+                    extraPoliciesFiles = (old.extraPoliciesFiles or [ ]) ++ [ cfg.${name}.policiesFile ];
+                  });
+            }
           )
       )
       {
-        inherit (pkgs) firefox librewolf;
+        inherit (pkgs) librewolf;
+        firefox =
+          if pkgs.stdenv.hostPlatform.isDarwin then
+            unbrandedFirefox
+          else
+            pkgs.wrapFirefox unbrandedFirefox {
+              pname = "firefox-unbranded";
+              hasMozSystemDirPatch = false;
+            };
         floorp = pkgs.unstable.floorp-bin;
         zen-browser = null;
       };

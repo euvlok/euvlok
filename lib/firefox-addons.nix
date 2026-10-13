@@ -46,4 +46,11 @@ let
 in
 {
   inherit buildFirefoxXpiAddon;
+
+  toTweezleExtension = addon: {
+    id = addon.addonId;
+    install_url = "file://${lib.strings.concatStringsSep "/" (map lib.strings.escapeURL (lib.strings.splitString "/" (toString addon.src)))}";
+    installation_mode = "normal_installed";
+    updates_disabled = true;
+  };
 }

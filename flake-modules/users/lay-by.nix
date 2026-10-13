@@ -5,7 +5,10 @@
   ...
 }:
 let
-  zenBrowserPackage = inputs.zen-browser.packages.x86_64-linux.default;
+  zenBrowserPackage =
+    (import inputs.zen-browser {
+      pkgs = import inputs.nixpkgs-unstable-small { system = "x86_64-linux"; };
+    }).default;
 in
 {
 
