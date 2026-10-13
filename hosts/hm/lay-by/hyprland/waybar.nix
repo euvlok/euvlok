@@ -1,4 +1,4 @@
-_: {
+{ lib, ... }: {
   programs.waybar.enable = true;
   programs.waybar.settings = [
     {
@@ -69,19 +69,19 @@ _: {
         format = "󰎇 {} 󰎇";
         interval = 1;
         on-click = "playerctl -p Feishin play-pause";
-        exec = builtins.readFile ./scripts/music.sh;
+        exec = lib.trivial.readFile ./scripts/music.sh;
       };
       "custom/nvidia" = {
         format = " {}";
         interval = 1;
-        exec = builtins.readFile ./scripts/nvidia.sh;
+        exec = lib.trivial.readFile ./scripts/nvidia.sh;
       };
       # There might already be a custom module for this but I'm just going to use my old script.
       "custom/weather" = {
         interval = 900;
-        exec = builtins.readFile ./scripts/weather.sh;
+        exec = lib.trivial.readFile ./scripts/weather.sh;
       };
     }
   ];
-  programs.waybar.style = builtins.readFile ./waybar.css;
+  programs.waybar.style = lib.trivial.readFile ./waybar.css;
 }

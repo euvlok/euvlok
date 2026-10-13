@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   fonts = {
     enableDefaultPackages = true;
     fontDir.enable = true;
-    packages = builtins.attrValues {
+    packages = lib.attrsets.attrValues {
       inherit (pkgs)
         dina-font
         fira-code-symbols

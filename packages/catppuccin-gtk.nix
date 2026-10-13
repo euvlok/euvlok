@@ -19,13 +19,13 @@ let
       "-Macchiato"
     else
       "";
-  tweaks = lib.optionals (base != "") [ flavor ] ++ lib.optional rimless "rimless";
+  tweaks = lib.lists.optionals (base != "") [ flavor ] ++ lib.lists.optional rimless "rimless";
   themeName =
     "Catppuccin${base}-${lib.strings.toSentenceCase accent}-${color}"
-    + lib.optionalString (size == "compact") "-Compact"
-    + lib.optionalString rimless "-R";
+    + lib.strings.optionalString (size == "compact") "-Compact"
+    + lib.strings.optionalString rimless "-R";
 in
-lib.checkListOfEnum "${pname}: flavor"
+lib.trivial.checkListOfEnum "${pname}: flavor"
   [
     "latte"
     "frappe"
@@ -33,7 +33,7 @@ lib.checkListOfEnum "${pname}: flavor"
     "mocha"
   ]
   [ flavor ]
-  lib.checkListOfEnum
+  lib.trivial.checkListOfEnum
   "${pname}: accent"
   [
     "blue"
@@ -52,7 +52,7 @@ lib.checkListOfEnum "${pname}: flavor"
     "yellow"
   ]
   [ accent ]
-  lib.checkListOfEnum
+  lib.trivial.checkListOfEnum
   "${pname}: size"
   [
     "standard"
@@ -89,9 +89,9 @@ lib.checkListOfEnum "${pname}: flavor"
       HOME="$TMPDIR" BATCH_MODE=true bash ./install.sh \
         --dest "$out/share/themes" \
         --accent ${accent} \
-        --mode ${lib.toLower color} \
+        --mode ${lib.strings.toLower color} \
         --size ${size} \
-        ${lib.optionalString (tweaks != [ ]) "--tweaks ${lib.escapeShellArgs tweaks}"}
+        ${lib.strings.optionalString (tweaks != [ ]) "--tweaks ${lib.strings.escapeShellArgs tweaks}"}
       runHook postInstall
     '';
 
@@ -101,6 +101,6 @@ lib.checkListOfEnum "${pname}: flavor"
       description = "Catppuccin GTK theme by Fausto-Korpsvart";
       homepage = "https://github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme";
       license = lib.licenses.gpl3Only;
-      platforms = lib.platforms.linux;
+      platforms = lib.systems.doubles.linux;
     };
   }

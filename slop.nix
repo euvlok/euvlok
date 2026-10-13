@@ -346,7 +346,7 @@ let
         CODEX_HOME = configDir;
       }
       // lib.attrsets.optionalAttrs (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {
-        CODEX_CLI_PATH = lib.getExe config.euvlok.home.codex.package;
+        CODEX_CLI_PATH = lib.meta.getExe config.euvlok.home.codex.package;
       };
 
       settings = if config.programs.codex.settings == null then { } else config.programs.codex.settings;
@@ -566,11 +566,11 @@ let
       launcherExecutable = pkgs.writeShellApplication {
         name = "codex";
         runtimeEnv = {
-          CODEX_REAL_BIN = lib.getExe cfg.package;
+          CODEX_REAL_BIN = lib.meta.getExe cfg.package;
           CODEX_HOME = configDir;
         };
         text = ''
-          exec ${lib.getExe pkgs.python3} ${./slop/launcher.py} "$@"
+          exec ${lib.meta.getExe pkgs.python3} ${./slop/launcher.py} "$@"
         '';
       };
       launcher = pkgs.symlinkJoin {
@@ -578,14 +578,14 @@ let
         inherit (cfg.package) version;
         paths = [ cfg.package ];
         postBuild = ''
-          ln -sfn ${lib.getExe launcherExecutable} "$out/bin/codex"
+          ln -sfn ${lib.meta.getExe launcherExecutable} "$out/bin/codex"
         '';
         meta = cfg.package.meta // {
           mainProgram = "codex";
         };
       };
       notify = pkgs.writeShellScript "codex-notify" ''
-        client=${lib.escapeShellArg "${configDir}/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"}
+        client=${lib.strings.escapeShellArg "${configDir}/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"}
         if [[ -x "$client" ]]; then
           exec "$client" turn-ended "$@"
         fi
@@ -723,7 +723,7 @@ let
           "${configKeyDir}/config.toml" = null;
         };
       configFiles = lib.attrsets.filterAttrs (_: file: file.enable) (
-        builtins.intersectAttrs configFileKeys config.home.file
+        lib.attrsets.intersectAttrs configFileKeys config.home.file
       );
       writeConfig = pkgs.writeShellApplication {
         name = "codex-write-config";
@@ -739,8 +739,8 @@ let
       copyConfig =
         file:
         let
-          source = lib.escapeShellArg (toString file.source);
-          destination = lib.escapeShellArg (
+          source = lib.strings.escapeShellArg (toString file.source);
+          destination = lib.strings.escapeShellArg (
             if lib.strings.hasPrefix "/" file.target then
               file.target
             else
@@ -748,7 +748,7 @@ let
           );
         in
         ''
-          run ${lib.getExe writeConfig} ${source} ${destination}
+          run ${lib.meta.getExe writeConfig} ${source} ${destination}
         '';
     in
     {
@@ -765,7 +765,7 @@ let
                 target = lib.modules.mkIf (
                   config.home.preferXdgDirectories && lib.strings.hasPrefix "${configKeyDir}/" name
                 ) (lib.modules.mkOverride 900 "${configDir}/${lib.strings.removePrefix "${configKeyDir}/" name}");
-                force = lib.modules.mkIf (builtins.hasAttr name configFileKeys) (lib.modules.mkDefault true);
+                force = lib.modules.mkIf (lib.attrsets.hasAttr name configFileKeys) (lib.modules.mkDefault true);
               };
             }
           )
@@ -775,7 +775,7 @@ let
       config = lib.modules.mkIf cfg.enable {
         home.activation.codexWritableConfig = lib.hm.dag.entryAfter [
           "linkGeneration"
-        ] (lib.strings.concatMapStrings copyConfig (builtins.attrValues configFiles));
+        ] (lib.strings.concatMapStrings copyConfig (lib.attrsets.attrValues configFiles));
       };
     };
   # the future of work needs another fucking bridge
@@ -892,7 +892,7 @@ let
             browser=$(realpath -m "$browser")
             codexHome=$(realpath -m "$CODEX_HOME")
             case "$browser" in
-              ${lib.escapeShellArg browserService}|${lib.escapeShellArg "${resources}/plugins/openai-bundled/plugins/browser/scripts/browser-service.mjs"}|"$codexHome"/plugins/cache/openai-bundled/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/openai-bundled/chrome/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/chrome/*/scripts/browser-service.mjs)
+              ${lib.strings.escapeShellArg browserService}|${lib.strings.escapeShellArg "${resources}/plugins/openai-bundled/plugins/browser/scripts/browser-service.mjs"}|"$codexHome"/plugins/cache/openai-bundled/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/openai-bundled/chrome/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/chrome/*/scripts/browser-service.mjs)
                 if [[ -n "''${CODEX_BROWSER_SERVICE:-}" ]]; then
                   browser="$CODEX_BROWSER_SERVICE"
                   [[ -f "$browser" ]]
@@ -906,16 +906,16 @@ let
                 ;;
             esac
           fi
-          ${lib.optionalString isDarwin ''
+          ${lib.strings.optionalString isDarwin ''
             if [[ -n "''${CODEX_NODE_REPL_APP_BUNDLE:-}" ]]; then
               /usr/bin/codesign --verify --strict "$CODEX_NODE_REPL_APP_BUNDLE"
               # Sky checks the broker's parent signature
               exec "$CODEX_NODE_REPL_APP_BUNDLE/Contents/MacOS/codex" \
                 sandbox -P :danger-full-access -- \
-                ${lib.escapeShellArg "${resources}/cua_node/bin/node_repl"} "$@"
+                ${lib.strings.escapeShellArg "${resources}/cua_node/bin/node_repl"} "$@"
             fi
           ''}
-          exec ${lib.escapeShellArg "${resources}/cua_node/bin/node_repl"} "$@"
+          exec ${lib.strings.escapeShellArg "${resources}/cua_node/bin/node_repl"} "$@"
         '';
       };
       marketplaceName = "euvlok-chatgpt-bundled";
@@ -950,7 +950,7 @@ let
           ' ${cfg.desktop.pluginsPackage}/.agents/plugins/marketplace.json)
           while IFS= read -r name; do
             [[ -n "$name" ]] || continue
-            ${lib.getExe cfg.package} plugin add "$name@${marketplaceName}"
+            ${lib.meta.getExe cfg.package} plugin add "$name@${marketplaceName}"
           done <<< "$plugins"
         '';
       };
@@ -961,10 +961,10 @@ let
       }";
       nativeHost = pkgs.writeShellScript "helium-chatgpt-native-host" ''
         exec ${
-          lib.optionalString (
+          lib.strings.optionalString (
             !isDarwin && bundledChatgpt ? extensionHost
-          ) "${lib.getExe bundledChatgpt.extensionHost} "
-        }${lib.escapeShellArg nativeHostBinary} "$@"
+          ) "${lib.meta.getExe bundledChatgpt.extensionHost} "
+        }${lib.strings.escapeShellArg nativeHostBinary} "$@"
       '';
       nativeHostDirectory =
         if isDarwin then
@@ -976,7 +976,7 @@ let
       options.euvlok.home.codex.desktop = {
         enable = lib.options.mkEnableOption "Codex desktop plugins" // {
           default = resources != null;
-          defaultText = lib.literalExpression "config.euvlok.home.codex.desktop.resourcesPath != null";
+          defaultText = lib.options.literalExpression "config.euvlok.home.codex.desktop.resourcesPath != null";
         };
         resourcesPath = lib.options.mkOption {
           type = lib.types.nullOr lib.types.str;
@@ -1026,7 +1026,7 @@ let
       config = lib.modules.mkIf cfg.enable {
         programs.codex.settings = lib.modules.mkIf desktopAvailable (mkDefaults {
           mcp_servers.node_repl = {
-            command = lib.getExe nodeRepl;
+            command = lib.meta.getExe nodeRepl;
             args = [ ];
             startup_timeout_sec = 120;
             env =
@@ -1039,7 +1039,7 @@ let
                 BROWSER_USE_AVAILABLE_BACKENDS = if isDarwin then "chrome,iab,mcpapps" else "chrome,iab";
                 BROWSER_USE_TINYSKY_ENABLED = if isDarwin then "1" else "0";
                 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod";
-                NODE_REPL_TRUSTED_SERVICES = builtins.toJSON (
+                NODE_REPL_TRUSTED_SERVICES = lib.strings.toJSON (
                   {
                     browser = browserService;
                   }
@@ -1069,7 +1069,7 @@ let
 
         systemd.user.sessionVariables = lib.modules.mkIf (!isDarwin) environment;
         home.file."${nativeHostDirectory}/com.openai.codexextension.json" = lib.modules.mkIf heliumEnabled {
-          text = builtins.toJSON {
+          text = lib.strings.toJSON {
             name = "com.openai.codexextension";
             description = "ChatGPT browser native messaging host for Helium";
             path = toString nativeHost;
@@ -1088,7 +1088,7 @@ let
               "codexWritableConfig"
             ]
             ''
-              run ${lib.getExe syncPlugins}
+              run ${lib.meta.getExe syncPlugins}
             ''
         );
       };
@@ -1144,9 +1144,7 @@ let
         environment = lib.options.mkOption {
           type = lib.types.addCheck (lib.types.attrsOf (lib.types.nullOr lib.types.str)) (
             variables:
-            lib.lists.all (name: builtins.match "[A-Za-z_][A-Za-z0-9_]*" name != null) (
-              builtins.attrNames variables
-            )
+            lib.lists.all (name: lib.strings.isValidPosixName name) (lib.attrsets.attrNames variables)
           );
           default = { };
           example = {
@@ -1260,7 +1258,7 @@ let
             "unlink"
             "gh"
           ]
-        ++ map (command: "${command}*") [
+        ++ lib.lists.map (command: "${command}*") [
           "git commit"
           "git push"
           "git send-pack"
@@ -1295,7 +1293,7 @@ let
               repository = "anomalyco/opencode";
               description = "Use for current OpenCode implementation, configuration, SDK, and documentation details; compare behavior with the installed release.";
             };
-            watcher.ignore = map (directory: "**/${directory}/**") [
+            watcher.ignore = lib.lists.map (directory: "**/${directory}/**") [
               ".git"
               ".jj"
               ".cache"
@@ -1437,7 +1435,7 @@ in
         '';
         meta = {
           license = lib.licenses.unfree;
-          platforms = builtins.attrNames sources;
+          platforms = lib.attrsets.attrNames sources;
         };
       };
       fhsArgs = {
@@ -1507,7 +1505,7 @@ in
           export SSL_CERT_FILE="''${SSL_CERT_FILE:-${cacert}/etc/ssl/certs/ca-bundle.crt}"
           export NIX_SSL_CERT_FILE="''${NIX_SSL_CERT_FILE:-$SSL_CERT_FILE}"
           export NODE_EXTRA_CA_CERTS="''${NODE_EXTRA_CA_CERTS:-$SSL_CERT_FILE}"
-          export GIO_EXTRA_MODULES="${glib-networking}/lib/gio/modules:${lib.getLib dconf}/lib/gio/modules''${GIO_EXTRA_MODULES:+:$GIO_EXTRA_MODULES}"
+          export GIO_EXTRA_MODULES="${glib-networking}/lib/gio/modules:${lib.attrsets.getLib dconf}/lib/gio/modules''${GIO_EXTRA_MODULES:+:$GIO_EXTRA_MODULES}"
           export GDK_PIXBUF_MODULE_FILE="''${GDK_PIXBUF_MODULE_FILE:-${gdk-pixbuf}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache}"
           export GTK_PATH="/usr/lib/gtk-3.0''${GTK_PATH:+:$GTK_PATH}"
           # Other Linux distributions lack NixOS's graphics driver directory
@@ -1601,7 +1599,7 @@ in
           cp -rs ${payload}/lib "$out/lib"
           chmod u+w "$out/lib/chatgpt/resources/cua_node/bin"
           rm "$out/lib/chatgpt/resources/cua_node/bin/node"
-          ln -s ${lib.getExe node} "$out/lib/chatgpt/resources/cua_node/bin/node"
+          ln -s ${lib.meta.getExe node} "$out/lib/chatgpt/resources/cua_node/bin/node"
         '';
         passthru = {
           unwrapped = payload;
@@ -1620,7 +1618,7 @@ in
           description = "ChatGPT desktop with Work and Codex in an FHS environment";
           homepage = "https://learn.chatgpt.com/docs/linux/linux-app";
           license = lib.licenses.unfree;
-          platforms = builtins.attrNames sources;
+          platforms = lib.attrsets.attrNames sources;
           sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
           mainProgram = "chatgpt";
         };
@@ -1691,7 +1689,7 @@ in
         options.catppuccin.codex = {
           enable = lib.options.mkEnableOption "Catppuccin for Codex" // {
             default = config.catppuccin.autoEnable;
-            defaultText = lib.literalExpression "config.catppuccin.autoEnable";
+            defaultText = lib.options.literalExpression "config.catppuccin.autoEnable";
           };
           flavor = lib.options.mkOption {
             type = lib.types.enum [
@@ -1701,7 +1699,7 @@ in
               "mocha"
             ];
             default = config.catppuccin.flavor;
-            defaultText = lib.literalExpression "config.catppuccin.flavor";
+            defaultText = lib.options.literalExpression "config.catppuccin.flavor";
             description = "Catppuccin flavor for Codex";
           };
         };
@@ -1939,7 +1937,7 @@ in
             })
             {
               c = lib.attrsets.mapAttrsToList (lib.generators.mkKeyValueDefault {
-                mkValueString = builtins.toJSON;
+                mkValueString = lib.strings.toJSON;
               } "=") openrouterSettings;
             };
       in
@@ -2204,7 +2202,7 @@ in
           environment.systemPackages = [
             pkgs.unstable.tesseract
           ]
-          ++ map (package: package.override { tesseractLanguages = tesseractLang; }) [
+          ++ lib.lists.map (package: package.override { tesseractLanguages = tesseractLang; }) [
             pkgs.kdePackages.spectacle
             pkgs.kdePackages.skanpage
           ];
@@ -2346,7 +2344,7 @@ in
           MACHINE_LEARNING_MODEL_INTER_OP_THREADS = "1";
           MACHINE_LEARNING_MODEL_INTRA_OP_THREADS = "4";
           MACHINE_LEARNING_MODEL_TTL = "1800";
-          MACHINE_LEARNING_WORKER_TIMEOUT = lib.mkForce "300";
+          MACHINE_LEARNING_WORKER_TIMEOUT = lib.modules.mkForce "300";
         };
 
         settings.job = {
@@ -2385,7 +2383,7 @@ in
         // {
           pname = id;
           meta = addon.package.meta // {
-            platforms = lib.platforms.all;
+            platforms = lib.systems.doubles.all;
           };
         }
       )

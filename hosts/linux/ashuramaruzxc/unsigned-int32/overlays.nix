@@ -43,7 +43,7 @@
         postFixup = ''
           patchelf --add-rpath \
             ${
-              final.lib.makeLibraryPath [
+              final.lib.strings.makeLibraryPath [
                 final.glib
                 final.libadwaita
               ]

@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  imports = lib.trivial.pipe (builtins.readDir ./.) [
+  imports = lib.trivial.pipe (lib.filesystem.readDir ./.) [
     (lib.attrsets.filterAttrs (
       name: type:
       type == "regular"

@@ -4,7 +4,7 @@
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
 
-    path = builtins.attrValues { inherit (pkgs.eupkgs) yt-dlp; };
+    path = lib.attrsets.attrValues { inherit (pkgs.eupkgs) yt-dlp; };
 
     # I literally couldn't give less of a fuck if you login to my soulseek
     # account. Don't @ me about having a plaintext password on github

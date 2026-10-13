@@ -10,9 +10,9 @@ let
   };
 
   categories = {
-    audio = builtins.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
+    audio = lib.attrsets.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
 
-    development = builtins.attrValues {
+    development = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         android-studio
         nixd
@@ -20,7 +20,7 @@ let
       inherit (jetbrainsPackages) dataspell;
     };
 
-    gaming = builtins.attrValues {
+    gaming = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         cemu
         chiaki
@@ -44,7 +44,7 @@ let
     };
 
     important =
-      builtins.attrValues {
+      lib.attrsets.attrValues {
         inherit (pkgs.unstable)
           bitwarden-desktop
           keepassxc
@@ -65,7 +65,7 @@ let
       jetbrainsPackages.rider
     ];
 
-    multimedia = builtins.attrValues {
+    multimedia = lib.attrsets.attrValues {
       inherit (pkgs)
         nicotine-plus
         pear-desktop
@@ -82,7 +82,7 @@ let
 
     nemo = [
       (pkgs.nemo-with-extensions.override {
-        extensions = builtins.attrValues {
+        extensions = lib.attrsets.attrValues {
           inherit (pkgs)
             folder-color-switcher
             nemo-emblems
@@ -94,7 +94,7 @@ let
       })
     ];
 
-    networking = builtins.attrValues {
+    networking = lib.attrsets.attrValues {
       inherit (pkgs)
         openvpn
         proton-vpn
@@ -104,7 +104,7 @@ let
         ;
     };
 
-    productivity = builtins.attrValues {
+    productivity = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         anki
         obsidian
@@ -114,7 +114,7 @@ let
       inherit (pkgs.unstable.kdePackages) francis;
     };
 
-    social = builtins.attrValues {
+    social = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         dino
         materialgram

@@ -2,9 +2,7 @@
 # DO NOT edit manually
 {
   buildFirefoxXpiAddon,
-  fetchurl,
   lib,
-  stdenv,
 }:
 {
   "clearurls" = buildFirefoxXpiAddon {
@@ -13,8 +11,8 @@
     addonId = "{74145f27-f039-47ce-a470-a662b129930a}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432106/clearurls-1.27.3.xpi";
     sha256 = "sha256-VJJrbkJ01ZNaX8DapjIPHTcePS8aWHdGfKOrIqZcTyA=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
         "webRequest"
@@ -34,8 +32,8 @@
     addonId = "magnolia@12.34";
     url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-latest.xpi&inline=false&commit=4f3c9a6d9cb78bf307ed10f6c647ea43ad6a67d6";
     sha256 = "sha256-aWv6kusp4uC0gjRbfzWJbQx4DRm70gXGGHJvZ0DsDzA=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "cookies"
         "storage"
@@ -1015,8 +1013,8 @@
     addonId = "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4920035/refined_github-26.7.26.xpi";
     sha256 = "sha256-ufDdqBY8/3/DHYookICtwkrE7SVci5DPnDZR/Rioit8=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "scripting"
@@ -1034,8 +1032,8 @@
     addonId = "sponsorBlocker@ajay.app";
     url = "https://addons.mozilla.org/firefox/downloads/file/4897574/sponsorblock-6.1.7.xpi";
     sha256 = "sha256-DVDhYyxvFe4VpUPmcOHFcpdGBaXAJiKRbgjgJoA9+D8=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "scripting"
@@ -1051,8 +1049,8 @@
     addonId = "uBlock0@raymondhill.net";
     url = "https://addons.mozilla.org/firefox/downloads/file/4888680/ublock_origin-1.72.2.xpi";
     sha256 = "sha256-QMMVsNp4cYaBVez656UKWN+gkgrr2GXgCCFJhvG3xXg=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "alarms"
         "dns"
@@ -1074,8 +1072,8 @@
     addonId = "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4830363/violentmonkey-2.41.0.xpi";
     sha256 = "sha256-QtGEeIvS9qKRlW3THNRdqntKXRsZvxx0+wrnbkVvo2s=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "tabs"
         "<all_urls>"

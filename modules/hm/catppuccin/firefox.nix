@@ -42,7 +42,7 @@ in
         ];
       })
       (lib.modules.mkMerge (
-        map
+        lib.lists.map
           (
             name:
             let
@@ -57,7 +57,7 @@ in
               home.file."${browser.profilesPath}/${profile.path}/browser-extension-data/FirefoxColor@mozilla.com/storage.js" =
                 {
                   force = true;
-                  text = builtins.toJSON {
+                  text = lib.strings.toJSON {
                     firstRunDone = true;
                     inherit theme;
                   };

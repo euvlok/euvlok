@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = builtins.attrValues { inherit (pkgs) linux-firmware; };
+    firmware = lib.attrsets.attrValues { inherit (pkgs) linux-firmware; };
   };
   services.fwupd.enable = true;
 }

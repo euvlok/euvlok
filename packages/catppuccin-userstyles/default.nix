@@ -7,22 +7,22 @@
   makeWrapper,
 }:
 let
-  packageJson = lib.importJSON ./package.json;
+  packageJson = lib.trivial.importJSON ./package.json;
   # Bun writes each locked package as a single JSON array, with a trailing comma
   # Read its integrity directly so dependency updates also update the Nix source
   lockPrefix = "    \"usercss-meta\": ";
   lockLine =
     lib.lists.findFirst (lib.strings.hasPrefix lockPrefix)
       (throw "usercss-meta is missing from bun.lock")
-      (lib.strings.splitString "\n" (builtins.readFile ../../bun.lock));
-  usercssMetaLock = builtins.fromJSON (
+      (lib.strings.splitString "\n" (lib.trivial.readFile ../../bun.lock));
+  usercssMetaLock = lib.strings.fromJSON (
     lib.strings.removeSuffix "," (lib.strings.removePrefix lockPrefix lockLine)
   );
   usercssMeta = fetchurl {
     url = "https://registry.npmjs.org/usercss-meta/-/usercss-meta-${packageJson.dependencies.usercss-meta}.tgz";
     hash =
-      assert builtins.head usercssMetaLock == "usercss-meta@${packageJson.dependencies.usercss-meta}";
-      builtins.elemAt usercssMetaLock 3;
+      assert lib.lists.head usercssMetaLock == "usercss-meta@${packageJson.dependencies.usercss-meta}";
+      lib.lists.elemAt usercssMetaLock 3;
   };
 in
 stdenvNoCC.mkDerivation {
@@ -54,9 +54,9 @@ stdenvNoCC.mkDerivation {
     install -Dm644 ${../../LICENSE} "$out/share/licenses/catppuccin-userstyles/LICENSE"
     install -Dm644 node_modules/usercss-meta/LICENCE \
       "$out/share/licenses/catppuccin-userstyles/usercss-meta.LICENCE"
-    makeWrapper ${lib.getExe bun} "$out/bin/catppuccin-userstyles" \
+    makeWrapper ${lib.meta.getExe bun} "$out/bin/catppuccin-userstyles" \
       --add-flags "$out/lib/catppuccin-userstyles.js" \
-      --prefix PATH : ${lib.makeBinPath [ git ]}
+      --prefix PATH : ${lib.strings.makeBinPath [ git ]}
     runHook postInstall
   '';
 

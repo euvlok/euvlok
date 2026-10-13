@@ -25,7 +25,7 @@ binary.overrideAttrs (old: {
   meta = old.meta // {
     description = "Mozilla's prebuilt unbranded Firefox release";
     license = lib.licenses.mpl20;
-    platforms = builtins.attrNames sources.platforms;
+    platforms = lib.attrsets.attrNames sources.platforms;
   };
   passthru = old.passthru // {
     unbranded = true;

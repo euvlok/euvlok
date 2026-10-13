@@ -12,7 +12,7 @@
 }:
 let
   isDarwin = stdenvNoCC.hostPlatform.isDarwin;
-  version = if isDarwin then "26.1002.52244" else lib.getVersion chatgpt;
+  version = if isDarwin then "26.1002.52244" else lib.strings.getVersion chatgpt;
   darwinSources = {
     aarch64-darwin = {
       arch = "arm64";
@@ -61,12 +61,12 @@ let
       "net.imput.helium"
     ];
   };
-  heliumBrowser = builtins.toJSON {
+  heliumBrowser = lib.strings.toJSON {
     displayName = "Helium";
     shortDisplayName = "Helium";
     inherit linux macos;
   };
-  browserPlugins = lib.intersectLists pluginNames [
+  browserPlugins = lib.lists.intersectLists pluginNames [
     "browser"
     "chrome"
   ];
@@ -98,7 +98,7 @@ stdenvNoCC.mkDerivation {
   ]
   ++ lib.lists.optional isDarwin unzip;
   # Extract only the plugins; stdenv handles source permissions and hooks
-  unpackCmd = lib.optionalString isDarwin ''
+  unpackCmd = lib.strings.optionalString isDarwin ''
     unzip -q "$curSrc" 'ChatGPT.app/Contents/Resources/plugins/openai-bundled/*'
   '';
   sourceRoot =
@@ -110,14 +110,14 @@ stdenvNoCC.mkDerivation {
   postPatch = ''
     ${lib.strings.toShellVars {
       inherit marketplaceName;
-      selectedPlugins = builtins.toJSON pluginNames;
+      selectedPlugins = lib.strings.toJSON pluginNames;
     }}
     jq --arg name "$marketplaceName" \
       --argjson selected "$selectedPlugins" \
       '.name = $name | .plugins |= map(select(.name as $name | $selected | index($name)))' \
       .agents/plugins/marketplace.json | sponge .agents/plugins/marketplace.json
   ''
-  + lib.optionalString helium ''
+  + lib.strings.optionalString helium ''
     ${lib.strings.toShellVars {
       inherit
         browserPlugins
@@ -175,6 +175,6 @@ stdenvNoCC.mkDerivation {
   meta = {
     description = "ChatGPT's bundled Codex marketplace with optional Helium patches";
     license = lib.licenses.unfree;
-    platforms = lib.platforms.linux ++ lib.platforms.darwin;
+    platforms = lib.systems.doubles.linux ++ lib.systems.doubles.darwin;
   };
 }

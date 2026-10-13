@@ -72,7 +72,7 @@
       "hid_playstation" # for some reason dualsense acts as a mouse if it's not loaded early on
       "v4l2loopback" # scrcpy
     ];
-    extraModulePackages = builtins.attrValues {
+    extraModulePackages = lib.attrsets.attrValues {
       inherit (config.boot.kernelPackages) zenpower v4l2loopback;
     };
     kernelParams = [

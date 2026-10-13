@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   programs = {
     thunar = {
       enable = true;
-      plugins = builtins.attrValues { inherit (pkgs) thunar-archive-plugin thunar-volman; };
+      plugins = lib.attrsets.attrValues { inherit (pkgs) thunar-archive-plugin thunar-volman; };
     };
 
     hyprland.enable = true;

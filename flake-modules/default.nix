@@ -1,6 +1,6 @@
 {
-  flake-parts-lib,
   inputs,
+  lib,
   ...
 }:
 let
@@ -83,7 +83,7 @@ let
         }) output
       );
   };
-  packagesModule = flake-parts-lib.importApply ./packages.nix { providerInputs = inputs; };
+  packagesModule = lib.modules.importApply ./packages.nix { providerInputs = inputs; };
 
   # Keep the project module importable as `flakeModules.default` as well as
   # using it to build this flake. Its own flake-parts extensions are included
@@ -95,12 +95,12 @@ let
       inputs.flake-parts.flakeModules.modules
       inputs.home-manager.flakeModules.default
       inputs.nix-darwin.flakeModules.default
-      (flake-parts-lib.importApply ./hosts.nix {
+      (lib.modules.importApply ./hosts.nix {
         providerInputs = inputs;
         inherit supportedSystems;
       })
-      (flake-parts-lib.importApply ./modules.nix { inherit inputs; })
-      (flake-parts-lib.importApply ./overlays.nix { inherit inputs supportedSystems; })
+      (lib.modules.importApply ./modules.nix { inherit inputs; })
+      (lib.modules.importApply ./overlays.nix { inherit inputs supportedSystems; })
       packagesModule
     ];
   };
@@ -112,7 +112,7 @@ in
     inputs.flake-parts.flakeModules.touchup
     euvlokModule
     ./inputs
-    (flake-parts-lib.importApply ./tests.nix { providerInputs = inputs; })
+    (lib.modules.importApply ./tests.nix { providerInputs = inputs; })
   ];
 
   systems = supportedSystems;

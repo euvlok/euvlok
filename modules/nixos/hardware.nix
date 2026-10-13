@@ -10,16 +10,16 @@
       hardware.graphics.enable32Bit = true;
     })
     (lib.modules.mkIf config.nixpkgs.hostPlatform.isx86_64 {
-      hardware.graphics.extraPackages32 = builtins.attrValues {
+      hardware.graphics.extraPackages32 = lib.attrsets.attrValues {
         inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
       };
     })
     {
-      environment.systemPackages = builtins.attrValues { inherit (pkgs) libva-utils; };
+      environment.systemPackages = lib.attrsets.attrValues { inherit (pkgs) libva-utils; };
       hardware = {
         graphics = {
           enable = true;
-          extraPackages = builtins.attrValues {
+          extraPackages = lib.attrsets.attrValues {
             inherit (pkgs) libva mesa vulkan-loader;
           };
         };

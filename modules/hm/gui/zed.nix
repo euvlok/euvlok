@@ -9,7 +9,7 @@
 
   config = lib.modules.mkIf config.euvlok.home.zed-editor.enable {
     programs.zed-editor.enable = true;
-    programs.zed-editor.extraPackages = builtins.attrValues {
+    programs.zed-editor.extraPackages = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         bash-language-server
         markdownlint-cli2

@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 {
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) ruby_4_0 solargraph rubocop;
     inherit (pkgs.unstable.rubyPackages)
       rails

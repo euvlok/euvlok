@@ -14,7 +14,7 @@
     # allowing the NW.js runtime required by games using its bundled Chromium.
     nixpkgs.config.allowInsecurePredicate =
       pkg:
-      builtins.elem (pkg.name or "${pkg.pname}-${pkg.version}") (
+      lib.lists.elem (pkg.name or "${pkg.pname}-${pkg.version}") (
         [ "nwjs-0.102.1" ] ++ (config.nixpkgs.config.permittedInsecurePackages or [ ])
       );
 
@@ -29,13 +29,13 @@
         protontricks.enable = true;
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
-        extraCompatPackages = builtins.attrValues {
+        extraCompatPackages = lib.attrsets.attrValues {
           inherit (pkgs.unstable)
             proton-ge-bin
             steamtinkerlaunch
             ;
         };
-        extraPackages = builtins.attrValues {
+        extraPackages = lib.attrsets.attrValues {
           inherit (pkgs)
             curl
             desktop-file-utils
@@ -53,7 +53,7 @@
             yad
             ;
         };
-        fontPackages = builtins.attrValues {
+        fontPackages = lib.attrsets.attrValues {
           inherit (pkgs) wqy_zenhei source-han-sans;
         };
       };
@@ -69,13 +69,13 @@
 
     environment = {
       systemPackages =
-        (builtins.attrValues {
+        (lib.attrsets.attrValues {
           inherit (pkgs) scummvm inotify-tools;
           inherit (pkgs) winetricks protonplus;
           inherit (pkgs.wineWow64Packages) stagingFull;
         })
         ++ (lib.lists.optionals config.services.desktopManager.gnome.enable (
-          builtins.attrValues { inherit (pkgs) adwsteamgtk; }
+          lib.attrsets.attrValues { inherit (pkgs) adwsteamgtk; }
         ));
     };
   };

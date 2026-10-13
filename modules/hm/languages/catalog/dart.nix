@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) flutter; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) flutter; };
   vscode.extensions = [
     "dart-code.dart-code"
     "dart-code.flutter"

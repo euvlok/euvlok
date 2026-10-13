@@ -17,8 +17,8 @@ let
 in
 {
   options.euvlok.catppuccinGtk = {
-    enable = lib.mkEnableOption "Catppuccin GTK theme by Fausto-Korpsvart";
-    flavor = lib.mkOption {
+    enable = lib.options.mkEnableOption "Catppuccin GTK theme by Fausto-Korpsvart";
+    flavor = lib.options.mkOption {
       type = lib.types.enum [
         "latte"
         "frappe"
@@ -28,7 +28,7 @@ in
       default = "mocha";
       description = "Catppuccin color palette used by the GTK theme.";
     };
-    accent = lib.mkOption {
+    accent = lib.options.mkOption {
       type = lib.types.enum [
         "blue"
         "flamingo"
@@ -48,7 +48,7 @@ in
       default = "mauve";
       description = "Accent color used by the GTK theme.";
     };
-    size = lib.mkOption {
+    size = lib.options.mkOption {
       type = lib.types.enum [
         "standard"
         "compact"
@@ -56,15 +56,15 @@ in
       default = "standard";
       description = "Widget size of the GTK theme.";
     };
-    rimless = lib.mkEnableOption "GTK windows and menus without border rims";
+    rimless = lib.options.mkEnableOption "GTK windows and menus without border rims";
   };
 
-  config = lib.mkIf cfg.enable {
-    gtk.enable = lib.mkDefault true;
+  config = lib.modules.mkIf cfg.enable {
+    gtk.enable = lib.modules.mkDefault true;
     gtk.theme = {
       name = package.themeName;
       inherit package;
     };
-    gtk.gtk4.theme = lib.mkDefault config.gtk.theme;
+    gtk.gtk4.theme = lib.modules.mkDefault config.gtk.theme;
   };
 }

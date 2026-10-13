@@ -12,10 +12,10 @@ let
         if [ -z "$SSH_AUTH_SOCK" ] || [ -z "$SSH_CONNECTION" ]; then
           ${config.sshAuthSock.initialization.bash}
         fi
-        exec ${lib.getExe config.programs.ssh.package} "$@"
+        exec ${lib.meta.getExe config.programs.ssh.package} "$@"
       ''
     else
-      lib.getExe config.programs.ssh.package;
+      lib.meta.getExe config.programs.ssh.package;
   workKey = "${config.home.homeDirectory}/.ssh/id_ed25519_sk_work";
   # A separate SSH config prevents personal IdentityFile entries from accumulating.
   workSshConfig = pkgs.writeText "git-work-ssh-config" ''

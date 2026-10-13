@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) php intelephense phpstan;
     inherit (pkgs.unstable.phpPackages) composer psalm;
   };

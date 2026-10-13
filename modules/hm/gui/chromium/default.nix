@@ -209,7 +209,7 @@ in
     programs.chromium = lib.modules.mkIf isLinux {
       enable = true;
       package = browserPackage;
-      dictionaries = builtins.attrValues {
+      dictionaries = lib.attrsets.attrValues {
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
 

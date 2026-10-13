@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) ocaml dune_3 opam;
     inherit (pkgs.unstable.ocamlPackages) ocaml-lsp ocamlformat;
   };

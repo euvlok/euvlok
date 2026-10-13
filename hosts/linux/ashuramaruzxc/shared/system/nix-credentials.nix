@@ -11,7 +11,7 @@ _: {
   # nix.extraOptions = ''
   #   !include ${config.sops.secrets.gh_token.path}
   # '';
-  # environment.etc."determinate/config.json".text = builtins.toJSON {
+  # environment.etc."determinate/config.json".text = lib.strings.toJSON {
   #   authentication.additionalNetrcSources = [ config.sops.secrets.netrc_creds.path ];
   # };
 

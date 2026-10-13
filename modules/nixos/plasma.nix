@@ -65,7 +65,7 @@ in
 
     environment = {
       systemPackages =
-        builtins.attrValues {
+        lib.attrsets.attrValues {
           inherit (pkgs.unstable)
             adwaita-icon-theme
             adwaita-qt

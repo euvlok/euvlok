@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -37,7 +38,7 @@
       type = "fcitx5";
       fcitx5 = {
         waylandFrontend = true;
-        addons = builtins.attrValues {
+        addons = lib.attrsets.attrValues {
           inherit (pkgs) fcitx5-gtk fcitx5-mozc;
         };
       };

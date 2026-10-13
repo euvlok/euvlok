@@ -2,9 +2,7 @@
 # DO NOT edit manually
 {
   buildFirefoxXpiAddon,
-  fetchurl,
   lib,
-  stdenv,
 }:
 {
   "angular-devtools" = buildFirefoxXpiAddon {
@@ -13,8 +11,8 @@
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4902165/angular_devtools-1.17.0.xpi";
     sha256 = "sha256-oaqxXtG/jsbxiKrk3y8Bi/EYso4TSX7Ig6pIMmFPKEM=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "activeTab"
         "storage"
@@ -30,8 +28,8 @@
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4915668/bitwarden_password_manager-2026.7.0.xpi";
     sha256 = "sha256-EYNuudKryZFLsze1fiDFoJz0TyT6Vy9+iGOE/TUKURI=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
         "*://*/*"
@@ -56,8 +54,8 @@
     addonId = "addon@darkreader.org";
     url = "https://addons.mozilla.org/firefox/downloads/file/4899461/darkreader-4.9.129.xpi";
     sha256 = "sha256-9PBH/gjkILbSlhdzjqAKe3hIkrImK35vON0JuO6VikQ=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "alarms"
         "contextMenus"
@@ -74,8 +72,8 @@
     addonId = "@contain-facebook";
     url = "https://addons.mozilla.org/firefox/downloads/file/4451874/facebook_container-2.3.12.xpi";
     sha256 = "sha256-M2m9hlh3hg5tfTg5nVkCswDT1XN6yy0TQv9b6x03gME=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
         "browsingData"
@@ -95,8 +93,8 @@
     addonId = "FirefoxColor@mozilla.com";
     url = "https://addons.mozilla.org/firefox/downloads/file/3643624/firefox_color-2.1.7.xpi";
     sha256 = "sha256-t/sHtniPcjPdYiPngOGJtMe5VsJcQEk8KNcCBJMkkpI=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "theme"
         "storage"
@@ -110,8 +108,8 @@
     addonId = "floccus@handmadeideas.org";
     url = "https://addons.mozilla.org/firefox/downloads/file/4905907/floccus-5.10.2.xpi";
     sha256 = "sha256-6EvFbE4b/DzDrsKnQAPJlVq49Vo/UTlHVNLHc6/k9IM=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "*://*/*"
         "alarms"
@@ -130,8 +128,8 @@
     addonId = "foxyproxy@eric.h.jung";
     url = "https://addons.mozilla.org/firefox/downloads/file/4472757/foxyproxy_standard-9.2.xpi";
     sha256 = "sha256-jbHGR5mmD3Eh1Rpun2sEGHFZg0SSfJWv6DDCeIDwiF0=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "contextMenus"
         "downloads"
@@ -151,8 +149,8 @@
     addonId = "{bd6be57d-91d7-41d2-b61d-3ba20f7942e5}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4720796/kagi_translate-0.1.8.xpi";
     sha256 = "sha256-9dgTQpg4NoetdbfGdRnd9MPopt53moxbt4jF3tZZBoQ=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "contextMenus"
@@ -171,8 +169,8 @@
     addonId = "@testpilot-containers";
     url = "https://addons.mozilla.org/firefox/downloads/file/4867303/multi_account_containers-8.3.8.xpi";
     sha256 = "sha256-MGopSEU2PxWnR46WILQ/keoXYQiHJ4COIye//xbBREc=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
         "activeTab"
@@ -196,8 +194,8 @@
     addonId = "{9063c2e9-e07c-4c2c-9646-cfe7ca8d0498}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4882083/old_reddit_redirect-2.2.0.xpi";
     sha256 = "sha256-WzRv+PfehDBKQCQyY479vawKYXTWKsXChFzOSZjzMCI=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "declarativeNetRequestWithHostAccess"
         "*://reddit.com/*"
@@ -216,8 +214,8 @@
     addonId = "@react-devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4432990/react_devtools-6.1.1.xpi";
     sha256 = "sha256-staeIgQCvWuLx9gzlIkVsdbcq7RTodUIcqPbhg/ZLEY=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "scripting"
         "storage"
@@ -233,8 +231,8 @@
     addonId = "jid1-xUfzOsOFlzSOXg@jetpack";
     url = "https://addons.mozilla.org/firefox/downloads/file/4899821/reddit_enhancement_suite-5.24.10.xpi";
     sha256 = "sha256-RXPP2xAZNGfpnh3Vp5LyOuaXZFQMLgbQRE8SqBzcTwo=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "https://*.reddit.com/*"
         "cookies"
@@ -263,8 +261,8 @@
     addonId = "extension@redux.devtools";
     url = "https://addons.mozilla.org/firefox/downloads/file/4467343/reduxdevtools-3.2.10.xpi";
     sha256 = "sha256-7ysQoryLDRqETRRuPur/QH6qpjzQVk246v2HDIeoiVY=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "notifications"
         "contextMenus"
@@ -282,8 +280,8 @@
     addonId = "{2e5ff8c8-32fe-46d0-9fc8-6b8986621f3c}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4840197/search_by_image-8.5.3.xpi";
     sha256 = "sha256-umBEeLUPXEbhMBHqfj4pBqvHsbcst+h7AsT73vpkrjc=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "alarms"
         "contextMenus"
@@ -305,8 +303,8 @@
     addonId = "firefox-extension@steamdb.info";
     url = "https://addons.mozilla.org/firefox/downloads/file/4891926/steam_database-4.35.xpi";
     sha256 = "sha256-N8HNwur6cB42Xrjg7ypQUblW6h6ZQbOZtas/pCFPwSM=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "https://steamdb.info/*"
@@ -321,8 +319,8 @@
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4907275/styl_us-2.4.8.xpi";
     sha256 = "sha256-RVQmiQo4vT7lEQABEuzlFnX4u8IemIviFww65pAMvt8=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "alarms"
         "contextMenus"
@@ -342,8 +340,8 @@
     addonId = "extension@tabliss.io";
     url = "https://addons.mozilla.org/firefox/downloads/file/3940751/tabliss-2.6.0.xpi";
     sha256 = "sha256-3nZoEPI0scE//bcEeubL8G7XnD0ItRoH5HZvrf8InA8=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
       ];
@@ -355,8 +353,8 @@
     addonId = "{d3a88b28-681e-43b6-ac3d-22f92ba18818}";
     url = "https://addons.mozilla.org/firefox/downloads/file/3656490/translate_web_pages-7.5.xpi";
     sha256 = "sha256-ENWrAcTpe9zxIoYlRYoF/kVHtZ1upBjeDuZHy3Gn6Nk=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
         "storage"
@@ -371,8 +369,8 @@
     addonId = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4773733/user_agent_string_switcher-0.6.7.xpi";
     sha256 = "sha256-l5oEyaOA8QtxWYCTWm8+hw3/88gQDL45PWW0bbgqslc=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "contextMenus"
@@ -389,8 +387,8 @@
     addonId = "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4871262/view_page_archive-7.3.3.xpi";
     sha256 = "sha256-gcolvUE5LPSwPUwcTDnr1aTqqEDvik0m+Esd05aZmjQ=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "alarms"
         "contextMenus"
@@ -412,8 +410,8 @@
     addonId = "{5caff8cc-3d2e-4110-a88a-003cc85b3858}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4508409/vue_js_devtools-7.7.7.xpi";
     sha256 = "sha256-VnLNDTKY+lfy9R5GRAEeQVLm4pH28zhgFJXdgDczEWk=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "<all_urls>"
       ];
@@ -425,8 +423,8 @@
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
     url = "https://addons.mozilla.org/firefox/downloads/file/4859010/youtube_no_translation-2.24.3.xpi";
     sha256 = "sha256-I8o4CxNTP7POo8qd6Paetv79VGCMhd8ABdNozR2Q/YU=";
-    meta = with lib; {
-      platforms = platforms.all;
+    meta = {
+      platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "*://*.youtube.com/*"

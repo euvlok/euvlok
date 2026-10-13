@@ -5,11 +5,11 @@
   ...
 }:
 {
-  home.activation.bitwardenBrowserDirectories = lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
+  home.activation.bitwardenBrowserDirectories = lib.modules.mkIf pkgs.stdenv.hostPlatform.isLinux (
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run mkdir -p -- \
-        ${lib.escapeShellArg "${config.home.homeDirectory}/.mozilla/native-messaging-hosts"} \
-        ${lib.escapeShellArg "${config.home.homeDirectory}/.config/net.imput.helium/NativeMessagingHosts"}
+        ${lib.strings.escapeShellArg "${config.home.homeDirectory}/.mozilla/native-messaging-hosts"} \
+        ${lib.strings.escapeShellArg "${config.home.homeDirectory}/.config/net.imput.helium/NativeMessagingHosts"}
     ''
   );
 

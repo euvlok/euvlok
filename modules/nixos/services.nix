@@ -16,7 +16,7 @@
       gnome.gnome-keyring.enable = true;
       gnome.gnome-settings-daemon.enable = true;
       dbus.packages = [ (pkgs.gcr_3 or pkgs.gcr) ];
-      udev.packages = builtins.attrValues { inherit (pkgs.unstable) gnome-settings-daemon; };
+      udev.packages = lib.attrsets.attrValues { inherit (pkgs.unstable) gnome-settings-daemon; };
     };
   };
 }

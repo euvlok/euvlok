@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  home.packages = builtins.attrValues {
+  home.packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       pavucontrol
       networkmanagerapplet

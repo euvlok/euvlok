@@ -7,7 +7,7 @@
 {
   config = lib.modules.mkIf config.programs.zsh.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "euvlok Zsh" pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "euvlok Zsh" pkgs lib.systems.doubles.linux)
     ];
     programs.zsh = {
       autosuggestion.enable = true;

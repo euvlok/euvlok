@@ -33,7 +33,7 @@ in
 
     environment = {
       systemPackages =
-        builtins.attrValues {
+        lib.attrsets.attrValues {
           inherit (pkgs.unstable)
             apostrophe # Markdown Editor
             decibels # Audio Player
@@ -47,7 +47,7 @@ in
         }
         ++ lib.lists.optional config.catppuccin.enable catppuccinGtk;
 
-      gnome.excludePackages = builtins.attrValues {
+      gnome.excludePackages = lib.attrsets.attrValues {
         inherit (pkgs.unstable)
           epiphany # Browser
           evince # Docs

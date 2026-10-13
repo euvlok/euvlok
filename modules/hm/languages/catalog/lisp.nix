@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) sbcl; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) sbcl; };
   vscode.extensions = [ "mattn.lisp" ];
   vscode.settings."[lisp]".editor.formatOnSave = true;
   helix.languageServers.cl-lsp.command = "cl-lsp";

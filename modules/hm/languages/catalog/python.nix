@@ -10,7 +10,7 @@ let
   tySettings.diagnosticMode = "workspace";
 in
 {
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) uv ty ruff;
     python = pkgs.python313.withPackages (pythonPackages: [
       pythonPackages.ipython

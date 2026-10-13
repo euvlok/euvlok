@@ -128,6 +128,6 @@ stdenvNoCC.mkDerivation {
   meta = {
     description = "Pinned NVIDIA Unix driver sources for euvlok hosts";
     homepage = "https://www.nvidia.com/en-us/drivers/unix/";
-    platforms = lib.platforms.unix;
+    platforms = lib.systems.doubles.unix;
   };
 }

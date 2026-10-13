@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) zig zls; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) zig zls; };
   vscode.extensions = [ "ziglang.vscode-zig" ];
   vscode.settings = {
     "[zig]" = {

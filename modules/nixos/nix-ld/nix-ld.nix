@@ -2,7 +2,7 @@
 {
   programs.nix-ld = {
     enable = lib.modules.mkDefault true;
-    libraries = builtins.attrValues {
+    libraries = lib.attrsets.attrValues {
       inherit (pkgs)
         # CLI runtimes and native language extensions
         glibc

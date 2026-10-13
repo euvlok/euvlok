@@ -53,7 +53,7 @@
     "mbedtls-2.28.10"
   ];
 
-  environment.shells = builtins.attrValues { inherit (pkgs) zsh bash fish; };
+  environment.shells = lib.attrsets.attrValues { inherit (pkgs) zsh bash fish; };
 
   euvlok.nixos.locale = {
     enable = true;

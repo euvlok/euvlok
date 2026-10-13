@@ -14,7 +14,7 @@
   };
   services.gnome.gnome-keyring.enable = true;
 
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       bitwarden-desktop
       gnome-boxes

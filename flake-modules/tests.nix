@@ -157,7 +157,7 @@ in
       checks.module-consumers =
         pkgs.runCommand "euvlok-module-consumers"
           {
-            payload = builtins.unsafeDiscardStringContext (builtins.toJSON results);
+            payload = lib.strings.unsafeDiscardStringContext (lib.strings.toJSON results);
           }
           ''
             mkdir -p "$out"

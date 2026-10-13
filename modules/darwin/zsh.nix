@@ -11,7 +11,7 @@ let
   # Consume that module result instead of reaching back into hosts/ by name.
   shellAliases = hmConfig.programs.zsh.shellAliases;
   shellAliasesStr = lib.trivial.pipe shellAliases [
-    (attrs: lib.attrsets.filterAttrs (_: value: builtins.isString value) attrs)
+    (attrs: lib.attrsets.filterAttrs (_: value: lib.strings.isString value) attrs)
     (
       filteredAttrs:
       lib.generators.toKeyValue {
@@ -58,7 +58,7 @@ in
       "# Home Manager session environment"
       ". ${hmConfig.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
-      (lib.optionalString hmConfig.sshAuthSock.enable ''
+      (lib.strings.optionalString hmConfig.sshAuthSock.enable ''
         # These system-owned shell files replace Home Manager's shell integration.
         if [ -z "$SSH_AUTH_SOCK" ] || [ -z "$SSH_CONNECTION" ]; then
           ${hmConfig.sshAuthSock.initialization.zsh}
@@ -109,7 +109,7 @@ in
           # Zsh startup is owned by nix-darwin, so run Home Manager's Zellij
           # integration here, after loading its session environment.
           if [[ "$USER" == ${lib.strings.escapeShellArg config.system.primaryUser} && "$TERM" != "dumb" ]]; then
-            eval "$(${lib.getExe hmConfig.programs.zellij.finalPackage} setup --generate-auto-start zsh)"
+            eval "$(${lib.meta.getExe hmConfig.programs.zellij.finalPackage} setup --generate-auto-start zsh)"
           fi
         ''
       )

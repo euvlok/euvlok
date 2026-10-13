@@ -15,7 +15,7 @@ in
 
   config = lib.modules.mkIf cfg.enable {
     virtualisation.waydroid.enable = cfg.waydroid.enable;
-    environment.systemPackages = builtins.attrValues {
+    environment.systemPackages = lib.attrsets.attrValues {
       inherit (pkgs) android-tools scrcpy;
     };
   };

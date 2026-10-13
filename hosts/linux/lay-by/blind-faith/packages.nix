@@ -1,8 +1,8 @@
 { zenBrowserPackage }:
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   environment.localBinInPath = true;
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       # Base System
       wget

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) dotnet-sdk fsautocomplete; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) dotnet-sdk fsautocomplete; };
   vscode.extensions = [ "ionide.ionide-fsharp" ];
   vscode.settings."[fsharp]" = {
     editor.defaultFormatter = "ionide.ionide-fsharp";

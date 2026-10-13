@@ -33,12 +33,12 @@ let
     lib.attrsets.mapAttrs
       (
         _: value:
-        if builtins.isPath value then
+        if lib.filesystem.isPath value then
           toString value
-        else if builtins.isBool value || builtins.isInt value || builtins.isString value then
+        else if lib.trivial.isBool value || lib.trivial.isInt value || lib.strings.isString value then
           value
         else
-          builtins.toJSON value
+          lib.strings.toJSON value
       )
       (
         lib.attrsets.optionalAttrs (profile.bookmarks.configFile != null) {
@@ -48,7 +48,7 @@ let
         //
           lib.attrsets.optionalAttrs
             (lib.lists.any (extension: extension.settings != { }) (
-              builtins.attrValues profile.extensions.settings
+              lib.attrsets.attrValues profile.extensions.settings
             ))
             {
               "extensions.webextensions.ExtensionStorageIDB.enabled" = false;

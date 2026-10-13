@@ -33,7 +33,7 @@ in
   };
 
   config = lib.modules.mkIf cfg.enable {
-    boot.extraModulePackages = builtins.attrValues { inherit (config.boot.kernelPackages) kvmfr; };
+    boot.extraModulePackages = lib.attrsets.attrValues { inherit (config.boot.kernelPackages) kvmfr; };
     boot.initrd.kernelModules = [ "kvmfr" ];
     boot.kernelParams = lib.lists.optional cfg.shm.enable "kvmfr.static_size_mb=${toString cfg.shm.size}";
     services.udev.extraRules = lib.modules.mkIf cfg.shm.enable ''

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  fonts.packages = builtins.attrValues {
+  fonts.packages = lib.attrsets.attrValues {
     inherit (pkgs.nerd-fonts)
       jetbrains-mono
       monaspace

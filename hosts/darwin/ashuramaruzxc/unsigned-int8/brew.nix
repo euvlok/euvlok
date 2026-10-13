@@ -1,4 +1,4 @@
-{ config, ... }:
+{ lib, config, ... }:
 {
   homebrew = {
     enable = true;
@@ -47,6 +47,6 @@
       # Bro i need working widevine 😭
       "brave-browser"
     ];
-    taps = builtins.attrNames config.nix-homebrew.taps;
+    taps = lib.attrsets.attrNames config.nix-homebrew.taps;
   };
 }

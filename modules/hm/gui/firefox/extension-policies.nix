@@ -26,7 +26,7 @@ in
         extensions = lib.lists.unique (
           settings.extraExtensions
           ++ settings.${name}.extraExtensions
-          ++ map (language: {
+          ++ lib.lists.map (language: {
             id = "langpack-${language}@firefox.mozilla.org";
             install_url = "https://releases.mozilla.org/pub/firefox/releases/${languageRelease}/linux-x86_64/xpi/${language}.xpi";
             installation_mode = "normal_installed";

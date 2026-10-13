@@ -26,16 +26,16 @@
       set -euo pipefail
 
       tailscale() {
-        ${lib.getExe' config.services.tailscale.package "tailscale"} \
+        ${lib.meta.getExe' config.services.tailscale.package "tailscale"} \
           --socket=/var/run/tailscaled.socket "$@"
       }
 
       state="$(tailscale status --json | jq -er '.BackendState')"
       case "$state" in
         NeedsLogin)
-          test -r ${lib.escapeShellArg config.sops.secrets.tailscale_auth.path}
+          test -r ${lib.strings.escapeShellArg config.sops.secrets.tailscale_auth.path}
           tailscale up \
-            --auth-key=${lib.escapeShellArg "file:${config.sops.secrets.tailscale_auth.path}"} \
+            --auth-key=${lib.strings.escapeShellArg "file:${config.sops.secrets.tailscale_auth.path}"} \
             --advertise-tags=tag:unsigned-int8 \
             --timeout=30s
           ;;
@@ -101,7 +101,7 @@
     "electron-39.8.10"
   ];
 
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     container = containerPackage;
 
     inherit (pkgs.unstable)

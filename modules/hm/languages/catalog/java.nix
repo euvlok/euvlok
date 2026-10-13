@@ -1,11 +1,12 @@
 {
+  lib,
   pkgs,
   versionMappings,
   getLatestVersion,
   ...
 }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) jdt-language-server gradle maven; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) jdt-language-server gradle maven; };
   versionMap = versionMappings.java;
   defaultVersion = getLatestVersion versionMappings.java;
   vscode.extensions = [

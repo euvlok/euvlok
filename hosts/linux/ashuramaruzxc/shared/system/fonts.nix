@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 {
   # Shared by NixOS and nix-darwin hosts.
-  fonts.packages = builtins.attrValues {
+  fonts.packages = lib.attrsets.attrValues {
     inherit (pkgs)
       anonymousPro
       cascadia-code

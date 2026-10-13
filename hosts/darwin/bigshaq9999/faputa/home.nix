@@ -118,7 +118,7 @@
       ]
       ++ [
         {
-          home.packages = builtins.attrValues {
+          home.packages = lib.attrsets.attrValues {
             inherit (pkgs.unstable)
               # Make macos useful
               alt-tab-macos

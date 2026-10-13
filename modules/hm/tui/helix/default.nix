@@ -15,7 +15,7 @@
   config = lib.modules.mkIf config.euvlok.home.helix.enable {
     programs.helix = {
       enable = true;
-      extraPackages = builtins.attrValues {
+      extraPackages = lib.attrsets.attrValues {
         inherit (pkgs.unstable)
           bash-language-server
           nil

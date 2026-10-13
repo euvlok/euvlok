@@ -1,4 +1,4 @@
-_: {
+{ lib, ... }: {
   programs.waybar = {
     enable = true;
     settings = [
@@ -73,14 +73,14 @@ _: {
           format = "󰎇 {}";
           interval = 2;
           on-click = "playerctl play-pause";
-          exec = builtins.readFile ../../hyprland/scripts/music.sh;
+          exec = lib.trivial.readFile ../../hyprland/scripts/music.sh;
         };
         "custom/weather" = {
           interval = 900;
-          exec = builtins.readFile ../../hyprland/scripts/weather.sh;
+          exec = lib.trivial.readFile ../../hyprland/scripts/weather.sh;
         };
       }
     ];
-    style = builtins.readFile ../../hyprland/waybar.css;
+    style = lib.trivial.readFile ../../hyprland/waybar.css;
   };
 }

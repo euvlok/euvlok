@@ -17,7 +17,7 @@ in
 
   config = lib.modules.mkIf config.euvlok.home.yazi.enable {
     home.packages =
-      (builtins.attrValues { inherit (pkgs) mediainfo exiftool; })
+      (lib.attrsets.attrValues { inherit (pkgs) mediainfo exiftool; })
       ++ lib.lists.optionals isLinux [
         pkgs.wl-clipboard
         pkgs.xclip

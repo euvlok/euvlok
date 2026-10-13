@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -42,7 +43,7 @@
   };
 
   # Environment
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       # Literally should be bultin but apple being apple
       soundsource

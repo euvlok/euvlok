@@ -17,7 +17,7 @@
         let
           rocmEnv = pkgs.symlinkJoin {
             name = "rocm-combined";
-            paths = builtins.attrValues {
+            paths = lib.attrsets.attrValues {
               inherit (pkgs.rocmPackages) rocblas hipblas clr;
             };
           };

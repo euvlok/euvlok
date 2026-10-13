@@ -49,7 +49,7 @@
   };
 
   environment.systemPackages =
-    builtins.attrValues {
+    lib.attrsets.attrValues {
       inherit (pkgs)
         virt-manager
         virt-viewer
@@ -64,7 +64,7 @@
         ;
     }
     ++ lib.lists.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
-      builtins.attrValues { inherit (pkgs) looking-glass-client; }
+      lib.attrsets.attrValues { inherit (pkgs) looking-glass-client; }
     );
   environment.etc = {
     "ovmf/edk2-x86_64-code.fd" = {
@@ -103,7 +103,7 @@
         };
       };
   systemd.services.libvirtd.path =
-    builtins.attrValues {
+    lib.attrsets.attrValues {
       inherit (pkgs)
         virtiofsd
         virtio-win
@@ -112,6 +112,6 @@
         ;
     }
     ++ lib.lists.optionals (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") (
-      builtins.attrValues { inherit (pkgs) looking-glass-client; }
+      lib.attrsets.attrValues { inherit (pkgs) looking-glass-client; }
     );
 }

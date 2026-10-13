@@ -1,11 +1,16 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 {
   services = {
     fstrim.enable = true;
     fstrim.interval = "weekly";
   };
 
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       # utils
       fio # disk benchmark

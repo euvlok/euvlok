@@ -1,4 +1,4 @@
 { lib, ... }:
 {
-  programs.zoxide.enable = lib.mkDefault true;
+  programs.zoxide.enable = lib.modules.mkDefault true;
 }

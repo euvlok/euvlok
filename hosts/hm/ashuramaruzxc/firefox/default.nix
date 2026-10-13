@@ -76,7 +76,8 @@ let
     };
   };
   settings = {
-    "extensions.webextensions.restrictedDomains" = builtins.concatStringsSep "," restrictedDomainsList;
+    "extensions.webextensions.restrictedDomains" =
+      lib.strings.concatStringsSep "," restrictedDomainsList;
     "dom.webgpu.enabled" = true;
     "gfx.webrender.all" = true;
     "media.av1.enabled" = true;
@@ -114,7 +115,7 @@ let
   sharedExtensions = pkgs.callPackage ../../../../modules/hm/gui/firefox/extensions.nix {
     inherit buildFirefoxXpiAddon;
   };
-  defaultExtensionsList = map toTweezleExtension (
+  defaultExtensionsList = lib.lists.map toTweezleExtension (
     lib.lists.filter lib.attrsets.isDerivation (
       lib.attrsets.attrValues (
         (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
@@ -161,7 +162,7 @@ in
       inherit search settings;
     };
     nativeMessagingHosts = lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux (
-      builtins.attrValues { inherit (pkgs) keepassxc; }
+      lib.attrsets.attrValues { inherit (pkgs) keepassxc; }
     );
   };
   programs.zen-browser = {
@@ -176,6 +177,6 @@ in
     };
     nativeMessagingHosts = lib.modules.mkIf (
       pkgs.stdenvNoCC.hostPlatform.isLinux && pkgs.stdenvNoCC.hostPlatform.isx86_64
-    ) (builtins.attrValues { inherit (pkgs.unstable) keepassxc; });
+    ) (lib.attrsets.attrValues { inherit (pkgs.unstable) keepassxc; });
   };
 }

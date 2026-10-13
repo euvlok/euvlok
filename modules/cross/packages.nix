@@ -5,7 +5,7 @@
   ...
 }:
 let
-  commonPkgs = builtins.attrValues {
+  commonPkgs = lib.attrsets.attrValues {
     # Nix Related
     inherit (pkgs.unstable)
       cachix
@@ -111,7 +111,7 @@ let
       "enable"
     ] false config;
   linuxOnlyPkgs =
-    builtins.attrValues {
+    lib.attrsets.attrValues {
       # Networking
       inherit (pkgs.unstable)
         iftop # TUI display of bandwidth usage on an interface
@@ -139,7 +139,7 @@ let
     }
     # Pacakges only meant for Desktops
     ++ lib.lists.optionals graphicalLinux (
-      builtins.attrValues {
+      lib.attrsets.attrValues {
         inherit (pkgs.unstable)
           networkmanagerapplet
           pavucontrol # PulseAudio Volume Control GUI

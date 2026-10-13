@@ -57,7 +57,7 @@
       "dm-mirror"
       "dm-snapshot"
     ];
-    extraModulePackages = builtins.attrValues {
+    extraModulePackages = lib.attrsets.attrValues {
       inherit (config.boot.kernelPackages) zenpower;
     };
     supportedFilesystems = [ "xfs" ];

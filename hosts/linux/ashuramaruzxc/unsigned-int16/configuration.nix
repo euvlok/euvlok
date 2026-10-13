@@ -37,7 +37,7 @@
       xkb.model = "evdev";
     };
     udev = {
-      packages = builtins.attrValues {
+      packages = lib.attrsets.attrValues {
         inherit (pkgs) yubikey-personalization;
       };
     };
@@ -64,7 +64,7 @@
   };
 
   environment = {
-    systemPackages = builtins.attrValues {
+    systemPackages = lib.attrsets.attrValues {
       inherit (pkgs) fcitx5-gtk;
       inherit (pkgs.unstable.kdePackages) bluedevil;
     };

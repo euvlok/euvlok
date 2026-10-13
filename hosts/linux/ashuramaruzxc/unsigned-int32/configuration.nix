@@ -61,7 +61,7 @@
       xkb.model = "evdev";
     };
     udev = {
-      packages = builtins.attrValues {
+      packages = lib.attrsets.attrValues {
         inherit (pkgs)
           libwacom
           via # qmk/via
@@ -87,7 +87,7 @@
     };
     printing = {
       enable = true;
-      drivers = builtins.attrValues {
+      drivers = lib.attrsets.attrValues {
         inherit (pkgs)
           cups-browsed
           cups-filters
@@ -170,7 +170,7 @@
   };
 
   environment = {
-    systemPackages = builtins.attrValues {
+    systemPackages = lib.attrsets.attrValues {
       inherit (pkgs)
         # yubico
         yubioath-flutter

@@ -9,12 +9,12 @@ let
       gifski
       parallel
     ];
-    text = builtins.readFile ./scripts/video2gif.sh;
+    text = lib.trivial.readFile ./scripts/video2gif.sh;
   };
   video2gifSimple = pkgs.writeShellApplication {
     name = "video2gif_simple";
     runtimeInputs = [ video2gif ];
-    text = builtins.readFile ./scripts/video2gif_simple.sh;
+    text = lib.trivial.readFile ./scripts/video2gif_simple.sh;
   };
 
   editor = {

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) nim nimlsp; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) nim nimlsp; };
   vscode.extensions = [
     "nimLang.nimlang"
     "nimsaem.nimvscode"

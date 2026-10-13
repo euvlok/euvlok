@@ -12,6 +12,7 @@
       config,
       final,
       pkgs,
+      lib,
       ...
     }:
     {
@@ -25,19 +26,19 @@
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
         nvidia-prefetch = final.callPackage ../packages/nvidia-prefetch.nix { };
       }
-      // pkgs.lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
+      // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
         chatgpt = final.callPackage (import ../slop.nix).packages.chatgpt { };
       };
 
       # Keep the established flake package name and omit unsupported platforms
       packages =
-        pkgs.lib.filterAttrs
+        lib.attrsets.filterAttrs
           (
             _: package:
-            pkgs.lib.isDerivation package && pkgs.lib.meta.availableOn pkgs.stdenv.hostPlatform package
+            lib.attrsets.isDerivation package && lib.meta.availableOn pkgs.stdenv.hostPlatform package
           )
           (
-            removeAttrs config.overlayAttrs [ "catppuccin-gtk-fausto" ]
+            lib.attrsets.removeAttrs config.overlayAttrs [ "catppuccin-gtk-fausto" ]
             // {
               catppuccin-gtk = config.overlayAttrs.catppuccin-gtk-fausto;
             }

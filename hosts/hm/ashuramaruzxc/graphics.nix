@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  home.packages = builtins.attrValues {
+  home.packages = lib.attrsets.attrValues {
     inherit (pkgs.kdePackages) kdenlive;
     # Graphics & Design
     inherit (pkgs)
@@ -10,19 +10,19 @@
       ansel # RAW image viewer
       ;
     inkscape = pkgs.inkscape-with-extensions.override {
-      inkscapeExtensions = builtins.attrValues {
+      inkscapeExtensions = lib.attrsets.attrValues {
         inherit (pkgs.inkscape-extensions) textext silhouette;
       };
     };
     # Photoshop but worse
     gimp = pkgs.gimp3-with-plugins.override {
-      plugins = builtins.attrValues { inherit (pkgs.gimp3Plugins) ; };
+      plugins = lib.attrsets.attrValues { inherit (pkgs.gimp3Plugins) ; };
     };
   };
   # Streaming and recording
   programs.obs-studio = {
     enable = true;
     package = pkgs.obs-studio;
-    plugins = builtins.attrValues { inherit (pkgs.obs-studio-plugins) obs-teleport obs-vkcapture; };
+    plugins = lib.attrsets.attrValues { inherit (pkgs.obs-studio-plugins) obs-teleport obs-vkcapture; };
   };
 }

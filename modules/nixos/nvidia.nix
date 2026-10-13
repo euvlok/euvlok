@@ -41,12 +41,12 @@ in
       };
 
       hardware.graphics = {
-        extraPackages = builtins.attrValues {
+        extraPackages = lib.attrsets.attrValues {
           inherit (pkgs) libva-vdpau-driver libvdpau-va-gl nv-codec-headers-12;
         };
       };
 
-      environment.systemPackages = builtins.attrValues {
+      environment.systemPackages = lib.attrsets.attrValues {
         inherit (pkgs) zenith-nvidia;
         inherit (pkgs.nvtopPackages) full;
       };

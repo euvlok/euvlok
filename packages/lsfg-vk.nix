@@ -45,7 +45,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   postFixup = ''
-    patchelf --add-rpath "${lib.getLib vulkan-loader}/lib" "$out/bin/lsfg-vk-cli"
+    patchelf --add-rpath "${lib.attrsets.getLib vulkan-loader}/lib" "$out/bin/lsfg-vk-cli"
   '';
 
   meta = {

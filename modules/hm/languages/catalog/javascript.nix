@@ -1,6 +1,11 @@
-{ pkgs, prettierFormatter, ... }:
 {
-  packages = builtins.attrValues {
+  lib,
+  pkgs,
+  prettierFormatter,
+  ...
+}:
+{
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       nodejs
       bun

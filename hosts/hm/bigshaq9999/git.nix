@@ -4,7 +4,7 @@ let
   email = "97749920+bigshaq9999@users.noreply.github.com";
 in
 {
-  # home.packages = builtins.attrValues { inherit (pkgs) watchman; };
+  # home.packages = lib.attrsets.attrValues { inherit (pkgs) watchman; };
 
   programs = {
     gh.gitCredentialHelper.enable = true;

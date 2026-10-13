@@ -1,4 +1,9 @@
-{ inputs, pkgs, ... }:
+{
+  lib,
+  inputs,
+  pkgs,
+  ...
+}:
 {
   name = "euvlok development shell";
 
@@ -7,7 +12,7 @@
     shell.enable = true;
   };
 
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs)
       flamegraph
       git

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) elixir elixir-ls hex; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) elixir elixir-ls hex; };
   vscode.extensions = [ "jakebecker.elixir-ls" ];
   vscode.settings."[elixir]" = {
     editor.defaultFormatter = "jakebecker.elixir-ls";

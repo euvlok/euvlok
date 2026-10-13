@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   ...
@@ -48,7 +49,9 @@
       };
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
-    declarativePlugins = builtins.attrValues { inherit (pkgs.grafanaPlugins) grafana-piechart-panel; };
+    declarativePlugins = lib.attrsets.attrValues {
+      inherit (pkgs.grafanaPlugins) grafana-piechart-panel;
+    };
   };
   systemd.services.prometheus = {
     after = [

@@ -1,7 +1,7 @@
 { zenBrowserPackage }:
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  environment.systemPackages = builtins.attrValues {
+  environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       brightnessctl
       wget

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues {
+  packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) perl perlnavigator;
     inherit (pkgs.unstable.perlPackages) PerlCritic PerlTidy;
   };

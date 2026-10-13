@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) kotlin kotlin-language-server gradle; };
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable) kotlin kotlin-language-server gradle;
+  };
   vscode.extensions = [ "fwcd.kotlin" ];
   vscode.settings."[kotlin]" = {
     editor.defaultFormatter = "fwcd.kotlin";

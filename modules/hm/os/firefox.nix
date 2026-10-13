@@ -10,7 +10,7 @@ let
   isLinux = pkgs.stdenvNoCC.hostPlatform.isLinux;
   nvidia = osConfig.euvlok.nixos.nvidia.enable or false;
   amd = osConfig.euvlok.nixos.amd.enable or false;
-  browsers = builtins.filter (name: builtins.hasAttr name options.programs) [
+  browsers = lib.lists.filter (name: lib.attrsets.hasAttr name options.programs) [
     "firefox"
     "floorp"
     "librewolf"

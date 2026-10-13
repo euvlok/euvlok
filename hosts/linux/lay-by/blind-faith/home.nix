@@ -68,7 +68,7 @@
       spicetify.homeManagerModules.default
       {
         programs.spicetify.enable = true;
-        programs.spicetify.enabledExtensions = builtins.attrValues {
+        programs.spicetify.enabledExtensions = lib.attrsets.attrValues {
           inherit (spicetify.legacyPackages.${pkgs.stdenvNoCC.hostPlatform.system}.extensions)
             adblock
             beautifulLyrics # Apple Music like Lyrics

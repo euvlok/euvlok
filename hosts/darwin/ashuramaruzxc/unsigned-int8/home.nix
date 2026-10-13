@@ -31,13 +31,13 @@ let
       programs.ssh.settings = {
         "unsigned-int32" = {
           HostName = "unsigned-int32";
-          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} nc %h %p";
           User = "ashuramaru";
         };
         "unsigned-int64" = {
           HostName = "unsigned-int64";
           Port = 57255;
-          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} nc %h %p";
           User = "ashuramaru";
         };
       };
@@ -83,7 +83,7 @@ let
     { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
   ];
 
-  macosPackages = builtins.attrValues {
+  macosPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       alt-tab-macos
       betterdisplay
@@ -96,7 +96,7 @@ let
     inherit (pkgs.eupkgs) aldente;
   };
 
-  socialPackages = builtins.attrValues {
+  socialPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       signal-desktop
       telegram-desktop
@@ -104,13 +104,13 @@ let
       ;
   };
 
-  multimediaPackages = builtins.attrValues {
+  multimediaPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       nicotine-plus
       qbittorrent
       ;
   };
-  productivityPackages = builtins.attrValues {
+  productivityPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       anki-bin
       inkscape
@@ -119,14 +119,14 @@ let
     inherit (pkgs.eupkgs) helium-browser;
   };
 
-  authPackages = builtins.attrValues {
+  authPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       keepassxc
       yubikey-manager
       ;
   };
 
-  gamingPackages = builtins.attrValues {
+  gamingPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
       chiaki
       osu-lazer-bin
@@ -150,7 +150,7 @@ let
     ++ authPackages
     ++ productivityPackages
     ++ gamingPackages
-    ++ (builtins.attrValues { inherit (jetbrainsPackages) rider clion idea; });
+    ++ (lib.attrsets.attrValues { inherit (jetbrainsPackages) rider clion idea; });
 
   userExtras = [
     { home.packages = allPackages; }

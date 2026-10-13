@@ -13,8 +13,8 @@ let
           if rocmPrev.hipblaslt.version == "7.2.3" then
             let
               lib = inputs.nixpkgs.lib;
-              targets = lib.sort builtins.lessThan (
-                lib.intersectLists (rocmPrev.clr.localGpuTargets or rocmPrev.clr.gpuTargets) [
+              targets = lib.lists.sort lib.trivial.lessThan (
+                lib.lists.intersectLists (rocmPrev.clr.localGpuTargets or rocmPrev.clr.gpuTargets) [
                   "gfx908"
                   "gfx90a"
                   "gfx942"
@@ -34,7 +34,7 @@ let
               });
               # Carry the next solution index between cached architecture builds
               deviceLibraries =
-                (lib.foldl'
+                (lib.lists.foldl'
                   (
                     state: target:
                     let
@@ -45,7 +45,7 @@ let
                           // {
                             TENSILE_RECORD_SOLUTION_INDEX = "1";
                           }
-                          // lib.optionalAttrs (state.previous != null) {
+                          // lib.attrsets.optionalAttrs (state.previous != null) {
                             TENSILE_SOLUTION_INDEX_START_FILE = "${state.previous}/.tensile-solution-index";
                           };
                         postInstall = (old.postInstall or "") + ''
@@ -66,7 +66,7 @@ let
                   targets
                 ).libraries;
             in
-            if builtins.length targets <= 1 then
+            if lib.lists.length targets <= 1 then
               base
             else
               base.overrideAttrs (old: {
@@ -74,7 +74,7 @@ let
                 # ten parsed libraries in one process on the hosted runner
                 preBuild = (old.preBuild or "") + ''
                   python3 ${./patches/hipblaslt-streaming/hipblaslt-library-merge.py} \
-                    Tensile/library ${lib.escapeShellArgs deviceLibraries}
+                    Tensile/library ${lib.strings.escapeShellArgs deviceLibraries}
                   touch device-library/Tensile.stamp
                 '';
               })
@@ -157,7 +157,7 @@ let
         # Keep newer Nixpkgs sources paired with their own node_modules
         opencode =
           if
-            inputs.nixpkgs.lib.versionAtLeast base.opencode.version upstreamAdditions.opencode.upstreamVersion
+            inputs.nixpkgs.lib.strings.versionAtLeast base.opencode.version upstreamAdditions.opencode.upstreamVersion
           then
             base.opencode
           else

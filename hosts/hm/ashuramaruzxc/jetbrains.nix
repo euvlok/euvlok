@@ -1,4 +1,7 @@
-{ pkgs, jetbrainsPlugins }:
+{
+  pkgs,
+  jetbrainsPlugins,
+}:
 let
   commonPlugins = [
     "com.fapiko.jetbrains.plugins.better_direnv" # better-direnv
@@ -20,16 +23,16 @@ let
       extraPlugins ? [ ],
     }:
     (jetbrainsPlugins.lib.buildIdeWithPlugins pkgs ide (
-      pkgs.lib.subtractLists bundledPlugins commonPlugins ++ extraPlugins
+      pkgs.lib.lists.subtractLists bundledPlugins commonPlugins ++ extraPlugins
     )).overrideAttrs
       (
         oldAttrs:
-        pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
           # addPlugins rewrites Contents/bin, but the macOS CLI launcher lives in bin.
           # Its buildPhase has no postBuild hook, so append the fix directly.
           buildPhase = oldAttrs.buildPhase + ''
             substituteInPlace "$out/bin/${ide.meta.mainProgram}" \
-              --replace-quiet ${pkgs.lib.escapeShellArg (toString ide)} "$out"
+              --replace-quiet ${pkgs.lib.strings.escapeShellArg (toString ide)} "$out"
           '';
         }
       );

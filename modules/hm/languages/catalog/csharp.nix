@@ -1,11 +1,12 @@
 {
+  lib,
   pkgs,
   versionMappings,
   getLatestVersion,
   ...
 }:
 {
-  packages = builtins.attrValues { inherit (pkgs.unstable) omnisharp-roslyn netcoredbg; };
+  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) omnisharp-roslyn netcoredbg; };
   versionMap = versionMappings.dotnet;
   defaultVersion = getLatestVersion versionMappings.dotnet;
   vscode.extensions = [
