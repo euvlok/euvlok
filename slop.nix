@@ -1360,10 +1360,13 @@ let
         };
       };
     };
+  firefoxSource = {
+    id = "ai-warning-for-steam";
+    name = "AI warning for Steam";
+    source = "amo";
+  };
   firefoxAddons = {
-    "ai-warning-for-steam" = {
-      name = "AI warning for Steam";
-      source = "amo";
+    ${firefoxSource.id} = firefoxSource // {
       package = {
         version = "1.1.0";
         addonId = "{29428906-aec3-11f0-beb4-6f7e24e82795}";
@@ -2388,10 +2391,5 @@ in
         }
       )
     ) firefoxAddons;
-  firefoxSources = builtins.attrValues (
-    builtins.mapAttrs (id: addon: {
-      inherit id;
-      inherit (addon) name source;
-    }) firefoxAddons
-  );
+  firefoxSources = [ firefoxSource ];
 }
