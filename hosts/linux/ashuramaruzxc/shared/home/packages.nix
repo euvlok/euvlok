@@ -117,10 +117,10 @@ let
     social = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         dino
-        materialgram
         nextcloud-client
         # signal-desktop
         ;
+      inherit (pkgs.stable) telegram-desktop;
     };
   };
 
