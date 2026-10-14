@@ -246,6 +246,14 @@ const FAILURE_RULES = [
   },
   {
     kind: "transient",
+    matches: ({ failedDrv, output }) =>
+      isKnownAiohttpClockPrecisionFailure(output, failedDrv),
+    retryable: true,
+    summary: () =>
+      "aiohttp's sole failing check exceeded its 1 ms clock tolerance.",
+  },
+  {
+    kind: "transient",
     matches: ({ transientFailure }) => transientFailure !== undefined,
     retryable: true,
     summary: ({ transientFailure }) =>
@@ -712,6 +720,21 @@ export function isKnownDarwinTwistedTcpTimeout(
 
 export function containsTransientFailure(output: string): boolean {
   return transientFailure(output) !== undefined;
+}
+
+// The event loop can resume outside this check's 1 ms tolerance under load
+export function isKnownAiohttpClockPrecisionFailure(
+  output: string,
+  failedDrv: string,
+): boolean {
+  const packageOutput = failedPackageOutput(output, failedDrv);
+  return (
+    derivationName(failedDrv) === "python3.14-aiohttp-3.14.3" &&
+    /FAILED tests\/test_helpers\.py::test_when_timeout_smaller_second\[pyloop\] - assert [0-9.e+-]+ == 0 ± 0\.001(?:\s|$)/u.test(
+      packageOutput,
+    ) &&
+    /= 1 failed, [0-9]+ passed,/u.test(packageOutput)
+  );
 }
 
 async function reportRunnerResources(): Promise<void> {
