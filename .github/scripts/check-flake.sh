@@ -55,8 +55,15 @@ PY
 
 printf 'null\n' >"${check_dir}/selection.json"
 echo '::group::Shared flake outputs'
-# Run writable evaluation first so partition inputs exist in the store before
-# --no-build switches evaluation to read-only mode
+# Materialize sources and derivations for every system before --no-build
+# switches evaluation to read-only mode, including checks absent on this runner
+for output in packages checks; do
+  nix eval --json "path:${check_dir}#${output}" --apply '
+    builtins.mapAttrs (_: packages:
+      builtins.mapAttrs (_: package: package.drvPath) packages
+    )
+  ' >/dev/null
+done
 nix flake check "path:${check_dir}"
 nix flake check "path:${check_dir}" --all-systems --no-build
 echo '::endgroup::'
