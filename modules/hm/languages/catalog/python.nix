@@ -12,7 +12,7 @@ in
 {
   packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) uv ty ruff;
-    python = pkgs.python313.withPackages (pythonPackages: [
+    python = pkgs.stable.python313.withPackages (pythonPackages: [
       pythonPackages.ipython
       pythonPackages.jupyter
     ]);
