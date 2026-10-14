@@ -87,10 +87,10 @@ let
       ;
 
     inherit (pkgs.unstable)
-      ffmpeg_9-full
       imagemagick
       mediainfo
       ;
+    inherit (pkgs.stable) ffmpeg-full;
 
     # Media
     inherit (pkgs.eupkgs)

@@ -6,116 +6,90 @@
   localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let
-  packageFixesOverlay = _final: prev: {
-    rocmPackages = prev.rocmPackages.overrideScope (
-      _rocmFinal: rocmPrev: {
-        hipblaslt =
-          if rocmPrev.hipblaslt.version == "7.2.3" then
-            let
-              lib = inputs.nixpkgs.lib;
-              targets = lib.lists.sort lib.trivial.lessThan (
-                lib.lists.intersectLists (rocmPrev.clr.localGpuTargets or rocmPrev.clr.gpuTargets) [
-                  "gfx908"
-                  "gfx90a"
-                  "gfx942"
-                  "gfx950"
-                  "gfx1100"
-                  "gfx1101"
-                  "gfx1150"
-                  "gfx1151"
-                  "gfx1200"
-                  "gfx1201"
-                ]
-              );
-              base = rocmPrev.hipblaslt.overrideAttrs (old: {
-                patches = (old.patches or [ ]) ++ [
-                  ./patches/hipblaslt-streaming/hipblaslt-streaming.patch
-                ];
-              });
-              # Carry the next solution index between cached architecture builds
-              deviceLibraries =
-                (lib.lists.foldl'
-                  (
-                    state: target:
-                    let
-                      package = (base.override { gpuTargets = [ target ]; }).overrideAttrs (old: {
-                        outputs = old.outputs ++ [ "device" ];
-                        env =
-                          (old.env or { })
-                          // {
-                            TENSILE_RECORD_SOLUTION_INDEX = "1";
-                          }
-                          // lib.attrsets.optionalAttrs (state.previous != null) {
-                            TENSILE_SOLUTION_INDEX_START_FILE = "${state.previous}/.tensile-solution-index";
-                          };
-                        postInstall = (old.postInstall or "") + ''
-                          mkdir -p "$device"
-                          cp -r Tensile/library/. "$device/"
-                        '';
-                      });
-                    in
-                    {
-                      previous = package.device;
-                      libraries = state.libraries ++ [ "${target}=${package.device}" ];
-                    }
-                  )
-                  {
-                    previous = null;
-                    libraries = [ ];
-                  }
-                  targets
-                ).libraries;
-            in
-            if lib.lists.length targets <= 1 then
-              base
-            else
-              base.overrideAttrs (old: {
-                # Cache each architecture separately instead of retaining all
-                # ten parsed libraries in one process on the hosted runner
-                preBuild = (old.preBuild or "") + ''
-                  python3 ${./patches/hipblaslt-streaming/hipblaslt-library-merge.py} \
-                    Tensile/library ${lib.strings.escapeShellArgs deviceLibraries}
-                  touch device-library/Tensile.stamp
-                '';
-              })
-          else
-            rocmPrev.hipblaslt;
+  stableOverlay = _final: prev: {
+    stable = import inputs.nixpkgs-stable (
+      packageSetArgs prev
+      // {
+        # Share host policy and GPU settings without unstable's option defaults
+        config = inputs.nixpkgs.lib.attrsets.filterAttrs (
+          name: _:
+          builtins.elem name [
+            "allowUnfree"
+            "allowUnfreePredicate"
+            "allowUnfreePackages"
+            "allowInsecurePredicate"
+            "permittedInsecurePackages"
+            "allowBroken"
+            "allowUnsupportedSystem"
+            "cudaSupport"
+            "cudaCapabilities"
+            "cudaForwardCompat"
+            "rocmSupport"
+          ]
+        ) (prev.config or { });
       }
     );
-    pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-      (_pythonFinal: pythonPrev: {
-        anyio =
-          if pythonPrev.anyio.version == "4.14.2" then
-            pythonPrev.anyio.overridePythonAttrs (old: {
-              # Preserve server-side wrapping when Python rejects client-only
-              # hostnames, including Python 3.12.15, 3.13.16, and 3.14.8
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace src/anyio/streams/tls.py \
-                  --replace-fail 'if hostname is not None:' \
-                  'if hostname is not None and not server_side:'
-              '';
-            })
-          else
-            pythonPrev.anyio;
-        black =
-          if
-            prev.stdenv.hostPlatform.isDarwin
-            && pythonPrev.black.version == "26.5.1"
-            && pythonPrev.pytest.version == "9.1.1"
-          then
-            pythonPrev.black.override {
-              pytestCheckHook = pythonPrev.pytestCheckHook.override {
-                pytest = pythonPrev.pytest.overridePythonAttrs (old: {
-                  # Close pytest's cleanup iterator if traversal ends early
-                  patches = (old.patches or [ ]) ++ [ ./patches/pytest-scandir/pytest-scandir.patch ];
-                });
-              };
-            }
-          else
-            pythonPrev.black;
-      })
-    ];
   };
+
+  # Keep ROCm and the Folly consumers with their release dependency sets
+  stableFallbacksOverlay =
+    final: prev:
+    {
+      inherit (final.stable)
+        rocmPackages
+        black
+        ;
+      pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+        (_pythonFinal: pythonPrev: {
+          anyio =
+            if pythonPrev.anyio.version == "4.14.2" then
+              pythonPrev.anyio.overridePythonAttrs (old: {
+                # Preserve server-side wrapping when Python rejects client-only
+                # hostnames, including Python 3.12.15, 3.13.16, and 3.14.8
+                postPatch = (old.postPatch or "") + ''
+                  substituteInPlace src/anyio/streams/tls.py \
+                    --replace-fail 'if hostname is not None:' \
+                    'if hostname is not None and not server_side:'
+                '';
+              })
+            else
+              pythonPrev.anyio;
+          black =
+            if
+              prev.stdenv.hostPlatform.isDarwin
+              && pythonPrev.black.version == "26.5.1"
+              && pythonPrev.pytest.version == "9.1.1"
+            then
+              pythonPrev.black.override {
+                pytestCheckHook = pythonPrev.pytestCheckHook.override {
+                  pytest = pythonPrev.pytest.overridePythonAttrs (old: {
+                    # Close pytest's cleanup iterator if traversal ends early
+                    patches = (old.patches or [ ]) ++ [ ./patches/pytest-scandir/pytest-scandir.patch ];
+                  });
+                };
+              }
+            else
+              pythonPrev.black;
+        })
+      ];
+    }
+    //
+      inputs.nixpkgs.lib.attrsets.optionalAttrs
+        (prev.stdenv.hostPlatform.isLinux && prev.stdenv.hostPlatform.isAarch64)
+        {
+          inherit (final.stable)
+            folly
+            fizz
+            wangle
+            fbthrift
+            fb303
+            edencommon
+            watchman
+            ;
+        }
+    // inputs.nixpkgs.lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+      inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+    };
 
   packageSetArgs =
     prev:
@@ -142,7 +116,10 @@ let
       packageSetArgs prev
       // {
         config = prev.config or { };
-        overlays = [ packageFixesOverlay ];
+        overlays = [
+          stableOverlay
+          stableFallbacksOverlay
+        ];
       }
     );
   };
@@ -174,9 +151,10 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   # Establish the independent package sets before overlays that inspect or
   # extend the final package set. This keeps stdenv evaluation acyclic on
   # custom platform bootstraps such as nixos-raspberrypi.
+  stableOverlay
   unstableOverlay
   eupkgsOverlay
-  packageFixesOverlay
+  stableFallbacksOverlay
   localPackagesOverlay
   (final: _prev: {
     euvlokVscodeExtensions =
