@@ -130,18 +130,8 @@ let
     final: _prev:
     let
       base = final.unstable;
-      additions = upstreamAdditions // {
-        # Keep newer Nixpkgs sources paired with their own node_modules
-        opencode =
-          if
-            inputs.nixpkgs.lib.strings.versionAtLeast base.opencode.version upstreamAdditions.opencode.upstreamVersion
-          then
-            base.opencode
-          else
-            upstreamAdditions.opencode;
-      };
+      additions = inputs.eupkgs.overlays.default scoped base;
       scoped = base // additions // { callPackage = base.newScope additions; };
-      upstreamAdditions = inputs.eupkgs.overlays.default scoped base;
     in
     {
       eupkgs = scoped;
