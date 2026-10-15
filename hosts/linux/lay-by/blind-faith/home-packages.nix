@@ -77,6 +77,7 @@
       # Security
       nmap
       keepassxc
+      scanmem
       ;
     inherit (pkgs.unstable.kdePackages)
       kcalc
