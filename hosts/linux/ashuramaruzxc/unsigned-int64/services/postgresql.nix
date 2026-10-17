@@ -8,6 +8,7 @@
     ensureDatabases = [
       "vaultwarden"
       "grafana"
+      "ecolinker"
     ];
     ensureUsers = [
       {
@@ -24,6 +25,10 @@
       }
       {
         name = "grafana";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "ecolinker";
         ensureDBOwnership = true;
       }
     ];
