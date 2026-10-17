@@ -138,6 +138,13 @@
       url = "github:nvmd/disko/gpt-attrs";
       inputs.nixpkgs.follows = "users-nixpkgs";
     };
+    ecolinker = {
+      url = "github:v4rakh/ecolinker";
+      inputs = {
+        flake-parts.follows = "users-flake-parts";
+        nixpkgs.follows = "users-nixpkgs-unstable-small";
+      };
+    };
     flatpak-declarative.url = "github:in-a-dil-emma/declarative-flatpak";
     homebrew-cask-source = {
       url = "github:homebrew/homebrew-cask";

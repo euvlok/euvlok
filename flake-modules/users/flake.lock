@@ -197,6 +197,29 @@
         "type": "github"
       }
     },
+    "ecolinker": {
+      "inputs": {
+        "flake-parts": [
+          "users-flake-parts"
+        ],
+        "nixpkgs": [
+          "users-nixpkgs-unstable-small"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792063964,
+        "narHash": "sha256-BCa5RT1x7JVgv31G5N4QAmkVQMBLtowA7r5pv3baSmc=",
+        "owner": "v4rakh",
+        "repo": "ecolinker",
+        "rev": "8364f0308b9435e4100c0c26d4935ac23348d5d7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "v4rakh",
+        "repo": "ecolinker",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -435,6 +458,7 @@
         "codex-desktop-linux": "codex-desktop-linux",
         "cursorgen-source": "cursorgen-source",
         "disko-rpi": "disko-rpi",
+        "ecolinker": "ecolinker",
         "flatpak-declarative": "flatpak-declarative",
         "homebrew-cask-source": "homebrew-cask-source",
         "homebrew-core-source": "homebrew-core-source",

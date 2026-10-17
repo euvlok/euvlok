@@ -19,6 +19,13 @@
       inputs.nixpkgs.follows = "users-nixpkgs";
       url = "github:nvmd/disko/gpt-attrs";
     };
+    ecolinker = {
+      inputs = {
+        flake-parts.follows = "users-flake-parts";
+        nixpkgs.follows = "users-nixpkgs-unstable-small";
+      };
+      url = "github:v4rakh/ecolinker";
+    };
     flatpak-declarative.url = "github:in-a-dil-emma/declarative-flatpak";
     nix-jetbrains-plugins = {
       inputs = {
