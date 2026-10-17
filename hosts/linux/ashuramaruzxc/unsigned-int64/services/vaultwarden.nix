@@ -71,7 +71,7 @@
       '';
     };
     locations."/admin" = {
-      basicAuthFile = config.sops.secrets.vault.path;
+      # basicAuthFile = config.sops.secrets.vault.path;
       proxyPass = "http://vaultwarden-default";
       proxyWebsockets = true;
     };
