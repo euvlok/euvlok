@@ -35,4 +35,6 @@
       RestartSec = "10s";
     };
   };
+
+  environment.systemPackages = [ config.services.ecolinker.package ];
 }
