@@ -27,9 +27,9 @@
       ${lib.meta.getExe' pkgs.iptables "iptables"} -D FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
     '';
     peers = [
-      # Clares@rt-ax86u
+      # ashuramaru@rt-be88u
       {
-        publicKey = "Qn6WDn9CHgla44vuo31whTen+Hj581dnHwJKQfWVOXY=";
+        publicKey = "h3xpCukBxMTgNG1PE3PyxNuWpuqS2IpACW5ZC8Pjjgc=";
         presharedKeyFile = config.sops.secrets.wireguard-shared.path;
         allowedIPs = [
           "172.16.31.2/32"
