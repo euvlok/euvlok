@@ -22,4 +22,17 @@
       DB_POSTGRES_PASSWORD = "unused-local-socket";
     };
   };
+
+  systemd.services.ecolinker = {
+    after = [
+      "network-online.target"
+      "postgresql.service"
+    ];
+    wants = [ "network-online.target" ];
+    requires = [ "postgresql.service" ];
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+  };
 }
