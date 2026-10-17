@@ -30,6 +30,7 @@ _: {
           QSG_RHI_BACKEND = "vulkan";
           QT_QPA_PLATFORM = "wayland;xcb";
         };
+        runWithoutGui = true;
       };
     }
     {
