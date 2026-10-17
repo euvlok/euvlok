@@ -6,6 +6,140 @@
 }:
 let
   datasourceUid = "dnscrypt-prometheus";
+  selector = ''{job="dnscrypt-router",instance=~"$instance"}'';
+  metric = name: "dnscrypt_proxy_${name}${selector}";
+  rate = name: "rate(${metric name}[$__rate_interval])";
+  panel = id: title: unit: expressions: {
+    inherit id title;
+    type = "timeseries";
+    datasource = {
+      type = "prometheus";
+      uid = datasourceUid;
+    };
+    gridPos = {
+      x = ((id - 1) - (builtins.div (id - 1) 2) * 2) * 12;
+      y = (builtins.div (id - 1) 2) * 8;
+      w = 12;
+      h = 8;
+    };
+    fieldConfig.defaults = {
+      inherit unit;
+      min = 0;
+    };
+    options = {
+      legend = {
+        displayMode = "list";
+        placement = "bottom";
+      };
+      tooltip.mode = "multi";
+    };
+    targets = builtins.genList (i: {
+      refId = builtins.elemAt [ "A" "B" "C" ] i;
+      inherit (builtins.elemAt expressions i) expr;
+      legendFormat = (builtins.elemAt expressions i).legend;
+    }) (builtins.length expressions);
+  };
+  dashboard = {
+    uid = "dnscrypt-router";
+    title = "DNSCrypt router";
+    description = "Native dnscrypt-proxy Prometheus metrics, scraped over WireGuard. Response-time averages and cache ratio are cumulative since process startup.";
+    schemaVersion = 39;
+    version = 1;
+    editable = false;
+    tags = [
+      "dnscrypt"
+      "router"
+    ];
+    timezone = "browser";
+    refresh = "30s";
+    time = {
+      from = "now-6h";
+      to = "now";
+    };
+    templating.list = [
+      {
+        name = "instance";
+        label = "Router";
+        type = "query";
+        datasource = {
+          type = "prometheus";
+          uid = datasourceUid;
+        };
+        query = ''label_values(up{job="dnscrypt-router"}, instance)'';
+        refresh = 1;
+        current = {
+          text = "172.16.31.2:8080";
+          value = "172.16.31.2:8080";
+        };
+      }
+    ];
+    panels = [
+      (panel 1 "Scrape status (1 = up)" "short" [
+        {
+          expr = "up${selector}";
+          legend = "Scrape status";
+        }
+      ])
+      (panel 2 "DNSCrypt uptime" "s" [
+        {
+          expr = metric "uptime_seconds";
+          legend = "Uptime";
+        }
+      ])
+      (panel 3 "Query rate" "reqps" [
+        {
+          expr = rate "queries_total";
+          legend = "Queries";
+        }
+      ])
+      (panel 4 "Cache hit ratio since startup" "percentunit" [
+        {
+          expr = metric "cache_hit_ratio";
+          legend = "Cache hit ratio";
+        }
+      ])
+      (panel 5 "Cache activity" "reqps" [
+        {
+          expr = rate "cache_hits_total";
+          legend = "Hits";
+        }
+        {
+          expr = rate "cache_misses_total";
+          legend = "Misses";
+        }
+      ])
+      (panel 6 "Blocked query rate" "reqps" [
+        {
+          expr = rate "blocked_queries_total";
+          legend = "Blocked";
+        }
+      ])
+      (panel 7 "Query rate by upstream" "reqps" [
+        {
+          expr = rate "server_queries_total";
+          legend = "{{server}}";
+        }
+      ])
+      (panel 8 "Query rate by record type" "reqps" [
+        {
+          expr = rate "query_type_total";
+          legend = "{{type}}";
+        }
+      ])
+      (panel 9 "Average response time since startup" "ms" [
+        {
+          expr = metric "response_time_average_ms";
+          legend = "All queries";
+        }
+      ])
+      (panel 10 "Average upstream response time since startup" "ms" [
+        {
+          expr = metric "server_response_time_average_ms";
+          legend = "{{server}}";
+        }
+      ])
+    ];
+  };
 in
 {
   sops.secrets.grafana_pgsql = {
@@ -25,6 +159,14 @@ in
           url = "http://127.0.0.1:${toString config.services.prometheus.port}/prometheus";
           jsonData.timeInterval = "30s";
           editable = false;
+        }
+      ];
+      dashboards.settings.providers = [
+        {
+          name = "dnscrypt-router";
+          folder = "DNS";
+          type = "file";
+          options.path = pkgs.writeTextDir "dnscrypt-router.json" (builtins.toJSON dashboard);
         }
       ];
     };
