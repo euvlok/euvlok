@@ -118,7 +118,7 @@ let
       inherit (pkgs.unstable)
         dino
         nextcloud-client
-        # signal-desktop
+        signal-desktop
         ;
       inherit (pkgs.stable) telegram-desktop;
     };
