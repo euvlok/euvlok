@@ -22,7 +22,7 @@
     ./hardware-configuration.nix
     ./networking.nix
     ./overlays.nix
-    ./samba.nix
+    # ./samba.nix
     ./settings.nix
     ./users.nix
   ];
