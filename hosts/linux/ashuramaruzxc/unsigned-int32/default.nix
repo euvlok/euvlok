@@ -25,8 +25,10 @@ _: {
           "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
         };
         overrides.global.environment = {
+          GDK_BACKEND = "wayland,x11";
           GSK_RENDERER = "vulkan";
           QSG_RHI_BACKEND = "vulkan";
+          QT_QPA_PLATFORM = "wayland;xcb";
         };
       };
     }
