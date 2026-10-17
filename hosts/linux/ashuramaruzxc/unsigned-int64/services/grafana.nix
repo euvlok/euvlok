@@ -312,6 +312,7 @@ in
       {
         job_name = "ecoflow";
         metrics_path = "/metrics";
+        scrape_interval = "30s";
         static_configs = [ { targets = [ "127.0.0.1:9981" ]; } ];
       }
     ];
