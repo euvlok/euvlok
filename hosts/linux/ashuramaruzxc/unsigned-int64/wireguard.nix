@@ -36,14 +36,6 @@
           "fd17:216b:31bc:1::2/128"
         ];
       }
-      {
-        publicKey = "w5lvJLqFUliUA9jBdKl7B5KB35L87hBK3n786yUgvSk=";
-        presharedKeyFile = config.sops.secrets.wireguard-shared.path;
-        allowedIPs = [
-          "172.16.31.5/32"
-          "fd17:216b:31bc:1::5/128"
-        ];
-      }
     ];
   };
 }
