@@ -168,6 +168,7 @@
       "TRANSMISSION_PEER_PORT" = "11623";
       "TRANSMISSION_PEER_PORT_RANDOM_ON_START" = "false";
       "TRANSMISSION_PORT_FORWARDING_ENABLED" = "false";
+      "DROP_DEFAULT_ROUTE" = "true";
       "LOCAL_NETWORK" = "172.16.31.0/24";
 
       "TRANSMISSION_WEB_UI" = "flood-for-transmission";
