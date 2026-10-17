@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  datasourceUid = "dnscrypt-prometheus";
+in
 {
   sops.secrets.grafana_pgsql = {
     mode = "0640";
@@ -11,6 +14,20 @@
     group = config.users.users.grafana.group;
   };
   services.grafana = {
+    provision = {
+      enable = true;
+      datasources.settings.datasources = [
+        {
+          name = "DNSCrypt Prometheus";
+          uid = datasourceUid;
+          type = "prometheus";
+          access = "proxy";
+          url = "http://127.0.0.1:${toString config.services.prometheus.port}/prometheus";
+          jsonData.timeInterval = "30s";
+          editable = false;
+        }
+      ];
+    };
     enable = true;
     settings = {
       server = {
