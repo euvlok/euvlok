@@ -50,6 +50,7 @@
       "vaultwarden"
       "grafana"
       "immich"
+      "ecolinker"
     ];
     location = "/var/lib/backup/postgresql";
   };
