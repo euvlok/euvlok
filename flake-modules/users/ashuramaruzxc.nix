@@ -102,6 +102,17 @@ in
       modules = [
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int64 {
           sharedModule = sharedNixosModule;
+          ecolinkerModule =
+            { pkgs, ... }:
+            {
+              imports = [ inputs.ecolinker.nixosModules.default ];
+              # Upstream's vendorHash predates its October dependency updates.
+              services.ecolinker.package =
+                inputs.ecolinker.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+                  {
+                    vendorHash = "sha256-lu28fn/1k8MDrsHTlg9zme1fd/kB1awlykIYGoOZzF8=";
+                  };
+            };
           homeModule = lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int64/home.nix {
             inherit
               catppuccinModule
