@@ -35,8 +35,6 @@ _: {
     }
     {
       euvlok.nixos = {
-        cosmic.enable = true;
-        gnome.enable = true;
         nvidia.enable = true;
         plasma.enable = true;
         steam.enable = true;
