@@ -118,6 +118,13 @@ in
     downloadDirPermissions = "775";
     home = "/var/lib/transmission/public";
     settings = {
+      # Transmission uses decimal kB/s: 15000 kB/s = 15 MB/s.
+      speed-limit-up-enabled = true;
+      speed-limit-up = 15000;
+      speed-limit-down-enabled = true;
+      speed-limit-down = 15000;
+      alt-speed-up = 15000;
+      alt-speed-down = 15000;
       utp-enabled = true; # to not forget
       watch-dir-enabled = true;
       watch-dir = "${config.services.transmission.home}/watch-dir";
