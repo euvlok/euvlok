@@ -132,18 +132,6 @@
       secureBoot.enable = true;
       validateChecksums = true;
       panicOnChecksumMismatch = true;
-      # additionalFiles = {
-      # "EFI/memtest86/BOOTX64.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
-      # };
-      # extraEntries = ''
-      # /Windows
-      # protocol: efi
-      # path: guid(b9fd3f92-5b29-4805-a8ab-690732def22d):/EFI/Microsoft/Boot/bootmgfw.efi
-
-      # /Memtest86
-      # protocol: efi
-      # path: boot():///EFI/memtest86/BOOTX64.efi
-      # '';
     };
     generationsDir.copyKernels = true;
     efi.canTouchEfiVariables = true;
