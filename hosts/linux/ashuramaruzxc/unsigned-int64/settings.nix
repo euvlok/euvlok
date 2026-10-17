@@ -233,20 +233,28 @@
             "\"tenjin.com. 10800 IN SOA ns1.internal.com. admin@cloud.tenjin-dk.com. 1 3600 1200 604800 10800\""
             "\"tenjin.com. 10800 IN A 172.16.31.1\""
             "\"tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
-            "\"www.tenjin.com. 10800 IN CNAME tenjin.com.\""
-            # CNAME
+            "\"www.tenjin.com. 10800 IN A 172.16.31.1\""
+            "\"www.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
+            # Static local zones need direct address records for these aliases.
             # metrics
-            "\"metrics.tenjin.com. 10800 IN CNAME www.tenjin.com.\""
+            "\"metrics.tenjin.com. 10800 IN A 172.16.31.1\""
+            "\"metrics.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
 
             # Torrent and Media
-            "\"media.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # Jellyfin instance
-            "\"track.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # track torrents
-            "\"public.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # public transmission instance
-            "\"private.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # private transmission instance
+            "\"media.tenjin.com. 10800 IN A 172.16.31.1\"" # Jellyfin instance
+            "\"media.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
+            "\"track.tenjin.com. 10800 IN A 172.16.31.1\"" # track torrents
+            "\"track.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
+            "\"public.tenjin.com. 10800 IN A 172.16.31.1\"" # public transmission instance
+            "\"public.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
+            "\"private.tenjin.com. 10800 IN A 172.16.31.1\"" # private transmission instance
+            "\"private.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
 
             # Utils
-            "\"ankisync.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # ankisyncing service
-            "\"uptime.tenjin.com. 10800 IN CNAME www.tenjin.com.\"" # uptime check (should be outsourced)
+            "\"ankisync.tenjin.com. 10800 IN A 172.16.31.1\"" # ankisyncing service
+            "\"ankisync.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
+            "\"uptime.tenjin.com. 10800 IN A 172.16.31.1\"" # uptime check (should be outsourced)
+            "\"uptime.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1\""
           ];
         };
         forward-zone = [
