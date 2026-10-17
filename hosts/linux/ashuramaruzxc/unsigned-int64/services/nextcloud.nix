@@ -84,7 +84,7 @@
         cookbook
         cospend
         music
-        onlyoffice
+        # onlyoffice
         # maps
         ;
       # Camera raw previes
