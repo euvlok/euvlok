@@ -234,6 +234,8 @@ in
   };
   services.prometheus = {
     enable = true;
+    # Keep enough history for the EcoFlow dashboard's 30-day energy query.
+    retentionTime = "35d";
     listenAddress = "127.0.0.1";
     webExternalUrl = "/prometheus";
     port = 9000;
