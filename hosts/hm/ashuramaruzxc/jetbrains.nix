@@ -28,8 +28,6 @@ let
       (
         oldAttrs:
         pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-          # addPlugins rewrites Contents/bin, but the macOS CLI launcher lives in bin.
-          # Its buildPhase has no postBuild hook, so append the fix directly.
           buildPhase = oldAttrs.buildPhase + ''
             substituteInPlace "$out/bin/${ide.meta.mainProgram}" \
               --replace-quiet ${pkgs.lib.strings.escapeShellArg (toString ide)} "$out"
@@ -41,13 +39,12 @@ in
   rider = withPlugins pkgs.jetbrains.rider {
     bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
     extraPlugins = [
-      "org.toml.lang" # Required by Python Community Edition; absent from Rider.
+      "org.toml.lang"
       "PythonCore" # Python Community Edition
     ];
   };
 
   clion = withPlugins pkgs.jetbrains.clion {
-    # CLion also bundles Rust, Python Community Edition, and TOML support.
     bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
     extraPlugins = [
       "artsiomch.cmake" # CMake Plus requires CMake simple highlighter.
@@ -59,7 +56,7 @@ in
     extraPlugins = [
       "org.jetbrains.plugins.go"
       "com.demonwav.minecraft-dev"
-      "PythonCore" # Required by the Python plugin.
+      "PythonCore"
       "Pythonid"
       "com.jetbrains.rust"
       "org.intellij.scala"
