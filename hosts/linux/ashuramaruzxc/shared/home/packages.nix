@@ -80,20 +80,6 @@ let
         ;
     };
 
-    nemo = [
-      (pkgs.nemo-with-extensions.override {
-        extensions = lib.attrsets.attrValues {
-          inherit (pkgs)
-            folder-color-switcher
-            nemo-emblems
-            nemo-fileroller
-            nemo-python
-            nemo-qml-plugin-dbus
-            ;
-        };
-      })
-    ];
-
     networking = builtins.attrValues {
       inherit (pkgs)
         openvpn

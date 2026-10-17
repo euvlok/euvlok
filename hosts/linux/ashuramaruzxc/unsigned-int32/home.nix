@@ -53,11 +53,10 @@ let
       "gaming"
       "development"
       "jetbrains"
-      "nemo"
     ]
     ++ [
       pkgs.unstable.piper
-      #until euroffice is statble
+      # until euroffice is statble
       pkgs.unstable.softmaker-office-nx
 
     ];
