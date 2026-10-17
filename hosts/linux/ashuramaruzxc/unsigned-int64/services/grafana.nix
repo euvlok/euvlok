@@ -102,6 +102,22 @@
       };
     };
     scrapeConfigs = [
+      # Pull router DNSCrypt metrics over WireGuard from 172.16.31.1.
+      {
+        job_name = "dnscrypt-router";
+        scheme = "http";
+        metrics_path = "/metrics";
+        scrape_interval = "30s";
+        scrape_timeout = "10s";
+        static_configs = [
+          {
+            targets = [ "172.16.31.2:8080" ];
+            labels = {
+              device = "rt-be88u";
+            };
+          }
+        ];
+      }
       {
         job_name = "unsigned-int64";
         static_configs = [
