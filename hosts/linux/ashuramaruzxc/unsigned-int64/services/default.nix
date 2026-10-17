@@ -3,6 +3,7 @@ _: {
     # Most important
     ./nginx.nix
     ./grafana.nix
+    ./ecoflow.nix
 
     # utils
     ./fail2ban.nix
