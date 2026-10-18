@@ -81,12 +81,29 @@ in
       system = "x86_64-linux";
       runner = "ubuntu-26.04";
       modules = [
+        {
+          nixpkgs.overlays = [
+            (final: _: {
+              aiTools =
+                let
+                  # Use AI's ChatGPT runtime, not EUVlok's desktop package
+                  packages = inputs.ai.packages.${final.stdenv.hostPlatform.system};
+                in
+                packages
+                // {
+                  # Keep the existing Codex and Claude launchers in the profile
+                  ai-tools = lib.meta.lowPrio packages.ai-tools;
+                };
+            })
+          ];
+        }
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int32 {
           sharedModule = sharedNixosModule;
           homeModule =
             mkHomeModule ../../hosts/linux/ashuramaruzxc/unsigned-int32/home.nix
               inputs.home-manager.nixosModules.home-manager
               {
+                aiModule = inputs.ai.homeManagerModules.default;
                 codexDesktopModule = inputs.codex-desktop-linux.homeManagerModules.default;
               };
           flatpakModule = inputs.flatpak-declarative.nixosModules.default;

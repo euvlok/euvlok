@@ -1,5 +1,10 @@
 {
   flake-file.inputs = {
+    ai = {
+      # Keep AI's Nixpkgs pin for Farstep's Rust 1.99 toolchain
+      inputs.flake-parts.follows = "users-flake-parts";
+      url = "github:4evy/ai";
+    };
     anime-cursors-source = {
       flake = false;
       url = "github:4evy/anime-cursors";

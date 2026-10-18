@@ -1,4 +1,5 @@
 {
+  aiModule,
   animeCursorsPackage,
   catppuccinModule,
   codexDesktopModule,
@@ -28,12 +29,20 @@ let
   ];
 
   ashuramaruHmConfig = [
+    aiModule
     ((import ../../../../slop.nix).homeManager.hosts.unsignedInt32 {
       inherit codexDesktopModule;
     })
     ../../../hm/ashuramaruzxc/graphics.nix
     ../../../hm/ashuramaruzxc/workstation.nix
     {
+      programs.ai = {
+        omp.enable = true;
+        farstep = {
+          enable = true;
+          desktop.enable = true;
+        };
+      };
       euvlok.home = {
         firefox.floorp.enable = true;
         nixcord.enable = true;

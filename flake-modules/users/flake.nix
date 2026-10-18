@@ -115,6 +115,10 @@
   outputs = inputs: inputs.users-flake-parts.lib.mkFlake { inherit inputs; } ./inputs;
 
   inputs = {
+    ai = {
+      url = "github:4evy/ai";
+      inputs.flake-parts.follows = "users-flake-parts";
+    };
     anime-cursors-source = {
       url = "github:4evy/anime-cursors";
       flake = false;
