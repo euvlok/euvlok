@@ -27,6 +27,9 @@
         "renovate": "44.145.3",
       },
     },
+    ".github/scripts/input-snapshots": {
+      "name": "@euvlok/input-snapshots",
+    },
     "packages/catppuccin-userstyles": {
       "name": "@euvlok/catppuccin-userstyles",
       "version": "0.1.0",
@@ -141,6 +144,8 @@
     "@euvlok/build-nix-flake-target": ["@euvlok/build-nix-flake-target@workspace:.github/actions/build-nix-flake-target"],
 
     "@euvlok/catppuccin-userstyles": ["@euvlok/catppuccin-userstyles@workspace:packages/catppuccin-userstyles"],
+
+    "@euvlok/input-snapshots": ["@euvlok/input-snapshots@workspace:.github/scripts/input-snapshots"],
 
     "@euvlok/renovate": ["@euvlok/renovate@workspace:.github/renovate"],
 

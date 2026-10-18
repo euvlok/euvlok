@@ -112,6 +112,10 @@ jobs:
         working-directory: .github/actions/build-nix-flake-target
         run: bun run check
 
+      - name: Check input snapshot tooling
+        working-directory: .github/scripts/input-snapshots
+        run: bun run check
+
       - name: Run build helper tests
         working-directory: .github/actions/build-nix-flake-target
         run: |

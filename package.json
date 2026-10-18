@@ -8,6 +8,7 @@
   "workspaces": [
     ".github/actions/build-nix-flake-target",
     ".github/renovate",
+    ".github/scripts/input-snapshots",
     "packages/catppuccin-userstyles"
   ],
   "devDependencies": {

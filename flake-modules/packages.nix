@@ -48,6 +48,10 @@
             lib.attrsets.removeAttrs config.overlayAttrs [ "catppuccin-gtk-fausto" ]
             // {
               catppuccin-gtk = config.overlayAttrs.catppuccin-gtk-fausto;
+              input-trace-nix = import ../packages/input-trace-nix/input-trace-nix.nix {
+                determinateNix = providerInputs.determinate.inputs.nix;
+                inherit pkgs;
+              };
             }
           );
     };
