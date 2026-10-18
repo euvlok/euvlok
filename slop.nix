@@ -431,7 +431,7 @@ let
   # pay for the harm they cause instead of charging everyone else for the
   # correction
   codexSettings = {
-    model = "gpt-6-1-sol";
+    model = "gpt-6.1-sol";
     model_reasoning_effort = "high";
     plan_mode_reasoning_effort = "high";
     approval_policy = "on-request";
@@ -892,7 +892,15 @@ let
             browser=$(realpath -m "$browser")
             codexHome=$(realpath -m "$CODEX_HOME")
             case "$browser" in
-              ${lib.strings.escapeShellArg browserService}|${lib.strings.escapeShellArg "${resources}/plugins/openai-bundled/plugins/browser/scripts/browser-service.mjs"}|"$codexHome"/plugins/cache/openai-bundled/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/openai-bundled/chrome/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/chrome/*/scripts/browser-service.mjs)
+              ${
+                lib.strings.concatMapStringsSep "|" lib.strings.escapeShellArg (
+                  # Without Helium both paths name the bundled browser service
+                  lib.lists.unique [
+                    browserService
+                    "${resources}/plugins/openai-bundled/plugins/browser/scripts/browser-service.mjs"
+                  ]
+                )
+              }|"$codexHome"/plugins/cache/openai-bundled/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/openai-bundled/chrome/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/browser/*/scripts/browser-service.mjs|"$codexHome"/plugins/cache/${marketplaceName}/chrome/*/scripts/browser-service.mjs)
                 if [[ -n "''${CODEX_BROWSER_SERVICE:-}" ]]; then
                   browser="$CODEX_BROWSER_SERVICE"
                   [[ -f "$browser" ]]
