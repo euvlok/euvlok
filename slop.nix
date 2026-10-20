@@ -596,6 +596,7 @@ let
         profiles
         writableConfig
         desktop
+        ./slop/omp.nix
       ];
 
       options.euvlok.home.codex = {
@@ -604,7 +605,6 @@ let
           default = [ "codex" ];
           extraDescription = "The native CLI is used by the terminal and desktop app";
         };
-        omp.enable = lib.options.mkEnableOption "Oh My Pi alongside Codex";
         opencode.enable = lib.options.mkEnableOption "OpenCode alongside Codex";
       };
 
@@ -612,7 +612,6 @@ let
         home.packages = [
           pkgs.unstable.glab
         ]
-        ++ lib.lists.optional cfg.omp.enable pkgs.unstable.omp
         ++ lib.lists.optional cfg.opencode.enable pkgs.unstable.opencode;
         home.sessionVariables = environment;
         home.shellAliases.cx = "codex";
