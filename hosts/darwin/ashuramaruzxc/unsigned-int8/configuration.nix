@@ -107,8 +107,6 @@
       wireguard-tools
       smartmontools
       # Virtualization
-      colima
-      docker
       podman
       podman-compose
       vfkit

@@ -88,7 +88,7 @@ let
       alt-tab-macos
       betterdisplay
       iina
-      keka
+      orbstack
       shottr
       thaw
       the-unarchiver
