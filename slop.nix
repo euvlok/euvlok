@@ -1896,6 +1896,30 @@ in
       }:
       let
         inherit (codexLib { inherit config lib pkgs; }) configDir;
+        ansibleSkillsSource = pkgs.fetchFromGitHub {
+          owner = "leogallego";
+          repo = "claude-ansible-skills";
+          rev = "2c43de8f4b180342f05f5e670cc7e6e8ae359ec4";
+          hash = "sha256-+aiGKrOHoY5i/nsCVvxPq9g6NH6ivYivc8dbKb6BUUg=";
+        };
+        ansibleSkillNames = [
+          "ansible-docs"
+          "ansible-good-practices"
+          "ansible-new-collection"
+          "ansible-new-ee"
+          "ansible-new-molecule"
+          "ansible-new-role"
+          "ansible-zen"
+        ];
+        ansibleSkills = pkgs.runCommand "ansible-agent-skills" { } (
+          lib.concatMapStringsSep "\n" (name: ''
+            mkdir -p "$out/${name}"
+            cp -R ${ansibleSkillsSource}/${name}/skills/${name}/. "$out/${name}/"
+            if [ -d ${ansibleSkillsSource}/${name}/references ]; then
+              cp -R ${ansibleSkillsSource}/${name}/references "$out/${name}/references"
+            fi
+          '') ansibleSkillNames
+        );
         models = {
           subscribed = {
             inherit (codexSettings) model;
@@ -1957,6 +1981,10 @@ in
           (lib.modules.mkIf config.euvlok.home.codex.enable {
             programs.ghostty.settings.font-family = "Hack Nerd Font Mono";
 
+            home.file = lib.genAttrs (map (name: ".agents/skills/${name}") ansibleSkillNames) (path: {
+              source = "${ansibleSkills}/${builtins.baseNameOf path}";
+            });
+
             programs.codex.settings = {
               apps = lib.modules.mkIf config.euvlok.home.codex.desktop.enable {
                 connector_76869538009648d5b282a4bb21c3d157.enabled = true; # GitHub
@@ -1980,13 +2008,6 @@ in
                 };
 
                 agent_servers = {
-                  # cline = {
-                  #   type = "custom";
-                  #   command = lib.meta.getExe' pkgs.eupkgs.cline-ai "cline";
-                  #   args = [ "--acp" ];
-                  #   env = { };
-                  # };
-
                   "codex-acp" = acpServer "codex-acp" [ ];
                 };
 
