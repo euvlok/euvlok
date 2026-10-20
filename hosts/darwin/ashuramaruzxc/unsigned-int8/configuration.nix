@@ -16,6 +16,8 @@
   security.pam.services.sudo_local.touchIdAuth = true;
   services.openssh.enable = true;
   services.tailscale.enable = true;
+  launchd.daemons.tailscaled.serviceConfig.KeepAlive = true;
+  environment.etc."resolver/ts.net".enable = false;
 
   sops.secrets.tailscale_auth = { };
 
@@ -68,11 +70,6 @@
       "Ethernet"
       "Thunderbolt Bridge"
       "Wi-Fi"
-    ];
-    dns = [
-      "192.168.1.1"
-      "172.16.31.1"
-      "fd17:216b:31bc:1::1"
     ];
   };
 

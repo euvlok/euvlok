@@ -42,6 +42,12 @@
         Port = 57255;
       };
 
+      "unsigned-int32.local.home" = {
+        HostName = "unsigned-int32.local.home";
+        Port = 57255;
+        User = "ashuramaru";
+      };
+
       "unsigned-int4.home.lan" = {
         HostName = "192.168.50.15";
         Port = 22;

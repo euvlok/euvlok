@@ -31,13 +31,13 @@ let
       programs.ssh.settings = {
         "unsigned-int32" = {
           HostName = "unsigned-int32";
-          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
           User = "ashuramaru";
         };
         "unsigned-int64" = {
           HostName = "unsigned-int64";
           Port = 57255;
-          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} nc %h %p";
+          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
           User = "ashuramaru";
         };
       };

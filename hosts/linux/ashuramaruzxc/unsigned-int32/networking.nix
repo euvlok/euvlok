@@ -26,6 +26,7 @@
         80
         443
       ];
+      interfaces.enp59s0.allowedTCPPorts = [ 57255 ];
       # The tailnet policy permits SSH only from unsigned-int8.
       interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [ 22 ];
       extraCommands = ''
@@ -39,6 +40,10 @@
     enable = true;
     allowSFTP = true;
     openFirewall = false;
+    ports = [
+      22
+      57255
+    ];
     settings = {
       UseDns = true;
       PasswordAuthentication = false;
@@ -48,11 +53,9 @@
     listenAddresses = [
       {
         addr = "0.0.0.0";
-        port = 22;
       }
       {
         addr = "[::]";
-        port = 22;
       }
     ];
   };
