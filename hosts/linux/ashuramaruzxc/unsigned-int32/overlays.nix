@@ -1,7 +1,9 @@
 { pkgs, ... }:
 {
   nixpkgs.overlays = [
-    (final: _prev: {
+    (final: prev: {
+      pinentry-qt = prev.pinentry-qt.override { qt6 = final.kdePackages; };
+
       gtk-nocsd = final.stdenv.mkDerivation {
         pname = "gtk-nocsd";
         version = "4.8";

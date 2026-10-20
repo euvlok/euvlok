@@ -609,10 +609,7 @@ let
       };
 
       config = lib.modules.mkIf cfg.enable {
-        home.packages = [
-          pkgs.unstable.glab
-        ]
-        ++ lib.lists.optional cfg.opencode.enable pkgs.unstable.opencode;
+        home.packages = lib.lists.optional cfg.opencode.enable pkgs.unstable.opencode;
         home.sessionVariables = environment;
         home.shellAliases.cx = "codex";
 
@@ -625,7 +622,6 @@ let
             !config.home.preferXdgDirectories
             || lib.strings.hasPrefix "${config.home.homeDirectory}/" config.xdg.configHome
           );
-          skills.glab = "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
           settings = lib.modules.mkMerge [
             (mkDefaults codexSettings)
             (lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin (mkDefaults {
@@ -1215,6 +1211,97 @@ let
           };
         };
       };
+    };
+  mcp =
+    {
+      config,
+      lib,
+      options,
+      pkgs,
+      ...
+    }:
+    let
+      secrets = lib.attrsets.optionalAttrs (options ? sops) config.sops.secrets;
+      withSecrets =
+        name: package: variables:
+        let
+          available = lib.attrsets.filterAttrs (_: secret: secrets ? ${secret}) variables;
+        in
+        if available == { } then
+          lib.meta.getExe package
+        else
+          lib.meta.getExe (
+            pkgs.writeShellApplication {
+              inherit name;
+              text = ''
+                ${lib.strings.concatLines (
+                  lib.attrsets.mapAttrsToList (variable: secret: ''
+                    ${variable}=$(< ${lib.strings.escapeShellArg secrets.${secret}.path})
+                    export ${variable}
+                  '') available
+                )}
+                exec ${lib.meta.getExe package} "$@"
+              '';
+            }
+          );
+      servers = {
+        context7.command = withSecrets "context7-mcp" pkgs.context7-mcp {
+          CONTEXT7_API_KEY = "context7_api_key";
+        };
+        gitlab = {
+          command = withSecrets "gitlab-mcp" pkgs.unstable.glab {
+            GITLAB_TOKEN = "gitlab_token";
+            GITLAB_HOST = "gitlab_host";
+          };
+          args = [
+            "mcp"
+            "serve"
+          ];
+          codex.env_vars = [
+            "GITLAB_HOST"
+            "GITLAB_TOKEN"
+            "GLAB_CONFIG_DIR"
+          ];
+          codex.tool_timeout_sec = 120;
+        };
+        nixos = {
+          command = lib.meta.getExe pkgs.unstable.mcp-nixos;
+          codex.tool_timeout_sec = 120;
+        };
+        openaiDeveloperDocs.url = "https://developers.openai.com/mcp";
+      };
+      generic = server: removeAttrs server [ "codex" ];
+      typed = server: generic server // { type = if server ? url then "http" else "stdio"; };
+      codexServer =
+        server:
+        lib.attrsets.mapAttrs (_: lib.modules.mkDefault) (
+          {
+            enabled = true;
+            startup_timeout_sec = 20;
+            tool_timeout_sec = 60;
+            default_tools_approval_mode = "auto";
+          }
+          // server.codex or { }
+        )
+        // generic server;
+    in
+    {
+      config = lib.modules.mkMerge (
+        [
+          (lib.modules.mkIf config.euvlok.home.codex.enable {
+            programs.codex.settings.mcp_servers = lib.attrsets.mapAttrs (_: codexServer) servers;
+            euvlok.home.codex.omp.mcpServers = lib.attrsets.mapAttrs (_: typed) servers;
+          })
+          (lib.modules.mkIf config.euvlok.home.claude-code.enable {
+            programs.claude-code.mcpServers = lib.attrsets.mapAttrs (_: typed) servers;
+          })
+        ]
+        ++ lib.lists.optional (options ? programs.ai.omp.mcp) (
+          lib.modules.mkIf config.programs.ai.omp.enable {
+            programs.ai.omp.mcp.mcpServers = lib.attrsets.mapAttrs (_: typed) servers;
+          }
+        )
+      );
     };
   # another prompt box to fucking bury
   #
@@ -1977,9 +2064,14 @@ in
       in
 
       {
+        imports = [ mcp ];
+
         config = lib.modules.mkMerge [
           (lib.modules.mkIf config.euvlok.home.codex.enable {
             programs.ghostty.settings.font-family = "Hack Nerd Font Mono";
+
+            home.packages = [ pkgs.unstable.glab ];
+            programs.codex.skills.glab = "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
 
             home.file = lib.genAttrs (map (name: ".agents/skills/${name}") ansibleSkillNames) (path: {
               source = "${ansibleSkills}/${builtins.baseNameOf path}";
@@ -2067,6 +2159,11 @@ in
           codexEnabled
           claudeCodeEnabled
         ];
+        sops.secrets = {
+          context7_api_key = { };
+          gitlab_host = { };
+          gitlab_token = { };
+        };
         euvlok.home.codex.omp.enable = true;
       };
       faputa = { pkgs, ... }: {

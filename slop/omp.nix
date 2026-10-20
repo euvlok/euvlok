@@ -9,6 +9,7 @@ let
   codexDir = config.home.sessionVariables.CODEX_HOME;
   claudeDir = config.programs.claude-code.configDir;
   settingsFile = (pkgs.formats.json { }).generate "omp-settings.json" cfg.settings;
+  mcpFile = (pkgs.formats.json { }).generate "omp-mcp.json" { inherit (cfg) mcpServers; };
   syncSettings = pkgs.writeShellApplication {
     name = "omp-sync-settings";
     text = ''
@@ -44,6 +45,15 @@ in
         Settings keyed by OMP's dotted setting names. Applied through
         `omp config set` on activation, preserving unrelated runtime settings.
         Credentials must be configured outside Nix.
+      '';
+    };
+    mcpServers = lib.options.mkOption {
+      type = lib.types.attrsOf (pkgs.formats.json { }).type;
+      default = { };
+      description = ''
+        MCP servers written to ~/.omp/agent/mcp.json, replacing that file.
+        Values are public in the Nix store, so servers must load their
+        credentials themselves.
       '';
     };
     skillRoots = lib.options.mkOption {
@@ -103,6 +113,11 @@ in
       Complete authorized work, verify changes with the project's configured
       checks, and report the result and any remaining limitations directly.
     '';
+    # Replaces the file `omp mcp add` would otherwise edit in place
+    home.file.".omp/agent/mcp.json" = lib.modules.mkIf (cfg.mcpServers != { }) {
+      source = mcpFile;
+      force = true;
+    };
     home.activation.ompSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       run ${lib.meta.getExe syncSettings}
     '';

@@ -98,7 +98,12 @@ in
       ++ [
         { home.packages = allPackages; }
         cursorModule
-        { services.easyeffects.enable = true; }
+        {
+          services.easyeffects = {
+            enable = true;
+            package = pkgs.easyeffects.override { qt6 = pkgs.kdePackages; };
+          };
+        }
       ];
   };
 }

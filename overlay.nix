@@ -39,8 +39,36 @@ let
         rocmPackages
         black
         ;
+      clipcat =
+        if prev.clipcat.version == "0.26.0" then
+          prev.clipcat.overrideAttrs (old: {
+            # Rust removed these lints; Clipcat's deny policy makes them fatal.
+            postPatch = (old.postPatch or "") + ''
+              sed -i \
+                -e '/^[[:space:]]*no_mangle_generic_items[[:space:]]*=/d' \
+                -e '/^[[:space:]]*repr_transparent_non_zst_fields[[:space:]]*=/d' \
+                -e '/^[[:space:]]*elided_lifetimes_in_associated_constant[[:space:]]*=/d' \
+                Cargo.toml
+            '';
+          })
+        else
+          prev.clipcat;
       pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
         (_pythonFinal: pythonPrev: {
+          torch =
+            if pythonPrev.torch.version == "2.13.0" && (pythonPrev.torch.rocmSupport or false) then
+              pythonPrev.torch.overridePythonAttrs (old: {
+                # HIP's empty __noinline__ macro breaks GCC 16's <format>.
+                # Parse <chrono> first in every GNU C++ source, including c10.
+                postPatch = (old.postPatch or "") + ''
+                  substituteInPlace CMakeLists.txt \
+                    --replace-fail 'project(Torch CXX C)' \
+                    'project(Torch CXX C)
+                  add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-include;chrono>")'
+                '';
+              })
+            else
+              pythonPrev.torch;
           anyio =
             if pythonPrev.anyio.version == "4.14.2" then
               pythonPrev.anyio.overridePythonAttrs (old: {
