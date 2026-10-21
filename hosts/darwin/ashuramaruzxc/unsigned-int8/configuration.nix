@@ -50,8 +50,6 @@
           exit 1
           ;;
       esac
-
-      tailscale set --advertise-tags=tag:unsigned-int8
     '';
     serviceConfig = {
       RunAtLoad = true;

@@ -5,6 +5,7 @@
 }:
 let
   datasourceUid = "ecoflow-prometheus";
+  ecolinkerPort = "7660";
   source = pkgs.fetchurl {
     url = "https://grafana.com/api/dashboards/17812/revisions/9/download";
     hash = "sha256-69RuK4QEqGOvUU/5ms/TB72zlsPqhiRufHLicOn6Vsw=";
@@ -177,10 +178,10 @@ in
       ECOFLOW_URL = "https://api-e.ecoflow.com";
       ECOFLOW_MQTT_ENABLED = "false";
       SERVER_LISTEN = "127.0.0.1";
-      SERVER_PORT = "9981";
+      SERVER_PORT = ecolinkerPort;
       PROMETHEUS_ENABLED = "true";
       PROMETHEUS_LISTEN = "127.0.0.1";
-      PROMETHEUS_PORT = "9981";
+      PROMETHEUS_PORT = ecolinkerPort;
       DB_POSTGRES_HOST = "/run/postgresql";
       DB_POSTGRES_PORT = toString config.services.postgresql.settings.port;
       DB_POSTGRES_NAME = "ecolinker";
@@ -212,7 +213,7 @@ in
         uid = datasourceUid;
         type = "prometheus";
         access = "proxy";
-        url = "http://127.0.0.1:${toString config.services.prometheus.port}/prometheus";
+        url = "https://${config.services.grafana.settings.server.domain}/prometheus";
         jsonData.timeInterval = "30s";
         editable = false;
       }

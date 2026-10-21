@@ -6,16 +6,17 @@
 }:
 let
   datasourceUid = "dnscrypt-prometheus";
+  dashboardDatasource = {
+    type = "prometheus";
+    uid = datasourceUid;
+  };
   selector = ''{job="dnscrypt-router",instance=~"$instance"}'';
   metric = name: "dnscrypt_proxy_${name}${selector}";
   rate = name: "rate(${metric name}[$__rate_interval])";
   panel = id: title: unit: expressions: {
     inherit id title;
     type = "timeseries";
-    datasource = {
-      type = "prometheus";
-      uid = datasourceUid;
-    };
+    datasource = dashboardDatasource;
     gridPos = {
       x = ((id - 1) - (builtins.div (id - 1) 2) * 2) * 12;
       y = (builtins.div (id - 1) 2) * 8;
@@ -61,10 +62,7 @@ let
         name = "instance";
         label = "Router";
         type = "query";
-        datasource = {
-          type = "prometheus";
-          uid = datasourceUid;
-        };
+        datasource = dashboardDatasource;
         query = ''label_values(up{job="dnscrypt-router"}, instance)'';
         refresh = 1;
         current = {
@@ -156,7 +154,7 @@ in
           uid = datasourceUid;
           type = "prometheus";
           access = "proxy";
-          url = "http://127.0.0.1:${toString config.services.prometheus.port}/prometheus";
+          url = "https://${config.services.grafana.settings.server.domain}/prometheus";
           jsonData.timeInterval = "30s";
           editable = false;
         }
@@ -209,8 +207,18 @@ in
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
     declarativePlugins = lib.attrsets.attrValues {
-      inherit (pkgs.grafanaPlugins) grafana-piechart-panel;
+      # These datasource plugins are distributed separately in Grafana 13.
+      inherit (pkgs.grafanaPlugins) grafana-piechart-panel prometheus loki;
     };
+  };
+  # HTTPS queries to metrics.tenjin.com use the same private CA as nginx.
+  systemd.services.grafana = {
+    environment.SSL_CERT_FILE = "/run/grafana/ca-certificates.crt";
+    serviceConfig.LoadCredential = [ "tenjin-ca:/etc/ssl/self/tenjin.com/ca.crt" ];
+    preStart = ''
+      ${pkgs.coreutils}/bin/cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+        "$CREDENTIALS_DIRECTORY/tenjin-ca" > "$RUNTIME_DIRECTORY/ca-certificates.crt"
+    '';
   };
   systemd.services.prometheus = {
     after = [
@@ -263,7 +271,7 @@ in
       };
     };
     scrapeConfigs = [
-      # Pull router DNSCrypt metrics over WireGuard from 172.16.31.1.
+      # Router metrics use WireGuard with source 172.16.31.1.
       {
         job_name = "dnscrypt-router";
         scheme = "http";
@@ -313,7 +321,9 @@ in
         job_name = "ecoflow";
         metrics_path = "/metrics";
         scrape_interval = "30s";
-        static_configs = [ { targets = [ "127.0.0.1:9981" ]; } ];
+        static_configs = [
+          { targets = [ "127.0.0.1:${config.services.ecolinker.environment.PROMETHEUS_PORT}" ]; }
+        ];
       }
     ];
   };

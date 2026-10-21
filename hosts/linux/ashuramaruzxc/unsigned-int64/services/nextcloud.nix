@@ -13,9 +13,7 @@
     enable = true;
     enableImagemagick = true;
     database.createLocally = true;
-    # Nextcloud upgrades must proceed one major version at a time
-    # Keep 34 pinned until its migration completes before advancing to 35
-    package = pkgs.nextcloud34;
+    package = pkgs.nextcloud35;
     settings = {
       enablePreview = true;
       enabledPreviewProviders = [
@@ -63,7 +61,6 @@
         user_oidc
         notify_push
         twofactor_webauthn
-        # twofactor_nextcloud_notification
         # ical
         calendar
         contacts
@@ -82,10 +79,7 @@
         gpoddersync
         bookmarks
         cookbook
-        cospend
         music
-        # onlyoffice
-        # maps
         ;
       # Camera raw previes
       # camerarawpreviews = pkgs.fetchNextcloudApp {
@@ -96,15 +90,6 @@
       #   sha256 = "sha256-aiMUSJQVbr3xlJkqOaE3cNhdZu3CnPEIWTNVOoG4HSo=";
       #   license = "${lib.licenses.agpl3Only.shortName}";
       #   appVersion = "0.8.7";
-      # };
-      # integration_paperless = pkgs.fetchNextcloudApp {
-      #   appName = "integration_paperless";
-      #   homepage = "https://apps.nextcloud.com/apps/integration_paperless";
-      #   description = "Integration with the Paperless Document Management System";
-      #   url = "https://github.com/nextcloud-releases/integration_paperless/releases/download/v1.0.6/integration_paperless-v1.0.6.tar.gz";
-      #   sha256 = "sha256-Tw0VZk+ByXLmFdNBgJdFnHUiFarDP+YyulzvCmE3ivw=";
-      #   license = "${lib.licenses.agpl3Only.shortName}";
-      #   appVersion = "1.0.6";
       # };
     };
     extraAppsEnable = true;

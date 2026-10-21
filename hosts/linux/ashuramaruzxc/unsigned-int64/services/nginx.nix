@@ -24,9 +24,8 @@
       email = "ashuramaru@tenjin-dk.com";
       dnsResolver = "1.1.1.1:53";
       dnsProvider = "cloudflare";
-      credentialFiles = {
-        CLOUDFLARE_DNS_API_TOKEN_FILE = config.sops.secrets.cloudflare-api_token.path;
-      };
+      # This secret contains CLOUDFLARE_DNS_API_TOKEN=<token>, not a raw token.
+      environmentFile = config.sops.secrets.cloudflare-api_token.path;
     };
   };
   services.nginx = {
@@ -70,18 +69,6 @@
         return 444;
       '';
     };
-    virtualHosts."static.fumoposting.com" = {
-      serverName = "static.fumoposting.com";
-      forceSSL = true;
-      enableACME = true;
-      basicAuthFile = config.sops.secrets.minecraft.path;
-      locations."/" = {
-        root = "/var/lib/www/minecraft/static";
-        extraConfig = ''
-          autoindex on;
-        '';
-      };
-    };
   };
   users.groups.minecraft = {
     gid = config.users.users.minecraft.uid;
@@ -101,7 +88,6 @@
     extraGroups = [
       "minecraft"
       "ashuramaru"
-      "docker"
       "nginx"
     ];
     openssh.authorizedKeys.keys = config.users.users.ashuramaru.openssh.authorizedKeys.keys;

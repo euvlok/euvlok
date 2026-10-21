@@ -35,10 +35,38 @@ let
   stableFallbacksOverlay =
     final: prev:
     {
-      inherit (final.stable)
-        rocmPackages
-        black
-        ;
+      inherit (final.stable) black;
+      rocmPackages = final.stable.rocmPackages.overrideScope (
+        _rocmFinal: rocmPrev: {
+          # AOTriton's attention API must match the current PyTorch package.
+          inherit (prev.rocmPackages) aotriton;
+          rocprofiler-sdk =
+            if rocmPrev.rocprofiler-sdk.version == "7.2.3" then
+              rocmPrev.rocprofiler-sdk.overrideAttrs (old: {
+                # OpenMP can discover the profiler before glog initializes.
+                patches = (old.patches or [ ]) ++ [
+                  (
+                    inputs.nixpkgs
+                    + /pkgs/development/rocm-modules/rocprofiler-sdk/0009-rocprofiler-sdk-guard-ompt-auto-start.patch
+                  )
+                ];
+              })
+            else
+              rocmPrev.rocprofiler-sdk;
+        }
+      );
+      llama-cpp =
+        if prev.llama-cpp.version == "0.6.0" then
+          prev.llama-cpp.overrideAttrs (old: {
+            # Large CPU pools make the tiny generated-model tests time out.
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace tests/CMakeLists.txt \
+                --replace-fail 'ARGS --models "''${MODEL_DIR}"' \
+                'ARGS --models "''${MODEL_DIR}" --threads 1 --threads-batch 1'
+            '';
+          })
+        else
+          prev.llama-cpp;
       clipcat =
         if prev.clipcat.version == "0.26.0" then
           prev.clipcat.overrideAttrs (old: {

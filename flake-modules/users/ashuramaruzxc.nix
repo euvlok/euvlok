@@ -8,6 +8,7 @@ let
   personalModule = ../../hosts/hm/ashuramaruzxc;
   sharedHomeModule = config.flake.homeModules.integrated;
   sharedNixosModule = config.flake.nixosModules.default;
+  tenjinCaModule = ../../hosts/shared/tenjin-ca.nix;
   catppuccinModule = lib.modules.importApply ../../hosts/hm/ashuramaruzxc/catppuccin.nix {
     catppuccinGtkModule = config.flake.homeModules.catppuccin-gtk;
   };
@@ -56,6 +57,7 @@ in
       runner = "ubuntu-24.04-arm";
       builder = inputs.nixos-raspberrypi.lib.nixosSystem;
       modules = [
+        tenjinCaModule
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int16 {
           sharedModule = sharedNixosModule;
           homeModule =
@@ -81,6 +83,7 @@ in
       system = "x86_64-linux";
       runner = "ubuntu-26.04";
       modules = [
+        tenjinCaModule
         {
           nixpkgs.overlays = [
             (final: _: {
@@ -117,6 +120,7 @@ in
       system = "x86_64-linux";
       runner = "ubuntu-26.04";
       modules = [
+        tenjinCaModule
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int64 {
           sharedModule = sharedNixosModule;
           ecolinkerModule =
@@ -151,6 +155,7 @@ in
       system = "aarch64-darwin";
       runner = "macos-latest";
       modules = [
+        tenjinCaModule
         (lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8 {
           containerPackage = inputs.nixpkgs.legacyPackages.aarch64-darwin.container;
           sharedModules = [

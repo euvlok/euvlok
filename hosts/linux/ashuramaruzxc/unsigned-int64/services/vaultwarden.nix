@@ -34,7 +34,7 @@
 
       signupsAllowed = false;
       signupsVerify = true;
-      signupsDomainsWhitelist = "fumoposting.com, tenjin-dk.com, riseup.net, meanrin.cat, waifu.club";
+      signupsDomainsWhitelist = "tenjin-dk.com, meanrin.cat";
 
       smtpHost = "sinope.uberspace.de";
       smtpSecurity = "starttls";

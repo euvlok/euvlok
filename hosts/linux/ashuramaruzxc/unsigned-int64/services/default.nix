@@ -2,6 +2,7 @@ _: {
   imports = [
     # Most important
     ./nginx.nix
+    ./tenjin-tls.nix
     ./grafana.nix
     ./ecoflow.nix
 
@@ -17,11 +18,13 @@ _: {
 
     # db
     ./postgresql.nix
-    #./redis.nix
+    ./redis.nix
 
     # Misc
+    ./forgejo.nix
     ./vaultwarden.nix
-    ./nextcloud.nix
-    (import ../../../../../slop.nix).nixos.cvat
+    # CVE-2026-109618, CVE-2026-109619
+    # ./nextcloud.nix
+    # (import ../../../../../slop.nix).nixos.cvat
   ];
 }

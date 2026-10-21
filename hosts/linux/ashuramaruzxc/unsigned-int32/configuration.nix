@@ -135,8 +135,7 @@
 
   security.polkit.enable = true;
 
-  # Keep compiler caching enabled;
-  # sudo ccache --dir=/var/cache/ccache.
+  # Administer the cache with sudo ccache --dir=/var/cache/ccache.
   security.wrappers.nix-ccache.enable = false;
 
   programs = {

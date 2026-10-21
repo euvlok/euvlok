@@ -22,8 +22,6 @@ _: {
           u2fAuth = true;
           enableGnomeKeyring = true;
           enableKwallet = true;
-          googleOsLoginAuthentication = true;
-          googleOsLoginAccountVerification = true;
           googleAuthenticator.enable = true;
         };
       };

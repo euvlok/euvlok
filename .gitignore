@@ -40,3 +40,7 @@ result-*
 
 # Logs
 *.log
+
+/hosts/linux/ashuramaruzxc/unsigned-int64/services/forgejo/README.md
+/hosts/linux/ashuramaruzxc/unsigned-int64/services/forgejo/test.nix
+/hosts/linux/ashuramaruzxc/unsigned-int64/services/forgejo/test.py

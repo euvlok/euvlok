@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  sops.secrets.tailscale_auth = { };
+  sops.secrets.tailscale_auth.restartUnits = [ "tailscaled-autoconnect.service" ];
   services.tailscale = {
     enable = true;
     openFirewall = true;
@@ -8,9 +8,10 @@
     # Tag requests are supported by `tailscale up`, not `tailscale set`.
     extraUpFlags = [
       "--advertise-tags=tag:unsigned-int64"
-      "--ssh=false"
+      "--advertise-exit-node"
+      "--ssh=true"
     ];
-    extraSetFlags = [ "--ssh=false" ];
+    extraSetFlags = [ "--ssh=true" ];
   };
   networking = {
     hostName = "unsigned-int64";
@@ -44,6 +45,8 @@
       address = "fe80::1";
       interface = "enp5s0";
     };
+    # Keep the static IPv6 address when NetworkManager reapplies Ethernet.
+    networkmanager.ensureProfiles.profiles.ethernet.ipv6.address1 = "2a01:4f8:2191:246a::1/64,fe80::1";
     nameservers = [
       "127.0.0.1"
       "::1"
@@ -120,6 +123,7 @@
           8053
         ];
         allowedTCPPorts = [
+          22
           53
           67
           5353
@@ -129,11 +133,15 @@
       };
     };
   };
+  systemd.services.sshd = {
+    after = [ "wg-quick-wireguard0.service" ];
+    wants = [ "wg-quick-wireguard0.service" ];
+  };
   services = {
     openssh = {
       enable = true;
       allowSFTP = true;
-      openFirewall = false;
+      openFirewall = true;
       ports = [ 57255 ];
       settings = {
         UseDns = true;
@@ -149,6 +157,14 @@
         {
           addr = "[::]";
           port = 57255;
+        }
+        {
+          addr = "172.16.31.1";
+          port = 22;
+        }
+        {
+          addr = "[fd17:216b:31bc:1::1]";
+          port = 22;
         }
       ];
     };
@@ -200,10 +216,7 @@
             "fd17::/16 allow"
             "fe80::/10 allow"
           ];
-          private-domain = [
-            "remote.tenjin-dk.com."
-            "remote.fumoposting.com."
-          ];
+          private-domain = [ "remote.tenjin-dk.com." ];
           private-address = [
             "10.0.0.0/8"
             "172.16.0.0/12"
