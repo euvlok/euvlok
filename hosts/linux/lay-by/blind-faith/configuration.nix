@@ -34,7 +34,7 @@
   };
 
   nix.settings = {
-    max-jobs = 8;
+    # max-jobs = 12;
     trusted-users = [
       "hushh"
       "@wheel"

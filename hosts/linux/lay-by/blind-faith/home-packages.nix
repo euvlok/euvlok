@@ -50,7 +50,7 @@
       nitch
       thunderbird-bin
       telegram-desktop
-      freecad
+      #freecad
       #libreoffice
       p7zip
       # _7zz

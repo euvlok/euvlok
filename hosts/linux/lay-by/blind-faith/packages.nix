@@ -35,7 +35,6 @@
 
       # Security
       wireshark
-      ghidra
 
       # Recording
       gpu-screen-recorder
@@ -49,6 +48,7 @@
       breeze-icons
       ;
     inherit (pkgs) seahorse;
+    ghidra = pkgs.ghidra.withExtensions (exts: [ exts.reva ]);
     zen-browser = zenBrowserPackage;
   };
 }
