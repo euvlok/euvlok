@@ -19,7 +19,7 @@ _: {
       "wlsunset -S 7:00 -s 21:00"
       "systemctl --user start hyprpolkitagent"
       "xrandr --output DP-1 --primary"
-      "nicotine -s"
+      #"nicotine -s"
       "keepassxc --minimized"
     ];
 

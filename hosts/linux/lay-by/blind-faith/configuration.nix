@@ -21,6 +21,14 @@
     "vm.vfs_cache_pressure" = 75;
   };
 
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 8 * 1024;
+      randomEncryption.enable = true;
+    }
+  ];
+
   networking.hostName = "blind-faith";
 
   euvlok.nixos.locale = {

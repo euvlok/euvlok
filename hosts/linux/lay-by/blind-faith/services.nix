@@ -5,7 +5,7 @@ _: {
   };
   services = {
     tailscale = {
-      enable = true;
+      enable = false;
       extraSetFlags = [ "--ssh" ];
     };
 
@@ -35,7 +35,7 @@ _: {
     };
 
     syncthing = {
-      enable = true;
+      enable = false;
       settings.folders = {
         "Music" = {
           path = "/media/HDD/spotmusic/";
@@ -44,7 +44,7 @@ _: {
     };
 
     navidrome = {
-      enable = true;
+      enable = false;
       settings = {
         MusicFolder = "/media/HDD/spotmusic/";
         Port = 4533;
@@ -63,7 +63,7 @@ _: {
 
     # Misc services
     earlyoom = {
-      enable = true;
+      enable = false;
       freeMemThreshold = 5;
       freeSwapThreshold = 5;
     };
