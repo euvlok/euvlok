@@ -7,37 +7,37 @@
 }:
 let
   # renovate: datasource=github-tags depName=nvidia-driver packageName=NVIDIA/open-gpu-kernel-modules
-  version = "615.71.09";
+  version = "615.78.08";
 
   src = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-x86_64/${version}/NVIDIA-Linux-x86_64-${version}.run";
-    hash = "sha256-zc7tIrvrYSSNGm3qvCWWZz46ZQFpjucayNL9wo87cP4=";
+    hash = "sha256-Pj9t3cLudnoIGFMAr3vjyyhuznZpjS3eNSRZl4LQf/4=";
   };
 
   aarch64 = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-aarch64/${version}/NVIDIA-Linux-aarch64-${version}.run";
-    hash = "sha256-IbekQhE7cFfmnPZaLY9NDYcF7CoNZ+2Qb7sRd4EOgWM=";
+    hash = "sha256-UHYBE1AYHoGgMfD9AS/jX+S+N8eCDWUft6qolK9Eejc=";
   };
 
   open = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "open-gpu-kernel-modules";
     rev = version;
-    hash = "sha256-3gByMYIwFzRaLdDG+roCEOuKRRJDrljG9AlLnRZTirM=";
+    hash = "sha256-HBINiOjL0ZJLIAJeNIBYHBnwgUXtNwPPtnFpAI1YwF4=";
   };
 
   settings = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "nvidia-settings";
     rev = version;
-    hash = "sha256-LK1LU8mDkM/XVRKPBtuOZh9nIP/lGFLAJnmasEX8jhg=";
+    hash = "sha256-inDRpG02sdDgHmlqgu/DsgK8OFdOt1fZIYyXdhlGC/c=";
   };
 
   persistenced = fetchFromGitHub {
     owner = "NVIDIA";
     repo = "nvidia-persistenced";
     rev = version;
-    hash = "sha256-qPRb+3d88+2RcpUkoBTbjIaImnQ+jX+/6p1vXcJ5geE=";
+    hash = "sha256-RzeR6Ldct6MUxjnXRyThdh5Y3jjMehTVg85MtwuWNX4=";
   };
 
   # nix-update --subpackage needs a derivation whose `src` is declared in this
