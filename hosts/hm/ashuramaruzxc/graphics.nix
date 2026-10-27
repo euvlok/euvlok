@@ -1,12 +1,16 @@
 { lib, pkgs, ... }:
 {
   home.packages = lib.attrsets.attrValues {
-    inherit (pkgs.kdePackages) kdenlive;
+    inherit (pkgs.unstable)
+      krita
+      ;
+    inherit (pkgs.unstable.kdePackages)
+      kdenlive
+      ;
     # Graphics & Design
     inherit (pkgs)
       blender # 3D creation suite
       godot # Game engine
-      krita # Digital painting
       ansel # RAW image viewer
       ;
     inkscape = pkgs.inkscape-with-extensions.override {

@@ -2,10 +2,10 @@
 let
   video2gif = pkgs.writeShellApplication {
     name = "video2gif";
-    runtimeInputs = with pkgs; [
+    runtimeInputs = with pkgs.unstable; [
       coreutils
       fd
-      ffmpeg_8-full
+      ffmpeg
       gifski
       parallel
     ];

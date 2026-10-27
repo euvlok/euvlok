@@ -30,10 +30,8 @@
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
         extraCompatPackages = lib.attrsets.attrValues {
-          inherit (pkgs.unstable)
-            proton-ge-bin
-            steamtinkerlaunch
-            ;
+          inherit (pkgs) steamtinkerlaunch; # steamtinkerlaunch changed their shit so libgl just doesnt wants to load
+          inherit (pkgs.unstable) proton-ge-bin;
         };
         extraPackages = lib.attrsets.attrValues {
           inherit (pkgs)
