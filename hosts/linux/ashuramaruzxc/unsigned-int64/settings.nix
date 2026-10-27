@@ -5,7 +5,6 @@
     enable = true;
     openFirewall = true;
     authKeyFile = config.sops.secrets.tailscale_auth.path;
-    # Tag requests are supported by `tailscale up`, not `tailscale set`.
     extraUpFlags = [
       "--advertise-tags=tag:unsigned-int64"
       "--advertise-exit-node"
@@ -92,9 +91,6 @@
     firewall = {
       enable = true;
       allowedUDPPorts = [
-        # Proxy
-        # 1080
-        # 3128
         # Wireguard
         51280
       ];
@@ -107,13 +103,11 @@
         1080
         3128
       ];
-      # The tailnet policy permits SSH only from tag:unsigned-int8.
       interfaces.${config.services.tailscale.interfaceName}.allowedTCPPorts = [ 57255 ];
       interfaces."podman+" = {
         allowedTCPPorts = [ 53 ];
         allowedUDPPorts = [ 53 ];
       };
-      #todo: actually tide it up
       interfaces."wireguard0" = {
         allowedUDPPorts = [
           # forward all possible dns ports
