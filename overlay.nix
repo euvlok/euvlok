@@ -31,7 +31,6 @@ let
     );
   };
 
-  # Keep ROCm and the Folly consumers with their release dependency sets
   stableFallbacksOverlay =
     final: prev:
     {
@@ -83,6 +82,14 @@ let
           prev.clipcat;
       pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
         (_pythonFinal: pythonPrev: {
+          fastmcp-slim =
+            if pythonPrev.fastmcp-slim.version == "3.4.7" then
+              pythonPrev.fastmcp-slim.override {
+                # FastMCP 3.4.7 needs MCP SDK 1.x; Nixpkgs defaults to 2.x.
+                mcp = pythonPrev.mcp_1;
+              }
+            else
+              pythonPrev.fastmcp-slim;
           torch =
             if pythonPrev.torch.version == "2.13.0" && (pythonPrev.torch.rocmSupport or false) then
               pythonPrev.torch.overridePythonAttrs (old: {
