@@ -11,7 +11,8 @@
     };
     cursorgen-source = {
       flake = false;
-      url = "github:4evy/cursorgen";
+      # anime-cursors requires the upstream 0.1.4 release, not the 0.1.3 fork
+      url = "github:meanvoid/cursorgen/v0.1.4";
     };
     codex-desktop-linux = {
       inputs = {
