@@ -30,6 +30,7 @@
     };
     btop.enable = true;
     direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
+
   };
 
   programs.fastfetch.enable = true;

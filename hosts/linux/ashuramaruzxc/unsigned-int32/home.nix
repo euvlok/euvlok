@@ -43,11 +43,7 @@ let
           desktop.enable = true;
         };
       };
-      euvlok.home = {
-        firefox.floorp.enable = true;
-        nixcord.enable = true;
-        vscode.enable = true;
-      };
+      euvlok.home.nixcord.enable = true;
     }
   ];
 
