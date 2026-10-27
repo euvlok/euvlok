@@ -43,7 +43,7 @@
   nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {
       "kernel.nmi_watchdog" = 1;
       "vm.compaction_proactiveness" = 20;
@@ -101,7 +101,6 @@
     extraModprobeConfig = ''
       options hid_apple fnmode=2
     '';
-    #ARRAY /dev/md/nvmepool0 metadata=1.2 name=unsgined-int32:nvmepool0 #UUID=22366d16:84656da4:2612b2de:a3e77bca
     swraid = {
       enable = true;
       mdadmConf = ''
@@ -141,7 +140,7 @@
   # boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
-    device = "/dev/nvme0n1p1";
+    device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -151,43 +150,19 @@
   ### ----------------BOOT------------------- ###
 
   boot.initrd = {
-    systemd.enable = false;
     ### ---------------------LUKS--------------------- ###
     luks = {
-      yubikeySupport = true;
       mitigateDMAAttacks = true;
       devices = {
         "root" = {
-          device = "/dev/nvme0n1p2";
+          device = "/dev/disk/by-uuid/5c64c922-ed1d-4c90-b926-39bc58340188";
           allowDiscards = true;
           bypassWorkqueues = true;
-          yubikey = {
-            slot = 2;
-            twoFactor = true;
-            gracePeriod = 5;
-            keyLength = 64;
-            saltLength = 16;
-            storage = {
-              device = "${config.fileSystems."/boot".device}";
-              fsType = "vfat";
-              path = "/crypt-storage/root_keyslot1";
-            };
-          };
+          crypttabExtraOpts = [ "fido2-device=auto" ];
         };
         "hddpool0" = {
           device = "/dev/md/hddpool0";
-          yubikey = {
-            slot = 2;
-            twoFactor = true;
-            gracePeriod = 5;
-            keyLength = 64;
-            saltLength = 16;
-            storage = {
-              device = "${config.fileSystems."/boot".device}";
-              fsType = "vfat";
-              path = "/crypt-storage/hddpool0_keyslot1";
-            };
-          };
+          crypttabExtraOpts = [ "fido2-device=auto" ];
         };
       };
     };
@@ -210,7 +185,7 @@
     kernelModules = [
       # modules
       "vfat"
-      # yubico
+      # vfat filename encodings
       "nls_cp437"
       "nls_iso8859-1"
       # lvm2
@@ -221,19 +196,6 @@
       "dm-cache-cleaner"
     ];
     supportedFilesystems = config.boot.supportedFilesystems;
-  };
-  # Enroll both LUKS devices with systemd-cryptenroll before selecting this boot entry.
-  specialisation.systemd-initrd.configuration = {
-    boot.initrd = {
-      systemd.enable = lib.modules.mkForce true;
-      luks = {
-        yubikeySupport = lib.modules.mkForce false;
-        devices = {
-          root.crypttabExtraOpts = [ "fido2-device=auto" ];
-          hddpool0.crypttabExtraOpts = [ "fido2-device=auto" ];
-        };
-      };
-    };
   };
   ### ---------------/dev/sdc2-------------------- ###
   fileSystems."/nix" = {
