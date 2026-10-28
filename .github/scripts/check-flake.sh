@@ -55,17 +55,9 @@ PY
 
 printf 'null\n' >"${check_dir}/selection.json"
 echo '::group::Shared flake outputs'
-# Materialize sources and derivations for every system before --no-build
-# switches evaluation to read-only mode, including checks absent on this runner
-for output in packages checks; do
-  nix eval --json "path:${check_dir}#${output}" --apply '
-    builtins.mapAttrs (_: packages:
-      builtins.mapAttrs (_: package: package.drvPath) packages
-    )
-  ' >/dev/null
-done
+# CI has a native runner per system. Avoid evaluating other systems' checks
+# again here, especially the Linux module consumers on Darwin
 nix flake check "path:${check_dir}"
-nix flake check "path:${check_dir}" --all-systems --no-build
 echo '::endgroup::'
 
 host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
