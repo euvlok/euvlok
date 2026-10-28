@@ -2002,6 +2002,8 @@ in
     {
       lib,
       stdenvNoCC,
+      callPackage,
+      path,
       fetchurl,
       rpmextract,
       buildFHSEnv,
@@ -2070,6 +2072,9 @@ in
           src = fetchSource system;
         }
       ) sources;
+      # Reuse Nixpkgs' synchronized writable plugin cache inside the FHS
+      # environment without patching the vendor's binaries or resource tree
+      pluginLauncher = callPackage (path + "/pkgs/by-name/ch/chatgpt/launcher.nix") { };
       fhsArgs = {
         inherit version;
         multiArch = false;
@@ -2229,7 +2234,15 @@ in
       fhsArgs
       // {
         pname = "chatgpt";
-        runScript = "/usr/bin/chatgpt";
+        runScript = lib.meta.getExe (writeShellApplication {
+          name = "chatgpt-fhs-launcher";
+          text = ''
+            export CHATGPT_EXECUTABLE=/usr/bin/chatgpt
+            export CHATGPT_RESOURCES_SOURCE="${payload}/lib/chatgpt/resources"
+            export CHATGPT_RESOURCES_CACHE_KEY="${builtins.baseNameOf (toString payload)}"
+            exec ${lib.meta.getExe pluginLauncher} "$@"
+          '';
+        });
         extraInstallCommands = ''
           cp -r ${payload}/share "$out/share"
           substituteInPlace "$out/share/applications/chatgpt.desktop" \
