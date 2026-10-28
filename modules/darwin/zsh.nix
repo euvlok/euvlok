@@ -7,18 +7,11 @@
 let
   hmConfig = config.home-manager.users.${config.system.primaryUser};
 
-  # Home Manager has already merged the shared and user-specific aliases.
-  # Consume that module result instead of reaching back into hosts/ by name.
+  # Consume Home Manager's merged, string-typed aliases rather than host sources
   shellAliases = hmConfig.programs.zsh.shellAliases;
-  shellAliasesStr = lib.trivial.pipe shellAliases [
-    (attrs: lib.attrsets.filterAttrs (_: value: lib.strings.isString value) attrs)
-    (
-      filteredAttrs:
-      lib.generators.toKeyValue {
-        mkKeyValue = name: value: "alias ${name}=${lib.strings.escapeShellArg value}";
-      } filteredAttrs
-    )
-  ];
+  shellAliasesStr = lib.generators.toKeyValue {
+    mkKeyValue = name: value: "alias ${name}=${lib.strings.escapeShellArg value}";
+  } shellAliases;
 
   omzPlugins = [
     "colorize"
