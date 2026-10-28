@@ -11,7 +11,7 @@
     })
     (lib.modules.mkIf config.nixpkgs.hostPlatform.isx86_64 {
       hardware.graphics.extraPackages32 = lib.attrsets.attrValues {
-        inherit (pkgs) libva libva-vdpau-driver libvdpau-va-gl;
+        inherit (pkgs.pkgsi686Linux) libva libva-vdpau-driver libvdpau-va-gl;
       };
     })
     {
