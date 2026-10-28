@@ -12,6 +12,7 @@ let
 in
 {
   programs.gh.settings.git_protocol = format;
+  programs.git.package = pkgs.gitMinimal.override { withLibsecret = true; };
   programs.git.settings = {
     user = { inherit email name; };
     credential.helper = "libsecret";

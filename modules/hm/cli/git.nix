@@ -16,7 +16,8 @@
       gh.enable = true;
       git = {
         enable = true;
-        package = pkgs.gitMinimal; # We don't use SVN; we also don't need GUI, manual, Python support, or PCRE2
+        # No SVN, GUI, manual, Python, or PCRE2
+        package = lib.modules.mkDefault pkgs.gitMinimal;
         ignores = [
           "*.DS_Store"
           "*.swp"
