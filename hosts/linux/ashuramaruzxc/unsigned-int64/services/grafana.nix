@@ -140,11 +140,6 @@ let
   };
 in
 {
-  sops.secrets.grafana_pgsql = {
-    mode = "0640";
-    owner = config.users.users.grafana.name;
-    group = config.users.users.grafana.group;
-  };
   services.grafana = {
     provision = {
       enable = true;
@@ -182,12 +177,7 @@ in
         root_url = "https://metrics.tenjin.com/grafana/";
       };
       database = {
-        type2 = "postgres";
-        name = "grafana";
-        user = "grafana";
-        password = "$__file{${config.sops.secrets.grafana_pgsql.path}}";
-        ssl_mode = "disable";
-        host = "127.0.0.1:5432";
+        type = "sqlite3";
         log_queries = true;
       };
       smtp = {
@@ -199,10 +189,10 @@ in
         from_name = "grafana notifyer";
         ehlo_identity = "metrics.tenjin-dk.com";
       };
-      user = {
+      users = {
         verify_email_enabled = true;
-        default_theme = true;
-        default_language = "en_us";
+        default_theme = "dark";
+        default_language = "en-US";
       };
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
