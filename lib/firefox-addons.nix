@@ -49,7 +49,12 @@ in
 
   toTweezleExtension = addon: {
     id = addon.addonId;
-    install_url = "file://${lib.strings.concatStringsSep "/" (lib.lists.map lib.strings.escapeURL (lib.strings.splitString "/" (toString addon.src)))}";
+    # Escape path components without turning directory separators into %2F
+    install_url = "file://${
+      lib.strings.concatMapStringsSep "/" lib.strings.escapeURL (
+        lib.strings.splitString "/" (toString addon.src)
+      )
+    }";
     installation_mode = "normal_installed";
     updates_disabled = true;
   };

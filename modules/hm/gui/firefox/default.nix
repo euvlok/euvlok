@@ -267,15 +267,15 @@ in
     };
   });
 
-  config.euvlok.home.firefox.extraExtensions = lib.lists.map addons.toTweezleExtension (
-    lib.lists.filter lib.attrsets.isDerivation (
-      lib.attrsets.attrValues (
-        pkgs.callPackage ./extensions.nix {
+  # The generated catalogue is data, not a callPackage-overridable package
+  config.euvlok.home.firefox.extraExtensions =
+    lib.attrsets.mapAttrsToList (_: addons.toTweezleExtension)
+      (
+        import ./extensions.nix {
+          inherit lib;
           inherit (addons) buildFirefoxXpiAddon;
         }
-      )
-    )
-  );
+      );
 
   config.programs =
     lib.attrsets.mapAttrs
