@@ -53,7 +53,7 @@
         }
         {
           name = "shared-exe-immediate";
-          "match:class" = "^(*.exe)$";
+          "match:class" = "^.*\\.exe$";
           immediate = true;
         }
       ];
