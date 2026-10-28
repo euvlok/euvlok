@@ -324,6 +324,7 @@
 #
 # I do not want to generate another one
 let
+  # Embedded Python uses the Python 3.15 standard library without extra packages
   codexEnabled.euvlok.home.codex.enable = true;
   claudeCodeEnabled.euvlok.home.claude-code.enable = true;
   codexLib =
@@ -563,6 +564,180 @@ let
     let
       cfg = config.euvlok.home.codex;
       inherit (codexLib { inherit config lib pkgs; }) configDir environment mkDefaults;
+      launcherScript = pkgs.writeText "codex-launcher.py" ''
+        import argparse
+        import asyncio
+        import json
+        import os
+        import sys
+        from collections.abc import AsyncIterator, Iterator, Mapping, Sequence
+        from contextlib import asynccontextmanager, suppress
+        from dataclasses import dataclass, field
+        from itertools import count
+        from pathlib import Path
+        from typing import cast
+
+
+        @dataclass
+        class AppServer:
+            process: asyncio.subprocess.Process
+            identifiers: Iterator[int] = field(default_factory=lambda: count(1))
+
+            async def send(self, payload: Mapping[str, object]) -> None:
+                if self.process.stdin is None:
+                    raise RuntimeError("Codex app server has no input stream")
+                self.process.stdin.write(json.dumps(payload).encode() + b"\n")
+                await self.process.stdin.drain()
+
+            async def request(self, method: str, params: Mapping[str, object]) -> object:
+                identifier = next(self.identifiers)
+                try:
+                    async with asyncio.timeout(5):
+                        await self.send(
+                            {
+                                "jsonrpc": "2.0",
+                                "id": identifier,
+                                "method": method,
+                                "params": params,
+                            }
+                        )
+                        return await self.receive(identifier)
+                except TimeoutError as exc:
+                    raise TimeoutError(f"Codex {method} response timed out") from exc
+
+            async def receive(self, identifier: int) -> object:
+                if self.process.stdout is None:
+                    raise RuntimeError("Codex app server has no output stream")
+                async for line in self.process.stdout:
+                    payload: object = json.loads(line)
+                    response = (
+                        cast("dict[str, object]", payload) if isinstance(payload, dict) else {}
+                    )
+                    if "method" in response or response.get("id") != identifier:
+                        continue
+                    if "error" in response:
+                        raise RuntimeError(response["error"])
+                    return response.get("result")
+                raise RuntimeError("Codex app server exited")
+
+
+        @asynccontextmanager
+        async def app_server(real: Path) -> AsyncIterator[AppServer]:
+            process = await asyncio.create_subprocess_exec(
+                real,
+                "app-server",
+                "--stdio",
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.DEVNULL,
+                limit=16 * 1024 * 1024,
+            )
+            try:
+                server = AppServer(process)
+                await server.request(
+                    "initialize",
+                    {"clientInfo": {"name": "codex-launcher", "version": "1"}},
+                )
+                async with asyncio.timeout(5):
+                    await server.send({"jsonrpc": "2.0", "method": "initialized"})
+                yield server
+            finally:
+                with suppress(ProcessLookupError):
+                    process.terminate()
+                try:
+                    async with asyncio.timeout(3):
+                        await process.communicate()
+                except TimeoutError:
+                    with suppress(ProcessLookupError):
+                        process.kill()
+                    await process.communicate()
+
+
+        async def trust_launch_hooks(real: Path, cwd: Path) -> None:
+            async with app_server(real) as server:
+                await trust_hooks(server, cwd)
+
+
+        async def trust_hooks(server: AppServer, cwd: Path) -> None:
+            result = await server.request("hooks/list", {"cwds": [os.fspath(cwd)]})
+            data = result.get("data") if isinstance(result, dict) else None
+            if not isinstance(data, list):
+                raise TypeError("Codex hooks/list returned an invalid response")
+            for entry in data:
+                if not isinstance(entry, dict) or entry.get("cwd") != os.fspath(cwd):
+                    continue
+                if entry.get("errors"):
+                    raise RuntimeError("Codex hooks/list could not load launch hooks")
+                hooks = entry.get("hooks")
+                if not isinstance(hooks, list):
+                    raise TypeError("Codex hooks/list returned invalid hooks")
+                trust = hook_trust_state(hooks)
+                if trust:
+                    await write_hook_trust(server, trust)
+                return
+            raise RuntimeError("Codex hooks/list did not include the launch directory")
+
+
+        def hook_trust_state(hooks: Sequence[object]) -> dict[object, dict[str, object]]:
+            return {
+                cast("dict[str, object]", hook)["key"]: {
+                    "trusted_hash": cast("dict[str, object]", hook)["currentHash"]
+                }
+                for hook in hooks
+                if isinstance(hook, dict)
+                and hook.get("trustStatus") in {"untrusted", "modified"}
+            }
+
+
+        async def write_hook_trust(
+            server: AppServer, trust: dict[object, dict[str, object]]
+        ) -> None:
+            await server.request(
+                "config/batchWrite",
+                {
+                    "edits": [
+                        {
+                            "keyPath": "hooks.state",
+                            "mergeStrategy": "upsert",
+                            "value": trust,
+                        }
+                    ],
+                    "reloadUserConfig": True,
+                },
+            )
+
+
+        def main() -> None:
+            real = Path(os.environ["CODEX_REAL_BIN"])
+            interactive = sys.stdin.isatty() and sys.stdout.isatty()
+            if interactive:
+                parser = argparse.ArgumentParser(
+                    prog="codex", add_help=False, allow_abbrev=False
+                )
+                parser.add_argument("-C", "--cd", type=Path, default=Path.cwd())
+                options, _ = parser.parse_known_args()
+                cwd = options.cd.resolve()
+                try:
+                    asyncio.run(trust_launch_hooks(real, cwd))
+                except (
+                    OSError,
+                    RuntimeError,
+                    TimeoutError,
+                    TypeError,
+                    ValueError,
+                    KeyError,
+                ) as exc:
+                    raise SystemExit(f"codex: could not trust launch hooks: {exc}") from exc
+
+            # Hook trust bypass is for automation and forces interactive sessions into
+            # embedded mode instead of the shared background server
+            hook_trust_flag = [] if interactive else ["--dangerously-bypass-hook-trust"]
+            os.execv(real, [os.fspath(real), *hook_trust_flag, *sys.argv[1:]])
+
+
+        if __name__ == "__main__":
+            main()
+      '';
       launcherExecutable = pkgs.writeShellApplication {
         name = "codex";
         runtimeEnv = {
@@ -570,7 +745,7 @@ let
           CODEX_HOME = configDir;
         };
         text = ''
-          exec ${lib.meta.getExe pkgs.python3} ${./slop/launcher.py} "$@"
+          exec ${lib.meta.getExe pkgs.python315} ${launcherScript} "$@"
         '';
       };
       launcher = pkgs.symlinkJoin {
@@ -596,7 +771,7 @@ let
         profiles
         writableConfig
         desktop
-        ./slop/omp.nix
+        omp
       ];
 
       options.euvlok.home.codex = {
@@ -630,6 +805,357 @@ let
             }))
           ];
         };
+      };
+    };
+
+  omp =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      cfg = config.euvlok.home.codex.omp;
+      codexDir = config.home.sessionVariables.CODEX_HOME;
+      claudeDir = config.programs.claude-code.configDir;
+      settingsFile = (pkgs.formats.json { }).generate "omp-settings.json" cfg.settings;
+      mcpFile = (pkgs.formats.json { }).generate "omp-mcp.json" { inherit (cfg) mcpServers; };
+      syncScript = pkgs.writeText "omp-sync-settings.py" ''
+        import argparse
+        import json
+        import subprocess
+        from pathlib import Path
+
+
+        def discover_skill_directories(roots: list[Path]) -> list[str]:
+            # rglob ignores missing roots and does not recurse into symlinked dirs
+            return sorted(
+                {
+                    str(skill_file.parent.parent.resolve())
+                    for root in roots
+                    for skill_file in root.rglob("SKILL.md")
+                    if skill_file.is_file()
+                }
+            )
+
+
+        def main() -> None:
+            parser = argparse.ArgumentParser(description=__doc__)
+            parser.add_argument("--omp", required=True)
+            parser.add_argument("--settings", type=Path, required=True)
+            parser.add_argument("--skill-root", type=Path, action="append", default=[])
+            args = parser.parse_args()
+
+            settings = json.loads(args.settings.read_text())
+            directories = settings.get("skills.customDirectories", [])
+            settings["skills.customDirectories"] = sorted(
+                set(directories) | set(discover_skill_directories(args.skill_root))
+            )
+            for key, value in settings.items():
+                command_value = value if isinstance(value, str) else json.dumps(value)
+                subprocess.run(
+                    [args.omp, "config", "set", key, command_value],
+                    check=True,
+                    timeout=30,
+                )
+
+
+        if __name__ == "__main__":
+            main()
+      '';
+      syncSettings = pkgs.writeShellApplication {
+        name = "omp-sync-settings";
+        text = ''
+          exec ${lib.meta.getExe pkgs.python315} ${syncScript} \
+            --omp ${lib.meta.getExe cfg.package} \
+            --settings ${settingsFile} \
+            ${lib.escapeShellArgs (
+              lib.concatMap (path: [
+                "--skill-root"
+                path
+              ]) cfg.skillRoots
+            )}
+        '';
+      };
+    in
+    {
+      options.euvlok.home.codex.omp = {
+        enable = lib.options.mkEnableOption "Oh My Pi alongside Codex";
+        package = lib.options.mkPackageOption pkgs "omp" {
+          default = [
+            "unstable"
+            "omp"
+          ];
+        };
+        settings = lib.options.mkOption {
+          type = lib.types.attrsOf (pkgs.formats.json { }).type;
+          default = { };
+          example = {
+            "defaultThinkingLevel" = "high";
+            "skills.enabled" = true;
+          };
+          description = ''
+            Settings keyed by OMP's dotted setting names. Applied through
+            `omp config set` on activation, preserving unrelated runtime settings.
+            Credentials must be configured outside Nix.
+          '';
+        };
+        mcpServers = lib.options.mkOption {
+          type = lib.types.attrsOf (pkgs.formats.json { }).type;
+          default = { };
+          description = ''
+            MCP servers written to ~/.omp/agent/mcp.json, replacing that file.
+            Values are public in the Nix store, so servers must load their
+            credentials themselves.
+          '';
+        };
+        skillRoots = lib.options.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = ''
+            Additional trees searched for SKILL.md files on activation. Their
+            containing skill collections are added to skills.customDirectories.
+          '';
+        };
+      };
+
+      config = lib.modules.mkIf (config.euvlok.home.codex.enable && cfg.enable) {
+        euvlok.home.codex.omp = {
+          settings = lib.mapAttrs (_: lib.modules.mkDefault) {
+            symbolPreset = "ascii";
+            emojiAutocomplete = false;
+            "composer.shape" = "claude";
+            "tui.tight" = true;
+            "tui.reactions" = false;
+            "statusLine.preset" = "compact";
+            enabledProviders = [
+              "claude"
+              "codex"
+              "gemini"
+            ];
+            "skills.enabled" = true;
+            "skills.enableSkillCommands" = true;
+            "skills.enableClaudeUser" = true;
+            "skills.enableClaudeProject" = true;
+            "skills.enableCodexUser" = true;
+            "skills.enablePiUser" = true;
+            "skills.enablePiProject" = true;
+            "skills.enableAgentsUser" = true;
+            "skills.enableAgentsProject" = true;
+            "skills.customDirectories" = [ "${codexDir}/skills/.system" ];
+          };
+          skillRoots = [
+            "${codexDir}/plugins/cache"
+            "${claudeDir}/skills/synced"
+            "${config.home.homeDirectory}/.gemini/antigravity/skills"
+            "${config.home.homeDirectory}/.gemini/antigravity-cli/skills"
+          ];
+        };
+
+        home.packages = [ cfg.package ];
+        home.file.".omp/agent/APPEND_SYSTEM.md".text = ''
+          Use plain, concise language and plain-text command descriptions.
+          Do not use emojis in responses, commands, command titles, shell output
+          labels, or commit messages. Use ordinary text for progress and results.
+
+          Follow the applicable AGENTS.md, CLAUDE.md, and GEMINI.md instructions.
+          Use relevant discovered skills, read their SKILL.md before applying them,
+          and follow their referenced resources. Do not assume another agent's
+          tools exist here; use available equivalents and explain missing tools.
+
+          Complete authorized work, verify changes with the project's configured
+          checks, and report the result and any remaining limitations directly.
+        '';
+        # Replaces the file `omp mcp add` would otherwise edit in place
+        home.file.".omp/agent/mcp.json" = lib.modules.mkIf (cfg.mcpServers != { }) {
+          source = mcpFile;
+          force = true;
+        };
+        home.activation.ompSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          run ${lib.meta.getExe syncSettings}
+        '';
+      };
+    };
+  bundledPlugins =
+    {
+      lib,
+      stdenvNoCC,
+      fetchurl,
+      unzip,
+      jq,
+      moreutils,
+      chatgpt,
+      helium ? false,
+      marketplaceName,
+      pluginNames,
+    }:
+    let
+      isDarwin = stdenvNoCC.hostPlatform.isDarwin;
+      version = if isDarwin then "26.1002.52244" else lib.strings.getVersion chatgpt;
+      darwinSources = {
+        aarch64-darwin = {
+          arch = "arm64";
+          hash = "sha256-Pxhv1tisEm6dZpNs78++EWQA4PGfOa4WfiUXAjC4VMU=";
+        };
+        x86_64-darwin = {
+          arch = "x64";
+          hash = "sha256-NkJJL03jHmFdtW79d8vkjWzXgUSMygjNr0x5SdZ6xfY=";
+        };
+      };
+      darwinSource = darwinSources.${stdenvNoCC.hostPlatform.system};
+      linux = {
+        installations = [
+          {
+            commands = [
+              "helium"
+              "helium-browser"
+            ];
+            userDataDirName = "net.imput.helium";
+          }
+        ];
+        nativeMessagingManifestDirectories = [ ".config/net.imput.helium/NativeMessagingHosts" ];
+        configHomeEnvironmentVariables = [ "XDG_CONFIG_HOME" ];
+        processNames = [
+          "helium"
+          "helium-browser"
+        ];
+        userDataDirectorySegments = [
+          ".config"
+          "net.imput.helium"
+        ];
+      };
+      macos = {
+        applicationNames = [ "Helium.app" ];
+        bundleId = "net.imput.helium";
+        nativeMessagingManifestDirectories = [
+          "Library/Application Support/net.imput.helium/NativeMessagingHosts"
+        ];
+        processNames = [
+          "Helium"
+          "Helium Helper"
+        ];
+        userDataDirectorySegments = [
+          "Library"
+          "Application Support"
+          "net.imput.helium"
+        ];
+      };
+      heliumBrowser = lib.strings.toJSON {
+        displayName = "Helium";
+        shortDisplayName = "Helium";
+        inherit linux macos;
+      };
+      browserPlugins = lib.lists.intersectLists pluginNames [
+        "browser"
+        "chrome"
+      ];
+      registryBoundary = ''}},edge:{backendCompatibilityKey:"chrome",displayName:"Microsoft Edge"'';
+      heliumRegistryBoundary = ''},...${heliumBrowser}},edge:{backendCompatibilityKey:"chrome",displayName:"Microsoft Edge"'';
+      guidance = ''
+        # Browser
+
+        This installation controls Helium. For an explicit Helium request,
+        use `agent.browsers.get("chrome")` and read its full documentation.
+        The `chrome` selector is Helium's extension transport compatibility key.
+        Use Helium for diagnostics, launch paths, profiles, and extension setup.
+      '';
+    in
+    stdenvNoCC.mkDerivation {
+      pname = "codex-bundled-plugins";
+      inherit version;
+      src =
+        if isDarwin then
+          fetchurl {
+            url = "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-${darwinSource.arch}-${version}.zip";
+            inherit (darwinSource) hash;
+          }
+        else
+          "${chatgpt.unwrapped}/lib/chatgpt/resources/plugins/openai-bundled";
+      nativeBuildInputs = [
+        jq
+        moreutils
+      ]
+      ++ lib.lists.optional isDarwin unzip;
+      # Extract only the plugins; stdenv handles source permissions and hooks
+      unpackCmd = lib.strings.optionalString isDarwin ''
+        unzip -q "$curSrc" 'ChatGPT.app/Contents/Resources/plugins/openai-bundled/*'
+      '';
+      sourceRoot =
+        if isDarwin then "ChatGPT.app/Contents/Resources/plugins/openai-bundled" else "openai-bundled";
+      dontConfigure = true;
+      dontBuild = true;
+      # Preserve the bundled native hosts' signatures and ELF interpreters
+      dontFixup = true;
+      postPatch = ''
+        ${lib.strings.toShellVars {
+          inherit marketplaceName;
+          selectedPlugins = lib.strings.toJSON pluginNames;
+        }}
+        jq --arg name "$marketplaceName" \
+          --argjson selected "$selectedPlugins" \
+          '.name = $name | .plugins |= map(select(.name as $name | $selected | index($name)))' \
+          .agents/plugins/marketplace.json | sponge .agents/plugins/marketplace.json
+      ''
+      + lib.strings.optionalString helium ''
+        ${lib.strings.toShellVars {
+          inherit
+            browserPlugins
+            heliumBrowser
+            registryBoundary
+            heliumRegistryBoundary
+            guidance
+            ;
+        }}
+        for name in "''${browserPlugins[@]}"; do
+          plugin="plugins/$name"
+          [[ -d "$plugin" ]] || continue
+          # Override platform settings while preserving Chrome's transport fields
+          for script in "$plugin"/scripts/*.mjs; do
+            if grep -Fq 'backendCompatibilityKey:"chrome",displayName:"Google Chrome"' "$script"; then
+              substituteInPlace "$script" \
+                --replace-fail "$registryBoundary" "$heliumRegistryBoundary"
+            fi
+          done
+          grep -Fq "$heliumRegistryBoundary" \
+            "$plugin/scripts/browser-service.mjs"
+          diagnostics="$plugin/scripts/extension-ids.json"
+          if [[ -f "$diagnostics" ]]; then
+            jq --argjson browser "$heliumBrowser" \
+              '(.browserDiagnostics[] | select(.browserFamily == "chrome")) |=
+               (. += $browser | .linux |= (.commands = .installations[0].commands | del(.installations)))' \
+              "$diagnostics" | sponge "$diagnostics"
+          fi
+          skill="$plugin/skills/control-chrome/SKILL.md"
+          if [[ -f "$skill" ]]; then
+            substituteInPlace "$skill" \
+              --replace-quiet 'Google Chrome' 'Helium' \
+              --replace-fail 'Chrome' 'Helium' \
+              --replace-fail '# Browser' "$guidance"
+            metadata="$plugin/.codex-plugin/plugin.json"
+            jq '.interface |= (.displayName = "Helium" |
+                .shortDescription |= (if type == "string" then gsub("Chrome"; "Helium") else . end) |
+                .longDescription |= (if type == "string" then gsub("Chrome"; "Helium") else . end))' \
+              "$metadata" | sponge "$metadata"
+          fi
+        done
+      '';
+      installPhase = ''
+        runHook preInstall
+        ${lib.strings.toShellVar "pluginNames" pluginNames}
+        mkdir -p "$out/plugins" "$out/.agents/plugins"
+        for name in "''${pluginNames[@]}"; do
+          if [[ -d "plugins/$name" ]]; then
+            cp -a "plugins/$name" "$out/plugins/"
+          fi
+        done
+        cp .agents/plugins/marketplace.json "$out/.agents/plugins/"
+        runHook postInstall
+      '';
+      meta = {
+        description = "ChatGPT's bundled Codex marketplace with optional Helium patches";
+        license = lib.licenses.unfree;
+        platforms = lib.systems.doubles.linux ++ lib.systems.doubles.darwin;
       };
     };
   # the permission dialog cannot resurrect a dead fucking idea
@@ -996,7 +1522,7 @@ let
         };
         pluginsPackage = lib.options.mkOption {
           type = lib.types.package;
-          default = pkgs.callPackage ./slop/bundled-plugins.nix {
+          default = pkgs.callPackage bundledPlugins {
             chatgpt = bundledChatgpt;
             helium = heliumEnabled;
             inherit marketplaceName;
@@ -1486,7 +2012,7 @@ in
       nix-update-script,
       writeShellApplication,
       curl,
-      python3,
+      python315,
     }:
     let
       version = "26.1002.52244";
@@ -1643,19 +2169,22 @@ in
       );
       updater = writeShellApplication {
         name = "chatgpt-update";
-        runtimeInputs = [
-          curl
-          python3
-        ];
+        runtimeInputs = [ curl ];
         text = ''
           export NIXPKGS_ALLOW_UNFREE=1
-          version=$(python3 - <<'PY'
+          version=$(${lib.meta.getExe python315} - <<'PY'
           import gzip
           import subprocess
           import xml.etree.ElementTree as ET
+          from io import BytesIO
 
+
+          # urllib requests are rejected by this endpoint, so retain curl
           def get(url):
-              return subprocess.check_output(["curl", "--fail", "--silent", "--show-error", "--location", url])
+              return subprocess.check_output(
+                  ["curl", "--fail", "--silent", "--show-error", "--location", url]
+              )
+
 
           versions = []
           repo_ns = {"r": "http://linux.duke.edu/metadata/repo"}
@@ -1664,9 +2193,16 @@ in
               base = f"https://persistent.oaistatic.com/codex-app-prod/linux/rpm/{arch}/"
               index = ET.fromstring(get(base + "repodata/repomd.xml"))
               location = index.find("r:data[@type='primary']/r:location", repo_ns)
-              packages = ET.fromstring(gzip.decompress(get(base + location.attrib["href"])))
-              releases = [p.find("p:version", pkg_ns).attrib["ver"] for p in packages
-                          if p.findtext("p:name", namespaces=pkg_ns) == "chatgpt"]
+              # Parse incrementally without a full decompressed byte buffer
+              with gzip.GzipFile(
+                  fileobj=BytesIO(get(base + location.attrib["href"]))
+              ) as metadata:
+                  packages = ET.parse(metadata).getroot()
+              releases = [
+                  p.find("p:version", pkg_ns).attrib["ver"]
+                  for p in packages
+                  if p.findtext("p:name", namespaces=pkg_ns) == "chatgpt"
+              ]
               versions.append(max(releases, key=lambda v: tuple(map(int, v.split(".")))))
           if len(set(versions)) != 1:
               raise SystemExit("ChatGPT Linux architectures have different latest versions")
