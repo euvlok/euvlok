@@ -117,7 +117,7 @@ let
     };
   }
   // lib.attrsets.optionalAttrs isDarwin {
-    macos = browser.macos;
+    inherit (browser) macos;
 
     paths.macos = {
       profile_dir = "\${home}/Library/Application Support/${browser.profileRoot}/Default";
@@ -199,7 +199,7 @@ in
     ];
     programs.chromium = lib.modules.mkIf isLinux {
       enable = true;
-      package = browser.package;
+      inherit (browser) package;
       dictionaries = lib.attrsets.attrValues {
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };

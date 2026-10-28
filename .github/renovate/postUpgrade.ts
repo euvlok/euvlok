@@ -4,11 +4,7 @@ import { execFileSync } from "node:child_process";
 type Command = Readonly<{ command: string; args: readonly string[] }>;
 type Task = Readonly<{ commands: readonly Command[] }>;
 
-const sourcePackages = [
-  "linux-rt-upscaler",
-  "nvidia-driver",
-  "catppuccin-gtk",
-];
+const sourcePackages = ["linux-rt-upscaler", "nvidia-driver", "catppuccin-gtk"];
 const tasks = new Map<string, Task>([
   // Renovate's Nix manager only maintains flake.lock, so refresh devenv too
   ["flake", { commands: [{ command: "devenv", args: ["update"] }] }],

@@ -2867,8 +2867,8 @@ in
           "userDefaults"
         ];
         text = import "${source}/cleanup.nix" {
+          inherit (cfg) package;
           inherit lib pkgs policyFile;
-          package = cfg.package;
           stateDirectory = "/var/db/pared";
           profilePath = "/etc/pared/disable-apple-intelligence.mobileconfig";
         };
