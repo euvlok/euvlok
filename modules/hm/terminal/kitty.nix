@@ -6,7 +6,6 @@
 {
   programs.kitty = {
     keybindings = {
-      "kitty_mod" = if pkgs.stdenvNoCC.hostPlatform.isDarwin then "cmd" else "ctrl";
       "kitty_mod+shift+c" = "copy_to_clipboard";
       "kitty_mod+shift+v" = "paste_from_clipboard";
       "kitty_mod+t" = "new_window";
@@ -14,9 +13,9 @@
     };
     darwinLaunchOptions = [
       "--single-instance"
-      "--directory=/tmp/my-dir"
     ];
     settings = {
+      kitty_mod = if pkgs.stdenvNoCC.hostPlatform.isDarwin then "cmd" else "ctrl";
       scrollback_lines = 10000000;
       repaint_delay = 10;
       tab_bar_style = "powerline";
