@@ -41,7 +41,7 @@
 
   home.sessionVariables = {
     GTK_CSD = "0";
-    GO_PATH = "${config.home.homeDirectory}/.go";
+    GOPATH = "${config.home.homeDirectory}/.go";
     GEM_HOME = "${config.home.homeDirectory}/.gems";
     GEM_PATH = "${config.home.homeDirectory}/.gems";
   };
