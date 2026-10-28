@@ -1,6 +1,8 @@
 {
+  config,
   inputs,
   lib,
+  partitionStack,
   ...
 }:
 let
@@ -37,9 +39,7 @@ in
     inputs.flake-parts.flakeModules.partitions
     inputs.flake-parts.flakeModules.touchup
     euvlokModule
-    ./inputs
     ./schemas/schemas.nix
-    (lib.modules.importApply ./tests.nix { providerInputs = inputs; })
   ];
 
   systems = supportedSystems;
@@ -53,11 +53,19 @@ in
       };
 
       formatter = pkgs.nixfmt-tree;
+
+      # Keep the established generator installables lazy for package consumers
+      packages = lib.attrsets.optionalAttrs (partitionStack == [ ]) (
+        lib.attrsets.genAttrs [ "write-flake" "write-inputs" "write-lock" ] (
+          name: config.partitions.dev.module.allSystems.${system}.packages.${name}
+        )
+      );
     };
 
   # Keep contributor-owned inputs out of the main entry path. Host outputs
   # and their evaluation checks opt into those inputs
   partitionedAttrs = {
+    checks = "dev";
     darwinConfigurations = "users";
     hostChecks = "users";
     hostChecksBySystem = "users";
@@ -67,6 +75,11 @@ in
   };
 
   partitions = {
+    dev.module.imports = [
+      ./inputs
+      (lib.modules.importApply ./tests.nix { providerInputs = inputs; })
+    ];
+
     users = {
       extraInputsFlake = ./users;
       module.imports = [ ./users/default.nix ];
