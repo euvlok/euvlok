@@ -55,5 +55,15 @@ in
         '';
       };
     })
+    (lib.attrsets.optionalAttrs (!isLinux) {
+      system.activation.steps.tenjin-ca = {
+        deps = [ "sops" ];
+        text = ''
+          /usr/bin/security add-trusted-cert -d -r trustRoot \
+            -k /Library/Keychains/System.keychain \
+            ${lib.escapeShellArg config.sops.secrets.tenjin_ca.path}
+        '';
+      };
+    })
   ];
 }
