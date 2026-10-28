@@ -27,9 +27,10 @@
       }
       //
         lib.attrsets.optionalAttrs
-          (lib.lists.elem pkgs.stdenvNoCC.hostPlatform.system (
-            lib.attrsets.attrNames (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms
-          ))
+          (
+            (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms
+            ? ${pkgs.stdenvNoCC.hostPlatform.system}
+          )
           {
             firefox-unbranded = final.callPackage ../lib/firefox-unbranded/firefox-unbranded.nix { };
           }

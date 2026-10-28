@@ -6,16 +6,10 @@
   ...
 }:
 let
-  hostPlatform = lib.attrsets.attrByPath [
-    "nixpkgs"
-    "hostPlatform"
-    "system"
-  ] (osConfig.nixpkgs.hostPlatform.system or null) config;
-  buildPlatform = lib.attrsets.attrByPath [
-    "nixpkgs"
-    "buildPlatform"
-    "system"
-  ] (osConfig.nixpkgs.buildPlatform.system or hostPlatform) config;
+  # Prefer this module's platforms, then the parent system's when integrated
+  hostPlatform = config.nixpkgs.hostPlatform.system or (osConfig.nixpkgs.hostPlatform.system or null);
+  buildPlatform =
+    config.nixpkgs.buildPlatform.system or (osConfig.nixpkgs.buildPlatform.system or hostPlatform);
 in
 {
   options.euvlok.nixpkgs.unstableSource = lib.options.mkOption {

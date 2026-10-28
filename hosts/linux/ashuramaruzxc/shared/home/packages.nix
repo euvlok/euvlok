@@ -111,8 +111,7 @@ let
   };
 
   mkPackages = lib.lists.concatMap (
-    name:
-    lib.attrsets.attrByPath [ name ] (throw "home-packages: category '${name}' not defined") categories
+    name: categories.${name} or (throw "home-packages: category '${name}' not defined")
   );
 in
 {

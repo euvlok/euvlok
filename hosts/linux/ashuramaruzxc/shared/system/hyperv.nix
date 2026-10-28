@@ -90,18 +90,16 @@
     };
   };
   #! wait until the next lts kernel
-  virtualisation.kvmfr =
-    lib.attrsets.optionalAttrs (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux")
-      {
-        enable = true;
-        shm = {
-          enable = true;
-          size = 128;
-          user = "qemu-libvirtd";
-          group = "libvirtd";
-          mode = "0600";
-        };
-      };
+  virtualisation.kvmfr = lib.modules.mkIf (pkgs.stdenvNoCC.hostPlatform.system != "aarch64-linux") {
+    enable = true;
+    shm = {
+      enable = true;
+      size = 128;
+      user = "qemu-libvirtd";
+      group = "libvirtd";
+      mode = "0600";
+    };
+  };
   systemd.services.libvirtd.path =
     lib.attrsets.attrValues {
       inherit (pkgs)

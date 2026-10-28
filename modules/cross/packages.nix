@@ -102,14 +102,7 @@ let
     inherit (pkgs.unstable) hyperfine tokei;
 
   };
-  graphicalLinux =
-    config.nixpkgs.hostPlatform.isLinux
-    && lib.attrsets.attrByPath [
-      "euvlok"
-      "nixos"
-      "gui"
-      "enable"
-    ] false config;
+  graphicalLinux = config.nixpkgs.hostPlatform.isLinux && (config.euvlok.nixos.gui.enable or false);
   linuxOnlyPkgs =
     lib.attrsets.attrValues {
       # Networking
