@@ -29,61 +29,55 @@ let
     "ExtensionManifestV2Disabled"
   ];
 
-  browserPackages = {
-    chromium = pkgs.chromium.override { enableWideVine = true; };
-    helium-browser = pkgs.eupkgs.helium-browser;
-    inherit (pkgs)
-      brave
-      google-chrome
-      ungoogled-chromium
-      ;
-  };
-
-  browserPackage = browserPackages.${cfg.browser};
-
-  browserExecutables = {
-    brave = "brave";
-    chromium = "chromium";
-    google-chrome = "google-chrome-stable";
-    helium-browser = "helium-browser";
-    ungoogled-chromium = "chromium";
-  };
-  browserExecutable = browserExecutables.${cfg.browser};
-
-  browserMacOSAppDirs = {
-    brave = "/Applications/Brave Browser.app";
-    chromium = "/Applications/Chromium.app";
-    google-chrome = "/Applications/Google Chrome.app";
-    helium-browser = "${browserPackage}/Applications/Helium.app";
-    ungoogled-chromium = "/Applications/Chromium.app";
-  };
-
-  browserMacOSLaunchers = {
-    brave = "Contents/MacOS/Brave Browser";
-    chromium = "Contents/MacOS/Chromium";
-    google-chrome = "Contents/MacOS/Google Chrome";
-    helium-browser = "Contents/MacOS/Helium";
-    ungoogled-chromium = "Contents/MacOS/Chromium";
-  };
-
-  browserProfileRoots =
-    if isDarwin then
-      {
-        brave = "BraveSoftware/Brave-Browser";
-        chromium = "Chromium";
-        google-chrome = "Google/Chrome";
-        helium-browser = "net.imput.helium";
-        ungoogled-chromium = "Chromium";
-      }
-    else
-      {
-        brave = "BraveSoftware/Brave-Browser";
-        chromium = "chromium";
-        google-chrome = "google-chrome";
-        helium-browser = "net.imput.helium";
-        ungoogled-chromium = "chromium";
+  # Keep package and launcher/profile identity together for each browser
+  browsers = {
+    brave = {
+      package = pkgs.brave;
+      executable = "brave";
+      profileRoot = "BraveSoftware/Brave-Browser";
+      macos = {
+        app_dir = "/Applications/Brave Browser.app";
+        launcher_path = "Contents/MacOS/Brave Browser";
       };
-  browserProfileRoot = browserProfileRoots.${cfg.browser};
+    };
+    chromium = {
+      package = pkgs.chromium.override { enableWideVine = true; };
+      executable = "chromium";
+      profileRoot = if isDarwin then "Chromium" else "chromium";
+      macos = {
+        app_dir = "/Applications/Chromium.app";
+        launcher_path = "Contents/MacOS/Chromium";
+      };
+    };
+    google-chrome = {
+      package = pkgs.google-chrome;
+      executable = "google-chrome-stable";
+      profileRoot = if isDarwin then "Google/Chrome" else "google-chrome";
+      macos = {
+        app_dir = "/Applications/Google Chrome.app";
+        launcher_path = "Contents/MacOS/Google Chrome";
+      };
+    };
+    helium-browser = rec {
+      package = pkgs.eupkgs.helium-browser;
+      executable = "helium-browser";
+      profileRoot = "net.imput.helium";
+      macos = {
+        app_dir = "${package}/Applications/Helium.app";
+        launcher_path = "Contents/MacOS/Helium";
+      };
+    };
+    ungoogled-chromium = {
+      package = pkgs.ungoogled-chromium;
+      executable = "chromium";
+      profileRoot = if isDarwin then "Chromium" else "chromium";
+      macos = {
+        app_dir = "/Applications/Chromium.app";
+        launcher_path = "Contents/MacOS/Chromium";
+      };
+    };
+  };
+  browser = browsers.${cfg.browser};
 
   chromiumCommandLineArgs = lib.cli.toCommandLineGNU { } {
     enable-logging = "stderr";
@@ -108,30 +102,27 @@ let
 
   browserSettings = {
     name = cfg.browser;
-    executable_name = browserExecutable;
+    executable_name = browser.executable;
     flags = chromiumCommandLineArgs;
   }
   // lib.attrsets.optionalAttrs isLinux {
     linux = {
       app_dir = "${config.home.profileDirectory}/bin";
-      launcher_name = browserExecutable;
+      launcher_name = browser.executable;
     };
 
     paths.linux = {
-      profile_dir = "\${config_home}/${browserProfileRoot}/Default";
-      external_extension_dirs = [ "\${config_home}/${browserProfileRoot}/External Extensions" ];
+      profile_dir = "\${config_home}/${browser.profileRoot}/Default";
+      external_extension_dirs = [ "\${config_home}/${browser.profileRoot}/External Extensions" ];
     };
   }
   // lib.attrsets.optionalAttrs isDarwin {
-    macos = {
-      app_dir = browserMacOSAppDirs.${cfg.browser};
-      launcher_path = browserMacOSLaunchers.${cfg.browser};
-    };
+    macos = browser.macos;
 
     paths.macos = {
-      profile_dir = "\${home}/Library/Application Support/${browserProfileRoot}/Default";
+      profile_dir = "\${home}/Library/Application Support/${browser.profileRoot}/Default";
       external_extension_dirs = [
-        "\${home}/Library/Application Support/${browserProfileRoot}/External Extensions"
+        "\${home}/Library/Application Support/${browser.profileRoot}/External Extensions"
       ];
     };
   };
@@ -158,7 +149,7 @@ in
     enable = lib.options.mkEnableOption "Chromium-based browsers";
 
     browser = lib.options.mkOption {
-      type = lib.types.enum (lib.attrsets.attrNames browserPackages);
+      type = lib.types.enum (lib.attrsets.attrNames browsers);
       default = "ungoogled-chromium";
       description = "The browser package to use.";
     };
@@ -208,7 +199,7 @@ in
     ];
     programs.chromium = lib.modules.mkIf isLinux {
       enable = true;
-      package = browserPackage;
+      package = browser.package;
       dictionaries = lib.attrsets.attrValues {
         inherit (pkgs.hunspellDictsChromium) en_US de_DE fr_FR;
       };
@@ -228,6 +219,6 @@ in
       };
     };
 
-    home.packages = lib.lists.optional isDarwin browserPackage;
+    home.packages = lib.lists.optional isDarwin browser.package;
   };
 }

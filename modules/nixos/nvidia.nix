@@ -51,22 +51,8 @@ in
         inherit (pkgs.nvtopPackages) full;
       };
 
-      nixpkgs.overlays =
-        let
-          commandLineArgs = lib.strings.concatStringsSep " " config.programs.chromium.commandLineArgs;
-          browsers = [
-            "brave"
-            "chromium"
-            "google-chrome"
-            "microsoft-edge"
-            "ungoogled-chromium"
-            "vivaldi"
-          ];
-        in
-        (lib.lists.map (browser: _: prev: {
-          ${browser} = prev.${browser}.override { inherit commandLineArgs; };
-        }) browsers)
-        ++ [ euvlokInputs.nvidia-patch.overlays.default ];
+      # Home Manager wraps the selected browser with its command-line arguments
+      nixpkgs.overlays = [ euvlokInputs.nvidia-patch.overlays.default ];
     })
   ];
 }
