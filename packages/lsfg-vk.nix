@@ -1,68 +1,39 @@
 {
+  basePackage,
   lib,
-  stdenv,
-  fetchzip,
-  cmake,
   ninja,
-  nix-update-script,
   pkg-config,
-  vulkan-headers,
-  vulkan-loader,
   qt6,
 }:
 
-stdenv.mkDerivation (finalAttrs: {
-  pname = "lsfg-vk";
-  # renovate: datasource=git-tags depName=lsfg-vk packageName=https://git.lsfg-vk.dev/lsfg-vk.git
-  version = "2.0.0";
-
-  src = fetchzip {
-    url = "https://git.lsfg-vk.dev/lsfg-vk/snapshot/lsfg-vk-${finalAttrs.version}.tar.xz";
-    hash = "sha256-vp0/adJdVV73C2RFjcEE90KjWiZJQhiqqOlYQ89RG+Y=";
-  };
-
-  nativeBuildInputs = [
-    cmake
+basePackage.overrideAttrs (previous: {
+  nativeBuildInputs = previous.nativeBuildInputs ++ [
     ninja
     pkg-config
     qt6.wrapQtAppsHook
   ];
 
-  buildInputs = [
-    vulkan-headers
-    vulkan-loader
+  buildInputs = previous.buildInputs ++ [
     qt6.qtbase
     qt6.qtdeclarative
     qt6.qttools
     qt6.qtwayland
   ];
 
-  cmakeFlags = [
-    "-DLSFGVK_BUILD_LAYER=ON"
-    "-DLSFGVK_BUILD_UI=ON"
-    "-DLSFGVK_BUILD_CLI=ON"
-    "-DLSFGVK_MANAGED=ON"
-    "-DLSFGVK_LAYER_LIBRARY_PATH=${placeholder "out"}/lib/liblsfg-vk-layer.so"
+  cmakeFlags = previous.cmakeFlags ++ [
+    (lib.cmakeBool "LSFGVK_BUILD_LAYER" true)
+    (lib.cmakeBool "LSFGVK_BUILD_UI" true)
+    (lib.cmakeBool "LSFGVK_BUILD_CLI" true)
   ];
 
-  postFixup = ''
-    patchelf --add-rpath "${lib.attrsets.getLib vulkan-loader}/lib" "$out/bin/lsfg-vk-cli"
+  # Preserve upstream's late Vulkan RPATH patch on the actual CLI
+  # Automatic Qt wrapping would replace it before that patch runs
+  dontWrapQtApps = true;
+  postFixup = previous.postFixup + ''
+    wrapQtApp "$out/bin/lsfg-vk-ui"
   '';
 
-  # Renovate selects cgit tags; nix-update refreshes the corresponding hash
-  passthru.updateScript = nix-update-script {
-    attrPath = "lsfg-vk";
-    extraArgs = [
-      "--flake"
-      "--format"
-      "--version=skip"
-    ];
-  };
-
-  meta = {
-    description = "Lossless Scaling frame generation Vulkan layer";
-    homepage = "https://lsfg-vk.dev";
-    license = lib.licenses.cc-by-nc-nd-40;
+  meta = previous.meta // {
     mainProgram = "lsfg-vk-ui";
     platforms = [ "x86_64-linux" ];
   };

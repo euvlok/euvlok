@@ -29,7 +29,7 @@
       "customType": "regex",
       "description": "Track package versions; refresh fixed-output hashes before committing",
       "managerFilePatterns": [
-        "/^packages\\/(linux-rt-upscaler|lsfg-vk|nvidia-driver)\\.nix$/"
+        "/^packages\\/(linux-rt-upscaler|nvidia-driver)\\.nix$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[^ ]+) depName=(?<depName>[^ ]+) packageName=(?<packageName>[^\\s]+)\\s+version = \"(?<currentValue>[^\"]+)\";"
@@ -142,15 +142,6 @@
       "postUpgradeTasks": {
         "commands": ["euvlokRenovatePostUpgrade.ts linux-rt-upscaler"],
         "fileFilters": ["packages/linux-rt-upscaler.nix"],
-        "executionMode": "branch"
-      }
-    },
-    {
-      "matchManagers": ["custom.regex"],
-      "matchDepNames": ["lsfg-vk"],
-      "postUpgradeTasks": {
-        "commands": ["euvlokRenovatePostUpgrade.ts lsfg-vk"],
-        "fileFilters": ["packages/lsfg-vk.nix"],
         "executionMode": "branch"
       }
     },

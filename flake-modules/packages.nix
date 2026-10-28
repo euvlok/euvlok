@@ -22,7 +22,9 @@
         catppuccin-gtk-fausto = final.callPackage ../packages/catppuccin-gtk.nix { };
         catppuccin-userstyles = final.callPackage ../packages/catppuccin-userstyles { };
         linux-rt-upscaler = final.callPackage ../packages/linux-rt-upscaler.nix { };
-        lsfg-vk = final.callPackage ../packages/lsfg-vk.nix { };
+        lsfg-vk = final.callPackage ../packages/lsfg-vk.nix {
+          basePackage = final.callPackage (providerInputs.nixpkgs + /pkgs/by-name/ls/lsfg-vk/package.nix) { };
+        };
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
       }
       //

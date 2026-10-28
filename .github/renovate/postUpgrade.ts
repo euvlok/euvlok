@@ -6,7 +6,6 @@ type Task = Readonly<{ commands: readonly Command[] }>;
 
 const sourcePackages = [
   "linux-rt-upscaler",
-  "lsfg-vk",
   "nvidia-driver",
   "catppuccin-gtk",
 ];
