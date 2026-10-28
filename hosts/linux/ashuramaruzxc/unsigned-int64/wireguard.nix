@@ -4,6 +4,12 @@
   config,
   ...
 }:
+let
+  externalInterface = config.networking.nat.externalInterface;
+  externalAddress =
+    (builtins.head config.networking.interfaces.${externalInterface}.ipv4.addresses).address;
+  iptables = lib.meta.getExe' pkgs.iptables "iptables";
+in
 {
   sops.secrets.wireguard-server = { };
   sops.secrets.wireguard-shared = { };
@@ -14,17 +20,47 @@
     ];
     listenPort = 51280;
     privateKeyFile = config.sops.secrets.wireguard-server.path;
+    # Match the public tuple before DNAT and the backend tuple after DNAT
+    # SNAT only this forward so the backend replies through the server
     postUp = ''
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -A PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -A POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -A FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -A FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
+      ${iptables} -t nat -A PREROUTING \
+        -i ${externalInterface} -d ${externalAddress} -p tcp --dport 45565 \
+        -j DNAT --to-destination 172.16.31.2:25565
+      ${iptables} -t nat -A POSTROUTING \
+        -o wireguard0 -d 172.16.31.2 -p tcp --dport 25565 \
+        -m conntrack --ctstate DNAT --ctdir ORIGINAL \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 \
+        -j SNAT --to-source 172.16.31.1
+      ${iptables} -A FORWARD \
+        -i ${externalInterface} -o wireguard0 \
+        -d 172.16.31.2 -p tcp --dport 25565 \
+        -m conntrack --ctstate NEW,ESTABLISHED --ctdir ORIGINAL \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 -j ACCEPT
+      ${iptables} -A FORWARD \
+        -i wireguard0 -o ${externalInterface} \
+        -s 172.16.31.2 -p tcp --sport 25565 \
+        -m conntrack --ctstate ESTABLISHED --ctdir REPLY \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 -j ACCEPT
     '';
     postDown = ''
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -D PREROUTING -i eth0 -p tcp --dport 45565 -j DNAT --to-destination 172.16.31.2:25565
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -t nat -D POSTROUTING -o wireguard0 -p tcp --sport 45565 -j SNAT --to-source 172.16.31.1:25565
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -D FORWARD -i eth0 -o wireguard0 -p tcp --dport 45565 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-      ${lib.meta.getExe' pkgs.iptables "iptables"} -D FORWARD -i wireguard0 -o eth0 -p tcp --sport 45565 -m state --state ESTABLISHED,RELATED -j ACCEPT
+      ${iptables} -t nat -D PREROUTING \
+        -i ${externalInterface} -d ${externalAddress} -p tcp --dport 45565 \
+        -j DNAT --to-destination 172.16.31.2:25565
+      ${iptables} -t nat -D POSTROUTING \
+        -o wireguard0 -d 172.16.31.2 -p tcp --dport 25565 \
+        -m conntrack --ctstate DNAT --ctdir ORIGINAL \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 \
+        -j SNAT --to-source 172.16.31.1
+      ${iptables} -D FORWARD \
+        -i ${externalInterface} -o wireguard0 \
+        -d 172.16.31.2 -p tcp --dport 25565 \
+        -m conntrack --ctstate NEW,ESTABLISHED --ctdir ORIGINAL \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 -j ACCEPT
+      ${iptables} -D FORWARD \
+        -i wireguard0 -o ${externalInterface} \
+        -s 172.16.31.2 -p tcp --sport 25565 \
+        -m conntrack --ctstate ESTABLISHED --ctdir REPLY \
+        --ctorigdst ${externalAddress} --ctorigdstport 45565 -j ACCEPT
     '';
     peers = [
       # ashuramaru@rt-be88u
