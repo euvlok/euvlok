@@ -25,12 +25,13 @@ in
             sha256 = "sha256-5A57Lyctq497SSph7B+ucuEyF1gGVTsuI3zuBItGfg4=";
           };
           inherit (config.programs.zen-browser) profilesPath;
+          profileDir = "${profilesPath}/${config.programs.zen-browser.profiles.default.path}";
           themeDir = "${catppuccinZen}/themes/${toSentenceCase config.catppuccin.flavor}/${toSentenceCase config.catppuccin.accent}";
         in
         {
-          "${profilesPath}/default/chrome/userChrome.css".source = "${themeDir}/userChrome.css";
-          "${profilesPath}/default/chrome/userContent.css".source = "${themeDir}/userContent.css";
-          "${profilesPath}/default/chrome/zen-logo.svg".source = "${themeDir}/zen-logo.svg";
+          "${profileDir}/chrome/userChrome.css".source = "${themeDir}/userChrome.css";
+          "${profileDir}/chrome/userContent.css".source = "${themeDir}/userContent.css";
+          "${profileDir}/chrome/zen-logo.svg".source = "${themeDir}/zen-logo.svg";
         };
     }
   );
