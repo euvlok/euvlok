@@ -5,14 +5,20 @@
 }:
 # GNOME Stuff
 {
-  services.gnome = {
-    at-spi2-core.enable = true;
-    core-developer-tools.enable = true;
-    core-utilities.enable = true;
-    localsearch.enable = true;
-    tinysparql.enable = true;
+  services = {
+    gnome = {
+      at-spi2-core.enable = true;
+      core-developer-tools.enable = true;
+      core-utilities.enable = true;
+      localsearch.enable = true;
+      tinysparql.enable = true;
+      gnome-keyring.enable = true;
+    };
+    libinput = {
+      mouse.accelProfile = "flat";
+      mouse.accelSpeed = "0";
+    };
   };
-  services.gnome.gnome-keyring.enable = true;
 
   environment.systemPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
@@ -40,14 +46,6 @@
       system-monitor
       user-themes
       ;
-  };
-}
-// {
-  services = {
-    libinput = {
-      mouse.accelProfile = "flat";
-      mouse.accelSpeed = "0";
-    };
   };
 
   qt.enable = true;
