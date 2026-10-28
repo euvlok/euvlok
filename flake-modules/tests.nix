@@ -6,7 +6,6 @@
 }:
 let
   linuxSystem = "x86_64-linux";
-  darwinSystem = "aarch64-darwin";
   pkgs = import providerInputs.nixpkgs { system = linuxSystem; };
 
   nixosConsumer = providerInputs.nixpkgs.lib.nixosSystem {
@@ -24,13 +23,11 @@ let
     ];
   };
 
-  darwinConsumer = providerInputs.nix-darwin.lib.darwinSystem {
+  darwinConsumer = providerInputs.ndw.lib.darwin.system {
     modules = [
       config.flake.darwinModules.default
       {
-        nixpkgs.hostPlatform = darwinSystem;
-        system.primaryUser = "consumer";
-        system.stateVersion = 7;
+        system.primary.user = "consumer";
         users.users.consumer.home = "/Users/consumer";
       }
     ];

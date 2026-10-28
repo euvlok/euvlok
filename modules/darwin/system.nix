@@ -1,5 +1,5 @@
 _: {
-  environment.pathsToLink = [
+  environment.paths.link = [
     "/share/btop"
   ];
 

@@ -1,3 +1,4 @@
+{ isDarwin }:
 {
   pkgs,
   lib,
@@ -102,7 +103,8 @@ let
     inherit (pkgs.unstable) hyperfine tokei;
 
   };
-  graphicalLinux = config.nixpkgs.hostPlatform.isLinux && (config.euvlok.nixos.gui.enable or false);
+  graphicalLinux =
+    !isDarwin && config.nixpkgs.hostPlatform.isLinux && (config.euvlok.nixos.gui.enable or false);
   linuxOnlyPkgs =
     lib.attrsets.attrValues {
       # Networking
@@ -151,8 +153,15 @@ in
       default = true;
     };
 
-  config = lib.modules.mkIf config.euvlok.packages.enable {
-    environment.systemPackages =
-      commonPkgs ++ lib.lists.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
-  };
+  config = lib.modules.mkIf config.euvlok.packages.enable (
+    if isDarwin then
+      {
+        environment.system.packages = commonPkgs;
+      }
+    else
+      {
+        environment.systemPackages =
+          commonPkgs ++ lib.lists.optionals config.nixpkgs.hostPlatform.isLinux linuxOnlyPkgs;
+      }
+  );
 }

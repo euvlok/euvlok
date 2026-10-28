@@ -12,9 +12,9 @@
     lib.modules.importApply ./nixpkgs.nix { inherit euvlokInputs; }
   );
 
-  # Home Manager's NixOS/nix-darwin integration injects the system package at
-  # the same priority as Determinate's module sets null. Prefer the externally
-  # managed Determinate installation explicitly.
+  # NixOS injects a system package at the same priority as Determinate's null
+  # default, while ndw owns its Determinate runtime directly. Neither should
+  # install another Nix package through Home Manager
   nix.package = lib.modules.mkForce null;
   manual.manpages.enable = lib.modules.mkDefault false;
 }

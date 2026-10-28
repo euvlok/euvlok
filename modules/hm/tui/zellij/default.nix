@@ -11,7 +11,7 @@ in
     autoStart = lib.options.mkEnableOption "Zellij on interactive shell startup" // {
       description = ''
         Whether to start Zellij automatically in Bash, Fish, and Zsh.
-        The shells must be enabled separately. The shared nix-darwin Zsh
+        The shells must be enabled separately. The shared ndw Zsh
         module also supports this option for the primary user.
 
         Individual shells can be excluded with

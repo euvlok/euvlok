@@ -6,11 +6,10 @@
 {
   imports = [
     { sops.defaultSopsFile = ../../../../secrets/bigshaq9999.yaml; }
+    ../../../../modules/darwin/host-services.nix
   ];
 
-  system.primaryUser = "faputa";
-
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  system.primary.user = "faputa";
 
   networking = {
     computerName = "Marie's boyfriend's Mac Mini M4 Pro faputa";
@@ -27,23 +26,23 @@
       "fd17:216b:31bc:3::1"
     ];
   };
-
-  services.tailscale.enable = true;
+  environment.files."resolver/ts.net" = {
+    text = "nameserver 100.100.100.100";
+    known.hashes = [
+      "2c28f4fe3b4a958cd86b120e7eb799eee6976daa35b228c885f0630c55ef626c"
+    ];
+  };
 
   users.users = {
     faputa = {
+      uid = 501;
       home = "/Volumes/Reg/Users/faputa";
       shell = pkgs.zsh;
     };
   };
 
-  programs = {
-    gnupg.agent.enable = true;
-    nix-index.enable = true;
-  };
-
   # Environment
-  environment.systemPackages = lib.attrsets.attrValues {
+  environment.system.packages = lib.attrsets.attrValues {
     inherit (pkgs)
       # Literally should be bultin but apple being apple
       soundsource

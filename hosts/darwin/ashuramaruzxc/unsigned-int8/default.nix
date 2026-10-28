@@ -1,26 +1,20 @@
 {
   containerPackage,
   homeModule,
-  homebrewModule,
+  homebrewSource,
   homebrewTaps,
   sharedModules,
 }:
 { lib, ... }:
 {
   imports = sharedModules ++ [
-    ./brew.nix
+    (lib.modules.importApply ./brew.nix { inherit homebrewTaps; })
     (lib.modules.importApply ./configuration.nix { inherit containerPackage; })
     homeModule
     ./system.nix
-    homebrewModule
+    (lib.modules.importApply ../../../../modules/darwin/homebrew-install.nix {
+      inherit homebrewSource homebrewTaps;
+    })
     { sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml; }
-    {
-      nix-homebrew = {
-        enable = true;
-        user = "ashuramaru";
-        taps = homebrewTaps;
-        autoMigrate = true;
-      };
-    }
   ];
 }

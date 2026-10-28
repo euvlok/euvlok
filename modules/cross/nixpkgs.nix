@@ -3,6 +3,7 @@
   config,
   lib,
   osConfig ? null,
+  _class,
   ...
 }:
 let
@@ -19,6 +20,7 @@ in
   };
 
   config = {
+    _module.args.osConfig = lib.modules.mkIf (_class == "darwin") (lib.modules.mkDefault null);
     nixpkgs.config.allowUnfree = true;
     nixpkgs.overlays = [
       (import ../../overlay.nix {

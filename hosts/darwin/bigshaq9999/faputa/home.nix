@@ -63,6 +63,9 @@
       ]
       ++ [
         {
+          programs.gpg.enable = true;
+          services.gpg-agent.enable = true;
+          programs.nix-index.enable = true;
           programs.fastfetch.enable = true;
           programs.ghostty.enable = true;
           programs.mpv.enable = true;

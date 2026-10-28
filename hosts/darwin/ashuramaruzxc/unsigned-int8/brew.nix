@@ -1,13 +1,14 @@
-{ lib, config, ... }:
+{ homebrewTaps }:
+{ lib, ... }:
 {
   homebrew = {
     enable = true;
-    onActivation = {
-      autoUpdate = true;
+    on.activation = {
+      auto.update = true;
       upgrade = true;
       cleanup = "uninstall";
     };
-    caskArgs = {
+    cask.args = {
       appdir = "/Applications";
       require_sha = false;
     };
@@ -47,6 +48,6 @@
       # Bro i need working widevine 😭
       "brave-browser"
     ];
-    taps = lib.attrsets.attrNames config.nix-homebrew.taps;
+    taps = lib.attrsets.attrNames homebrewTaps;
   };
 }

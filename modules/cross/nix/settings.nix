@@ -41,8 +41,8 @@ in
   config =
     if isDarwin then
       {
-        # The Determinate nix-darwin module disables nix-darwin's Nix config
-        # writer. Put all custom settings in its supported include instead.
+        # ndw writes Determinate's supported custom include without replacing
+        # the Nixd-managed configuration
         determinateNix.customSettings = settings;
       }
     else

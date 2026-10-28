@@ -44,7 +44,7 @@ let
         builder = lib.options.mkOption {
           type = lib.types.nullOr (lib.types.functionTo lib.types.raw);
           default = null;
-          description = "Optional replacement for nixosSystem/darwinSystem.";
+          description = "Optional replacement for nixosSystem/darwin.system.";
         };
       };
     }
@@ -63,15 +63,17 @@ let
         else if host.class == "nixos" then
           providerInputs.nixpkgs.lib.nixosSystem
         else
-          providerInputs.nix-darwin.lib.darwinSystem;
+          providerInputs.ndw.lib.darwin.system;
 
       configuration = builder {
-        modules = host.modules ++ [
-          {
-            _file = "${toString ./hosts.nix}#euvlok.hosts.${name}.system";
-            nixpkgs.hostPlatform = lib.modules.mkDefault host.system;
-          }
-        ];
+        modules =
+          host.modules
+          ++ lib.lists.optionals (host.class == "nixos") [
+            {
+              _file = "${toString ./hosts.nix}#euvlok.hosts.${name}.system";
+              nixpkgs.hostPlatform = lib.modules.mkDefault host.system;
+            }
+          ];
       };
 
       actualSystem = configuration.pkgs.stdenv.hostPlatform.system;
@@ -118,10 +120,15 @@ in
   options.euvlok.hosts = lib.options.mkOption {
     type = lib.types.attrsOf hostType;
     default = { };
-    description = "Typed inventory of all NixOS and nix-darwin machines.";
+    description = "Typed inventory of all NixOS and ndw machines.";
   };
 
   options.flake = {
+    darwinConfigurations = lib.options.mkOption {
+      type = lib.types.lazyAttrsOf lib.types.raw;
+      default = { };
+      description = "Darwin system configurations";
+    };
     hostMetadata = lib.options.mkOption {
       type = lib.types.lazyAttrsOf (
         lib.types.submodule {

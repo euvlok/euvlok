@@ -6,29 +6,50 @@
   ...
 }:
 {
+  system.primary.user = "ashuramaru";
+
   imports = [
-    ../../../linux/ashuramaruzxc/shared/system/fonts.nix
+    ../../../../modules/darwin/host-services.nix
+    (lib.modules.importApply ../../../../modules/darwin/fonts.nix {
+      packages =
+        (import ../../../linux/ashuramaruzxc/shared/system/fonts.nix { inherit pkgs lib; }).fonts.packages;
+    })
   ];
-  system.primaryUser = "ashuramaru";
+  launchd.daemons.tailscaled.config.KeepAlive = true;
 
-  nixpkgs.hostPlatform = "aarch64-darwin";
-
-  security.pam.services.sudo_local.touchIdAuth = true;
-  services.openssh.enable = true;
-  services.tailscale.enable = true;
-  launchd.daemons.tailscaled.serviceConfig.KeepAlive = true;
-  environment.etc."resolver/ts.net".enable = false;
+  environment.files."pam.d/sudo_local" = {
+    text = "auth sufficient pam_tid.so\n";
+    known.macOS = true;
+    known.hashes = [
+      (builtins.hashString "sha256" "auth       sufficient     pam_tid.so\n")
+    ];
+  };
+  system.activation.steps.remote-login = {
+    deps = [ "files" ];
+    text = ''
+      /bin/launchctl enable system/com.openssh.sshd
+      if ! /bin/launchctl print system/com.openssh.sshd >/dev/null 2>&1; then
+        /bin/launchctl bootstrap system /System/Library/LaunchDaemons/ssh.plist
+      fi
+    '';
+  };
+  environment.files."ssh/authorized_keys.d/ashuramaru".text =
+    lib.concatStringsSep "\n" (import ../../../keys/ashuramaru.nix) + "\n";
+  environment.files."ssh/sshd_config.d/100-authorized-keys.conf".text = ''
+    AuthorizedKeysFile .ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
+  '';
 
   sops.secrets.tailscale_auth = { };
 
-  # nix-darwin has no authKeyFile option. Retry until SOPS and tailscaled are ready.
+  # Retry until the secret and tailscaled are ready
   launchd.daemons.tailscale-autoconnect = {
+    enable = true;
     path = [ pkgs.jq ];
     script = ''
       set -euo pipefail
 
       tailscale() {
-        ${lib.meta.getExe' config.services.tailscale.package "tailscale"} \
+        ${lib.meta.getExe' pkgs.tailscale "tailscale"} \
           --socket=/var/run/tailscaled.socket "$@"
       }
 
@@ -51,7 +72,7 @@
           ;;
       esac
     '';
-    serviceConfig = {
+    config = {
       RunAtLoad = true;
       KeepAlive.SuccessfulExit = false;
       ThrottleInterval = 30;
@@ -71,32 +92,20 @@
     ];
   };
 
-  users.users =
-    let
-      ssh-keys = import ../../../keys/ashuramaru.nix;
-    in
-    {
-      ashuramaru = {
-        home = "/Users/ashuramaru";
-        description = "Maria Głowata";
-        openssh.authorizedKeys.keys = ssh-keys;
-        shell = pkgs.zsh;
-      };
-    };
-
-  programs = {
-    gnupg.agent.enable = true;
-    gnupg.agent.enableSSHSupport = false;
-    nix-index.enable = true;
-    pared.features.mailSummaries = true;
-    # Environment
+  users.users.ashuramaru = {
+    uid = 501;
+    home = "/Users/ashuramaru";
+    description = "Maria Głowata";
+    shell = pkgs.zsh;
   };
+
+  programs.pared.features.mailSummaries = true;
 
   nixpkgs.config.permittedInsecurePackages = [
     "electron-39.8.10"
   ];
 
-  environment.systemPackages = lib.attrsets.attrValues {
+  environment.system.packages = lib.attrsets.attrValues {
     container = containerPackage;
 
     inherit (pkgs.unstable)
@@ -129,6 +138,6 @@
   # ];
 
   # Use Determinate's native macOS Virtualization.framework Linux builder
-  # instead of nix-darwin's NixOS VM builder.
+  # instead of a separate NixOS VM builder
   determinateNix.determinateNixd.builder.state = "enabled";
 }
