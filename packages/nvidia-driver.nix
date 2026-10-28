@@ -61,63 +61,53 @@ let
     };
 
 in
-stdenvNoCC.mkDerivation {
+(mkPin {
   pname = "nvidia-driver";
-  inherit version src;
+  inherit src;
+}).overrideAttrs
+  {
+    passthru = {
+      aarch64 = mkPin {
+        pname = "nvidia-driver-aarch64";
+        src = aarch64;
+      };
+      open = mkPin {
+        pname = "nvidia-driver-open";
+        src = open;
+      };
+      settings = mkPin {
+        pname = "nvidia-driver-settings";
+        src = settings;
+      };
+      persistenced = mkPin {
+        pname = "nvidia-driver-persistenced";
+        src = persistenced;
+      };
+      mkDriverArgs = {
+        inherit version;
+        sha256_64bit = src.outputHash;
+        sha256_aarch64 = aarch64.outputHash;
+        openSha256 = open.outputHash;
+        settingsSha256 = settings.outputHash;
+        persistencedSha256 = persistenced.outputHash;
+      };
+      updateScript = nix-update-script {
+        attrPath = "nvidia-driver";
+        extraArgs = [
+          "--flake"
+          "--format"
+          "--url=https://github.com/NVIDIA/open-gpu-kernel-modules"
+          "--subpackage=aarch64"
+          "--subpackage=open"
+          "--subpackage=settings"
+          "--subpackage=persistenced"
+        ];
+      };
+    };
 
-  dontUnpack = true;
-  dontConfigure = true;
-  dontBuild = true;
-  dontFixup = true;
-
-  installPhase = ''
-    runHook preInstall
-    mkdir -p "$out"
-    runHook postInstall
-  '';
-
-  passthru = {
-    aarch64 = mkPin {
-      pname = "nvidia-driver-aarch64";
-      src = aarch64;
+    meta = {
+      description = "Pinned NVIDIA Unix driver sources for euvlok hosts";
+      homepage = "https://www.nvidia.com/en-us/drivers/unix/";
+      platforms = lib.systems.doubles.unix;
     };
-    open = mkPin {
-      pname = "nvidia-driver-open";
-      src = open;
-    };
-    settings = mkPin {
-      pname = "nvidia-driver-settings";
-      src = settings;
-    };
-    persistenced = mkPin {
-      pname = "nvidia-driver-persistenced";
-      src = persistenced;
-    };
-    mkDriverArgs = {
-      inherit version;
-      sha256_64bit = src.outputHash;
-      sha256_aarch64 = aarch64.outputHash;
-      openSha256 = open.outputHash;
-      settingsSha256 = settings.outputHash;
-      persistencedSha256 = persistenced.outputHash;
-    };
-    updateScript = nix-update-script {
-      attrPath = "nvidia-driver";
-      extraArgs = [
-        "--flake"
-        "--format"
-        "--url=https://github.com/NVIDIA/open-gpu-kernel-modules"
-        "--subpackage=aarch64"
-        "--subpackage=open"
-        "--subpackage=settings"
-        "--subpackage=persistenced"
-      ];
-    };
-  };
-
-  meta = {
-    description = "Pinned NVIDIA Unix driver sources for euvlok hosts";
-    homepage = "https://www.nvidia.com/en-us/drivers/unix/";
-    platforms = lib.systems.doubles.unix;
-  };
-}
+  }
