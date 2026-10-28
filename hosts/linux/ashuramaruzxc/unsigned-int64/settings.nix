@@ -193,6 +193,7 @@
           do-ip6 = "yes";
           do-udp = "yes";
           do-tcp = "yes";
+          do-not-query-localhost = false;
           harden-glue = "yes";
           harden-dnssec-stripped = "yes";
           edns-buffer-size = 1232;
@@ -268,23 +269,9 @@
           {
             name = ".";
             forward-addr = [
-              # dnscrypt odoh
               "127.0.0.1@5353"
-              "::1"
-
-              # Authoritive recursive DNS for robot.hetzner
-              "185.12.64.1"
-              "185.12.64.2"
-              "2a01:4ff:ff00::add:1"
-              "2a01:4ff:ff00::add:2"
-
-              # Backup cloudflare DoT
-              "1.1.1.1@853#cloudflare-dns.com"
-              "1.0.0.1@853#cloudflare-dns.com"
-              "2606:4700:4700::1111@853#cloudflare-dns.com"
-              "2606:4700:4700::1001@853#cloudflare-dns.com"
+              "::1@5353"
             ];
-            forward-tls-upstream = "yes";
           }
         ];
         remote-control = {
