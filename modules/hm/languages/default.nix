@@ -76,14 +76,8 @@ let
           description = "Available ${displayName} SDK versions";
         };
         version = lib.options.mkOption {
-          type = lib.types.nullOr lib.types.str;
+          type = lib.types.nullOr (lib.types.enum (lib.attrsets.attrNames config.versions));
           default = definition.defaultVersion or null;
-          apply =
-            version:
-            if version == null || lib.attrsets.hasAttr version config.versions then
-              version
-            else
-              throw "Unknown ${displayName} SDK version ${version}; available versions: ${lib.strings.concatStringsSep ", " (lib.attrsets.attrNames config.versions)}";
           description = "SDK version to install, or null for no additional SDK";
         };
       };
