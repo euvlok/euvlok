@@ -83,9 +83,12 @@ let
       pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
         (_pythonFinal: pythonPrev: {
           fastmcp-slim =
-            if pythonPrev.fastmcp-slim.version == "3.4.7" then
+            if
+              pythonPrev.fastmcp-slim.version == "3.4.7"
+              && inputs.nixpkgs.lib.versionAtLeast pythonPrev.mcp.version "2"
+            then
               pythonPrev.fastmcp-slim.override {
-                # FastMCP 3.4.7 needs MCP SDK 1.x; Nixpkgs defaults to 2.x.
+                # FastMCP 3.4.7 needs MCP SDK 1.x, not the newer default
                 mcp = pythonPrev.mcp_1;
               }
             else
