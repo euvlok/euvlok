@@ -18,7 +18,7 @@ let
     type = "timeseries";
     datasource = dashboardDatasource;
     gridPos = {
-      x = ((id - 1) - (builtins.div (id - 1) 2) * 2) * 12;
+      x = lib.trivial.mod (id - 1) 2 * 12;
       y = (builtins.div (id - 1) 2) * 8;
       w = 12;
       h = 8;
@@ -34,11 +34,11 @@ let
       };
       tooltip.mode = "multi";
     };
-    targets = builtins.genList (i: {
+    targets = lib.lists.imap0 (i: expression: {
       refId = builtins.elemAt [ "A" "B" "C" ] i;
-      inherit (builtins.elemAt expressions i) expr;
-      legendFormat = (builtins.elemAt expressions i).legend;
-    }) (builtins.length expressions);
+      inherit (expression) expr;
+      legendFormat = expression.legend;
+    }) expressions;
   };
   dashboard = {
     uid = "dnscrypt-router";
