@@ -138,6 +138,10 @@
     };
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";
     flake-utils.url = "github:numtide/flake-utils";
+    helix = {
+      url = "github:gj1118/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

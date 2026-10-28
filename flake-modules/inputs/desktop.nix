@@ -7,6 +7,8 @@
     tweezle.url = "github:4evy/tweezle";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     catppuccin.url = "github:catppuccin/nix";
+    helix.inputs.nixpkgs.follows = "nixpkgs";
+    helix.url = "github:gj1118/helix";
     nix4vscode.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nix4vscode.inputs.systems.follows = "flake-utils/systems";
     nix4vscode.url = "github:nix-community/nix4vscode";

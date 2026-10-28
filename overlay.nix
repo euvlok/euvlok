@@ -212,6 +212,8 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   eupkgsOverlay
   stableFallbacksOverlay
   localPackagesOverlay
+  # Keep the fork's editor, runtime, and grammars on the same revision
+  inputs.helix.overlays.default
   (final: _prev: {
     euvlokVscodeExtensions =
       { version, extensions }:
