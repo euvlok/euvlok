@@ -17,6 +17,8 @@ let
       "ca-no-trust-rules-bundle.crt"
     else
       "ca-bundle.crt";
+  # Reuse NixOS's final public trust policy; nix-darwin exposes no bundle option
+  publicBundle = cfg.caBundle or "${publicCAs}/etc/ssl/certs/${bundleName}";
 in
 {
   # SOPS owns the final bundle; the private CA never enters a store derivation.
@@ -29,7 +31,7 @@ in
     path = caBundle;
     mode = "0444";
     file = pkgs.runCommand "tenjin-ca-bundle-template.crt" { } ''
-      cat ${publicCAs}/etc/ssl/certs/${bundleName} > "$out"
+      cat ${publicBundle} > "$out"
       printf '\n%s\n' ${lib.escapeShellArg config.sops.placeholder.tenjin_ca} >> "$out"
     '';
   };
