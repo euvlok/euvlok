@@ -15,8 +15,8 @@
     "rubyLsp.pullDiagnosticsOn" = "save";
     "rubyLsp.rubyVersionManager" = "none";
     "[ruby]" = {
-      editor.defaultFormatter = "shopify.ruby-lsp";
-      editor.formatOnSave = true;
+      "editor.defaultFormatter" = "shopify.ruby-lsp";
+      "editor.formatOnSave" = true;
     };
   };
   helix.languageServers = {

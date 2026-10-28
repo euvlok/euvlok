@@ -4,9 +4,9 @@
   vscode.extensions = [ "ziglang.vscode-zig" ];
   vscode.settings = {
     "[zig]" = {
-      editor.defaultFormatter = "ziglang.vscode-zig";
-      editor.formatOnSave = true;
-      editor.codeActionsOnSave.source.fixAll = "explicit";
+      "editor.defaultFormatter" = "ziglang.vscode-zig";
+      "editor.formatOnSave" = true;
+      "editor.codeActionsOnSave"."source.fixAll" = "explicit";
     };
     "zig.path" = "zig";
     "zig.zls.path" = "zls";

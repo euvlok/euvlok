@@ -20,9 +20,9 @@
     "vscjava.vscode-spring-initializr"
   ];
   vscode.settings."[java]" = {
-    editor.formatOnPaste = true;
-    editor.defaultFormatter = "esbenp.prettier-vscode";
-    editor.formatOnSave = true;
+    "editor.formatOnPaste" = true;
+    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+    "editor.formatOnSave" = true;
   };
   zed.extensions = [
     "java"

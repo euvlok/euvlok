@@ -6,8 +6,8 @@
   };
   vscode.extensions = [ "ocamllabs.vscode-ocaml-platform" ];
   vscode.settings."[ocaml]" = {
-    editor.defaultFormatter = "ocamllabs.vscode-ocaml-platform";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "ocamllabs.vscode-ocaml-platform";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.ocamllsp.command = "ocamllsp";
   helix.languages = [

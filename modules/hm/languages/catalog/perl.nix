@@ -6,8 +6,8 @@
   };
   vscode.extensions = [ "richterger.perl" ];
   vscode.settings."[perl]" = {
-    editor.defaultFormatter = "richterger.perl";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "richterger.perl";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.perlnavigator = {
     command = "perlnavigator";

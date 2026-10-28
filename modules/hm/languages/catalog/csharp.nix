@@ -15,11 +15,11 @@
     "ms-dotnettools.vscode-dotnet-runtime"
   ];
   vscode.settings."[csharp]" = {
-    editor.defaultFormatter = "ms-dotnettools.csharp";
-    editor.formatOnSave = true;
-    editor.codeActionsOnSave = {
-      source.fixAll = "explicit";
-      source.organizeImports = "explicit";
+    "editor.defaultFormatter" = "ms-dotnettools.csharp";
+    "editor.formatOnSave" = true;
+    "editor.codeActionsOnSave" = {
+      "source.fixAll" = "explicit";
+      "source.organizeImports" = "explicit";
     };
   };
   zed.extensions = [ "csharp" ];

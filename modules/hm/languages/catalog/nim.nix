@@ -6,8 +6,8 @@
     "nimsaem.nimvscode"
   ];
   vscode.settings."[nim]" = {
-    editor.defaultFormatter = "kosz78.nim";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "kosz78.nim";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.nimlsp.command = "nimlsp";
   helix.languages = [

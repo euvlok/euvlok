@@ -13,8 +13,8 @@
     "vknabel.swift-coverage"
   ];
   vscode.settings."[swift]" = {
-    editor.defaultFormatter = "swift-server.swift";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "swift-server.swift";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.sourcekit-lsp.command = "sourcekit-lsp";
   helix.languages = [

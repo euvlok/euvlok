@@ -15,8 +15,8 @@
     "justusadam.language-haskell"
   ];
   vscode.settings."[haskell]" = {
-    editor.defaultFormatter = "haskell.haskell";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "haskell.haskell";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.haskell-language-server = {
     command = "haskell-language-server-wrapper";

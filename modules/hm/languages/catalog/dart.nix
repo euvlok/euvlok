@@ -6,11 +6,11 @@
     "dart-code.flutter"
   ];
   vscode.settings."[dart]" = {
-    editor.defaultFormatter = "dart-code.dart-code";
-    editor.formatOnSave = true;
-    editor.codeActionsOnSave = {
-      source.fixAll = "explicit";
-      source.organizeImports = "explicit";
+    "editor.defaultFormatter" = "dart-code.dart-code";
+    "editor.formatOnSave" = true;
+    "editor.codeActionsOnSave" = {
+      "source.fixAll" = "explicit";
+      "source.organizeImports" = "explicit";
     };
   };
   helix.languageServers.dart = {

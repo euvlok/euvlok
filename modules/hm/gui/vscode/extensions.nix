@@ -29,45 +29,45 @@
 
     programs.vscode.profiles.default = {
       userSettings = {
-        security.workspace.trust.enabled = false;
-        nix.enableLanguageServer = true;
-        nix.serverPath = "nil";
-        alejandra.program = "nixfmt";
+        "security.workspace.trust.enabled" = false;
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nil";
+        "alejandra.program" = "nixfmt";
         "[nix]" = {
-          editor.defaultFormatter = "kamadorueda.alejandra";
-          editor.formatOnPaste = true;
-          editor.formatOnSave = true;
-          editor.formatOnType = true;
+          "editor.defaultFormatter" = "kamadorueda.alejandra";
+          "editor.formatOnPaste" = true;
+          "editor.formatOnSave" = true;
+          "editor.formatOnType" = true;
         };
         "[json]" = {
-          editor.defaultFormatter = "esbenp.prettier-vscode";
-          editor.formatOnSave = true;
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnSave" = true;
         };
         "[jsonc]" = {
-          editor.defaultFormatter = "esbenp.prettier-vscode";
-          editor.formatOnSave = true;
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnSave" = true;
         };
         "[toml]" = {
-          editor.defaultFormatter = "tamasfe.even-better-toml";
-          editor.formatOnSave = true;
+          "editor.defaultFormatter" = "tamasfe.even-better-toml";
+          "editor.formatOnSave" = true;
         };
         "[yaml]" = {
-          editor.defaultFormatter = "esbenp.prettier-vscode";
-          editor.formatOnSave = true;
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnSave" = true;
         };
         "[yml]" = {
-          editor.defaultFormatter = "esbenp.prettier-vscode";
-          editor.formatOnSave = true;
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.formatOnSave" = true;
         };
         "[shellscript]" = {
-          editor.formatOnSave = true;
+          "editor.formatOnSave" = true;
         };
-        markdownlint.config = {
+        "markdownlint.config" = {
           "MD033" = false;
           "MD041" = false;
           "MD045" = false;
         };
-        bashIde.explainshellEndpoint = "http://localhost:5134";
+        "bashIde.explainshellEndpoint" = "http://localhost:5134";
       };
     };
   };

@@ -10,8 +10,8 @@
     "xdebug.php-debug"
   ];
   vscode.settings."[php]" = {
-    editor.defaultFormatter = "bmewburn.vscode-intelephense-client";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "bmewburn.vscode-intelephense-client";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.intelephense = {
     command = "intelephense";

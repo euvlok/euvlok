@@ -15,9 +15,9 @@
     "premparihar.gotestexplorer"
   ];
   vscode.settings."[go]" = {
-    editor.defaultFormatter = "golang.go";
-    editor.formatOnSave = true;
-    editor.codeActionsOnSave.source.organizeImports = "explicit";
+    "editor.defaultFormatter" = "golang.go";
+    "editor.formatOnSave" = true;
+    "editor.codeActionsOnSave"."source.organizeImports" = "explicit";
   };
   helix.languageServers.gopls.command = "gopls";
   helix.languages = [

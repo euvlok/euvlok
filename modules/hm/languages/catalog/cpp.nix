@@ -21,14 +21,14 @@
   ];
   vscode.settings = {
     "[cpp]" = {
-      editor.defaultFormatter = "ms-vscode.cpptools";
-      editor.formatOnSave = true;
-      editor.codeActionsOnSave.source.fixAll = "explicit";
+      "editor.defaultFormatter" = "ms-vscode.cpptools";
+      "editor.formatOnSave" = true;
+      "editor.codeActionsOnSave"."source.fixAll" = "explicit";
     };
     "[c]" = {
-      editor.defaultFormatter = "ms-vscode.cpptools";
-      editor.formatOnSave = true;
-      editor.codeActionsOnSave.source.fixAll = "explicit";
+      "editor.defaultFormatter" = "ms-vscode.cpptools";
+      "editor.formatOnSave" = true;
+      "editor.codeActionsOnSave"."source.fixAll" = "explicit";
     };
     "C_Cpp.default.cppStandard" = "c++23";
     "C_Cpp.default.cStandard" = "c23";

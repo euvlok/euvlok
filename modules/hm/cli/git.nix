@@ -57,7 +57,7 @@
         };
       };
       vscode.profiles.default.userSettings = {
-        git.enableCommitSigning = config.programs.git.signing.key != null;
+        "git.enableCommitSigning" = config.programs.git.signing.key != null;
       };
     };
   };

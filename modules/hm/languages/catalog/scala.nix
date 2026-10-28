@@ -10,8 +10,8 @@
   };
   vscode.extensions = [ "scalameta.metals" ];
   vscode.settings."[scala]" = {
-    editor.defaultFormatter = "scalameta.metals";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "scalameta.metals";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.metals.command = "metals";
   helix.languages = [

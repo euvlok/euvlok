@@ -3,8 +3,8 @@
   packages = lib.attrsets.attrValues { inherit (pkgs.unstable) dotnet-sdk fsautocomplete; };
   vscode.extensions = [ "ionide.ionide-fsharp" ];
   vscode.settings."[fsharp]" = {
-    editor.defaultFormatter = "ionide.ionide-fsharp";
-    editor.formatOnSave = true;
+    "editor.defaultFormatter" = "ionide.ionide-fsharp";
+    "editor.formatOnSave" = true;
   };
   helix.languageServers.fsautocomplete = {
     command = "fsautocomplete";

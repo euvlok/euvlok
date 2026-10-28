@@ -33,15 +33,15 @@
   ];
   vscode.settings = {
     "[javascript]" = {
-      editor.defaultFormatter = "esbenp.prettier-vscode";
-      editor.formatOnPaste = true;
-      editor.formatOnSave = true;
-      editor.formatOnType = true;
+      "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      "editor.formatOnPaste" = true;
+      "editor.formatOnSave" = true;
+      "editor.formatOnType" = true;
     };
     "[typescript]" = {
-      editor.formatOnPaste = true;
-      editor.defaultFormatter = "esbenp.prettier-vscode";
-      editor.formatOnSave = true;
+      "editor.formatOnPaste" = true;
+      "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      "editor.formatOnSave" = true;
     };
   };
   helix.languageServers = {
