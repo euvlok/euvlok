@@ -32,6 +32,9 @@
     hooks = import ./devenv/git-hooks.nix { inherit pkgs; };
   };
 
+  # Finish formatting before hooks check whether a command modified files
+  tasks."devenv:git-hooks:run".after = [ "devenv:treefmt:run" ];
+
   treefmt = {
     enable = true;
     config.programs.nixfmt.enable = true;
