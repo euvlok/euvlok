@@ -26,7 +26,7 @@
     { ... }:
     {
       imports = [
-        { home.stateVersion = "26.05"; }
+        { home.stateVersion = "26.11"; }
         (import ../../../../slop.nix).homeManager.hosts.faputa
         (import ../../../../modules/hm/gui/raycast.nix {
           avatarId = "97749920";
@@ -143,7 +143,6 @@
               # gimp # Image editing
               inkscape # Vector graphics
               yubikey-manager # OTP
-              notion-app # Productivity
               ;
 
             inherit (pkgs.eupkgs) helium-browser;
