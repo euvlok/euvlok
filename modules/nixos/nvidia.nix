@@ -27,7 +27,7 @@ in
 
         #! kwin 6.8-6.8.1 regression
         #! causes screen freeze when gpu is under ANY! load
-        #! this will cause slight performance degradation but at least doesnt freezes display :/
+        #! this will cause slight performance degradation but at least doesnt freezes display :/usi
         KWIN_DRM_DISABLE_TRIPLE_BUFFERING = lib.modules.mkIf config.euvlok.nixos.plasma.enable "1";
       };
 
