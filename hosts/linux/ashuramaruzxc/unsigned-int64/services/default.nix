@@ -23,8 +23,12 @@ _: {
     # Misc
     ./forgejo.nix
     ./vaultwarden.nix
+
     # CVE-2026-109618, CVE-2026-109619
     # ./nextcloud.nix
     # (import ../../../../../slop.nix).nixos.cvat
+
+    # Kunny
+    # ./freshrss.nix
   ];
 }

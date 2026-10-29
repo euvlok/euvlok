@@ -9,6 +9,7 @@
       "vaultwarden"
       "grafana"
       "ecolinker"
+      "freshrss"
     ];
     ensureUsers = [
       {
@@ -29,6 +30,10 @@
       }
       {
         name = "ecolinker";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "freshrss";
         ensureDBOwnership = true;
       }
     ];
