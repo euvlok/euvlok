@@ -31,7 +31,7 @@
         lib.attrsets.optionalAttrs
           (
             (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms
-            ? ${pkgs.stdenvNoCC.hostPlatform.system}
+              ? ${pkgs.stdenvNoCC.hostPlatform.system}
           )
           {
             firefox-unbranded = final.callPackage ../lib/firefox-unbranded/firefox-unbranded.nix { };

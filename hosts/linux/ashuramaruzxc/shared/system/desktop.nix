@@ -37,7 +37,6 @@
       auto-move-windows
       blur-my-shell
       dash-to-dock
-      dual-monitor-toggle
       gsconnect
       kimpanel
       pop-shell
