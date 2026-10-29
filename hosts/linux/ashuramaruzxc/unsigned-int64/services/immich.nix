@@ -1,9 +1,31 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  # Use cached CPU packages for model-tooling tests, not host GPU variants
+  cpuPython =
+    (import pkgs.path {
+      inherit (pkgs.stdenv.hostPlatform) system;
+      config.allowUnfree = true;
+    }).python3Packages;
+  machineLearningPython = pkgs.python3.override {
+    packageOverrides = _final: prev: {
+      onnx-ir = prev.onnx-ir.override { inherit (cpuPython) torch; };
+      onnxscript = prev.onnxscript.override {
+        inherit (cpuPython) torch torchvision;
+      };
+      safetensors = prev.safetensors.override { inherit (cpuPython) torch; };
+    };
+  };
+in
 {
   imports = [ (import ../../../../../slop.nix).nixos.unsignedInt64 ];
 
   services.immich = {
     enable = true;
+    package = pkgs.immich.override {
+      immich-machine-learning = pkgs.immich-machine-learning.override {
+        python3 = machineLearningPython;
+      };
+    };
     host = "127.0.0.1";
     port = 2283;
     # Nginx is the only public entry point.
