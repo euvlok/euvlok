@@ -73,7 +73,11 @@
       "--advertise-tags=tag:unsigned-int32"
       "--ssh=false"
     ];
-    extraSetFlags = [ "--ssh=false" ];
+    extraSetFlags = [
+      "--ssh=false"
+      "--accept-routes=true"
+      "--accept-dns=true"
+    ];
   };
   systemd.services.NetworkManager-wait-online.enable = lib.modules.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.modules.mkForce false;
