@@ -3,6 +3,7 @@
   sops.secrets.tailscale_auth.restartUnits = [ "tailscaled-autoconnect.service" ];
   services.tailscale = {
     enable = true;
+    useRoutingFeatures = "server";
     openFirewall = true;
     authKeyFile = config.sops.secrets.tailscale_auth.path;
     extraUpFlags = [
@@ -10,7 +11,11 @@
       "--advertise-exit-node"
       "--ssh=true"
     ];
-    extraSetFlags = [ "--ssh=true" ];
+    extraSetFlags = [
+      "--ssh=true"
+      # Keep the existing tenjin.com DNS records reachable outside WireGuard.
+      "--advertise-routes=172.16.31.1/32,fd17:216b:31bc:1::1/128"
+    ];
   };
   networking = {
     hostName = "unsigned-int64";
@@ -205,6 +210,7 @@
           rrset-roundrobin = "yes";
           access-control = [
             "127.0.0.0/8 allow"
+            "100.64.0.0/10 allow"
             "172.16.0.0/12 allow"
             "fd00::/8 allow"
             "fd17::/16 allow"

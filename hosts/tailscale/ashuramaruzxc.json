@@ -5,7 +5,18 @@
     "tag:unsigned-int64": ["autogroup:admin"]
   },
   "acls": [],
+  "autoApprovers": {
+    "routes": {
+      "172.16.31.1/32": ["tag:unsigned-int64"],
+      "fd17:216b:31bc:1::1/128": ["tag:unsigned-int64"]
+    }
+  },
   "grants": [
+    {
+      "src": ["*"],
+      "dst": ["172.16.31.1/32", "fd17:216b:31bc:1::1/128"],
+      "ip": ["tcp:53", "udp:53", "tcp:443"]
+    },
     {
       "src": ["*"],
       "dst": ["*"],
@@ -42,6 +53,28 @@
     }
   ],
   "tests": [
+    {
+      "src": "tag:unsigned-int8",
+      "proto": "tcp",
+      "accept": ["172.16.31.1:53", "172.16.31.1:443"],
+      "deny": ["172.16.31.1:22", "172.16.31.1:57255"]
+    },
+    {
+      "src": "fd7a:115c:a1e0::1",
+      "proto": "tcp",
+      "accept": ["[fd17:216b:31bc:1::1]:53", "[fd17:216b:31bc:1::1]:443"],
+      "deny": ["[fd17:216b:31bc:1::1]:22", "[fd17:216b:31bc:1::1]:57255"]
+    },
+    {
+      "src": "100.64.0.1",
+      "proto": "udp",
+      "accept": ["172.16.31.1:53"]
+    },
+    {
+      "src": "fd7a:115c:a1e0::1",
+      "proto": "udp",
+      "accept": ["[fd17:216b:31bc:1::1]:53"]
+    },
     {
       "src": "tag:unsigned-int8",
       "proto": "tcp",
