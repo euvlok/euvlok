@@ -23,6 +23,7 @@ let
     imports = [
       inputs.flake-parts.flakeModules.modules
       inputs.home-manager.flakeModules.default
+      inputs.nix-darwin.flakeModules.default
       (lib.modules.importApply ./hosts.nix {
         providerInputs = inputs;
         inherit supportedSystems;

@@ -35,32 +35,10 @@ in
     (
       if isDarwin then
         {
-          environment.files."nix/registry.json".text = builtins.toJSON {
-            version = 2;
-            flakes = lib.attrsets.mapAttrsToList (name: flake: {
-              from = {
-                type = "indirect";
-                id = name;
-              };
-              to = {
-                type = "path";
-                path = flake.outPath;
-              }
-              // lib.attrsets.filterAttrs (
-                key: _:
-                builtins.elem key [
-                  "lastModified"
-                  "rev"
-                  "revCount"
-                  "narHash"
-                ]
-              ) flake;
-              exact = true;
-            }) config.euvlok.nix.registryInputs;
+          determinateNix = {
+            inherit registry;
+            customSettings.nix-path = nixPathEntries;
           };
-          # Nixd owns nix-path, so shell lookups use the session environment
-          environment.variables.NIX_PATH = lib.strings.concatStringsSep ":" nixPathEntries;
-          determinateNix.customSettings.flake-registry = "/etc/nix/registry.json";
         }
       else
         {

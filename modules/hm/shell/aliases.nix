@@ -71,7 +71,7 @@ let
       if pkgs.stdenvNoCC.hostPlatform.isLinux then
         "nixos-rebuild switch --use-remote-sudo --flake $(readlink -f /etc/nixos)"
       else
-        "darwin switch --flake $(readlink -f /etc/nixos)";
+        "sudo nix-darwin switch --flake $(readlink -f /etc/nixos)";
 
     # Shared and contributor inputs have independent lockfiles
     update = ''nix flake update --flake "$(readlink -f /etc/nixos)"'';

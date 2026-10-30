@@ -1,7 +1,9 @@
 { config, lib, ... }:
 {
   system = {
+    keyboard.enableKeyMapping = true;
     defaults.dock.tilesize = 42;
+    stateVersion = 6;
     defaults.CustomUserPreferences = lib.modules.mkMerge [
       {
         NSGlobalDomain.AppleLanguages = [
@@ -13,7 +15,7 @@
           "fr-FR"
         ];
       }
-      (lib.modules.mkIf (lib.lists.any (cask: cask.name == "forklift") config.homebrew.casks) {
+      (lib.modules.mkIf (lib.lists.elem "forklift" config.homebrew.casks) {
         NSGlobalDomain.NSFileViewer = "com.binarynights.ForkLift";
         "com.apple.LaunchServices/com.apple.launchservices.secure" = {
           LSHandlers = [

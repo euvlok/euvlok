@@ -7,7 +7,7 @@
   ];
 
   flake-file = {
-    description = "EUVlok shared NixOS, ndw, and Home Manager configurations";
+    description = "EUVlok shared NixOS, nix-darwin, and Home Manager configurations";
     outputs = "inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./flake-modules";
     do-not-edit = ''
       #                                                                        ⢰⣆

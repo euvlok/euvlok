@@ -4,6 +4,6 @@
   imports = [
     (lib.modules.importApply ./nix { inherit euvlokInputs isDarwin; })
     (lib.modules.importApply ./nixpkgs.nix { inherit euvlokInputs; })
-    (lib.modules.importApply ./packages.nix { inherit isDarwin; })
+    ./packages.nix
   ];
 }

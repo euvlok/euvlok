@@ -2828,50 +2828,13 @@ in
   # https://x.com/BTTierney85/status/2104259146443116834
   darwin =
     { euvlokInputs }:
+    { ... }:
     {
-      config,
-      lib,
-      pkgs,
-      ...
-    }:
-    let
-      cfg = config.programs.pared;
-      source = "${euvlokInputs.pared}/nix";
-      policy = import "${source}/policy.nix" {
-        inherit lib;
-        inherit (cfg) defaultState features;
-      };
-      policyFile = pkgs.writeText "pared-policy.json" (builtins.toJSON policy.document);
-    in
-    {
-      imports = [ "${source}/modules/options.nix" ];
+      imports = [ euvlokInputs.pared.darwinModules.default ];
 
       programs.pared = {
         enable = true;
         defaultState = false;
-      };
-      environment.system.packages = lib.lists.optional cfg.enable cfg.package;
-      environment.files = lib.modules.mkIf cfg.enable {
-        "pared/policy.json".source = policyFile;
-        "pared/disable-apple-intelligence.mobileconfig".text = import "${source}/profile.nix" {
-          inherit lib policy;
-        };
-        "pared/declarations.json".text = builtins.toJSON (
-          import "${source}/declarations.nix" { inherit lib policy; }
-        );
-      };
-      system.defaults.CustomUserPreferences = lib.modules.mkIf cfg.enable policy.userPreferences;
-      system.activation.steps.pared = lib.modules.mkIf (cfg.enable && cfg.cleanupOnActivation) {
-        deps = [
-          "files"
-          "userDefaults"
-        ];
-        text = import "${source}/cleanup.nix" {
-          inherit (cfg) package;
-          inherit lib pkgs policyFile;
-          stateDirectory = "/var/db/pared";
-          profilePath = "/etc/pared/disable-apple-intelligence.mobileconfig";
-        };
       };
     };
   nixos = {

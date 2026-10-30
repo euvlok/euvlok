@@ -2,7 +2,7 @@
   flake-file.inputs = {
     tweezle.inputs.flake-parts.follows = "flake-parts";
     tweezle.inputs.home-manager.follows = "home-manager";
-    tweezle.inputs.nix-darwin.follows = "";
+    tweezle.inputs.nix-darwin.follows = "nix-darwin";
     tweezle.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     tweezle.url = "github:4evy/tweezle";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
@@ -13,7 +13,7 @@
     nix4vscode.inputs.systems.follows = "flake-utils/systems";
     nix4vscode.url = "github:nix-community/nix4vscode";
     nixcord.inputs.home-manager.follows = "home-manager";
-    nixcord.inputs.nix-darwin.follows = "";
+    nixcord.inputs.nix-darwin.follows = "nix-darwin";
     nixcord.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     nixcord.inputs.nixpkgs-ci.follows = "nixcord/nixpkgs-packages";
     nixcord.url = "github:4evy/nixcord";

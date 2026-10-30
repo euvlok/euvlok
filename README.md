@@ -31,9 +31,9 @@
 
 ---
 
-Our NixOS, [ndw](https://github.com/4evy/ndw), and Home Manager configs. We
-share modules and keep each person's machine settings in [`hosts/`](hosts/).
-These are the configs we use, including personal defaults and encrypted secrets.
+Our NixOS, nix-darwin, and Home Manager configs. We share modules and keep each
+person's machine settings in [`hosts/`](hosts/). These are the configs we use,
+including personal defaults and encrypted secrets.
 
 <table>
   <tr>
@@ -43,7 +43,7 @@ These are the configs we use, including personal defaults and encrypted secrets.
       <a href="modules/nixos/"><kbd>Browse NixOS modules</kbd></a>
     </td>
     <td align="center" valign="top" width="33%">
-      <h3>ndw</h3>
+      <h3>nix-darwin</h3>
       <p>macOS system configs</p>
       <a href="modules/darwin/"><kbd>Browse Darwin modules</kbd></a>
     </td>
@@ -84,7 +84,7 @@ nix build .#nixosBuilds.blind-faith
 </details>
 
 <details>
-  <summary><strong>Build an ndw host on macOS</strong></summary>
+  <summary><strong>Build a nix-darwin host on macOS</strong></summary>
 
 ```sh
 nix build .#darwinConfigurations.faputa.system
@@ -92,36 +92,16 @@ nix build .#darwinConfigurations.faputa.system
 
 </details>
 
-Darwin hosts require Apple Silicon and macOS 27 or newer. To switch from an
-existing checkout:
-
-```sh
-nix run github:4evy/ndw -- switch --flake .#faputa
-```
-
-Subsequent switches can use `darwin switch --flake .#faputa`. The command builds
-as your user and requests sudo only for activation.
-
-On a fresh `unsigned-int8`, bootstrap its pinned Homebrew installation before
-the first switch. Existing Homebrew installations migrate during activation.
-The bootstrap preserves installed packages and backs up replaced Homebrew code
-and taps:
-
-```sh
-nix build .#darwinConfigurations.unsigned-int8.config.system.build.homebrew-install -o result-homebrew
-sudo ./result-homebrew
-```
-
 ## Finding things
 
-| Path                               | What's there                                |
-| ---------------------------------- | ------------------------------------------- |
-| [`hosts/`](hosts/)                 | Machine configs and personal profiles       |
-| [`modules/`](modules/)             | Shared NixOS, ndw, and Home Manager modules |
-| [`flake-modules/`](flake-modules/) | Flake outputs and host definitions          |
-| [`packages/`](packages/)           | Local packages and the NVIDIA driver pin    |
-| [`lib/`](lib/)                     | Helpers and overlays                        |
-| [`secrets/`](secrets/)             | SOPS-encrypted secrets                      |
+| Path                               | What's there                                       |
+| ---------------------------------- | -------------------------------------------------- |
+| [`hosts/`](hosts/)                 | Machine configs and personal profiles              |
+| [`modules/`](modules/)             | Shared NixOS, nix-darwin, and Home Manager modules |
+| [`flake-modules/`](flake-modules/) | Flake outputs and host definitions                 |
+| [`packages/`](packages/)           | Local packages and the NVIDIA driver pin           |
+| [`lib/`](lib/)                     | Helpers and overlays                               |
+| [`secrets/`](secrets/)             | SOPS-encrypted secrets                             |
 
 To list hosts, owners, platforms, and CI runners:
 
@@ -135,22 +115,15 @@ CI uses the same inventory for its build matrix.
 
 Under `inputs.euvlok`, import the default module for your platform:
 
-| Platform                        | Module                   |
-| ------------------------------- | ------------------------ |
-| NixOS                           | `nixosModules.default`   |
-| ndw                             | `darwinModules.default`  |
-| Standalone Home Manager         | `homeModules.default`    |
-| Home Manager under NixOS or ndw | `homeModules.integrated` |
+| Platform                               | Module                   |
+| -------------------------------------- | ------------------------ |
+| NixOS                                  | `nixosModules.default`   |
+| nix-darwin                             | `darwinModules.default`  |
+| Standalone Home Manager                | `homeModules.default`    |
+| Home Manager under NixOS or nix-darwin | `homeModules.integrated` |
 
 For integrated Home Manager, set `home-manager.useGlobalPkgs = true`. Individual
 modules are available too; run `nix flake show` to browse them.
-
-For Home Manager under ndw, also import `darwinModules.home-manager` instead of
-Home Manager's nix-darwin module. The
-[native integration](modules/darwin/home-manager.nix) uses ndw's activation
-steps and user package profiles. Set `users.users.<name>.uid` for accounts
-receiving packages through `home-manager.useUserPackages`, so ndw can validate
-application ownership.
 
 ---
 

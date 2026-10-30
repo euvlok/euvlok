@@ -2,6 +2,7 @@
 { lib, ... }:
 {
   imports = [
+    euvlokInputs.determinate.darwinModules.default
     (lib.modules.importApply ../cross {
       inherit euvlokInputs;
       isDarwin = true;

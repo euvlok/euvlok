@@ -2,12 +2,12 @@
 {
   homebrew = {
     enable = true;
-    on.activation = {
-      auto.update = true;
+    onActivation = {
+      autoUpdate = true;
       upgrade = true;
       cleanup = "uninstall";
     };
-    cask.args = {
+    caskArgs = {
       appdir = "${config.users.users.faputa.home}/Applications";
       require_sha = false;
     };

@@ -164,13 +164,13 @@ in
           ];
           homeModule = lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8/home.nix {
             inherit personalModule;
-            homeManagerModule = config.flake.darwinModules.home-manager;
+            homeManagerModule = inputs.home-manager.darwinModules.home-manager;
             jetbrainsPlugins = inputs.nix-jetbrains-plugins;
             raycastModule = inputs.raycast.homeManagerModules.default;
             raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
             sharedModule = sharedHomeModule;
           };
-          homebrewSource = inputs.nix-homebrew;
+          homebrewModule = inputs.nix-homebrew.darwinModules.nix-homebrew;
           homebrewTaps = {
             "homebrew/homebrew-core" = inputs.homebrew-core-source;
             "homebrew/homebrew-cask" = inputs.homebrew-cask-source;

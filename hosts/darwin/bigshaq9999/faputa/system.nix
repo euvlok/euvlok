@@ -1,5 +1,6 @@
 {
   system = {
+    keyboard.enableKeyMapping = true;
     defaults.dock = {
       tilesize = 44;
     };
@@ -10,5 +11,6 @@
       "fr-FR"
       "ru-RU"
     ];
+    stateVersion = 5;
   };
 }

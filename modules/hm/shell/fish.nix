@@ -66,7 +66,7 @@
           if string match -q -i "*linux*" -- "$uname_str"
               nixos-rebuild switch --use-remote-sudo --flake /etc/nixos/ $argv
           else
-              darwin switch --flake /etc/nixos/ $argv
+              darwin-rebuild switch --flake /etc/nixos/ $argv
           end
         '';
       };
