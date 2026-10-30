@@ -1,4 +1,4 @@
-_: {
+{ config, lib, ... }: {
   imports = [
     ./aliases.nix
     ./chromium
@@ -13,4 +13,6 @@ _: {
     ../shared/vscode.nix
     ./zed.nix
   ];
+
+  programs.ghostty.settings.font-family = lib.modules.mkIf config.euvlok.home.codex.enable "Hack Nerd Font Mono";
 }

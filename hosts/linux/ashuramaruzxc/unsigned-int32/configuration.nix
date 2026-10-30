@@ -18,7 +18,6 @@
     ../shared/system/workstation.nix
     ../shared/system/settings.nix
     ../shared/system/fonts.nix
-    (import ../../../../slop.nix).nixos.unsignedInt32
     ./hardware-configuration.nix
     ./networking.nix
     ./overlays.nix
@@ -47,6 +46,7 @@
   };
 
   services = {
+    ollama.enable = true;
     displayManager.gdm.enable = lib.modules.mkForce false;
     displayManager.cosmic-greeter.enable = lib.modules.mkForce false;
     hardware.openrgb = {
@@ -150,7 +150,10 @@
         "mlt"
         "obs-studio"
         "octave"
+        "onnxruntime"
+        "opencv"
         "spectacle"
+        "whisper-cpp"
       ];
     };
     gnupg.dirmngr.enable = true;
