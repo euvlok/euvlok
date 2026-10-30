@@ -49,10 +49,6 @@
       "--security-opt=no-new-privileges"
     ];
   };
-  nixpkgs.config.permittedInsecurePackages = [
-    "mbedtls-2.28.10"
-  ];
-
   environment.shells = lib.attrsets.attrValues { inherit (pkgs) zsh bash fish; };
 
   euvlok.nixos.locale = {
