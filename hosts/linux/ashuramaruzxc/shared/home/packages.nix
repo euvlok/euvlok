@@ -23,7 +23,6 @@ let
     gaming = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         cemu
-        chiaki
         dolphin-emu
         eden
         flycast

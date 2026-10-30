@@ -12,10 +12,6 @@
       require_sha = false;
     };
     casks = [
-      ### --- Gay --- ###
-      "notion"
-      "stats"
-      ### --- Gay --- ###
       ### --- Socials --- ###
       "deltachat"
       "element" # halo based department?
@@ -42,6 +38,7 @@
       "gstreamer-development"
       "gstreamer-runtime"
       "nextcloud-vfs"
+      "stats"
       "yubico-authenticator"
       ### --- Utilities --- ###
       # Bro i need working widevine 😭

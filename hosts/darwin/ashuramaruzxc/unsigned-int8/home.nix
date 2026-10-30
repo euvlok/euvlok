@@ -114,7 +114,7 @@ let
     inherit (pkgs)
       anki-bin
       inkscape
-      audacity
+      # audacity
       ;
     inherit (pkgs.eupkgs) helium-browser;
   };

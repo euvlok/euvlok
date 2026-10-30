@@ -50,6 +50,8 @@
           exit 1
           ;;
       esac
+
+      tailscale set --accept-routes=true --accept-dns=true
     '';
     serviceConfig = {
       RunAtLoad = true;
@@ -91,10 +93,6 @@
     pared.features.mailSummaries = true;
     # Environment
   };
-
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-39.8.10"
-  ];
 
   environment.systemPackages = lib.attrsets.attrValues {
     container = containerPackage;
