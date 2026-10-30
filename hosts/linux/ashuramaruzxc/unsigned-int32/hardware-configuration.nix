@@ -282,6 +282,10 @@
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";
+    fileSystems = [
+      "/"
+      "/var/lib/backup"
+    ];
   };
   system.fsPackages = [ pkgs.sshfs ];
 }
