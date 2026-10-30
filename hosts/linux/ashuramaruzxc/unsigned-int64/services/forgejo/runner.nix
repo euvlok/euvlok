@@ -28,7 +28,13 @@ in
       Group = cfg.group;
       WorkingDirectory = cfg.stateDir;
       UMask = "0077";
-      ExecStart = "${lib.getExe cfg.package} --config ${cfg.customDir}/conf/app.ini forgejo-cli actions register --name unsigned-int64-local --keep-labels --secret-file ${secretFile}";
+      ExecStart = ''
+        ${lib.getExe cfg.package} \
+          --config ${cfg.customDir}/conf/app.ini \
+          forgejo-cli actions register --name unsigned-int64-local \
+          --keep-labels \
+          --secret-file ${secretFile}
+      '';
     };
     environment = {
       FORGEJO_WORK_DIR = cfg.stateDir;
@@ -46,15 +52,18 @@ in
           capacity = 1;
           labels = [ "native:host" ];
           timeout = "3h";
-          shutdown_timeout = "30s";
+          shutdown_timeout = "45s";
           insecure = false;
           fetch_timeout = "30s";
           fetch_interval = "2s";
         };
-        cache.enabled = false;
+        cache = {
+          enabled = true;
+          dir = "/var/lib/forgejo-runner/local/cache";
+          host = "127.0.0.1";
+        };
         server.connections.local = {
           url = cfg.settings.server.LOCAL_ROOT_URL;
-          # UUID formed from runnerId's ASCII bytes by Forgejo's offline registration.
           uuid = "37353665-3733-3639-3637-366536353634";
           token = null;
         };
@@ -62,17 +71,25 @@ in
       secrets.server.connections.local.token_url = secretFile;
       runtimes = {
         host = true;
-        docker = false;
-        podman = false;
+        docker = true;
+        podman = true;
       };
       hostPackages = lib.attrValues {
         inherit (pkgs)
           bash
+          bzip2
           coreutils
           curl
+          diffutils
+          docker
+          docker-buildx
+          file
+          findutils
           gawk
           git
           git-lfs
+          gnugrep
+          gnumake
           gnused
           gnutar
           gzip
@@ -80,8 +97,18 @@ in
           nix
           nodejs
           openssh
+          patch
+          pkg-config
+          python3
+          rsync
           unzip
+          which
+          xz
+          zip
+          zstd
           ;
+        inherit (pkgs.stdenv) cc;
+        podman = config.virtualisation.podman.package;
       };
     };
   };
