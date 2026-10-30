@@ -74,6 +74,5 @@ _: {
 
     # Necessary for piper
     ratbagd.enable = true;
-    blueman.enable = true;
   };
 }

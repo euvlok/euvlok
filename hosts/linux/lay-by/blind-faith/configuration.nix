@@ -11,7 +11,6 @@
     (lib.modules.importApply ./packages.nix { inherit zenBrowserPackage; })
     ./programs.nix
     ./services.nix
-    ./slsk.nix
   ];
 
   euvlok.nixos.boot.systemd-boot.enable = true;
@@ -84,5 +83,5 @@
     sshfs
   ];
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "26.11";
 }

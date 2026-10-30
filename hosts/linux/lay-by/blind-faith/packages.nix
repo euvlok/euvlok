@@ -10,7 +10,14 @@
       libsecret
       ffmpeg
       hyprpolkitagent
-
+      usbutils
+      net-tools
+      desktop-file-utils
+      unzip
+      p7zip
+      file
+      font-manager
+      killall
       # Desktop
       wayland-protocols
       wayland-utils

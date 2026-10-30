@@ -2,13 +2,11 @@
 {
 
   home.packages = lib.attrsets.attrValues {
-    inherit (pkgs) photocraft;
+    inherit (pkgs) corefonts photocraft;
     inherit (pkgs.unstable)
       # Base apps
       pavucontrol
       networkmanagerapplet
-      desktop-file-utils
-      unzip
       element-desktop
       hyprshot
       hyprcursor
@@ -31,7 +29,6 @@
       nixfmt
       meson
       cmake
-      font-manager
       ;
     inherit (pkgs.unstable)
       # nim
@@ -52,11 +49,7 @@
       telegram-desktop
       #freecad
       #libreoffice
-      p7zip
-      # _7zz
-      file
       wlsunset
-      killall
       piper
       ;
     inherit (pkgs.unstable)
@@ -70,7 +63,6 @@
       nicotine-plus
       #kdenlive
       imagemagick
-      gimp
       evince
       alsa-utils
       ;

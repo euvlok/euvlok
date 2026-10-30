@@ -35,9 +35,7 @@
     "mg_lru.types=7"
   ];
   boot.consoleLogLevel = 3;
-  boot.initrd.verbose = false;
 
-  boot.initrd.systemd.enable = true;
   boot.plymouth = {
     enable = true;
     theme = "lone";
@@ -50,7 +48,7 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/0ba3f7ef-9efb-4b39-97d0-5d5621d0e2fc";
+    device = "/dev/mapper/luks-78ea3416-4e3a-4009-93a2-375fb7872b9e";
     fsType = "ext4";
   };
 
@@ -70,15 +68,6 @@
     device = "/dev/disk/by-uuid/6d60675c-ebe6-4f7f-b9bc-be9cdc748c90";
     fsType = "btrfs";
   };
-
-  # For some reason this piece of shit makes my pc freeze at high ram utilization.
-  #swapDevices = [
-  #  {
-  #    device = "/var/lib/swapfile";
-  #    size = 4 * 1024;
-  #    randomEncryption.enable = true;
-  #  }
-  #];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
