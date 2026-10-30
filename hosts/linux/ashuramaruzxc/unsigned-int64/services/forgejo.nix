@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -136,7 +137,13 @@ in
       };
       oauth2.ENABLED = false;
       api.ENABLE_SWAGGER = false;
-      mailer.ENABLED = false;
+      mailer = {
+        ENABLED = true;
+        PROTOCOL = "sendmail";
+        FROM = config.programs.msmtp.accounts.default.from;
+        SENDMAIL_PATH = lib.getExe' pkgs.system-sendmail "sendmail";
+        SENDMAIL_ARGS = "--";
+      };
       federation.ENABLED = false;
       packages.ENABLED = false;
       "other" = {

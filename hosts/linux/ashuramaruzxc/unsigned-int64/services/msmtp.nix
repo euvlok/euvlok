@@ -11,6 +11,7 @@
       "nextcloud"
       "vaultwarden"
       "grafana"
+      "forgejo"
     ];
   };
   users.users.mail = {
