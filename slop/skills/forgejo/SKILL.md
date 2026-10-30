@@ -29,9 +29,19 @@ For a health check, verify MCP initialization and tool discovery, then use an
 available read-only tool to retrieve the authenticated user or a known
 repository. Initialization alone does not prove API connectivity or token access.
 If no Forgejo tools are exposed, check the configured launcher and its startup
-error before diagnosing token permissions. After changing the launcher or skill
-source in `/etc/nixos`, rebuild and activate the relevant Home Manager
-configuration, then reconnect the MCP client to load the changes.
+error before diagnosing token permissions. On macOS, the shared server
+configuration sets `GODEBUG=netdns=go`: the native resolver can stall during the
+API connection check before MCP initialization. If the client reports a startup
+timeout, confirm it passes this environment setting to the launcher; increasing
+the timeout does not fix a failing DNS lookup. `GODEBUG=netdns=2` reports which
+resolver Go selected without enabling HTTP debug logging.
+
+The source lives in `/etc/nixos/slop/skills/forgejo`; the installed skill is a
+Home Manager symlink. Change the source, not files inside `/nix/store`. After
+changing the launcher, shared server settings, or skill source, activate the
+relevant Home Manager configuration and reconnect the MCP client. A targeted
+update to the live client settings can apply a tested fix immediately, but keep
+the Nix configuration in sync so activation preserves it.
 
 Use local JJ in JJ workspaces, or Git otherwise, for diffs, history, and
 working-tree operations. The `glab` CLI

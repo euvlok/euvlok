@@ -1626,6 +1626,7 @@ let
     {
       config,
       lib,
+      osConfig ? null,
       pkgs,
       ...
     }:
@@ -1770,15 +1771,56 @@ let
               '';
             }
           );
+      withEnvironment =
+        {
+          name,
+          package,
+          secret,
+          setup,
+        }:
+        if !(secrets ? ${secret}) then
+          package
+        else
+          pkgs.writeShellApplication {
+            inherit name;
+            text = ''
+              set -a
+              # shellcheck source=/dev/null
+              source ${lib.strings.escapeShellArg config.sops.templates.${secret}.path}
+              set +a
+              ${setup}
+              exec ${lib.meta.getExe package} "$@"
+            '';
+          };
+      forgejo = withEnvironment {
+        name = "forgejo-mcp";
+        package = pkgs.unstable.forgejo-mcp;
+        secret = "forjego_tenjin";
+        setup = ''
+          : "''${FORGEJO_ACCESS_TOKEN:?Set FORGEJO_ACCESS_TOKEN in forjego_tenjin}"
+          case "''${FORGEJO_URL:-}" in
+            https://* | http://*) ;;
+            *)
+              echo "Set FORGEJO_URL to a full http(s) URL in forjego_tenjin" >&2
+              exit 1
+              ;;
+          esac
+        '';
+      };
       servers = {
         context7.command = withSecrets "context7-mcp" pkgs.context7-mcp {
           CONTEXT7_API_KEY = "context7_api_key";
         };
         gitlab = {
-          command = withSecrets "gitlab-mcp" pkgs.unstable.glab {
-            GITLAB_TOKEN = "gitlab_token";
-            GITLAB_HOST = "gitlab_host";
-          };
+          command = lib.meta.getExe (withEnvironment {
+            name = "gitlab-mcp";
+            package = pkgs.unstable.glab;
+            secret = "gitlab_simsoft";
+            setup = ''
+              : "''${GITLAB_HOST:?Set GITLAB_HOST in gitlab_simsoft}"
+              : "''${GITLAB_TOKEN:?Set GITLAB_TOKEN in gitlab_simsoft}"
+            '';
+          });
           args = [
             "mcp"
             "serve"
@@ -1787,6 +1829,22 @@ let
             "GITLAB_HOST"
             "GITLAB_TOKEN"
             "GLAB_CONFIG_DIR"
+          ];
+          codex.tool_timeout_sec = 120;
+        };
+        forgejo = {
+          command = lib.meta.getExe forgejo;
+          args = [
+            "--transport"
+            "stdio"
+          ];
+          env = lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+            # The native Go resolver can stall before the MCP handshake on macOS.
+            GODEBUG = "netdns=go";
+          };
+          codex.env_vars = [
+            "FORGEJO_URL"
+            "FORGEJO_ACCESS_TOKEN"
           ];
           codex.tool_timeout_sec = 120;
         };
@@ -1822,6 +1880,22 @@ let
             programs.claude-code.mcpServers = lib.attrsets.mapAttrs (_: typed) servers;
           })
         ]
+        ++ lib.lists.optionals (options ? sops.templates) (
+          map
+            (
+              secret:
+              lib.modules.mkIf (secrets ? ${secret}) {
+                sops.templates.${secret} = {
+                  content = config.sops.placeholder.${secret};
+                  mode = "0400";
+                };
+              }
+            )
+            [
+              "gitlab_simsoft"
+              "forjego_tenjin"
+            ]
+        )
         ++ lib.lists.optional (options ? programs.ai.omp.mcp) (
           lib.modules.mkIf config.programs.ai.omp.enable {
             programs.ai.omp.mcp.mcpServers = lib.attrsets.mapAttrs (_: typed) servers;
@@ -2625,17 +2699,22 @@ in
 
             home.packages = [ pkgs.unstable.glab ];
             programs.codex.skills.glab = "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
+            programs.codex.skills.forgejo = ./slop/skills/forgejo;
 
             home.file = lib.genAttrs (map (name: ".agents/skills/${name}") ansibleSkillNames) (path: {
               source = "${ansibleSkills}/${builtins.baseNameOf path}";
             });
 
             programs.codex.settings = {
+              desktop.git-branch-prefix = "ashuramaruzxc";
               apps = lib.modules.mkIf config.euvlok.home.codex.desktop.enable {
                 connector_76869538009648d5b282a4bb21c3d157.enabled = true; # GitHub
                 connector_0c9786b2f41f41558056126bdb46c9bd.enabled = true; # GitLab
               };
             };
+          })
+          (lib.modules.mkIf config.euvlok.home.claude-code.enable {
+            programs.claude-code.skills.forgejo = ./slop/skills/forgejo;
           })
           {
             programs.zed-editor = {
@@ -2714,10 +2793,13 @@ in
         ];
         sops.secrets = {
           context7_api_key = { };
-          gitlab_host = { };
-          gitlab_token = { };
+          gitlab_simsoft = { };
+          forjego_tenjin = { };
         };
-        euvlok.home.codex.omp.enable = true;
+        euvlok.home.codex.omp = {
+          enable = true;
+          settings.modelRoles.default = "openai-codex/gpt-6-astra";
+        };
       };
       faputa = { pkgs, ... }: {
         imports = [
