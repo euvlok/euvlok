@@ -1,33 +1,32 @@
 _: {
   imports = [
-    # Most important
+    ### --- networking --- ###
+    ./forgejo.nix
     ./nginx.nix
     ./tenjin-tls.nix
-    ./grafana.nix
+    ### --- networking --- ###
+
+    ### --- utilities --- ###
     ./ecoflow.nix
-
-    # utils
     ./fail2ban.nix
+    ./freshrss.nix
+    ./grafana.nix
     ./msmtp.nix # email
+    ./vaultwarden.nix
+    ### --- utilities --- ###
 
-    # media
-    ./torrent.nix
-    ./jellyfin.nix
-    ./immich.nix
+    ### --- media --- ###
     ./anki.nix
+    ./games.nix
+    ./immich.nix
+    ./jellyfin.nix
+    ./nextcloud.nix
+    ./torrent.nix
+    ### --- media --- ###
 
-    # db
+    ### --- database --- ###
     ./postgresql.nix
     ./redis.nix
-
-    # Misc
-    ./forgejo.nix
-    ./vaultwarden.nix
-
-    # CVE-2026-109618, CVE-2026-109619
-    # ./nextcloud.nix
-
-    # Kunny
-    # ./freshrss.nix
+    ### --- database --- ###
   ];
 }
