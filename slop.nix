@@ -2621,6 +2621,8 @@ in
 
         config = lib.modules.mkMerge [
           (lib.modules.mkIf config.euvlok.home.codex.enable {
+            programs.ghostty.settings.font-family = "Hack Nerd Font Mono";
+
             home.packages = [ pkgs.unstable.glab ];
             programs.codex.skills.glab = "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
 
@@ -2726,6 +2728,28 @@ in
           pkgs.chatgpt
           pkgs.eupkgs.opencode
         ];
+      };
+      unsignedInt32 = { codexDesktopModule }: { config, ... }: {
+        imports = [
+          codexDesktopModule
+          codexEnabled
+          claudeCodeEnabled
+        ];
+        sops.secrets.context7_api_key = { };
+        programs.codexDesktopLinux = {
+          enable = true;
+          computerUseUi.enable = true;
+          remoteMobileControl.enable = true;
+          linuxFeatures = [
+            "appshots"
+            "codex-micro"
+            "pet-overlay"
+            "tray-usage"
+            "ui-tweaks"
+            "read-aloud"
+          ];
+          cliPackage = config.euvlok.home.codex.package;
+        };
       };
     };
   };

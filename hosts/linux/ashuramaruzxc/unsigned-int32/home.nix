@@ -29,28 +29,12 @@ let
 
   ashuramaruHmConfig = [
     aiModule
-    codexDesktopModule
-    (import ../../../../slop.nix).homeManager.codex
-    (import ../../../../slop.nix).homeManager.claude-code
+    ((import ../../../../slop.nix).homeManager.hosts.unsignedInt32 {
+      inherit codexDesktopModule;
+    })
     ../../../hm/ashuramaruzxc/graphics.nix
     ../../../hm/ashuramaruzxc/workstation.nix
-    ({ config, ... }: {
-      sops.secrets.context7_api_key = { };
-      programs.codexDesktopLinux = {
-        enable = true;
-        computerUseUi.enable = true;
-        remoteMobileControl.enable = true;
-        linuxFeatures = [
-          "appshots"
-          "codex-micro"
-          "pet-overlay"
-          "tray-usage"
-          "ui-tweaks"
-          "read-aloud"
-        ];
-        cliPackage = config.euvlok.home.codex.package;
-      };
-
+    {
       programs.ai = {
         omp.enable = true;
         farstep = {
@@ -59,7 +43,7 @@ let
         };
       };
       euvlok.home.nixcord.enable = true;
-    })
+    }
   ];
 
   allPackages =
