@@ -21,7 +21,7 @@
   ];
 
   security = {
-    sudo-rs = {
+    sudo = {
       wheelNeedsPassword = false;
       execWheelOnly = true;
     };
