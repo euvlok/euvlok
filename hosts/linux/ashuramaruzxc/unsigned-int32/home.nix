@@ -4,7 +4,6 @@
   catppuccinModule,
   codexDesktopModule,
   homeManagerModule,
-  jetbrainsPlugins,
   personalModule,
   sharedModule,
 }:
@@ -85,8 +84,8 @@ in
       ++ [
         {
           sops.defaultSopsFile = ../../../../secrets/ashuramaruzxc_shared.yaml;
-          sops.secrets.gitlab_token = { };
-          sops.secrets.gitlab_host = { };
+          sops.secrets.gitlab_simsoft = { };
+          sops.secrets.forjego_tenjin = { };
         }
       ]
       ++ ashuramaruHmConfig
