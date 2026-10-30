@@ -135,7 +135,7 @@
       };
     };
     cursorgen-source = {
-      url = "github:4evy/cursorgen";
+      url = "github:meanvoid/cursorgen/v0.1.4";
       flake = false;
     };
     disko-rpi = {

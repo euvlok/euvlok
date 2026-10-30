@@ -28,11 +28,11 @@
     "anime-cursors-source": {
       "flake": false,
       "locked": {
-        "lastModified": 1791224100,
-        "narHash": "sha256-zh9LC/AtUj7Goxda+HUG6EfMYDMLvWKOzWcxBMqtT1Y=",
+        "lastModified": 1792964400,
+        "narHash": "sha256-diNYXtduBXKY13gNlMmCgwSo7ZtpKMrtpeosnI39p+I=",
         "owner": "4evy",
         "repo": "anime-cursors",
-        "rev": "579ab17ed775222ab5458b5a23a0e51817e7f306",
+        "rev": "72e37ac5ad2fd2b2098353603467155f75c8e362",
         "type": "github"
       },
       "original": {
@@ -218,15 +218,16 @@
     "cursorgen-source": {
       "flake": false,
       "locked": {
-        "lastModified": 1791215100,
-        "narHash": "sha256-qY+77FTYiL3VHOUWQNQ9YvCf+WUUMKtpXkmPq4QRnRo=",
-        "owner": "4evy",
+        "lastModified": 1792963013,
+        "narHash": "sha256-QFDKJlHXTywNP0IQZIEJ4WicZhSXgcV5WkDvQia1HyQ=",
+        "owner": "meanvoid",
         "repo": "cursorgen",
-        "rev": "fcc2edd176dc12141d0cb0e445f48ba0e14416dc",
+        "rev": "53fbe520d588409914cc7669b6923621f49f48f4",
         "type": "github"
       },
       "original": {
-        "owner": "4evy",
+        "owner": "meanvoid",
+        "ref": "v0.1.4",
         "repo": "cursorgen",
         "type": "github"
       }
