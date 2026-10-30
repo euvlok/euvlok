@@ -18,7 +18,7 @@ let
     type = "timeseries";
     datasource = dashboardDatasource;
     gridPos = {
-      x = lib.trivial.mod (id - 1) 2 * 12;
+      x = ((id - 1) - (builtins.div (id - 1) 2) * 2) * 12;
       y = (builtins.div (id - 1) 2) * 8;
       w = 12;
       h = 8;
@@ -34,11 +34,11 @@ let
       };
       tooltip.mode = "multi";
     };
-    targets = lib.lists.imap0 (i: expression: {
+    targets = builtins.genList (i: {
       refId = builtins.elemAt [ "A" "B" "C" ] i;
-      inherit (expression) expr;
-      legendFormat = expression.legend;
-    }) expressions;
+      inherit (builtins.elemAt expressions i) expr;
+      legendFormat = (builtins.elemAt expressions i).legend;
+    }) (builtins.length expressions);
   };
   dashboard = {
     uid = "dnscrypt-router";
@@ -140,6 +140,11 @@ let
   };
 in
 {
+  sops.secrets.grafana_pgsql = {
+    mode = "0640";
+    owner = config.users.users.grafana.name;
+    group = config.users.users.grafana.group;
+  };
   services.grafana = {
     provision = {
       enable = true;
@@ -177,7 +182,12 @@ in
         root_url = "https://metrics.tenjin.com/grafana/";
       };
       database = {
-        type = "sqlite3";
+        type2 = "postgres";
+        name = "grafana";
+        user = "grafana";
+        password = "$__file{${config.sops.secrets.grafana_pgsql.path}}";
+        ssl_mode = "disable";
+        host = "127.0.0.1:5432";
         log_queries = true;
       };
       smtp = {
@@ -189,10 +199,10 @@ in
         from_name = "grafana notifyer";
         ehlo_identity = "metrics.tenjin-dk.com";
       };
-      users = {
+      user = {
         verify_email_enabled = true;
-        default_theme = "dark";
-        default_language = "en-US";
+        default_theme = true;
+        default_language = "en_us";
       };
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
