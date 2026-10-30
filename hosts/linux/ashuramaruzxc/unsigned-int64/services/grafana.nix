@@ -171,6 +171,12 @@ let
   };
 in
 {
+  sops.secrets.grafana_secret_key = {
+    mode = "0400";
+    owner = config.users.users.grafana.name;
+    group = config.users.users.grafana.group;
+    restartUnits = [ "grafana.service" ];
+  };
   sops.secrets.grafana_pgsql = {
     mode = "0640";
     owner = config.users.users.grafana.name;
@@ -235,11 +241,15 @@ in
         default_theme = true;
         default_language = "en_us";
       };
-      security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
+      security.secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
     };
     declarativePlugins = lib.attrsets.attrValues {
       # These datasource plugins are distributed separately in Grafana 13.
-      inherit (pkgs.grafanaPlugins) grafana-piechart-panel prometheus loki;
+      inherit (pkgs.grafanaPlugins)
+        grafana-piechart-panel
+        prometheus
+        loki
+        ;
     };
   };
   # HTTPS queries to metrics.tenjin.com use the same private CA as nginx.
