@@ -112,15 +112,19 @@ let
     buildFirefoxXpiAddon
     toTweezleExtension
     ;
-  sharedExtensions = import ../../../../modules/hm/gui/firefox/extensions.nix {
-    inherit buildFirefoxXpiAddon lib;
+  sharedExtensions = pkgs.callPackage ../../../../modules/hm/gui/firefox/extensions.nix {
+    inherit buildFirefoxXpiAddon;
   };
-  defaultExtensionsList = lib.attrsets.mapAttrsToList (_: toTweezleExtension) (
-    (import ./extensions.nix { inherit buildFirefoxXpiAddon lib; })
-    // (import ../../../../slop.nix).firefoxExtensions { inherit buildFirefoxXpiAddon lib; }
-    // {
-      inherit (sharedExtensions) "magnolia@12.34";
-    }
+  defaultExtensionsList = lib.lists.map toTweezleExtension (
+    lib.lists.filter lib.attrsets.isDerivation (
+      lib.attrsets.attrValues (
+        (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
+        // (import ../../../../slop.nix).firefoxExtensions { inherit buildFirefoxXpiAddon lib; }
+        // {
+          inherit (sharedExtensions) "magnolia@12.34";
+        }
+      )
+    )
   );
 in
 {
