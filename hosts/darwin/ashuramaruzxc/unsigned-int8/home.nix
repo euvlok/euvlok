@@ -128,7 +128,6 @@ let
 
   gamingPackages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
-      chiaki
       osu-lazer-bin
       prismlauncher
       ryubing
