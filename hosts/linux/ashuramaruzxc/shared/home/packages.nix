@@ -1,14 +1,8 @@
 {
   pkgs,
   lib,
-  jetbrainsPlugins,
 }:
 let
-  jetbrainsPackages = import ../../../../hm/ashuramaruzxc/jetbrains.nix {
-    inherit jetbrainsPlugins;
-    pkgs = pkgs.unstable;
-  };
-
   categories = {
     audio = lib.attrsets.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
 
@@ -17,7 +11,6 @@ let
         android-studio
         nixd
         ;
-      inherit (jetbrainsPackages) dataspell;
     };
 
     gaming = lib.attrsets.attrValues {
@@ -59,9 +52,9 @@ let
       ];
 
     jetbrains = [
-      jetbrainsPackages.clion
-      jetbrainsPackages.idea
-      jetbrainsPackages.rider
+      pkgs.jetbrains.clion
+      pkgs.jetbrains.idea
+      pkgs.jetbrains.rider
     ];
 
     multimedia = lib.attrsets.attrValues {

@@ -12,6 +12,13 @@ let
   catppuccinModule = lib.modules.importApply ../../hosts/hm/ashuramaruzxc/catppuccin.nix {
     catppuccinGtkModule = config.flake.homeModules.catppuccin-gtk;
   };
+  jetbrainsModule = {
+    nixpkgs.overlays = [
+      (import ../../hosts/hm/ashuramaruzxc/jetbrains.nix {
+        jetbrainsPlugins = inputs.nix-jetbrains-plugins;
+      })
+    ];
+  };
 
   mkHomeModule =
     path: homeManagerModule: extraArgs:
@@ -41,7 +48,6 @@ let
                 );
           in
           (cursorPackages.cursors.override { themes = [ "hakurei-reimu" ]; }).variants.hakurei-reimu;
-        jetbrainsPlugins = inputs.nix-jetbrains-plugins;
         sharedModule = sharedHomeModule;
       }
       // extraArgs
@@ -58,6 +64,7 @@ in
       builder = inputs.nixos-raspberrypi.lib.nixosSystem;
       modules = [
         tenjinCaModule
+        jetbrainsModule
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int16 {
           sharedModule = sharedNixosModule;
           homeModule =
@@ -84,6 +91,7 @@ in
       runner = "ubuntu-26.04";
       modules = [
         tenjinCaModule
+        jetbrainsModule
         {
           nixpkgs.overlays = [
             (final: _: {
@@ -156,6 +164,7 @@ in
       runner = "macos-latest";
       modules = [
         tenjinCaModule
+        jetbrainsModule
         (lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8 {
           containerPackage = inputs.nixpkgs.legacyPackages.aarch64-darwin.container;
           sharedModules = [
@@ -165,7 +174,6 @@ in
           homeModule = lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8/home.nix {
             inherit personalModule;
             homeManagerModule = inputs.home-manager.darwinModules.home-manager;
-            jetbrainsPlugins = inputs.nix-jetbrains-plugins;
             raycastModule = inputs.raycast.homeManagerModules.default;
             raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
             sharedModule = sharedHomeModule;

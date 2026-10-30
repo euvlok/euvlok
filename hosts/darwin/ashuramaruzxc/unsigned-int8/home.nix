@@ -1,6 +1,5 @@
 {
   homeManagerModule,
-  jetbrainsPlugins,
   personalModule,
   raycastModule,
   raycastPackage,
@@ -134,12 +133,6 @@ let
       winetricks
       xemu
       ;
-    inherit (jetbrainsPackages) dataspell;
-  };
-
-  jetbrainsPackages = import ../../../hm/ashuramaruzxc/jetbrains.nix {
-    inherit jetbrainsPlugins;
-    pkgs = pkgs.unstable;
   };
 
   allPackages =
@@ -149,7 +142,7 @@ let
     ++ authPackages
     ++ productivityPackages
     ++ gamingPackages
-    ++ (lib.attrsets.attrValues { inherit (jetbrainsPackages) rider clion idea; });
+    ++ (lib.attrsets.attrValues { inherit (pkgs.jetbrains) rider clion idea; });
 
   userExtras = [
     { home.packages = allPackages; }

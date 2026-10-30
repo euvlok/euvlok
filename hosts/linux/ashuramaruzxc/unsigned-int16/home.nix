@@ -2,7 +2,6 @@
   animeCursorsPackage,
   catppuccinModule,
   homeManagerModule,
-  jetbrainsPlugins,
   personalModule,
   sharedModule,
 }:
@@ -12,7 +11,7 @@
   ...
 }:
 let
-  homePackages = import ../shared/home/packages.nix { inherit pkgs lib jetbrainsPlugins; };
+  homePackages = import ../shared/home/packages.nix { inherit pkgs lib; };
   cursorPackage = animeCursorsPackage pkgs;
   cursorModule = lib.modules.importApply ../shared/home/cursor.nix {
     inherit cursorPackage;

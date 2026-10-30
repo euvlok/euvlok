@@ -1,8 +1,8 @@
-{
-  pkgs,
-  jetbrainsPlugins,
-}:
+{ jetbrainsPlugins }:
+final: prev:
 let
+  pkgs = final.unstable;
+
   commonPlugins = [
     "com.fapiko.jetbrains.plugins.better_direnv" # better-direnv
     "com.github.catppuccin.jetbrains_icons" # Catppuccin Icons
@@ -36,32 +36,32 @@ let
       );
 in
 {
-  rider = withPlugins pkgs.jetbrains.rider {
-    bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
-    extraPlugins = [
-      "org.toml.lang"
-      "PythonCore" # Python Community Edition
-    ];
-  };
+  jetbrains = prev.jetbrains // {
+    rider = withPlugins pkgs.jetbrains.rider {
+      bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
+      extraPlugins = [
+        "org.toml.lang"
+        "PythonCore" # Python Community Edition
+      ];
+    };
 
-  clion = withPlugins pkgs.jetbrains.clion {
-    bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
-    extraPlugins = [
-      "artsiomch.cmake" # CMake Plus requires CMake simple highlighter.
-      "artsiomch.cmake.plus"
-    ];
-  };
+    clion = withPlugins pkgs.jetbrains.clion {
+      bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
+      extraPlugins = [
+        "artsiomch.cmake" # CMake Plus requires CMake simple highlighter.
+        "artsiomch.cmake.plus"
+      ];
+    };
 
-  idea = withPlugins pkgs.jetbrains.idea {
-    extraPlugins = [
-      "org.jetbrains.plugins.go"
-      "com.demonwav.minecraft-dev"
-      "PythonCore"
-      "Pythonid"
-      "com.jetbrains.rust"
-      "org.intellij.scala"
-    ];
+    idea = withPlugins pkgs.jetbrains.idea {
+      extraPlugins = [
+        "org.jetbrains.plugins.go"
+        "com.demonwav.minecraft-dev"
+        "PythonCore"
+        "Pythonid"
+        "com.jetbrains.rust"
+        "org.intellij.scala"
+      ];
+    };
   };
-
-  dataspell = withPlugins pkgs.jetbrains.dataspell { };
 }
