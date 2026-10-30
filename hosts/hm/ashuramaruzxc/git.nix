@@ -37,7 +37,6 @@ in
     gh.settings.git_protocol = "ssh";
     git = {
       enable = true;
-      lfs.enable = true;
       includes = [
         {
           condition = "gitdir:~/Documents/work/";
@@ -64,6 +63,12 @@ in
         };
         commit.gpgsign = true;
         gpg.format = "openpgp";
+        filter.lfs = {
+          clean = "git-lfs clean -- %f";
+          smudge = "git-lfs smudge -- %f";
+          process = "git-lfs filter-process";
+          required = true;
+        };
         alias.lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
       };
     };
