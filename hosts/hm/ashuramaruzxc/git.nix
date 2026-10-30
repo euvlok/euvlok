@@ -17,7 +17,10 @@ let
     else
       lib.meta.getExe config.programs.ssh.package;
   workKey = "${config.home.homeDirectory}/.ssh/id_ed25519_sk_work";
-  # A separate SSH config prevents personal IdentityFile entries from accumulating.
+  workIdentity = {
+    name = "Maria Holovata";
+    email = "m.holovata@ukrinfosystems.ua";
+  };
   workSshConfig = pkgs.writeText "git-work-ssh-config" ''
     Host github.com
       HostName ssh.github.com
@@ -30,6 +33,9 @@ let
   '';
 in
 {
+  imports = [ ../../../modules/hm/cli/jujutsu.nix ];
+
+  euvlok.home.jujutsu.enable = true;
   home.packages = [ pkgs.watchman ];
 
   programs = {
@@ -42,9 +48,7 @@ in
           condition = "gitdir:~/Documents/work/";
           contentSuffix = "work.gitconfig";
           contents = {
-            user = {
-              name = "Maria Holovata";
-              email = ""; # Fill in the work email; do not inherit the personal email.
+            user = workIdentity // {
               signingKey = workKey;
               useConfigOnly = true;
             };
@@ -71,6 +75,27 @@ in
         };
         alias.lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
       };
+    };
+    jujutsu.settings = {
+      user = {
+        inherit (config.programs.git.settings.user) name email;
+      };
+      signing = {
+        behavior = "own";
+        backend = "gpg";
+        key = config.programs.git.settings.user.signingkey;
+      };
+      git.colocate = true;
+      "--scope" = [
+        {
+          "--when".repositories = [ "${config.home.homeDirectory}/Documents/work" ];
+          user = workIdentity;
+          signing = {
+            backend = "ssh";
+            key = workKey;
+          };
+        }
+      ];
     };
     git-credential-oauth.enable = true;
   };
