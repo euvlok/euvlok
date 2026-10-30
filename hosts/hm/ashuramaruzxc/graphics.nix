@@ -1,26 +1,19 @@
 { lib, pkgs, ... }:
 {
   home.packages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
-      krita
-      ;
-    inherit (pkgs.unstable.kdePackages)
-      kdenlive
-      ;
     # Graphics & Design
     inherit (pkgs)
+      krita
       blender # 3D creation suite
       godot # Game engine
       ansel # RAW image viewer
+      gimp3 # photoshop but worse
       ;
+    inherit (pkgs.kdePackages) kdenlive;
     inkscape = pkgs.inkscape-with-extensions.override {
       inkscapeExtensions = lib.attrsets.attrValues {
         inherit (pkgs.inkscape-extensions) textext silhouette;
       };
-    };
-    # Photoshop but worse
-    gimp = pkgs.gimp3-with-plugins.override {
-      plugins = lib.attrsets.attrValues { inherit (pkgs.gimp3Plugins) ; };
     };
   };
   # Streaming and recording
