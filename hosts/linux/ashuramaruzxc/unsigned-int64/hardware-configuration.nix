@@ -12,7 +12,7 @@
           (
             mount: subvolume:
             {
-              device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
+              device = "/dev/mapper/root";
               fsType = "btrfs";
               options = [
                 "noatime"
@@ -45,7 +45,6 @@
     kernelModules = [
       # dkms
       "kvm-amd"
-      "zenpower"
       # lvm2
       "dm-cache"
       "dm-cache-smq"
@@ -57,9 +56,6 @@
       "dm-mirror"
       "dm-snapshot"
     ];
-    extraModulePackages = lib.attrsets.attrValues {
-      inherit (config.boot.kernelPackages) zenpower;
-    };
     supportedFilesystems = [ "xfs" ];
     swraid = {
       enable = true;
@@ -145,7 +141,7 @@
   };
   ### ---------------/dev/sda2-------------------- ###
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/26953b02-1451-48a0-acdc-d02261ce95df";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
     options = [
       "noatime"
