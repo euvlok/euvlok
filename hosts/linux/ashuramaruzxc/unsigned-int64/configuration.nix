@@ -28,6 +28,7 @@
   };
 
   programs = {
+    ccache.enable = true;
     gnupg.dirmngr.enable = true;
     gnupg.agent = {
       enable = true;
@@ -36,6 +37,8 @@
       pinentryPackage = pkgs.pinentry-curses;
     };
   };
+  virtualisation.kvmfr.enable = lib.modules.mkForce false;
+
   virtualisation.oci-containers.containers.byparr = {
     image = "ghcr.io/thephaseless/byparr:latest";
     autoStart = true;
