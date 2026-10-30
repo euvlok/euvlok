@@ -5,6 +5,37 @@
   ...
 }:
 let
+  promtail = pkgs.callPackage ../../../../../packages/promtail.nix { };
+  promtailConfig = (pkgs.formats.json { }).generate "promtail-config.json" {
+    server = {
+      http_listen_port = 3031;
+      grpc_listen_port = 0;
+    };
+    positions.filename = "/tmp/positions.yaml";
+    clients = [
+      {
+        url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
+      }
+    ];
+    scrape_configs = [
+      {
+        job_name = "journal";
+        journal = {
+          max_age = "24h";
+          labels = {
+            job = "systemd-journal";
+            host = "unsigned-int64";
+          };
+        };
+        relabel_configs = [
+          {
+            source_labels = [ "__journal__systemd_unit" ];
+            target_label = "unit";
+          }
+        ];
+      }
+    ];
+  };
   datasourceUid = "dnscrypt-prometheus";
   dashboardDatasource = {
     type = "prometheus";
@@ -399,35 +430,50 @@ in
       };
     };
   };
-  services.fluent-bit = {
-    enable = true;
-    settings = {
-      pipeline = {
-        inputs = [
-          {
-            name = "systemd";
-            tag = "systemd.*";
-            db = "/var/lib/fluent-bit/systemd.db";
-            read_from_tail = true;
-          }
-        ];
-        outputs = [
-          {
-            name = "loki";
-            match = "systemd.*";
-            host = "127.0.0.1";
-            port = config.services.loki.configuration.server.http_listen_port;
-            labels = "job=systemd-journal,host=unsigned-int64";
-            label_keys = "$_SYSTEMD_UNIT";
-          }
-        ];
-      };
+  # Keep the former NixOS Promtail service without reviving its removed option
+  systemd.services.promtail = {
+    description = "Promtail log ingress";
+    wantedBy = [ "multi-user.target" ];
+    stopIfChanged = false;
+    preStart = ''
+      ${lib.getExe promtail} -config.file=${promtailConfig} -check-syntax
+    '';
+    serviceConfig = {
+      ExecStart = "${lib.getExe promtail} -config.file=${promtailConfig}";
+      Restart = "on-failure";
+      TimeoutStopSec = 10;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      PrivateTmp = true;
+      PrivateDevices = true;
+      ProtectKernelTunables = true;
+      ProtectControlGroups = true;
+      RestrictSUIDSGID = true;
+      PrivateMounts = true;
+      CacheDirectory = "promtail";
+      ReadWritePaths = [ "/tmp" ];
+      User = "promtail";
+      Group = "promtail";
+      CapabilityBoundingSet = "";
+      NoNewPrivileges = true;
+      ProtectKernelModules = true;
+      SystemCallArchitectures = "native";
+      ProtectKernelLogs = true;
+      ProtectClock = true;
+      LockPersonality = true;
+      ProtectHostname = true;
+      RestrictRealtime = true;
+      MemoryDenyWriteExecute = true;
+      PrivateUsers = true;
+      SupplementaryGroups = [ "systemd-journal" ];
+      SystemCallFilter = "@system-service";
     };
   };
-  systemd.tmpfiles.settings.fluent-bit."/var/lib/fluent-bit".d = {
-    mode = "0750";
-    user = "root";
-    group = "root";
+  users.groups.promtail = { };
+  users.users.promtail = {
+    description = "Promtail service user";
+    isSystemUser = true;
+    group = "promtail";
   };
 
   services.nginx.virtualHosts = {

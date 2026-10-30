@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  _class,
   ...
 }:
 let
@@ -18,11 +17,9 @@ let
       "ca-no-trust-rules-bundle.crt"
     else
       "ca-bundle.crt";
-  # Reuse NixOS's final public trust policy; nix-darwin exposes no bundle option
-  publicBundle = cfg.caBundle or "${publicCAs}/etc/ssl/certs/${bundleName}";
 in
 {
-  # SOPS owns the final bundle; the private CA never enters a store derivation.
+  # SOPS owns the final bundle, keeping the private CA out of the store
   security.pki.installCACerts = false;
   sops.secrets.tenjin_ca = {
     sopsFile = ../../secrets/tenjin-ca.yaml;
@@ -32,7 +29,7 @@ in
     path = caBundle;
     mode = "0444";
     file = pkgs.runCommand "tenjin-ca-bundle-template.crt" { } ''
-      cat ${publicBundle} > "$out"
+      cat ${publicCAs}/etc/ssl/certs/${bundleName} > "$out"
       printf '\n%s\n' ${lib.escapeShellArg config.sops.placeholder.tenjin_ca} >> "$out"
     '';
   };
@@ -49,12 +46,4 @@ in
       ln -s ${lib.escapeShellArg config.sops.secrets.tenjin_ca.path} "$out/anchors/tenjin-ca.pem"
     '';
   };
-}
-// lib.attrsets.optionalAttrs (_class == "darwin") {
-  # Run after sops-nix's mkAfter hook has decrypted the certificate
-  system.activationScripts.postActivation.text = lib.modules.mkOrder 1600 ''
-    /usr/bin/security add-trusted-cert -d -r trustRoot \
-      -k /Library/Keychains/System.keychain \
-      ${lib.escapeShellArg config.sops.secrets.tenjin_ca.path}
-  '';
 }

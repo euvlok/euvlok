@@ -12,7 +12,7 @@ in
 {
   programs.helix.defaultEditor = true;
   programs.helix.settings = {
-    # Preserve counted G navigation and the fork's built-in Z folding bindings
+    # Preserve counted G navigation
     keys.normal = repeatedBinds // {
       G = "goto_line";
       g = {

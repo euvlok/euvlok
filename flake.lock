@@ -240,27 +240,6 @@
         "url": "https://flakehub.com/f/cachix/git-hooks.nix/0.1.941"
       }
     },
-    "helix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
-      },
-      "locked": {
-        "lastModified": 1792511964,
-        "narHash": "sha256-blUrBVceXYw1BZ+Jr54E5WqfrXBiyMPYmFHt3iIohZA=",
-        "owner": "gj1118",
-        "repo": "helix",
-        "rev": "9e56642e5fb638d3dfea2be7c122f44d8adad592",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gj1118",
-        "repo": "helix",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -563,7 +542,6 @@
         "flake-parts": "flake-parts_2",
         "flake-schemas": "flake-schemas",
         "flake-utils": "flake-utils",
-        "helix": "helix",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nix4vscode": "nix4vscode",
@@ -577,27 +555,6 @@
         "sops-nix": "sops-nix",
         "tweezle": "tweezle",
         "zen-browser": "zen-browser"
-      }
-    },
-    "rust-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "helix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1791189933,
-        "narHash": "sha256-Y8eN7ki0Urx4Ojf4w1xSpWg8uk/3lJqK+E0Oth77rH0=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "e60029353d0c48d216bc4b065168ccd4079c166f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
       }
     },
     "sops-nix": {

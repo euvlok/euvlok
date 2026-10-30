@@ -2589,7 +2589,11 @@ in
         openrouterSettings = {
           model_provider = models.openrouter.provider;
           model = models.openrouter.model;
-          model_catalog_json = "${configDir}/openrouter-model-catalog.json";
+          # Unknown model slugs use Codex's built-in metadata fallback
+          "model_providers.openrouter.name" = "OpenRouter";
+          "model_providers.openrouter.base_url" = "https://openrouter.ai/api/v1";
+          "model_providers.openrouter.env_key" = "OPENROUTER_API_KEY";
+          "model_providers.openrouter.wire_api" = "responses";
           model_reasoning_effort = "high";
           model_context_window = 1000000;
           model_auto_compact_token_limit = 950000;
