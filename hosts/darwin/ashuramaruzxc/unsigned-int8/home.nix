@@ -87,6 +87,8 @@ let
       alt-tab-macos
       betterdisplay
       iina
+      linearmouse
+      mole-cleaner
       orbstack
       shottr
       thaw
