@@ -92,6 +92,33 @@ nix build .#darwinConfigurations.faputa.system
 
 </details>
 
+### Opening a bot PR
+
+Push your feature branch, then open **Actions → Open PR → Run workflow**.
+Choose your branch under **Use workflow from**, enter a `scope: summary`
+title, and run the workflow. An optional description goes above the PR template.
+
+The [dispatcher](.github/workflows/open-pr.yml) opens the PR as
+`github-actions[bot]` against `master` and runs CI on the selected commit.
+Running it again reuses the open PR without changing its title or description.
+Your branch must contain the workflow file. The
+[TypeScript handler](.github/scripts/pr/open.ts), locked dependencies, and PR
+template must already be on `master`, which supplies the trusted checkout.
+
+With an authenticated GitHub CLI, the same operation is:
+
+```sh
+gh api --method POST \
+  repos/euvlok/euvlok/actions/workflows/open-pr.yml/dispatches \
+  -f ref=your-feature-branch \
+  -f 'inputs[title]=ci: update action pins'
+```
+
+The [`@octocat merge` command](.github/scripts/pr/merge.ts) is for trusted
+collaborators. It requires write access, an existing current-head human
+approval, and green head checks, then submits one SHA-bound rebase merge. GitHub
+enforces conflicts and any branch rules.
+
 ## Finding things
 
 | Path                               | What's there                                       |

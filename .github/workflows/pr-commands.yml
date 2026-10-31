@@ -1,0 +1,32 @@
+name: PR Commands
+
+on:
+  issue_comment: # zizmor: ignore[dangerous-triggers]
+    types: [created]
+
+# Serialize merges and their master build dispatches
+concurrency: pr-commands-master
+
+jobs:
+  merge:
+    if: github.event.issue.pull_request && github.event.comment.user.type == 'User'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      actions: write # Bot merges need explicit master build dispatches
+      checks: read
+      contents: write
+      pull-requests: write
+      statuses: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # issue_comment github.sha is an immutable default-branch commit
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - uses: ./.github/actions/scripts/setup # zizmor: ignore[self-repository]
+
+      - run: bun .github/scripts/pr/merge.ts
+        env:
+          GH_TOKEN: ${{ github.token }}

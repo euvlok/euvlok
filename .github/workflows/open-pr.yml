@@ -1,0 +1,50 @@
+name: Open PR
+run-name: Open PR from ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "User-facing scoped title, for example ci: update action pins"
+        required: true
+        type: string
+      body:
+        description: Optional description to place above the repository PR template.
+        required: false
+        default: ""
+        type: string
+
+# The branch picker selects the PR head, not the trusted implementation
+jobs:
+  open:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    concurrency: open-pr-${{ github.ref }}
+    permissions:
+      contents: read
+      pull-requests: write
+    outputs:
+      head-sha: ${{ steps.pr.outputs.head-sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/heads/master
+          persist-credentials: false
+
+      - uses: ./.github/actions/scripts/setup # zizmor: ignore[self-repository]
+
+      - id: pr
+        run: bun .github/scripts/pr/open.ts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_TITLE: ${{ inputs.title }}
+          PR_BODY: ${{ inputs.body }}
+
+  # Bot-created PRs need explicit CI with a separate read-only token
+  ci:
+    needs: open
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml # zizmor: ignore[self-repository]
+    with:
+      head-sha: ${{ needs.open.outputs.head-sha }}
