@@ -28,6 +28,16 @@ let
   hmModuleConfig = [
     {
       programs.ssh.settings = {
+        "Match host tenjin.com localnetwork 192.168.50.0/24" = {
+          # Use the Wi-Fi router's WireGuard tunnel instead of Tailscale's
+          # advertised host route, which does not permit SSH to this address.
+          ProxyCommand = "/usr/bin/nc -4 -b en0 -G 10 %h %p";
+        };
+        "www.tenjin-dk.com" = {
+          # Bypass intermittent macOS DNS stalls for the public SSH endpoint.
+          HostName = lib.mkForce "188.34.136.238";
+          HostKeyAlias = "[www.tenjin-dk.com]:57255";
+        };
         "unsigned-int32" = {
           HostName = "unsigned-int32";
           ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";

@@ -194,10 +194,10 @@ in
   systemd.services.ecolinker = {
     after = [
       "network-online.target"
-      "postgresql.service"
+      "postgresql.target"
     ];
     wants = [ "network-online.target" ];
-    requires = [ "postgresql.service" ];
+    requires = [ "postgresql.target" ];
     serviceConfig = {
       Restart = "on-failure";
       RestartSec = "10s";
