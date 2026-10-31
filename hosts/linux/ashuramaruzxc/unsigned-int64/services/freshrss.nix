@@ -12,9 +12,7 @@
     webserver = "nginx";
     defaultUser = "admin";
     passwordFile = config.sops.secrets.freshrss.path;
-    database = {
-      type = "pgsql";
-    };
+    database.type = "pgsql";
   };
 
   services.nginx.virtualHosts."freshrss.tenjin-dk.com" = {
