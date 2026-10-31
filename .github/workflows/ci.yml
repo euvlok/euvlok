@@ -7,12 +7,18 @@ on:
       - master
       - "renovate/**"
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      head-sha:
+        description: Same-repository PR head validated by the branch-picker opener.
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-ci-${{ inputs['head-sha'] || github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -30,6 +36,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Check README links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
@@ -51,6 +58,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Verify immutable action pins
         env:
@@ -66,6 +74,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Install Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -86,7 +95,7 @@ jobs:
         run: bun run validate
 
   typescript:
-    name: TypeScript 7
+    name: TypeScript 7.1
     if: >-
       github.event_name != 'pull_request' ||
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association) ||
@@ -99,6 +108,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Install Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
@@ -108,8 +118,12 @@ jobs:
       - name: Install pinned dependencies
         run: bun install --frozen-lockfile --ignore-scripts
 
-      - name: Type-check and lint with TypeScript 7
+      - name: Type-check and lint build helpers with TypeScript 7.1
         working-directory: .github/actions/build-nix-flake-target
+        run: bun run check
+
+      - name: Type-check and lint PR command handlers with TypeScript 7.1
+        working-directory: .github/scripts
         run: bun run check
 
       - name: Run build helper tests
@@ -152,15 +166,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Install Nix
         uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
           cachix-auth-token: >-
-            ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
+            ${{ inputs['head-sha'] == '' && github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
           cachix-skip-push: >-
-            ${{ github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
+            ${{ inputs['head-sha'] != '' || github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
       - name: Check the generated contributor manifest
         env:
@@ -194,15 +209,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ inputs['head-sha'] || github.ref }}
 
       - name: Install Nix
         uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
         with:
           github-token: ${{ github.token }}
           cachix-auth-token: >-
-            ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
+            ${{ inputs['head-sha'] == '' && github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
           cachix-skip-push: >-
-            ${{ github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
+            ${{ inputs['head-sha'] != '' || github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
       - name: Run development checks
         run: nix run nixpkgs#devenv -- test --no-eval-cache
