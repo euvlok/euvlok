@@ -416,8 +416,8 @@ in
           match = "systemd.*";
           host = "127.0.0.1";
           port = config.services.loki.configuration.server.http_listen_port;
-          labels = "job=systemd-journal,host=unsigned-int64";
-          label_keys = "$_SYSTEMD_UNIT";
+          labels = "job=systemd-journal,host=unsigned-int64,unit=$_SYSTEMD_UNIT";
+          retry_limit = 10;
         }
       ];
     };
