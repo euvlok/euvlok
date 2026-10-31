@@ -100,11 +100,7 @@
       apcu = false;
     };
     maxUploadSize = "500G";
-    config = {
-      dbtype = "pgsql";
-      adminuser = "root";
-      adminpassFile = config.sops.secrets.admin.path;
-    };
+    config.dbtype = "pgsql";
     settings = {
       overwriteprotocol = "https";
       default_phone_region = "UA";
