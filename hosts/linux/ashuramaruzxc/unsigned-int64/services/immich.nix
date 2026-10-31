@@ -4,11 +4,13 @@
     enable = true;
     host = "127.0.0.1";
     port = 2283;
-    # Nginx is the only public entry point.
     openFirewall = false;
 
     mediaLocation = "/mnt/media/immich";
-    accelerationDevices = [ "/dev/dri/renderD128" ];
+    accelerationDevices = [
+      "/dev/dri/renderD128"
+      "/dev/kfd"
+    ];
 
     database = {
       enable = true;
@@ -17,8 +19,6 @@
     redis.enable = true;
 
     environment = {
-      # The 7950X3D has 16 physical cores. Leaving SMT capacity outside this
-      # budget keeps the API and the other services on this host responsive.
       CPU_CORES = "16";
       IMMICH_TRUSTED_PROXIES = "127.0.0.1,::1";
       LIBVA_DRIVER_NAME = "radeonsi";
@@ -26,6 +26,9 @@
     };
 
     machine-learning.environment = {
+      MIOPEN_USER_DB_PATH = "/var/cache/immich/miopen/db";
+      MIOPEN_CUSTOM_CACHE_DIR = "/var/cache/immich/miopen/kernels";
+
       # One worker avoids loading a second copy of every model into memory
       MACHINE_LEARNING_WORKERS = "1";
       MACHINE_LEARNING_REQUEST_THREADS = "8";

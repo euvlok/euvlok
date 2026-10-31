@@ -35,25 +35,6 @@ let
     final: prev:
     {
       inherit (final.stable) black;
-      rocmPackages = final.stable.rocmPackages.overrideScope (
-        _rocmFinal: rocmPrev: {
-          # AOTriton's attention API must match the current PyTorch package.
-          inherit (prev.rocmPackages) aotriton;
-          rocprofiler-sdk =
-            if rocmPrev.rocprofiler-sdk.version == "7.2.3" then
-              rocmPrev.rocprofiler-sdk.overrideAttrs (old: {
-                # OpenMP can discover the profiler before glog initializes.
-                patches = (old.patches or [ ]) ++ [
-                  (
-                    inputs.nixpkgs
-                    + /pkgs/development/rocm-modules/rocprofiler-sdk/0009-rocprofiler-sdk-guard-ompt-auto-start.patch
-                  )
-                ];
-              })
-            else
-              rocmPrev.rocprofiler-sdk;
-        }
-      );
       llama-cpp =
         if prev.llama-cpp.version == "0.6.0" then
           prev.llama-cpp.overrideAttrs (old: {
@@ -93,20 +74,6 @@ let
               }
             else
               pythonPrev.fastmcp-slim;
-          torch =
-            if pythonPrev.torch.version == "2.13.0" && (pythonPrev.torch.rocmSupport or false) then
-              pythonPrev.torch.overridePythonAttrs (old: {
-                # HIP's empty __noinline__ macro breaks GCC 16's <format>.
-                # Parse <chrono> first in every GNU C++ source, including c10.
-                postPatch = (old.postPatch or "") + ''
-                  substituteInPlace CMakeLists.txt \
-                    --replace-fail 'project(Torch CXX C)' \
-                    'project(Torch CXX C)
-                  add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-include;chrono>")'
-                '';
-              })
-            else
-              pythonPrev.torch;
           anyio =
             if pythonPrev.anyio.version == "4.14.2" then
               pythonPrev.anyio.overridePythonAttrs (old: {

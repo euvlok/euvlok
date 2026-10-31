@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -21,17 +20,12 @@
     ./wireguard.nix
   ];
 
-  security = {
-    # Administer the cache with sudo ccache --dir=/var/cache/ccache.
-    wrappers.nix-ccache.enable = false;
-    sudo = {
-      wheelNeedsPassword = false;
-      execWheelOnly = true;
-    };
+  security.sudo = {
+    wheelNeedsPassword = false;
+    execWheelOnly = true;
   };
 
   programs = {
-    ccache.enable = true;
     gnupg.dirmngr.enable = true;
     gnupg.agent = {
       enable = true;
@@ -55,41 +49,6 @@
       "--security-opt=no-new-privileges"
     ];
   };
-  nix.settings.extra-sandbox-paths = [ config.programs.ccache.cacheDir ];
-
-  nixpkgs.overlays = [
-    (
-      final: prev:
-      let
-        ccache = lib.meta.getExe final.buildPackages.ccache;
-        withCcache =
-          package:
-          package.overrideAttrs (old: {
-            # Launchers retain MAGMA's ROCm compiler selection and also reach
-            # Torch's CMake invocation through its Python build backend.
-            env = (old.env or { }) // {
-              CCACHE_DIR = config.programs.ccache.cacheDir;
-              CCACHE_UMASK = "007";
-              CCACHE_SLOPPINESS = "random_seed";
-              CMAKE_C_COMPILER_LAUNCHER = ccache;
-              CMAKE_CXX_COMPILER_LAUNCHER = ccache;
-              CMAKE_HIP_COMPILER_LAUNCHER = ccache;
-            };
-          });
-      in
-      {
-        onnxruntime = withCcache prev.onnxruntime;
-        magma = withCcache prev.magma;
-        pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-          (_pythonFinal: pythonPrev: {
-            torch = withCcache pythonPrev.torch;
-          })
-        ];
-      }
-    )
-  ];
-
-  environment.systemPackages = [ pkgs.ccache ];
   environment.shells = lib.attrsets.attrValues { inherit (pkgs) zsh bash fish; };
 
   euvlok.nixos.locale = {
