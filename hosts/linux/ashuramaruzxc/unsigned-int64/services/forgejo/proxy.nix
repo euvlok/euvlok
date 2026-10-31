@@ -19,7 +19,8 @@ let
       recommendedProxySettings = true;
       extraConfig = ''
         auth_request /_forgejo_auth;
-        proxy_hide_header Cache-Control;
+        # headers-more preserves the inherited security headers.
+        more_set_headers "Cache-Control: private, no-store";
       '';
     };
     "= /_forgejo_auth" = {
@@ -43,15 +44,6 @@ let
   };
 in
 {
-  # HTTP scope preserves shared security headers; empty map values add no header.
-  services.nginx.commonHttpConfig = ''
-    map "$host:$uri" $forgejo_avatar_cache_control {
-      default "";
-      "~^(${lib.escapeRegex cfg.settings.server.DOMAIN}|${lib.escapeRegex privateDomain}):/(avatars|repo-avatars)/" "private, no-store";
-    }
-    add_header Cache-Control $forgejo_avatar_cache_control always;
-  '';
-
   services.nginx.virtualHosts = {
     ${cfg.settings.server.DOMAIN} = {
       forceSSL = true;
