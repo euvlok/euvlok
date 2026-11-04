@@ -1,0 +1,22 @@
+{
+  "name": "@euvlok/github-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "bun run typecheck && bun run lint && bun run format:check",
+    "format:check": "prettier --check '**/*.ts' package.json tsconfig.json",
+    "lint": "biome lint --error-on-warnings .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "effect": "4.1.2",
+    "es-toolkit": "1.53.1"
+  },
+  "devDependencies": {
+    "@actions/core": "3.0.1",
+    "@actions/github": "9.1.1",
+    "@octokit/plugin-rest-endpoint-methods": "18.0.0",
+    "@octokit/webhooks": "14.2.0",
+    "@types/node": "26.6.4"
+  }
+}
