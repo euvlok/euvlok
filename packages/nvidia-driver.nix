@@ -1,43 +1,38 @@
 {
   lib,
   fetchurl,
-  fetchFromGitHub,
+  fetchzip,
   nix-update-script,
   stdenvNoCC,
 }:
 let
   # renovate: datasource=github-tags depName=nvidia-driver packageName=NVIDIA/open-gpu-kernel-modules
-  version = "615.78.08";
+  version = "620.70.06";
 
   src = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-x86_64/${version}/NVIDIA-Linux-x86_64-${version}.run";
-    hash = "sha256-Pj9t3cLudnoIGFMAr3vjyyhuznZpjS3eNSRZl4LQf/4=";
+    hash = "sha256-KRGOOr0IwHVZvMo9nHYjjQOUkK8DYqLlvPy+cgSv1LE=";
   };
 
   aarch64 = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-aarch64/${version}/NVIDIA-Linux-aarch64-${version}.run";
-    hash = "sha256-UHYBE1AYHoGgMfD9AS/jX+S+N8eCDWUft6qolK9Eejc=";
+    hash = "sha256-P6ZaknHg3eKk5YxJZcOIhaAqOkKszcsm/IF0EGB/PgM=";
   };
 
-  open = fetchFromGitHub {
-    owner = "NVIDIA";
-    repo = "open-gpu-kernel-modules";
-    rev = version;
-    hash = "sha256-HBINiOjL0ZJLIAJeNIBYHBnwgUXtNwPPtnFpAI1YwF4=";
+  # NVIDIA publishes release archives before the matching GitHub tags
+  open = fetchzip {
+    url = "https://download.nvidia.com/XFree86/NVIDIA-kernel-module-source/NVIDIA-kernel-module-source-${version}.tar.xz";
+    hash = "sha256-hQ8JyuzBlEu7LIxGDe09+HMWroafUWQYrfxSX127kcQ=";
   };
 
-  settings = fetchFromGitHub {
-    owner = "NVIDIA";
-    repo = "nvidia-settings";
-    rev = version;
-    hash = "sha256-inDRpG02sdDgHmlqgu/DsgK8OFdOt1fZIYyXdhlGC/c=";
+  settings = fetchzip {
+    url = "https://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-${version}.tar.bz2";
+    hash = "sha256-CFBRmXFJ9eAf5BRlHMBolahz1Pshr9giI7zcZC29oZ8=";
   };
 
-  persistenced = fetchFromGitHub {
-    owner = "NVIDIA";
-    repo = "nvidia-persistenced";
-    rev = version;
-    hash = "sha256-RzeR6Ldct6MUxjnXRyThdh5Y3jjMehTVg85MtwuWNX4=";
+  persistenced = fetchzip {
+    url = "https://download.nvidia.com/XFree86/nvidia-persistenced/nvidia-persistenced-${version}.tar.bz2";
+    hash = "sha256-FpGzhArrvR1nEt8lKDzNEnbvHvGP36gL1dINvpDAkpA=";
   };
 
   # nix-update --subpackage needs a derivation whose `src` is declared in this

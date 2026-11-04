@@ -6,7 +6,16 @@
   ...
 }:
 let
-  nvidiaDriver = config.boot.kernelPackages.nvidiaPackages.mkDriver pkgs.nvidia-driver.mkDriverArgs;
+  nvidiaDriver =
+    (config.boot.kernelPackages.nvidiaPackages.mkDriver pkgs.nvidia-driver.mkDriverArgs).overrideAttrs
+      (previous: {
+        passthru = previous.passthru // {
+          # nixpkgs only fetches open modules from GitHub, which can lag releases
+          open = previous.passthru.open.overrideAttrs {
+            src = pkgs.nvidia-driver.open.src;
+          };
+        };
+      });
 in
 {
   options.euvlok.nixos.nvidia.enable = lib.options.mkEnableOption "NVIDIA Drivers & Env Variables";
