@@ -1,0 +1,54 @@
+name: PR Commands
+
+on:
+  issue_comment: # zizmor: ignore[dangerous-triggers]
+    types: [created]
+
+jobs:
+  merge:
+    if: github.event.issue.pull_request && github.event.comment.user.type == 'User'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      checks: read
+      contents: write
+      pull-requests: write
+      statuses: read
+    outputs:
+      merged: ${{ steps.merge.outputs.merged }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # issue_comment github.sha is an immutable default-branch commit
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - uses: ./.github/actions/scripts/setup # zizmor: ignore[self-repository]
+
+      - id: merge
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          retries: 0
+          script: |
+            const { default: merge } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/pr/merge.ts`);
+            await merge({ github, context, core });
+
+  # A confirmed merge still needs master CI if posting the reply fails
+  dispatch:
+    needs: merge
+    if: always() && needs.merge.outputs.merged == 'true'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    strategy:
+      fail-fast: false
+      matrix:
+        workflow: [ci.yml, build-configurations.yml]
+    steps:
+      - name: Dispatch master workflow
+        run: gh workflow run "$WORKFLOW" --repo "$GH_REPO" --ref master
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          WORKFLOW: ${{ matrix.workflow }}
