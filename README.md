@@ -92,6 +92,45 @@ nix build .#darwinConfigurations.faputa.system
 
 </details>
 
+### Opening a bot PR
+
+Push your feature branch, then open **Actions → Open PR → Run workflow**.
+Choose your branch under **Use workflow from**, enter a `scope: summary`
+title, and run the workflow. An optional description goes above the PR template.
+
+The [dispatcher](.github/workflows/open-pr.yml) opens the PR as
+`github-actions[bot]` against `master` and runs read-only CI on the selected
+commit without a separate workflow approval. GitHub's PR-triggered runs for
+`GITHUB_TOKEN`-created PRs otherwise require approval. Running the dispatcher
+again reuses the open PR without changing its title or description.
+Your branch must contain the workflow file. The
+[TypeScript handler](.github/scripts/pr/open.ts),
+[library setup](.github/actions/scripts/setup/action.yml), lockfile, and PR
+template must already be on `master`, which supplies the trusted checkout.
+GitHub's [`github-script` action](https://github.com/actions/github-script)
+supplies Node 24 and the authenticated API client. Library setup installs only
+locked production dependencies, with lifecycle scripts disabled.
+
+With an authenticated GitHub CLI, the same operation is:
+
+```sh
+gh api --method POST \
+  repos/euvlok/euvlok/actions/workflows/open-pr.yml/dispatches \
+  -f ref=your-feature-branch \
+  -f 'inputs[title]=ci: update action pins'
+```
+
+The [`@octocat merge` command](.github/scripts/pr/merge.ts) is for trusted
+collaborators. It requires write access, an existing current-head human
+approval, and green head checks, then submits one SHA-bound rebase merge. GitHub
+enforces conflicts and any branch rules.
+
+Bot merges do not trigger push workflows. After a confirmed merge, the
+[PR Commands workflow](.github/workflows/pr-commands.yml) dispatches master CI
+and configuration builds in independent matrix jobs. The reply links to that
+Actions run, where each dispatch failure marks its matrix job failed. Dispatches
+still run if posting the reply fails.
+
 ## Finding things
 
 | Path                               | What's there                                       |

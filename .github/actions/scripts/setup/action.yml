@@ -1,0 +1,14 @@
+name: Set up PR libraries
+description: Install locked production libraries from the trusted checkout.
+
+runs:
+  using: composite
+  steps:
+    - name: Install Bun
+      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      with:
+        bun-version: 1.4.4
+
+    - name: Install trusted PR libraries
+      shell: bash
+      run: bun install --frozen-lockfile --ignore-scripts --production --filter @euvlok/github-scripts
