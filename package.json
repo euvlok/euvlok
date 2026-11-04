@@ -8,13 +8,14 @@
   "workspaces": [
     ".github/actions/build-nix-flake-target",
     ".github/renovate",
+    ".github/scripts",
     "packages/catppuccin-userstyles"
   ],
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@types/bun": "1.4.2",
     "prettier": "3.9.9",
-    "typescript": "7.0.2"
+    "typescript": "7.1.0-beta"
   },
   "trustedDependencies": [
     "re2"
