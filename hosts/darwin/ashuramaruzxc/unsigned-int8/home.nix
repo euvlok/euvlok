@@ -1,4 +1,5 @@
 {
+  aiModule,
   homeManagerModule,
   personalModule,
   raycastModule,
@@ -9,6 +10,7 @@
 let
   commonImports = [
     { home.stateVersion = "26.11"; }
+    aiModule
     (import ../../../../slop.nix).homeManager.hosts.unsignedInt8
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
@@ -27,6 +29,13 @@ let
 
   hmModuleConfig = [
     {
+      programs.ai = {
+        omp.enable = true;
+        farstep = {
+          enable = true;
+          desktop.enable = true;
+        };
+      };
       programs.ssh.settings = {
         "Match host tenjin.com localnetwork 192.168.50.0/24" = {
           # Use the Wi-Fi router's WireGuard tunnel instead of Tailscale's

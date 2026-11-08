@@ -1626,7 +1626,6 @@ let
     {
       config,
       lib,
-      osConfig ? null,
       pkgs,
       ...
     }:
@@ -2796,10 +2795,7 @@ in
           gitlab_simsoft = { };
           forjego_tenjin = { };
         };
-        euvlok.home.codex.omp = {
-          enable = true;
-          settings.modelRoles.default = "openai-codex/gpt-6-astra";
-        };
+        programs.ai.omp.settings.modelRoles.default = "openai-codex/gpt-6.1-sol";
       };
       faputa = { pkgs, ... }: {
         imports = [
