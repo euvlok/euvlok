@@ -15,6 +15,14 @@
 
   euvlok.nixos.boot.systemd-boot.enable = true;
   boot.loader.systemd-boot.memtest86.enable = true;
+  # Temporary workaround: XanMod 7.3.3 already includes this patch.
+  boot.kernelPackages = pkgs.linuxPackagesFor (
+    pkgs.linux_xanmod_latest.override (old: {
+      kernelPatches = builtins.filter (
+        patch: (patch.name or "") != "tools-add-128-bit-integer-types-for-aarch64"
+      ) (old.kernelPatches or [ ]);
+    })
+  );
   boot.kernel.sysctl = {
     "vm.swappiness" = 20;
     "vm.vfs_cache_pressure" = 75;

@@ -57,7 +57,7 @@
         euvlok.home = {
           firefox.zen-browser.enable = true;
           firefox.defaultSearchEngine = "ddg";
-          #helix.enable = true;
+          helix.enable = true;
           hyprland.enable = true;
           zed-editor.enable = true;
           nixcord.enable = true;
