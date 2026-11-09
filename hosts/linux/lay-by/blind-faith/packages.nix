@@ -59,7 +59,21 @@
       breeze-icons
       ;
     inherit (pkgs) seahorse;
-    ghidra = pkgs.ghidra.withExtensions (exts: [ exts.reva ]);
+    ghidra = pkgs.ghidra.withExtensions (exts: [
+      (
+        if exts.reva.version == "7.3.1" then
+          exts.reva.overrideAttrs (old: {
+            # Ghidra 12.2's storeFile now throws IOException; propagate it to the factory.
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace src/main/java/reva/revaFileSystem.java \
+                --replace-fail 'public void mount(TaskMonitor monitor) {' \
+                'public void mount(TaskMonitor monitor) throws IOException {'
+            '';
+          })
+        else
+          exts.reva
+      )
+    ]);
     zen-browser = zenBrowserPackage;
   };
 }
