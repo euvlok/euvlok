@@ -35,6 +35,10 @@
       ninja
       uv
 
+      # Android device control
+      android-tools
+      scrcpy
+
       # QEMU
       #qemu
       #quickemu
