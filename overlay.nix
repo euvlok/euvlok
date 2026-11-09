@@ -35,6 +35,14 @@ let
     final: prev:
     {
       inherit (final.stable) black;
+      codex =
+        if prev.codex.version == "0.167.0" then
+          prev.codex.overrideAttrs (old: {
+            # Cargo requires a system AWS-LC; OpenSSL cannot satisfy aws-lc-sys.
+            buildInputs = (old.buildInputs or [ ]) ++ [ final.aws-lc ];
+          })
+        else
+          prev.codex;
       llama-cpp =
         if prev.llama-cpp.version == "0.6.0" then
           prev.llama-cpp.overrideAttrs (old: {
