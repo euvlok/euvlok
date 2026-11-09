@@ -38,8 +38,13 @@ let
       codex =
         if prev.codex.version == "0.167.0" then
           prev.codex.overrideAttrs (old: {
-            # Cargo requires a system AWS-LC; OpenSSL cannot satisfy aws-lc-sys.
-            buildInputs = (old.buildInputs or [ ]) ++ [ final.aws-lc ];
+            # Cargo's system-library hook disables bundled copies of these dependencies.
+            buildInputs = (old.buildInputs or [ ]) ++ [
+              final.aws-lc
+              final.oniguruma
+              final.sqlite
+              final.zstd
+            ];
           })
         else
           prev.codex;
