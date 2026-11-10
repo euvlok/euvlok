@@ -20,6 +20,23 @@ let
     ];
   };
 
+  aiToolsModule = {
+    nixpkgs.overlays = [
+      (final: _: {
+        aiTools =
+          let
+            # Use 4evy/ai's pinned runtime and patched omp
+            packages = inputs.ai.packages.${final.stdenv.hostPlatform.system};
+          in
+          packages
+          // {
+            # Keep the existing Codex and Claude launchers in the profile
+            ai-tools = lib.meta.lowPrio packages.ai-tools;
+          };
+      })
+    ];
+  };
+
   mkHomeModule =
     path: homeManagerModule: extraArgs:
     lib.modules.importApply path (
@@ -92,22 +109,7 @@ in
       modules = [
         tenjinCaModule
         jetbrainsModule
-        {
-          nixpkgs.overlays = [
-            (final: _: {
-              aiTools =
-                let
-                  # Use AI's ChatGPT runtime, not EUVlok's desktop package
-                  packages = inputs.ai.packages.${final.stdenv.hostPlatform.system};
-                in
-                packages
-                // {
-                  # Keep the existing Codex and Claude launchers in the profile
-                  ai-tools = lib.meta.lowPrio packages.ai-tools;
-                };
-            })
-          ];
-        }
+        aiToolsModule
         (lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int32 {
           sharedModule = sharedNixosModule;
           homeModule =
@@ -165,6 +167,7 @@ in
       modules = [
         tenjinCaModule
         jetbrainsModule
+        aiToolsModule
         (lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8 {
           containerPackage = inputs.nixpkgs.legacyPackages.aarch64-darwin.container;
           sharedModules = [
@@ -173,6 +176,7 @@ in
           ];
           homeModule = lib.modules.importApply ../../hosts/darwin/ashuramaruzxc/unsigned-int8/home.nix {
             inherit personalModule;
+            aiModule = inputs.ai.homeManagerModules.default;
             homeManagerModule = inputs.home-manager.darwinModules.home-manager;
             raycastModule = inputs.raycast.homeManagerModules.default;
             raycastPackage = inputs.raycast.packages.aarch64-darwin.raycast;
