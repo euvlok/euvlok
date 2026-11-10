@@ -5,7 +5,6 @@
   config,
   lib,
   modulesPath,
-  pkgs,
   ...
 }:
 
@@ -27,24 +26,12 @@
   boot.kernelParams = [
     "nvidia_drm.fbdev=1"
     "quiet"
-    "splash"
     "udev.log_level=3"
     "rd.systemd.show_status=auto"
     "boot.shell_on_fail"
     "mg_lru.types=7"
   ];
   boot.consoleLogLevel = 3;
-
-  boot.plymouth = {
-    enable = true;
-    theme = "lone";
-    themePackages = with pkgs; [
-      # By default we would install all themes
-      (adi1090x-plymouth-themes.override {
-        selected_themes = [ "lone" ];
-      })
-    ];
-  };
 
   fileSystems."/" = {
     device = "/dev/mapper/luks-78ea3416-4e3a-4009-93a2-375fb7872b9e";

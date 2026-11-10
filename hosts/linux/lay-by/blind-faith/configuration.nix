@@ -15,6 +15,12 @@
 
   euvlok.nixos.boot.systemd-boot.enable = true;
   boot.loader.systemd-boot.memtest86.enable = true;
+  # Initialize the display before the initrd asks for the LUKS passphrase.
+  boot.initrd.kernelModules = [
+    "nvidia"
+    "nvidia_modeset"
+    "nvidia_drm"
+  ];
   # Temporary workaround: XanMod 7.3.3 already includes this patch.
   boot.kernelPackages = pkgs.linuxPackagesFor (
     pkgs.linux_xanmod_latest.override (old: {

@@ -2,6 +2,10 @@
   flake-file.inputs = {
     artcraft.inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
     artcraft.url = "github:Hy4ri/artcraft-flake";
+    bootvine = {
+      inputs.nixpkgs.follows = "users-nixpkgs";
+      url = "git+https://codeberg.org/wvhulle/bootvine";
+    };
     nixpkgs-unstable.follows = "users-nixpkgs";
     spicetify-nix = {
       inputs = {
