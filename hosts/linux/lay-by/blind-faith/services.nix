@@ -15,7 +15,11 @@
   # These are shared budgets, not reservations or protection for every child.
   systemd.slices."user".sliceConfig.MemoryLow = "8G";
   systemd.slices."user-1000".sliceConfig.MemoryLow = "8G";
-  systemd.services."user@1000".serviceConfig.MemoryLow = "8G";
+  systemd.services."user@1000" = {
+    # Preserve user@.service's ExecStart and session setup for this instance.
+    overrideStrategy = "asDropin";
+    serviceConfig.MemoryLow = "8G";
+  };
 
   systemd.services.navidrome.serviceConfig = {
     BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];

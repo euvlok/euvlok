@@ -55,7 +55,7 @@
     {
       device = "/var/lib/swapfile";
       size = 8 * 1024;
-      randomEncryption.enable = true;
+      randomEncryption.enable = false;
     }
   ];
 
