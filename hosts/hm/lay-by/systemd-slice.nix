@@ -1,11 +1,11 @@
 _: {
-  systemd.user.slices."no-swap" = {
+  systemd.user.slices."gaming" = {
     Unit = {
-      Description = "Disable swap for slice";
+      Description = "Prefer keeping game memory in RAM";
     };
     Slice = {
-      MemorySwapMax = "0";
-      OOMScoreAdjust = "1000";
+      # Best-effort protection; swap remains available under memory pressure.
+      MemoryLow = "8G";
     };
   };
 }

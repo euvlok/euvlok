@@ -1,9 +1,39 @@
-_: {
+{ lib, ... }:
+{
+  # Make HDMI available again when the graphical login starts.
+  systemd.services.display-manager.preStart = lib.modules.mkBefore ''
+    for connector in /sys/class/drm/card*-HDMI-A-1/status; do
+      if [ -e "$connector" ]; then
+        if ! printf 'detect\n' > "$connector"; then
+          printf 'Failed to restore HDMI detection for %s\n' "$connector" >&2
+        fi
+      fi
+    done
+  '';
+
+  # Back gaming.slice's protection through the system-level cgroup ancestors.
+  # These are shared budgets, not reservations or protection for every child.
+  systemd.slices."user".sliceConfig.MemoryLow = "8G";
+  systemd.slices."user-1000".sliceConfig.MemoryLow = "8G";
+  systemd.services."user@1000".serviceConfig.MemoryLow = "8G";
 
   systemd.services.navidrome.serviceConfig = {
     BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];
   };
   services = {
+    scx-loader = {
+      enable = true;
+      config = {
+        default_sched = "scx_lavd";
+        default_mode = "Auto";
+      };
+    };
+
+    # Target the game SSD by stable identity, even if its sdX name changes.
+    udev.extraRules = ''
+      ACTION=="add|change", SUBSYSTEM=="block", ENV{DEVTYPE}=="disk", ENV{ID_SERIAL}=="WDC_WDS100T2B0B-00YS70_190735484104", TEST=="queue/scheduler", ATTR{queue/scheduler}="kyber"
+    '';
+
     tailscale = {
       enable = false;
       extraSetFlags = [ "--ssh" ];

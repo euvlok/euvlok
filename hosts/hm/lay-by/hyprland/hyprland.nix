@@ -19,6 +19,7 @@ _: {
     end)
 
     hl.config({
+      render = { direct_scanout = 1 },
       general = {
         gaps_in = 1,
         gaps_out = 2,
@@ -84,6 +85,7 @@ _: {
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
     hl.window_rule({ name = "lay-by-suppress-maximize", match = { class = ".*" }, suppress_event = "maximize" })
+    hl.window_rule({ name = "lay-by-fullscreen-no-blur", match = { fullscreen = true }, no_blur = true })
     hl.window_rule({ name = "lay-by-titanfall2-immediate", match = { class = "^(Titanfall2.exe)$" }, immediate = true })
     hl.window_rule({ name = "lay-by-helldivers2-immediate", match = { class = "^(helldivers2.exe)$" }, immediate = true })
     hl.window_rule({ name = "lay-by-cs2-fullscreen", match = { class = "^(cs2)$" }, fullscreen_state = "2 0" })

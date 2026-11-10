@@ -21,6 +21,13 @@
     "nvidia_modeset"
     "nvidia_drm"
   ];
+  boot.kernelModules = [ "ntsync" ];
+  # Keep the boot console at DP-1's native width instead of HDMI's narrower width.
+  boot.kernelParams = [
+    "video=HDMI-A-1:d"
+    "preempt=full"
+  ];
+
   # Temporary workaround: XanMod 7.3.3 already includes this patch.
   boot.kernelPackages = pkgs.linuxPackagesFor (
     pkgs.linux_xanmod_latest.override (old: {
@@ -30,8 +37,18 @@
     })
   );
   boot.kernel.sysctl = {
-    "vm.swappiness" = 20;
+    "kernel.split_lock_mitigate" = 0;
+    "vm.swappiness" = 60;
     "vm.vfs_cache_pressure" = 75;
+  };
+
+  # 4 GiB logical capacity; compressed pages allocate RAM on demand.
+  # Prefer zram to disk swap without enabling the shared module's sysctl tuning.
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryMax = 4 * 1024 * 1024 * 1024;
+    priority = 15;
   };
 
   swapDevices = [
