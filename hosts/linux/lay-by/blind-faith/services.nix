@@ -43,8 +43,6 @@
       extraSetFlags = [ "--ssh" ];
     };
 
-    bootvine.enable = true;
-
     xserver.xkb = {
       layout = "us";
       variant = "";

@@ -127,10 +127,6 @@
       url = "github:Hy4ri/artcraft-flake";
       inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
     };
-    bootvine = {
-      url = "git+https://codeberg.org/wvhulle/bootvine";
-      inputs.nixpkgs.follows = "users-nixpkgs";
-    };
     codex-desktop-linux = {
       url = "github:ilysenko/codex-desktop-linux";
       inputs = {

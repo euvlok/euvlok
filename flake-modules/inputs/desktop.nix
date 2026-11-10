@@ -1,5 +1,9 @@
 {
   flake-file.inputs = {
+    bootvine = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "git+https://codeberg.org/wvhulle/bootvine";
+    };
     tweezle.inputs.flake-parts.follows = "flake-parts";
     tweezle.inputs.home-manager.follows = "home-manager";
     tweezle.inputs.nix-darwin.follows = "nix-darwin";

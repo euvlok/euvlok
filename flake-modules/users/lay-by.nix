@@ -18,7 +18,6 @@ in
     system = "x86_64-linux";
     runner = "ubuntu-26.04";
     modules = [
-      inputs.bootvine.nixosModules.default
       { nixpkgs.overlays = [ inputs.artcraft.overlays.default ]; }
       (lib.modules.importApply ../../hosts/linux/lay-by/blind-faith {
         sharedModule = config.flake.nixosModules.default;

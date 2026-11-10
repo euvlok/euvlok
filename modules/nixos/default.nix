@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    euvlokInputs.bootvine.nixosModules.default
     euvlokInputs.catppuccin.nixosModules.catppuccin
     (lib.modules.importApply ./catppuccin.nix { inherit euvlokInputs; })
     euvlokInputs.determinate.nixosModules.default
@@ -34,4 +35,5 @@
   ];
 
   catppuccin.autoEnable = lib.modules.mkDefault config.catppuccin.enable;
+  services.bootvine.enable = lib.modules.mkDefault true;
 }
