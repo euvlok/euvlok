@@ -39,85 +39,64 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
-  matrix-x86-64-linux:
-    name: Host Matrix (x86_64-linux)
-    if: inputs['retry-system'] == '' || inputs['retry-system'] == 'x86_64-linux'
+  matrix:
+    name: Native Host Inventory
     uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
     with:
-      runner: ubuntu-26.04
-      system: x86_64-linux
+      retry-system: ${{ inputs['retry-system'] || '' }}
       event-name: ${{ github.event_name }}
-      before-revision: ${{ github.event.before || '' }}
       retry-kind: ${{ inputs['retry-kind'] || '' }}
       retry-name: ${{ inputs['retry-name'] || '' }}
 
   build-x86-64-linux:
     name: Build Hosts (x86_64-linux)
-    needs: matrix-x86-64-linux
-    if: needs.matrix-x86-64-linux.outputs.has_hosts == 'true'
+    needs: matrix
+    if: needs.matrix.outputs.has_x86_64_linux == 'true'
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
     uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
-      hosts: ${{ needs.matrix-x86-64-linux.outputs.matrix }}
-      has-hosts: ${{ needs.matrix-x86-64-linux.outputs.has_hosts }}
+      hosts: ${{ needs.matrix.outputs.matrix_x86_64_linux }}
+      has-hosts: ${{ needs.matrix.outputs.has_x86_64_linux }}
+      event-name: ${{ github.event_name }}
+      before-revision: ${{ github.event.before || '' }}
       max-parallel: 2
       retry-attempt: ${{ inputs['retry-attempt'] || '0' }}
     secrets:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
-  matrix-aarch64-linux:
-    name: Host Matrix (aarch64-linux)
-    if: inputs['retry-system'] == '' || inputs['retry-system'] == 'aarch64-linux'
-    uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
-    with:
-      runner: ubuntu-24.04-arm
-      system: aarch64-linux
-      event-name: ${{ github.event_name }}
-      before-revision: ${{ github.event.before || '' }}
-      retry-kind: ${{ inputs['retry-kind'] || '' }}
-      retry-name: ${{ inputs['retry-name'] || '' }}
-
   build-aarch64-linux:
     name: Build Hosts (aarch64-linux)
-    needs: matrix-aarch64-linux
-    if: needs.matrix-aarch64-linux.outputs.has_hosts == 'true'
+    needs: matrix
+    if: needs.matrix.outputs.has_aarch64_linux == 'true'
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
     uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
-      hosts: ${{ needs.matrix-aarch64-linux.outputs.matrix }}
-      has-hosts: ${{ needs.matrix-aarch64-linux.outputs.has_hosts }}
+      hosts: ${{ needs.matrix.outputs.matrix_aarch64_linux }}
+      has-hosts: ${{ needs.matrix.outputs.has_aarch64_linux }}
+      event-name: ${{ github.event_name }}
+      before-revision: ${{ github.event.before || '' }}
       max-parallel: 1
       retry-attempt: ${{ inputs['retry-attempt'] || '0' }}
     secrets:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
-  matrix-aarch64-darwin:
-    name: Host Matrix (aarch64-darwin)
-    if: inputs['retry-system'] == '' || inputs['retry-system'] == 'aarch64-darwin'
-    uses: ./.github/workflows/host-matrix.yml # zizmor: ignore[self-repository]
-    with:
-      runner: macos-latest
-      system: aarch64-darwin
-      event-name: ${{ github.event_name }}
-      before-revision: ${{ github.event.before || '' }}
-      retry-kind: ${{ inputs['retry-kind'] || '' }}
-      retry-name: ${{ inputs['retry-name'] || '' }}
-
   build-aarch64-darwin:
     name: Build Hosts (aarch64-darwin)
-    needs: matrix-aarch64-darwin
-    if: needs.matrix-aarch64-darwin.outputs.has_hosts == 'true'
+    needs: matrix
+    if: needs.matrix.outputs.has_aarch64_darwin == 'true'
     permissions:
       actions: write  # The called workflow may dispatch one isolated retry.
       contents: read
     uses: ./.github/workflows/build-hosts.yml # zizmor: ignore[self-repository]
     with:
-      hosts: ${{ needs.matrix-aarch64-darwin.outputs.matrix }}
-      has-hosts: ${{ needs.matrix-aarch64-darwin.outputs.has_hosts }}
+      hosts: ${{ needs.matrix.outputs.matrix_aarch64_darwin }}
+      has-hosts: ${{ needs.matrix.outputs.has_aarch64_darwin }}
+      event-name: ${{ github.event_name }}
+      before-revision: ${{ github.event.before || '' }}
       max-parallel: 1
       retry-attempt: ${{ inputs['retry-attempt'] || '0' }}
     secrets:

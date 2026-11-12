@@ -11,6 +11,15 @@ on:
         description: Whether the matrix contains at least one host.
         required: true
         type: string
+      event-name:
+        description: Original event that selected these hosts.
+        required: true
+        type: string
+      before-revision:
+        description: Commit preceding a push, when available.
+        required: false
+        default: ""
+        type: string
       max-parallel:
         description: Maximum builds in this native platform lane.
         required: false
@@ -40,6 +49,9 @@ jobs:
     if: inputs['has-hosts'] == 'true'
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 360
+    concurrency:
+      group: native-host-${{ github.run_id }}-${{ matrix.system }}-${{ matrix.name }}
+      cancel-in-progress: false
     permissions:
       actions: write # Required to dispatch an isolated retry via the API.
       contents: read
@@ -60,6 +72,19 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout comparison revision
+        id: base-checkout
+        if: inputs.event-name == 'push'
+        continue-on-error: true
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+          path: .host-base
+          ref: >-
+            ${{ inputs.before-revision != '0000000000000000000000000000000000000000'
+              && inputs.before-revision || github.sha }}
+
       # Give store-built Nix the namespace permissions its sandbox requires
       - name: Allow Nix user namespaces
         if: runner.os == 'Linux'
@@ -77,6 +102,8 @@ jobs:
           PROFILE
           sudo apparmor_parser --replace /etc/apparmor.d/ci-nix-userns
 
+      # This storage action refuses an existing /nix, so it must precede
+      # comparison setup even when the host later proves unchanged
       - name: Reclaim maximum Nix store space
         # euvlok fork: pin transitive actions and optimize Holster storage.
         uses: euvlok/nothing-but-nix@107c493df981130c9b02eb3ec7a8ff1d300853e9 # main
@@ -84,8 +111,42 @@ jobs:
           hatchet-protocol: rampage
           root-safe-haven: ${{ matrix.name == 'unsigned-int64' && '24576' || '2048' }}
 
+      - name: Create shared ccache path
+        if: matrix.class == 'nixos'
+        shell: bash
+        run: sudo install -d -m 0755 -o root -g root /var/cache/ccache
+
+      - name: Configure Nix and caches before comparison
+        uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
+        with:
+          github-token: ${{ github.token }}
+          cachix-cache: ${{ env.CACHIX_CACHE }}
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          cachix-skip-push: false
+          # Cachix owns large build closures, not the GitHub cache quota
+          cache-store: false
+          extra-nix-config: |
+            ${{ matrix.class == 'nixos' && 'build-dir = /nix/build' || '' }}
+            ${{ matrix.class == 'nixos' && 'extra-sandbox-paths = /var/cache/ccache' || '' }}
+
+      - name: Secure shared ccache directory
+        if: matrix.class == 'nixos'
+        shell: bash
+        run: sudo install -d -m 0770 -o root -g nixbld /var/cache/ccache
+
+      - name: Compare this native host derivation
+        id: comparison
+        shell: bash
+        env:
+          EVENT_NAME: ${{ inputs.event-name }}
+          BEFORE_REVISION: ${{ inputs.before-revision }}
+          BASE_AVAILABLE: ${{ steps.base-checkout.outcome == 'success' }}
+          HOST_SYSTEM: ${{ matrix.system }}
+          HOST_NAME: ${{ matrix.name }}
+        run: bash .github/scripts/compare-host.sh
+
       - name: Add swap for Tensile generation
-        if: matrix.name == 'unsigned-int64'
+        if: steps.comparison.outputs.should-build == 'true' && matrix.name == 'unsigned-int64'
         shell: bash
         run: |
           sudo fallocate -l 16G /ci-tensile-swapfile
@@ -96,6 +157,7 @@ jobs:
 
       - name: Build and cache configuration
         id: build
+        if: steps.comparison.outputs.should-build == 'true'
         continue-on-error: true
         uses: ./.github/actions/build-nix-flake-target # zizmor: ignore[self-repository]
         with:
@@ -108,6 +170,7 @@ jobs:
           # runner time building if Cachix cannot accept the outputs.
           cachix-skip-push: false
           github-token: ${{ github.token }}
+          skip-nix-setup: true
           build-started-at-epoch: ${{ steps.build-start.outputs.epoch }}
           # Bound compiler and kernel-generation workers for the hosted runner
           build-cores: ${{ matrix.name == 'unsigned-int64' && '4' || '0' }}
@@ -197,7 +260,9 @@ jobs:
           } >>"${GITHUB_STEP_SUMMARY}"
 
       - name: Fail failed build
-        if: steps.build.outcome == 'failure' || steps.build.outputs.exit-code != '0'
+        if: >-
+          steps.comparison.outputs.should-build == 'true' &&
+          (steps.build.outcome == 'failure' || steps.build.outputs.exit-code != '0')
         shell: bash
         env:
           EXIT_CODE: ${{ steps.build.outputs.exit-code || '1' }}

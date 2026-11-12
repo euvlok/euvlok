@@ -1,22 +1,14 @@
-name: Select Native Host Changes
+name: Discover Native Hosts
 
 on:
   workflow_call:
     inputs:
-      runner:
-        description: Native runner used to evaluate this host platform.
-        required: true
-        type: string
-      system:
-        description: Nix system whose host derivations are evaluated.
-        required: true
-        type: string
       event-name:
         description: Event that invoked the calling workflow.
         required: true
         type: string
-      before-revision:
-        description: Commit preceding a push, when available.
+      retry-system:
+        description: Native Nix system selected by a retry dispatch.
         required: false
         default: ""
         type: string
@@ -31,12 +23,24 @@ on:
         default: ""
         type: string
     outputs:
-      matrix:
-        description: Changed hosts for this native platform.
-        value: ${{ jobs.select.outputs.matrix }}
-      has_hosts:
-        description: Whether this native platform selected at least one host.
-        value: ${{ jobs.select.outputs.has_hosts }}
+      matrix_x86_64_linux:
+        description: Eligible x86_64-linux hosts.
+        value: ${{ jobs.select.outputs.matrix_x86_64_linux }}
+      has_x86_64_linux:
+        description: Whether any x86_64-linux host was selected.
+        value: ${{ jobs.select.outputs.has_x86_64_linux }}
+      matrix_aarch64_linux:
+        description: Eligible aarch64-linux hosts.
+        value: ${{ jobs.select.outputs.matrix_aarch64_linux }}
+      has_aarch64_linux:
+        description: Whether any aarch64-linux host was selected.
+        value: ${{ jobs.select.outputs.has_aarch64_linux }}
+      matrix_aarch64_darwin:
+        description: Eligible aarch64-darwin hosts.
+        value: ${{ jobs.select.outputs.matrix_aarch64_darwin }}
+      has_aarch64_darwin:
+        description: Whether any aarch64-darwin host was selected.
+        value: ${{ jobs.select.outputs.has_aarch64_darwin }}
 
 permissions:
   contents: read
@@ -48,47 +52,25 @@ env:
 
 jobs:
   select:
-    name: ${{ inputs.system }}
-    runs-on: ${{ inputs.runner }}
+    name: All native host metadata
+    # Inventory is platform-independent and never forces host derivations
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
+    concurrency:
+      group: host-discovery-${{ github.run_id }}
+      cancel-in-progress: false
     outputs:
-      matrix: ${{ steps.hosts.outputs.matrix }}
-      has_hosts: ${{ steps.hosts.outputs.has-hosts }}
+      matrix_x86_64_linux: ${{ steps.hosts.outputs.matrix_x86_64_linux }}
+      has_x86_64_linux: ${{ steps.hosts.outputs.has_x86_64_linux }}
+      matrix_aarch64_linux: ${{ steps.hosts.outputs.matrix_aarch64_linux }}
+      has_aarch64_linux: ${{ steps.hosts.outputs.has_aarch64_linux }}
+      matrix_aarch64_darwin: ${{ steps.hosts.outputs.matrix_aarch64_darwin }}
+      has_aarch64_darwin: ${{ steps.hosts.outputs.has_aarch64_darwin }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-
-      - name: Checkout comparison revision
-        if: inputs.event-name == 'push'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 2
-          persist-credentials: false
-          path: .host-base
-          ref: >-
-            ${{ inputs.before-revision != '0000000000000000000000000000000000000000'
-              && inputs.before-revision || github.sha }}
-
-      - name: Prepare comparison revision
-        id: comparison
-        if: inputs.event-name == 'push'
-        shell: bash
-        env:
-          BEFORE_REVISION: ${{ inputs.before-revision }}
-        run: |
-          has_base=true
-
-          if [[ "${BEFORE_REVISION}" == "0000000000000000000000000000000000000000" ]]; then
-            if git -C .host-base rev-parse --verify HEAD^ >/dev/null; then
-              git -C .host-base checkout --detach HEAD^
-            else
-              has_base=false
-            fi
-          fi
-
-          echo "has_base=${has_base}" >>"${GITHUB_OUTPUT}"
 
       - name: Install Nix
         uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
@@ -96,70 +78,34 @@ jobs:
           github-token: ${{ github.token }}
           cachix-skip-push: true
 
-      - name: Generate matrix from native host derivations
+      - name: Generate matrix from native host metadata
         id: hosts
         shell: bash
         env:
-          BASE_AVAILABLE: ${{ steps.comparison.outputs.has_base }}
           EVENT_NAME: ${{ inputs.event-name }}
-          HOST_SYSTEM: ${{ inputs.system }}
+          RETRY_SYSTEM: ${{ inputs.retry-system }}
           RETRY_KIND: ${{ inputs.retry-kind }}
           RETRY_NAME: ${{ inputs.retry-name }}
         run: |
           host_metadata="$(nix eval --json .#hostMetadata)"
-          metadata="$(
-            jq --arg system "${HOST_SYSTEM}" \
-              'with_entries(select(.value.system == $system))' \
-              <<<"${host_metadata}"
-          )"
 
-          if [[ "${EVENT_NAME}" == "push" && "${BASE_AVAILABLE}" == "true" ]]; then
-            # Force only derivations native to this runner. Some host modules
-            # use import-from-derivation and cannot be evaluated cross-platform.
-            current_checks="$(
-              nix eval --json ".#hostChecksBySystem.${HOST_SYSTEM}"
-            )"
-
-            # The base of the first rollout does not expose the partitioned
-            # output. Treat its native hosts as changed instead of forcing the
-            # old cross-platform hostChecks output
-            # Historical bases may still need the explicit parallel evaluator
-            if previous_checks="$(
-              nix --extra-experimental-features parallel-eval \
-                eval --json "./.host-base#hostChecksBySystem.${HOST_SYSTEM}" \
-                2>/dev/null
-            )"; then
-              :
-            else
-              previous_checks='{}'
-            fi
-
-            matrix="$(
-              jq --compact-output --null-input \
-                --argjson metadata "${metadata}" \
-                --argjson current "${current_checks}" \
-                --argjson previous "${previous_checks}" \
-                '{
-                  include: [
-                    $metadata |
-                    to_entries[] |
-                    select(($previous[.key] // null) != $current[.key]) |
-                    .value + { name: .key }
-                  ]
-                }'
-            )"
-          elif [[ -n "${RETRY_KIND}" || -n "${RETRY_NAME}" ]]; then
+          # Derivation comparison belongs to each host job so one broken
+          # configuration cannot prevent other native hosts from starting
+          if [[ "${EVENT_NAME}" != "push" ]]; then
             matrix="$(
               jq --compact-output \
+                --arg system "${RETRY_SYSTEM}" \
                 --arg kind "${RETRY_KIND}" \
                 --arg name "${RETRY_NAME}" \
                 '{
                   include: [
                     to_entries[] |
-                    select(.value.class == $kind and .key == $name) |
+                    select($system == "" or .value.system == $system) |
+                    select(($kind == "" and $name == "") or
+                      (.value.class == $kind and .key == $name)) |
                     .value + { name: .key }
                   ]
-                }' <<<"${metadata}"
+                }' <<<"${host_metadata}"
             )"
           else
             matrix="$(
@@ -168,26 +114,30 @@ jobs:
                   to_entries[] |
                   .value + { name: .key }
                 ]
-              }' <<<"${metadata}"
+              }' <<<"${host_metadata}"
             )"
           fi
 
           host_count="$(jq '.include | length' <<<"${matrix}")"
 
           {
-            if ((host_count > 0)); then
-              echo "has-hosts=true"
-            else
-              echo "has-hosts=false"
-            fi
-            echo "matrix=${matrix}"
+            for system in x86_64-linux aarch64-linux aarch64-darwin; do
+              output_name="${system//-/_}"
+              native_matrix="$(
+                jq --compact-output --arg system "${system}" \
+                  '{include: [.include[] | select(.system == $system)]}' \
+                  <<<"${matrix}"
+              )"
+              echo "matrix_${output_name}=${native_matrix}"
+              echo "has_${output_name}=$(jq '.include | length > 0' <<<"${native_matrix}")"
+            done
           } >>"${GITHUB_OUTPUT}"
 
           {
-            echo "### Selected ${HOST_SYSTEM} configurations"
+            echo "### Selected native configurations"
             echo
             if ((host_count == 0)); then
-              echo "No native host derivation changed."
+              echo "No native hosts match this selection."
             else
               jq --raw-output \
                 '.include[] | "- `\(.class) / \(.owner) / \(.name)`"' \

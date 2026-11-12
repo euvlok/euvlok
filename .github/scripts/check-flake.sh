@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Release the evaluator heap between hosts while retaining the normal flake
-# schemas and checks for every output
+# Keep shared checks and native hosts independently runnable in CI
+selection="${1:-all}"
+case "${selection}" in
+  all | shared) ;;
+  host)
+    if [[ $# != 2 || -z "$2" ]]; then
+      echo "Usage: $0 [all|shared|host NAME]" >&2
+      exit 2
+    fi
+    ;;
+  *)
+    echo "Usage: $0 [all|shared|host NAME]" >&2
+    exit 2
+    ;;
+esac
+
 project_root="$(git rev-parse --show-toplevel)"
 native_system="$(nix config show --json | jq -r .system.value)"
 check_dir="$(mktemp -d)"
@@ -53,19 +67,31 @@ url = json.dumps("path:" + os.environ["PROJECT_ROOT"]).replace("${", r"\${")
 flake.write_text(flake.read_text().replace('"path:PROJECT_ROOT"', url))
 PY
 
-printf 'null\n' >"${check_dir}/selection.json"
-echo '::group::Shared flake outputs'
-# CI has a native runner per system. Avoid evaluating other systems' checks
-# again here, especially the Linux module consumers on Darwin
-nix flake check "path:${check_dir}"
-echo '::endgroup::'
-
-host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
-while IFS= read -r host; do
-  printf '%s\n' "${host}" >"${check_dir}/selection.json"
-  echo "::group::Host $(jq -r .name <<<"${host}")"
+if [[ "${selection}" != host ]]; then
+  printf 'null\n' >"${check_dir}/selection.json"
+  echo '::group::Shared flake outputs'
   nix flake check "path:${check_dir}"
   echo '::endgroup::'
-done < <(jq -c --arg system "${native_system}" \
-  'to_entries[] | select(.value.system == $system) | {name: .key, system: .value.system}' \
-  <<<"${host_metadata}")
+fi
+
+if [[ "${selection}" != shared ]]; then
+  host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
+  hosts="$(jq -c --arg system "${native_system}" \
+    --arg name "${2:-}" \
+    'to_entries[] | select(.value.system == $system) |
+      select($name == "" or .key == $name) |
+      {name: .key, system: .value.system}' <<<"${host_metadata}")"
+
+  if [[ "${selection}" == host && -z "${hosts}" ]]; then
+    echo "Host $2 is not native to ${native_system}" >&2
+    exit 1
+  fi
+
+  while IFS= read -r host; do
+    [[ -n "${host}" ]] || continue
+    printf '%s\n' "${host}" >"${check_dir}/selection.json"
+    echo "::group::Host $(jq -r .name <<<"${host}")"
+    nix flake check "path:${check_dir}"
+    echo '::endgroup::'
+  done <<<"${hosts}"
+fi
