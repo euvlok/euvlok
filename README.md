@@ -81,6 +81,12 @@ host on its matching platform:
 nix build .#nixosBuilds.blind-faith
 ```
 
+For Nanachi, use `nix build .#nixosBuilds.nanachi`. Its
+[hardware configuration](hosts/linux/bigshaq9999/nanachi/hardware-configuration.nix)
+retains the original LUKS, filesystem, and swap UUIDs. Verify these against the
+laptop before activation. Keep the system and Home Manager state versions at
+`25.05` when upgrading the existing installation.
+
 </details>
 
 <details>

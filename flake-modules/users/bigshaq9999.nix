@@ -27,4 +27,21 @@
       })
     ];
   };
+
+  euvlok.hosts.nanachi = {
+    owner = "bigshaq9999";
+    class = "nixos";
+    system = "x86_64-linux";
+    runner = "ubuntu-26.04";
+    modules = [
+      (lib.modules.importApply ../../hosts/linux/bigshaq9999/nanachi {
+        sharedModule = config.flake.nixosModules.default;
+        homeModule = lib.modules.importApply ../../hosts/linux/bigshaq9999/nanachi/home.nix {
+          homeManagerModule = inputs.home-manager.nixosModules.home-manager;
+          personalModule = ../../hosts/hm/bigshaq9999;
+          sharedModule = config.flake.homeModules.integrated;
+        };
+      })
+    ];
+  };
 }
