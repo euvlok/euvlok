@@ -22,6 +22,10 @@ inputs:
     description: Only use Cachix as a substituter without pushing build results.
     required: false
     default: "true"
+  cache-store:
+    description: Cache CI store paths in GitHub Actions, separate from public Cachix.
+    required: false
+    default: "true"
   extra-nix-config:
     description: Additional Nix configuration appended to the installer config.
     required: false
@@ -40,6 +44,27 @@ runs:
           extra-substituters = https://cache.flox.dev https://cache.nixos-cuda.org
           extra-trusted-public-keys = flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs= cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=
           ${{ inputs.extra-nix-config }}
+
+    - name: Cache CI store paths
+      if: inputs.cache-store == 'true'
+      uses: DeterminateSystems/magic-nix-cache-action@84c0677f58dcedf3b91f8223ce36a9ea5b3c84b7 # v15
+      with:
+        use-gha-cache: true
+        use-flakehub: false
+        diagnostic-endpoint: ""
+
+    - name: Cache Nix fetch and evaluation metadata
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ~/.cache/nix/eval-cache-*
+          ~/.cache/nix/fetcher-cache-*
+          ~/.cache/nix/gitv*
+          ~/.cache/nix/tarball-cache*
+        key: nix-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{ hashFiles('**/flake.lock', 'devenv.lock') }}-${{ github.sha }}
+        restore-keys: |
+          nix-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{ hashFiles('**/flake.lock', 'devenv.lock') }}-
+          nix-metadata-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-
 
     - name: Configure Cachix
       id: cachix

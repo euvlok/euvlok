@@ -4,16 +4,23 @@ on:
   issue_comment: # zizmor: ignore[dangerous-triggers]
     types: [created]
 
+permissions: {}
+
+concurrency:
+  group: pr-commands-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
 jobs:
   merge:
+    name: Merge approved pull request
     if: github.event.issue.pull_request && github.event.comment.user.type == 'User'
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
-      checks: read
-      contents: write
-      pull-requests: write
-      statuses: read
+      checks: read # Verify current-head check runs
+      contents: write # Submit the approved SHA-bound rebase merge
+      pull-requests: write # Read approvals and reply to the command
+      statuses: read # Verify legacy commit statuses
     outputs:
       merged: ${{ steps.merge.outputs.merged }}
     steps:
@@ -35,12 +42,13 @@ jobs:
 
   # A confirmed merge still needs master CI if posting the reply fails
   dispatch:
+    name: Dispatch ${{ matrix.workflow }}
     needs: merge
     if: always() && needs.merge.outputs.merged == 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
-      actions: write
+      actions: write # Start master checks after a confirmed merge
     strategy:
       fail-fast: false
       matrix:

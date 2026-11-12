@@ -25,6 +25,10 @@ inputs:
   github-token:
     description: GitHub token used by the Nix installer for GitHub fetches.
     required: true
+  skip-nix-setup:
+    description: Reuse Nix and Cachix already configured by the calling job.
+    required: false
+    default: "false"
   build-timeout-seconds:
     description: Soft deadline for the host build, in seconds.
     required: false
@@ -94,6 +98,7 @@ runs:
       run: sudo install -d -m 0755 -o root -g root /var/cache/ccache
 
     - name: Install Nix
+      if: inputs.skip-nix-setup != 'true'
       uses: ./.github/actions/setup-nix # zizmor: ignore[self-repository]
       with:
         github-token: ${{ inputs.github-token }}
@@ -112,7 +117,15 @@ runs:
     - name: Install Bun
       uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       with:
-        bun-version: 1.4.2
+        bun-version: 1.4.4
+
+    - name: Cache Bun package downloads
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.bun/install/cache
+        key: bun-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock') }}
+        restore-keys: |
+          bun-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Install build helper dependencies
       shell: bash
