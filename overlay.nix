@@ -63,6 +63,9 @@ let
       clipcat =
         if prev.clipcat.version == "0.26.0" then
           prev.clipcat.overrideAttrs (old: {
+            # https://github.com/NixOS/nixpkgs/pull/585611
+            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.pkg-config ];
+            buildInputs = (old.buildInputs or [ ]) ++ [ final.libgit2 ];
             # Rust removed these lints; Clipcat's deny policy makes them fatal.
             postPatch = (old.postPatch or "") + ''
               sed -i \
@@ -74,6 +77,19 @@ let
           })
         else
           prev.clipcat;
+      foundry =
+        if prev.foundry.version == "1.8.6" then
+          prev.foundry.overrideAttrs (old: {
+            # https://github.com/NixOS/nixpkgs/pull/587157
+            buildInputs = (old.buildInputs or [ ]) ++ [
+              final.aws-lc
+              final.rust-jemalloc-sys
+              final.sqlite
+              final.zstd
+            ];
+          })
+        else
+          prev.foundry;
       pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
         (_pythonFinal: pythonPrev: {
           fastmcp-slim =
