@@ -128,8 +128,10 @@ gh api --method POST \
 
 The [`@octocat merge` command](.github/scripts/pr/merge.ts) is for trusted
 collaborators. It requires write access, an existing current-head human
-approval, and green head checks, then submits one SHA-bound rebase merge. GitHub
-enforces conflicts and any branch rules.
+approval, and green head checks in GitHub's current rollup, including a
+successful GitHub Actions check. Superseded workflow failures do not block it.
+The command submits one SHA-bound rebase merge. GitHub enforces conflicts and
+any branch rules.
 
 Bot merges do not trigger push workflows. After a confirmed merge, the
 [PR Commands workflow](.github/workflows/pr-commands.yml) dispatches master CI

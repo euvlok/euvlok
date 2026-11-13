@@ -9,6 +9,17 @@ import {
 
 const DECISIVE_STATES = ["APPROVED", "CHANGES_REQUESTED", "DISMISSED"];
 
+type CheckRollup = {
+  state: string;
+  contexts: {
+    nodes: ({
+      conclusion?: string | null;
+      checkSuite?: { app: { slug: string } | null } | null;
+    } | null)[];
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  };
+};
+
 export async function requireHumanApproval(
   github: GitHub,
   repo: Repository,
@@ -63,34 +74,55 @@ export async function requireGreenCI(
   repo: Repository,
   head: string,
 ) {
-  const checks = await github.paginate(github.rest.checks.listForRef, {
-    ...repo,
-    ref: head,
-    filter: "latest",
-    per_page: 100,
-  });
-  if (
-    !checks.some(
-      (check) =>
-        check.app?.slug === "github-actions" && check.conclusion === "success",
-    ) ||
-    checks.some(
-      (check) =>
-        check.status !== "completed" ||
-        (check.conclusion !== "success" &&
-          check.conclusion !== "neutral" &&
-          check.conclusion !== "skipped"),
-    )
-  ) {
-    throw new Refusal(
-      "Current-head checks need successful CI and no pending or failing results.",
+  let cursor: string | null = null;
+  do {
+    // REST's latest filter retains obsolete runs from separate check suites
+    const {
+      repository,
+    }: {
+      repository: {
+        object: { statusCheckRollup: CheckRollup | null } | null;
+      } | null;
+    } = await github.graphql(
+      `query($owner: String!, $repo: String!, $head: GitObjectID!, $cursor: String) {
+        repository(owner: $owner, name: $repo) {
+          object(oid: $head) {
+            ... on Commit {
+              statusCheckRollup {
+                state
+                contexts(first: 100, after: $cursor) {
+                  nodes {
+                    ... on CheckRun {
+                      conclusion
+                      checkSuite { app { slug } }
+                    }
+                  }
+                  pageInfo { hasNextPage endCursor }
+                }
+              }
+            }
+          }
+        }
+      }`,
+      { ...repo, head, cursor },
     );
-  }
-  const { data: status } = await github.rest.repos.getCombinedStatusForRef({
-    ...repo,
-    ref: head,
-  });
-  if (status.total_count > 0 && status.state !== "success") {
-    throw new Refusal("Current-head commit statuses are pending or failing.");
-  }
+    const rollup: CheckRollup | null | undefined =
+      repository?.object?.statusCheckRollup;
+    // The aggregate covers all current checks and commit statuses, on every page
+    if (rollup?.state !== "SUCCESS") break;
+    if (
+      rollup.contexts.nodes.some(
+        (check) =>
+          check?.conclusion === "SUCCESS" &&
+          check.checkSuite?.app?.slug === "github-actions",
+      )
+    )
+      return;
+    cursor = rollup.contexts.pageInfo.hasNextPage
+      ? rollup.contexts.pageInfo.endCursor
+      : null;
+  } while (cursor);
+  throw new Refusal(
+    "Current-head checks need successful CI and no pending or failing results.",
+  );
 }
