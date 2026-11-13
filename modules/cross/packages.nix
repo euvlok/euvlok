@@ -41,6 +41,7 @@ let
 
     # Modern UNIX
     inherit (pkgs.unstable)
+      ast-grep # Structural code search and rewriting
       bat # cat
       bottom # htop & btop
       btop # top

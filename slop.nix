@@ -2605,6 +2605,13 @@ in
       }:
       let
         inherit (codexLib { inherit config lib pkgs; }) configDir;
+        astGrepSkillSource = pkgs.fetchFromGitHub {
+          owner = "ast-grep";
+          repo = "agent-skill";
+          rev = "0613dc7f82bbfb3b557380b54726b92f73358460";
+          hash = "sha256-HFZVX/UYsct8EMtkczBGJNr9RjjDz77zY6SHS1WlKkc=";
+        };
+        astGrepSkill = "${astGrepSkillSource}/ast-grep/skills/ast-grep";
         ansibleSkillsSource = pkgs.fetchFromGitHub {
           owner = "leogallego";
           repo = "claude-ansible-skills";
@@ -2697,6 +2704,7 @@ in
             programs.ghostty.settings.font-family = "Hack Nerd Font Mono";
 
             home.packages = [ pkgs.unstable.glab ];
+            programs.codex.skills.ast-grep = astGrepSkill;
             programs.codex.skills.glab = "${pkgs.unstable.glab.src}/internal/commands/skills/bundled/assets/glab";
             programs.codex.skills.forgejo = ./slop/skills/forgejo;
 
@@ -2713,6 +2721,7 @@ in
             };
           })
           (lib.modules.mkIf config.euvlok.home.claude-code.enable {
+            programs.claude-code.skills.ast-grep = astGrepSkill;
             programs.claude-code.skills.forgejo = ./slop/skills/forgejo;
           })
           {

@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 {
@@ -13,10 +12,6 @@
       xserver.enable = true;
       libinput.enable = true;
       gvfs.enable = true;
-      gnome.gnome-keyring.enable = true;
-      gnome.gnome-settings-daemon.enable = true;
-      dbus.packages = [ (pkgs.gcr_3 or pkgs.gcr) ];
-      udev.packages = lib.attrsets.attrValues { inherit (pkgs.unstable) gnome-settings-daemon; };
     };
   };
 }

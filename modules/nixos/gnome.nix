@@ -19,10 +19,24 @@ in
   config = lib.modules.mkIf config.euvlok.nixos.gnome.enable {
     euvlok.nixos.gui.enable = lib.modules.mkDefault true;
 
+    programs.kdeconnect = {
+      enable = true;
+      package = lib.mkIf (!config.euvlok.nixos.plasma.enable) pkgs.unstable.gnomeExtensions.gsconnect;
+    };
+
     services = {
+      dbus.packages = [ (pkgs.gcr_3 or pkgs.gcr) ];
+      udev.packages = lib.attrsets.attrValues { inherit (pkgs.unstable) gnome-settings-daemon; };
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
       gnome = {
+        gnome-keyring.enable = true;
+        gnome-settings-daemon.enable = true;
+        at-spi2-core.enable = true;
+        core-developer-tools.enable = true;
+        core-utilities.enable = true;
+        localsearch.enable = true;
+        tinysparql.enable = true;
         glib-networking.enable = true;
         gnome-browser-connector.enable = true;
         gnome-online-accounts.enable = true;
@@ -52,12 +66,9 @@ in
           epiphany # Browser
           evince # Docs
           geary # Email
-          # gnome-builder
           gnome-console
-          # gnome-maps
           gnome-music
           gnome-tour
-          # gnome-weather
           ;
       };
     };

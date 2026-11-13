@@ -3,6 +3,12 @@ final: prev:
 let
   pkgs = final.unstable;
 
+  linuxVmOptions = pkgs.writeText "jetbrains-extra.vmoptions" ''
+    -Dawt.toolkit.name=WLToolkit
+    -Dsun.awt.wl.WindowDecorationStyle=server
+    -Dsun.java2d.vulkan=true
+  '';
+
   commonPlugins = [
     "com.fapiko.jetbrains.plugins.better_direnv" # better-direnv
     "com.github.catppuccin.jetbrains_icons" # Catppuccin Icons
@@ -27,7 +33,27 @@ let
     )).overrideAttrs
       (
         oldAttrs:
-        pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
+          let
+            launcherName = pkgs.lib.strings.toLower ide.vmoptsIDE;
+            vmOptionsName = launcherName + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.is64bit "64";
+            vmOptions = pkgs.concatText "${launcherName}.vmoptions" [
+              "${ide}/${ide.meta.mainProgram}/bin/${vmOptionsName}.vmoptions"
+              linuxVmOptions
+            ];
+          in
+          {
+            buildPhase = oldAttrs.buildPhase + ''
+              for launcher in "$out/${ide.meta.mainProgram}/bin/${launcherName}" \
+                "$out/${ide.meta.mainProgram}/bin/${launcherName}.sh"; do
+                if [ -f "$launcher" ]; then
+                  wrapProgram "$launcher" --set ${ide.vmoptsIDE}_VM_OPTIONS ${vmOptions}
+                fi
+              done
+            '';
+          }
+        )
+        // pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
           buildPhase = oldAttrs.buildPhase + ''
             substituteInPlace "$out/bin/${ide.meta.mainProgram}" \
               --replace-quiet ${pkgs.lib.strings.escapeShellArg (toString ide)} "$out"
@@ -41,26 +67,27 @@ in
       bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
       extraPlugins = [
         "org.toml.lang"
-        "PythonCore" # Python Community Edition
+        "PythonCore"
       ];
     };
 
     clion = withPlugins pkgs.jetbrains.clion {
       bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
       extraPlugins = [
-        "artsiomch.cmake" # CMake Plus requires CMake simple highlighter.
+        "artsiomch.cmake"
         "artsiomch.cmake.plus"
       ];
     };
 
     idea = withPlugins pkgs.jetbrains.idea {
       extraPlugins = [
-        "org.jetbrains.plugins.go"
         "com.demonwav.minecraft-dev"
-        "PythonCore"
-        "Pythonid"
+        "com.intellij.nativeDebug"
         "com.jetbrains.rust"
         "org.intellij.scala"
+        "org.jetbrains.plugins.go"
+        "PythonCore"
+        "Pythonid"
       ];
     };
   };

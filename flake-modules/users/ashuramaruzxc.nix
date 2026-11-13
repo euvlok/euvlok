@@ -57,10 +57,19 @@ let
                   final: _: {
                     cursorgen = pkgs.python314Packages.callPackage "${inputs.cursorgen-source}/pkgs/cursorgen.nix" { };
                     # Scope the newer dependencies to the converter
-                    converter = pkgs.python314Packages.callPackage "${inputs.anime-cursors-source}/pkgs/converter.nix" {
-                      inherit (final) cursorgen;
-                      inherit (final.pythonPackages) msgspec platformdirs;
-                    };
+                    converter =
+                      (pkgs.python314Packages.callPackage "${inputs.anime-cursors-source}/pkgs/converter.nix" {
+                        inherit (final) cursorgen;
+                        inherit (final.pythonPackages) msgspec platformdirs;
+                      }).overridePythonAttrs
+                        (old: {
+                          # Allow Nixpkgs' uv-build 0.13 until upstream widens its bound:
+                          # https://github.com/4evy/anime-cursors/blob/72e37ac5ad2fd2b2098353603467155f75c8e362/pyproject.toml
+                          postPatch = (old.postPatch or "") + ''
+                            substituteInPlace pyproject.toml \
+                              --replace-fail 'uv_build>=0.11.28,<0.13' 'uv_build>=0.11.28,<0.14'
+                          '';
+                        });
                   }
                 );
           in

@@ -163,7 +163,7 @@ let
     ++ authPackages
     ++ productivityPackages
     ++ gamingPackages
-    ++ (lib.attrsets.attrValues { inherit (pkgs.jetbrains) rider clion idea; });
+    ++ (lib.attrsets.attrValues { inherit (pkgs.unstable.jetbrains) rider clion idea; });
 
   userExtras = [
     { home.packages = allPackages; }

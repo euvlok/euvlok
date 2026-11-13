@@ -17,6 +17,7 @@
     ./audio.nix
     ./boot.nix
     ./cosmic.nix
+    ./desktop.nix
     ./gnome.nix
     ./hardware.nix
     ./locale.nix

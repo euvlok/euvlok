@@ -7,11 +7,12 @@
     };
 
   config = lib.modules.mkIf config.euvlok.nixos.audio.enable {
+    environment.systemPackages = [ config.services.pipewire.package.jack ];
+
     services.pipewire = {
       enable = true;
       alsa.enable = true;
       audio.enable = true;
-      jack.enable = true;
       pulse.enable = true;
       wireplumber.enable = true;
     };

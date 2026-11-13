@@ -59,7 +59,6 @@ let
     ]
     ++ [
       pkgs.unstable.piper
-      # until euroffice is statble
       pkgs.unstable.softmaker-office-nx
 
     ];

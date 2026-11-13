@@ -48,6 +48,8 @@ in
 
   config = lib.modules.mkIf config.euvlok.nixos.plasma.enable {
     euvlok.nixos.gui.enable = lib.modules.mkDefault true;
+    qt.platformTheme = "kde";
+    programs.kdeconnect.enable = true;
 
     nixpkgs.overlays = [
       (_: prev: {
