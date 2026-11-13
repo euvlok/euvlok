@@ -31,8 +31,7 @@
     keyboard.qmk.enable = true;
     bluetooth = {
       settings.General = {
-        ControllerMode = "bredr";
-        AutoEnable = true;
+        ControllerMode = "dual";
         Experimental = true;
       };
     };
