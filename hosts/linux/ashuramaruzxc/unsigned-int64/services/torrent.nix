@@ -4,6 +4,16 @@
   pkgs,
   ...
 }:
+let
+  commonrrsetting = {
+    auth = {
+      method = "Forms";
+      required = "DisabledForLocalAddresses";
+      trustcgnatipaddresses = true;
+    };
+    server.trustednetworks = "172.16.31.1/32";
+  };
+in
 {
   sops.secrets.transmission_env = {
     mode = "0640";
@@ -60,24 +70,36 @@
     enable = true;
     user = "jellyfin";
     group = "jellyfin";
+    settings = commonrrsetting;
   };
   services.lidarr = {
     enable = true;
     user = "jellyfin";
     group = "jellyfin";
+    settings = commonrrsetting;
   };
   services.readarr = {
     enable = true;
     user = "jellyfin";
     group = "jellyfin";
+    settings = commonrrsetting;
   };
   services.bazarr = {
     enable = true;
     listenPort = 8763;
     user = "jellyfin";
     group = "jellyfin";
+    settings = commonrrsetting;
   };
   services.prowlarr.enable = true;
+  services.unbound.settings.server.local-data = [
+    ''"lib.tenjin.com. 10800 IN A 172.16.31.1"''
+    ''"lib.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1"''
+  ];
+  networking.hosts = {
+    "172.16.31.1" = [ "lib.tenjin.com" ];
+    "fd17:216b:31bc:1::1" = [ "lib.tenjin.com" ];
+  };
   users.groups.transmission = {
     gid = 70;
     members = [
