@@ -10,6 +10,7 @@
   cosmic = mkDesktopModule ../../modules/nixos/cosmic.nix;
   gnome = mkDesktopModule ../../modules/nixos/gnome.nix;
   hardware = ../../modules/nixos/hardware.nix;
+  kmscon = ../../modules/nixos/kmscon.nix;
   locale = ../../modules/nixos/locale.nix;
   networking = ../../modules/nixos/networking.nix;
   nix-ld = ../../modules/nixos/nix-ld/nix-ld.nix;

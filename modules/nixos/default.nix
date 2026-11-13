@@ -21,6 +21,7 @@
     ./desktop.nix
     ./gnome.nix
     ./hardware.nix
+    ./kmscon.nix
     ./locale.nix
     ./networking.nix
     ./nix-ld/nix-ld.nix
