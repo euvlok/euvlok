@@ -48,7 +48,6 @@ let
       programs.nh.enable = true;
       euvlok.home = {
         helix.enable = true;
-        vscode.enable = true;
         yazi.enable = true;
       };
       euvlok.catppuccinGtk = {
