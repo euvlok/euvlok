@@ -1719,6 +1719,7 @@ let
           OTEL_LOG_TOOL_CONTENT = "0";
           OTEL_LOG_TOOL_DETAILS = "0";
           OTEL_LOG_RAW_API_BODIES = "0";
+          NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
         };
 
         programs.claude-code = {
