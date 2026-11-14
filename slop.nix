@@ -2161,7 +2161,7 @@ in
                 agent = {
                   dock = "right";
                   model_parameters = [ ];
-                  sidebar_side = "right";
+                  threads_sidebar.position = "right";
                 };
 
                 agent_servers = {
