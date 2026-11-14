@@ -19,6 +19,7 @@ let
           "8"
           "9"
           "10"
+          "11"
         ];
       in
       lib.attrsets.genAttrs versions (version: pkgs.unstable.dotnetCorePackages."sdk_${version}_0-bin");

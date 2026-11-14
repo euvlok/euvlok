@@ -151,6 +151,18 @@ let
         }
     // inputs.nixpkgs.lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+      llvmPackages_latest = prev.llvmPackages_latest // {
+        lldb =
+          if prev.llvmPackages_latest.lldb.version == "23.1.3" then
+            prev.llvmPackages_latest.lldb.overrideAttrs (old: {
+              # LLVM's xcrun fallback cannot find codesign in the build sandbox.
+              cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+                "-DCMAKE_CODESIGN=${final.darwin.sigtool}/bin/codesign"
+              ];
+            })
+          else
+            prev.llvmPackages_latest.lldb;
+      };
     };
 
   packageSetArgs =

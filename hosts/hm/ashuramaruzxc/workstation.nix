@@ -54,7 +54,11 @@
       cpp.enable = true;
       csharp = {
         enable = true;
-        version = "10";
+        version = "11";
+      };
+      fsharp = {
+        enable = true;
+        version = "11";
       };
       go.enable = true;
       haskell.enable = true;
@@ -66,6 +70,8 @@
       kotlin.enable = true;
       lisp.enable = true;
       lua.enable = true;
+      perl.enable = true;
+      php.enable = true;
       python.enable = true;
       ruby.enable = true;
       rust.enable = true;

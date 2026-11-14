@@ -39,7 +39,7 @@
     formatter = "language_server";
   };
   zed.lsp.gopls = {
-    binary.path = "gopls";
+    binary.path = lib.meta.getExe pkgs.unstable.gopls;
     initialization_options = {
       gofumpt = true;
       staticcheck = true;

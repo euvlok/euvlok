@@ -6,7 +6,7 @@
     "nimsaem.nimvscode"
   ];
   vscode.settings."[nim]" = {
-    "editor.defaultFormatter" = "kosz78.nim";
+    "editor.defaultFormatter" = "nimLang.nimlang";
     "editor.formatOnSave" = true;
   };
   helix.languageServers.nimlsp.command = "nimlsp";
@@ -18,6 +18,6 @@
     }
   ];
   zed.extensions = [ "nim" ];
-  zed.languages."Nim".language_servers = [ "nimlsp" ];
-  zed.lsp.nimlsp.binary.path = "nimlsp";
+  zed.languages."Nim".language_servers = [ "nim" ];
+  zed.lsp.nim.binary.path = lib.meta.getExe pkgs.unstable.nimlsp;
 }

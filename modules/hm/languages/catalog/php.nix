@@ -35,7 +35,7 @@
     prettier.allowed = false;
   };
   zed.lsp.intelephense.binary = {
-    path = "intelephense";
+    path = lib.meta.getExe pkgs.unstable.intelephense;
     arguments = [ "--stdio" ];
   };
 }

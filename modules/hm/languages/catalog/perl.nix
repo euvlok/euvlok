@@ -21,6 +21,9 @@
     }
   ];
   zed.extensions = [ "perl" ];
-  zed.languages."Perl".language_servers = [ "perlnavigator" ];
-  zed.lsp.perlnavigator.binary.path = "perlnavigator";
+  zed.languages."Perl".language_servers = [ "perlnavigator-server" ];
+  zed.lsp.perlnavigator-server.binary = {
+    path = lib.meta.getExe pkgs.unstable.perlnavigator;
+    arguments = [ "--stdio" ];
+  };
 }

@@ -32,5 +32,5 @@
     language_servers = [ "sourcekit-lsp" ];
     formatter = "language_server";
   };
-  zed.lsp.sourcekit-lsp.binary.path = "sourcekit-lsp";
+  zed.lsp.sourcekit-lsp.binary.path = lib.meta.getExe pkgs.unstable.sourcekit-lsp;
 }

@@ -31,11 +31,11 @@
   ];
   zed.extensions = [ "haskell" ];
   zed.languages."Haskell" = {
-    language_servers = [ "haskell-language-server" ];
+    language_servers = [ "hls" ];
     formatter = "language_server";
   };
-  zed.lsp.haskell-language-server.binary = {
-    path = "haskell-language-server-wrapper";
+  zed.lsp.hls.binary = {
+    path = lib.meta.getExe' pkgs.unstable.haskell-language-server "haskell-language-server-wrapper";
     arguments = [ "--lsp" ];
   };
 }

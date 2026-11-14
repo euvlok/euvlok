@@ -67,7 +67,7 @@ let
           lsp = lib.options.mkOption {
             type = jsonType;
             default = { };
-            description = "Zed language server settings for ${displayName}";
+            description = "Zed language server settings for ${displayName}; binary paths must be absolute";
           };
         };
         versions = lib.options.mkOption {

@@ -6,7 +6,13 @@
   ...
 }:
 {
-  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) omnisharp-roslyn netcoredbg; };
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable)
+      ilspycmd
+      netcoredbg
+      omnisharp-roslyn
+      ;
+  };
   versionMap = versionMappings.dotnet;
   defaultVersion = getLatestVersion versionMappings.dotnet;
   vscode.extensions = [
@@ -31,7 +37,7 @@
     };
   };
   zed.lsp.omnisharp.binary = {
-    path = "OmniSharp";
+    path = lib.meta.getExe' pkgs.unstable.omnisharp-roslyn "OmniSharp";
     arguments = [ "-lsp" ];
   };
 }

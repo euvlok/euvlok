@@ -6,7 +6,14 @@
   ...
 }:
 {
-  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) jdt-language-server gradle maven; };
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable)
+      cfr
+      gradle
+      jdt-language-server
+      maven
+      ;
+  };
   versionMap = versionMappings.java;
   defaultVersion = getLatestVersion versionMappings.java;
   vscode.extensions = [
@@ -26,12 +33,11 @@
   };
   zed.extensions = [
     "java"
-    "java-eclipse-jdtls"
   ];
   zed.languages."Java" = {
     language_servers = [ "jdtls" ];
     formatter = "language_server";
     prettier.allowed = false;
   };
-  zed.lsp.jdtls.binary.path = "jdtls";
+  zed.lsp.jdtls.binary.path = lib.meta.getExe' pkgs.unstable.jdt-language-server "jdtls";
 }

@@ -77,7 +77,11 @@ let
           cpp.enable = true;
           csharp = {
             enable = true;
-            version = "10";
+            version = "11";
+          };
+          fsharp = {
+            enable = true;
+            version = "11";
           };
           go.enable = true;
           haskell.enable = true;
@@ -87,11 +91,15 @@ let
           };
           javascript.enable = true;
           kotlin.enable = true;
+          lisp.enable = true;
           lua.enable = true;
+          perl.enable = true;
+          php.enable = true;
           python.enable = true;
           ruby.enable = true;
           rust.enable = true;
           scala.enable = true;
+          swift.enable = true;
         };
       };
     }
@@ -163,7 +171,7 @@ let
     ++ authPackages
     ++ productivityPackages
     ++ gamingPackages
-    ++ (lib.attrsets.attrValues { inherit (pkgs.unstable.jetbrains) rider clion idea; });
+    ++ (lib.attrsets.attrValues { inherit (pkgs.jetbrains) rider clion idea; });
 
   userExtras = [
     { home.packages = allPackages; }

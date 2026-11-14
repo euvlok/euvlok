@@ -21,5 +21,5 @@
     language_servers = [ "kotlin-language-server" ];
     formatter = "language_server";
   };
-  zed.lsp.kotlin-language-server.binary.path = "kotlin-language-server";
+  zed.lsp.kotlin-language-server.binary.path = lib.meta.getExe pkgs.unstable.kotlin-language-server;
 }

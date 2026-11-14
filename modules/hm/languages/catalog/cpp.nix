@@ -1,10 +1,22 @@
 { pkgs, lib, ... }:
+let
+  llvmPackages = pkgs.unstable.llvmPackages_latest;
+  clangdArguments = [
+    # Query only the selected compiler wrappers for SDK and standard-library headers.
+    "--query-driver=${llvmPackages.clang}/bin/clang,${llvmPackages.clang}/bin/clang++"
+  ];
+in
 {
   packages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
-      ccls
+    inherit (llvmPackages)
       clang
       clang-tools
+      lld
+      lldb
+      llvm
+      ;
+    inherit (pkgs.unstable)
+      ccls
       cmake
       gdb
       gnumake
@@ -32,9 +44,13 @@
     };
     "C_Cpp.default.cppStandard" = "c++23";
     "C_Cpp.default.cStandard" = "c23";
-    "C_Cpp.default.compilerPath" = lib.meta.getExe' pkgs.unstable.clang "clang";
+    "C_Cpp.default.compilerPath" = lib.meta.getExe' llvmPackages.clang "clang";
+    "C_Cpp.clang_format_path" = lib.meta.getExe' llvmPackages.clang-tools "clang-format";
   };
-  helix.languageServers.clangd.command = "clangd";
+  helix.languageServers.clangd = {
+    command = lib.meta.getExe' llvmPackages.clang-tools "clangd";
+    args = clangdArguments;
+  };
   helix.languages = [
     {
       name = "c";
@@ -51,17 +67,17 @@
     "C" = {
       language_servers = [ "clangd" ];
       code_actions_on_format."source.fixAll" = true;
-      formatter.external.command = "clang-format";
+      formatter.external.command = lib.meta.getExe' llvmPackages.clang-tools "clang-format";
     };
     "C++" = {
       language_servers = [ "clangd" ];
       code_actions_on_format."source.fixAll" = true;
-      formatter.external.command = "clang-format";
+      formatter.external.command = lib.meta.getExe' llvmPackages.clang-tools "clang-format";
     };
   };
   zed.lsp.clangd.binary = {
-    path = "clangd";
-    arguments = [
+    path = lib.meta.getExe' llvmPackages.clang-tools "clangd";
+    arguments = clangdArguments ++ [
       "--header-insertion=iwyu"
       "--completion-style=detailed"
       "--fallback-style=llvm"

@@ -40,10 +40,7 @@
     };
   };
   zed.lsp.lua-language-server = {
-    binary.path = "lua-language-server";
-    initialization_options.Lua = {
-      telemetry.enable = false;
-      workspace.checkThirdParty = false;
-    };
+    binary.path = lib.meta.getExe pkgs.unstable.lua-language-server;
+    settings.Lua.workspace.checkThirdParty = "Disable";
   };
 }

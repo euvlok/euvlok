@@ -29,5 +29,5 @@
     code_actions_on_format."source.fixAll" = true;
     formatter = "language_server";
   };
-  zed.lsp.zls.binary.path = "zls";
+  zed.lsp.zls.binary.path = lib.meta.getExe pkgs.unstable.zls;
 }

@@ -10,7 +10,13 @@
       "git-firefly"
       "github-actions"
       "graphql"
-      "prisma"
+    ];
+
+    userKeymaps = [
+      {
+        context = "Workspace";
+        bindings."ctrl-b" = "workspace::ToggleRightDock";
+      }
     ];
 
     userSettings = {
@@ -23,7 +29,6 @@
       collaboration_panel.dock = "left";
       colorize_brackets = true;
 
-      context.Workspace.bindings."ctrl-b" = "workspace::ToggleRightDock";
       diff_view_style = "unified";
       ensure_final_newline_on_save = true;
       format_on_save = "on";

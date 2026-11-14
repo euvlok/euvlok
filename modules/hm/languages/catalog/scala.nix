@@ -26,5 +26,5 @@
     language_servers = [ "metals" ];
     formatter = "language_server";
   };
-  zed.lsp.metals.binary.path = "metals";
+  zed.lsp.metals.binary.path = lib.meta.getExe pkgs.unstable.metals;
 }

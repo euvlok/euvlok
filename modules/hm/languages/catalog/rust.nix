@@ -1,10 +1,14 @@
 { lib, pkgs, ... }:
 {
   packages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
+    inherit (pkgs.unstable.rustPackages)
       rustc
       cargo
       rustfmt
+      clippy
+      ;
+    inherit (pkgs.unstable.llvmPackages_latest) lldb;
+    inherit (pkgs.unstable)
       rust-analyzer
       cargo-watch
       cargo-edit
@@ -45,9 +49,9 @@
     formatter = "language_server";
   };
   zed.lsp = {
-    crates-lsp.binary.path = "crates-lsp";
+    crates-lsp.binary.path = lib.meta.getExe pkgs.unstable.crates-lsp;
     rust-analyzer = {
-      binary.path = "rust-analyzer";
+      binary.path = lib.meta.getExe pkgs.unstable.rust-analyzer;
       initialization_options = {
         cargo = {
           buildScripts.enable = true;

@@ -1,6 +1,20 @@
-{ lib, pkgs, ... }:
 {
-  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) dotnet-sdk fsautocomplete; };
+  lib,
+  pkgs,
+  versionMappings,
+  getLatestVersion,
+  ...
+}:
+{
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable)
+      fsautocomplete
+      ilspycmd
+      netcoredbg
+      ;
+  };
+  versionMap = versionMappings.dotnet;
+  defaultVersion = getLatestVersion versionMappings.dotnet;
   vscode.extensions = [ "ionide.ionide-fsharp" ];
   vscode.settings."[fsharp]" = {
     "editor.defaultFormatter" = "ionide.ionide-fsharp";
@@ -8,7 +22,7 @@
   };
   helix.languageServers.fsautocomplete = {
     command = "fsautocomplete";
-    args = [ "--background-service-enabled" ];
+    args = [ "--adaptive-lsp-server-enabled" ];
   };
   helix.languages = [
     {
@@ -18,11 +32,11 @@
     }
   ];
   zed.extensions = [ "fsharp" ];
-  zed.languages."F#" = {
+  zed.languages."FSharp" = {
     language_servers = [ "fsautocomplete" ];
   };
   zed.lsp.fsautocomplete.binary = {
-    path = "fsautocomplete";
-    arguments = [ "--background-service-enabled" ];
+    path = lib.meta.getExe pkgs.unstable.fsautocomplete;
+    arguments = [ "--adaptive-lsp-server-enabled" ];
   };
 }

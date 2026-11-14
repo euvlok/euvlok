@@ -29,5 +29,5 @@
       ];
     };
   };
-  zed.lsp.ocamllsp.binary.path = "ocamllsp";
+  zed.lsp.ocamllsp.binary.path = lib.meta.getExe' pkgs.unstable.ocamlPackages.ocaml-lsp "ocamllsp";
 }

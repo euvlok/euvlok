@@ -1,6 +1,9 @@
 { lib, pkgs, ... }:
 {
-  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) elixir elixir-ls hex; };
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable) elixir-ls hex;
+    inherit (pkgs.unstable.beamPackages) elixir;
+  };
   vscode.extensions = [ "jakebecker.elixir-ls" ];
   vscode.settings."[elixir]" = {
     "editor.defaultFormatter" = "jakebecker.elixir-ls";
@@ -19,5 +22,5 @@
     language_servers = [ "elixir-ls" ];
     formatter = "language_server";
   };
-  zed.lsp.elixir-ls.binary.path = "elixir-ls";
+  zed.lsp.elixir-ls.binary.path = lib.meta.getExe pkgs.unstable.elixir-ls;
 }

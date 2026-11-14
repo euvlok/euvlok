@@ -1,6 +1,9 @@
 { lib, pkgs, ... }:
 {
-  packages = lib.attrsets.attrValues { inherit (pkgs.unstable) flutter; };
+  packages = lib.attrsets.attrValues {
+    inherit (pkgs.unstable) flutter;
+    dart = pkgs.unstable.flutter.dart;
+  };
   vscode.extensions = [
     "dart-code.dart-code"
     "dart-code.flutter"
@@ -40,7 +43,7 @@
     formatter = "language_server";
   };
   zed.lsp.dart.binary = {
-    path = "dart";
+    path = lib.meta.getExe pkgs.unstable.flutter.dart;
     arguments = [
       "language-server"
       "--protocol=lsp"

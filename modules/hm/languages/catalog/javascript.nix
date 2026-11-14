@@ -126,15 +126,15 @@
     "JavaScript" = {
       language_servers = [
         "typescript-language-server"
-        "eslint_d"
+        "eslint"
         "biome"
       ];
-      formatter = prettierFormatter "javascript";
+      formatter = prettierFormatter "babel";
     };
     "TypeScript" = {
       language_servers = [
         "typescript-language-server"
-        "eslint_d"
+        "eslint"
         "biome"
       ];
       formatter = prettierFormatter "typescript";
@@ -142,28 +142,23 @@
     "TSX" = {
       language_servers = [
         "typescript-language-server"
-        "eslint_d"
+        "eslint"
         "biome"
       ];
-      formatter = prettierFormatter "tsx";
-    };
-    "JSX" = {
-      language_servers = [
-        "typescript-language-server"
-        "eslint_d"
-        "biome"
-      ];
-      formatter = prettierFormatter "jsx";
+      formatter = prettierFormatter "typescript";
     };
   };
   zed.lsp = {
     "typescript-language-server".binary = {
-      path = "typescript-language-server";
+      path = lib.meta.getExe pkgs.unstable.typescript-language-server;
       arguments = [ "--stdio" ];
     };
-    eslint_d.binary.path = "eslint_d";
+    eslint.binary = {
+      path = lib.meta.getExe' pkgs.unstable.vscode-langservers-extracted "vscode-eslint-language-server";
+      arguments = [ "--stdio" ];
+    };
     biome.binary = {
-      path = "biome";
+      path = lib.meta.getExe pkgs.unstable.biome;
       arguments = [ "lsp-proxy" ];
     };
   };
