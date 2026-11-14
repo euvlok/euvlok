@@ -33,7 +33,7 @@ let
   dashboard = {
     uid = "forgejo";
     title = "Forgejo";
-    description = "Forgejo application and local service health on unsigned-int64. Forgejo 15 retains the gitea_ metric prefix.";
+    description = "Forgejo application and local service health on unsigned-int64";
     schemaVersion = 39;
     version = 1;
     editable = false;

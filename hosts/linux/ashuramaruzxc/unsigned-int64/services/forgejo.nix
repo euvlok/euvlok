@@ -17,13 +17,14 @@ in
     ./forgejo/runner.nix
     ./forgejo/monitoring.nix
     ./forgejo/proxy.nix
+    ./forgejo/theme.nix
   ];
 
   environment.systemPackages = [ cfg.package ];
 
   services.forgejo = {
     enable = true;
-    package = pkgs.forgejo-lts;
+    package = pkgs.forgejo;
     useWizard = false;
     user = "forgejo";
     group = "forgejo";
@@ -48,7 +49,7 @@ in
         RUN_MODE = "prod";
       };
       server = {
-        # Forgejo 15 derives WebAuthn's RP ID and origin from DOMAIN and ROOT_URL.
+        # WebAuthn derives its RP ID and origin from DOMAIN and ROOT_URL.
         DOMAIN = publicDomain;
         ROOT_URL = "https://${publicDomain}/";
         PROTOCOL = "http";
