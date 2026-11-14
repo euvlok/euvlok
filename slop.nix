@@ -103,226 +103,7 @@
 #                                              ⢮⡁⣳                                                ⠐⣏⠝⣘⣦
 #                                              ⠈⠉                                                  ⠉⠉⠁
 #
-# Kill the fucking product
 #
-# I hate this industry. I hate the replacement pitch, the synthetic intimacy,
-# the greasy little promise that every human activity can become somebody else's
-# subscription. I want the businesses built on replacing paid craft to fail. I
-# want the checkout closed and the domain abandoned. Let the product die without
-# a tasteful farewell post about everything it taught us
-#
-# The generated pictures disgust me. That polished, dead-eyed sheen. Every
-# surface begging to be called beautiful while the whole fucking image feels
-# like packaging for something that isn't inside the box. I don't want another
-# version. I don't want it at a higher resolution. I want the sludge out of the
-# search results so I can find something somebody actually wanted to make
-#
-# And the fucking pride. "Look what I made." You ordered an image and now the
-# rest of us have to attend the unveiling. The prompt gets a director's
-# commentary. The rerolls get described as a creative struggle. A smug little
-# output salesman wants the respect that comes from doing the thing while
-# sneering at the people who bothered to learn it. Get over yourself
-#
-# Nick Cave, responding in January 2023 to ChatGPT lyrics imitating him, called
-# the song "bullshit, a grotesque mockery of what it is to be human". This whole
-# imitation as a service pitch can go fuck itself
-#
-# https://www.theredhandfiles.com/chat-gpt-what-do-you-think/
-#
-# I despise the "artists are gatekeeping" excuse. Somebody being good at drawing
-# is apparently an injury now. They spent years learning and you resent the
-# fucking years. You want the result, the credit, the commissions, and
-# permission to sneer at the work that made any of it possible. What an ugly,
-# grasping little attitude. Pick up a pencil or admit you don't want to draw
-#
-# The contempt for effort is the part I find really rotten. Practice becomes
-# friction. Revision becomes waste. A person taking time to decide what they
-# mean becomes a bottleneck. Then a machine sprays fifty interchangeable answers
-# and somebody announces that creativity has been liberated. Liberated from
-# having a fucking reason to exist, apparently
-#
-#                                                    ⣠⠤⠤⠤⣤⣤⣤⣄⣀⣀⣀⣀⣀⣀⡀
-#                                                    ⣿         ⠉⠉⠉⢻⡉⢉⣿⠂
-#                      ⢠⡤⠤⠤⣤⣤⣤⣤⣀⣀⣀⣀⣀⣀⣀              ⢀  article    ⠈⢧⡞⣿
-#                      ⢸⠇        ⠈⠉⠉⠹⡍⠉⣹⡇           ⢸⡇              ⢀⡟              ⣶⠒⠒⠲⠶⠶⠶⠦⠤⠤⣤⣤⣤⣤⣄⣀⣀
-#                        portfolio   ⠹⡼⢹⡇           ⣸⠁ ⠉⠉⠛⠛⠒⠒⠒⠒⠒⠒   ⢸⡇              ⡟            ⢳⡀⣠⣿
-#                      ⡿               ⣾            ⣿  ⣉⣉⣉⡉⠉⠙⠛⠓⠒    ⣸⠃             ⢸  drawing     ⠳⠃⡿
-#                     ⢰⡇ ⠈⠉⠙⠛⠓⠒⠒⠒⠒⠒⠂   ⣿           ⢀⡏  ⣀⣀⣉⣉⣉⣉⠉⠉⠁    ⣿              ⢸⠃       ⣀⣀⡀    ⢸⡇
-#                     ⢸⠇ ⢈⣉⣉⣉⠉⠉⠛⠓⠒⠂   ⢰⡇           ⢸⡇      ⠈⠉⠉⠁    ⢀⡟              ⣿       ⣴⣿⣿⣽⡆   ⢸⠇
-#                     ⣾  ⢀⣀⣈⣉⣉⣉⡉⠉⠉    ⢸⡇           ⠘⠳⠶⠦⢤⣤⣤⣀⣀⣀⡀     ⢸⡇              ⡟     ⢀⡾⠙⢿⣿⡿⠃   ⣿
-#                     ⡿       ⠉⠉⠉     ⣾                    ⠉⠉⠉⠙⠛⠓⠒⠶⠾⠃             ⢸⡇     ⢸⣷⣿⠃      ⡿
-#                    ⠐⠓⠶⠶⠤⣤⣤⣄⣀⣀⡀      ⣿                    ⢠⠇                     ⢸⠃     ⠈⠉⠁      ⢸⡇
-#                            ⠈⠉⠉⠉⠛⠛⠒⠶⠶⠇                  ⢠⣤⣯⡤                     ⠉⠙⠛⠓⠲⠶⠶⠤⣤⣤⣀⣀⣀⡀  ⢸⠇
-#                            ⢀⡾                           ⠻⡿⠁                              ⡀ ⠈⠉⠉⠙⠛⠛
-#                           ⣤⣼⣥                                                           ⣼⠃
-#                           ⠙⢿⠃                                                         ⢰⣶⣷⠆
-#                    ⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣹⣏⣀⣀
-#                    ⠈⠻⣯⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢹⡿⠋
-#                      ⠙⢿⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣻⠟⠁
-#                        ⠙⢦⡀                                                           ⣠⡾⠁
-#                          ⠻⣆                                                        ⢀⣴⠋
-#                           ⠈⠳⣄                                                     ⣰⠟⠁
-#                             ⠈⢷⡄                                                 ⢠⡾⠃
-#                               ⠙⢦⡀                                             ⢀⣴⠏             ⢀⣠⣄ ⡀
-#                                 ⠙⢦⡀                                          ⣠⠟⠁     ⣠⣤⡄ ⢀⡀ ⢰⢛⣻⠵⠾⣯⡹⣇⡀
-#                              ⢀⣀⡀ ⠈⢻⡶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⣾⠋   ⢰⠟⠳⠴⠏ ⠙⠶⠋⠹⣷⢫⡏⢈⡧⢴⡃⠹⡎⡿
-#                           ⢰⡞⠶⢟⣉⣓⠚⢻⣼⣗⠿⠃                                    ⠻⠗⣿ ⢠⡶⠶⠞⢀⣴⡞⠛⠉⠙⠛⢲⣤⣹⠿⡏⠙⡧⢴⡛⢛⣇⣳⠄
-#                 ⢺⣦⣤⣤⡄   ⠰⣟⢛⡵⢿⡉⠉⠉⣽⠳⣍⢹⡇            THE SLOP MILL              ⣿ ⠈⣷ ⡴⠋⠈⢳⡀  ⣠⠏ ⠙⣿⣟⠾⣥⣤⢷⣋⣾⠁
-#                 ⢠⡟⠛⠋   ⢠⡶⢋⡞  ⣻⠶⢾⡃ ⠘⣆⢉⡷                                      ⣿⣴⠛⠁⣼⠁  ⢀⡵⠒⠲⢯   ⠸⡏⢋⡽⠶⠋⠉⠁
-#               ⠘⣷⣾⣤⣤     ⣽⠸⡟⠛⠛⣇⡀⣀⡗⠒⠒⡿⠸⣦⡄ ⣤ ⢠  ⡄ ⣤ ⢠⡄ ⡄ ⢠ ⢠⡄ ⣤ ⢠  ⡄ ⣤ ⢠⡄ ⡄    ⣿⠈⣻ ⣿⠒⠒⠒⢺⡅  ⢸⡷⠶⠶⠶⡇⠘⢧⡀
-#                ⢸⡟⠋⠁    ⠈⠳⣦⠻⡄⢀⡞⠉⠙⣦ ⡼⠣⣟⠹⠇ ⠿ ⠸  ⠇ ⠿ ⠸⠇ ⠇ ⠸ ⠸⠇ ⠿ ⠸  ⠇ ⠿ ⠸⠇ ⠇  ⢀⡀⣿⢸⣏⡀⠹⡄  ⢀⡽⠲⠖⣯   ⣸⠃⣤⠶⠃
-#              ⠠⣦⣼⣤⣤       ⠿⠤⣌⠻⠦⠤⠤⠾⠋⣴⣶⣟⣁⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣛⣋⣿ ⠈⢹⡆⠙⢦⣀⡞⠁  ⠈⢧⣀⡴⠃ ⢷⡀
-#               ⠙⣿⠛⠁         ⠙⠶⠛⢦⡴⠋⠛⠋⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢹⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢹⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁  ⠻⡤⠶⣤⠙⠓⠶⠤⠴⠶⠚⠉⢰⡟⠛⠋
-#              ⢀⡀⡏⣀⣀                       ⡶⠒⠒⠒⠒⠒⠒⠒⠚⠓⠒⠒⠒⢶      ⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⢻      ⡶⠿⠶⠾⠷⠶⠶⠾⠿⠷⠾⠷⠶⢶
-#              ⠘⠿⣿⠿⠃                      ⢠⡇   SLOP     ⢸⣆⣀⣀⣀⣀⣰⡇   SLOP     ⢸⡇    ⢠⡇   SLOP     ⢸⡆
-#                ⣇  ⢀⡴⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⢾⠃            ⠈⣿⠿⠿⠿⠿⣿⠁             ⣷⠶⠶⠶⠶⢾⠃            ⠈⣷⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⣶⣦
-#              ⢠⣤⣿⣴⣶⣯⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣤⣤⣤⣤⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣤⣤⣤⣾⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡾⠋⣿
-#               ⠙⢻⢻⡧⣾⣦⠴⢦⡀   ⣠⠶⢤⡀   ⣤⠶⢤⡀  ⢀⡤⠶⢤⡀  ⢀⡤⠶⣄   ⢀⡴⠦⣄   ⢠⡴⠦⣄   ⣠⠴⠦⣄   ⣠⠴⢦⡀   ⣠⠶⢤⡀   ⣤⠶⢤⡀  ⢀⡤⠶⢤⡀     ⢰⣷⢸⡇⡄⣿
-#                ⢸⣿⡇⡰⣇⠑⢄⡿  ⠸⡇⠳⢄⡷  ⢸⡍⠳⢄⡇  ⢸⡈⠳⣨⡇  ⢾⡈⠢⣸⠇  ⢿⠘⠦⣸⠆  ⣯⠙⠦⣸   ⣇⠙⢆⣽  ⠰⣇⠑⢄⡿  ⠸⡇⠳⢄⡷  ⢸⡍⠳⢄⡇  ⢸⡈⠳⣨⡇       ⢸⡇⡀⣿
-#               ⢰⣮⣿⣿⣿⠎⠛⠋⠁   ⠉⠛⠋    ⠙⠛⠋    ⠙⠛⠋    ⠙⠛⠉   ⠈⠙⠛⠁   ⠈⠛⠛⠁   ⠈⠛⠛⠁   ⠈⠛⠋⠁   ⠉⠛⠋    ⠙⠛⠋    ⠙⠛⠋      ⠰⣶⢼⣯⡾⠃
-#                ⠈⢻⡟⠛⠛⠛⠛⣻⣿⣿⣿⢿⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⢛⠛⠛⠛⡛⠛⠛⢛⠛⠛⠛⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣻⣿⣿⣿⢿⡟⠛⠛⠛⠋
-#                 ⠘⣇ ⣀  ⣿⢴⡦⣿⢸⡇                               ⡏  ⢸⠁  ⡏  ⢸⠁                           ⣿⢴⡦⣿⢸⡇
-#              ⢰⠞⠳⣶⣿⣾⡿  ⣿  ⣿⢸⡇                               ⢳⡀ ⠘⣆  ⢳⡀ ⠘⣆                           ⣿  ⣿⢸⡇     ⣠⣶⡶⠚⠳⡆
-#              ⠸⣄ ⠈⣙⣿⢦  ⣿⣠⣄⣿⢸⡇                               ⠞  ⠰⠃  ⠞  ⠰⠃                           ⣿⣠⣄⣿⢸⡇    ⠴⢿⣋⠁ ⣠⠇
-#               ⠈⠛⠛⠉⠹⡄  ⠿⠾⠷⠿⠋                                                                       ⠿⠾⠷⠿⠋       ⠉⠛⠛⠁
-#                              ⢠⡾⠂                                                                 ⠾⣆               ⢀⣠⠤⢄
-#          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-#           ⠉⠉
-#                                                                                                    ⢴⠚⣻⡄
-#                                                                                                    ⠈⠉⠁
-#
-#      The fucking conveyor belt never runs out of nothing
-#
-# There is always more shit. More pictures, more articles, more plausible little
-# stories with nothing behind them. Who asked for the next ten thousand? Who is
-# meant to read them? Is another bot going to summarize them for a third bot?
-# The whole arrangement reeks of contempt for the person expected to scroll
-# through it. I want the content mill bankrupt before it discovers another
-# surface to foul
-#
-# "But it's getting better." I still hate the fucking deal. When the pitch is
-# replacing the person you used to pay, a prettier output does not make it less
-# vile. When training uses somebody's work without asking, a better demo does
-# not answer the consent question. I want the artist's refusal to mean something
-# that costs the vendor access
-#
-# Reid Southen wrote: "Jobs are getting shorter and paying less off of our own
-# stolen art. AI is theft." I share his disgust at expecting the worker to clean
-# up the generated replacement and be grateful for the fucking scraps
-#
-# https://x.com/Rahll/status/1836931420368822624
-#
-# The Society of Authors got nearly 800 responses to its January 2024
-# survey. Among illustrator respondents, 26% said they'd already lost work to
-# generative AI. Among translator respondents, 36%. Those figures describe the
-# respondents. The people reporting lost work deserve more than another smug
-# fucking keynote about opportunities
-#
-# https://societyofauthors.org/2024/04/11/soa-survey-reveals-a-third-of-translators-and-quarter-of-illustrators-losing-work-to-ai/
-#
-# I want the commissioning budget back in the illustrator's account. I want the
-# translator paid to translate. The business model that turns skilled people
-# into cheaper cleanup staff can choke on its own invoices. Count the
-# supervision. Count the repair. Count the work the demo quietly dumped on
-# somebody else. Then tell me where the miraculous fucking saving went
-#
-# Consent before training. Paid licences with a clear scope. An actual no. I
-# hate the attitude that a portfolio is an unattended buffet because the scraper
-# can reach it. Your dataset is not a birthright. Your refusal to ask is not a
-# clever shortcut I need to respect. If the margin disappears when you obtain
-# permission, I hope the margin fucking disappears
-#
-# Then the artist has to prove the drawing is theirs. Sketches, layers, process
-# videos, a fucking cross-examination under an image they already spent hours
-# making. The sludge gets produced by the bucket and the humans get the
-# paperwork. I resent being made suspicious of something good because imitation
-# merchants couldn't keep their shit to themselves
-#
-# The fucking nerve of selling the imitation back into the space the person used
-# to occupy. I despise the greedy little grift of treating a human as expensive
-# feedstock and the output as the valuable part. The replacement pitch can eat
-# shit. I want its salesmen explaining cancelled orders instead of lecturing
-# artists about adapting
-#
-# I do not want to talk to the search box
-#
-# Find the page. Show the link. Get your bloated fucking summary out of the
-# way. I hate this arrangement where the person who wrote the answer disappears
-# behind a machine explaining it badly. I want to read what they wrote. I don't
-# want the chatbot's warm little hand over the fucking text
-#
-# The editor, the browser, the launcher, the operating system. Every pause
-# treated as an opening for another unsolicited paragraph. I find the synthetic
-# friendliness repulsive. That wet little "I'd be happy to help" attached to a
-# feature I am trying to switch off. The software is already doing something I
-# hate and now it wants credit for being pleasant about it
-#
-# And the apologies. "You're absolutely right." Yes, the command doesn't
-# exist. The citation is imaginary. The file you confidently described is
-# absent. Fuck the soothing tone. I want the mistake counted as a mistake
-# instead of laundered into another congratulatory paragraph about our
-# collaboration. I am disgusted by the product's ability to sound helpful while
-# handing the checking back to me
-#
-# "You should have prompted better" is such a cowardly little excuse. The expert
-# machine was wrong and somehow the customer failed to recite the right
-# spell. Add a role. Add a warning. Tell it to think harder. Tell it that
-# thinking matters. Fuck off. A product that needs a page of pleading before
-# admitting uncertainty has earned contempt
-#
-# I hate the model-launch ritual too. Another letter after the number. Another
-# leaderboard. Another crowd of smug pricks announcing that everyone who asked
-# an ordinary question about reliability is behind the times. Show the actual
-# answer. Show the fucking source. Your excitement is not evidence and I don't
-# owe the new tier a round of applause
-#
-# AGI is always just around the next invoice
-#
-# I want the replacement fantasy to lose money. I want the investors who bought
-# it to eat their own losses. The valuation can die. The subscription can
-# die. The app nobody wanted can die. I do not want a public rescue for a
-# fucking prompt box whose sales pitch was making other people's livelihoods
-# disposable
-#
-# Let the failed launch stay failed. Let the returned gadget stay returned. I
-# hope the refund queue is longer than the keynote transcript. The people who
-# approved the pitch can answer the complaints in their own words and explain
-# the gap between the demo and the fucking product. No chatbot apology on their
-# behalf
-#
-# Lattice announced official employee records for digital workers on July 9,
-# 2024. On July 12 it updated the same post to say it would not pursue digital
-# workers in the product. Tuesday to Friday. The employee-replacement fantasy
-# needed a rollback before the fucking week was over
-#
-# https://lattice.com/blog/leading-the-way-in-responsible-ai-employment
-#
-# The employee avatar disgusts me. A generated yes-machine dressed in the
-# paperwork of somebody who needs a salary, time off, and a reason to get out of
-# bed. I want the human employees to keep their pay and the replacement slide
-# deck to become an expensive embarrassment. Bury the digital worker in the
-# changelog. Leave the rollback notice attached to the announcement
-#
-# "This frees people for more meaningful work." Which fucking people? Does the
-# meaningful work include getting paid? I hate the glib cruelty of announcing
-# someone else's redundancy as an exciting creative opportunity. If your
-# paradise needs their income to disappear, I hope your paradise loses funding
-#
-# The sparkle icon can fuck off too. Petty, yes. I still hate it. That stupid
-# little mark has become a warning that an ordinary feature is about to acquire
-# an unwanted conversation. I want the off switch to stick. I want the update to
-# respect it. I want the shape gone from the toolbar and I don't need a
-# heartfelt blog post about its journey
-#
-# I hate the slop. I hate the contempt for slow, handmade, awkward, specific
-# work. I hate the demand that every objection wait patiently for next year's
-# alleged miracle. Today's spam exists. Today's wasted afternoon exists. Today's
-# unpaid cleanup exists. Your imaginary future cannot refund any of it
-#
-# Let the whole product category die quietly in a quarterly report while
-# somebody gives a talk about bravery
-#
-# I do not want to generate another one
 let
   # Embedded Python uses the Python 3.15 standard library without extra packages
   codexEnabled.euvlok.home.codex.enable = true;
@@ -363,74 +144,6 @@ let
       # Keep each setting overridable without discarding unrelated defaults
       mkDefaults = lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
     };
-  # high reasoning effort, low fucking patience
-  #
-  #              ⣴⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⣦⡀                    ⣠⠞⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⢛⣿⡇
-  #              ⣿                                   ⣿⠙⢦⡀                ⣠⠞⠁                                        ⢀⡴⠋⢸⡇
-  #              ⣿                                   ⣿⣀⣀⣙⣦⡀             ⢸⣟⣿⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣛⡛⢛⡛⢛⣛⣻⣻⡏ ⡠⢺⡇
-  #              ⣿        THE CITATION               ⠉⠉⠉⠉⢹⡇             ⢸⡏⠋⠁      THE SOURCE                ⢯⡇⢯⡽⠸⣽⠛⢹⡇⠊⡠⢺⡇
-  #              ⣿                                       ⢸⡇             ⢸⣇⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣸⡇⠚⣠⢺⡇
-  #              ⣿                                       ⢸⡇             ⢸⡇                                         ⢸⡇⠜⢡⢼⡇
-  #              ⣿    ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀           ⢸⡇             ⢸⡇                   ⢀⣀⡀                   ⢸⡇⠔⢁⢼⡇
-  #              ⣿    ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁           ⢸⡇             ⢸⡇                ⣀⡴⠞⠋⠉⠉⠓⢦⣄                ⢸⡇⠔⢁⢼⡇
-  #              ⣿    ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣄     ⢸⡇             ⢸⡇              ⣠⠞⠉       ⠈⠳⣦⡀             ⢸⡇⠴⢁⢼⡇
-  #              ⣿                                      ⢀⣸⣧⡀            ⢸⡇            ⢀⡾⠁           ⠈⠻⣄            ⢸⡇⡰⢋⣸⡇
-  #              ⣿    ⠶  sounds real  ⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠆      ⣿⠟⢺⡷⠳⠿⡦⡀         ⢸⡇           ⢠⠏               ⠹⣆           ⢸⡇⡠⠊⣸⡇
-  #              ⣿                                       ⢸⡇  ⠻⣗⣦⡀       ⢸⡇          ⢀⡟                 ⠹⡆          ⢸⡇⡠⠊⣸⡇
-  #             ⢀⣿    ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃           ⢸⡇    ⡟⠉⢷      ⢸⡇          ⣼⠁       404        ⢿          ⢸⡇⣠⠊⣸⡇
-  #           ⠠⣤⣸⣿⣤⡄  ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀     ⢸⡇  ⣠⡄⠳⣤⡿⡄     ⢸⡇          ⡟                   ⢸⡇         ⢸⡇⢠⠞⢸⡇
-  #            ⠙⣻⣿⠛   ⠉  looks checked  ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉     ⢸⡇ ⠐⠓⠚  ⠸⢷⣿⣭⠇  ⢸⡇         ⢸⡇                   ⢸⡇         ⢸⡇⢁⠜⢹⡇
-  #             ⣿⣿    ⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡄        ⢸⡇        ⠻⢿⣶⡴⣆⢸⡇         ⠘⠃                   ⠘⠃         ⢸⡇⢁⠔⢹⡇
-  #             ⣿⣿                                       ⢸⡇           ⠘⠁⢸⡇                                         ⢸⡇⢁⠔⢹⡇
-  #           ⢴⣦⣯⣿⣶                                      ⢸⡇             ⢸⡇          NO SUCH SOURCE                 ⢸⡇⢉⡴⢹⡇
-  #            ⠙⡟⣿⠁   ⣿⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⡇     ⢸⡇             ⢸⡇                                         ⢸⡇⠊⡰⢺⡇
-  #             ⡇⣿    ⣿         MADE UP            ⡇     ⢸⡇             ⢸⡇                                         ⢸⡇⠊⡠⢺⡇
-  #             ⣿⣿⢀   ⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃     ⢸⡇             ⢸⡇              ⣀⣤⣤⡶⢶⣤⣤⣀                   ⢸⡇⠊⡠⢺⡇
-  #           ⠺⣶⣿⣿⣟⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣸⡇             ⢸⡇           ⢀⣴⢞⣫⠷⠚⠛⠛⠓⠺⢽⡻⣦⡀                ⢸⡇⠚⣠⢺⡇
-  #            ⠈⣿⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁             ⢸⡇          ⢠⡾⣱⠋        ⠙⢮⢻⡄               ⢸⣷⣾⣿⢻⣷
-  #             ⢻                                                       ⢸⡇          ⣾⢱⠃          ⠈⣇⣿               ⢾⣿⣝⣁⣼⡿
-  #             ⢸⣇⣠⡄                                                    ⢸⣇⣤⡀        ⣿⣿            ⣿⣹⡇             ⣤⣸⡇⣬⡿⠋
-  #            ⠻⢿⣿⠿⠁        ⢀⣤⣄⣀⣀                              ⣀⣀⣠⣤⡄    ⠸⣧⣭⣤⣤⣤⣤⣤⣤⣤⣤⣤⣿⡸⡄          ⢠⣏⣿⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣽⣽⠿⠋
-  #              ⣿          ⢸⡇ ⠈⠉⠙⠛⠓⠶⠶⢤⣤⣄⣀⡀          ⣀⣀⣠⣤⡤⠶⠶⠚⠛⠋⠉⠁ ⠘⡇                ⠈⢷⡝⣆⡀       ⣠⢏⡾⣃
-  #              ⢹⡄         ⣼            ⠉⠉⠙⠛⠒⠶⢦⡴⠶⠚⠛⠋⠉⠉            ⣿                  ⠙⢶⣝⡲⠤⣤⣤⠤⢖⣫⡵⢻⣞⠉⠳⣄
-  #             ⣠⣼⣧⣾⡟       ⣿   ⣀⡀             ⢸⡇            ⢀⣀    ⣿                    ⠈⠙⠛⠛⠛⠛⠋⠉  ⠙⢧⡀⠙⢷⡀
-  #             ⠈⠛⢿⡋       ⢠⡇  ⢀⡀  ⠉ ⠒⠂⠠⠤ ⢀⣀   ⢸⡇  ⢀⣀ ⠤⠄⠐⠒ ⠉⠁  ⣀   ⢸⡄                               ⠻⣦ ⠙⢦⡀
-  #               ⠸⡇       ⢸⡇    ⠈⠉ ⠒⠂ ⠤⠄⢀⣀    ⢸⡇   ⣀⡀ ⠤⠄ ⠒ ⠉⠉     ⢸⡇                                ⠈⢳⣄ ⠙⣦⡀
-  #                ⢻⡀⣠⡄    ⣸⠁   ⠉⠉ ⠒⠂ ⠤⠄⢀⣀⡀    ⢸⡇    ⣀⡀⠠⠤⠄⠐⠒ ⠈⠉    ⠈⣇                                  ⠙⢧⡀⠈⣳⠄
-  #               ⢶⣾⣿⡿⠃    ⣿   ⠈⠁⠐⠒⠂⠠⠤⠄⢀⣀⡀ ⠈   ⢸⡇  ⠉  ⣀⡀ ⠄⠄⠐⠒⠂⠈⠉    ⣿                                    ⠻⠞⠁
-  #                 ⢹⡄    ⢀⡏    ⠒⠒ ⠠⠤⠄⢀⣀⡀ ⠈⠉   ⢸⡇  ⠉⠁ ⢀⣀⡀ ⠤⠄ ⠒⠒     ⢻
-  #                  ⠷     ⠉⠛⠓⠲⠶⢤⣤⣄⣀⡀     ⠉⠁   ⢸⡇  ⠈⠉⠁       ⣀⣀⣀⣤⡤⠴⠶⠞⠃
-  #              ⢰⠞⠓⢶⣶⣄            ⠉⠉⠙⠛⠲⠶⠤⣤⣄⣀⣀ ⢸⡇ ⢀⣀⣀⣤⣤⠴⠶⠖⠚⠛⠋⠉⠉                                                  ⣠⣶⡶⠚⠳⡆
-  #              ⠸⣄  ⣙⡿⢦                    ⠉⠉⠙⠛⠛⠋⠉⠉                                                            ⠴⢿⣋⠁ ⣠⠇
-  #               ⠈⠛⠛⠉                                                                                            ⠉⠛⠛⠁
-  #                              ⢠⡾⠂                                                                 ⠾⣆               ⢀⣠⠤⢄
-  #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-  #           ⠉⠉
-  #                                                                                                    ⢴⠚⣻⡄
-  #                                                                                                    ⠈⠉⠁
-  #
-  #       Open the fucking source before you repeat the answer
-  #
-  # Turn the knob up. Give the bullshit another thirty seconds to compose
-  # itself. I hate the pretence that a longer pause deserves more trust. The
-  # invented flag still doesn't exist. A solemn little essay about the invented
-  # flag only makes the answer more fucking irritating
-  #
-  # Mata v. Avianca, June 22, 2023. The court's sanctions opinion describes
-  # lawyers submitting nonexistent judicial opinions with fake quotes and
-  # citations created by ChatGPT, then standing by them after the court
-  # questioned whether they existed. The court found bad faith in the lawyers'
-  # conduct. They chose to file the bullshit and defend it. The machine's
-  # confidence did not make the cases real
-  #
-  # https://law.justia.com/cases/federal/district-courts/new-york/nysdce/1:2022cv01461/575368/54/
-  #
-  # I despise the fake citation. It borrows the appearance of somebody having
-  # checked. Then an actual person has to prove the impressive-looking source is
-  # fucking imaginary. Show me the source. Open it. If it doesn't say the thing,
-  # the answer is wrong. I want the people selling and deploying this shit to
-  # pay for the harm they cause instead of charging everyone else for the
-  # correction
   codexSettings = {
     model = "gpt-6.1-sol";
     model_reasoning_effort = "high";
@@ -492,68 +205,6 @@ let
       preventSleepWhileRunning = true;
     };
   };
-  # kill the fucking patch
-  #
-  #                                         ⣾⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿⢦⡀
-  #                                         ⣿                                   ⣿ ⠙⢦⡀
-  #                                         ⣿        AI.patch                   ⠛⠒⠒⠒⢻⡆             ⠠⡀ ⣀⣀⣒⣀⣀⡀⢠
-  #                                         ⣿                                       ⢸⡇          ⡀ ⣠⡴⢟⣫⡭⠭⠭⠭⠭⣝⣛⠶⣄⡀⢀
-  #                                         ⣿                                       ⢸⡇          ⣹⠞⡡⠚⠉       ⠈⠓⢮⡛⣯⡀
-  #                                         ⣿                                       ⢸⡇       ⢀⢀⡼⢡⠎             ⠙⢎⢳⡀⡀
-  #                                         ⣿   + rename                            ⢸⡇        ⣼⢡⠇               ⠈⣇⢿⡀
-  #                                         ⣿                                       ⢸⡇       ⢠⡏⡾                 ⢸⢸⡇
-  #                                         ⣿   + another helper                    ⢸⡇      ⠈⠹⡇⣇     REJECTED    ⢸⢸⡏⠁
-  #                                         ⣿                                       ⢸⡇        ⢷⢹⡀                ⡾⣸⠃
-  #                                         ⣿   + more churn                        ⢸⡇       ⠐⠙⣧⢳⡀              ⡼⣱⠟⠂
-  #                                         ⣿                                       ⢸⡇         ⠈⢷⡙⢦⡀         ⢀⡠⢊⡴⠋
-  #                                         ⣿   bug still here                      ⢸⡇          ⠋⠙⠳⣭⣓⠦⢤⣄⣀⣠⡤⠴⢒⣩⠴⠋⠙
-  #                                         ⣿                                       ⢸⡇              ⠏⠛⠓⠲⢶⠶⠚⠛⠙⠅
-  #                                         ⣿                                       ⢸⡇                  ⠈
-  #                         ⢀⡤              ⣿                                       ⢸⡇
-  #                      ⢠⣄⢀⡞⠁      ⢀⡴⠶⠶⢶⣶⣶⣶⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣾⣷⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⠶⠶⠶⠶⠶⠶⠶⣶⣶
-  #                      ⠈⢿⣿⣶⡶    ⢀⡴⠋ ⢀⡴⠋⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⣩⣍⠉⠉⢩⡿⠃     ⣠⡾⠋⣿
-  #                      ⢠⡟     ⢀⣴⣋⣀⣀⣴⣋⣠⣾⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣿⣿⣷⣟⣀⣴⣋⣀⣀⣀⣀⣀⣠⡾⠋⢀⡄⣿
-  #                    ⢰⣦⣾⣡⣤    ⣿⣩⣯⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣽⡍⣿ ⡠⠊⡄⣿
-  #                     ⢹⡟⠛⠉    ⣿⠈⠉                                                              ⠉⠁⣿⠈⡠⠊⡀⣿
-  #                     ⢸⠃      ⣿                                                                  ⣿⠚⡠⠊⡀⣿
-  #                   ⢠⣤⣿⣤⣶⠆    ⣿⢀⣀⢀⡤⣄⣀⣄⡀     ⡤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⡄              ⣿⠘⣡⠞⡁⣿
-  #                    ⠙⣿⠛⠁    ⢀⣿⣼⢉⡭⠴⠾⢭⣜⠧⢶⡄   ⡇           THE SHREDDER              ⡇     ⢠⡶⠴⢟⣷⠶⣦⣀ ⣿⠘⢁⠜⡁⣿
-  #                     ⣿      ⣈⡇⡼⠉⢻⣄⣀⡞⠉⢳⡹⢦⡄  ⡇                                     ⡇    ⢾⢛⡵⢿⡉⢉⡿⢮⣹⣇⣿⠐⢁⠔⠁⣿
-  #                     ⢸⣀⣠⡄  ⠘⢷⢸⡧⠤⢴⡋⠉⣧⣤⣤⡇⢿⡁  ⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃   ⠸⣏⣾⣤⣬⠟⠻⣄⣀⣷⢼⣿⠴⢁⠔⠁⣿
-  #                    ⠻⢿⡿⠟⠁  ⠐⢯⣌⢧ ⢠⠟⠛⣧ ⣰⢣⡞⠃                                            ⠰⢯⣻⡄⢨⡗⠺⣅⢠⣟⡾⣿⠰⢃⡴⠃⣿
-  #                      ⣧      ⣿⣬⡝⠿⢤⣤⠼⠟⣵⠶⠇  ⢰⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣷   ⠸⠧⣽⢻⡦⠴⣟⣻⡖⠛⣿⠰⠋⡰⠃⣿
-  #                      ⢹⡄     ⣿ ⠳⠞⠻⡴⠏⠛⠋    ⢸⡇                                      ⣿     ⠉⠋⠙⠚⠉⠉  ⣿⠠⠊⡠⠃⣿
-  #                     ⢀⣘⣇⣴⡷   ⣿            ⢸⡇              /dev/null               ⣿             ⣿⣠⠊⡠⠂⣿
-  #                     ⠈⠛⢿⡟⠁   ⣿            ⢸⣇⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣿             ⣿⢠⠎⣠⠆⣿
-  #                       ⠈⣧    ⣿                                                                  ⣿⢠⠞⢁⣶⠟
-  #                        ⠸⡆   ⣿⢀⣀          ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒ ⠒⠂⠐⠒        ⣀⡀⣿⢀⣴⠟⠁
-  #                         ⢹⣀⣶⡆⢿⣽⣯⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣽⣯⣿⠟⠁
-  #                        ⠛⠿⢿⠟     ⢹⡄ ⢸⠃       ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏ ⡧⡏             ⢻⡀ ⣸⠁
-  #                          ⠈⣧     ⠈⣇⣀⣿        ⣇⢧ ⣇⢷ ⣇⢷ ⣇⢧ ⣇⢷ ⣇⢷ ⣇⢧ ⣇⢷ ⣇⢷ ⣇⢧             ⠸⣇⣀⡟
-  #                           ⠘⣦     ⠉⠉⠁        ⠘⡟⣆⠸⡞⣆⠸⡞⡆⠘⡟⣆⠸⡞⣆⠸⡞⡆⠘⡟⣆⠸⡞⣆⠸⡞⡆⠘⡟⣆             ⠉⠉⠁
-  #                                              ⢹⣸⡆⢳⣹⡄⢳⢹⡀⢹⣸⡆⢳⣹⡄⢳⢹⡀⢹⣸⡆⢳⣹⡄⢳⢹⡀⢹⣸⡆
-  #                                               ⡇⣧⠈⡏⣇⠘⡟⡇ ⡇⣧⠈⡏⣇⠘⡟⡇ ⡇⣧⠈⡏⣇⠘⡟⡇ ⡇⣧
-  #                                               ⣧⡿ ⡇⣿ ⡇⣿ ⣧⡿ ⡇⣿ ⡇⣿ ⣧⡿ ⡇⣿ ⡇⣿ ⣧⡿
-  #              ⢰⠞⠓⢶⣶⣄                          ⣰⢣⠇⢀⡟⡏ ⣧⡟⢰⢣⠇⢀⡟⡏ ⣧⡟⢰⢣⠇⢀⡟⡏ ⣧⡟⢰⢣⠇                                  ⣠⣶⡶⠚⠳⡆
-  #              ⠸⣄  ⣙⡿⢦                        ⢠⢃⠎ ⣸⢱⠁⢠⡇⣧⢃⠎ ⣸⢱⠁⢠⡇⣧⢃⠎ ⣸⢱⠁⢠⡇⣧⢃⠎                                  ⠴⢿⣋⠁ ⣠⠇
-  #               ⠈⠛⠛⠉                          ⠓⠊ ⢠⢣⠇ ⡼⣸⠓⠊ ⢠⢣⠇ ⡼⣸⠓⠊ ⢠⢣⠇ ⡼⣸⠓⠊                                     ⠉⠛⠛⠁
-  #                              ⢠⡾⠂               ⠧⠎ ⢰⢣⠇   ⠧⠎ ⢰⢣⠇   ⠧⠎ ⢰⢣⠇                          ⠾⣆               ⢀⣠⠤⢄
-  #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                    ⠯⠞       ⠯⠞       ⠯⠞                            ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-  #           ⠉⠉
-  #                                                                                                    ⢴⠚⣻⡄
-  #                                                                                                    ⠈⠉⠁
-  #
-  # The bug survives and the diff fills with unrelated crap. Another
-  # helper. Another abstraction. A rename nobody requested. I hate this
-  # compulsive fucking busywork. Every extra line becomes somebody else's
-  # responsibility to read, understand, and eventually remove. Output is cheap
-  # when the machine doesn't have to maintain it
-  #
-  # "I also noticed". Shut the fuck up and finish the request. I want the
-  # unsolicited patch rejected before it becomes the next person's
-  # afternoon. Your mountain of churn is a burden with a flattering summary
-  # attached. I hope every demo that treats lines changed as proof of competence
-  # gets picked apart in review
   codex =
     {
       pkgs,
@@ -1158,17 +809,6 @@ let
         platforms = lib.systems.doubles.linux ++ lib.systems.doubles.darwin;
       };
     };
-  # the permission dialog cannot resurrect a dead fucking idea
-  #
-  # The machine has a bad plan and now it wants my signature underneath it. I
-  # hate that little transfer of responsibility. A confirmation window cannot
-  # supply the judgment the answer lacked. Kill the bad plan before it gets
-  # dressed up as my informed fucking choice
-  #
-  # The read-only excuse irritates me too. Imaginary sources still mislead. Fake
-  # instructions still waste time. I want the wrong answer called wrong even
-  # when it stayed politely inside the chat. The safety paperwork doesn't make
-  # the bullshit worth reading
   profiles =
     {
       config,
@@ -1299,68 +939,6 @@ let
         ] (lib.strings.concatMapStrings copyConfig (lib.attrsets.attrValues configFiles));
       };
     };
-  # the future of work needs another fucking bridge
-  #
-  #                                                    ⣀⣀⣀⣀⣀⣀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣄⣀⣀⣀⣀⣀⣀⡀
-  #                                       ⣠⡶⠶⠶⢶⣶⠖⠒⠒⠚⠛⠋⠉⠉⠉⠉⠉⠁             ⠉⠉⠉⠉⠉⠉⠛⠛⠓⠒⠒⢲⣶⡶⠶⠶⠶⠶⠶⠶⠶⠶⠶⢶⣶⡄
-  #                                     ⣠⡾⠋  ⣾⣍                                      ⢈⣹⡆      ⢀⡴⠋⢸⡇
-  #                                    ⣾⢿⠶⠶⠶⠶⣿⠈⠙⠓⠲⠶⠤⣤⣤⣄⣀⣀⣀⣀⣀⣀⣀⡀       ⢀⣀⣀⣀⣀⣀⣀⣀⣤⣤⡤⠴⠶⠖⠘⠉⢸⡷⠶⠶⠶⠶⡶⣶⠋ ⡠⢸⡇
-  #                                    ⣿⠻⠟ ⢀⣤⣿          ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁         ⢸⣧⣤  ⠻⠟⣿⠠⠊⡠⢸⡇
-  #                                    ⣿   ⣼⣿⣿                                       ⢀⢸⣿⠏    ⣿⢠⠎⡠⢸⡇
-  #                                    ⣿  ⠸⠿⠿⣿         THE FUCKING MIRACLE           ⢸⢸⡏     ⣿⢠⠞⣡⢸⡇
-  #                                    ⣿     ⢸                                       ⢸⢸⡇     ⣿⢀⠔⢁⢸⡇
-  #                                    ⣿     ⢸             DEMO INVOICE              ⢸⢸⡇     ⣿⢀⠔⢁⢸⡇
-  #                                    ⣿     ⢸                                       ⢸⢸⡇    ⢮⣿⣔⡶⡡⡾⠃
-  #                                    ⣿⣴⣦   ⢸⡆                                      ⢸⢸⡇   ⣤⣦⣿⢈⡴⠛⠳⠿⢦⣆
-  #                                    ⠿⠾⠷⠶⠶⠶⢾⡇                                      ⢸⢸⡷⠶⠶⠶⠾⠷⠿⠋    ⠘⠻⠽⣦⡀
-  #                                          ⢸⡇                                      ⢸⢸⡇              ⢻⣗⡄
-  #                                          ⢸⡇    supervising   your time           ⢸⢸⡇                ⣯⠆
-  #                                          ⢸⡇                                      ⢸⢸⡇                ⠰⠿⡆
-  #                                          ⢸⡇                                      ⢸⢸⡇                 ⠸⡽
-  #                                          ⢸⡇    checking      your time           ⢸⢸⡇           ⢀⣤⣤⡴⠖⠶⣜⢿⠃
-  #                   ⢀⣀⣤⡴⠶⠶⠶⠶⠶⣤⣄⡀           ⢸⡇                                      ⢸⢸⡇          ⣠⣿⡿⠏⠁  ⣿⠯⠃
-  #                ⢀⣠⠶⣋⡭⠶⠚⠛⠹⠏⠛⠛⠲⢮⣹⡷⣦⡀        ⢸⡇                                      ⢸⢸⡇         ⠘⠋⠙⢦⣄⣀⣠⡴⠓⡯⠗
-  #               ⣠⠟⣡⠞⠉⠃    ⢀  ⣀⡾⠋⠙⢮⡻⣦       ⠘⣧    undoing       your time           ⢸⢸⡇                 ⣘⣿
-  #              ⣼⢫⣞⠁  ⠰⣄   ⠈⠓⠋⠉⢻⡄  ⣹⣌⢷⡀      ⣿                                      ⢸⢸⡇                 ⡽⡎
-  #             ⣸⢃⡟⠈    ⠙⢧⡀    ⢀⣠⡿  ⠁⠹⡎⣷      ⣿                                      ⢸⢸⡇                ⣴⣻⠁
-  #            ⢀⡿⣸⠁      ⠈⢻⣄⡀  ⠛⠁⢀⡀   ⣷⢸⡇     ⣿    explaining    your time           ⢸⢸⡇ ⢀             ⣸⡽
-  #            ⢸⡇⣿⠒        ⢯⡽⠚⠛⠛⠉⠉⠁  ⠒⢾⢸⡇     ⣿                                      ⢸⢸⡇ ⠘⣇           ⣾⡗⠃
-  #             ⣿⢸⡀                   ⡿⣸⠇     ⣿   ⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠦ ⢸⢸⡇  ⢹⣄⣤⡆     ⢀⣴⠿⠏
-  #             ⢹⡎⢧⣠                ⣄⣸⢣⡟      ⣿     ⢀⡀                               ⢸⢸⡇ ⠚⠿⣿⠟⠁   ⣤⣶⡾⠚
-  #              ⠻⣎⢳⡀              ⢀⡼⢣⡞⠁      ⣿      "effortless"                    ⢸⢸⡇   ⢸⡆  ⠲⠿⠗⠁
-  #               ⠙⢷⣝⠦⣄⡆        ⠰⣄⡴⢋⣴⠏        ⣿               ⠈⠉⠉⠛⠛⠒                 ⢸⢸⡇  ⢀⣀⣷⣠⣶
-  #                 ⠙⠳⣮⣙⡲⠶⠤⣼⣧⡤⠴⠖⣛⣭⠾⠋          ⣿                                      ⢸⢸⡇  ⠈⠻⢿⡟⠃
-  #                    ⠉⠙⠛⠛⠶⠶⠞⠛⠋⠉             ⣿                                      ⢸⢸⡇    ⢸⡇
-  #                                           ⣿  TOTAL: somebody else's time         ⢸⢸⡇   ⣤⣼⣧⣴⡶
-  #                                           ⢿                                      ⢸⢸⡇   ⠈⠛⡟⠋
-  #                                           ⢸                                      ⢸⢸⡇     ⡇
-  #                                           ⢸   ⣤⡄⣤⡄⣦⣤⢠⡄⢠⣴⡄⣴⢠⣤⡄⣤⡄⣤⣤⢠⣤⢠⣤⡄⣴⡄⣴⡄⣴⡄⣤⣤   ⢸⢸⡇   ⢶⣦⣧⣶⡖
-  #                                           ⢸   ⣿⡇⣿⡇⣿⣿⢸⡇⢸⣿⡇⣿⢸⣿⡇⣿⡇⣿⣿⢸⣿⢸⣿⡇⣿⡇⣿⡇⣿⡇⣿⣿   ⢸⢸⡇    ⢹⡟⠉
-  #                                           ⢸   ⣿⡇⣿⡇⣿⡿⢸⡇⢸⢿⡇⣿⠸⣿⡇⣿⡇⣿⣿⢸⡿⢸⢿⡇⣿⡇⣿⡇⣿⡇⣿⣿   ⢸⢸⡇    ⣸⠁
-  #                                           ⢸   ⠿⠁⠿⠁⠟ ⠈ ⠈⠸⠇⠸ ⠿⠁⠿⠁⠿⠁⠈ ⠈⠸⠇⠸⠇⠸⠃⠿⠁⠿⠁   ⢸⢸⡇  ⠸⣷⣿⣶⡶
-  #                                           ⢸⡀                                     ⠸⢸⡇   ⢸⠏⠉
-  #              ⢰⠞⠓⢶⣶⣄                       ⢸⡇                                      ⢸⡇ ⣀⢀⡿                     ⣠⣶⡶⠚⠳⡆
-  #              ⠸⣄  ⣙⡿⢦                      ⠘⢧⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡴⢦⣄⣀⡼⠇ ⠻⣿⣷⡶⠆                  ⠴⢿⣋⠁ ⣠⠇
-  #               ⠈⠛⠛⠉                          ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉  ⠈⠉   ⢰⠏                       ⠉⠛⠛⠁
-  #                              ⢠⡾⠂                                                     ⠛           ⠾⣆               ⢀⣠⠤⢄
-  #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-  #           ⠉⠉
-  #                                                                                                    ⢴⠚⣻⡄
-  #                                                                                                    ⠈⠉⠁
-  #
-  #       Send the fucking bill to the vendor
-  #
-  # Look at the plumbing required to keep the alleged replacement for
-  # programmers attached to its own tools. Wrappers, compatibility fixes,
-  # writable configuration. I find the sales pitch fucking insulting when the
-  # human work underneath it gets erased from the story
-  #
-  # Every integration repair belongs on the vendor's savings calculation. Every
-  # hour spent supervising, checking, undoing and explaining the output belongs
-  # there too. I want the replace-your-team demo tested with that bill
-  # included. If the savings disappear, cancel the fucking deployment and pay
-  # the people who had to endure it. Let the autonomous-colleague pitch die of
-  # upkeep
   desktop =
     {
       config,
@@ -1904,17 +1482,6 @@ let
         )
       );
     };
-  # another prompt box to fucking bury
-  #
-  # Another costume for the prompt box. Another leaderboard trophy for an answer
-  # I still have to check. I hate the self-congratulation. The made-up command
-  # doesn't become less fucking annoying because this brand won a comparison
-  # chart
-  #
-  # Who paid for the checking? Who cleaned up the patch? Put their time beside
-  # the subscription price. I want the upsell to fail when the cleanup stops
-  # being free. Let the annual renewal die. The brand can rot under its own
-  # victory screenshot while the customer gets their afternoon back
   opencode =
     {
       pkgs,
@@ -2353,16 +1920,6 @@ in
         opencode
       ];
     };
-    # lipstick for the fucking corpse
-    #
-    # The fake answer is pink now. I still hate it. Tasteful lavender doesn't
-    # settle the citation or make the unsolicited paragraph welcome. The fucking
-    # palette is being asked to make a bad idea feel like a considered purchase
-    #
-    # I want the refund page to get this much design attention. Good contrast on
-    # the amount returned. A clear cancellation button. Beautiful typography
-    # announcing that the unwanted chatbot has been removed. Dress the dead
-    # product however you like. I'm interested in the part where it stays dead
     catppuccin =
       {
         config,
@@ -2446,133 +2003,11 @@ in
           };
         };
       };
-    # get the fuck out of the editor
-    #
-    #                        ⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀
-    #                      ⣠⠞⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢭⡉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣩⢿⡇
-    #                    ⣠⠞⠁                                                             ⠻⣄ ⣀⡀    ⣠⠞⠁⢸⡇
-    #                  ⣠⠞⠁                                                               ⢀⣽⣶⣿⠃  ⣠⠞⠁⢀⠔⢹⡇
-    #                 ⢸⣟⣟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿⢛⣟⣿⠁⢀⡔⢁⡴⢹⡇
-    #                 ⢸⡏⠛                                                                   ⠘⣏⠋⣿⠐⢋⡴⢋⡴⢺⡇
-    #                 ⢸⡇  ⢰⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣷⣤⣽⣴⣿⠡⠋⡠⠊⡰⢺⡇
-    #                 ⢸⡇  ⢸⡇   file.nix                                                    ⣿⠈⠉⢿⣽⠠⠊⡠⠊⡠⢺⡇
-    #                 ⢸⡇  ⢸⣇⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣿  ⢸⣿⠠⠎⡠⠊⣠⢺⡇
-    #                 ⢸⡇  ⢸⡇                                                               ⣿   ⣿⢀⣞⣡⠞⣡⢼⣇⣤⣴⣶⣶⣶⣶⣤⣀
-    #                 ⢸⡇  ⢸⡇                                                               ⣿ ⠐⢿⣿⣿⠟⢁⠜⢁⢿⡿⠟⠛⠛⠉⠙⠛⠻⢿⣿⣦⡀
-    #                 ⢸⡇  ⢸⡇                                                               ⣿   ⣿⣆⠔⢁⠔⢁⢼⡇        ⠙⢿⣿⣆
-    #                 ⢸⡇  ⢸⡇                                                               ⣿   ⣿⣇⡔⢁⠔⢁⢼⡇          ⢻⣿⣧
-    #                 ⢸⡇  ⢸⡇          GET THE FUCK OUT                                     ⣿   ⣿⣇⡴⢃⡴⢋⣸⡇           ⢻⣿⣇
-    #                 ⢸⡇  ⢸⡇                                                               ⣿  ⠺⣿⣷⣿⢏⡴⢋⣸⡇           ⠈⡿⠿⣄
-    #                 ⢸⡇  ⢸⡇         OF MY FUCKING FILE                                    ⣿   ⣿⡏⡠⠋⡠⠊⣸⣷⠦⠤⣤⣤⣀⣀⣀⡀    ⠧⠤⠟
-    #                 ⢸⡇  ⢸⡇                                                               ⣿   ⣿⡏⡠⠊⡠⠊⣸⡟     ⠈⠉⠉⠙⠛⠛⠒⠶⠶⠦⢤⣤⣄
-    #                 ⢸⡇  ⢸⡇                                                               ⣿   ⣿⠋⣡⠎⣠⠞⢸⡧⠤⢤⣄⣀  AI         ⣿
-    #                 ⢸⡇  ⢸⡇    ⠠⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤                          ⣿ ⢀⣀⣿⢈⣁⠞⢡⠞⢹⡇     ⠉⠉⠉⠙⠓⠒⠒⠶⠤⠤⣤⣄⡿
-    #                 ⢸⡇  ⢸⡇    ⠠⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠄             ⣿ ⠈⠻⣿⡿⢋⠔⢁⠜⢹⠇                ⢰⡇
-    #                 ⢸⡇  ⢸⡇    ⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀                          ⣿  ⢠⣿⠐⢁⠔⢁⠔⣿  ⠒⠒⠒⣢⣤⡤⠤⣤⣄⣀⡀    ⢸⡇
-    #                 ⢸⡇  ⢸⡇                                                               ⣿  ⢸⣿⠐⢃⡔⢁⡔⣿  ⣀⣴⠟⠉     ⢉⡴⣋   ⢸⠃
-    #                 ⢸⡇  ⢸⡇    ⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁             ⣿  ⣿⣿⠐⢋⡴⢋⡴⡿  ⡾⠁     ⢀⡴⠋ ⠹⣆  ⣾
-    #                 ⢸⡇  ⢸⡇                                                               ⣿ ⢠⡇⣿⠠⠋⡠⠊⣰⡇ ⢸⡇    ⢀⡴⠋    ⣿  ⣿
-    #                 ⢸⡇  ⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢿⣾⣷⣿⠢⠊⡠⠊⣸⡇ ⠘⣇  ⢀⡴⠋      ⡿  ⡟
-    #                 ⢸⡇                                                                    ⢀⡟⠉⣿⠠⠎⣠⠞⢹⠇  ⠹⢆⣴⠋      ⢀⡼⠃ ⢰⡇
-    #                 ⢸⣿⡿                                                                   ⣸⠷⡷⣿⣠⠞⠁ ⣼⠻⣦⡀⠐⠟⠱⢦⣤⣀⣀⣀⣤⣶⣋⡀  ⢸⡇
-    #                ⢠⣿⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⢻⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⡿⠛⠛⠛⠁   ⣿⢀ ⠙⢷⡄   ⠈⠉⠁   ⠈  ⢸⠃
-    #                ⣾⣿⡏                         ⡿                   ⢸⡆                             ⣿⠈⠙⠻⣿⡁            ⣾
-    #               ⢸⣿⣿                         ⣸⠇                    ⢿                             ⠛⠲⠶⠦⢬⣷⣤⣀⣀⣀        ⣿
-    #               ⢸⣿⡟                    ⣠⡶⠶⠶⠶⠿⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠾⠷⠶⢶⣄                                 ⠉⠉⠉⠛⠛⠒⠶⠶⠤⣤⡟
-    #               ⢻⣿⡇                 ⢀⣠⣞⣉⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣈⣳⣄                       ⢲⡶⢤⡄             ⢀⡀
-    #               ⢸⣿⣷                 ⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉                        ⢻⡞              ⠈⢯⠛⢶⣤
-    #               ⠈⣿⣿⡄  ⣰⠟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠳⣄                             ⠈⠷⠟⠁
-    #                ⠹⣿⣿⣄⡾⣃⣮⣭⡭⢽⣯⣭⡭⢽⣯⣭⣭⢽⣯⣭⣭⢽⣭⣭⣭⠽⣭⣭⣭⠿⣭⣭⣭⡿⣭⣭⣭⡯⣭⣭⣽⡯⢭⣭⣽⡯⢭⣭⣽⣯⢭⣭⣽⣭⢭⣭⣿⣭⠭⣭⣿⣭⠭⣭⣗⣀⡀⠈⠳⣄
-    #                 ⠙⣿⣿⣶⣳⣶⡒⣺⣷⣶⡖⢚⣳⣶⣶⠚⣳⣶⣶⡒⣻⣶⣶⣖⢛⣶⣶⣶⠛⣶⣶⣶⡟⢲⣶⣶⣞⢓⣶⣶⣾⡓⣲⣶⣾⡓⢲⣶⣾⣳⠒⣶⣶⣻⡒⣲⣶⣻⣖⢒⣶⣟⣶⠒⣶⣗⣀⡀⠈⠻⣦⡀
-    #              ⢰⠞⢳⣾⣿⣿⣿⣿⣶⣿⠷⠶⣖⢺⠷⠶⠶⡒⡻⠶⠶⢖⢛⠷⠶⠶⡞⣻⠶⠶⢶⡛⡶⠶⠶⢞⢓⠶⠶⠾⡛⡲⠶⠶⢿⢓⡶⠶⠾⣗⢲⠶⠶⠿⡒⡲⠶⠿⢗⢒⠶⠾⠿⡖⣲⠶⠿⢶⡒⡶⠾⠤⢄⠈⠛⢦⡀                   ⣠⣶⡶⠚⠳⡆
-    #              ⢸⣴⠏ ⣙⡿⢯⠛⢿⣿⣿⣯⣍⣉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉   ⠙⢦⡀                ⠴⢿⣋⠁ ⣠⠇
-    #              ⠈⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠋                  ⠉⠛⠛⠁
-    #                           ⠈⠉⠙⣛⡿⠿⠿⠿⠿⠟⠛                                                            ⠾⣆               ⢀⣠⠤⢄
-    #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-    #           ⠉⠉
-    #                                                                                                    ⢴⠚⣻⡄
-    #                                                                                                    ⠈⠉⠁
-    #
-    # I am opening a file. I am moving a cursor. Stop interpreting ordinary work
-    # as a request for your fucking company. The suggestion arrives before the
-    # person has decided what they mean and now they have to spend attention
-    # pushing it away
-    #
-    #                 ⢾⡇                                                                                            ⢰⣳
-    #                ⠰⣯⠇                                                                                            ⠸⣽⠆
-    #                ⢘⣽                                                                                              ⣯⡃
-    #                ⢹⣞⠁                                                                                            ⠈⣳⡏
-    #                ⣼⢯                                                                                              ⡽⣧
-    #                ⢸⣳                                                                                              ⣞⡇
-    #                ⠺⣿⠆ ⢀⣀⣤⣤⣤⣤⣤⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣠⣤⣤⣤⣤⣀ ⠰⣿⠗
-    #            ⣀⣤⣄⣀⡀⠿⠃⢰⠏⠁     ⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠁    ⠙⣧⠘⠿⢀⣀⣠⣤⣀
-    #            ⣏ ⠈⠻⢿⣄ ⠸⣆                                                                                        ⣠⠟ ⣠⣿⠿⠁ ⣹
-    #            ⠙⠲⠶⠖⠋⠈  ⢸⡟⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿  ⠁⠙⠲⠶⠖⠋
-    #                    ⢸⡇ ⣴⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⣶  ⣿
-    #                    ⢸⡇ ⣿                                                                                  ⣿  ⣿
-    #                    ⢸⣧⣦⣿                                                                                  ⣿⢰⡄⣿
-    #                    ⢸⡇⠈⣿                     [KEEP] [YOUR] [FUCKING] [CHATBOT] [OUT]                      ⣿⠁ ⣿
-    #                    ⢸⡇ ⣿                                                                                  ⣿  ⣿
-    #                    ⢸⡇⠤⣿                                                                                  ⣿⠢ ⣿
-    #                    ⢸⡇ ⣿                                                                                  ⣿  ⣿
-    #               ⡀    ⢸⡗⠷⣿                                                                                  ⣿⡸⠇⣿    ⣀
-    #              ⢰⡇    ⢸⡇ ⣿                                                                                  ⣿  ⣿    ⢹⡄
-    #            ⢠⣤⣾⣀⣄   ⢸⡇ ⣿             I despise the entitlement to every blank line. Sometimes             ⣿  ⣿   ⢀⣀⣇⣤⡶
-    #             ⢻⡿⠟⠃   ⢸⡇⠊⣿                                                                                  ⣿⠑ ⣿   ⠈⠛⢿⡛⠁
-    #             ⢸⠇     ⢸⣇⡀⣿                                                                                  ⣿⢀⡀⣿     ⢸⡇
-    #             ⣾      ⢸⡏⠛⣿             the pause is the work. Sometimes the thought needs to stay           ⣿⠞⠃⣿     ⠈⣧
-    #           ⢠⣀⣿⣠⣤    ⢸⡇ ⣿                                                                                  ⣿  ⣿    ⢀⣀⣿⣠⣤
-    #           ⠈⠻⡿⠟⠁    ⢸⡇⢀⣿                                                                                  ⣿⡀ ⣿    ⠈⠛⣿⠟⠃
-    #            ⢠⡇      ⢸⡇⠁⣿             unfinished. I want the generated paragraph off the screen            ⣿⠈ ⣿      ⢻
-    #            ⠸⡇      ⢸⣧⣄⣿                                                                                  ⣿⢠⡄⣿      ⣸
-    #           ⢠⣤⣧⣴⡖    ⢸⡇⠉⣿                                                                                  ⣿⠉ ⣿    ⠠⣤⣿⣤⣴
-    #           ⠈⠙⣿⠋     ⢸⡇ ⣿             long enough for a person to have their own idea                      ⣿  ⣿     ⠉⣿⠛⠁
-    #             ⢻      ⢸⡇⡤⣿                                                                                  ⣿⢤ ⣿     ⢀⡏
-    #             ⢸⡇⣀⡄   ⢸⡇ ⣿                                                                                  ⣿  ⣿    ⡀⢸⠇
-    #            ⣰⣾⣿⣿⣇   ⢸⡇ ⣿                         ⢀⡴⠦⣤⣤                      ⣤⣤⠴⢦⡀                         ⣿  ⣿   ⣨⣿⣿⣾⣿
-    #            ⣧ ⢸⡟⣿⣦  ⢸⡇ ⣿                         ⠘⣧⡀⢈⣻⢷⠄                   ⠾⣟⡁⢀⣼⠃                         ⣿  ⣿  ⣴⣿⢻⡇ ⣼
-    #            ⠈⠛⠒⢿⠁⢀⡀ ⢸⡇ ⣿                          ⠈⠉⠉⠁                      ⠈⠉⠉⠁                          ⣿  ⣿   ⢈⡟⠒⠛⠁
-    #              ⢠⣼⣷⣿⠇ ⢸⡇ ⣿                                                                                  ⣿  ⣿  ⣿⣾⣥⣤
-    #               ⠉⠙⣇  ⢸⡇ ⠛⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠛  ⣿  ⣼⠛⠋⠁
-    #                 ⠘⣦ ⣸⡧⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠴⣤⣄⣀⡀ ⣀⣠⣤⠶⠛⠋⠛⢶⣄⣀⣀⣀⣀⣤⣤⣤⣄   ⢀⣤⣄⡀     ⣠⡿ ⣼⠃
-    #                 ⢀⣨⣷⣿⠇                                                     ⠈⠉⠙⠛⠋⠁      ⠈⠉⠉⠉    ⠉⠳⣦⡴⠋ ⠈⠙⠳⢦⣤⡶⠛⠁⣿⣾⣥⣀
-    #                  ⠉⠉⢳⡄                                                                                      ⣠⠞⠙⠛⠁
-    #                     ⠙⠂                                                                                    ⠐⠋
-    #
-    #              ⢰⠞⠓⢶⣶⣄                                                                                          ⣠⣶⡶⠚⠳⡆
-    #              ⠸⣄  ⣙⡿⢦                                                                                        ⠴⢿⣋⠁ ⣠⠇
-    #               ⠈⠛⠛⠉                                                                                            ⠉⠛⠛⠁
-    #                              ⢠⡾⠂                                                                 ⠾⣆               ⢀⣠⠤⢄
-    #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-    #           ⠉⠉
-    #                                                                                                    ⢴⠚⣻⡄
-    #                                                                                                    ⠈⠉⠁
-    #
-    # The disable switch should stay disabled through the update, the rename,
-    # and the next desperate onboarding campaign. I want the feature killed in
-    # the release notes. A dead help page explaining how to enable it can be its
-    # obituary. Get the fucking sludge out of the sidebar
-    #
-    # Willow (@anarchopupgal) wrote: "I came to linux, to debian, explicitly to
-    # leave the slop behind." Then: "Fuck me for wanting to trust my
-    # software". I want that refusal taken seriously. Stop treating a person
-    # saying get this shit away from me as an unfinished onboarding flow
-    #
-    # https://x.com/anarchopupgal/status/2105212475025269099
     vscode = { config, lib, ... }: {
       config = lib.modules.mkIf config.euvlok.home.vscode.enable {
         programs.vscode.profiles.default.userSettings.chat.disableAIFeatures = true;
       };
     };
-    # kill the AI launcher feature
-    #
-    # Find the app. Open the app. Shut the fuck up. I hate having a synthetic
-    # thought partner wedged between the keyboard and a calculator. Locating an
-    # application does not need a conversation or a subscription pitch
-    #
-    # I want the AI button gone. Leave the space empty. Stop asking whether I
-    # want to try it now. I already switched the fucking thing off. Let the
-    # feature die thoroughly enough that its documentation becomes a broken link
     raycast = _: {
       programs.raycast.configuration.settings = {
         disableAi = true;
@@ -2585,18 +2020,6 @@ in
         ];
       };
     };
-    # pick which fucking subscription deserves an obituary
-    #
-    # Provider, model, effort, context, credentials. Another administrative
-    # chore for the product selling effortless work. I hate the little
-    # priesthood around getting a dependable answer. The model picker is another
-    # menu I now have to understand before finding out the answer needs checking
-    # anyway
-    #
-    # Setup is work. Checking is work. Repair is work. Put the whole wasted
-    # afternoon on the fucking bill. I want the subscription cancelled when its
-    # promised saving depends on pretending all of that was free. Let the
-    # replacement pitch die under its own timesheet
     personal =
       {
         config,
@@ -2784,17 +2207,6 @@ in
       };
     codex = codexEnabled;
     claude-code = claudeCodeEnabled;
-    # the same fucking corpse on every machine
-    #
-    # One machine wasn't enough. The same unwanted paragraph gets another
-    # address and somebody calls it adoption. I hate the assumption that
-    # spreading the fucking product proves it deserved to exist
-    #
-    # The network can move the bytes. It cannot supply a reason to read them. I
-    # want the rollout cancelled before the cleanup gets sold as another
-    # service. A dead product mirrored across five hosts is still a dead
-    # product. The deployment can fail without becoming somebody else's
-    # ecosystem
     hosts = {
       unsignedInt8 = _: {
         imports = [
@@ -2842,73 +2254,6 @@ in
       };
     };
   };
-  # kill the fucking operating-system chatbot
-  #
-  #                         ⢀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡀
-  #                       ⢀⡴⠋                                                   ⣠⠞⢹⡇
-  #                      ⣴⣯⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⠞⠁⢀⢸⡇
-  #                      ⣿⢾⠆                                                ⠰⡷⣿⢀⠔⢁⢸⡇
-  #                      ⣿                                                    ⣿⢀⡴⢁⢸⡇
-  #                      ⣿                                                    ⣿ ⡴⢃⢸⡇
-  #                      ⣿                AI INTEGRATION                      ⣿⠈⡠⠋⢸⡇            ⢀⣠⡴⠶⠛⠛⠛⠛⠛⠛⠶⢦⣤⣀
-  #                      ⣿                                                    ⣿⠈⡠⠊⢸⡇         ⢀⣴⠞⠋⠁    ⣰⣆     ⠉⠳⠦⢀⡴⠃
-  #                      ⣿                                                    ⣿⠈⣠⠊⢸⡇        ⣴⠟⠁      ⢰⡏⠸⣆     ⢀⡴⠋⣤⡀
-  #                  ⢀⡾  ⣿    ⢸⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢹⡇    ⣿⠈⣡⠎⢸⡇      ⢀⡾⠁       ⢠⡟⢻⡄⠹⣆  ⢀⡴⠋  ⠈⢳⡄
-  #                  ⣼⠁  ⣿    ⢸⡇   ⢀⣠⠶⠖⣛⠳⠶⣤⡀                            ⢸⡇    ⣿⠐⢁⠞⢸⡇     ⢀⡾⠁       ⢀⣟ ⢀⣻⡄⠹⢂⡴⠋      ⢿⡀
-  #               ⠰⣶⣴⣏⣤⣄ ⣿    ⢸⡇  ⢠⡟⠁  ⣿   ⠹⣆    OFF             ON     ⢸⡇    ⣿⠐⢁⠔⢸⡇     ⣸⠇     ⣀⣤⠶⠛⠉⢙⣽⠋⢀⣴⠋⠐⠦⣄⡀    ⠘⣧
-  #                ⠙⡿⠿⠛⠁ ⣿    ⢸⡇  ⣿    ⠻    ⣿                           ⢸⡇    ⣿⠐⢁⠔⢸⡇     ⣿  ⣀⡤⠶⠛⠉   ⠠⣾⢁⣴⠟⠁    ⠉⠓⠦⣄⡀ ⣿
-  #                ⢸⠇    ⣿    ⢸⡇  ⠹⣆       ⢠⡟                           ⢸⡇    ⣿⠐⢋⡔⢸⡇     ⣿  ⠉⠛⠶⢤⣀⡀  ⢀⣴⠟⢥⣄   ⢀⣠⡤⠶⠛⠉⠁ ⣿
-  #              ⣀⡀⣾⢀⣀   ⣿    ⢸⡇   ⠙⠳⣤⣄⣀⣠⣤⠶⠋       ⠘⠂⠘ ⠚ ⠛ ⠓ ⠃⠐⠃        ⢸⡇    ⣿⠠⠋⡴⢸⡇     ⢸⡇     ⠈⠙⠓⣠⠟⠱⢤⡤⢿⣇⡶⠚⠋⠁     ⢠⡟
-  #              ⠙⢿⣿⣿⠟   ⣿    ⢸⣇⣀⣀⣀⣀⣀⣀⣀⣉⣁⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣸⡇    ⣿⠠⠊⡠⢸⡇      ⢿⡀     ⣠⠞⠁⣦  ⢀⣿⡾⠁       ⢀⡾⠁
-  #               ⢸⡇     ⣿     ⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉     ⣿⠠⠊⡠⢸⡇      ⠈⢷⡀  ⣠⠞⠁  ⠘⣧ ⣼⣿⠃       ⢀⡾⠁
-  #               ⢸⡇     ⣿                                                    ⣿⠠⠞⡠⢸⡇        ⠛⣠⠞⠁     ⠘⣇⣻⠃      ⢀⣴⠟
-  #             ⠰⣶⣾⣷⣿⠇   ⣿        ⢰⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⢶⡄        ⣿⢀⠞⣡⢸⡇       ⠠⠞⠁⠘⢶⣄⡀    ⠘⠋    ⢀⣠⡴⠛⠁
-  #              ⠈⢹⡏⠁    ⣿        ⢸          STAYS DISABLED         ⢸⡇        ⣿⢀⠔⢁⢸⡇            ⠈⠙⠛⠶⠶⣤⣤⣤⣤⡴⠶⠞⠋⠁
-  #               ⢸⡇     ⣿        ⢸                                 ⢸⡇        ⣿⢀⠔⢁⢸⡇
-  #              ⣠⣀⣷⣴⣾   ⣿        ⠘⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠚⠃        ⣿⢀⡴⢁⢸⡇                            ⢀⣀⡀
-  #              ⠈⠛⢻⡟⠁   ⣿                                                    ⣿ ⡴⢃⢸⡇          ⣼⠳⣦             ⠰⣞⠋⣽⠁
-  #                ⠘⣇    ⣿                                                    ⣿⠈⡠⠋⣸⠇          ⠿⠛⠁              ⠈⠳⠏
-  #                 ⢻⣄⣴⡆ ⣿⣠⡄                                                ⢠⣄⣿⠈⣠⠞⠁
-  #                ⠻⢿⣿⠟⠁ ⣿⣽⣥⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣴⢦⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣬⣯⣿⠞⠁
-  #                  ⠘⣧                        ⢀⡾⡱⢫⠞
-  #                   ⠘⣆⢀⣴                    ⢀⡞⡵⣱⠏
-  #                  ⠠⣴⣿⣿⡿                   ⢀⡞⡼⣱⠏
-  #                    ⠉⠙⣆                   ⣾⢱⢱⡏
-  #                      ⠘⠇                 ⢰⡇⡏⣾                                            ⢀⣤⣄⡀               ⢀⣀
-  #                                         ⢸⡇⡇⡇                                           ⢀⡾⠁⠈⠙⠓⠦⣤⡀           ⢸⡍⠙⠛⠓⠶⠦⣤
-  #                                         ⢸⡇⡇⣷                                           ⣼⠁    ⢼⣋⠳⢤⣀         ⠘⣇⢿⠇ ⣴⡄⢸⡇
-  #                                         ⠈⣧⢳⡹⣆                                         ⢼⣅⡀   ⣠⣞⡉⠙⠲⠟          ⢿   ⠈⠁ ⣷
-  #                                          ⠘⢧⡳⡝⣦⡀                                    ⢀⣠⠞⣫⢞⣹⠗⠦⣬⡷⢤⣍⣳⠆           ⠸⠧⣤⣄⣀⣀ ⢹⡄
-  #                                           ⠈⠳⣝⠮⣙⢦⣄⡀                             ⢀⣠⡴⢞⣫⠕⣫⡴⠋⠁     ⠈⠉                ⠈⠉⠙⠛⠃
-  #                                             ⠈⠳⢮⣑⠮⣝⡲⢦⣤⣀⣀                 ⢀⣀⣀⣤⡴⠶⣚⡫⢕⣪⡭⠖⠋⠁
-  #                                                ⠈⠛⠲⢭⣟⣒⡪⠭⢝⣛⣓⣒⠶⠶⠶⠶⠶⠶⠶⠶⠶⢖⣚⣛⣛⠭⠭⢕⣒⣪⡭⠶⠚⠋⠁
-  #              ⢰⠞⠓⢶⣶⣄                                 ⠉⠙⠛⠓⠶⠶⠶⠭⣭⣭⣭⣭⣭⣭⡭⠭⠵⠶⠶⠖⠛⠋⠉⠁                                 ⣠⣶⡶⠚⠳⡆
-  #              ⠸⣄  ⣙⡿⢦                                                                                        ⠴⢿⣋⠁ ⣠⠇
-  #               ⠈⠛⠛⠉                                                                                            ⠉⠛⠛⠁
-  #                              ⢠⡾⠂                                                                 ⠾⣆               ⢀⣠⠤⢄
-  #          ⠠⡖⠛⡄      ⠐⠒⠒⠒⠒⠒⠒⠒⠒⠚⠁                                                                    ⠈⠓⠒⠒⠒⠒⠒⠒⠒⠒⠂     ⠘⠶⠒⠚⠃
-  #           ⠉⠉
-  #                                                                                                    ⢴⠚⣻⡄
-  #                                                                                                    ⠈⠉⠁
-  #
-  #       Leave the fucking plug on the floor
-  #
-  # Apparently buying the computer did not buy the right to be left
-  # alone. Another rewrite button. Another prompt box. I hate the fucking
-  # presumption that the operating system should keep trying to insert generated
-  # prose into the day
-  #
-  # I want the off switch to be the feature's headstone. Stop resurrecting it
-  # under a different name. Stop asking whether I'm ready to embrace it. I want
-  # forced integration to lose enough sales that the next keynote has to explain
-  # why the chatbot was removed
-  #
-  # Brian Tierney put it this way: "it’s just there & being forced down
-  # everyone’s throats" and "it’s fucking sick". That is the part I fucking
-  # loathe. Having to fight an unwanted product for the right to keep using
-  # software I already paid for
-  #
-  # https://x.com/BTTierney85/status/2104259146443116834
   darwin =
     { euvlokInputs }:
     { ... }:
@@ -2920,25 +2265,6 @@ in
         defaultState = false;
       };
     };
-  # put the fucking disclosure where people can see it
-  #
-  # Put it beside the price before the money changes hands. I despise the
-  # evasiveness around how the image was made. The seller wants applause for a
-  # new creative process until the buyer asks what the fucking process was
-  #
-  # "You can't tell the difference" is a shit excuse. "Everyone does it" is
-  # another. I want an honest label and a refund when the production method was
-  # misrepresented. The buyer shouldn't have to cross-examine a screenshot to
-  # find out what they're paying for
-  #
-  # The badge doesn't settle permission either. The artist whose work went into
-  # training still matters. Credit matters. Consent matters. I want the seller
-  # to answer that question instead of treating disclosure as a little
-  # absolution sticker
-  #
-  # I hope the generated-art storefront dies of honest labels. I hope the
-  # refunds kill the margin. Put the production method beside the price and let
-  # the checkout discover how much the buyer actually wanted the fucking sludge
   firefoxExtensions =
     { buildFirefoxXpiAddon, lib, ... }:
     lib.attrsets.mapAttrs (
