@@ -1808,7 +1808,8 @@ let
         '';
       };
       servers = {
-        context7.command = withSecrets "context7-mcp" pkgs.context7-mcp {
+        clickup.url = "https://mcp.clickup.com/mcp";
+        context7.command = withSecrets "context7-mcp" pkgs.unstable.context7-mcp {
           CONTEXT7_API_KEY = "context7_api_key";
         };
         gitlab = {
