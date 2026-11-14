@@ -151,6 +151,18 @@ let
         }
     // inputs.nixpkgs.lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+      uutils-diffutils =
+        if prev.uutils-diffutils.version == "0.6.0" then
+          prev.uutils-diffutils.overrideAttrs (old: {
+            # https://github.com/NixOS/nixpkgs/pull/587325
+            # Use stdenv's GNU patch instead of its Homebrew name
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace src/utils.rs \
+                --replace-fail '"gpatch"' '"patch"'
+            '';
+          })
+        else
+          prev.uutils-diffutils;
       llvmPackages_latest = prev.llvmPackages_latest // {
         lldb =
           if prev.llvmPackages_latest.lldb.version == "23.1.3" then
