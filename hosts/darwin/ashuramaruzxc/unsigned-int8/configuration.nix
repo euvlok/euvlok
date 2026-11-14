@@ -90,7 +90,7 @@
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = false;
     nix-index.enable = true;
-    pared.features.mailSummaries = true;
+    pared.enable = lib.mkForce false;
     # Environment
   };
 
