@@ -1,5 +1,17 @@
-{ lib, config, ... }:
 {
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  nix-homebrew.taps."notprotonnot/homebrew-notproton" = pkgs.fetchFromGitHub {
+    owner = "NotProtonNot";
+    repo = "homebrew-notproton";
+    rev = "f17a85b4f530e29544a4d92eac4715cd7e9f63e6";
+    hash = "sha256-ssHdG/sp5gDyUB9VYAHOrcpNcfq+isOa+im6EeN4pPk=";
+  };
+
   homebrew = {
     enable = true;
     onActivation = {
@@ -20,8 +32,8 @@
       "cemu"
       "ppsspp-emulator"
       ### --- Gayming --- ###
-      "crossover" # Supporting wine project
       "dolphin"
+      "notprotonnot/notproton/notproton"
       "steam" # Gayming
       "wine@devel"
       ### --- Gayming --- ###
