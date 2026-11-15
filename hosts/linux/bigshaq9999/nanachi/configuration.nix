@@ -20,6 +20,9 @@
       "wheel"
       "libvirtd"
     ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSS01C9Um/08HZJH8CCTdUvkJK8RUmZ4QD91V5KAFfd"
+    ];
   };
 
   programs = {
@@ -29,14 +32,17 @@
     };
     zsh.enable = true;
     dconf.enable = true;
-    steam.enable = true;
+    # steam.enable = true;
     virt-manager.enable = true;
   };
 
   networking = {
-    hostName = "nanachi";
+    hostName = "nixos";
     networkmanager.plugins = [ pkgs.networkmanager-openvpn ];
   };
+
+  services.openssh.enable = true;
+  services.tailscale.enable = true;
 
   euvlok.nixos.locale = {
     enable = true;
@@ -52,7 +58,7 @@
   };
 
   services = {
-    mullvad-vpn.enable = true;
+    # mullvad-vpn.enable = true;
     flatpak.enable = true;
     earlyoom.enable = true;
   };
