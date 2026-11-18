@@ -4,6 +4,11 @@
   sharedModule,
 }:
 {
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [ homeManagerModule ];
 
   home-manager = {
@@ -47,6 +52,12 @@
       nixcord.enable = true;
       vscode.enable = true;
       yazi.enable = true;
+    };
+
+    home.packages = lib.attrsets.attrValues {
+      inherit (pkgs)
+        telegram-desktop
+        ;
     };
   };
 }
