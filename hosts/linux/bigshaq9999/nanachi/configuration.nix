@@ -5,6 +5,7 @@
     ./fonts.nix
     ./input.nix
     ./power.nix
+    ./kanata.nix
   ];
 
   environment.plasma6.excludePackages = [
