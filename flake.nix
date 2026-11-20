@@ -114,13 +114,6 @@
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } ./flake-modules;
 
-  nixConfig = {
-    extra-substituters = [ "https://catppuccin.cachix.org" ];
-    extra-trusted-public-keys = [
-      "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
-    ];
-  };
-
   inputs = {
     bootvine = {
       url = "git+https://codeberg.org/wvhulle/bootvine";

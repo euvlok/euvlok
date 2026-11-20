@@ -123,13 +123,6 @@
       # EDIT THOSE MODULES, then run `nix run .#write-flake` from the repo root
     '';
 
-    nixConfig = {
-      extra-substituters = [ "https://catppuccin.cachix.org" ];
-      extra-trusted-public-keys = [
-        "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
-      ];
-    };
-
     write-hooks = [
       {
         program =
