@@ -12,9 +12,8 @@ the target instance and available tools before making requests.
 
 - Identify the instance, owner, and repository from the repository's remote URL
   or the user's Forgejo link.
-- Treat Tenjin (`https://git.tenjin-dk.com`) as the configured instance, not the
-  destination for every Forgejo request. Codeberg and other instances need their
-  own server configuration.
+- Verify that the configured server points at the target instance. Codeberg and
+  other Forgejo instances can require different server configurations.
 - Discover the server's available tools and inspect their schemas before calling
   them. Supported operations depend on the installed MCP server and Forgejo
   versions.
@@ -31,12 +30,10 @@ the target instance and available tools before making requests.
 
 ## Authentication
 
-- Let the launcher load authentication from the SOPS template `forjego_tenjin`.
-  The template is rendered from the same-named secret containing `FORGEJO_URL`
-  and `FORGEJO_ACCESS_TOKEN`.
+- When the profile declares the `forjego_tenjin` SOPS secret,
+  the launcher loads `FORGEJO_URL` and `FORGEJO_ACCESS_TOKEN` from its template.
+  Otherwise the server uses its environment.
 - Set `FORGEJO_URL` to a complete HTTP(S) URL.
-- Preserve the identifier `forjego_tenjin`. Its spelling is intentional in the
-  existing configuration; do not rename it as a typo correction.
 - Do not read or print the secret to troubleshoot authentication.
 
 ## Checking connectivity
@@ -63,8 +60,8 @@ the target instance and available tools before making requests.
 
 ## Maintaining configuration
 
-- Edit the source in `/etc/nixos/slop/skills/forgejo`. The installed skill is a
-  Home Manager symlink; do not edit files inside `/nix/store`.
+- Edit the source in `hosts/hm/ashuramaruzxc/agent-tools/skills/forgejo`.
+  Home Manager symlinks the installed skill to the Nix store.
 - After changing the launcher, shared server settings, or skill source, activate
   the relevant Home Manager configuration and reconnect the MCP client.
 - When applying a tested fix directly to live client settings, update the Nix
