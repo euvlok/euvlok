@@ -74,6 +74,8 @@ _: {
     hl.bind("CTRL + Print", hl.dsp.exec_cmd("wl-paste | swappy -f -"))
     hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
+    hl.bind("Control_R", hl.dsp.global("discord:discord-toggle-mute"))
+
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
