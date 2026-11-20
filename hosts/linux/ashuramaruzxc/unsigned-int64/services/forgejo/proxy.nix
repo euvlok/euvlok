@@ -15,7 +15,7 @@ let
     };
     # Forgejo serves uploaded avatars before its normal sign-in middleware.
     "~ ^/(avatars|repo-avatars)/" = {
-      proxyPass = lib.removeSuffix "/" cfg.settings.server.LOCAL_ROOT_URL;
+      proxyPass = lib.strings.removeSuffix "/" cfg.settings.server.LOCAL_ROOT_URL;
       recommendedProxySettings = true;
       extraConfig = ''
         auth_request /_forgejo_auth;

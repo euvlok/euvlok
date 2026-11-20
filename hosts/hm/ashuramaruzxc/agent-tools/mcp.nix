@@ -13,19 +13,75 @@ let
     forgejo = "forjego_tenjin";
     gitlab = "gitlab_simsoft";
   };
+  /**
+    Check whether the current host declares a SOPS secret
+
+    # Inputs
+
+    `name`
+    : Key in `sops.secrets`, not the path to the secret on disk
+
+    # Type
+    ```
+    hasSecret :: String -> Bool
+    ```
+
+    # Examples
+    :::{.example}
+    ## `hasSecret` usage example
+    On a host without the SOPS module:
+    ```nix
+    hasSecret "context7_api_key"
+    => false
+    ```
+    :::
+  */
   hasSecret = name: secrets ? ${name};
   context7 =
     if hasSecret secretNames.context7 then
       pkgs.writeShellApplication {
         name = "context7-mcp";
+        meta.mainProgram = "context7-mcp";
         text = ''
-          CONTEXT7_API_KEY=$(< ${lib.escapeShellArg secrets.${secretNames.context7}.path})
+          CONTEXT7_API_KEY=$(< ${lib.strings.escapeShellArg secrets.${secretNames.context7}.path})
           export CONTEXT7_API_KEY
-          exec ${lib.getExe packages.context7-mcp} "$@"
+          exec ${lib.meta.getExe packages.context7-mcp} "$@"
         '';
       }
     else
       packages.context7-mcp;
+  /**
+    Wrap an MCP server to export the environment from a runtime SOPS template
+
+    Return the original package if the host does not declare the secret
+
+    # Inputs
+
+    `options`
+    : Required fields: `name` names the wrapper executable, `package` is a
+      derivation with a `meta.mainProgram`, `secret` names the secret and
+      its matching template, and `setup` is Bash to run after sourcing it
+
+    # Type
+    ```
+    withEnvironment :: { name :: String; package :: Derivation; secret :: String; setup :: String; } -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## `withEnvironment` usage example
+    On a host without the GitLab secret:
+    ```nix
+    withEnvironment {
+      name = "gitlab-mcp";
+      package = packages.glab;
+      secret = secretNames.gitlab;
+      setup = "";
+    }
+    => packages.glab
+    ```
+    :::
+  */
   withEnvironment =
     {
       name,
@@ -38,6 +94,7 @@ let
     else
       pkgs.writeShellApplication {
         inherit name;
+        meta.mainProgram = name;
         text = ''
           set -a
           # shellcheck source=/dev/null
@@ -65,7 +122,7 @@ let
   servers = {
     clickup.url = "https://mcp.clickup.com/mcp";
     cloudflare.url = "https://mcp.cloudflare.com/mcp";
-    context7.command = lib.getExe context7;
+    context7.command = lib.meta.getExe context7;
     gitlab = {
       command = lib.meta.getExe (withEnvironment {
         name = "gitlab-mcp";
@@ -109,8 +166,53 @@ let
     };
     openaiDeveloperDocs.url = "https://developers.openai.com/mcp";
   };
-  generic = server: removeAttrs server [ "codex" ];
-  ompServers = lib.mapAttrs (_: server: lib.hm.mcp.addType (generic server)) servers;
+  /**
+    Strip Codex-only settings before exporting a server to other clients
+
+    # Inputs
+
+    `server`
+    : Server settings, optionally including a `codex` attribute
+
+    # Type
+    ```
+    generic :: AttrSet -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `generic` usage example
+    ```nix
+    generic { command = "mcp-nixos"; codex.tool_timeout_sec = 120; }
+    => { command = "mcp-nixos"; }
+    ```
+    :::
+  */
+  generic = server: lib.attrsets.removeAttrs server [ "codex" ];
+  ompServers = lib.attrsets.mapAttrs (_: server: lib.hm.mcp.addType (generic server)) servers;
+  /**
+    Add overridable Codex defaults to the shared MCP server settings
+
+    # Inputs
+
+    `server`
+    : Shared server settings, optionally including a `codex` attribute set.
+      Shared keys win over the corresponding Codex defaults
+
+    # Type
+    ```
+    codexServer :: AttrSet -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `codexServer` usage example
+    ```nix
+    (codexServer { command = "mcp-nixos"; codex.tool_timeout_sec = 120; }).tool_timeout_sec
+    => lib.modules.mkDefault 120
+    ```
+    :::
+  */
   codexServer =
     server:
     lib.attrsets.mapAttrs (_: lib.modules.mkDefault) (
@@ -129,8 +231,10 @@ in
     [
       {
         programs.mcp = {
-          enable = lib.mkIf (config.programs.zed-editor.enable || config.programs.claude-code.enable) true;
-          servers = lib.mapAttrs (_: generic) servers;
+          enable = lib.modules.mkIf (
+            config.programs.zed-editor.enable || config.programs.claude-code.enable
+          ) true;
+          servers = lib.attrsets.mapAttrs (_: generic) servers;
         };
         programs.claude-code.enableMcpIntegration = true;
       }
@@ -140,8 +244,8 @@ in
     ]
     ++ lib.lists.optional (options ? sops.templates) {
       sops.templates =
-        lib.genAttrs
-          (lib.filter hasSecret [
+        lib.attrsets.genAttrs
+          (lib.lists.filter hasSecret [
             secretNames.gitlab
             secretNames.forgejo
           ])

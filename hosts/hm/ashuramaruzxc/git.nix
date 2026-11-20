@@ -8,12 +8,24 @@ let
   # GUI applications may inherit Apple's agent socket instead of Home Manager's.
   sshCommand =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      pkgs.writeShellScript "git-nix-ssh" ''
-        if [ -z "$SSH_AUTH_SOCK" ] || [ -z "$SSH_CONNECTION" ]; then
-          ${config.sshAuthSock.initialization.bash}
-        fi
-        exec ${lib.meta.getExe config.programs.ssh.package} "$@"
-      ''
+      lib.meta.getExe (
+        pkgs.writeShellApplication {
+          name = "git-nix-ssh";
+          meta.mainProgram = "git-nix-ssh";
+          # SSH still runs if the agent initialization fails
+          bashOptions = [ ];
+          text = ''
+            ${lib.strings.optionalString config.sshAuthSock.enable ''
+              if [ -z "$SSH_AUTH_SOCK" ] || [ -z "$SSH_CONNECTION" ]; then
+                # Home Manager exports this itself. SSH runs even if getconf fails
+                # shellcheck disable=SC2155
+                ${config.sshAuthSock.initialization.bash}
+              fi
+            ''}
+            exec ${lib.meta.getExe config.programs.ssh.package} "$@"
+          '';
+        }
+      )
     else
       lib.meta.getExe config.programs.ssh.package;
   workKey = "${config.home.homeDirectory}/.ssh/id_ed25519_sk_work";

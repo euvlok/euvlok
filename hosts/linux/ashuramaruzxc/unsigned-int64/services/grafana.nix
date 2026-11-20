@@ -11,15 +11,91 @@ let
     uid = datasourceUid;
   };
   selector = ''{job="dnscrypt-router",instance=~"$instance"}'';
+  /**
+    Select a DNSCrypt proxy metric for the dashboard's current instance
+
+    # Inputs
+
+    `name`
+    : Metric suffix without `dnscrypt_proxy_`
+
+    # Type
+    ```
+    metric :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `metric` usage example
+    ```nix
+    metric "queries_total"
+    => ''dnscrypt_proxy_queries_total{job="dnscrypt-router",instance=~"$instance"}''
+    ```
+    :::
+  */
   metric = name: "dnscrypt_proxy_${name}${selector}";
+  /**
+    Compute a per-second DNSCrypt counter rate over Grafana's rate interval
+
+    # Inputs
+
+    `name`
+    : Counter suffix without `dnscrypt_proxy_`
+
+    # Type
+    ```
+    rate :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `rate` usage example
+    ```nix
+    rate "queries_total"
+    => "rate(dnscrypt_proxy_queries_total" + selector + "[$__rate_interval])"
+    ```
+    :::
+  */
   rate = name: "rate(${metric name}[$__rate_interval])";
+  /**
+    Place a time-series panel in the two-column DNSCrypt dashboard
+
+    # Inputs
+
+    `id`
+    : Unique, one-based grid position in row-major order
+
+    `title`
+    : Panel heading
+
+    `unit`
+    : Grafana field unit
+
+    `expressions`
+    : Up to three PromQL expressions, in target ID order. Each needs `expr`
+      and `legend` strings
+
+    # Type
+    ```
+    panel :: Int -> String -> String -> [{ expr :: String; legend :: String; }] -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `panel` usage example
+    ```nix
+    (panel 2 "Sample panel" "short" [ { expr = "up"; legend = "Availability"; } ]).targets
+    => [ { refId = "A"; expr = "up"; legendFormat = "Availability"; } ]
+    ```
+    :::
+  */
   panel = id: title: unit: expressions: {
     inherit id title;
     type = "timeseries";
     datasource = dashboardDatasource;
     gridPos = {
-      x = ((id - 1) - (builtins.div (id - 1) 2) * 2) * 12;
-      y = (builtins.div (id - 1) 2) * 8;
+      x = (lib.trivial.mod (id - 1) 2) * 12;
+      y = (lib.trivial.div (id - 1) 2) * 8;
       w = 12;
       h = 8;
     };
@@ -34,11 +110,11 @@ let
       };
       tooltip.mode = "multi";
     };
-    targets = builtins.genList (i: {
-      refId = builtins.elemAt [ "A" "B" "C" ] i;
-      inherit (builtins.elemAt expressions i) expr;
-      legendFormat = (builtins.elemAt expressions i).legend;
-    }) (builtins.length expressions);
+    targets = lib.lists.imap0 (i: { expr, legend, ... }: {
+      refId = lib.lists.elemAt [ "A" "B" "C" ] i;
+      inherit expr;
+      legendFormat = legend;
+    }) expressions;
   };
   dashboard = {
     uid = "dnscrypt-router";
@@ -170,7 +246,7 @@ in
           name = "dnscrypt-router";
           folder = "DNS";
           type = "file";
-          options.path = pkgs.writeTextDir "dnscrypt-router.json" (builtins.toJSON dashboard);
+          options.path = pkgs.writeTextDir "dnscrypt-router.json" (lib.strings.toJSON dashboard);
         }
       ];
     };
@@ -226,7 +302,7 @@ in
     environment.SSL_CERT_FILE = "/run/grafana/ca-certificates.crt";
     serviceConfig.LoadCredential = [ "tenjin-ca:/etc/ssl/self/tenjin.com/ca.crt" ];
     preStart = ''
-      ${pkgs.coreutils}/bin/cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+      ${lib.meta.getExe' pkgs.coreutils "cat"} ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
         "$CREDENTIALS_DIRECTORY/tenjin-ca" > "$RUNTIME_DIRECTORY/ca-certificates.crt"
     '';
   };

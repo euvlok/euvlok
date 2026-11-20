@@ -25,6 +25,30 @@ let
     "com.intellij.ideolog" # Log highlighting, filtering, and navigation
   ];
 
+  /**
+    Add common and requested plugins to an IDE, then apply platform launcher
+    fixes. Plugin metadata must cover the IDE's exact version
+
+    # Inputs
+    `ide`: JetBrains package from the selected unstable package set
+    `options`: `bundledPlugins` (`[String]`, default `[]`) excludes common
+    plugins shipped with the IDE. `extraPlugins` (`[String]`, default `[]`)
+    adds plugins after that exclusion
+
+    # Type
+    ```
+    withPlugins :: Derivation -> { bundledPlugins ? []; extraPlugins ? []; } -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## `withPlugins` usage example
+    ```nix
+    (withPlugins pkgs.jetbrains.idea { }).meta.mainProgram
+    => pkgs.jetbrains.idea.meta.mainProgram
+    ```
+    :::
+  */
   withPlugins =
     ide:
     {
@@ -77,12 +101,13 @@ let
           });
       } pkgs ide (pkgs.lib.lists.subtractLists bundledPlugins commonPlugins ++ extraPlugins);
     in
-    (pkgs.jetbrains.plugins.addPlugins ide (builtins.attrValues plugins)).overrideAttrs (
+    (pkgs.jetbrains.plugins.addPlugins ide (pkgs.lib.attrsets.attrValues plugins)).overrideAttrs (
       oldAttrs:
       pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
         let
           launcherName = pkgs.lib.strings.toLower ide.vmoptsIDE;
-          vmOptionsName = launcherName + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.is64bit "64";
+          vmOptionsName =
+            launcherName + pkgs.lib.strings.optionalString pkgs.stdenv.hostPlatform.is64bit "64";
           vmOptions = pkgs.concatText "${launcherName}.vmoptions" [
             "${ide}/${ide.meta.mainProgram}/bin/${vmOptionsName}.vmoptions"
             linuxVmOptions

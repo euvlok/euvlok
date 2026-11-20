@@ -48,14 +48,14 @@ python3Packages.buildPythonApplication (finalAttrs: {
     wayland
   ];
 
-  build-system = with python3Packages; [ setuptools ];
+  build-system = [ python3Packages.setuptools ];
 
-  dependencies = with python3Packages; [
-    pillow
-    pyside6
-    pyyaml
-    shiboken6
-    xcffib
+  dependencies = [
+    python3Packages.pillow
+    python3Packages.pyside6
+    python3Packages.pyyaml
+    python3Packages.shiboken6
+    python3Packages.xcffib
   ];
 
   postInstall = ''
@@ -86,8 +86,8 @@ python3Packages.buildPythonApplication (finalAttrs: {
 
   meta = {
     description = "Real-time SRCNN upscaler for X11 and XWayland windows";
-    homepage = "https://github.com/baronsmv/linux-rt-upscaler";
-    changelog = "https://github.com/baronsmv/linux-rt-upscaler/releases/tag/${finalAttrs.src.tag}";
+    homepage = "https://redirect.github.com/baronsmv/linux-rt-upscaler";
+    changelog = "https://redirect.github.com/baronsmv/linux-rt-upscaler/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.gpl3Plus;
     mainProgram = "upscale-gui";
     platforms = lib.systems.doubles.linux;

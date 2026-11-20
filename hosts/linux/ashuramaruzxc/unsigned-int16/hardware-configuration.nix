@@ -24,12 +24,52 @@ let
     options.mountpoint = "legacy";
   };
 
+  /**
+    Mount a legacy ZFS dataset from the boot pool
+
+    # Inputs
+    `dataset`: Dataset name relative to `rpool`
+
+    # Type
+    ```
+    zfsMount :: String -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `zfsMount` usage example
+    ```nix
+    zfsMount "system/root"
+    => { device = "rpool/system/root"; fsType = "zfs"; options = [ "defaults" ]; }
+    ```
+    :::
+  */
   zfsMount = dataset: {
     device = "rpool/${dataset}";
     fsType = "zfs";
     options = [ "defaults" ];
   };
 
+  /**
+    Enable a Raspberry Pi firmware setting and assign its value
+
+    # Inputs
+    `value`: Value accepted by the target firmware setting
+
+    # Type
+    ```
+    enabledConfig :: a -> { enable :: Bool; value :: a; }
+    ```
+
+    # Examples
+    :::{.example}
+    ## `enabledConfig` usage example
+    ```nix
+    enabledConfig "on"
+    => { enable = true; value = "on"; }
+    ```
+    :::
+  */
   enabledConfig = value: {
     enable = true;
     inherit value;
@@ -157,7 +197,7 @@ in
   # - https://www.raspberrypi.com/documentation/computers/config_txt.html#conditional-filters
   # - https://www.raspberrypi.com/documentation/computers/config_txt.html#enable_uart
   # - https://www.raspberrypi.com/documentation/computers/config_txt.html#uart_2ndstage
-  # - https://github.com/raspberrypi/linux/blob/a1d3defcca200077e1e382fe049ca613d16efd2b/arch/arm/boot/dts/overlays/README#L132
+  # - https://redirect.github.com/raspberrypi/linux/blob/a1d3defcca200077e1e382fe049ca613d16efd2b/arch/arm/boot/dts/overlays/README#L132
   # - https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#enable-pcie
   # - https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#pcie-gen-3-0
   hardware.raspberry-pi.config.all = {

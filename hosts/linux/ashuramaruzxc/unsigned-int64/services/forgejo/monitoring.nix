@@ -8,6 +8,37 @@ let
   cfg = config.services.forgejo;
   tokenFile = "${cfg.customDir}/conf/metrics_token";
   datasourceUid = "forgejo-prometheus";
+  /**
+    Place a time-series panel in the two-column Forgejo dashboard
+
+    # Inputs
+
+    `id`
+    : Unique, one-based grid position in row-major order
+
+    `title`
+    : Panel heading
+
+    `unit`
+    : Grafana field unit
+
+    `targets`
+    : Grafana query target objects, included unchanged
+
+    # Type
+    ```
+    panel :: Int -> String -> String -> [AttrSet] -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `panel` usage example
+    ```nix
+    (panel 3 "Service health" "short" [ ]).gridPos
+    => { x = 0; y = 8; w = 12; h = 8; }
+    ```
+    :::
+  */
   panel = id: title: unit: targets: {
     inherit id title targets;
     type = "timeseries";
@@ -16,8 +47,8 @@ let
       uid = datasourceUid;
     };
     gridPos = {
-      x = (lib.mod (id - 1) 2) * 12;
-      y = (builtins.div (id - 1) 2) * 8;
+      x = (lib.trivial.mod (id - 1) 2) * 12;
+      y = (lib.trivial.div (id - 1) 2) * 8;
       w = 12;
       h = 8;
     };
@@ -123,9 +154,9 @@ in
     };
     secrets.metrics.TOKEN = tokenFile;
   };
-  systemd.services.forgejo-secrets.script = lib.mkAfter ''
+  systemd.services.forgejo-secrets.script = lib.modules.mkAfter ''
     if [ ! -s '${tokenFile}' ]; then
-      ${pkgs.openssl}/bin/openssl rand -hex 32 > '${tokenFile}.tmp'
+      ${lib.meta.getExe pkgs.openssl} rand -hex 32 > '${tokenFile}.tmp'
       mv '${tokenFile}.tmp' '${tokenFile}'
     fi
   '';
@@ -134,7 +165,7 @@ in
     requires = [ "forgejo-secrets.service" ];
     serviceConfig.LoadCredential = [ "forgejo-metrics:${tokenFile}" ];
     preStart = ''
-      ${config.services.prometheus.package.cli}/bin/promtool check config /etc/prometheus/prometheus.yaml
+      ${lib.meta.getExe' config.services.prometheus.package.cli "promtool"} check config /etc/prometheus/prometheus.yaml
     '';
   };
   # Credential paths exist only in the service namespace; preStart validates them.
@@ -169,7 +200,7 @@ in
         name = "forgejo";
         folder = "Forgejo";
         type = "file";
-        options.path = pkgs.writeTextDir "forgejo.json" (builtins.toJSON dashboard);
+        options.path = pkgs.writeTextDir "forgejo.json" (lib.strings.toJSON dashboard);
       }
     ];
   };

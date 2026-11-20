@@ -2,6 +2,28 @@
 { lib, ... }:
 let
   sourceLocks = lib.trivial.importJSON (euvlokInputs.catppuccin + /pkgs/sources.json);
+  /**
+    Fetch a Catppuccin repository at the revision pinned by the Catppuccin input
+
+    # Inputs
+
+    `repo`
+    : Repository name present in Catppuccin's source lock
+
+    # Type
+    ```
+    fetchCatppuccinSource :: String -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `fetchCatppuccinSource` usage example
+    ```nix
+    (fetchCatppuccinSource "palette").rev
+    => sourceLocks.palette.rev
+    ```
+    :::
+  */
   fetchCatppuccinSource =
     repo:
     let

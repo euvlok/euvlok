@@ -3,11 +3,7 @@
   programs.starship.enable = true;
   programs.starship.settings = {
     add_newline = true;
-    command_timeout =
-      let
-        secToMin = s: s * 1000;
-      in
-      secToMin 10;
+    command_timeout = 10 * 1000; # milliseconds
 
     format = lib.strings.concatStrings [
       "$shell"

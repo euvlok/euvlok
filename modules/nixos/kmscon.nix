@@ -13,7 +13,7 @@ let
       inherit (color.rgb) r g b;
     in
     lib.strings.concatStringsSep "," (
-      map toString [
+      lib.lists.map toString [
         r
         g
         b

@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   services = {
-    forgejo.settings.packages.ENABLED = lib.mkForce true;
+    forgejo.settings.packages.ENABLED = lib.modules.mkForce true;
 
     nginx.virtualHosts."games.tenjin.com" = {
       forceSSL = true;

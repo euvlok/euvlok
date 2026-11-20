@@ -11,9 +11,10 @@ let
   runnerId = "756e7369676e6564";
 in
 {
-  systemd.services.forgejo-secrets.script = lib.mkAfter ''
+  systemd.services.forgejo-secrets.script = lib.modules.mkAfter ''
     if [ ! -s '${secretFile}' ]; then
-      printf '%s%s' '${runnerId}' "$(${pkgs.openssl}/bin/openssl rand -hex 12)" > '${secretFile}.tmp'
+      runnerTokenSuffix=$(${lib.meta.getExe pkgs.openssl} rand -hex 12) || exit 1
+      printf '%s%s' '${runnerId}' "$runnerTokenSuffix" > '${secretFile}.tmp'
       mv '${secretFile}.tmp' '${secretFile}'
     fi
   '';
@@ -29,7 +30,7 @@ in
       WorkingDirectory = cfg.stateDir;
       UMask = "0077";
       ExecStart = ''
-        ${lib.getExe cfg.package} \
+        ${lib.meta.getExe cfg.package} \
           --config ${cfg.customDir}/conf/app.ini \
           forgejo-cli actions register --name unsigned-int64-local \
           --keep-labels \
@@ -74,7 +75,7 @@ in
         docker = true;
         podman = true;
       };
-      hostPackages = lib.attrValues {
+      hostPackages = lib.attrsets.attrValues {
         inherit (pkgs)
           bash
           bzip2

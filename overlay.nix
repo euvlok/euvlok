@@ -6,31 +6,90 @@
   localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let
+  inherit (inputs.nixpkgs) lib;
+
+  stableConfigKeys = lib.attrsets.genAttrs [
+    "allowUnfree"
+    "allowUnfreePredicate"
+    "allowUnfreePackages"
+    "allowInsecurePredicate"
+    "permittedInsecurePackages"
+    "allowBroken"
+    "allowUnsupportedSystem"
+    "cudaSupport"
+    "cudaCapabilities"
+    "cudaForwardCompat"
+    "rocmSupport"
+  ] (_: null);
+
+  /**
+    Add an independent stable package set with the parent's platform and
+    selected policy and GPU settings, without inheriting unstable defaults
+
+    # Inputs
+
+    `final`
+    : Unused final package set
+
+    `prev`
+    : Parent package set supplying platforms and configuration
+
+    # Type
+
+    ```
+    stableOverlay :: Pkgs -> Pkgs -> { stable :: Pkgs; }
+    ```
+
+    # Examples
+    :::{.example}
+    ## Select a stable package
+
+    ```nix
+    (stableOverlay final prev).stable.black
+    => the Black package from the stable pin
+    ```
+
+    :::
+  */
   stableOverlay = _final: prev: {
     stable = import inputs.nixpkgs-stable (
       packageSetArgs prev
       // {
         # Share host policy and GPU settings without unstable's option defaults
-        config = inputs.nixpkgs.lib.attrsets.filterAttrs (
-          name: _:
-          builtins.elem name [
-            "allowUnfree"
-            "allowUnfreePredicate"
-            "allowUnfreePackages"
-            "allowInsecurePredicate"
-            "permittedInsecurePackages"
-            "allowBroken"
-            "allowUnsupportedSystem"
-            "cudaSupport"
-            "cudaCapabilities"
-            "cudaForwardCompat"
-            "rocmSupport"
-          ]
-        ) (prev.config or { });
+        config = lib.attrsets.intersectAttrs stableConfigKeys (prev.config or { });
       }
     );
   };
 
+  /**
+    Apply version-gated upstream fixes and select stable dependencies on the
+    platforms that need them
+
+    # Inputs
+
+    `final`
+    : Final package set, including the `stable` layer and any overrides
+
+    `prev`
+    : Package set before these fixes
+
+    # Type
+
+    ```
+    stableFallbacksOverlay :: Pkgs -> Pkgs -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## Use stable Black on all platforms
+
+    ```nix
+    (stableFallbacksOverlay final prev).black
+    => final.stable.black
+    ```
+
+    :::
+  */
   stableFallbacksOverlay =
     final: prev:
     {
@@ -63,7 +122,7 @@ let
       clipcat =
         if prev.clipcat.version == "0.26.0" then
           prev.clipcat.overrideAttrs (old: {
-            # https://github.com/NixOS/nixpkgs/pull/585611
+            # https://redirect.github.com/NixOS/nixpkgs/pull/585611
             nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.pkg-config ];
             buildInputs = (old.buildInputs or [ ]) ++ [ final.libgit2 ];
             # Rust removed these lints; Clipcat's deny policy makes them fatal.
@@ -80,7 +139,7 @@ let
       foundry =
         if prev.foundry.version == "1.8.6" then
           prev.foundry.overrideAttrs (old: {
-            # https://github.com/NixOS/nixpkgs/pull/587157
+            # https://redirect.github.com/NixOS/nixpkgs/pull/587157
             buildInputs = (old.buildInputs or [ ]) ++ [
               final.aws-lc
               final.rust-jemalloc-sys
@@ -94,8 +153,7 @@ let
         (_pythonFinal: pythonPrev: {
           fastmcp-slim =
             if
-              pythonPrev.fastmcp-slim.version == "3.4.7"
-              && inputs.nixpkgs.lib.versionAtLeast pythonPrev.mcp.version "2"
+              pythonPrev.fastmcp-slim.version == "3.4.7" && lib.strings.versionAtLeast pythonPrev.mcp.version "2"
             then
               pythonPrev.fastmcp-slim.override {
                 # FastMCP 3.4.7 needs MCP SDK 1.x, not the newer default
@@ -136,8 +194,7 @@ let
       ];
     }
     //
-      inputs.nixpkgs.lib.attrsets.optionalAttrs
-        (prev.stdenv.hostPlatform.isLinux && prev.stdenv.hostPlatform.isAarch64)
+      lib.attrsets.optionalAttrs (prev.stdenv.hostPlatform.isLinux && prev.stdenv.hostPlatform.isAarch64)
         {
           inherit (final.stable)
             folly
@@ -149,7 +206,7 @@ let
             watchman
             ;
         }
-    // inputs.nixpkgs.lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
+    // lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
       telegram-desktop =
         if prev.telegram-desktop.version == "7.4.1" then
@@ -168,7 +225,7 @@ let
       uutils-diffutils =
         if prev.uutils-diffutils.version == "0.6.0" then
           prev.uutils-diffutils.overrideAttrs (old: {
-            # https://github.com/NixOS/nixpkgs/pull/587325
+            # https://redirect.github.com/NixOS/nixpkgs/pull/587325
             # Use stdenv's GNU patch instead of its Homebrew name
             postPatch = (old.postPatch or "") + ''
               substituteInPlace src/utils.rs \
@@ -183,7 +240,7 @@ let
             prev.llvmPackages_latest.lldb.overrideAttrs (old: {
               # LLVM's xcrun fallback cannot find codesign in the build sandbox.
               cmakeFlags = (old.cmakeFlags or [ ]) ++ [
-                "-DCMAKE_CODESIGN=${final.darwin.sigtool}/bin/codesign"
+                "-DCMAKE_CODESIGN=${lib.meta.getExe' final.darwin.sigtool "codesign"}"
               ];
             })
           else
@@ -191,10 +248,36 @@ let
       };
     };
 
+  /**
+    Select the local and optional cross platform for a secondary Nixpkgs
+    import without inheriting the parent's elaborated platform records
+
+    # Inputs
+
+    `prev`
+    : Parent package set supplying fallback build and host platforms
+
+    # Type
+
+    ```
+    packageSetArgs :: Pkgs -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## Omit `crossSystem` on a native platform
+
+    ```nix
+    # With no platform overrides and a native x86_64 Linux package set
+    packageSetArgs prev
+    => { localSystem = "x86_64-linux"; }
+    ```
+
+    :::
+  */
   packageSetArgs =
     prev:
     let
-      lib = inputs.nixpkgs.lib;
       # Keep secondary imports independent of the parent's elaborated platforms
       localSystem = if buildPlatform == null then prev.stdenvNoCC.buildPlatform.system else buildPlatform;
       targetSystem = if hostPlatform == null then prev.stdenvNoCC.hostPlatform.system else hostPlatform;
@@ -209,8 +292,35 @@ let
     # it back into x86_64, making multilib packages recurse into themselves
     // lib.attrsets.optionalAttrs (!isNative) { crossSystem = targetSystem; };
 
-  # Keep the package-set layers independently readable even though consumers
-  # normally install the composed overlay exported as `overlays.default`
+  /**
+    Add an unstable package set using the parent's platforms and policy, then
+    apply stable fallbacks inside that package set
+
+    # Inputs
+
+    `final`
+    : Unused final package set
+
+    `prev`
+    : Parent package set supplying the fallback platforms and configuration
+
+    # Type
+
+    ```
+    unstableOverlay :: Pkgs -> Pkgs -> { unstable :: Pkgs; }
+    ```
+
+    # Examples
+    :::{.example}
+    ## Access a stable fallback inside unstable
+
+    ```nix
+    (unstableOverlay final prev).unstable.black
+    => (unstableOverlay final prev).unstable.stable.black
+    ```
+
+    :::
+  */
   unstableOverlay = _final: prev: {
     unstable = import unstableSource (
       packageSetArgs prev
@@ -224,8 +334,34 @@ let
     );
   };
 
-  # Extend only the callPackage scope for eupkgs instead of rebuilding the
-  # complete unstable Nixpkgs fixed point
+  /**
+    Expose eupkgs over unstable without rebuilding the Nixpkgs fixed point
+
+    # Inputs
+
+    `final`
+    : Final package set, with an `unstable` layer to extend
+
+    `prev`
+    : Unused previous package set
+
+    # Type
+
+    ```
+    eupkgsOverlay :: Pkgs -> Pkgs -> { eupkgs :: Pkgs; }
+    ```
+
+    # Examples
+    :::{.example}
+    ## Access a package carried through from unstable
+
+    ```nix
+    (eupkgsOverlay final prev).eupkgs.stdenv
+    => final.unstable.stdenv
+    ```
+
+    :::
+  */
   eupkgsOverlay =
     final: _prev:
     let
@@ -237,7 +373,7 @@ let
       eupkgs = scoped;
     };
 in
-inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
+lib.fixedPoints.composeManyExtensions [
   # Establish the independent package sets before overlays that inspect or
   # extend the final package set. This keeps stdenv evaluation acyclic on
   # custom platform bootstraps such as nixos-raspberrypi.
@@ -247,6 +383,36 @@ inputs.nixpkgs.lib.fixedPoints.composeManyExtensions [
   stableFallbacksOverlay
   localPackagesOverlay
   (final: _prev: {
+    /**
+      Select VS Code extension packages for an editor version using the
+      unstable package set and nix4vscode's marketplace data
+
+      # Inputs
+
+      `options`
+      : `version` (required)
+        : VS Code version used to resolve extension compatibility
+
+        `extensions` (required)
+        : List of nix4vscode extension identifiers
+
+      # Type
+
+      ```
+      euvlokVscodeExtensions :: { version :: String; extensions :: [String]; } -> [Derivation]
+      ```
+
+      # Examples
+      :::{.example}
+      ## Resolve an empty extension list
+
+      ```nix
+      pkgs.euvlokVscodeExtensions { version = "1.100.0"; extensions = [ ]; }
+      => [ ]
+      ```
+
+      :::
+    */
     euvlokVscodeExtensions =
       { version, extensions }:
       import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {

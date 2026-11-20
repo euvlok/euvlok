@@ -53,9 +53,13 @@ let
     # Nix Aliases
     nix-build-file = ''
       __02fda1f0() {
-        file="$1"
-        args="''${2:-{}}"
-        nix-build -E "with import <nixpkgs> {}; callPackage ./$file $args"
+        local file args
+        file=$(realpath -- "$1") || return
+        args="''${2-}"
+        if [ -z "$args" ]; then
+          args='{}'
+        fi
+        nix-build --argstr file "$file" -E "{ file }: (import <nixpkgs> {}).callPackage (/. + file) $args"
       }; __02fda1f0
     '';
 

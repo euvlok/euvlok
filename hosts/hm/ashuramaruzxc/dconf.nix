@@ -4,11 +4,29 @@ let
   numWorkspaces = 6;
   defaultFontSize = 11;
 
-  # Generate numbered keybindings (e.g., Super+1 through Super+6 for workspace switching)
-  # prefix: the base name for the keybinding (e.g., "switch-to-workspace")
-  # super: the super key modifier (e.g., "<Super>")
-  # modifiers: additional modifiers as a list (e.g., ["<Shift>"])
-  # count: number of keybindings to generate
+  /**
+    Generate numbered GNOME keybindings starting at 1
+
+    # Inputs
+    `prefix`: Base name of each keybinding
+    `super`: Primary modifier in GNOME syntax
+    `modifiers`: Additional modifiers in order, or `[]`
+    `count`: Number of bindings to generate
+
+    # Type
+    ```
+    generateKeybindings :: String -> String -> [String] -> Int -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `generateKeybindings` usage example
+    ```nix
+    generateKeybindings "move-to-workspace" "<Super>" [ "<Shift>" ] 1
+    => { move-to-workspace-1 = [ "<Super><Shift>1" ]; }
+    ```
+    :::
+  */
   generateKeybindings =
     prefix: super: modifiers: count:
     lib.attrsets.genAttrs' (lib.lists.range 1 count) (

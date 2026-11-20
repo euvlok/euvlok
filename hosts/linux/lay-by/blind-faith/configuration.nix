@@ -31,7 +31,7 @@
   # Temporary workaround: XanMod 7.3.3 already includes this patch.
   boot.kernelPackages = pkgs.linuxPackagesFor (
     pkgs.linux_xanmod_latest.override (old: {
-      kernelPatches = builtins.filter (
+      kernelPatches = lib.lists.filter (
         patch: (patch.name or "") != "tools-add-128-bit-integer-types-for-aarch64"
       ) (old.kernelPatches or [ ]);
     })
@@ -110,9 +110,7 @@
 
   virtualisation.libvirtd.enable = true;
 
-  system.fsPackages = with pkgs; [
-    sshfs
-  ];
+  system.fsPackages = [ pkgs.sshfs ];
 
   system.stateVersion = "26.11";
 }

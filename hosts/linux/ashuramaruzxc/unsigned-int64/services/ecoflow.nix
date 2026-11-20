@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -12,13 +13,133 @@ let
     name = "ecoflow-17812-revision-9.json";
   };
   selector = ''job="ecoflow",device="$device"'';
+  /**
+    Select an Ecolinker metric for the dashboard device
+
+    # Inputs
+    `name`: Metric name regex without the `ecolinker_` prefix
+
+    # Type
+    ```
+    metric :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `metric` usage example
+    ```nix
+    metric "pd[._]soc"
+    => ''{__name__=~"ecolinker_pd[._]soc",job="ecoflow",device="$device"}''
+    ```
+    :::
+  */
   metric = name: ''{__name__=~"ecolinker_${name}",${selector}}'';
+  /**
+    Select a battery-management status metric using either field separator
+
+    # Inputs
+    `field`: Field suffix after `bms_bmsStatus`, without the separator
+
+    # Type
+    ```
+    bms :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `bms` usage example
+    ```nix
+    bms "minCellVol"
+    => metric "bms_bmsStatus[._]minCellVol"
+    ```
+    :::
+  */
   bms = field: metric "bms_bmsStatus[._]${field}";
+  /**
+    Select an energy-management status metric using either field separator
+
+    # Inputs
+    `field`: Field suffix after `bms_emsStatus`, without the separator
+
+    # Type
+    ```
+    ems :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `ems` usage example
+    ```nix
+    ems "f32LcdShowSoc"
+    => metric "bms_emsStatus[._]f32LcdShowSoc"
+    ```
+    :::
+  */
   ems = field: metric "bms_emsStatus[._]${field}";
+  /**
+    Select an inverter metric using either field separator
+
+    # Inputs
+    `field`: Field suffix after `inv`, without the separator
+
+    # Type
+    ```
+    inv :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `inv` usage example
+    ```nix
+    inv "acInVol"
+    => metric "inv[._]acInVol"
+    ```
+    :::
+  */
   inv = field: metric "inv[._]${field}";
+  /**
+    Select a solar charge controller metric using either field separator
+
+    # Inputs
+    `field`: Field suffix after `mppt`, without the separator
+
+    # Type
+    ```
+    mppt :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `mppt` usage example
+    ```nix
+    mppt "inVol"
+    => metric "mppt[._]inVol"
+    ```
+    :::
+  */
   mppt = field: metric "mppt[._]${field}";
   soc = "${bms "f32ShowSoc"} or on(device) ${ems "f32LcdShowSoc"} or on(device) ${metric "pd[._]soc"}";
   solarPower = "(${mppt "inVol"} / 1000) * on(device) (${mppt "inAmp"} / 1000)";
+  /**
+    Compute solar energy over a Prometheus range, accounting for counter resets
+
+    # Inputs
+    `range`: Prometheus duration or Grafana duration variable, without brackets
+
+    # Type
+    ```
+    solarEnergy :: String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `solarEnergy` usage example
+    ```nix
+    solarEnergy "1h"
+    => "increase(${metric "pd[._]chgSunPower"}[1h])"
+    ```
+    :::
+  */
   solarEnergy = range: "increase(${metric "pd[._]chgSunPower"}[${range}])";
   queries = {
     "46".A = ''max(up{job="ecoflow"}) or vector(0)'';
@@ -99,7 +220,7 @@ let
     "48".A = ''time() - ecolinker_collector_last_invocation{${selector},kind="device_parameters"}'';
   };
   changes = pkgs.writeText "ecoflow-dashboard-changes.json" (
-    builtins.toJSON {
+    lib.strings.toJSON {
       inherit queries datasourceUid;
       deviceQuery = ''label_values({job="ecoflow",__name__=~"ecolinker_.+",device!=""}, device)'';
     }

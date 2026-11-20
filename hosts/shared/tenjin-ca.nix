@@ -30,20 +30,20 @@ in
     mode = "0444";
     file = pkgs.runCommand "tenjin-ca-bundle-template.crt" { } ''
       cat ${publicCAs}/etc/ssl/certs/${bundleName} > "$out"
-      printf '\n%s\n' ${lib.escapeShellArg config.sops.placeholder.tenjin_ca} >> "$out"
+      printf '\n%s\n' ${lib.strings.escapeShellArg config.sops.placeholder.tenjin_ca} >> "$out"
     '';
   };
   environment.variables = {
-    SSL_CERT_FILE = lib.mkDefault caBundle;
-    NIX_SSL_CERT_FILE = lib.mkDefault caBundle;
+    SSL_CERT_FILE = lib.modules.mkDefault caBundle;
+    NIX_SSL_CERT_FILE = lib.modules.mkDefault caBundle;
   };
-  environment.etc = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  environment.etc = lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     "ssl/certs/ca-bundle.crt".source = caBundle;
     "pki/tls/certs/ca-bundle.crt".source = caBundle;
-    "ssl/trust-source".source = pkgs.runCommand "tenjin-trust-source" { } ''
-      mkdir -p "$out/anchors"
-      ln -s ${publicCAs.p11kit}/etc/ssl/trust-source/* "$out/"
-      ln -s ${lib.escapeShellArg config.sops.secrets.tenjin_ca.path} "$out/anchors/tenjin-ca.pem"
-    '';
+    "ssl/trust-source".source = pkgs.linkFarm "tenjin-trust-source" {
+      "ca-bundle.trust.p11-kit" = "${publicCAs.p11kit}/etc/ssl/trust-source/ca-bundle.trust.p11-kit";
+      # This link points to the runtime secret, not to certificate contents in the store
+      "anchors/tenjin-ca.pem" = config.sops.secrets.tenjin_ca.path;
+    };
   };
 }

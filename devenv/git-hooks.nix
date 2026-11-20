@@ -1,4 +1,4 @@
-{ pkgs }:
+{ lib, pkgs }:
 {
   action-validator.enable = true;
   actionlint.enable = true;
@@ -25,7 +25,7 @@
   shfmt = {
     enable = true;
     files = "^hosts/hm/ashuramaruzxc/scripts/.*\\.sh$";
-    entry = "${pkgs.shfmt}/bin/shfmt -d -i 2 -ci -bn";
+    entry = "${lib.meta.getExe pkgs.shfmt} -d -i 2 -ci -bn";
   };
   statix.enable = true;
   yamllint = {

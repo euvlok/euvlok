@@ -84,7 +84,7 @@
       # Camera raw previes
       # camerarawpreviews = pkgs.fetchNextcloudApp {
       #   appName = "camerarawpreviews";
-      #   homepage = "https:2//github.com/ariselseng/camerarawpreviews";
+      #   homepage = "https://redirect.github.com/ariselseng/camerarawpreviews";
       #   description = "Camera Raw Previews app for Nextcloud";
       #   url = "https://github.com/ariselseng/camerarawpreviews/releases/download/v0.8.7/camerarawpreviews_nextcloud.tar.gz";
       #   sha256 = "sha256-aiMUSJQVbr3xlJkqOaE3cNhdZu3CnPEIWTNVOoG4HSo=";

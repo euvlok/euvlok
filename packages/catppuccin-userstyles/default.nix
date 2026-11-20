@@ -25,7 +25,7 @@ let
       lib.lists.elemAt usercssMetaLock 3;
   };
 in
-stdenvNoCC.mkDerivation {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "catppuccin-userstyles";
   inherit (packageJson) version;
 
@@ -54,7 +54,8 @@ stdenvNoCC.mkDerivation {
     install -Dm644 ${../../LICENSE} "$out/share/licenses/catppuccin-userstyles/LICENSE"
     install -Dm644 node_modules/usercss-meta/LICENCE \
       "$out/share/licenses/catppuccin-userstyles/usercss-meta.LICENCE"
-    makeWrapper ${lib.meta.getExe bun} "$out/bin/catppuccin-userstyles" \
+    makeWrapper ${lib.meta.getExe bun} \
+      "$out/bin/"${lib.strings.escapeShellArg finalAttrs.meta.mainProgram} \
       --add-flags "$out/lib/catppuccin-userstyles.js" \
       --prefix PATH : ${lib.strings.makeBinPath [ git ]}
     runHook postInstall
@@ -62,9 +63,9 @@ stdenvNoCC.mkDerivation {
 
   meta = {
     inherit (packageJson) description;
-    homepage = "https://github.com/euvlok/euvlok";
+    homepage = "https://redirect.github.com/euvlok/euvlok";
     license = lib.licenses.mit;
     mainProgram = "catppuccin-userstyles";
     inherit (bun.meta) platforms;
   };
-}
+})

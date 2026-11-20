@@ -54,6 +54,35 @@ let
   nixosSpecs = lib.attrsets.filterAttrs (_: host: host.class == "nixos") hostSpecs;
   darwinSpecs = lib.attrsets.filterAttrs (_: host: host.class == "darwin") hostSpecs;
 
+  /**
+    Build a host with its declared or standard platform builder and reject
+    a configuration that evaluates for a different system
+
+    # Inputs
+
+    `name`
+    : Name used in the platform option's source and in error messages
+
+    `host`
+    : Evaluated `euvlok.hosts` entry with its class, platform, and modules
+
+    # Type
+
+    ```
+    mkConfiguration :: String -> HostSpec -> Configuration
+    ```
+
+    # Examples
+    :::{.example}
+    ## Evaluate a declared NixOS host
+
+    ```nix
+    (mkConfiguration "nanachi" hostSpecs.nanachi).pkgs.stdenv.hostPlatform.system
+    => "x86_64-linux"
+    ```
+
+    :::
+  */
   mkConfiguration =
     name: host:
     let

@@ -21,9 +21,9 @@ basePackage.overrideAttrs (previous: {
   ];
 
   cmakeFlags = previous.cmakeFlags ++ [
-    (lib.cmakeBool "LSFGVK_BUILD_LAYER" true)
-    (lib.cmakeBool "LSFGVK_BUILD_UI" true)
-    (lib.cmakeBool "LSFGVK_BUILD_CLI" true)
+    (lib.strings.cmakeBool "LSFGVK_BUILD_LAYER" true)
+    (lib.strings.cmakeBool "LSFGVK_BUILD_UI" true)
+    (lib.strings.cmakeBool "LSFGVK_BUILD_CLI" true)
   ];
 
   # Preserve upstream's late Vulkan RPATH patch on the actual CLI

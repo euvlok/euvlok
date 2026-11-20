@@ -52,7 +52,7 @@ in
 
   services.forgejo.settings.ui = {
     DEFAULT_THEME = "github-auto";
-    THEMES = lib.concatStringsSep "," [
+    THEMES = lib.strings.concatStringsSep "," [
       "forgejo-auto"
       "forgejo-light"
       "forgejo-dark"

@@ -3,7 +3,7 @@ let
   llvmPackages = pkgs.unstable.llvmPackages_latest;
   clangdArguments = [
     # Query only the selected compiler wrappers for SDK and standard-library headers.
-    "--query-driver=${llvmPackages.clang}/bin/clang,${llvmPackages.clang}/bin/clang++"
+    "--query-driver=${lib.meta.getExe' llvmPackages.clang "clang"},${lib.meta.getExe' llvmPackages.clang "clang++"}"
   ];
 in
 {

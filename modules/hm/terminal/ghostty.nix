@@ -7,8 +7,32 @@ let
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   superKey = if isDarwin then "super" else "ctrl";
+  /**
+    Make a Ghostty binding that uses Command on Darwin or Control elsewhere
+
+    # Inputs
+
+    `key`
+    : Ghostty key name, optionally prefixed with another modifier
+
+    `command`
+    : Ghostty action, including any argument
+
+    # Type
+    ```
+    mkSuper :: String -> String -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `mkSuper` usage example
+    ```nix
+    mkSuper "shift+v" "paste_from_clipboard"
+    => "${superKey}+shift+v=paste_from_clipboard"
+    ```
+    :::
+  */
   mkSuper = key: command: "${superKey}+${key}=${command}";
-  mkSuperShift = key: command: "${superKey}+shift+${key}=${command}";
 
   # Source: https://vt100.net/docs/vt100-ug/chapter3.html
   # Converter: https://www.rapidtables.com/convert/number/hex-to-octal.html
@@ -49,7 +73,7 @@ let
       "${superKey}+shift+minus=decrease_font_size:1"
     ];
 
-    clipboard = [ (mkSuperShift "v" "paste_from_clipboard") ];
+    clipboard = [ (mkSuper "shift+v" "paste_from_clipboard") ];
 
     misc = [
       (mkSuper "a" "select_all")

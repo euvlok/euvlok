@@ -39,50 +39,109 @@ let
     ];
   };
 
+  /**
+    Build the selected cursor theme with its converter isolated on Python 3.14
+
+    # Inputs
+
+    `pkgs`
+    : Package set for the host using the cursors
+
+    # Type
+
+    ```
+    animeCursorsPackage :: Pkgs -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## Select the Hakurei Reimu variant
+
+    ```nix
+    animeCursorsPackage pkgs
+    => the Hakurei Reimu cursor theme for pkgs.stdenv.hostPlatform
+    ```
+
+    :::
+  */
+  animeCursorsPackage =
+    pkgs:
+    let
+      cursorPackages =
+        (pkgs.callPackage "${inputs.anime-cursors-source}/pkgs" {
+          cursorgenSrc = inputs.cursorgen-source;
+        }).overrideScope
+          (
+            final: _: {
+              cursorgen = pkgs.python314Packages.callPackage "${inputs.cursorgen-source}/pkgs/cursorgen.nix" { };
+              # Scope the newer dependencies to the converter
+              converter =
+                (pkgs.python314Packages.callPackage "${inputs.anime-cursors-source}/pkgs/converter.nix" {
+                  inherit (final) cursorgen;
+                  inherit (final.pythonPackages) msgspec platformdirs;
+                }).overridePythonAttrs
+                  (old: {
+                    # Allow Nixpkgs' uv-build 0.13 until upstream widens its bound
+                    # https://redirect.github.com/4evy/anime-cursors/blob/72e37ac5ad2fd2b2098353603467155f75c8e362/pyproject.toml
+                    postPatch = (old.postPatch or "") + ''
+                      substituteInPlace pyproject.toml \
+                        --replace-fail 'uv_build>=0.11.28,<0.13' 'uv_build>=0.11.28,<0.14'
+                    '';
+                  });
+            }
+          );
+    in
+    (cursorPackages.cursors.override { themes = [ "hakurei-reimu" ]; }).variants.hakurei-reimu;
+
+  /**
+    Apply the shared and personal Home Manager modules and cursor package to
+    a host's Home Manager integration
+
+    # Inputs
+
+    `path`
+    : Host Home Manager module file
+
+    `homeManagerModule`
+    : Home Manager's platform integration module
+
+    `extraArgs`
+    : Additional outer arguments for that host, or `{ }` for none
+
+    # Type
+
+    ```
+    mkHomeModule :: Path -> Module -> AttrSet -> Module
+    ```
+
+    # Examples
+    :::{.example}
+    ## Apply the NixOS integration without extra inputs
+
+    ```nix
+    mkHomeModule ../../hosts/linux/ashuramaruzxc/unsigned-int16/home.nix
+      inputs.home-manager.nixosModules.home-manager { }
+    => the unsigned-int16 Home Manager module with its outer arguments applied
+    ```
+
+    :::
+  */
   mkHomeModule =
     path: homeManagerModule: extraArgs:
     lib.modules.importApply path (
       {
         inherit
+          animeCursorsPackage
           catppuccinModule
           homeManagerModule
           personalModule
           ;
-        animeCursorsPackage =
-          pkgs:
-          let
-            cursorPackages =
-              (pkgs.callPackage "${inputs.anime-cursors-source}/pkgs" {
-                cursorgenSrc = inputs.cursorgen-source;
-              }).overrideScope
-                (
-                  final: _: {
-                    cursorgen = pkgs.python314Packages.callPackage "${inputs.cursorgen-source}/pkgs/cursorgen.nix" { };
-                    # Scope the newer dependencies to the converter
-                    converter =
-                      (pkgs.python314Packages.callPackage "${inputs.anime-cursors-source}/pkgs/converter.nix" {
-                        inherit (final) cursorgen;
-                        inherit (final.pythonPackages) msgspec platformdirs;
-                      }).overridePythonAttrs
-                        (old: {
-                          # Allow Nixpkgs' uv-build 0.13 until upstream widens its bound:
-                          # https://github.com/4evy/anime-cursors/blob/72e37ac5ad2fd2b2098353603467155f75c8e362/pyproject.toml
-                          postPatch = (old.postPatch or "") + ''
-                            substituteInPlace pyproject.toml \
-                              --replace-fail 'uv_build>=0.11.28,<0.13' 'uv_build>=0.11.28,<0.14'
-                          '';
-                        });
-                  }
-                );
-          in
-          (cursorPackages.cursors.override { themes = [ "hakurei-reimu" ]; }).variants.hakurei-reimu;
         sharedModule = sharedHomeModule;
       }
       // extraArgs
     );
 in
 {
-
   euvlok.hosts = {
     unsigned-int16 = {
       owner = "ashuramaruzxc";

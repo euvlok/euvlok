@@ -15,27 +15,29 @@ let
 in
 {
   # Zed's mutable settings merge retains keys removed from older generations.
-  home.activation.removeRetiredZedIntegrations = lib.mkIf (zed.enable && zed.mutableUserSettings) (
-    lib.hm.dag.entryAfter [ "zedSettingsActivation" ] (
-      lib.hm.generators.mkImpureConfigMerger {
-        inherit pkgs;
-        path = "${config.xdg.configHome}/zed/settings.json";
-        format = "json";
-        empty = "{}";
-        staticSettings = (pkgs.formats.json { }).generate "retired-zed-extensions.json" {
-          mcp-server-context7 = false;
-          mcp-server-github = false;
-        };
-        jqOperation = ''
-          $dynamic
-          | if .agent_servers == null then .
-            else del(.agent_servers."codex-acp", .agent_servers.codex_openrouter) end
-          | delpaths($static | keys | map(["context_servers", .]))
-          | .auto_install_extensions += $static
-        '';
-      }
-    )
-  );
+  home.activation.removeRetiredZedIntegrations =
+    lib.modules.mkIf (zed.enable && zed.mutableUserSettings)
+      (
+        lib.hm.dag.entryAfter [ "zedSettingsActivation" ] (
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            path = "${config.xdg.configHome}/zed/settings.json";
+            format = "json";
+            empty = "{}";
+            staticSettings = (pkgs.formats.json { }).generate "retired-zed-extensions.json" {
+              mcp-server-context7 = false;
+              mcp-server-github = false;
+            };
+            jqOperation = ''
+              $dynamic
+              | if .agent_servers == null then .
+                else del(.agent_servers."codex-acp", .agent_servers.codex_openrouter) end
+              | delpaths($static | keys | map(["context_servers", .]))
+              | .auto_install_extensions += $static
+            '';
+          }
+        )
+      );
 
   programs.zed-editor = {
     enableMcpIntegration = true;
@@ -65,7 +67,7 @@ in
         sandbox_permissions.allow_unsandboxed = true;
         threads_sidebar.position = "right";
       }
-      // lib.optionalAttrs config.euvlok.home.codex.enable {
+      // lib.attrsets.optionalAttrs config.euvlok.home.codex.enable {
         default_model = subscribedModel;
         favorite_models = [ subscribedModel ];
       };

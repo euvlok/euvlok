@@ -28,9 +28,11 @@
       fastfetch.enable = true;
       ghostty.enable = true;
       mpv.enable = true;
-      nushell.enable = true;
-      # Keep the existing Nushell startup behavior on this installation
-      nushell.loadSessionVariables = false;
+      nushell = {
+        enable = true;
+        # Keep the existing env.nu ownership
+        loadSessionVariables = false;
+      };
       zsh.enable = true;
       helix.defaultEditor = true;
     };

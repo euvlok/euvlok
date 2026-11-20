@@ -58,15 +58,19 @@ let
         launcher_path = "Contents/MacOS/Google Chrome";
       };
     };
-    helium-browser = rec {
-      package = pkgs.eupkgs.helium-browser;
-      executable = "helium-browser";
-      profileRoot = "net.imput.helium";
-      macos = {
-        app_dir = "${package}/Applications/Helium.app";
-        launcher_path = "Contents/MacOS/Helium";
+    helium-browser =
+      let
+        package = pkgs.eupkgs.helium-browser;
+      in
+      {
+        inherit package;
+        executable = "helium-browser";
+        profileRoot = "net.imput.helium";
+        macos = {
+          app_dir = "${package}/Applications/Helium.app";
+          launcher_path = "Contents/MacOS/Helium";
+        };
       };
-    };
     ungoogled-chromium = {
       package = pkgs.ungoogled-chromium;
       executable = "chromium";

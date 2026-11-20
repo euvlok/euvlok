@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   imports = [
     ./aliases.nix
@@ -6,7 +7,7 @@
     ./zsh.nix
   ];
 
-  home.sessionPath = map (directory: "$HOME/${directory}/bin") [
+  home.sessionPath = lib.lists.map (directory: "$HOME/${directory}/bin") [
     ".bun"
     ".npm"
     ".local"

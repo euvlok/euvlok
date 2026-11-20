@@ -114,7 +114,7 @@ lib.trivial.checkListOfEnum "${pname}: flavor"
 
     meta = {
       description = "Catppuccin GTK theme by Fausto-Korpsvart";
-      homepage = "https://github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme";
+      homepage = "https://redirect.github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme";
       license = lib.licenses.gpl3Only;
       platforms = lib.systems.doubles.linux;
     };

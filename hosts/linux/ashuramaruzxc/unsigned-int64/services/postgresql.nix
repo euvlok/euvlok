@@ -51,7 +51,7 @@
     ];
     authentication = lib.modules.mkOverride 10 ''
       #type database DBuser origin-address auth-method
-      ${lib.optionalString config.services.forgejo.enable ''
+      ${lib.strings.optionalString config.services.forgejo.enable ''
         local forgejo   forgejo peer
         local forgejo   postgres peer
         local forgejo   all     reject

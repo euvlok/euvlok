@@ -26,8 +26,57 @@ let
     };
   };
 
-  # Raw JavaScript still needs Home Manager's user.js writer
+  /**
+    Check whether Tweezle can own the preferences of a Firefox profile
+
+    # Inputs
+
+    `profile`
+    : Home Manager profile. Raw JavaScript in `preConfig` or `extraConfig`
+      still needs Home Manager's `user.js` writer
+
+    # Type
+    ```
+    managedPreferences :: AttrSet -> Bool
+    ```
+
+    # Examples
+    :::{.example}
+    ## `managedPreferences` usage example
+    ```nix
+    managedPreferences { preConfig = ""; extraConfig = ""; }
+    => true
+    ```
+    :::
+  */
   managedPreferences = profile: profile.preConfig == "" && profile.extraConfig == "";
+  /**
+    Convert Home Manager Firefox preferences into Tweezle's scalar settings
+
+    # Inputs
+
+    `profile`
+    : A Home Manager Firefox profile with `bookmarks`, `extensions`, and
+      `settings`. Explicit settings win over generated ones
+
+    # Type
+    ```
+    preferences :: AttrSet -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `preferences` usage example
+    ```nix
+    preferences {
+      bookmarks.configFile = null;
+      extensions.settings = { };
+      settings."browser.example" = [ "test" ];
+    }
+    => { "browser.example" = ''["test"]''; }
+    ```
+    :::
+  */
   preferences =
     profile:
     lib.attrsets.mapAttrs
@@ -63,7 +112,53 @@ in
       let
         cfg = config.programs.${name};
         package = cfg.finalPackage;
+        /**
+          Resolve the configured profile path without making it absolute
+
+          # Inputs
+
+          `profile`
+          : The Home Manager profile, with a `path` relative to `cfg.profilesPath`
+
+          # Type
+          ```
+          profileDir :: AttrSet -> String
+          ```
+
+          # Examples
+          :::{.example}
+          ## `profileDir` usage example
+          ```nix
+          profileDir { path = "work"; }
+          => "${cfg.profilesPath}/work"
+          ```
+          :::
+        */
         profileDir = profile: "${cfg.profilesPath}/${profile.path}";
+        /**
+          Resolve the absolute profile directory for Tweezle
+
+          # Inputs
+
+          `profile`
+          : The Home Manager profile, with a `path` relative to `cfg.profilesPath`
+
+          # Type
+          ```
+          absoluteProfileDir :: AttrSet -> String
+          ```
+
+          # Examples
+          :::{.example}
+          ## `absoluteProfileDir` usage example
+          If the home directory is `/home/user` and `cfg.profilesPath` is
+          `.mozilla/firefox`:
+          ```nix
+          absoluteProfileDir { path = "work"; }
+          => "/home/user/.mozilla/firefox/work"
+          ```
+          :::
+        */
         absoluteProfileDir =
           profile:
           let
@@ -86,7 +181,8 @@ in
               // lib.attrsets.optionalAttrs (!isDarwin) {
                 linux = {
                   app_dir = if package == null then "${config.home.profileDirectory}/bin" else "${package}/bin";
-                  launcher_name = if package == null then name else baseNameOf (lib.meta.getExe package);
+                  launcher_name =
+                    if package == null then name else lib.filesystem.baseNameOf (lib.meta.getExe package);
                 };
               }
               // lib.attrsets.optionalAttrs isDarwin {

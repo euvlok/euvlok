@@ -44,18 +44,18 @@ let
         };
         "www.tenjin-dk.com" = {
           # Bypass intermittent macOS DNS stalls for the public SSH endpoint.
-          HostName = lib.mkForce "188.34.136.238";
+          HostName = lib.modules.mkForce "188.34.136.238";
           HostKeyAlias = "[www.tenjin-dk.com]:57255";
         };
         "unsigned-int32" = {
           HostName = "unsigned-int32";
-          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
+          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
           User = "ashuramaru";
         };
         "unsigned-int64" = {
           HostName = "unsigned-int64";
           Port = 57255;
-          ProxyCommand = "${lib.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
+          ProxyCommand = "${lib.meta.getExe' pkgs.tailscale "tailscale"} --socket=/var/run/tailscaled.socket nc %h %p";
           User = "ashuramaru";
         };
       };

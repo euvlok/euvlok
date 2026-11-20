@@ -14,6 +14,29 @@ let
     librewolf = "librewolf";
     zen-browser = "zen";
   };
+  setFloorpRelease = pkgs.buildPackages.writers.writePython3 "floorp-language-pack-release" { } ''
+    import configparser
+    import sys
+    from pathlib import Path
+
+    platform = configparser.ConfigParser()
+    platform.read(sys.argv[2])
+    release = platform["Build"]["Milestone"]
+    content = Path(sys.argv[1]).read_text()
+    content = content.replace("__FLOORP_GECKO_RELEASE__", release)
+    Path(sys.argv[3]).write_text(content)
+  '';
+  renderPolicyPlist = pkgs.buildPackages.writers.writePython3 "firefox-policy-plist" { } ''
+    import json
+    import plistlib
+    import sys
+
+    with open(sys.argv[1]) as source:
+        policies = json.load(source)["policies"]
+    policies["EnterprisePoliciesEnabled"] = True
+    with open(sys.argv[2], "wb") as destination:
+        plistlib.dump(policies, destination)
+  '';
 in
 {
   config = lib.modules.mkMerge (
@@ -53,44 +76,15 @@ in
                 else
                   "${unwrapped}/lib/${unwrapped.libName}/platform.ini";
             in
-            pkgs.runCommandLocal "${name}-extensions.toml"
-              {
-                nativeBuildInputs = [ pkgs.python3 ];
-              }
-              ''
-                python3 - ${template} ${lib.strings.escapeShellArg platformIni} "$out" <<'PY'
-                import configparser
-                from pathlib import Path
-                import sys
-
-                platform = configparser.ConfigParser()
-                platform.read(sys.argv[2])
-                release = platform["Build"]["Milestone"]
-                content = Path(sys.argv[1]).read_text()
-                Path(sys.argv[3]).write_text(content.replace("__FLOORP_GECKO_RELEASE__", release))
-                PY
-              '';
+            pkgs.runCommandLocal "${name}-extensions.toml" { } ''
+              ${setFloorpRelease} ${template} ${lib.strings.escapeShellArg platformIni} "$out"
+            '';
         policiesFile = pkgs.runCommandLocal "${name}-tweezle-policies.json" { } ''
           ${lib.meta.getExe tweezle} policy render ${extensionConfigFile} --output "$out"
         '';
-        policiesPlist =
-          pkgs.runCommandLocal "${name}-tweezle-policies.plist"
-            {
-              nativeBuildInputs = [ pkgs.python3 ];
-            }
-            ''
-              python3 - ${policiesFile} "$out" <<'PY'
-              import json
-              import plistlib
-              import sys
-
-              with open(sys.argv[1]) as source:
-                  policies = json.load(source)["policies"]
-              policies["EnterprisePoliciesEnabled"] = True
-              with open(sys.argv[2], "wb") as destination:
-                  plistlib.dump(policies, destination)
-              PY
-            '';
+        policiesPlist = pkgs.runCommandLocal "${name}-tweezle-policies.plist" { } ''
+          ${renderPolicyPlist} ${policiesFile} "$out"
+        '';
       in
       lib.modules.mkMerge [
         {

@@ -2,6 +2,34 @@
 let
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
+  /**
+    Construct a Yazi manager keymap entry
+
+    # Inputs
+
+    `desc`
+    : Description shown in Yazi's keybinding help
+
+    `on`
+    : A key or ordered key sequence in Yazi syntax
+
+    `run`
+    : Yazi action and its arguments
+
+    # Type
+    ```
+    genKeyBind :: String -> (String | [String]) -> String -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `genKeyBind` usage example
+    ```nix
+    genKeyBind "Go to Home" [ "g" "h" ] "cd ~"
+    => { desc = "Go to Home"; on = [ "g" "h" ]; run = "cd ~"; }
+    ```
+    :::
+  */
   genKeyBind = desc: on: run: { inherit desc on run; };
 in
 {

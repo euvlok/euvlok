@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf config.euvlok.nixos.gnome.enable {
+  config = lib.modules.mkIf config.euvlok.nixos.gnome.enable {
     environment.systemPackages = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         gnome-themes-extra

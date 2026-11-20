@@ -32,7 +32,7 @@ let
     "ansible-zen"
   ];
   ansibleSkills = pkgs.runCommand "ansible-agent-skills" { } (
-    lib.concatMapStringsSep "\n" (name: ''
+    lib.strings.concatMapStringsSep "\n" (name: ''
       mkdir -p "$out/${name}"
       cp -R ${ansibleSkillsSource}/${name}/skills/${name}/. "$out/${name}/"
       if [ -d ${ansibleSkillsSource}/${name}/references ]; then
@@ -51,8 +51,9 @@ in
         glab = "${packages.glab.src}/internal/commands/skills/bundled/assets/glab";
       };
 
-      home.file = lib.genAttrs (map (name: ".agents/skills/${name}") ansibleSkillNames) (path: {
-        source = "${ansibleSkills}/${builtins.baseNameOf path}";
+      home.file = lib.attrsets.genAttrs' ansibleSkillNames (name: {
+        name = ".agents/skills/${name}";
+        value.source = "${ansibleSkills}/${name}";
       });
     })
     (lib.modules.mkIf config.programs.claude-code.enable {

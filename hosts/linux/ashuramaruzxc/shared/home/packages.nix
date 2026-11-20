@@ -72,7 +72,7 @@ let
         ;
     };
 
-    networking = builtins.attrValues {
+    networking = lib.attrsets.attrValues {
       inherit (pkgs)
         openvpn
         proton-vpn

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   fonts = {
     fontDir.enable = true;
@@ -10,7 +10,7 @@
         emoji = [ "Twitter Color Emoji" ];
       };
     };
-    packages = builtins.attrValues {
+    packages = lib.attrsets.attrValues {
       inherit (pkgs)
         noto-fonts
         noto-fonts-cjk-sans

@@ -2,12 +2,12 @@
 let
   video2gif = pkgs.writeShellApplication {
     name = "video2gif";
-    runtimeInputs = with pkgs.unstable; [
-      coreutils
-      fd
-      ffmpeg
-      gifski
-      parallel
+    runtimeInputs = [
+      pkgs.unstable.coreutils
+      pkgs.unstable.fd
+      pkgs.unstable.ffmpeg
+      pkgs.unstable.gifski
+      pkgs.unstable.parallel
     ];
     text = lib.trivial.readFile ./scripts/video2gif.sh;
   };
@@ -65,8 +65,8 @@ let
   };
 
   scripts = {
-    video2gif = lib.meta.getExe video2gif;
-    video2gif_simple = lib.meta.getExe video2gifSimple;
+    video2gif = lib.meta.getExe' video2gif "video2gif";
+    video2gif_simple = lib.meta.getExe' video2gifSimple "video2gif_simple";
   };
 
   darwin = lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isDarwin {

@@ -108,6 +108,98 @@ let
   # Embedded Python uses the Python 3.15 standard library without extra packages
   codexEnabled.euvlok.home.codex.enable = true;
   claudeCodeEnabled.euvlok.home.claude-code.enable = true;
+  /**
+    Write a standalone Python script using Python 3.15 on the host
+
+    # Inputs
+
+    `pkgs`
+    : Nixpkgs with Python 3.15 on both the build and host platforms
+
+    `name`
+    : Store file name without a slash
+
+    `options`
+    : Nixpkgs Python writer options. Pass `{ }` for no libraries and the
+      default lint check
+
+    `text`
+    : Python source code
+
+    # Type
+    ```
+    writePython315 :: AttrSet -> String -> AttrSet -> String -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## `writePython315` usage example
+    ```nix
+    writePython315 pkgs "hello" { } "print('hello')"
+    => executable /nix/store/…-hello that prints hello
+    ```
+    :::
+  */
+  writePython315 =
+    pkgs:
+    pkgs.writers.makePythonWriter pkgs.python315 pkgs.python315.pkgs pkgs.buildPackages.python315.pkgs;
+
+  /**
+    Mark each leaf of a settings tree as an overridable module default
+
+    # Inputs
+
+    `lib`
+    : Nixpkgs library
+
+    `settings`
+    : Settings attrset whose nested attrsets are traversed down to their leaves
+
+    # Type
+    ```
+    mkSettingsDefaults :: Lib -> AttrSet -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `mkSettingsDefaults` usage example
+    ```nix
+    mkSettingsDefaults lib { tui.show_tooltips = false; }
+    => { tui.show_tooltips = lib.modules.mkDefault false; }
+    ```
+    :::
+  */
+  mkSettingsDefaults = lib: lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
+
+  /**
+    Share Codex paths, environment, and settings across Home Manager modules
+
+    # Inputs
+
+    `args` (attribute set)
+    : `config` (required)
+      : Evaluated Home Manager config with the Codex module
+
+      `lib` (required)
+      : Nixpkgs library
+
+      `pkgs` (required)
+      : Nixpkgs package set for the Home Manager host
+
+    # Type
+    ```
+    codexLib :: { config :: AttrSet; lib :: Lib; pkgs :: AttrSet; } -> AttrSet
+    ```
+
+    # Examples
+    :::{.example}
+    ## `codexLib` usage example
+    ```nix
+    (codexLib { inherit config lib pkgs; }).configKeyDir
+    => ".codex" # when config.home.preferXdgDirectories is false
+    ```
+    :::
+  */
   codexLib =
     {
       config,
@@ -140,9 +232,6 @@ let
           "${lib.strings.removePrefix config.home.homeDirectory config.xdg.configHome}/codex"
         else
           ".codex";
-
-      # Keep each setting overridable without discarding unrelated defaults
-      mkDefaults = lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
     };
   codexSettings = {
     model = "gpt-6.1-sol";
@@ -214,189 +303,198 @@ let
     }:
     let
       cfg = config.euvlok.home.codex;
-      inherit (codexLib { inherit config lib pkgs; }) configDir environment mkDefaults;
-      launcherScript = pkgs.writeText "codex-launcher.py" ''
-        import argparse
-        import asyncio
-        import json
-        import os
-        import sys
-        from collections.abc import AsyncIterator, Iterator, Mapping, Sequence
-        from contextlib import asynccontextmanager, suppress
-        from dataclasses import dataclass, field
-        from itertools import count
-        from pathlib import Path
-        from typing import cast
+      inherit (codexLib { inherit config lib pkgs; }) configDir environment;
+      launcherScript =
+        writePython315 pkgs "codex-launcher.py"
+          {
+            flakeIgnore = [
+              "E501"
+              "W503"
+            ];
+          }
+          ''
+            import argparse
+            import asyncio
+            import json
+            import os
+            import sys
+            from collections.abc import AsyncIterator, Iterator, Mapping, Sequence
+            from contextlib import asynccontextmanager, suppress
+            from dataclasses import dataclass, field
+            from itertools import count
+            from pathlib import Path
+            from typing import cast
 
 
-        @dataclass
-        class AppServer:
-            process: asyncio.subprocess.Process
-            identifiers: Iterator[int] = field(default_factory=lambda: count(1))
+            @dataclass
+            class AppServer:
+                process: asyncio.subprocess.Process
+                identifiers: Iterator[int] = field(default_factory=lambda: count(1))
 
-            async def send(self, payload: Mapping[str, object]) -> None:
-                if self.process.stdin is None:
-                    raise RuntimeError("Codex app server has no input stream")
-                self.process.stdin.write(json.dumps(payload).encode() + b"\n")
-                await self.process.stdin.drain()
+                async def send(self, payload: Mapping[str, object]) -> None:
+                    if self.process.stdin is None:
+                        raise RuntimeError("Codex app server has no input stream")
+                    self.process.stdin.write(json.dumps(payload).encode() + b"\n")
+                    await self.process.stdin.drain()
 
-            async def request(self, method: str, params: Mapping[str, object]) -> object:
-                identifier = next(self.identifiers)
-                try:
-                    async with asyncio.timeout(5):
-                        await self.send(
-                            {
-                                "jsonrpc": "2.0",
-                                "id": identifier,
-                                "method": method,
-                                "params": params,
-                            }
+                async def request(self, method: str, params: Mapping[str, object]) -> object:
+                    identifier = next(self.identifiers)
+                    try:
+                        async with asyncio.timeout(5):
+                            await self.send(
+                                {
+                                    "jsonrpc": "2.0",
+                                    "id": identifier,
+                                    "method": method,
+                                    "params": params,
+                                }
+                            )
+                            return await self.receive(identifier)
+                    except TimeoutError as exc:
+                        raise TimeoutError(f"Codex {method} response timed out") from exc
+
+                async def receive(self, identifier: int) -> object:
+                    if self.process.stdout is None:
+                        raise RuntimeError("Codex app server has no output stream")
+                    async for line in self.process.stdout:
+                        payload: object = json.loads(line)
+                        response = (
+                            cast("dict[str, object]", payload) if isinstance(payload, dict) else {}
                         )
-                        return await self.receive(identifier)
-                except TimeoutError as exc:
-                    raise TimeoutError(f"Codex {method} response timed out") from exc
+                        if "method" in response or response.get("id") != identifier:
+                            continue
+                        if "error" in response:
+                            raise RuntimeError(response["error"])
+                        return response.get("result")
+                    raise RuntimeError("Codex app server exited")
 
-            async def receive(self, identifier: int) -> object:
-                if self.process.stdout is None:
-                    raise RuntimeError("Codex app server has no output stream")
-                async for line in self.process.stdout:
-                    payload: object = json.loads(line)
-                    response = (
-                        cast("dict[str, object]", payload) if isinstance(payload, dict) else {}
+
+            @asynccontextmanager
+            async def app_server(real: Path) -> AsyncIterator[AppServer]:
+                process = await asyncio.create_subprocess_exec(
+                    real,
+                    "app-server",
+                    "--stdio",
+                    stdin=asyncio.subprocess.PIPE,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.DEVNULL,
+                    limit=16 * 1024 * 1024,
+                )
+                try:
+                    server = AppServer(process)
+                    await server.request(
+                        "initialize",
+                        {"clientInfo": {"name": "codex-launcher", "version": "1"}},
                     )
-                    if "method" in response or response.get("id") != identifier:
-                        continue
-                    if "error" in response:
-                        raise RuntimeError(response["error"])
-                    return response.get("result")
-                raise RuntimeError("Codex app server exited")
-
-
-        @asynccontextmanager
-        async def app_server(real: Path) -> AsyncIterator[AppServer]:
-            process = await asyncio.create_subprocess_exec(
-                real,
-                "app-server",
-                "--stdio",
-                stdin=asyncio.subprocess.PIPE,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.DEVNULL,
-                limit=16 * 1024 * 1024,
-            )
-            try:
-                server = AppServer(process)
-                await server.request(
-                    "initialize",
-                    {"clientInfo": {"name": "codex-launcher", "version": "1"}},
-                )
-                async with asyncio.timeout(5):
-                    await server.send({"jsonrpc": "2.0", "method": "initialized"})
-                yield server
-            finally:
-                with suppress(ProcessLookupError):
-                    process.terminate()
-                try:
-                    async with asyncio.timeout(3):
-                        await process.communicate()
-                except TimeoutError:
+                    async with asyncio.timeout(5):
+                        await server.send({"jsonrpc": "2.0", "method": "initialized"})
+                    yield server
+                finally:
                     with suppress(ProcessLookupError):
-                        process.kill()
-                    await process.communicate()
+                        process.terminate()
+                    try:
+                        async with asyncio.timeout(3):
+                            await process.communicate()
+                    except TimeoutError:
+                        with suppress(ProcessLookupError):
+                            process.kill()
+                        await process.communicate()
 
 
-        async def trust_launch_hooks(real: Path, cwd: Path) -> None:
-            async with app_server(real) as server:
-                await trust_hooks(server, cwd)
+            async def trust_launch_hooks(real: Path, cwd: Path) -> None:
+                async with app_server(real) as server:
+                    await trust_hooks(server, cwd)
 
 
-        async def trust_hooks(server: AppServer, cwd: Path) -> None:
-            result = await server.request("hooks/list", {"cwds": [os.fspath(cwd)]})
-            data = result.get("data") if isinstance(result, dict) else None
-            if not isinstance(data, list):
-                raise TypeError("Codex hooks/list returned an invalid response")
-            for entry in data:
-                if not isinstance(entry, dict) or entry.get("cwd") != os.fspath(cwd):
-                    continue
-                if entry.get("errors"):
-                    raise RuntimeError("Codex hooks/list could not load launch hooks")
-                hooks = entry.get("hooks")
-                if not isinstance(hooks, list):
-                    raise TypeError("Codex hooks/list returned invalid hooks")
-                trust = hook_trust_state(hooks)
-                if trust:
-                    await write_hook_trust(server, trust)
-                return
-            raise RuntimeError("Codex hooks/list did not include the launch directory")
+            async def trust_hooks(server: AppServer, cwd: Path) -> None:
+                result = await server.request("hooks/list", {"cwds": [os.fspath(cwd)]})
+                data = result.get("data") if isinstance(result, dict) else None
+                if not isinstance(data, list):
+                    raise TypeError("Codex hooks/list returned an invalid response")
+                for entry in data:
+                    if not isinstance(entry, dict) or entry.get("cwd") != os.fspath(cwd):
+                        continue
+                    if entry.get("errors"):
+                        raise RuntimeError("Codex hooks/list could not load launch hooks")
+                    hooks = entry.get("hooks")
+                    if not isinstance(hooks, list):
+                        raise TypeError("Codex hooks/list returned invalid hooks")
+                    trust = hook_trust_state(hooks)
+                    if trust:
+                        await write_hook_trust(server, trust)
+                    return
+                raise RuntimeError("Codex hooks/list did not include the launch directory")
 
 
-        def hook_trust_state(hooks: Sequence[object]) -> dict[object, dict[str, object]]:
-            return {
-                cast("dict[str, object]", hook)["key"]: {
-                    "trusted_hash": cast("dict[str, object]", hook)["currentHash"]
+            def hook_trust_state(hooks: Sequence[object]) -> dict[object, dict[str, object]]:
+                return {
+                    cast("dict[str, object]", hook)["key"]: {
+                        "trusted_hash": cast("dict[str, object]", hook)["currentHash"]
+                    }
+                    for hook in hooks
+                    if isinstance(hook, dict)
+                    and hook.get("trustStatus") in {"untrusted", "modified"}
                 }
-                for hook in hooks
-                if isinstance(hook, dict)
-                and hook.get("trustStatus") in {"untrusted", "modified"}
-            }
 
 
-        async def write_hook_trust(
-            server: AppServer, trust: dict[object, dict[str, object]]
-        ) -> None:
-            await server.request(
-                "config/batchWrite",
-                {
-                    "edits": [
-                        {
-                            "keyPath": "hooks.state",
-                            "mergeStrategy": "upsert",
-                            "value": trust,
-                        }
-                    ],
-                    "reloadUserConfig": True,
-                },
-            )
-
-
-        def main() -> None:
-            real = Path(os.environ["CODEX_REAL_BIN"])
-            interactive = sys.stdin.isatty() and sys.stdout.isatty()
-            if interactive:
-                parser = argparse.ArgumentParser(
-                    prog="codex", add_help=False, allow_abbrev=False
+            async def write_hook_trust(
+                server: AppServer, trust: dict[object, dict[str, object]]
+            ) -> None:
+                await server.request(
+                    "config/batchWrite",
+                    {
+                        "edits": [
+                            {
+                                "keyPath": "hooks.state",
+                                "mergeStrategy": "upsert",
+                                "value": trust,
+                            }
+                        ],
+                        "reloadUserConfig": True,
+                    },
                 )
-                parser.add_argument("-C", "--cd", type=Path, default=Path.cwd())
-                options, _ = parser.parse_known_args()
-                cwd = options.cd.resolve()
-                try:
-                    asyncio.run(trust_launch_hooks(real, cwd))
-                except (
-                    OSError,
-                    RuntimeError,
-                    TimeoutError,
-                    TypeError,
-                    ValueError,
-                    KeyError,
-                ) as exc:
-                    raise SystemExit(f"codex: could not trust launch hooks: {exc}") from exc
-
-            # Hook trust bypass is for automation and forces interactive sessions into
-            # embedded mode instead of the shared background server
-            hook_trust_flag = [] if interactive else ["--dangerously-bypass-hook-trust"]
-            os.execv(real, [os.fspath(real), *hook_trust_flag, *sys.argv[1:]])
 
 
-        if __name__ == "__main__":
-            main()
-      '';
+            def main() -> None:
+                real = Path(os.environ["CODEX_REAL_BIN"])
+                interactive = sys.stdin.isatty() and sys.stdout.isatty()
+                if interactive:
+                    parser = argparse.ArgumentParser(
+                        prog="codex", add_help=False, allow_abbrev=False
+                    )
+                    parser.add_argument("-C", "--cd", type=Path, default=Path.cwd())
+                    options, _ = parser.parse_known_args()
+                    cwd = options.cd.resolve()
+                    try:
+                        asyncio.run(trust_launch_hooks(real, cwd))
+                    except (
+                        OSError,
+                        RuntimeError,
+                        TimeoutError,
+                        TypeError,
+                        ValueError,
+                        KeyError,
+                    ) as exc:
+                        raise SystemExit(f"codex: could not trust launch hooks: {exc}") from exc
+
+                # Hook trust bypass is for automation and forces interactive sessions into
+                # embedded mode instead of the shared background server
+                hook_trust_flag = [] if interactive else ["--dangerously-bypass-hook-trust"]
+                os.execv(real, [os.fspath(real), *hook_trust_flag, *sys.argv[1:]])
+
+
+            if __name__ == "__main__":
+                main()
+          '';
       launcherExecutable = pkgs.writeShellApplication {
         name = "codex";
+        meta.mainProgram = "codex";
         runtimeEnv = {
           CODEX_REAL_BIN = lib.meta.getExe cfg.package;
           CODEX_HOME = configDir;
         };
         text = ''
-          exec ${lib.meta.getExe pkgs.python315} ${launcherScript} "$@"
+          exec ${launcherScript} "$@"
         '';
       };
       launcher = pkgs.symlinkJoin {
@@ -404,18 +502,24 @@ let
         inherit (cfg.package) version;
         paths = [ cfg.package ];
         postBuild = ''
+          # Replace only the original executable in the joined tree
           ln -sfn ${lib.meta.getExe launcherExecutable} "$out/bin/codex"
         '';
         meta = cfg.package.meta // {
           mainProgram = "codex";
         };
       };
-      notify = pkgs.writeShellScript "codex-notify" ''
-        client=${lib.strings.escapeShellArg "${configDir}/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"}
-        if [[ -x "$client" ]]; then
-          exec "$client" turn-ended "$@"
-        fi
-      '';
+      notify = pkgs.writeShellApplication {
+        name = "codex-notify";
+        meta.mainProgram = "codex-notify";
+        bashOptions = [ ];
+        text = ''
+          client=${lib.strings.escapeShellArg "${configDir}/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"}
+          if [[ -x "$client" ]]; then
+            exec "$client" turn-ended "$@"
+          fi
+        '';
+      };
     in
     {
       imports = [
@@ -449,11 +553,13 @@ let
             || lib.strings.hasPrefix "${config.home.homeDirectory}/" config.xdg.configHome
           );
           settings = lib.modules.mkMerge [
-            (mkDefaults codexSettings)
-            (lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin (mkDefaults {
-              tui.keymap.global.open_transcript = "ctrl-t";
-              notify = [ (toString notify) ];
-            }))
+            (mkSettingsDefaults lib codexSettings)
+            (lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin (
+              mkSettingsDefaults lib {
+                tui.keymap.global.open_transcript = "ctrl-t";
+                notify = [ (lib.meta.getExe notify) ];
+              }
+            ))
           ];
         };
       };
@@ -472,7 +578,7 @@ let
       claudeDir = config.programs.claude-code.configDir;
       settingsFile = (pkgs.formats.json { }).generate "omp-settings.json" cfg.settings;
       mcpFile = (pkgs.formats.json { }).generate "omp-mcp.json" { inherit (cfg) mcpServers; };
-      syncScript = pkgs.writeText "omp-sync-settings.py" ''
+      syncScript = writePython315 pkgs "omp-sync-settings.py" { } ''
         import argparse
         import json
         import subprocess
@@ -517,12 +623,13 @@ let
       '';
       syncSettings = pkgs.writeShellApplication {
         name = "omp-sync-settings";
+        meta.mainProgram = "omp-sync-settings";
         text = ''
-          exec ${lib.meta.getExe pkgs.python315} ${syncScript} \
+          exec ${syncScript} \
             --omp ${lib.meta.getExe cfg.package} \
             --settings ${settingsFile} \
-            ${lib.escapeShellArgs (
-              lib.concatMap (path: [
+            ${lib.strings.escapeShellArgs (
+              lib.lists.concatMap (path: [
                 "--skill-root"
                 path
               ]) cfg.skillRoots
@@ -573,7 +680,7 @@ let
 
       config = lib.modules.mkIf (config.euvlok.home.codex.enable && cfg.enable) {
         euvlok.home.codex.omp = {
-          settings = lib.mapAttrs (_: lib.modules.mkDefault) {
+          settings = lib.attrsets.mapAttrs (_: lib.modules.mkDefault) {
             symbolPreset = "ascii";
             emojiAutocomplete = false;
             "composer.shape" = "claude";
@@ -628,6 +735,48 @@ let
         '';
       };
     };
+  /**
+    Select bundled Codex plugins and optionally adapt browser plugins for Helium
+
+    # Inputs
+
+    `args` (attribute set)
+    : `lib` (required)
+      : Nixpkgs library
+
+      `stdenvNoCC`, `fetchurl`, `unzip`, `jq`, `moreutils` (required)
+      : Nixpkgs build dependencies
+
+      `chatgpt` (required)
+      : Desktop derivation exposing `unwrapped` on Linux, unused on Darwin
+
+      `helium` (optional, default: `false`)
+      : Enable Helium compatibility patches for the selected browser plugins
+
+      `marketplaceName` (required)
+      : String replacing the bundled marketplace name
+
+      `pluginNames` (required)
+      : List of bundled plugin names to retain
+
+    # Type
+    ```
+    bundledPlugins :: AttrSet -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## `bundledPlugins` usage example
+    ```nix
+    pkgs.callPackage bundledPlugins {
+      inherit chatgpt;
+      marketplaceName = "local";
+      pluginNames = [ "browser" ];
+    }
+    => derivation containing the browser plugin in marketplace "local"
+    ```
+    :::
+  */
   bundledPlugins =
     {
       lib,
@@ -643,7 +792,6 @@ let
     }:
     let
       isDarwin = stdenvNoCC.hostPlatform.isDarwin;
-      version = if isDarwin then "26.1002.52244" else lib.strings.getVersion chatgpt;
       darwinSources = {
         aarch64-darwin = {
           arch = "arm64";
@@ -712,13 +860,13 @@ let
         Use Helium for diagnostics, launch paths, profiles, and extension setup.
       '';
     in
-    stdenvNoCC.mkDerivation {
+    stdenvNoCC.mkDerivation (finalAttrs: {
       pname = "codex-bundled-plugins";
-      inherit version;
+      version = if isDarwin then "26.1002.52244" else lib.strings.getVersion chatgpt;
       src =
         if isDarwin then
           fetchurl {
-            url = "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-${darwinSource.arch}-${version}.zip";
+            url = "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-${darwinSource.arch}-${finalAttrs.version}.zip";
             inherit (darwinSource) hash;
           }
         else
@@ -808,7 +956,7 @@ let
         license = lib.licenses.unfree;
         platforms = lib.systems.doubles.linux ++ lib.systems.doubles.darwin;
       };
-    };
+    });
   profiles =
     {
       config,
@@ -818,7 +966,7 @@ let
     }:
     let
       cfg = config.euvlok.home.codex;
-      inherit (codexLib { inherit config lib pkgs; }) mkDefaults settings;
+      inherit (codexLib { inherit config lib pkgs; }) settings;
       servers =
         lib.attrsets.optionalAttrs (
           config.programs.codex.enableMcpIntegration && config.programs.mcp.enable
@@ -853,7 +1001,7 @@ let
       config = lib.modules.mkIf cfg.enable {
         programs.codex.profiles = lib.attrsets.mapAttrs (
           _: policy:
-          mkDefaults (
+          mkSettingsDefaults lib (
             policy.settings
             // {
               web_search = "cached";
@@ -888,6 +1036,7 @@ let
       );
       writeConfig = pkgs.writeShellApplication {
         name = "codex-write-config";
+        meta.mainProgram = "codex-write-config";
         runtimeInputs = [ pkgs.coreutils ];
         text = ''
           destination=$2
@@ -897,6 +1046,32 @@ let
           mv -fT -- "$candidate" "$destination"
         '';
       };
+      /**
+        Render the activation command for a generated Home Manager config file
+
+        # Inputs
+
+        `file` (attribute set)
+        : `source` (required)
+          : Generated config file, coercible to a path string
+
+          `target` (required)
+          : Absolute destination or path relative to `config.home.homeDirectory`
+
+        # Type
+        ```
+        copyConfig :: { source :: PathLike; target :: String; } -> String
+        ```
+
+        # Examples
+        :::{.example}
+        ## `copyConfig` usage example
+        ```nix
+        copyConfig { source = "/tmp/config"; target = "/home/me/.codex/config.toml"; }
+        => "run ${lib.meta.getExe writeConfig} /tmp/config /home/me/.codex/config.toml\n"
+        ```
+        :::
+      */
       copyConfig =
         file:
         let
@@ -951,7 +1126,6 @@ let
       isDarwin = pkgs.stdenvNoCC.hostPlatform.isDarwin;
       inherit (codexLib { inherit config lib pkgs; })
         environment
-        mkDefaults
         settings
         ;
       desktopPackage = lib.lists.findFirst (
@@ -980,6 +1154,7 @@ let
           "${resources}/plugins/openai-bundled/plugins/browser/scripts/browser-service.mjs";
       nodeRepl = pkgs.writeShellApplication {
         name = "codex-node-repl";
+        meta.mainProgram = "codex-node-repl";
         runtimeInputs = [
           pkgs.coreutils
           pkgs.jq
@@ -1044,6 +1219,7 @@ let
       ) pluginNames;
       syncPlugins = pkgs.writeShellApplication {
         name = "codex-sync-bundled-plugins";
+        meta.mainProgram = "codex-sync-bundled-plugins";
         runtimeInputs = [ pkgs.jq ];
         runtimeEnv = environment;
         text = ''
@@ -1066,13 +1242,18 @@ let
       nativeHostBinary = "${compatibilityRoot}/chrome/extension-host/${nativeHostPlatform}/${nativeHostArch}/${
         if isDarwin then "ChatGPT for Chrome" else "extension-host"
       }";
-      nativeHost = pkgs.writeShellScript "helium-chatgpt-native-host" ''
-        exec ${
-          lib.strings.optionalString (
-            !isDarwin && bundledChatgpt ? extensionHost
-          ) "${lib.meta.getExe bundledChatgpt.extensionHost} "
-        }${lib.strings.escapeShellArg nativeHostBinary} "$@"
-      '';
+      nativeHost = pkgs.writeShellApplication {
+        name = "helium-chatgpt-native-host";
+        meta.mainProgram = "helium-chatgpt-native-host";
+        bashOptions = [ ];
+        text = ''
+          exec ${
+            lib.strings.optionalString (
+              !isDarwin && bundledChatgpt ? extensionHost
+            ) "${lib.meta.getExe bundledChatgpt.extensionHost} "
+          }${lib.strings.escapeShellArg nativeHostBinary} "$@"
+        '';
+      };
       nativeHostDirectory =
         if isDarwin then
           "Library/Application Support/net.imput.helium/NativeMessagingHosts"
@@ -1131,55 +1312,57 @@ let
       };
 
       config = lib.modules.mkIf cfg.enable {
-        programs.codex.settings = lib.modules.mkIf desktopAvailable (mkDefaults {
-          mcp_servers.node_repl = {
-            command = lib.meta.getExe nodeRepl;
-            args = [ ];
-            startup_timeout_sec = 120;
-            env =
-              environment
-              // {
-                NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000";
-                NODE_REPL_NODE_MODULE_DIRS = nodeModules;
-                NODE_REPL_NODE_PATH = "${resources}/cua_node/bin/node";
-                NODE_REPL_TRUSTED_CODE_PATHS = nodeModules;
-                BROWSER_USE_AVAILABLE_BACKENDS = if isDarwin then "chrome,iab,mcpapps" else "chrome,iab";
-                BROWSER_USE_TINYSKY_ENABLED = if isDarwin then "1" else "0";
-                BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod";
-                NODE_REPL_TRUSTED_SERVICES = lib.strings.toJSON (
-                  {
-                    browser = browserService;
-                  }
-                  // lib.attrsets.optionalAttrs isDarwin { sky = "@oai/sky/service"; }
-                );
-              }
-              // lib.attrsets.optionalAttrs (!isDarwin) {
-                NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin.";
-                NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative.";
-              }
-              // lib.attrsets.optionalAttrs heliumEnabled {
-                CODEX_BROWSER_SERVICE = browserService;
-                NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control Helium with the Chrome Plugin's chrome compatibility selector. Use Helium's own profile, extension, and native host.";
-              }
-              // lib.attrsets.optionalAttrs (isDarwin && cfg.desktop.nodeReplAppBundle != null) {
-                CODEX_NODE_REPL_APP_BUNDLE = cfg.desktop.nodeReplAppBundle;
-              };
-          };
-          marketplaces.${marketplaceName} = {
-            source_type = "local";
-            source = toString cfg.desktop.pluginsPackage;
-          };
-          plugins = lib.attrsets.genAttrs' pluginNames (
-            name: lib.attrsets.nameValuePair "${name}@${marketplaceName}" { enabled = true; }
-          );
-        });
+        programs.codex.settings = lib.modules.mkIf desktopAvailable (
+          mkSettingsDefaults lib {
+            mcp_servers.node_repl = {
+              command = lib.meta.getExe nodeRepl;
+              args = [ ];
+              startup_timeout_sec = 120;
+              env =
+                environment
+                // {
+                  NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000";
+                  NODE_REPL_NODE_MODULE_DIRS = nodeModules;
+                  NODE_REPL_NODE_PATH = "${resources}/cua_node/bin/node";
+                  NODE_REPL_TRUSTED_CODE_PATHS = nodeModules;
+                  BROWSER_USE_AVAILABLE_BACKENDS = if isDarwin then "chrome,iab,mcpapps" else "chrome,iab";
+                  BROWSER_USE_TINYSKY_ENABLED = if isDarwin then "1" else "0";
+                  BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod";
+                  NODE_REPL_TRUSTED_SERVICES = lib.strings.toJSON (
+                    {
+                      browser = browserService;
+                    }
+                    // lib.attrsets.optionalAttrs isDarwin { sky = "@oai/sky/service"; }
+                  );
+                }
+                // lib.attrsets.optionalAttrs (!isDarwin) {
+                  NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin.";
+                  NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative.";
+                }
+                // lib.attrsets.optionalAttrs heliumEnabled {
+                  CODEX_BROWSER_SERVICE = browserService;
+                  NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control Helium with the Chrome Plugin's chrome compatibility selector. Use Helium's own profile, extension, and native host.";
+                }
+                // lib.attrsets.optionalAttrs (isDarwin && cfg.desktop.nodeReplAppBundle != null) {
+                  CODEX_NODE_REPL_APP_BUNDLE = cfg.desktop.nodeReplAppBundle;
+                };
+            };
+            marketplaces.${marketplaceName} = {
+              source_type = "local";
+              source = toString cfg.desktop.pluginsPackage;
+            };
+            plugins = lib.attrsets.genAttrs' pluginNames (
+              name: lib.attrsets.nameValuePair "${name}@${marketplaceName}" { enabled = true; }
+            );
+          }
+        );
 
         systemd.user.sessionVariables = lib.modules.mkIf (!isDarwin) environment;
         home.file."${nativeHostDirectory}/com.openai.codexextension.json" = lib.modules.mkIf heliumEnabled {
           text = lib.strings.toJSON {
             name = "com.openai.codexextension";
             description = "ChatGPT browser native messaging host for Helium";
-            path = toString nativeHost;
+            path = lib.meta.getExe nativeHost;
             type = "stdio";
             allowed_origins = [
               "chrome-extension://hehggadaopoacecdllhhajmbjkdcmajg/"
@@ -1209,7 +1392,6 @@ let
     }:
     let
       cfg = config.euvlok.home.claude-code;
-      mkDefaults = lib.attrsets.mapAttrsRecursive (_: lib.modules.mkDefault);
       environment = lib.attrsets.filterAttrs (_: value: value != null) cfg.environment;
       configDir =
         if (environment.CLAUDE_CONFIG_DIR or "") != "" then
@@ -1280,7 +1462,7 @@ let
         # https://code.claude.com/docs/en/env-vars
         # Telemetry opt-out also disables feature-flag fetching
         # null omits our default but preserves an inherited opt-out
-        euvlok.home.claude-code.environment = mkDefaults {
+        euvlok.home.claude-code.environment = mkSettingsDefaults lib {
           DISABLE_AUTOUPDATER = "1";
           DISABLE_UPDATES = "1";
           DISABLE_INSTALLATION_CHECKS = "1";
@@ -1305,7 +1487,7 @@ let
           package = lib.modules.mkDefault launcher;
           configDir = lib.modules.mkDefault configDir;
           mutableSettings = lib.modules.mkDefault true;
-          settings = mkDefaults {
+          settings = mkSettingsDefaults lib {
             # https://code.claude.com/docs/en/settings-reference#attribution
             attribution = {
               commit = "";
@@ -1478,7 +1660,6 @@ in
       python315,
     }:
     let
-      version = "26.1002.52244";
       sources = {
         x86_64-linux = {
           arch = "x86_64";
@@ -1489,8 +1670,33 @@ in
           hash = "sha256-F3p4jpX/NB+e2KTpto2PWbw3FnX4fYY6IfkV378Smvk=";
         };
       };
+      /**
+        Fetch the pinned RPM for one of the supported ChatGPT Linux systems
+
+        # Inputs
+
+        `version`
+        : Upstream dotted release version matching the pinned hashes
+
+        `system`
+        : `x86_64-linux` or `aarch64-linux`
+
+        # Type
+        ```
+        fetchSource :: String -> String -> Derivation
+        ```
+
+        # Examples
+        :::{.example}
+        ## `fetchSource` usage example
+        ```nix
+        (fetchSource version "aarch64-linux").name
+        => "chatgpt-${version}-1.aarch64.rpm"
+        ```
+        :::
+      */
       fetchSource =
-        system:
+        version: system:
         let
           source = sources.${system};
         in
@@ -1498,10 +1704,10 @@ in
           url = "https://persistent.oaistatic.com/codex-app-prod/linux/rpm/${source.arch}/chatgpt-${version}-1.${source.arch}.rpm";
           inherit (source) hash;
         };
-      payload = stdenvNoCC.mkDerivation {
+      payload = stdenvNoCC.mkDerivation (finalAttrs: {
         pname = "chatgpt-unwrapped";
-        inherit version;
-        src = fetchSource stdenvNoCC.hostPlatform.system;
+        version = "26.1002.52244";
+        src = fetchSource finalAttrs.version stdenvNoCC.hostPlatform.system;
         nativeBuildInputs = [ rpmextract ];
         sourceRoot = ".";
         unpackPhase = ''
@@ -1523,82 +1729,81 @@ in
           license = lib.licenses.unfree;
           platforms = lib.attrsets.attrNames sources;
         };
-        passthru = { inherit updateSources; };
-      };
-      # Refresh both RPM hashes with native fetchers, including unchanged
-      # versions, without requiring a builder for the other architecture
-      updateSources = lib.attrsets.mapAttrs (
-        system: _:
-        payload.overrideAttrs {
-          src = fetchSource system;
-        }
-      ) sources;
+        # Refresh both RPM hashes with native fetchers, including unchanged
+        # versions, without requiring a builder for the other architecture
+        passthru.updateSources = lib.attrsets.mapAttrs (
+          system: _:
+          finalAttrs.finalPackage.overrideAttrs (
+            variant: _: {
+              src = fetchSource variant.version system;
+            }
+          )
+        ) sources;
+      });
       # Reuse Nixpkgs' synchronized writable plugin cache inside the FHS
       # environment without patching the vendor's binaries or resource tree
       pluginLauncher = callPackage (path + "/pkgs/by-name/ch/chatgpt/launcher.nix") { };
       fhsArgs = {
-        inherit version;
+        inherit (payload) version;
         multiArch = false;
         # Detached windows and child services must survive their launcher
         dieWithParent = false;
-        targetPkgs =
-          pkgs:
-          [ payload ]
-          ++ (with pkgs; [
-            # ChatGPT and its Chromium runtime, including dlopen dependencies
-            alsa-lib
-            at-spi2-core
-            cairo
-            cups
-            dbus
-            expat
-            fontconfig
-            freetype
-            gdk-pixbuf
-            glib
-            gtk3
-            libcanberra-gtk3
-            libdrm
-            libgbm
-            libglvnd
-            libnotify
-            libpulseaudio
-            libsecret
-            libva
-            libxcb
-            libxkbcommon
-            nspr
-            nss
-            pango
-            pipewire
-            mesa
-            systemdLibs
-            vulkan-loader
-            wayland
-            libx11
-            libxcomposite
-            libxdamage
-            libxext
-            libxfixes
-            libxrandr
+        targetPkgs = pkgs: [
+          payload
+          # ChatGPT and its Chromium runtime, including dlopen dependencies
+          pkgs.alsa-lib
+          pkgs.at-spi2-core
+          pkgs.cairo
+          pkgs.cups
+          pkgs.dbus
+          pkgs.expat
+          pkgs.fontconfig
+          pkgs.freetype
+          gdk-pixbuf
+          pkgs.glib
+          pkgs.gtk3
+          pkgs.libcanberra-gtk3
+          pkgs.libdrm
+          pkgs.libgbm
+          pkgs.libglvnd
+          pkgs.libnotify
+          pkgs.libpulseaudio
+          pkgs.libsecret
+          pkgs.libva
+          pkgs.libxcb
+          pkgs.libxkbcommon
+          pkgs.nspr
+          pkgs.nss
+          pkgs.pango
+          pkgs.pipewire
+          pkgs.mesa
+          pkgs.systemdLibs
+          pkgs.vulkan-loader
+          pkgs.wayland
+          pkgs.libx11
+          pkgs.libxcomposite
+          pkgs.libxdamage
+          pkgs.libxext
+          pkgs.libxfixes
+          pkgs.libxrandr
 
-            # Chromium ships optional shims for both Qt desktop versions
-            qt5.qtbase
-            qt6.qtbase
+          # Chromium ships optional shims for both Qt desktop versions
+          pkgs.qt5.qtbase
+          pkgs.qt6.qtbase
 
-            # USB/HID addons and the remote-control device-key addon
-            libusb1
-            openssl
-            tpm2-tss
+          # USB/HID addons and the remote-control device-key addon
+          pkgs.libusb1
+          pkgs.openssl
+          pkgs.tpm2-tss
 
-            # Desktop integration, HTTPS, and subprocesses launched by Work
-            cacert
-            dconf
-            glib-networking
-            shared-mime-info
-            xdg-utils
-            zlib
-          ]);
+          # Desktop integration, HTTPS, and subprocesses launched by Work
+          cacert
+          dconf
+          glib-networking
+          pkgs.shared-mime-info
+          pkgs.xdg-utils
+          pkgs.zlib
+        ];
         profile = ''
           export SSL_CERT_FILE="''${SSL_CERT_FILE:-${cacert}/etc/ssl/certs/ca-bundle.crt}"
           export NIX_SSL_CERT_FILE="''${NIX_SSL_CERT_FILE:-$SSL_CERT_FILE}"
@@ -1625,16 +1830,16 @@ in
         fhsArgs
         // {
           pname = "chatgpt-extension-host";
-          runScript = "${
-            writeShellApplication {
-              name = "chatgpt-extension-host-exec";
-              text = ''exec "$@"'';
-            }
-          }/bin/chatgpt-extension-host-exec";
+          runScript = lib.meta.getExe (writeShellApplication {
+            name = "chatgpt-extension-host-exec";
+            meta.mainProgram = "chatgpt-extension-host-exec";
+            text = ''exec "$@"'';
+          });
         }
       );
       updater = writeShellApplication {
         name = "chatgpt-update";
+        meta.mainProgram = "chatgpt-update";
         runtimeInputs = [ curl ];
         text = ''
           export NIXPKGS_ALLOW_UNFREE=1
@@ -1697,10 +1902,11 @@ in
         pname = "chatgpt";
         runScript = lib.meta.getExe (writeShellApplication {
           name = "chatgpt-fhs-launcher";
+          meta.mainProgram = "chatgpt-fhs-launcher";
           text = ''
             export CHATGPT_EXECUTABLE=/usr/bin/chatgpt
             export CHATGPT_RESOURCES_SOURCE="${payload}/lib/chatgpt/resources"
-            export CHATGPT_RESOURCES_CACHE_KEY="${builtins.baseNameOf (toString payload)}"
+            export CHATGPT_RESOURCES_CACHE_KEY="${lib.filesystem.baseNameOf (toString payload)}"
             exec ${lib.meta.getExe pluginLauncher} "$@"
           '';
         });
@@ -1718,7 +1924,8 @@ in
         '';
         passthru = {
           unwrapped = payload;
-          inherit node extensionHost updateSources;
+          inherit (payload) updateSources;
+          inherit node extensionHost;
           updateScript = lib.meta.getExe updater;
         };
         meta = {
@@ -1748,7 +1955,7 @@ in
       }:
       let
         cfg = config.catppuccin.codex;
-        inherit (codexLib { inherit config lib pkgs; }) configDir mkDefaults;
+        inherit (codexLib { inherit config lib pkgs; }) configDir;
         darkFlavor = if cfg.flavor == "latte" then "frappe" else cfg.flavor;
         palette = lib.trivial.importJSON "${config.catppuccin.sources.palette}/palette.json";
         appearances = {
@@ -1761,6 +1968,32 @@ in
             contrast = 60;
           };
         };
+        /**
+          Build the desktop chrome theme from one Catppuccin palette
+
+          # Inputs
+
+          `colors`
+          : Palette attrset with `hex` values for the configured accent, text,
+            base, green, and red
+
+          `contrast`
+          : Integer contrast value for the appearance
+
+          # Type
+          ```
+          desktopTheme :: AttrSet -> Int -> AttrSet
+          ```
+
+          # Examples
+          :::{.example}
+          ## `desktopTheme` usage example
+          ```nix
+          (desktopTheme palette.latte.colors 45).surface
+          => "#eff1f5"
+          ```
+          :::
+        */
         desktopTheme =
           colors: contrast:
           let
@@ -1778,9 +2011,6 @@ in
               skill = accent;
             };
           };
-        theme =
-          variant:
-          "${config.catppuccin.sources.bat}/Catppuccin ${lib.strings.toSentenceCase variant}.tmTheme";
       in
       {
         options.catppuccin.codex = {
@@ -1806,10 +2036,10 @@ in
             _:
             { flavor, ... }:
             lib.attrsets.nameValuePair "${configDir}/themes/catppuccin-${flavor}.tmTheme" {
-              source = theme flavor;
+              source = "${config.catppuccin.sources.bat}/Catppuccin ${lib.strings.toSentenceCase flavor}.tmTheme";
             }
           ) appearances;
-          programs.codex.settings = mkDefaults {
+          programs.codex.settings = mkSettingsDefaults lib {
             tui.theme = "catppuccin-${cfg.flavor}";
             desktop = lib.attrsets.concatMapAttrs (
               appearance:
@@ -1864,6 +2094,30 @@ in
           pkgs.eupkgs.opencode
         ];
       };
+      /**
+        Instantiate this host's Codex and Claude Code Home Manager module
+
+        # Inputs
+
+        `args` (attribute set)
+        : `codexDesktopModule` (required)
+          : Home Manager module defining `programs.codexDesktopLinux`
+
+        # Type
+        ```
+        unsignedInt32 :: { codexDesktopModule :: Module; } -> Module
+        ```
+
+        # Examples
+        :::{.example}
+        ## `unsignedInt32` usage example
+        ```nix
+        (unsignedInt32 { inherit codexDesktopModule; } { inherit config; })
+          .programs.codexDesktopLinux.enable
+        => true
+        ```
+        :::
+      */
       unsignedInt32 = { codexDesktopModule }: { config, ... }: {
         imports = [
           codexDesktopModule
@@ -1888,6 +2142,29 @@ in
       };
     };
   };
+  /**
+    Instantiate the macOS module with the configured Pared flake input
+
+    # Inputs
+
+    `args` (attribute set)
+    : `euvlokInputs` (required)
+      : Flake inputs containing `pared.darwinModules.default`
+
+    # Type
+    ```
+    darwin :: { euvlokInputs :: AttrSet; } -> Module
+    ```
+
+    # Examples
+    :::{.example}
+    ## `darwin` usage example
+    ```nix
+    (darwin { inherit euvlokInputs; } { }).programs.pared.enable
+    => true
+    ```
+    :::
+  */
   darwin =
     { euvlokInputs }:
     { ... }:

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   services.kanata = {
     enable = true;
@@ -6,7 +6,7 @@
     keyboards.main = {
       devices = [ ];
       extraDefCfg = "danger-enable-cmd yes process-unmapped-keys yes";
-      config = builtins.readFile ./config.scm;
+      config = lib.trivial.readFile ./config.scm;
     };
   };
 }

@@ -90,7 +90,7 @@
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = false;
     nix-index.enable = true;
-    pared.enable = lib.mkForce false;
+    pared.enable = lib.modules.mkForce false;
     # Environment
   };
 

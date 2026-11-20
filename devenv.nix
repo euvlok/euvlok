@@ -29,7 +29,7 @@
 
   git-hooks = {
     excludes = [ ".devenv" ];
-    hooks = import ./devenv/git-hooks.nix { inherit pkgs; };
+    hooks = import ./devenv/git-hooks.nix { inherit lib pkgs; };
   };
 
   # Finish formatting before hooks check whether a command modified files

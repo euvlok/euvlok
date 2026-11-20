@@ -9,7 +9,7 @@ buildFirefoxXpiAddon {
   url = "https://addons.mozilla.org/firefox/downloads/file/4647055/catppuccin_web_file_icons-1.6.1.xpi";
   sha256 = "sha256-oe4jEr0ssTBqON7EtQ7cVaQ5edgYczJk3ulVxsBKdnY=";
   meta = {
-    homepage = "https://github.com/catppuccin/web-file-explorer-icons";
+    homepage = "https://redirect.github.com/catppuccin/web-file-explorer-icons";
     description = "Soothing pastel icons for file explorers on the web!";
     license = lib.licenses.mit;
     mozPermissions = [

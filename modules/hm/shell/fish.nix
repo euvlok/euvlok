@@ -36,8 +36,8 @@
               set args "$argv[2]"
           end
 
-          set expanded_file (realpath "$file")
-          nix-build -E "with import <nixpkgs> {}; callPackage $expanded_file $args"
+          set expanded_file (realpath -- "$file"); or return
+          nix-build --argstr file "$expanded_file" -E "{ file }: (import <nixpkgs> {}).callPackage (/. + file) $args"
         '';
       };
 

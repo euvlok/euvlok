@@ -21,7 +21,9 @@ in
 
     programs.kdeconnect = {
       enable = true;
-      package = lib.mkIf (!config.euvlok.nixos.plasma.enable) pkgs.unstable.gnomeExtensions.gsconnect;
+      package = lib.modules.mkIf (
+        !config.euvlok.nixos.plasma.enable
+      ) pkgs.unstable.gnomeExtensions.gsconnect;
     };
 
     services = {

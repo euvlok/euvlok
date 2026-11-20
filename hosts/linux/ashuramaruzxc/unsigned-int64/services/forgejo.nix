@@ -10,6 +10,28 @@ let
   httpPort = 3001;
   sshPort = 2222;
   redis = config.services.redis.servers.forgejo;
+  /**
+    Build the Redis connection URL for a database on the local Unix socket
+
+    # Inputs
+
+    `database`
+    : Zero-based Redis database number
+
+    # Type
+    ```
+    redisUrl :: Int -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `redisUrl` usage example
+    ```nix
+    redisUrl 1
+    => "redis+socket://${redis.unixSocket}?db=1"
+    ```
+    :::
+  */
   redisUrl = database: "redis+socket://${redis.unixSocket}?db=${toString database}";
 in
 {
@@ -142,7 +164,7 @@ in
         ENABLED = true;
         PROTOCOL = "sendmail";
         FROM = config.programs.msmtp.accounts.default.from;
-        SENDMAIL_PATH = lib.getExe' pkgs.system-sendmail "sendmail";
+        SENDMAIL_PATH = lib.meta.getExe' pkgs.system-sendmail "sendmail";
         SENDMAIL_ARGS = "--";
       };
       federation.ENABLED = false;

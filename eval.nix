@@ -9,6 +9,7 @@
   pkgs ? import <nixpkgs> { },
 }:
 let
+  # Use the versioned writer to keep the benchmark runner on Python 3.15
   python = pkgs.python315;
 in
 pkgs.writers.makePythonWriter python python.pkgs pkgs.buildPackages.python315.pkgs
@@ -55,7 +56,7 @@ pkgs.writers.makePythonWriter python python.pkgs pkgs.buildPackages.python315.pk
             timed = ["/usr/bin/time", "-lp", "-o", timing_path]
         else:
             timed = [
-                "${pkgs.time}/bin/time",
+                "${pkgs.lib.meta.getExe pkgs.time}",
                 "-f", "real %e\nuser %U\nsys %S\nmax_rss_kib %M",
                 "-o", timing_path,
             ]
