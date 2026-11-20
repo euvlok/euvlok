@@ -18,14 +18,25 @@ and the feature branch. Get approval for the push, dispatch, and PR wording.
 Push the feature branch, then dispatch from it:
 
 ```sh
-gh api --method POST \
-  repos/euvlok/euvlok/actions/workflows/open-pr.yml/dispatches \
-  -f ref="$branch" -f "inputs[title]=$title"
+gh workflow run open-pr.yml -R euvlok/euvlok --ref "$branch" -f title="$title"
 ```
 
 The workflow opens the PR as `github-actions[bot]` against `master` using the
-repository PR template. Pass `inputs[body]` only if the user requests extra
+repository PR template. Add `-f body="$body"` only if the user requests extra
 text.
+
+Track the returned run (includes CI). If no URL is returned, find the dispatched
+SHA with `gh run list -w open-pr.yml -b "$branch"` instead of dispatching again.
+Wait with `gh run watch "$run_id" --exit-status` and inspect failures with
+`gh run view "$run_id" --log-failed`.
+
+- Prefer `--json` and `--jq`. For `gh pr checks --json bucket,name,link`, read
+  `bucket`, not the exit code. Fetch inline review comments with
+  `gh api --paginate "repos/euvlok/euvlok/pulls/$pr/comments"`.
+- For PR waits, use `gh event listen` as described in the [official `gh`
+  skill][gh-skill]. Get approval before creating a subscription.
+
+[gh-skill]: https://redirect.github.com/cli/cli/blob/HEAD/skills/gh/SKILL.md
 
 ## Nix Preferences
 
