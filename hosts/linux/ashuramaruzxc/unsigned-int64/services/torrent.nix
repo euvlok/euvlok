@@ -86,10 +86,11 @@ in
   };
   services.bazarr = {
     enable = true;
-    listenPort = 8763;
     user = "jellyfin";
     group = "jellyfin";
-    settings = commonrrsetting;
+    settings = commonrrsetting // {
+      general.port = 8763;
+    };
   };
   services.prowlarr.enable = true;
   services.unbound.settings.server.local-data = [
