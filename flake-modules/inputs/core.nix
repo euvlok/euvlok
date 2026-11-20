@@ -1,6 +1,6 @@
 {
   flake-file.inputs = {
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.23.1";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.24.2";
     eupkgs.inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     eupkgs.url = "github:euvlok/pkgs";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/*.tar.gz";

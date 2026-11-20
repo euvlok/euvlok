@@ -207,11 +207,11 @@ in
             { pkgs, ... }:
             {
               imports = [ inputs.ecolinker.nixosModules.default ];
-              # Upstream's vendorHash predates its October dependency updates.
+              # Upstream's vendorHash predates the updated Go dependencies
               services.ecolinker.package =
                 inputs.ecolinker.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
                   {
-                    vendorHash = "sha256-lu28fn/1k8MDrsHTlg9zme1fd/kB1awlykIYGoOZzF8=";
+                    vendorHash = "sha256-Ofe7IP61tUQaQQ/silHxDIeKmSUsbvlkDGZAT0xi0S4=";
                   };
             };
           homeModule = lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int64/home.nix {

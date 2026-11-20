@@ -34,10 +34,12 @@ let
     `options`: `bundledPlugins` (`[String]`, default `[]`) excludes common
     plugins shipped with the IDE. `extraPlugins` (`[String]`, default `[]`)
     adds plugins after that exclusion
+    `extraPluginPackages` (`[Derivation]`, default `[]`) supplies plugins that
+    are not in the catalog
 
     # Type
     ```
-    withPlugins :: Derivation -> { bundledPlugins ? []; extraPlugins ? []; } -> Derivation
+    withPlugins :: Derivation -> { bundledPlugins ? []; extraPlugins ? []; extraPluginPackages ? []; } -> Derivation
     ```
 
     # Examples
@@ -54,17 +56,10 @@ let
     {
       bundledPlugins ? [ ],
       extraPlugins ? [ ],
+      extraPluginPackages ? [ ],
     }:
     let
       plugins = jetbrainsPlugins.lib.pluginsForIdeWith {
-        extraOverrides."com.cppcxy.Intellij-EmmyLua" =
-          plugin:
-          plugin.overrideAttrs (old: {
-            # The plugin cannot chmod its bundled servers after they enter the Nix store.
-            postInstall = (old.postInstall or "") + ''
-              chmod +x "$out"/server/*/emmylua_ls
-            '';
-          });
         extraOverrides."com.redhat.devtools.lsp4ij" =
           plugin:
           plugin.overrideAttrs (old: {
@@ -100,8 +95,9 @@ let
             '';
           });
       } pkgs ide (pkgs.lib.lists.subtractLists bundledPlugins commonPlugins ++ extraPlugins);
+      pluginPackages = pkgs.lib.attrsets.attrValues plugins ++ extraPluginPackages;
     in
-    (pkgs.jetbrains.plugins.addPlugins ide (pkgs.lib.attrsets.attrValues plugins)).overrideAttrs (
+    (pkgs.jetbrains.plugins.addPlugins ide pluginPackages).overrideAttrs (
       oldAttrs:
       pkgs.lib.attrsets.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
         let
@@ -153,9 +149,9 @@ in
     };
 
     idea = withPlugins pkgs.jetbrains.idea {
+      extraPluginPackages = pkgs.callPackage ./jetbrains-idea-plugins.nix { };
       extraPlugins = [
         "boo.fox.haskelllsp"
-        "com.cppcxy.Intellij-EmmyLua"
         # Clojure LSP requires GUI bootstrap and breaks IDEA's headless formatter.
         "com.github.clojure-lsp"
         "com.laamella.nim"
@@ -169,8 +165,6 @@ in
         "org.jetbrains.plugins.ruby"
         "reasonml"
         "com.demonwav.minecraft-dev"
-        "com.intellij.nativeDebug"
-        "com.jetbrains.rust"
         "org.intellij.scala"
         "org.jetbrains.plugins.go"
         "PythonCore"

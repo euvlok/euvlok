@@ -123,7 +123,7 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable-small";
     };
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.23.1";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/=3.24.2";
     eupkgs = {
       url = "github:euvlok/pkgs";
       inputs.nixpkgs.follows = "nixpkgs-unstable-small";

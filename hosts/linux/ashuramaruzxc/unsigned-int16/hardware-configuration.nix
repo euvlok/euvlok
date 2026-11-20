@@ -80,7 +80,7 @@ in
 
   boot = {
     loader.raspberry-pi.bootloader = "kernel";
-    kernelPackages = pkgs.linuxAndFirmware.v6_12_85.linuxPackages_rpi5;
+    kernelPackages = pkgs.linuxAndFirmware.v6_12_87.linuxPackages_rpi5;
     kernelParams = [ "zfs.zfs_arc_max=1610612736" ];
     supportedFilesystems = [ "zfs" ];
     zfs.forceImportRoot = false;

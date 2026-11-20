@@ -416,7 +416,9 @@ lib.fixedPoints.composeManyExtensions [
     euvlokVscodeExtensions =
       { version, extensions }:
       import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {
-        inherit extensions version;
+        inherit extensions;
+        # VS Code can omit .0, but nix4vscode expects three version components
+        version = if builtins.match "[0-9]+\\.[0-9]+" version != null then "${version}.0" else version;
         pkgs = final.unstable;
       };
   })
