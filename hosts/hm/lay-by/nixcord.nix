@@ -13,7 +13,7 @@ _: {
       ignoreSelf = true;
       ignoreBots = true;
     };
-    expressionCloner.enable = true;
+    expressionManager.enable = true;
     imageZoom.enable = true;
     implicitRelationships.enable = true;
     noMosaic.enable = true;
