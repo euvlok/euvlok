@@ -32,6 +32,8 @@ let
           // {
             # Keep the existing Codex and Claude launchers in the profile
             ai-tools = lib.meta.lowPrio packages.ai-tools;
+            # Prefer the configured Bun over Farstep's bundled runtime in the profile
+            farstep = lib.meta.lowPrio packages.farstep;
           };
       })
     ];
