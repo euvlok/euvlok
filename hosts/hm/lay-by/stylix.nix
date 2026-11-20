@@ -13,7 +13,6 @@
     targets.rofi.enable = false;
     # targets.anki.enable = false;
     # targets.hyprpaper.enable = false;
-    targets.vscode.enable = false;
   };
 
   home.pointerCursor.enable = true;

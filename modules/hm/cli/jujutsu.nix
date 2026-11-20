@@ -16,7 +16,6 @@
         core.watchman.register-snapshot-trigger = true;
         ui = {
           paginate = "auto";
-          merge-editor = "vscode";
           diff.format = "git";
         };
         git = {

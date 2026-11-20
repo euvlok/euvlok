@@ -22,7 +22,6 @@
           "gitfast"
           "podman"
           "ssh"
-          "vscode"
         ];
       };
       plugins = [

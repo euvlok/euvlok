@@ -143,13 +143,6 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix4vscode = {
-      url = "github:nix-community/nix4vscode";
-      inputs = {
-        nixpkgs.follows = "nixpkgs-unstable-small";
-        systems.follows = "flake-utils/systems";
-      };
-    };
     nixcord = {
       url = "github:4evy/nixcord";
       inputs = {

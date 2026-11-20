@@ -23,7 +23,6 @@
       ;
     inherit (pkgs.unstable)
       # Development
-      #vscode-fhs # Not using vscode for now.
       lmstudio
       gnumake
       nixfmt

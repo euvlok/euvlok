@@ -1,14 +1,6 @@
 { lib, pkgs, ... }:
 {
   packages = lib.attrsets.attrValues { inherit (pkgs.unstable) nim nimlsp; };
-  vscode.extensions = [
-    "nimLang.nimlang"
-    "nimsaem.nimvscode"
-  ];
-  vscode.settings."[nim]" = {
-    "editor.defaultFormatter" = "nimLang.nimlang";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.nimlsp.command = "nimlsp";
   helix.languages = [
     {

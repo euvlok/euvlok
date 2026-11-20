@@ -23,27 +23,6 @@
       typescript-language-server
       ;
   };
-  vscode.extensions = [
-    "bradlc.vscode-tailwindcss"
-    "christian-kohler.npm-intellisense"
-    "denoland.vscode-deno"
-    "esbenp.prettier-vscode"
-    "ms-vscode.vscode-typescript-next"
-    "syler.sass-indented"
-  ];
-  vscode.settings = {
-    "[javascript]" = {
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-      "editor.formatOnPaste" = true;
-      "editor.formatOnSave" = true;
-      "editor.formatOnType" = true;
-    };
-    "[typescript]" = {
-      "editor.formatOnPaste" = true;
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-      "editor.formatOnSave" = true;
-    };
-  };
   helix.languageServers = {
     typescript-language-server = {
       command = "typescript-language-server";
@@ -151,10 +130,6 @@
   zed.lsp = {
     "typescript-language-server".binary = {
       path = lib.meta.getExe pkgs.unstable.typescript-language-server;
-      arguments = [ "--stdio" ];
-    };
-    eslint.binary = {
-      path = lib.meta.getExe' pkgs.unstable.vscode-langservers-extracted "vscode-eslint-language-server";
       arguments = [ "--stdio" ];
     };
     biome.binary = {

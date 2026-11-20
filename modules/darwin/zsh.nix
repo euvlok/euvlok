@@ -23,7 +23,6 @@ let
     "fzf"
     "git"
     "ssh"
-    "vscode"
   ];
 
   customPlugins = [

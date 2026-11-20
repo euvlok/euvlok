@@ -46,10 +46,7 @@ let
           homeDirectory = "/home/consumer";
           stateVersion = "26.11";
         };
-        euvlok.home = {
-          languages.rust.enable = true;
-          vscode.enable = true;
-        };
+        euvlok.home.languages.rust.enable = true;
       }
     ];
   };
@@ -130,17 +127,10 @@ let
     package: lib.strings.getName package == "pavucontrol"
   ) nvidiaGuiConsumer.config.environment.systemPackages;
 
-  hasLldb = lib.lists.any (
-    extension: lib.strings.hasInfix "vscode-lldb" (lib.strings.getName extension)
-  ) standaloneHome.config.programs.vscode.profiles.default.extensions;
-
   results =
     assert hasDesktopPackages;
-    assert hasLldb;
     assert !(serverHome.config.euvlok.home ? languages);
-    assert !(serverHome.config.euvlok.home ? vscode);
     assert !serverHome.config.programs.ghostty.enable;
-    assert !serverHome.config.programs.vscode.enable;
     {
       darwinSystem = darwinConsumer.system.drvPath;
       integratedHome = integratedNixos.config.home-manager.users.consumer.home.activationPackage.drvPath;

@@ -4,18 +4,6 @@
     inherit (pkgs.unstable) flutter;
     dart = pkgs.unstable.flutter.dart;
   };
-  vscode.extensions = [
-    "dart-code.dart-code"
-    "dart-code.flutter"
-  ];
-  vscode.settings."[dart]" = {
-    "editor.defaultFormatter" = "dart-code.dart-code";
-    "editor.formatOnSave" = true;
-    "editor.codeActionsOnSave" = {
-      "source.fixAll" = "explicit";
-      "source.organizeImports" = "explicit";
-    };
-  };
   helix.languageServers.dart = {
     command = "dart";
     args = [

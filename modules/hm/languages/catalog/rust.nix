@@ -16,18 +16,6 @@
       crates-lsp
       ;
   };
-  vscode.extensions = [
-    "fill-labs.dependi"
-    "rust-lang.rust-analyzer"
-  ];
-  vscode.settings."[rust]" = {
-    "editor.defaultFormatter" = "rust-lang.rust-analyzer";
-    "editor.formatOnSave" = true;
-    "editor.codeActionsOnSave" = {
-      "source.fixAll" = "explicit";
-      "source.organizeImports" = "explicit";
-    };
-  };
   helix.languageServers.rust-analyzer.command = "rust-analyzer";
   helix.languages = [
     {

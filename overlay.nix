@@ -382,45 +382,4 @@ lib.fixedPoints.composeManyExtensions [
   eupkgsOverlay
   stableFallbacksOverlay
   localPackagesOverlay
-  (final: _prev: {
-    /**
-      Select VS Code extension packages for an editor version using the
-      unstable package set and nix4vscode's marketplace data
-
-      # Inputs
-
-      `options`
-      : `version` (required)
-        : VS Code version used to resolve extension compatibility
-
-        `extensions` (required)
-        : List of nix4vscode extension identifiers
-
-      # Type
-
-      ```
-      euvlokVscodeExtensions :: { version :: String; extensions :: [String]; } -> [Derivation]
-      ```
-
-      # Examples
-      :::{.example}
-      ## Resolve an empty extension list
-
-      ```nix
-      pkgs.euvlokVscodeExtensions { version = "1.100.0"; extensions = [ ]; }
-      => [ ]
-      ```
-
-      :::
-    */
-    euvlokVscodeExtensions =
-      { version, extensions }:
-      import (inputs.nix4vscode + /nix/forVscodeVersionRaw.nix) {
-        inherit extensions;
-        # VS Code can omit .0, but nix4vscode expects three version components
-        version = if builtins.match "[0-9]+\\.[0-9]+" version != null then "${version}.0" else version;
-        pkgs = final.unstable;
-      };
-  })
-  inputs.nix4vscode.overlays.default
 ]

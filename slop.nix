@@ -2052,11 +2052,6 @@ in
           };
         };
       };
-    vscode = { config, lib, ... }: {
-      config = lib.modules.mkIf config.euvlok.home.vscode.enable {
-        programs.vscode.profiles.default.userSettings.chat.disableAIFeatures = true;
-      };
-    };
     raycast = _: {
       programs.raycast.configuration.settings = {
         disableAi = true;

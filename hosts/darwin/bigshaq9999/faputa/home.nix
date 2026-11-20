@@ -44,21 +44,6 @@
         }
       ]
       ++ [
-        {
-          programs.vscode = {
-            profiles.default = {
-              userSettings = {
-                "editor.fontSize" = lib.modules.mkForce 15;
-                "terminal.integrated.fontSize" = lib.modules.mkForce 15;
-                "editor.tabSize" = lib.modules.mkForce 4;
-                "editor.fontFamily" = lib.modules.mkForce "'Hack Nerd Font Mono'";
-                "terminal.integrated.fontFamily" = lib.modules.mkForce "'Hack Nerd Font Mono'";
-              };
-            };
-          };
-        }
-      ]
-      ++ [
         { sops.defaultSopsFile = ../../../../secrets/bigshaq9999.yaml; }
       ]
       ++ [
@@ -93,9 +78,7 @@
             };
             helix.enable = true;
             nixcord.enable = true;
-            vscode.enable = true;
             # yazi.enable = true;
-            zed-editor.enable = true;
             languages = {
               # cpp.enable = true;
               # csharp.enable = true;

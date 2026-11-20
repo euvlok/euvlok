@@ -9,11 +9,6 @@
       babashka
       ;
   };
-  vscode.extensions = [ "betterthantomorrow.calva" ];
-  vscode.settings."[clojure]" = {
-    "editor.defaultFormatter" = "betterthantomorrow.calva";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.clojure-lsp.command = "clojure-lsp";
   helix.languages = [
     {

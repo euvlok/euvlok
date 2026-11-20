@@ -14,4 +14,3 @@ secrets/*.yaml linguist-generated
 
 # Hidden repository configuration is first-party source.
 .github/** -linguist-vendored
-.vscode/*.json -linguist-vendored linguist-detectable

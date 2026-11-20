@@ -10,7 +10,6 @@
     ../shared/nixcord.nix
     ./ssh.nix
     ./starship.nix
-    ../shared/vscode.nix
     ./zed.nix
   ];
 

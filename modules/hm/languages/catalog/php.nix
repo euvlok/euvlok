@@ -4,15 +4,6 @@
     inherit (pkgs.unstable) php intelephense phpstan;
     inherit (pkgs.unstable.phpPackages) composer psalm;
   };
-  vscode.extensions = [
-    "devsense.phptools-vscode"
-    "bmewburn.vscode-intelephense-client"
-    "xdebug.php-debug"
-  ];
-  vscode.settings."[php]" = {
-    "editor.defaultFormatter" = "bmewburn.vscode-intelephense-client";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.intelephense = {
     command = "intelephense";
     args = [ "--stdio" ];

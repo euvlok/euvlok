@@ -16,21 +16,6 @@
   };
   versionMap = versionMappings.java;
   defaultVersion = getLatestVersion versionMappings.java;
-  vscode.extensions = [
-    "oracle.oracle-java"
-    "redhat.java"
-    "vscjava.vscode-gradle"
-    "vscjava.vscode-java-debug"
-    "vscjava.vscode-java-dependency"
-    "vscjava.vscode-java-test"
-    "vscjava.vscode-maven"
-    "vscjava.vscode-spring-initializr"
-  ];
-  vscode.settings."[java]" = {
-    "editor.formatOnPaste" = true;
-    "editor.defaultFormatter" = "esbenp.prettier-vscode";
-    "editor.formatOnSave" = true;
-  };
   zed.extensions = [
     "java"
   ];

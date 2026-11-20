@@ -9,6 +9,35 @@
 
   config = lib.modules.mkIf config.euvlok.home.zed-editor.enable {
     programs.zed-editor.enable = true;
+
+    xdg.mimeApps = lib.modules.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      enable = true;
+      defaultApplications = {
+        "text/plain" = lib.modules.mkDefault "dev.zed.Zed.desktop";
+        "application/x-zerosize" = lib.modules.mkDefault "dev.zed.Zed.desktop";
+      };
+    };
+
+    home.activation.setZedDefaultEditor = lib.modules.mkIf pkgs.stdenv.hostPlatform.isDarwin (
+      let
+        inherit (config.targets.darwin) copyApps linkApps;
+        appDirectory =
+          if copyApps.enable then
+            "${config.home.homeDirectory}/${copyApps.directory}"
+          else if linkApps.enable then
+            "${config.home.homeDirectory}/${linkApps.directory}"
+          else
+            "${config.programs.zed-editor.package}/Applications";
+        lsregister = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister";
+        duti = lib.meta.getExe pkgs.duti;
+      in
+      lib.hm.dag.entryAfter [ "linkGeneration" "copyApps" ] ''
+        run ${lsregister} -f ${lib.strings.escapeShellArg "${appDirectory}/Zed.app"}
+        run ${duti} -s dev.zed.Zed public.plain-text editor
+        run ${duti} -s dev.zed.Zed public.source-code editor
+      ''
+    );
+
     programs.zed-editor.extraPackages = lib.attrsets.attrValues {
       inherit (pkgs.unstable)
         bash-language-server
@@ -21,7 +50,6 @@
         shfmt
         taplo
         typos-lsp
-        vscode-langservers-extracted
         yaml-language-server
         ;
     };
@@ -183,11 +211,6 @@
 
       yaml-language-server.binary = {
         path = lib.meta.getExe pkgs.unstable.yaml-language-server;
-        arguments = [ "--stdio" ];
-      };
-
-      "json-language-server".binary = {
-        path = lib.meta.getExe' pkgs.unstable.vscode-langservers-extracted "vscode-json-language-server";
         arguments = [ "--stdio" ];
       };
 

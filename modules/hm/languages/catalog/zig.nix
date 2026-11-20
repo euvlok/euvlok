@@ -1,17 +1,6 @@
 { lib, pkgs, ... }:
 {
   packages = lib.attrsets.attrValues { inherit (pkgs.unstable) zig zls; };
-  vscode.extensions = [ "ziglang.vscode-zig" ];
-  vscode.settings = {
-    "[zig]" = {
-      "editor.defaultFormatter" = "ziglang.vscode-zig";
-      "editor.formatOnSave" = true;
-      "editor.codeActionsOnSave"."source.fixAll" = "explicit";
-    };
-    "zig.path" = "zig";
-    "zig.zls.path" = "zls";
-    "zig.initialSetupDone" = true;
-  };
   helix.languageServers.zls.command = "zls";
   helix.languages = [
     {

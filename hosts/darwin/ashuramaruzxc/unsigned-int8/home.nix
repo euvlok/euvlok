@@ -71,7 +71,6 @@ let
         helix.enable = true;
         nixcord.enable = true;
         yazi.enable = true;
-        zed-editor.enable = true;
         zellij.enable = true;
         languages = {
           cpp.enable = true;

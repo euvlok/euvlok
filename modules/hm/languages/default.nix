@@ -41,18 +41,6 @@ let
             description = "Helix language definitions for ${displayName}";
           };
         };
-        vscode = {
-          extensions = lib.options.mkOption {
-            type = lib.types.listOf lib.types.str;
-            default = [ ];
-            description = "VS Code extension IDs for ${displayName}";
-          };
-          settings = lib.options.mkOption {
-            type = jsonType;
-            default = { };
-            description = "VS Code settings for ${displayName}";
-          };
-        };
         zed = {
           extensions = lib.options.mkOption {
             type = lib.types.listOf lib.types.str;
@@ -91,10 +79,6 @@ let
           languageServers = defaultSettings (definition.helix.languageServers or { });
           languages = definition.helix.languages or [ ];
         };
-        vscode = {
-          extensions = definition.vscode.extensions or [ ];
-          settings = defaultSettings (definition.vscode.settings or { });
-        };
         zed = {
           extensions = definition.zed.extensions or [ ];
           languages = defaultSettings (definition.zed.languages or { });
@@ -113,8 +97,6 @@ in
 {
   imports = [
     ./helix.nix
-    ./vscode.nix
-    (import ../../../slop.nix).homeManager.vscode
     ./zed.nix
   ];
 
@@ -142,7 +124,6 @@ in
           bash-language-server
           taplo
           typos-lsp
-          vscode-langservers-extracted
           yaml-language-server
           ;
       })

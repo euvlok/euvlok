@@ -3,11 +3,6 @@
   packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) kotlin kotlin-language-server gradle;
   };
-  vscode.extensions = [ "fwcd.kotlin" ];
-  vscode.settings."[kotlin]" = {
-    "editor.defaultFormatter" = "fwcd.kotlin";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.kotlin-language-server.command = "kotlin-language-server";
   helix.languages = [
     {

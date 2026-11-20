@@ -17,34 +17,6 @@ in
       pythonPackages.jupyter
     ]);
   };
-  vscode.extensions = [
-    "astral-sh.ty"
-    "charliermarsh.ruff"
-    "ms-python.debugpy"
-    "ms-python.python"
-    "ms-python.vscode-python-envs"
-    "ms-toolsai.jupyter"
-  ];
-  vscode.settings = {
-    "python.languageServer" = "None";
-    "python.useEnvironmentsExtension" = true;
-    "python-envs.alwaysUseUv" = true;
-    "ty.path" = [ (lib.meta.getExe pkgs.unstable.ty) ];
-    "ty.diagnosticMode" = tySettings.diagnosticMode;
-    "ruff.path" = [ (lib.meta.getExe pkgs.unstable.ruff) ];
-    "ruff.nativeServer" = "on";
-    "ruff.configurationPreference" = ruffSettings.configurationPreference;
-    "ruff.configuration" = ruffSettings.configuration;
-    "[python]" = {
-      "editor.defaultFormatter" = "charliermarsh.ruff";
-      "editor.codeActionsOnSave" = {
-        "source.fixAll.ruff" = "explicit";
-        "source.organizeImports.ruff" = "explicit";
-      };
-      "editor.formatOnSave" = true;
-      "editor.insertSpaces" = true;
-    };
-  };
   helix.languageServers = {
     ruff = {
       command = lib.meta.getExe pkgs.unstable.ruff;

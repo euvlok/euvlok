@@ -56,9 +56,6 @@
           tag.sort = "version:refname"; # Sort tags like versions (e.g., v1.10 after v1.2)
         };
       };
-      vscode.profiles.default.userSettings = {
-        "git.enableCommitSigning" = config.programs.git.signing.key != null;
-      };
     };
   };
 }

@@ -8,14 +8,6 @@
       stylua
       ;
   };
-  vscode.extensions = [
-    "keyring.lua"
-    "sumneko.lua"
-  ];
-  vscode.settings."[lua]" = {
-    "editor.defaultFormatter" = "sumneko.lua";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.lua-language-server.command = "lua-language-server";
   helix.languages = [
     {

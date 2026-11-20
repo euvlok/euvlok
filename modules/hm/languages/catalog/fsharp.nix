@@ -15,11 +15,6 @@
   };
   versionMap = versionMappings.dotnet;
   defaultVersion = getLatestVersion versionMappings.dotnet;
-  vscode.extensions = [ "ionide.ionide-fsharp" ];
-  vscode.settings."[fsharp]" = {
-    "editor.defaultFormatter" = "ionide.ionide-fsharp";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.fsautocomplete = {
     command = "fsautocomplete";
     args = [ "--adaptive-lsp-server-enabled" ];

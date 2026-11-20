@@ -2,7 +2,7 @@
 {
   /**
     Compose the stable and unstable package sets, eupkgs, euvlok's package
-    overrides and local packages, and the VS Code extension overlays
+    overrides, and local packages
 
     If a platform is `null`, use the corresponding system string from the
     caller's package set. Secondary imports use `crossSystem` only when the

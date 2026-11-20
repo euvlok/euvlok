@@ -59,7 +59,6 @@
           firefox.defaultSearchEngine = "ddg";
           helix.enable = true;
           hyprland.enable = true;
-          zed-editor.enable = true;
           nixcord.enable = true;
         };
       }

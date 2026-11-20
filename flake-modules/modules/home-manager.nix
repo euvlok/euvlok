@@ -32,7 +32,6 @@
     imports = [
       ../../modules/hm/languages
       ../../modules/hm/tui/helix
-      ../../modules/hm/gui/vscode
       ../../modules/hm/gui/zed.nix
     ];
   };

@@ -8,6 +8,5 @@ _: {
     ./ssh.nix
     ./starship.nix
     ../shared/nixcord.nix
-    ../shared/vscode.nix
   ];
 }

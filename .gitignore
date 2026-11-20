@@ -8,12 +8,6 @@ Thumbs.db
 *~
 .idea/
 
-# Keep shared VS Code configuration, but ignore local workspace files
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/tasks.json
-
 # Local development environments and tooling
 .devenv/
 .direnv/

@@ -54,7 +54,6 @@
       };
       helix.enable = true;
       nixcord.enable = true;
-      vscode.enable = true;
       yazi.enable = true;
     };
 

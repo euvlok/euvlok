@@ -4,11 +4,6 @@
     inherit (pkgs.unstable) elixir-ls hex;
     inherit (pkgs.unstable.beamPackages) elixir;
   };
-  vscode.extensions = [ "jakebecker.elixir-ls" ];
-  vscode.settings."[elixir]" = {
-    "editor.defaultFormatter" = "jakebecker.elixir-ls";
-    "editor.formatOnSave" = true;
-  };
   helix.languageServers.elixir-ls.command = "elixir-ls";
   helix.languages = [
     {
