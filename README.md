@@ -1,13 +1,13 @@
 <h1 align="center">EUVlok</h1>
 
 <p align="center">
-  <a href="https://github.com/euvlok/euvlok/actions/workflows/ci.yml">
+  <a href="https://redirect.github.com/euvlok/euvlok/actions/workflows/ci.yml">
     <img
       alt="CI status"
       src="https://img.shields.io/github/actions/workflow/status/euvlok/euvlok/ci.yml?branch=master&style=for-the-badge&label=ci&colorA=303446&colorB=a6d189"
     />
   </a>
-  <a href="https://github.com/euvlok/euvlok/issues">
+  <a href="https://redirect.github.com/euvlok/euvlok/issues">
     <img
       alt="Open issues"
       src="https://img.shields.io/github/issues/euvlok/euvlok?style=for-the-badge&colorA=303446&colorB=ef9f76"

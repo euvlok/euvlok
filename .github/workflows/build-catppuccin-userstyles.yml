@@ -121,9 +121,10 @@ jobs:
           jq -r '.assets[] | "\(.sha256)  \(.name)"' "$output/manifest.json" |
             (cd "$output" && sha256sum --check --strict)
           jq -r '
+            (.upstream | sub("^https://github[.]com/"; "https://redirect.github.com/")) as $source |
             "Catppuccin Stylus imports: Latte light mode with Frappé, Macchiato, and Mocha dark variants and all upstream accents.",
             "",
-            "Built from [catppuccin/userstyles](\(.upstream)/tree/\(.revision)) with \(.styleCount) styles.",
+            "Built from [catppuccin/userstyles](\($source)/tree/\(.revision)) with \(.styleCount) styles.",
             "Excluded styles: \(if (.excluded | length) == 0 then "none" else (.excluded | join(", ")) end).",
             "",
             "Download one `catppuccin-*-import.json` file and import it in Stylus → Manage → Import.",
