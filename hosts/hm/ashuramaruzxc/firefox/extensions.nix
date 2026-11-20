@@ -7,38 +7,43 @@
 {
   "ai-warning-for-steam" = buildFirefoxXpiAddon {
     pname = "ai-warning-for-steam";
-    version = "1.1.0";
+    version = "1.1.2";
     addonId = "{29428906-aec3-11f0-beb4-6f7e24e82795}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4859426/ai_warning_for_steam-1.1.0.xpi";
-    sha256 = "sha256-OYFD0NGp7DS1Gq95X9xc+zKc1g0cjp07zP478oSKjjk=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5058709/ai_warning_for_steam-1.1.2.xpi";
+    sha256 = "sha256-sT6vd7U65ei+yvrKAF4aq5g/CERR06ljelt7U4/rGf4=";
     meta = {
       platforms = lib.systems.doubles.all;
-      mozPermissions = [ "storage" ];
+      mozPermissions = [
+        "storage"
+        "*://store.steampowered.com/app/*"
+        "*://store.steampowered.com/search*"
+      ];
     };
   };
   "angular-devtools" = buildFirefoxXpiAddon {
     pname = "angular-devtools";
-    version = "1.17.0";
+    version = "1.22.3";
     addonId = "{20a9bb38-ed7c-4faf-9aaf-7c5d241fd747}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4902165/angular_devtools-1.17.0.xpi";
-    sha256 = "sha256-oaqxXtG/jsbxiKrk3y8Bi/EYso4TSX7Ig6pIMmFPKEM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5278263/angular_devtools-1.22.3.xpi";
+    sha256 = "sha256-2BCc85bWAjlsqB5pcam/cQnrjFZfcc95YI+uAZbH7is=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
-        "activeTab"
         "storage"
         "http://*/*"
         "https://*/*"
         "file:///*"
+        "devtools"
+        "<all_urls>"
       ];
     };
   };
   "bitwarden-password-manager" = buildFirefoxXpiAddon {
     pname = "bitwarden-password-manager";
-    version = "2026.7.0";
+    version = "2026.11.0";
     addonId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4915668/bitwarden_password_manager-2026.7.0.xpi";
-    sha256 = "sha256-EYNuudKryZFLsze1fiDFoJz0TyT6Vy9+iGOE/TUKURI=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5278513/bitwarden_password_manager-2026.11.0.xpi";
+    sha256 = "sha256-YH1kM9neFRpMURNa2ecIgkYNDgSTqbWF8VqYSNXxC5c=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -56,15 +61,16 @@
         "webRequest"
         "webRequestBlocking"
         "notifications"
+        "file:///*"
       ];
     };
   };
   "darkreader" = buildFirefoxXpiAddon {
     pname = "darkreader";
-    version = "4.9.129";
+    version = "4.9.135";
     addonId = "addon@darkreader.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4899461/darkreader-4.9.129.xpi";
-    sha256 = "sha256-9PBH/gjkILbSlhdzjqAKe3hIkrImK35vON0JuO6VikQ=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5216111/darkreader-4.9.135.xpi";
+    sha256 = "sha256-v+1FkdbMaYV/XtM6LTy/vFgR1bksQyPQc10vF1fi3OQ=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -115,10 +121,10 @@
   };
   "floccus" = buildFirefoxXpiAddon {
     pname = "floccus";
-    version = "5.10.2";
+    version = "5.13.0";
     addonId = "floccus@handmadeideas.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4905907/floccus-5.10.2.xpi";
-    sha256 = "sha256-6EvFbE4b/DzDrsKnQAPJlVq49Vo/UTlHVNLHc6/k9IM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5224106/floccus-5.13.0.xpi";
+    sha256 = "sha256-cfZY5onmfBezxgVQPmRAD6BccwYYNluNAjuOY70chHM=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -135,10 +141,10 @@
   };
   "foxyproxy-standard" = buildFirefoxXpiAddon {
     pname = "foxyproxy-standard";
-    version = "9.2";
+    version = "9.9";
     addonId = "foxyproxy@eric.h.jung";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4472757/foxyproxy_standard-9.2.xpi";
-    sha256 = "sha256-jbHGR5mmD3Eh1Rpun2sEGHFZg0SSfJWv6DDCeIDwiF0=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5198108/foxyproxy_standard-9.9.xpi";
+    sha256 = "sha256-ugafFIQ/M7OjbkFJ3WPj0FzqU2LRCNaaB0OXUYBHEwI=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -150,20 +156,20 @@
         "tabs"
         "webRequest"
         "webRequestAuthProvider"
-        "<all_urls>"
       ];
     };
   };
   "kagi-translate" = buildFirefoxXpiAddon {
     pname = "kagi-translate";
-    version = "0.1.8";
+    version = "0.1.12";
     addonId = "{bd6be57d-91d7-41d2-b61d-3ba20f7942e5}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4720796/kagi_translate-0.1.8.xpi";
-    sha256 = "sha256-9dgTQpg4NoetdbfGdRnd9MPopt53moxbt4jF3tZZBoQ=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5187504/kagi_translate-0.1.12.xpi";
+    sha256 = "sha256-de/CypHXF2xNUt6ufgwdotB76mwfIvcQRc1AOCvTJFw=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
+        "alarms"
         "contextMenus"
         "cookies"
         "scripting"
@@ -171,15 +177,17 @@
         "webNavigation"
         "https://*/*"
         "http://*/*"
+        "*://*/*"
+        "*://www.youtube.com/*"
       ];
     };
   };
   "multi-account-containers" = buildFirefoxXpiAddon {
     pname = "multi-account-containers";
-    version = "8.3.8";
+    version = "8.4.1";
     addonId = "@testpilot-containers";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4867303/multi_account_containers-8.3.8.xpi";
-    sha256 = "sha256-MGopSEU2PxWnR46WILQ/keoXYQiHJ4COIye//xbBREc=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5272233/multi_account_containers-8.4.1.xpi";
+    sha256 = "sha256-CV2dRwFYwsCWOLRg3uD8pEibnkf1EuoWjZSY+WTHm2Q=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -201,30 +209,26 @@
   };
   "old-reddit-redirect" = buildFirefoxXpiAddon {
     pname = "old-reddit-redirect";
-    version = "2.2.0";
+    version = "4.0.0";
     addonId = "{9063c2e9-e07c-4c2c-9646-cfe7ca8d0498}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4882083/old_reddit_redirect-2.2.0.xpi";
-    sha256 = "sha256-WzRv+PfehDBKQCQyY479vawKYXTWKsXChFzOSZjzMCI=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5175184/old_reddit_redirect-4.0.0.xpi";
+    sha256 = "sha256-F6uD3CSqGWKBmSM94q7S4JYHAr3V3TT7L9H38s17sQA=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
+        "storage"
+        "cookies"
         "declarativeNetRequestWithHostAccess"
-        "*://reddit.com/*"
-        "*://www.reddit.com/*"
-        "*://np.reddit.com/*"
-        "*://amp.reddit.com/*"
-        "*://i.reddit.com/*"
-        "*://i.redd.it/*"
-        "*://preview.redd.it/*"
+        "*://*.reddit.com/*"
       ];
     };
   };
   "react-devtools" = buildFirefoxXpiAddon {
     pname = "react-devtools";
-    version = "6.1.1";
+    version = "8.0.0";
     addonId = "@react-devtools";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4432990/react_devtools-6.1.1.xpi";
-    sha256 = "sha256-staeIgQCvWuLx9gzlIkVsdbcq7RTodUIcqPbhg/ZLEY=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5018049/react_devtools-8.0.0.xpi";
+    sha256 = "sha256-rUKfCw25FKBQVZH3AWAAXXw+GnhlEow7+kY5LSi+NL4=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -232,16 +236,17 @@
         "storage"
         "tabs"
         "clipboardWrite"
+        "devtools"
         "<all_urls>"
       ];
     };
   };
   "reddit-enhancement-suite" = buildFirefoxXpiAddon {
     pname = "reddit-enhancement-suite";
-    version = "5.24.10";
+    version = "5.26.3";
     addonId = "jid1-xUfzOsOFlzSOXg@jetpack";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4899821/reddit_enhancement_suite-5.24.10.xpi";
-    sha256 = "sha256-RXPP2xAZNGfpnh3Vp5LyOuaXZFQMLgbQRE8SqBzcTwo=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5194564/reddit_enhancement_suite-5.26.3.xpi";
+    sha256 = "sha256-OVfWUeeG7E2Y0X0TkXy3vA1X5VJmC1Uwo/MpPR6EAdg=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -253,25 +258,15 @@
         "storage"
         "scripting"
         "unlimitedStorage"
-        "https://publish.twitter.com/oembed"
-        "https://backend.deviantart.com/oembed"
-        "https://api.gyazo.com/api/oembed"
-        "https://api.tumblr.com/v2/blog/*/posts"
-        "https://xkcd.com/*/info.0.json"
-        "https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/*"
-        "https://www.googleapis.com/drive/v3/*"
-        "https://*.redd.it/*"
-        "https://www.flickr.com/services/oembed"
-        "https://embed.bsky.app/oembed"
       ];
     };
   };
   "reduxdevtools" = buildFirefoxXpiAddon {
     pname = "reduxdevtools";
-    version = "3.2.10";
+    version = "3.2.12";
     addonId = "extension@redux.devtools";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4467343/reduxdevtools-3.2.10.xpi";
-    sha256 = "sha256-7ysQoryLDRqETRRuPur/QH6qpjzQVk246v2HDIeoiVY=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5141168/reduxdevtools-3.2.12.xpi";
+    sha256 = "sha256-DqCwDCPqMC6mFFop6MKP1clBRd++qxgBZ0T+WX2hBFo=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -279,9 +274,8 @@
         "contextMenus"
         "tabs"
         "storage"
-        "file:///*"
-        "http://*/*"
-        "https://*/*"
+        "devtools"
+        "<all_urls>"
       ];
     };
   };
@@ -310,26 +304,64 @@
   };
   "steam-database" = buildFirefoxXpiAddon {
     pname = "steam-database";
-    version = "4.35";
+    version = "4.37";
     addonId = "firefox-extension@steamdb.info";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4891926/steam_database-4.35.xpi";
-    sha256 = "sha256-N8HNwur6cB42Xrjg7ypQUblW6h6ZQbOZtas/pCFPwSM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/4967437/steam_database-4.37.xpi";
+    sha256 = "sha256-0oDZqL5/6Lzf/WBpfa9ZA8tNpnkSVpUQ+3qL1oVi1sw=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
         "storage"
         "https://steamdb.info/*"
+        "https://store.steampowered.com/*"
         "https://steamcommunity.com/*"
-        "https://*.steampowered.com/*"
+        "https://store.steampowered.com/app/*"
+        "https://store.steampowered.com/news/app/*"
+        "https://store.steampowered.com/account/licenses*"
+        "https://store.steampowered.com/account/registerkey*"
+        "https://store.steampowered.com/sub/*"
+        "https://store.steampowered.com/bundle/*"
+        "https://store.steampowered.com/widget/*"
+        "https://store.steampowered.com/app/*/agecheck"
+        "https://store.steampowered.com/agecheck/*"
+        "https://store.steampowered.com/explore*"
+        "https://steamcommunity.com/app/*"
+        "https://steamcommunity.com/sharedfiles/filedetails*"
+        "https://steamcommunity.com/workshop/filedetails*"
+        "https://steamcommunity.com/workshop/browse*"
+        "https://steamcommunity.com/workshop/discussions*"
+        "https://steamcommunity.com/id/*"
+        "https://steamcommunity.com/profiles/*"
+        "https://steamcommunity.com/id/*/inventory*"
+        "https://steamcommunity.com/profiles/*/inventory*"
+        "https://steamcommunity.com/id/*/stats*"
+        "https://steamcommunity.com/profiles/*/stats*"
+        "https://steamcommunity.com/id/*/stats/CSGO*"
+        "https://steamcommunity.com/profiles/*/stats/CSGO*"
+        "https://steamcommunity.com/stats/*/achievements*"
+        "https://steamcommunity.com/tradeoffer/*"
+        "https://steamcommunity.com/id/*/recommended/*"
+        "https://steamcommunity.com/profiles/*/recommended/*"
+        "https://steamcommunity.com/id/*/badges*"
+        "https://steamcommunity.com/profiles/*/badges*"
+        "https://steamcommunity.com/id/*/gamecards/*"
+        "https://steamcommunity.com/profiles/*/gamecards/*"
+        "https://steamcommunity.com/market/multibuy*"
+        "https://steamcommunity.com/games/*"
+        "https://steamcommunity.com/sharedfiles/*"
+        "https://steamcommunity.com/workshop/*"
+        "https://steamcommunity.com/linkfilter/*"
+        "https://steamcommunity.com/market/*"
+        "https://steamcommunity.com/tradingcards/boostercreator*"
       ];
     };
   };
   "styl-us" = buildFirefoxXpiAddon {
     pname = "styl-us";
-    version = "2.4.8";
+    version = "2.4.18";
     addonId = "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4907275/styl_us-2.4.8.xpi";
-    sha256 = "sha256-RVQmiQo4vT7lEQABEuzlFnX4u8IemIviFww65pAMvt8=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5257053/styl_us-2.4.18.xpi";
+    sha256 = "sha256-TI4bD2NFfdkJLmFIYx+63bce3CTTrPw5tT6o948NIlQ=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -342,6 +374,7 @@
         "webRequest"
         "webRequestBlocking"
         "<all_urls>"
+        "https://userstyles.org/*"
       ];
     };
   };
@@ -376,10 +409,10 @@
   };
   "user-agent-string-switcher" = buildFirefoxXpiAddon {
     pname = "user-agent-string-switcher";
-    version = "0.6.7";
+    version = "0.7.3";
     addonId = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4773733/user_agent_string_switcher-0.6.7.xpi";
-    sha256 = "sha256-l5oEyaOA8QtxWYCTWm8+hw3/88gQDL45PWW0bbgqslc=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5275336/user_agent_string_switcher-0.7.3.xpi";
+    sha256 = "sha256-srz8mnVCMaGsL971RSEnqMPqd08vP6XCK45IWyUAnFw=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [
@@ -388,7 +421,6 @@
         "scripting"
         "declarativeNetRequestWithHostAccess"
         "webRequest"
-        "<all_urls>"
       ];
     };
   };
@@ -430,10 +462,10 @@
   };
   "youtube-no-translation" = buildFirefoxXpiAddon {
     pname = "youtube-no-translation";
-    version = "2.24.3";
+    version = "2.26.2";
     addonId = "{9a3104a2-02c2-464c-b069-82344e5ed4ec}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4859010/youtube_no_translation-2.24.3.xpi";
-    sha256 = "sha256-I8o4CxNTP7POo8qd6Paetv79VGCMhd8ABdNozR2Q/YU=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5246661/youtube_no_translation-2.26.2.xpi";
+    sha256 = "sha256-YXxbTHMWFvSuC654lpTmFY7TwgTCXhF6RAVur/xjQ2c=";
     meta = {
       platforms = lib.systems.doubles.all;
       mozPermissions = [

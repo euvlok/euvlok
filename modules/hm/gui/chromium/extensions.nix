@@ -47,9 +47,9 @@ in
     {
       id = "bolggfoncklhniejomgplkjcllmnonbh";
       name = "TWP - Translate Web Pages";
-      version = "10.1.1.0";
-      url = "https://github.com/FilipePS/Traduzir-paginas-web/releases/download/v10.1.1.0/TWP_10.1.1.0_Chromium.crx";
-      sha256 = "sha256-X4m1To1n/1zQGrzQPXPyR8KIA4JleyyAh5AjuS2BvYw=";
+      version = "10.2.1.0";
+      url = "https://github.com/FilipePS/Traduzir-paginas-web/releases/download/v10.2.1.0/TWP_10.2.1.0_Chromium_MV2_deprecated.crx";
+      sha256 = "sha256-uy6d7irHQUwYBP8I/X30ISPnZ5KhUQfFM9XuELa32jI=";
     }
   ];
 

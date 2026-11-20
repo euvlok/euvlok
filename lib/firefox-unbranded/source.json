@@ -1,17 +1,17 @@
 {
-  "version": "158.0",
+  "version": "161.0",
   "platforms": {
     "x86_64-linux": {
-      "taskId": "CjIk25zlTwOt3j7I5Fc28A",
-      "buildId": "20261007201254",
-      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/CjIk25zlTwOt3j7I5Fc28A/artifacts/public/build/target.tar.xz",
-      "sha256": "sha256-62Uj0VTYzjzHBNVnED7eSZ4WMUuhRvt77YuoJ7Fpq7s="
+      "taskId": "G7ZaRsdXRMm4AbRKuMTeeg",
+      "buildId": "20261118180411",
+      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/G7ZaRsdXRMm4AbRKuMTeeg/artifacts/public/build/target.tar.xz",
+      "sha256": "sha256-UWdU45P6yWHazw0iHOmwEgMtfEjcxvjMV3lxdqicQgk="
     },
     "aarch64-darwin": {
-      "taskId": "NcIPXVd8RCuXQ0FfqJn5bw",
-      "buildId": "20261007201254",
-      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/NcIPXVd8RCuXQ0FfqJn5bw/artifacts/public/build/target.dmg",
-      "sha256": "sha256-0LwBbLOXeveN1pT49qv/vxYFh76SCniaERZjywuLglU="
+      "taskId": "YUWsg2JqT-i-N3ZNtYGYoA",
+      "buildId": "20261118180411",
+      "url": "https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/YUWsg2JqT-i-N3ZNtYGYoA/artifacts/public/build/target.dmg",
+      "sha256": "sha256-WCL80pDEZcoiOAw99dg3Qw3geOAhgPcS5F8GXmYUEyw="
     }
   }
 }
