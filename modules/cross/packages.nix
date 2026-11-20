@@ -100,7 +100,7 @@ let
       ;
 
     # Development Tools (enable `euvlok.home.languages.*`) for stuff like cmake, gnumake, cargo, etc.)
-    inherit (pkgs.unstable) hyperfine tokei;
+    inherit (pkgs.unstable) forgejo-cli hyperfine tokei;
 
   };
   graphicalLinux = config.nixpkgs.hostPlatform.isLinux && (config.euvlok.nixos.gui.enable or false);
