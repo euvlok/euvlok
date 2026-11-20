@@ -2,11 +2,16 @@
 {
   packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable)
-      swift
       swiftpm
       swift-format
       sourcekit-lsp
       ;
+    # The Darwin toolchain also ships clang. Prefer the standalone C++ wrapper.
+    swift =
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        lib.meta.setPrio (pkgs.unstable.llvmPackages_latest.clang.meta.priority + 1) pkgs.unstable.swift
+      else
+        pkgs.unstable.swift;
   };
   vscode.extensions = [
     "swift-server.swift"
