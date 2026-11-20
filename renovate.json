@@ -2,8 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices"],
   "timezone": "Europe/Sofia",
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Dependency maintenance",
+  "dependencyDashboard": {
+    "enabled": true,
+    "title": "Dependency maintenance"
+  },
   "enabledManagers": ["nix", "bun", "github-actions", "custom.regex"],
   "ignorePaths": ["**/node_modules/**", "**/.devenv/**", "**/.host-base/**"],
   "automerge": true,

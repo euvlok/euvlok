@@ -2,18 +2,18 @@
   "name": "@euvlok/workspace",
   "private": true,
   "engines": {
-    "node": "26.13.0"
+    "node": "26.13.1"
   },
-  "packageManager": "bun@1.4.4",
+  "packageManager": "bun@1.4.5",
   "workspaces": [
     ".github/renovate",
     ".github/scripts",
     "packages/catppuccin-userstyles"
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.6.6",
-    "@types/bun": "1.4.4",
-    "prettier": "3.9.10",
+    "@biomejs/biome": "2.6.8",
+    "@types/bun": "1.4.5",
+    "prettier": "3.10.1",
     "typescript": "7.1.0-beta"
   },
   "trustedDependencies": [
