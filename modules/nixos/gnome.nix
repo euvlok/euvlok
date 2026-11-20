@@ -34,7 +34,7 @@ in
         gnome-settings-daemon.enable = true;
         at-spi2-core.enable = true;
         core-developer-tools.enable = true;
-        core-utilities.enable = true;
+        core-apps.enable = true;
         localsearch.enable = true;
         tinysparql.enable = true;
         glib-networking.enable = true;
