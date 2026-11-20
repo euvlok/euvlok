@@ -29,6 +29,8 @@
       ghostty.enable = true;
       mpv.enable = true;
       nushell.enable = true;
+      # Keep the existing Nushell startup behavior on this installation
+      nushell.loadSessionVariables = false;
       zsh.enable = true;
       helix.defaultEditor = true;
     };
