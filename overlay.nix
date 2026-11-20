@@ -151,6 +151,20 @@ let
         }
     // inputs.nixpkgs.lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+      telegram-desktop =
+        if prev.telegram-desktop.version == "7.4.1" then
+          prev.telegram-desktop.override {
+            unwrapped = prev.telegram-desktop.unwrapped.overrideAttrs (old: {
+              # Swift 6.4's library discovery expects a layout Nixpkgs does not use.
+              postPatch = (old.postPatch or "") + ''
+                substituteInPlace Telegram/cmake/telegram_apple_swift_runtime.cmake \
+                  --replace-fail '--platform macosx' \
+                  '--platform macosx --source-libraries "''${swift_bin_dir}/../lib/swift/macosx"'
+              '';
+            });
+          }
+        else
+          prev.telegram-desktop;
       uutils-diffutils =
         if prev.uutils-diffutils.version == "0.6.0" then
           prev.uutils-diffutils.overrideAttrs (old: {
