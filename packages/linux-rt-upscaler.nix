@@ -16,15 +16,15 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "linux-rt-upscaler";
-  # renovate: datasource=github-releases depName=linux-rt-upscaler packageName=baronsmv/linux-rt-upscaler
-  version = "1.1.4";
+  # renovate: datasource=github-tags depName=linux-rt-upscaler packageName=baronsmv/linux-rt-upscaler
+  version = "1.1.6.post1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "baronsmv";
     repo = "linux-rt-upscaler";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-/QbSzUsP2yMy+d/OHHqBC2/RW+/4swtk3azguHUeaeM=";
+    hash = "sha256-GVPT1bghDzadt5ijZuPQ0v24uczjJWAPeZwvUXLxHvI=";
   };
 
   postPatch = ''

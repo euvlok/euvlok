@@ -7,32 +7,32 @@
 }:
 let
   # renovate: datasource=github-tags depName=nvidia-driver packageName=NVIDIA/open-gpu-kernel-modules
-  version = "620.70.06";
+  version = "620.73.04";
 
   src = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-x86_64/${version}/NVIDIA-Linux-x86_64-${version}.run";
-    hash = "sha256-KRGOOr0IwHVZvMo9nHYjjQOUkK8DYqLlvPy+cgSv1LE=";
+    hash = "sha256-tfLi1dqENbMlOTBAFbib9+si/grsjNaQW3puip+bjxs=";
   };
 
   aarch64 = fetchurl {
     url = "https://download.nvidia.com/XFree86/Linux-aarch64/${version}/NVIDIA-Linux-aarch64-${version}.run";
-    hash = "sha256-P6ZaknHg3eKk5YxJZcOIhaAqOkKszcsm/IF0EGB/PgM=";
+    hash = "sha256-45QZFS3Hs9hN4tKRrfmripADVpZQqksB7pAEZaS+XkA=";
   };
 
   # NVIDIA publishes release archives before the matching GitHub tags
   open = fetchzip {
     url = "https://download.nvidia.com/XFree86/NVIDIA-kernel-module-source/NVIDIA-kernel-module-source-${version}.tar.xz";
-    hash = "sha256-hQ8JyuzBlEu7LIxGDe09+HMWroafUWQYrfxSX127kcQ=";
+    hash = "sha256-iS3Z1O9yHrz/aGL1sysNZ5E/asQM3dliLKqDVlURBBE=";
   };
 
   settings = fetchzip {
     url = "https://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-${version}.tar.bz2";
-    hash = "sha256-CFBRmXFJ9eAf5BRlHMBolahz1Pshr9giI7zcZC29oZ8=";
+    hash = "sha256-Wrv0F7Eo9X/0Xv5DclI9aIe3FcRtbu9okQJuWBjL8es=";
   };
 
   persistenced = fetchzip {
     url = "https://download.nvidia.com/XFree86/nvidia-persistenced/nvidia-persistenced-${version}.tar.bz2";
-    hash = "sha256-FpGzhArrvR1nEt8lKDzNEnbvHvGP36gL1dINvpDAkpA=";
+    hash = "sha256-QOndl1q7veD5aB6AfEe0/K2QHR8+ftLsei/aQrUCN3Q=";
   };
 
   /**

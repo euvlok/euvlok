@@ -8,8 +8,8 @@
   nix-homebrew.taps."notprotonnot/homebrew-notproton" = pkgs.fetchFromGitHub {
     owner = "NotProtonNot";
     repo = "homebrew-notproton";
-    rev = "f17a85b4f530e29544a4d92eac4715cd7e9f63e6";
-    hash = "sha256-ssHdG/sp5gDyUB9VYAHOrcpNcfq+isOa+im6EeN4pPk=";
+    rev = "886a488e75f621d3e993c9ce184c99a16c3c30fd";
+    hash = "sha256-OIhXUMf61dNFy3kzAdwPBfnKcdfWJ1uVeGnDvsU+pUM=";
   };
 
   homebrew = {

@@ -141,6 +141,7 @@
     {
       "matchManagers": ["custom.regex"],
       "matchDepNames": ["linux-rt-upscaler"],
+      "versioning": "pep440",
       "postUpgradeTasks": {
         "commands": ["euvlokRenovatePostUpgrade.ts linux-rt-upscaler"],
         "fileFilters": ["packages/linux-rt-upscaler.nix"],
