@@ -1,7 +1,6 @@
 import type * as Core from "@actions/core";
 import type { context } from "@actions/github";
 import type { GitHub as GitHubConstructor } from "@actions/github/lib/utils";
-import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 import * as v from "valibot";
 
 export const BASE_BRANCH = "master";
@@ -12,8 +11,6 @@ export type Action = {
   context: typeof context;
   core: typeof Core;
 };
-export type PullRequest =
-  RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
 type User = { id: number; login: string; type?: string };
 const WritablePermissionSchema = v.picklist(["write", "maintain", "admin"]);
 const DeniedErrorSchema = v.object({ status: v.picklist([403, 404]) });

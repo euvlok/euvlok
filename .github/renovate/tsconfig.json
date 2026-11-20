@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
     "exactOptionalPropertyTypes": true,
     "module": "preserve",
     "moduleResolution": "bundler",
@@ -13,10 +12,5 @@
     "types": ["bun"],
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "build.ts",
-    "build.test.ts",
-    "triage.ts",
-    "../../renovate/postUpgrade.ts"
-  ]
+  "include": ["postUpgrade.ts"]
 }

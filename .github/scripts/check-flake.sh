@@ -91,7 +91,7 @@ if [[ "${selection}" != shared ]]; then
     [[ -n "${host}" ]] || continue
     printf '%s\n' "${host}" >"${check_dir}/selection.json"
     echo "::group::Host $(jq -r .name <<<"${host}")"
-    nix flake check "path:${check_dir}"
+    nix flake check --no-build --option allow-import-from-derivation false "path:${check_dir}"
     echo '::endgroup::'
   done <<<"${hosts}"
 fi

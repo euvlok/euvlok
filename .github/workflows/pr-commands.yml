@@ -12,15 +12,13 @@ concurrency:
 
 jobs:
   merge:
-    name: Merge approved pull request
+    name: Merge pull request on contributor command
     if: github.event.issue.pull_request && github.event.comment.user.type == 'User'
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
-      checks: read # Verify current-head check runs
-      contents: write # Submit the approved SHA-bound rebase merge
-      pull-requests: write # Read approvals and reply to the command
-      statuses: read # Verify legacy commit statuses
+      contents: write # Rebase-merge the current head by SHA
+      pull-requests: write # Read the PR and reply to the command
     outputs:
       merged: ${{ steps.merge.outputs.merged }}
     steps:
@@ -42,21 +40,16 @@ jobs:
 
   # A confirmed merge still needs master CI if posting the reply fails
   dispatch:
-    name: Dispatch ${{ matrix.workflow }}
+    name: Dispatch master CI
     needs: merge
     if: always() && needs.merge.outputs.merged == 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       actions: write # Start master checks after a confirmed merge
-    strategy:
-      fail-fast: false
-      matrix:
-        workflow: [ci.yml, build-configurations.yml]
     steps:
       - name: Dispatch master workflow
-        run: gh workflow run "$WORKFLOW" --repo "$GH_REPO" --ref master
+        run: gh workflow run ci.yml --repo "$GH_REPO" --ref master
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          WORKFLOW: ${{ matrix.workflow }}

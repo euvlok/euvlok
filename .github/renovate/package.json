@@ -2,6 +2,7 @@
   "name": "@euvlok/renovate",
   "private": true,
   "scripts": {
+    "check": "tsc --noEmit && biome lint --error-on-warnings postUpgrade.ts && prettier --check postUpgrade.ts tsconfig.json",
     "validate": "node -e \"require('re2')\" && cd ../.. && renovate-config-validator --strict --no-global renovate.json && renovate-config-validator --strict .github/renovate/config.js"
   },
   "dependencies": {

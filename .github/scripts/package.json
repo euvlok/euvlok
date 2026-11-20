@@ -9,13 +9,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "es-toolkit": "1.53.2",
     "valibot": "1.5.0"
   },
   "devDependencies": {
     "@actions/core": "3.0.1",
     "@actions/github": "9.1.1",
-    "@octokit/plugin-rest-endpoint-methods": "18.0.0",
     "@octokit/webhooks": "14.2.0",
     "@types/node": "26.6.6"
   }
