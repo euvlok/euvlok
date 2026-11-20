@@ -25,6 +25,7 @@ let
   ];
 
   ashuramaruHmConfig = [
+    personalModule
     ../../../hm/ashuramaruzxc/workstation.nix
   ];
 
@@ -44,10 +45,7 @@ in
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "bak";
-    sharedModules = [
-      sharedModule
-      personalModule
-    ];
+    sharedModules = [ sharedModule ];
   };
 
   home-manager.users.ashuramaru = {

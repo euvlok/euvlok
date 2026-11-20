@@ -27,6 +27,7 @@ let
   ];
 
   ashuramaruHmConfig = [
+    personalModule
     aiModule
     ((import ../../../../slop.nix).homeManager.hosts.unsignedInt32 {
       inherit codexDesktopModule;
@@ -71,10 +72,7 @@ in
     useGlobalPkgs = true;
     backupFileExtension = "bak";
     overwriteBackup = true;
-    sharedModules = [
-      sharedModule
-      personalModule
-    ];
+    sharedModules = [ sharedModule ];
   };
 
   home-manager.users.ashuramaru = {

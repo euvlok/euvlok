@@ -200,11 +200,9 @@ in
     useUserPackages = true;
     useGlobalPkgs = true;
     backupFileExtension = "bak";
-    sharedModules = [
-      sharedModule
-      personalModule
-    ];
+    sharedModules = [ sharedModule ];
     users.ashuramaru.imports = [
+      personalModule
       (import ../../../../modules/hm/gui/raycast.nix {
         avatarId = "72100551";
         fallbackName = "ashuramaruzxc";
