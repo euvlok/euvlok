@@ -32,11 +32,6 @@
           match = { class = ".*" },
           suppress_event = "maximize",
         })
-        hl.window_rule({
-          name = "shared-exe-immediate",
-          match = { class = [[^.*\.exe$]] },
-          immediate = true,
-        })
       '';
     };
   };

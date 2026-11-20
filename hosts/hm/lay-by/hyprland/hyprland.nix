@@ -25,7 +25,7 @@ _: {
         gaps_out = 2,
         border_size = 1,
         resize_on_border = false,
-        allow_tearing = true,
+        allow_tearing = false,
         layout = "dwindle",
       },
       decoration = {
@@ -74,22 +74,11 @@ _: {
     hl.bind("CTRL + Print", hl.dsp.exec_cmd("wl-paste | swappy -f -"))
     hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
-    -- Focus Discord, send mute, then restore focus, in that order.
-    hl.bind("Control_R", function()
-      hl.dispatch(hl.dsp.focus({ window = "class:^discord$" }))
-      hl.dispatch(hl.dsp.send_shortcut({ mods = "CTRL + SHIFT", key = "M", window = "class:^discord$" }))
-      hl.dispatch(hl.dsp.focus({ last = true }))
-    end)
-
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
     hl.window_rule({ name = "lay-by-suppress-maximize", match = { class = ".*" }, suppress_event = "maximize" })
     hl.window_rule({ name = "lay-by-fullscreen-no-blur", match = { fullscreen = true }, no_blur = true })
-    hl.window_rule({ name = "lay-by-titanfall2-immediate", match = { class = "^(Titanfall2.exe)$" }, immediate = true })
-    hl.window_rule({ name = "lay-by-helldivers2-immediate", match = { class = "^(helldivers2.exe)$" }, immediate = true })
-    hl.window_rule({ name = "lay-by-cs2-fullscreen", match = { class = "^(cs2)$" }, fullscreen_state = "2 0" })
-    hl.window_rule({ name = "lay-by-exe-immediate", match = { class = [[^.*\.exe$]] }, immediate = true })
     hl.layer_rule({ name = "lay-by-waybar-blur", match = { namespace = "waybar" }, blur = true })
   '';
 }
