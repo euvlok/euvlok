@@ -72,5 +72,5 @@
 
   # This must describe the installation, not follow the current nixpkgs
   # release. Keep it aligned with this host's Home Manager state version.
-  system.stateVersion = "26.05";
+  system.stateVersion = "26.11";
 }

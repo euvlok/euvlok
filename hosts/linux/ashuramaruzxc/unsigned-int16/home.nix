@@ -20,7 +20,7 @@ let
   };
 
   baseImports = [
-    { home.stateVersion = "26.05"; }
+    { home.stateVersion = "26.11"; }
     catppuccinModule
   ];
 
