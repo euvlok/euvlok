@@ -1622,22 +1622,6 @@ let
         };
       };
     };
-  firefoxSource = {
-    id = "ai-warning-for-steam";
-    name = "AI warning for Steam";
-    source = "amo";
-  };
-  firefoxAddons = {
-    ${firefoxSource.id} = firefoxSource // {
-      package = {
-        version = "1.1.0";
-        addonId = "{29428906-aec3-11f0-beb4-6f7e24e82795}";
-        url = "https://addons.mozilla.org/firefox/downloads/file/4859426/ai_warning_for_steam-1.1.0.xpi";
-        sha256 = "sha256-OYFD0NGp7DS1Gq95X9xc+zKc1g0cjp07zP478oSKjjk=";
-        meta.mozPermissions = [ "storage" ];
-      };
-    };
-  };
 in
 {
   packages.chatgpt =
@@ -2265,19 +2249,4 @@ in
         defaultState = false;
       };
     };
-  firefoxExtensions =
-    { buildFirefoxXpiAddon, lib, ... }:
-    lib.attrsets.mapAttrs (
-      id: addon:
-      buildFirefoxXpiAddon (
-        addon.package
-        // {
-          pname = id;
-          meta = addon.package.meta // {
-            platforms = lib.systems.doubles.all;
-          };
-        }
-      )
-    ) firefoxAddons;
-  firefoxSources = [ firefoxSource ];
 }

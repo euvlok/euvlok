@@ -119,7 +119,6 @@ let
     lib.lists.filter lib.attrsets.isDerivation (
       lib.attrsets.attrValues (
         (pkgs.callPackage ./extensions.nix { inherit buildFirefoxXpiAddon; })
-        // (import ../../../../slop.nix).firefoxExtensions { inherit buildFirefoxXpiAddon lib; }
         // {
           inherit (sharedExtensions) "magnolia@12.34";
         }

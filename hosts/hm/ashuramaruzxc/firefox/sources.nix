@@ -114,6 +114,10 @@
       name = "Kagi Translate";
       source = "amo";
     }
-  ]
-  ++ (import ../../../../slop.nix).firefoxSources;
+    {
+      id = "ai-warning-for-steam";
+      name = "AI warning for Steam";
+      source = "amo";
+    }
+  ];
 }
