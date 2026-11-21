@@ -74,6 +74,11 @@ _: {
     hl.bind("CTRL + Print", hl.dsp.exec_cmd("wl-paste | swappy -f -"))
     hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
+    -- KP_1 through KP_3 use keycodes so they work with either Num Lock state.
+    hl.bind("code:87", hl.dsp.exec_cmd("playerctl previous"))
+    hl.bind("code:88", hl.dsp.exec_cmd("playerctl play-pause"))
+    hl.bind("code:89", hl.dsp.exec_cmd("playerctl next"))
+
     hl.bind("Control_R", hl.dsp.global("discord:discord-toggle-mute"))
 
     hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
