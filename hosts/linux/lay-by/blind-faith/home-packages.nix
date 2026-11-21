@@ -46,6 +46,7 @@
       nitch
       thunderbird-bin
       telegram-desktop
+      signal-desktop
       #freecad
       #libreoffice
       wlsunset
