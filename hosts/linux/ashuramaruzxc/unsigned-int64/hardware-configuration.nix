@@ -42,6 +42,10 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_xanmod;
+    # This host does not use SCTP. Block autoload until the kernel fix is available.
+    extraModprobeConfig = ''
+      install sctp ${pkgs.coreutils}/bin/false
+    '';
     kernelModules = [
       # dkms
       "kvm-amd"

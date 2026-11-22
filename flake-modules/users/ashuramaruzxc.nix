@@ -211,7 +211,7 @@ in
               services.ecolinker.package =
                 inputs.ecolinker.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
                   {
-                    vendorHash = "sha256-Ofe7IP61tUQaQQ/silHxDIeKmSUsbvlkDGZAT0xi0S4=";
+                    vendorHash = "sha256-XoBTM3VaFGHsEiS5SpkB+cO6lwBpjFrhn4lUAWGgysw=";
                   };
             };
           homeModule = lib.modules.importApply ../../hosts/linux/ashuramaruzxc/unsigned-int64/home.nix {

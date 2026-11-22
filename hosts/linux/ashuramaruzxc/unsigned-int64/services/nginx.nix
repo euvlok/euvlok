@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -8,6 +9,42 @@
   systemd.services.nginx.serviceConfig = {
     SupplementaryGroups = [ "shadow" ];
   };
+  imports = [
+    {
+      options.services.nginx.virtualHosts = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.submodule (
+            { config, ... }:
+            {
+              # forceSSL creates a port 80 redirect, and the NixOS quic option
+              # adds UDP alongside TCP. Use explicit QUIC-only listeners instead.
+              forceSSL = lib.mkForce false;
+              onlySSL = !config.rejectSSL;
+              http2 = false;
+              listen =
+                map
+                  (addr: {
+                    inherit addr;
+                    port = 443;
+                    extraParameters = [ "quic" ];
+                  })
+                  [
+                    "0.0.0.0"
+                    "[::]"
+                  ];
+              reuseport = config.default;
+            }
+          )
+        );
+      };
+    }
+  ];
+
+  # Advertise HTTP/3 to first-time clients of the private DNS zone.
+  services.unbound.settings.server.local-data = map (
+    name: ''"${name}. 10800 IN HTTPS 1 . alpn=h3 no-default-alpn"''
+  ) (lib.filter (lib.hasSuffix ".tenjin.com") (lib.attrNames config.services.nginx.virtualHosts));
+
   sops.secrets.minecraft = {
     mode = "0640";
     owner = config.users.users.nginx.name;
@@ -30,6 +67,19 @@
   };
   services.nginx = {
     enable = true;
+    # Backport nixpkgs PR 589961 until the locked stable package includes the fix.
+    package = lib.mkIf (lib.versionOlder pkgs.nginxStable.version "1.30.7") (
+      pkgs.nginxStable.overrideAttrs (
+        finalAttrs: _: {
+          version = "1.30.7";
+          nginxVersion = finalAttrs.version;
+          src = pkgs.fetchurl {
+            url = "https://nginx.org/download/nginx-${finalAttrs.version}.tar.gz";
+            hash = "sha256-JWW1yDcFDpWPcPsPc8SOK8pFQq00n9NW9G+wxyYQvG4=";
+          };
+        }
+      )
+    );
     additionalModules = [ pkgs.nginxModules.pam ];
 
     recommendedUwsgiSettings = true;
@@ -52,22 +102,8 @@
     '';
     virtualHosts."_" = {
       default = true;
-      listen = [
-        { addr = "80"; }
-        { addr = "[::]:80"; }
-        {
-          addr = "443";
-          ssl = true;
-        }
-        {
-          addr = "[::]:443";
-          ssl = true;
-        }
-      ];
-      extraConfig = ''
-        ssl_reject_handshake on;
-        return 444;
-      '';
+      rejectSSL = true;
+      extraConfig = "return 444;";
     };
   };
   users.groups.minecraft = {

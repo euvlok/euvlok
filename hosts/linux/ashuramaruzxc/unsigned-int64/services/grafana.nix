@@ -236,7 +236,7 @@ in
           uid = datasourceUid;
           type = "prometheus";
           access = "proxy";
-          url = "https://${config.services.grafana.settings.server.domain}/prometheus";
+          url = "http://127.0.0.1:${toString config.services.prometheus.port}/prometheus";
           jsonData.timeInterval = "30s";
           editable = false;
         }
@@ -297,7 +297,7 @@ in
         ;
     };
   };
-  # HTTPS queries to metrics.tenjin.com use the same private CA as nginx.
+  # Include the private Tenjin CA in Grafana's trust bundle.
   systemd.services.grafana = {
     environment.SSL_CERT_FILE = "/run/grafana/ca-certificates.crt";
     serviceConfig.LoadCredential = [ "tenjin-ca:/etc/ssl/self/tenjin.com/ca.crt" ];

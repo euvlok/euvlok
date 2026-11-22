@@ -37,7 +37,7 @@
         Port = 57255;
       };
 
-      "tenjin-dk.com" = {
+      "Match originalhost tenjin-dk.com user *,!git" = {
         HostName = "www.tenjin-dk.com";
         Port = 57255;
       };

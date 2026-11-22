@@ -90,7 +90,7 @@
       chmod 0644 "$export_file"
 
       systemctl reload nginx.service
-      curl --cacert "$cert_dir/ca.crt" \
+      curl --http3-only --cacert "$cert_dir/ca.crt" \
         --resolve metrics.tenjin.com:443:127.0.0.1 \
         --fail --silent --show-error --max-time 20 \
         https://metrics.tenjin.com/prometheus/-/ready

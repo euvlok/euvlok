@@ -8,7 +8,7 @@ let
   cfg = config.services.forgejo;
   publicDomain = "git.tenjin-dk.com";
   httpPort = 3001;
-  sshPort = 2222;
+  sshListenPort = 2222;
   redis = config.services.redis.servers.forgejo;
   /**
     Build the Redis connection URL for a database on the local Unix socket
@@ -78,15 +78,15 @@ in
         HTTP_ADDR = "127.0.0.1";
         HTTP_PORT = httpPort;
         LOCAL_ROOT_URL = "http://127.0.0.1:${toString httpPort}/";
-        # Forgejo authenticates uploaded account keys on its own Git-only port.
+        # Forgejo authenticates uploaded account keys on its own Git-only listener.
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
         BUILTIN_SSH_SERVER_USER = "git";
         SSH_USER = "git";
-        SSH_DOMAIN = publicDomain;
-        SSH_PORT = sshPort;
+        SSH_DOMAIN = "tenjin-dk.com";
+        SSH_PORT = 22;
         SSH_LISTEN_HOST = "::";
-        SSH_LISTEN_PORT = sshPort;
+        SSH_LISTEN_PORT = sshListenPort;
         SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
         OFFLINE_MODE = true;
         LANDING_PAGE = "login";
@@ -182,7 +182,13 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ sshPort ];
+  networking.firewall.allowedTCPPorts = [ sshListenPort ];
+  # Redirect public IPv4 and IPv6 before filtering. Private SSH stays on sshd.
+  networking.nat.extraCommands = ''
+    ip46tables -w -t nat -A nixos-nat-pre -i ${config.networking.nat.externalInterface} \
+      -m addrtype --dst-type LOCAL -p tcp --dport ${toString cfg.settings.server.SSH_PORT} \
+      -j REDIRECT --to-ports ${toString sshListenPort}
+  '';
 
   # A dedicated, permission-controlled socket isolates sessions and queues from
   # other applications without putting a Redis password in the Nix store.

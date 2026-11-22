@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  wanInterface = "enp5s0";
+  wanInterface = "enp2s0";
   wireguardIPv4 = "172.16.31.1";
   wireguardIPv6 = "fd17:216b:31bc:1::1";
   publicSshPort = 57255;
@@ -31,28 +31,27 @@ in
       wakeOnLan.enable = true;
       ipv4.addresses = [
         {
-          address = "188.34.136.238";
-          prefixLength = 26;
+          address = "157.90.69.197";
+          prefixLength = 25;
         }
       ];
       ipv6.addresses = [
         {
-          address = "2a01:4f8:2191:246a::1";
+          address = "2a01:4f8:2b02:eb5::1";
           prefixLength = 64;
         }
       ];
     };
 
     defaultGateway = {
-      address = "188.34.136.193";
+      address = "157.90.69.129";
       interface = wanInterface;
     };
     defaultGateway6 = {
       address = "fe80::1";
       interface = wanInterface;
     };
-    # Keep the static IPv6 address when NetworkManager reapplies Ethernet.
-    networkmanager.ensureProfiles.profiles.ethernet.ipv6.address1 = "2a01:4f8:2191:246a::1/64,fe80::1";
+    networkmanager.ensureProfiles.profiles.ethernet.ipv6.address1 = "2a01:4f8:2b02:eb5::1/64,fe80::1";
 
     nat = {
       enable = true;
@@ -71,10 +70,10 @@ in
     };
 
     firewall = {
-      allowedUDPPorts = [ config.networking.wg-quick.interfaces.wireguard0.listenPort ];
-      allowedTCPPorts = [
-        80
+      allowedUDPPorts = [
+        # HTTP/3 (QUIC)
         443
+        config.networking.wg-quick.interfaces.wireguard0.listenPort
       ];
       interfaces = {
         "podman+" = {

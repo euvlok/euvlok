@@ -33,6 +33,11 @@
           proxyPass = "http://127.0.0.1:18081";
           recommendedProxySettings = true;
         };
+        "= /tsukire".return = "308 /tsukire/";
+        "/tsukire/" = {
+          proxyPass = "http://127.0.0.1:18083";
+          recommendedProxySettings = true;
+        };
         "= /umineko".return = "308 /umineko/";
         "/umineko/" = {
           # Umineko resolves assets relative to the page; its server expects /.
