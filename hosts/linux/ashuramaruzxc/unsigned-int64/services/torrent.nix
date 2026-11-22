@@ -93,7 +93,9 @@ in
     };
   };
   services.prowlarr.enable = true;
-  networking.hosts."172.16.31.1" = [ "lib.tenjin.com" ];
+  services.unbound.settings.server.local-data = [
+    ''"lib.tenjin.com. 10800 IN A 172.16.31.1"''
+  ];
   users.groups.transmission = {
     gid = 70;
     members = [

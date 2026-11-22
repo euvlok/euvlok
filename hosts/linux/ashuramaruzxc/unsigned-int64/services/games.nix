@@ -47,5 +47,7 @@
       };
     };
   };
-  networking.hosts."172.16.31.1" = [ "games.tenjin.com" ];
+  services.unbound.settings.server.local-data = [
+    ''"games.tenjin.com. 10800 IN A 172.16.31.1"''
+  ];
 }

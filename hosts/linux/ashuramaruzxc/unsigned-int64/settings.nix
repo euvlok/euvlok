@@ -8,8 +8,14 @@ let
     "internal.com"
     "ns1.internal.com"
     "tenjin.com"
-  ]
-  ++ config.networking.hosts.${wireguardIPv4};
+    "www.tenjin.com"
+    "metrics.tenjin.com"
+    "media.tenjin.com"
+    "public.tenjin.com"
+    "private.tenjin.com"
+    "ankisync.tenjin.com"
+    "uptime.tenjin.com"
+  ];
 in
 {
   # --- WAN and routing ---
@@ -126,17 +132,7 @@ in
   };
 
   # --- Private DNS ---
-  # Service modules can add aliases here through networking.hosts
-  networking.hosts.${wireguardIPv4} = [
-    "www.tenjin.com"
-    "metrics.tenjin.com"
-    "media.tenjin.com"
-    "public.tenjin.com"
-    "private.tenjin.com"
-    "ankisync.tenjin.com"
-    "uptime.tenjin.com"
-  ];
-
+  # The router forwards tenjin.com and 31.16.172.in-addr.arpa here over WireGuard
   services.unbound = {
     enable = true;
     settings = {

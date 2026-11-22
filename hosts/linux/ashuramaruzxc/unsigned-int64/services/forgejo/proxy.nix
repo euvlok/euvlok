@@ -72,5 +72,7 @@ in
       locations = proxyLocations;
     };
   };
-  networking.hosts."172.16.31.1" = [ privateDomain ];
+  services.unbound.settings.server.local-data = [
+    ''"${privateDomain}. 10800 IN A 172.16.31.1"''
+  ];
 }
