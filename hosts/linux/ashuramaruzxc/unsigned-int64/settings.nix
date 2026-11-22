@@ -59,6 +59,7 @@ in
     };
 
     firewall = {
+      allowedTCPPorts = [ 443 ];
       allowedUDPPorts = [
         # HTTP/3 (QUIC)
         443

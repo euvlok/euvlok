@@ -16,17 +16,15 @@
           lib.types.submodule (
             { config, ... }:
             {
-              # forceSSL creates a port 80 redirect, and the NixOS quic option
-              # adds UDP alongside TCP. Use explicit QUIC-only listeners instead.
               forceSSL = lib.mkForce false;
               onlySSL = !config.rejectSSL;
-              http2 = false;
+              quic = true;
               listen =
                 map
                   (addr: {
                     inherit addr;
                     port = 443;
-                    extraParameters = [ "quic" ];
+                    ssl = true;
                   })
                   [
                     "0.0.0.0"
@@ -42,7 +40,7 @@
 
   # Advertise HTTP/3 to first-time clients of the private DNS zone.
   services.unbound.settings.server.local-data = map (
-    name: ''"${name}. 10800 IN HTTPS 1 . alpn=h3 no-default-alpn"''
+    name: ''"${name}. 10800 IN HTTPS 1 . alpn=h3,h2"''
   ) (lib.filter (lib.hasSuffix ".tenjin.com") (lib.attrNames config.services.nginx.virtualHosts));
 
   sops.secrets.minecraft = {
