@@ -2,7 +2,6 @@
 let
   wanInterface = "enp2s0";
   wireguardIPv4 = "172.16.31.1";
-  publicSshPort = 57255;
 
   privateDnsNames = [
     "internal.com"
@@ -14,7 +13,6 @@ let
     "public.tenjin.com"
     "private.tenjin.com"
     "ankisync.tenjin.com"
-    "uptime.tenjin.com"
   ];
 in
 {
@@ -93,7 +91,7 @@ in
 
   services.openssh = {
     enable = true;
-    ports = [ publicSshPort ];
+    ports = [ 57255 ];
     settings = {
       UseDns = true;
       PasswordAuthentication = false;
@@ -103,11 +101,11 @@ in
     listenAddresses = [
       {
         addr = "0.0.0.0";
-        port = publicSshPort;
+        port = 57255;
       }
       {
         addr = "[::]";
-        port = publicSshPort;
+        port = 57255;
       }
       {
         addr = wireguardIPv4;

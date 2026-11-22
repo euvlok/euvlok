@@ -26,14 +26,14 @@ in
     downloadDirPermissions = "775";
     home = "/var/lib/transmission/public";
     settings = {
-      # Transmission uses decimal kB/s: 15000 kB/s = 15 MB/s.
+      # kB/s: 25000 kB/s = 25 MB/s
       speed-limit-up-enabled = true;
-      speed-limit-up = 15000;
+      speed-limit-up = 25000;
       speed-limit-down-enabled = true;
-      speed-limit-down = 15000;
-      alt-speed-up = 15000;
-      alt-speed-down = 15000;
-      utp-enabled = true; # to not forget
+      speed-limit-down = 25000;
+      alt-speed-up = 25000;
+      alt-speed-down = 25000;
+      utp-enabled = true;
       watch-dir-enabled = true;
       watch-dir = "${config.services.transmission.home}/watch-dir";
       incomplete-dir-enabled = true;
@@ -56,7 +56,7 @@ in
     wants = [ "wg-quick-wireguard0.service" ];
   };
 
-  # The public peer port is deliberately exposed only on the WAN interface.
+  # The public peer port is deliberately exposed only on the WAN interface
   networking.firewall.interfaces.${config.networking.nat.externalInterface} = {
     allowedTCPPorts = [ 51413 ];
     allowedUDPPorts = [ 51413 ];
