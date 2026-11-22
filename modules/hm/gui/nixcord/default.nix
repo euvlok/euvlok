@@ -40,7 +40,6 @@
       fakeNitro.enable = true;
       favoriteEmojiFirst.enable = true;
       fixSpotifyEmbeds.enable = true;
-      fixYoutubeEmbeds.enable = true;
       fullSearchContext.enable = true;
       mutualGroupDms.enable = true;
       noDevtoolsWarning.enable = true;
@@ -88,7 +87,6 @@
       validUser.enable = true;
       volumeBooster.enable = true;
       webScreenShareFixes.enable = true;
-      youtubeAdblock.enable = true;
     };
   };
 }
