@@ -41,7 +41,6 @@
   ];
 
   nixpkgs.hostPlatform = lib.modules.mkDefault "x86_64-linux";
-
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {
@@ -137,7 +136,6 @@
     efi.efiSysMountPoint = "/boot";
     timeout = 30;
   };
-  # boot.plymouth.enable = true;
   ### ----------------BOOT------------------- ###
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/12CE-A600";

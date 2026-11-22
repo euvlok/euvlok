@@ -21,7 +21,7 @@
     ./hardware-configuration.nix
     ./networking.nix
     ./overlays.nix
-    # ./samba.nix
+    ./samba.nix
     ./settings.nix
     ./users.nix
   ];
@@ -131,11 +131,15 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "electron-39.8.10"
+    "rider-2026.2.4"
+    "rider-with-plugins-2026.2.4"
+    "clion-2026.2.4.1"
+    "clion-with-plugins-2026.2.4.1"
   ];
 
   security.polkit.enable = true;
 
-  # Administer the cache with sudo ccache --dir=/var/cache/ccache.
+  # Administer the cache with sudo ccache --dir=/var/cache/ccache
   security.wrappers.nix-ccache.enable = false;
 
   programs = {

@@ -64,7 +64,7 @@ let
           plugin:
           plugin.overrideAttrs (old: {
             nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.unzip ];
-            # LSP4IJ otherwise extracts these resources into the read-only store at startup.
+            # LSP4IJ otherwise extracts these resources into the read-only store at startup
             postInstall = (old.postInstall or "") + ''
               bundle="$out/bundles/${old.version}"
               jar="$out/lib/lsp4ij-${old.version}.jar"
@@ -152,7 +152,7 @@ in
       extraPluginPackages = pkgs.callPackage ./jetbrains-idea-plugins.nix { };
       extraPlugins = [
         "boo.fox.haskelllsp"
-        # Clojure LSP requires GUI bootstrap and breaks IDEA's headless formatter.
+        # Clojure LSP requires GUI bootstrap and breaks IDEA's headless formatter
         "com.github.clojure-lsp"
         "com.laamella.nim"
         "com.perl5"

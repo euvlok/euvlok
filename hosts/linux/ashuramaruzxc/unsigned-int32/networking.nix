@@ -7,13 +7,16 @@
     nat = {
       enable = true;
       enableIPv6 = true;
-      externalInterface = "enp59s0";
+      externalInterface = "enp57s0";
       internalInterfaces = [ "ve-+" ];
     };
     networkmanager = {
       enable = true;
       unmanaged = [ "interface-name:ve-*" ];
-      ensureProfiles.profiles.ethernet.ethernet.wake-on-lan = 64;
+      ensureProfiles.profiles.ethernet = {
+        ethernet.wake-on-lan = 64;
+        ipv4.routing-rule1 = "priority 2500 to 172.16.31.1/32 table 254";
+      };
     };
     firewall = {
       enable = true;
