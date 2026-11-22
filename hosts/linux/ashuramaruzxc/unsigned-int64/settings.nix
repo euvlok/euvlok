@@ -206,21 +206,19 @@ in
     };
   };
 
-  # --- Tailscale enrollment and exit node (disabled) ---
-  # sops.secrets.tailscale_auth.restartUnits = [ "tailscaled-autoconnect.service" ];
-  # services.tailscale = {
-  #   enable = true;
-  #   useRoutingFeatures = "server";
-  #   openFirewall = true;
-  #   authKeyFile = config.sops.secrets.tailscale_auth.path;
-  #   extraUpFlags = [
-  #     "--advertise-tags=tag:unsigned-int64"
-  #     "--advertise-exit-node"
-  #     "--ssh=true"
-  #   ];
-  #   extraSetFlags = [
-  #     "--ssh=true"
-  #     "--advertise-routes=${wireguardIPv4}/32"
-  #   ];
-  # };
+  # Keep the WAN default route, WireGuard subnet, and local DNS independent of Tailscale.
+  sops.secrets.tailscale_auth.restartUnits = [ "tailscaled-autoconnect.service" ];
+  services.tailscale = {
+    enable = true;
+    authKeyFile = config.sops.secrets.tailscale_auth.path;
+    extraUpFlags = [ "--advertise-tags=tag:unsigned-int64" ] ++ config.services.tailscale.extraSetFlags;
+    extraSetFlags = [
+      "--accept-dns=false"
+      "--accept-routes=false"
+      "--advertise-exit-node=false"
+      "--advertise-routes="
+      "--exit-node="
+      "--ssh=false"
+    ];
+  };
 }
