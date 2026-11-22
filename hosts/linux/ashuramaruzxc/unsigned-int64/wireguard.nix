@@ -11,6 +11,23 @@ in
 {
   sops.secrets.wireguard-server = { };
   sops.secrets.wireguard-shared = { };
+
+  # These services listen on the address assigned by wg-quick.
+  systemd.services =
+    lib.attrsets.genAttrs
+      [
+        "bazarr"
+        "lidarr"
+        "prowlarr"
+        "radarr"
+        "readarr"
+        "redis-ecoflow_exporter"
+      ]
+      (_: {
+        requires = [ "wg-quick-wireguard0.service" ];
+        after = [ "wg-quick-wireguard0.service" ];
+      });
+
   networking.wg-quick.interfaces.wireguard0 = {
     address = [
       "172.16.31.1/24"
