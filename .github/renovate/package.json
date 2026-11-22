@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "re2": "1.27.2",
-    "renovate": "44.257.2"
+    "renovate": "44.257.9"
   }
 }
