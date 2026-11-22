@@ -57,7 +57,7 @@ in
   };
 
   # The public peer port is deliberately exposed only on the WAN interface.
-  networking.firewall.interfaces.enp5s0 = {
+  networking.firewall.interfaces.${config.networking.nat.externalInterface} = {
     allowedTCPPorts = [ 51413 ];
     allowedUDPPorts = [ 51413 ];
   };
@@ -93,14 +93,7 @@ in
     };
   };
   services.prowlarr.enable = true;
-  services.unbound.settings.server.local-data = [
-    ''"lib.tenjin.com. 10800 IN A 172.16.31.1"''
-    ''"lib.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1"''
-  ];
-  networking.hosts = {
-    "172.16.31.1" = [ "lib.tenjin.com" ];
-    "fd17:216b:31bc:1::1" = [ "lib.tenjin.com" ];
-  };
+  networking.hosts."172.16.31.1" = [ "lib.tenjin.com" ];
   users.groups.transmission = {
     gid = 70;
     members = [

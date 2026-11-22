@@ -12,7 +12,6 @@
         allow 127.0.0.1;
         allow ::1;
         allow 172.16.31.0/24;
-        allow fd17:216b:31bc::/48;
         allow 100.64.0.0/10;
         allow fd7a:115c:a1e0::/48;
         deny all;
@@ -47,13 +46,6 @@
         "/".return = "404";
       };
     };
-    unbound.settings.server.local-data = [
-      ''"games.tenjin.com. 10800 IN A 172.16.31.1"''
-      ''"games.tenjin.com. 10800 IN AAAA fd17:216b:31bc:1::1"''
-    ];
   };
-  networking.hosts = {
-    "172.16.31.1" = [ "games.tenjin.com" ];
-    "fd17:216b:31bc:1::1" = [ "games.tenjin.com" ];
-  };
+  networking.hosts."172.16.31.1" = [ "games.tenjin.com" ];
 }
