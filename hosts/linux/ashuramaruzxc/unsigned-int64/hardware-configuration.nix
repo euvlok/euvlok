@@ -126,8 +126,8 @@
       "uas"
       "sd_mod"
       "igb"
+      "ixgbe"
       # "igc" # No longer needed in initrd might get handy in a future, Intel 2.5gbe NIC
-      # "ixgbe" # Intel 10gbe SFP+ NIC
     ];
     kernelModules = [
       # modules
