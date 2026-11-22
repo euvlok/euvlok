@@ -208,6 +208,20 @@ let
         }
     // lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+      swiftPackages = prev.swiftPackages.overrideScope (
+        _swiftFinal: swiftPrev: {
+          swift-collections =
+            if swiftPrev.swift-collections.version == "1.7.6" then
+              swiftPrev.swift-collections.overrideAttrs (old: {
+                # Reserve 0x200 bytes for the Span compatibility rpaths added in postInstall.
+                cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+                  (prev.lib.cmakeFeature "CMAKE_SHARED_LINKER_FLAGS" "-Xlinker -headerpad -Xlinker 200")
+                ];
+              })
+            else
+              swiftPrev.swift-collections;
+        }
+      );
       telegram-desktop =
         if prev.telegram-desktop.version == "7.4.1" then
           prev.telegram-desktop.override {
@@ -222,18 +236,6 @@ let
           }
         else
           prev.telegram-desktop;
-      uutils-diffutils =
-        if prev.uutils-diffutils.version == "0.6.0" then
-          prev.uutils-diffutils.overrideAttrs (old: {
-            # https://redirect.github.com/NixOS/nixpkgs/pull/587325
-            # Use stdenv's GNU patch instead of its Homebrew name
-            postPatch = (old.postPatch or "") + ''
-              substituteInPlace src/utils.rs \
-                --replace-fail '"gpatch"' '"patch"'
-            '';
-          })
-        else
-          prev.uutils-diffutils;
       llvmPackages_latest = prev.llvmPackages_latest // {
         lldb =
           if prev.llvmPackages_latest.lldb.version == "23.1.3" then

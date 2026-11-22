@@ -38,13 +38,14 @@ let
       };
       programs.ssh.settings = {
         "Match host tenjin.com localnetwork 192.168.50.0/24" = {
-          # Use the Wi-Fi router's WireGuard tunnel instead of Tailscale's
-          # advertised host route, which does not permit SSH to this address.
           ProxyCommand = "/usr/bin/nc -4 -b en0 -G 10 %h %p";
         };
+        "Match originalhost tenjin-dk.com user git" = {
+          HostName = 157.90 .69 .197;
+          HostKeyAlias = "tenjin-dk.com";
+        };
         "www.tenjin-dk.com" = {
-          # Bypass intermittent macOS DNS stalls for the public SSH endpoint.
-          HostName = lib.modules.mkForce "188.34.136.238";
+          HostName = lib.modules.mkForce 157.90 .69 .197;
           HostKeyAlias = "[www.tenjin-dk.com]:57255";
         };
         "unsigned-int32" = {
@@ -159,7 +160,6 @@ let
       prismlauncher
       ryubing
       winetricks
-      xemu
       ;
   };
 
