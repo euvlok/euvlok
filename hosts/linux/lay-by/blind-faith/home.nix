@@ -40,6 +40,7 @@
           fps_limit = 200;
           no_display = true;
         };
+        programs.antigravity-cli.enable = true;
         fonts.fontconfig.enable = true;
         home.pointerCursor.enable = true;
         xsession.numlock.enable = true;
