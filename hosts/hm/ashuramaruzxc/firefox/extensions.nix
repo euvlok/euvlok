@@ -44,10 +44,10 @@
   };
   "floccus" = buildFirefoxXpiAddon {
     pname = "floccus";
-    version = "5.13.0";
+    version = "5.14.0";
     addonId = "floccus@handmadeideas.org";
-    url = "https://addons.mozilla.org/firefox/downloads/file/5224106/floccus-5.13.0.xpi";
-    sha256 = "sha256-cfZY5onmfBezxgVQPmRAD6BccwYYNluNAjuOY70chHM=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5285330/floccus-5.14.0.xpi";
+    sha256 = "sha256-Bcnn/+n5FYKe9zBeOvbryzDur0N3elsxKtUld1elI7A=";
   };
   "foxyproxy-standard" = buildFirefoxXpiAddon {
     pname = "foxyproxy-standard";

@@ -2,17 +2,17 @@
 {
   "clearurls" = buildFirefoxXpiAddon {
     pname = "clearurls";
-    version = "1.27.3";
+    version = "1.28.0";
     addonId = "{74145f27-f039-47ce-a470-a662b129930a}";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4432106/clearurls-1.27.3.xpi";
-    sha256 = "sha256-VJJrbkJ01ZNaX8DapjIPHTcePS8aWHdGfKOrIqZcTyA=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5286652/clearurls-1.28.0.xpi";
+    sha256 = "sha256-aTYBuh8hxpQDdPdqzC3UvTIBhpsP4QqxuSe1k+4lCNE=";
   };
   "magnolia@12.34" = buildFirefoxXpiAddon {
     pname = "magnolia@12.34";
-    version = "4.4.9.8";
+    version = "4.5.0.0";
     addonId = "magnolia@12.34";
-    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-4.4.9.8.xpi";
-    sha256 = "sha256-i5ZoPZlHdMd/d7zAttJkRiOetb5zeV/dUFudFDvbCYE=";
+    url = "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=bypass_paywalls_clean-4.5.0.0.xpi";
+    sha256 = "sha256-hUNpZqqK5PBMPax/GFih79nYI9a+t5QNwQ/RxRsZ2FM=";
   };
   "refined-github-" = buildFirefoxXpiAddon {
     pname = "refined-github-";
@@ -30,10 +30,10 @@
   };
   "ublock-origin" = buildFirefoxXpiAddon {
     pname = "ublock-origin";
-    version = "1.76.4";
+    version = "1.77.0";
     addonId = "uBlock0@raymondhill.net";
-    url = "https://addons.mozilla.org/firefox/downloads/file/5257481/ublock_origin-1.76.4.xpi";
-    sha256 = "sha256-ZtDj8hzjsysbwKk5m5PLLJqlmO8YgF2SEYx29m4mbB4=";
+    url = "https://addons.mozilla.org/firefox/downloads/file/5290541/ublock_origin-1.77.0.xpi";
+    sha256 = "sha256-iU6kje3SamN6uYumJ65wt+2UeY6r/UsIn15ec1JKJOs=";
   };
   "violentmonkey" = buildFirefoxXpiAddon {
     pname = "violentmonkey";
