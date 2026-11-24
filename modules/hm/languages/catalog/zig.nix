@@ -1,8 +1,8 @@
 { lib, pkgs, ... }:
 {
   packages = lib.attrsets.attrValues { inherit (pkgs.unstable) zig zls; };
-  helix.languageServers.zls.command = "zls";
-  helix.languages = [
+  mitos.languageServers.zls.command = "zls";
+  mitos.languages = [
     {
       name = "zig";
       auto-format = true;

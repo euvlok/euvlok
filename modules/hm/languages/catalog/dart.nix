@@ -4,14 +4,14 @@
     inherit (pkgs.unstable) flutter;
     dart = pkgs.unstable.flutter.dart;
   };
-  helix.languageServers.dart = {
+  mitos.languageServers.dart = {
     command = "dart";
     args = [
       "language-server"
       "--protocol=lsp"
     ];
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "dart";
       auto-format = true;

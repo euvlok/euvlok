@@ -1,8 +1,8 @@
 { lib, pkgs, ... }:
 {
   packages = lib.attrsets.attrValues { inherit (pkgs.unstable) nim nimlsp; };
-  helix.languageServers.nimlsp.command = "nimlsp";
-  helix.languages = [
+  mitos.languageServers.nimlsp.command = "nimlsp";
+  mitos.languages = [
     {
       name = "nim";
       auto-format = true;

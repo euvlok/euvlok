@@ -16,8 +16,8 @@
       crates-lsp
       ;
   };
-  helix.languageServers.rust-analyzer.command = "rust-analyzer";
-  helix.languages = [
+  mitos.languageServers.rust-analyzer.command = "rust-analyzer";
+  mitos.languages = [
     {
       name = "rust";
       auto-format = true;

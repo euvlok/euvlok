@@ -6,7 +6,7 @@
     ./dconf.nix
     ./firefox
     ./git.nix
-    ./helix.nix
+    ./mitos.nix
     ../shared/nixcord.nix
     ./ssh.nix
     ./starship.nix

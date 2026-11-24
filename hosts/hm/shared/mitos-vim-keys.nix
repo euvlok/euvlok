@@ -10,8 +10,8 @@ let
   };
 in
 {
-  programs.helix.defaultEditor = true;
-  programs.helix.settings = {
+  euvlok.home.mitos.defaultEditor = true;
+  euvlok.home.mitos.settings = {
     # Preserve counted G navigation
     keys.normal = repeatedBinds // {
       G = "goto_line";

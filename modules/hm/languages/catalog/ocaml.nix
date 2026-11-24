@@ -4,8 +4,8 @@
     inherit (pkgs.unstable) ocaml dune_3 opam;
     inherit (pkgs.unstable.ocamlPackages) ocaml-lsp ocamlformat;
   };
-  helix.languageServers.ocamllsp.command = "ocamllsp";
-  helix.languages = [
+  mitos.languageServers.ocamllsp.command = "ocamllsp";
+  mitos.languages = [
     {
       name = "ocaml";
       auto-format = true;

@@ -15,11 +15,11 @@
   };
   versionMap = versionMappings.dotnet;
   defaultVersion = getLatestVersion versionMappings.dotnet;
-  helix.languageServers.fsautocomplete = {
+  mitos.languageServers.fsautocomplete = {
     command = "fsautocomplete";
     args = [ "--adaptive-lsp-server-enabled" ];
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "fsharp";
       auto-format = true;

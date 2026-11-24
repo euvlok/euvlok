@@ -10,11 +10,11 @@
       ormolu
       ;
   };
-  helix.languageServers.haskell-language-server = {
+  mitos.languageServers.haskell-language-server = {
     command = "haskell-language-server-wrapper";
     args = [ "--lsp" ];
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "haskell";
       auto-format = true;

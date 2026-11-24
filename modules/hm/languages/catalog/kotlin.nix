@@ -3,8 +3,8 @@
   packages = lib.attrsets.attrValues {
     inherit (pkgs.unstable) kotlin kotlin-language-server gradle;
   };
-  helix.languageServers.kotlin-language-server.command = "kotlin-language-server";
-  helix.languages = [
+  mitos.languageServers.kotlin-language-server.command = "kotlin-language-server";
+  mitos.languages = [
     {
       name = "kotlin";
       auto-format = true;

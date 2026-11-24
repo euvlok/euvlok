@@ -2,7 +2,7 @@
   imports = [
     ./aliases.nix
     ./git.nix
-    ./helix.nix
+    ./mitos.nix
     ./ssh.nix
     ./starship.nix
   ];

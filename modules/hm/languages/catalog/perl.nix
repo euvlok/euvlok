@@ -4,11 +4,11 @@
     inherit (pkgs.unstable) perl perlnavigator;
     inherit (pkgs.unstable.perlPackages) PerlCritic PerlTidy;
   };
-  helix.languageServers.perlnavigator = {
+  mitos.languageServers.perlnavigator = {
     command = "perlnavigator";
     args = [ "--stdio" ];
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "perl";
       auto-format = true;

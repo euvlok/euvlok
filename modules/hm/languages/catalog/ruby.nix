@@ -7,14 +7,14 @@
       ruby-lsp
       ;
   };
-  helix.languageServers = {
+  mitos.languageServers = {
     ruby-lsp.command = "ruby-lsp";
     solargraph = {
       command = "solargraph";
       args = [ "stdio" ];
     };
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "ruby";
       auto-format = true;

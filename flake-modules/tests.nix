@@ -65,7 +65,7 @@ let
         programs.fastfetch.enable = true;
         programs.nh.enable = true;
         euvlok.home = {
-          helix.enable = true;
+          mitos.enable = true;
           yazi.enable = true;
         };
       }

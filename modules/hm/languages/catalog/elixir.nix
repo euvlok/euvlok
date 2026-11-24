@@ -4,8 +4,8 @@
     inherit (pkgs.unstable) elixir-ls hex;
     inherit (pkgs.unstable.beamPackages) elixir;
   };
-  helix.languageServers.elixir-ls.command = "elixir-ls";
-  helix.languages = [
+  mitos.languageServers.elixir-ls.command = "elixir-ls";
+  mitos.languages = [
     {
       name = "elixir";
       auto-format = true;

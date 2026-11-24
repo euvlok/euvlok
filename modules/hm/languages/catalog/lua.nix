@@ -8,8 +8,8 @@
       stylua
       ;
   };
-  helix.languageServers.lua-language-server.command = "lua-language-server";
-  helix.languages = [
+  mitos.languageServers.lua-language-server.command = "lua-language-server";
+  mitos.languages = [
     {
       name = "lua";
       auto-format = true;

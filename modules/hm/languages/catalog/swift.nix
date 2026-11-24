@@ -13,8 +13,8 @@
       else
         pkgs.unstable.swift;
   };
-  helix.languageServers.sourcekit-lsp.command = "sourcekit-lsp";
-  helix.languages = [
+  mitos.languageServers.sourcekit-lsp.command = "sourcekit-lsp";
+  mitos.languages = [
     {
       name = "swift";
       auto-format = true;
