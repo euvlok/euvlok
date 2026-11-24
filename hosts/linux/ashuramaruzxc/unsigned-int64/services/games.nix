@@ -4,7 +4,6 @@
     forgejo.settings.packages.ENABLED = lib.modules.mkForce true;
 
     nginx.virtualHosts."games.tenjin.com" = {
-      forceSSL = true;
       sslCertificate = "/etc/ssl/self/tenjin.com/tenjin.com.crt";
       sslCertificateKey = "/etc/ssl/self/tenjin.com/tenjin.com.key";
       sslTrustedCertificate = "/etc/ssl/self/tenjin.com/ca.crt";
@@ -24,24 +23,20 @@
         "= /dolx".return = "301 /dolx/";
         "/dolx/" = {
           proxyPass = "http://127.0.0.1:18080/";
-          recommendedProxySettings = true;
         };
         "= /tsukihime".return = "308 /tsukihime/";
         "/tsukihime/" = {
           # Tsukihime's Caddy server expects the prefix used by its Vite build.
           proxyPass = "http://127.0.0.1:18081";
-          recommendedProxySettings = true;
         };
         "= /tsukire".return = "308 /tsukire/";
         "/tsukire/" = {
           proxyPass = "http://127.0.0.1:18083";
-          recommendedProxySettings = true;
         };
         "= /umineko".return = "308 /umineko/";
         "/umineko/" = {
           # Umineko resolves assets relative to the page; its server expects /.
           proxyPass = "http://127.0.0.1:18082/";
-          recommendedProxySettings = true;
         };
         "/".return = "404";
       };

@@ -57,7 +57,6 @@
   };
   services.nginx.virtualHosts."bitwarden.tenjin-dk.com" = {
     serverName = "bitwarden.tenjin-dk.com";
-    forceSSL = true;
     enableACME = true;
     locations."/" = {
       proxyPass = "http://vaultwarden-default";

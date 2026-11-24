@@ -6,7 +6,6 @@ let
     "/" = {
       proxyPass = cfg.settings.server.LOCAL_ROOT_URL;
       proxyWebsockets = true;
-      recommendedProxySettings = true;
       extraConfig = ''
         proxy_request_buffering off;
         proxy_read_timeout 600s;
@@ -16,7 +15,6 @@ let
     # Forgejo serves uploaded avatars before its normal sign-in middleware.
     "~ ^/(avatars|repo-avatars)/" = {
       proxyPass = lib.strings.removeSuffix "/" cfg.settings.server.LOCAL_ROOT_URL;
-      recommendedProxySettings = true;
       extraConfig = ''
         auth_request /_forgejo_auth;
         # headers-more preserves the inherited security headers.
@@ -25,7 +23,6 @@ let
     };
     "= /_forgejo_auth" = {
       proxyPass = "${cfg.settings.server.LOCAL_ROOT_URL}user/settings";
-      recommendedProxySettings = true;
       extraConfig = ''
         internal;
         proxy_method GET;
@@ -46,7 +43,6 @@ in
 {
   services.nginx.virtualHosts = {
     ${cfg.settings.server.DOMAIN} = {
-      forceSSL = true;
       enableACME = true;
       # Public DNS points here; validate over HTTP without DNS API credentials.
       acmeRoot = "/var/lib/acme/acme-challenge";
@@ -55,7 +51,6 @@ in
       locations = proxyLocations;
     };
     ${privateDomain} = {
-      forceSSL = true;
       sslCertificate = "/etc/ssl/self/tenjin.com/tenjin.com.crt";
       sslCertificateKey = "/etc/ssl/self/tenjin.com/tenjin.com.key";
       sslTrustedCertificate = "/etc/ssl/self/tenjin.com/ca.crt";

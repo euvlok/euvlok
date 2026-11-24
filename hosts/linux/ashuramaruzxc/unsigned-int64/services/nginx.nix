@@ -67,19 +67,6 @@
   };
   services.nginx = {
     enable = true;
-    # Backport nixpkgs PR 589961 until the locked stable package includes the fix.
-    package = lib.mkIf (lib.versionOlder pkgs.nginxStable.version "1.30.7") (
-      pkgs.nginxStable.overrideAttrs (
-        finalAttrs: _: {
-          version = "1.30.7";
-          nginxVersion = finalAttrs.version;
-          src = pkgs.fetchurl {
-            url = "https://nginx.org/download/nginx-${finalAttrs.version}.tar.gz";
-            hash = "sha256-JWW1yDcFDpWPcPsPc8SOK8pFQq00n9NW9G+wxyYQvG4=";
-          };
-        }
-      )
-    );
     additionalModules = [ pkgs.nginxModules.pam ];
 
     recommendedUwsgiSettings = true;

@@ -118,12 +118,10 @@
 
   services.nginx.virtualHosts."photos.tenjin-dk.com" = {
     enableACME = true;
-    forceSSL = true;
 
     locations."/" = {
       proxyPass = "http://127.0.0.1:2283";
       proxyWebsockets = true;
-      recommendedProxySettings = true;
 
       extraConfig = ''
         client_max_body_size 50000M;
