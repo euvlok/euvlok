@@ -16,7 +16,6 @@
   };
 
   services.nginx.virtualHosts."freshrss.tenjin-dk.com" = {
-    forceSSL = true;
     enableACME = true;
   };
 }

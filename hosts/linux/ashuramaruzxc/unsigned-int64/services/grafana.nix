@@ -513,7 +513,6 @@ in
 
   services.nginx.virtualHosts = {
     "${config.services.grafana.settings.server.domain}" = {
-      forceSSL = true;
       sslCertificate = "/etc/ssl/self/tenjin.com/tenjin.com.crt";
       sslCertificateKey = "/etc/ssl/self/tenjin.com/tenjin.com.key";
       sslTrustedCertificate = "/etc/ssl/self/tenjin.com/ca.crt";
@@ -521,12 +520,10 @@ in
         "/grafana/" = {
           proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
           proxyWebsockets = true;
-          recommendedProxySettings = true;
         };
         "/grafana/api/live/" = {
           proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
           proxyWebsockets = true;
-          recommendedProxySettings = true;
         };
         "/prometheus" = {
           proxyPass = "http://127.0.0.1:${toString config.services.prometheus.port}";
