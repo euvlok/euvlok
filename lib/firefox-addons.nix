@@ -43,7 +43,7 @@ let
       `sha256` (required)
       : SHA-256 hash accepted by `fetchurl`
 
-      `meta` (required)
+      `meta` (optional, default: `{ }`)
       : Package metadata passed through unchanged
 
     # Type
@@ -58,7 +58,7 @@ let
       url :: String ? "";
       urls :: [String] ? [];
       sha256 :: String;
-      meta :: AttrSet;
+      meta :: AttrSet ? {};
       ...
     } -> Derivation
     ```
@@ -74,7 +74,6 @@ let
       addonId = "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}";
       url = "https://addons.mozilla.org/firefox/downloads/file/4647055/catppuccin_web_file_icons-1.6.1.xpi";
       sha256 = "sha256-oe4jEr0ssTBqON7EtQ7cVaQ5edgYczJk3ulVxsBKdnY=";
-      meta = { };
     }).addonId
     => "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}"
     ```
@@ -91,7 +90,7 @@ let
       url ? "",
       urls ? [ ],
       sha256,
-      meta,
+      meta ? { },
       ...
     }:
     stdenv.mkDerivation (finalAttrs: {

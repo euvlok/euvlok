@@ -267,12 +267,10 @@ in
     };
   });
 
-  # The generated catalogue is data, not a callPackage-overridable package
   config.euvlok.home.firefox.extraExtensions =
     lib.attrsets.mapAttrsToList (_: addons.toTweezleExtension)
       (
         import ./extensions.nix {
-          inherit lib;
           inherit (addons) buildFirefoxXpiAddon;
         }
       );
