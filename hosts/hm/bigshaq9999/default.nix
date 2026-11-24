@@ -1,4 +1,5 @@
-_: {
+{ pkgs, ... }:
+{
   imports = [
     ./git.nix
     ./ghostty.nix
@@ -9,4 +10,6 @@ _: {
     ./starship.nix
     ../shared/nixcord.nix
   ];
+
+  home.packages = [ pkgs.antigravity-cli ];
 }
