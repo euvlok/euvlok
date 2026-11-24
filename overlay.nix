@@ -94,31 +94,6 @@ let
     final: prev:
     {
       inherit (final.stable) black;
-      codex =
-        if prev.codex.version == "0.167.0" then
-          prev.codex.overrideAttrs (old: {
-            # Cargo's system-library hook disables bundled copies of these dependencies.
-            buildInputs = (old.buildInputs or [ ]) ++ [
-              final.aws-lc
-              final.oniguruma
-              final.sqlite
-              final.zstd
-            ];
-          })
-        else
-          prev.codex;
-      llama-cpp =
-        if prev.llama-cpp.version == "0.6.0" then
-          prev.llama-cpp.overrideAttrs (old: {
-            # Large CPU pools make the tiny generated-model tests time out.
-            postPatch = (old.postPatch or "") + ''
-              substituteInPlace tests/CMakeLists.txt \
-                --replace-fail 'ARGS --models "''${MODEL_DIR}"' \
-                'ARGS --models "''${MODEL_DIR}" --threads 1 --threads-batch 1'
-            '';
-          })
-        else
-          prev.llama-cpp;
       clipcat =
         if prev.clipcat.version == "0.26.0" then
           prev.clipcat.overrideAttrs (old: {
@@ -161,19 +136,6 @@ let
               }
             else
               pythonPrev.fastmcp-slim;
-          anyio =
-            if pythonPrev.anyio.version == "4.14.2" then
-              pythonPrev.anyio.overridePythonAttrs (old: {
-                # Preserve server-side wrapping when Python rejects client-only
-                # hostnames, including Python 3.12.15, 3.13.16, and 3.14.8
-                postPatch = (old.postPatch or "") + ''
-                  substituteInPlace src/anyio/streams/tls.py \
-                    --replace-fail 'if hostname is not None:' \
-                    'if hostname is not None and not server_side:'
-                '';
-              })
-            else
-              pythonPrev.anyio;
           black =
             if
               prev.stdenv.hostPlatform.isDarwin
@@ -222,20 +184,6 @@ let
               swiftPrev.swift-collections;
         }
       );
-      telegram-desktop =
-        if prev.telegram-desktop.version == "7.4.1" then
-          prev.telegram-desktop.override {
-            unwrapped = prev.telegram-desktop.unwrapped.overrideAttrs (old: {
-              # Swift 6.4's library discovery expects a layout Nixpkgs does not use.
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace Telegram/cmake/telegram_apple_swift_runtime.cmake \
-                  --replace-fail '--platform macosx' \
-                  '--platform macosx --source-libraries "''${swift_bin_dir}/../lib/swift/macosx"'
-              '';
-            });
-          }
-        else
-          prev.telegram-desktop;
       llvmPackages_latest = prev.llvmPackages_latest // {
         lldb =
           if prev.llvmPackages_latest.lldb.version == "23.1.3" then
