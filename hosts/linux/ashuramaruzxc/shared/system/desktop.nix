@@ -1,7 +1,6 @@
 { pkgs, lib, ... }:
 {
   imports = [
-    ./desktop/gnome.nix
     ./desktop/plasma.nix
   ];
 

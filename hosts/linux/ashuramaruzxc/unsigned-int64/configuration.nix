@@ -11,7 +11,6 @@
     ../shared/system/fonts.nix
     ../shared/system/hyperv.nix
     ../shared/system/lxc.nix
-    ../shared/system/nix-credentials.nix
     ../shared/system/settings.nix
     ./hardware-configuration.nix
     ./services/default.nix
