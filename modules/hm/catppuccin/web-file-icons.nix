@@ -12,19 +12,6 @@ buildFirefoxXpiAddon {
     homepage = "https://redirect.github.com/catppuccin/web-file-explorer-icons";
     description = "Soothing pastel icons for file explorers on the web!";
     license = lib.licenses.mit;
-    mozPermissions = [
-      "storage"
-      "contextMenus"
-      "activeTab"
-      "*://bitbucket.org/*"
-      "*://codeberg.org/*"
-      "*://git.sr.ht/*"
-      "*://gitea.com/*"
-      "*://github.com/*"
-      "*://gitlab.com/*"
-      "*://hg.sr.ht/*"
-      "*://tangled.org/*"
-    ];
     platforms = lib.systems.doubles.all;
   };
 }
