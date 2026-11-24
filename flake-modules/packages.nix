@@ -15,6 +15,9 @@
       lib,
       ...
     }:
+    let
+      firefoxPlatforms = (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms;
+    in
     {
       # Use final so dependencies, including the pinned NVIDIA driver, follow
       # overrides made by consumers of the generated overlay
@@ -28,15 +31,9 @@
         mitos = final.callPackage ../packages/mitos.nix { };
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
       }
-      //
-        lib.attrsets.optionalAttrs
-          (
-            (lib.trivial.importJSON ../lib/firefox-unbranded/source.json).platforms
-            ? ${pkgs.stdenvNoCC.hostPlatform.system}
-          )
-          {
-            firefox-unbranded = final.callPackage ../lib/firefox-unbranded/firefox-unbranded.nix { };
-          }
+      // lib.attrsets.optionalAttrs (firefoxPlatforms ? ${pkgs.stdenvNoCC.hostPlatform.system}) {
+        firefox-unbranded = final.callPackage ../lib/firefox-unbranded/firefox-unbranded.nix { };
+      }
       // lib.attrsets.optionalAttrs pkgs.stdenvNoCC.hostPlatform.isLinux {
         chatgpt = final.callPackage (import ../slop.nix).packages.chatgpt { };
       };
