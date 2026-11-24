@@ -41,11 +41,11 @@ let
           ProxyCommand = "/usr/bin/nc -4 -b en0 -G 10 %h %p";
         };
         "Match originalhost tenjin-dk.com user git" = {
-          HostName = 157.90 .69 .197;
+          HostName = "157.90.69.197";
           HostKeyAlias = "tenjin-dk.com";
         };
         "www.tenjin-dk.com" = {
-          HostName = lib.modules.mkForce 157.90 .69 .197;
+          HostName = lib.modules.mkForce "157.90.69.197";
           HostKeyAlias = "[www.tenjin-dk.com]:57255";
         };
         "unsigned-int32" = {
