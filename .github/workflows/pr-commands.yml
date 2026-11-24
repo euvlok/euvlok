@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
-      contents: write # Rebase-merge the current head by SHA
+      contents: write # Fast-forward master without creating commits
       pull-requests: write # Read the PR and reply to the command
     outputs:
       merged: ${{ steps.merge.outputs.merged }}
