@@ -6,6 +6,63 @@ let
   # with the root nixpkgs-unstable-small input used by this package set
   pkgs = final.unstable;
 
+  /**
+    Use the vendor's patched Apple Silicon IDE while Nixpkgs is held back
+    by Linux-only dependencies
+
+    # Inputs
+
+    `ide`
+    : JetBrains IDE derivation from Nixpkgs
+
+    `pin`
+    : Vendor URL, SHA-256 hash, and Marketplace build number
+
+    # Type
+    ```
+    patchedDarwinIde :: Derivation -> { url :: String; hash :: String; buildNumber :: String; } -> Derivation
+    ```
+
+    # Examples
+    :::{.example}
+    ## Leave Linux packages unchanged
+
+    ```nix
+    patchedDarwinIde pkgs.jetbrains.clion clionPin
+    => pkgs.jetbrains.clion # on Linux
+    ```
+    :::
+  */
+  patchedDarwinIde =
+    ide:
+    {
+      url,
+      hash,
+      buildNumber,
+    }:
+    let
+      version = "2026.3.0.1";
+    in
+    if
+      pkgs.stdenv.hostPlatform.system == "aarch64-darwin"
+      && pkgs.lib.strings.versionOlder ide.version version
+    then
+      ide.overrideAttrs (old: {
+        inherit version;
+        src = pkgs.fetchurl { inherit url hash; };
+        passthru = old.passthru // {
+          inherit buildNumber;
+        };
+        # This release fixes CVE-2026-111497. Keep any other advisories
+        meta = old.meta // {
+          knownVulnerabilities = pkgs.lib.lists.filter (
+            advisory: !pkgs.lib.strings.hasPrefix "CVE-2026-111497;" advisory
+          ) (old.meta.knownVulnerabilities or [ ]);
+        };
+      })
+    else
+      ide;
+
   linuxVmOptions = pkgs.writeText "jetbrains-extra.vmoptions" ''
     -Dawt.toolkit.name=WLToolkit
     -Dsun.awt.wl.WindowDecorationStyle=server
@@ -127,10 +184,22 @@ let
         '';
       }
     );
+
+  riderPackage = patchedDarwinIde pkgs.jetbrains.rider {
+    url = "https://download.jetbrains.com/rider/JetBrains.Rider-2026.3.0.1-aarch64.dmg";
+    hash = "sha256-FuwW/Baiy68yECCGrffyYYJXTYHr7W38d1rDdnyo5as=";
+    buildNumber = "263.7307.325";
+  };
+
+  clionPackage = patchedDarwinIde pkgs.jetbrains.clion {
+    url = "https://download.jetbrains.com/cpp/CLion-2026.3.0.1-aarch64.dmg";
+    hash = "sha256-jOR18nE85zAtxdpYOqekF0kmBaFJKLBvmTmxKKktNBU=";
+    buildNumber = "263.7307.257";
+  };
 in
 {
   jetbrains = prev.jetbrains // {
-    rider = withPlugins pkgs.jetbrains.rider {
+    rider = withPlugins riderPackage {
       bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
       extraPlugins = [
         "org.toml.lang"
@@ -138,7 +207,7 @@ in
       ];
     };
 
-    clion = withPlugins pkgs.jetbrains.clion {
+    clion = withPlugins clionPackage {
       bundledPlugins = [ "com.jetbrains.plugins.ini4idea" ];
       extraPlugins = [
         "artsiomch.cmake"
