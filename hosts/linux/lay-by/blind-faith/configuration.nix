@@ -28,14 +28,7 @@
     "preempt=full"
   ];
 
-  # Temporary workaround: XanMod 7.3.3 already includes this patch.
-  boot.kernelPackages = pkgs.linuxPackagesFor (
-    pkgs.linux_xanmod_latest.override (old: {
-      kernelPatches = lib.lists.filter (
-        patch: (patch.name or "") != "tools-add-128-bit-integer-types-for-aarch64"
-      ) (old.kernelPatches or [ ]);
-    })
-  );
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.kernel.sysctl = {
     "kernel.split_lock_mitigate" = 0;
     "vm.swappiness" = 60;
