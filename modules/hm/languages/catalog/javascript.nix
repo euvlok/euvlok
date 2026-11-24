@@ -23,7 +23,7 @@
       typescript-language-server
       ;
   };
-  helix.languageServers = {
+  mitos.languageServers = {
     typescript-language-server = {
       command = "typescript-language-server";
       args = [ "--stdio" ];
@@ -55,7 +55,7 @@
       };
     };
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "javascript";
       auto-format = true;

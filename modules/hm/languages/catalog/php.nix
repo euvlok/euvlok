@@ -4,11 +4,11 @@
     inherit (pkgs.unstable) php intelephense phpstan;
     inherit (pkgs.unstable.phpPackages) composer psalm;
   };
-  helix.languageServers.intelephense = {
+  mitos.languageServers.intelephense = {
     command = "intelephense";
     args = [ "--stdio" ];
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "php";
       auto-format = true;

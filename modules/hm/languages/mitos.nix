@@ -9,11 +9,11 @@ let
   ) config.euvlok.home.languages;
 in
 {
-  config = lib.modules.mkIf config.euvlok.home.helix.enable {
-    programs.helix.languages = lib.modules.mkMerge (
+  config = lib.modules.mkIf config.euvlok.home.mitos.enable {
+    euvlok.home.mitos.languages = lib.modules.mkMerge (
       lib.attrsets.mapAttrsToList (_: def: {
-        language-server = def.helix.languageServers or { };
-        language = def.helix.languages or [ ];
+        language-server = def.mitos.languageServers;
+        language = def.mitos.languages;
       }) enabledLanguages
     );
   };

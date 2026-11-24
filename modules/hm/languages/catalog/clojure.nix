@@ -9,8 +9,8 @@
       babashka
       ;
   };
-  helix.languageServers.clojure-lsp.command = "clojure-lsp";
-  helix.languages = [
+  mitos.languageServers.clojure-lsp.command = "clojure-lsp";
+  mitos.languages = [
     {
       name = "clojure";
       auto-format = true;

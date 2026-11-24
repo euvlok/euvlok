@@ -48,7 +48,7 @@
       zen-browser.enable = true;
       defaultSearchEngine = "kagi";
     };
-    helix.enable = true;
+    mitos.enable = true;
     languages = {
       cpp.enable = true;
       csharp = {

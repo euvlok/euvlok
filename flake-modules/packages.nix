@@ -25,6 +25,7 @@
         lsfg-vk = final.callPackage ../packages/lsfg-vk.nix {
           basePackage = final.callPackage (providerInputs.nixpkgs + /pkgs/by-name/ls/lsfg-vk/package.nix) { };
         };
+        mitos = final.callPackage ../packages/mitos.nix { };
         nvidia-driver = final.callPackage ../packages/nvidia-driver.nix { };
       }
       //

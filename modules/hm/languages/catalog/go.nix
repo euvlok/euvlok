@@ -10,8 +10,8 @@
       templ
       ;
   };
-  helix.languageServers.gopls.command = "gopls";
-  helix.languages = [
+  mitos.languageServers.gopls.command = "gopls";
+  mitos.languages = [
     {
       name = "go";
       auto-format = true;

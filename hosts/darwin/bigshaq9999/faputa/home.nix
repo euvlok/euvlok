@@ -76,7 +76,7 @@
               ];
               zen-browser.enable = true;
             };
-            helix.enable = true;
+            mitos.enable = true;
             nixcord.enable = true;
             # yazi.enable = true;
             languages = {
@@ -145,7 +145,6 @@
               };
             };
             btop.enable = true;
-            helix.enable = true;
           };
         }
       ];

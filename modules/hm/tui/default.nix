@@ -1,6 +1,6 @@
 _: {
   imports = [
-    ./helix
+    ./mitos
     ./yazi
     ./zellij
   ];

@@ -32,8 +32,6 @@ let
     mp4-cut = "yt-dlp-script mp4-cut";
 
     # Modern Replacements
-    vi = "hx";
-    vim = "hx";
     htop = "btop";
     neofetch = "fastfetch";
 

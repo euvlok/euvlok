@@ -2,7 +2,7 @@ _: {
   imports = [
     ./git.nix
     ./ghostty.nix
-    ./helix.nix
+    ./mitos.nix
     ./mpv.nix
     ./nixcord.nix
     ./ssh.nix

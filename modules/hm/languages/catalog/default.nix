@@ -51,7 +51,7 @@ let
     mapping: lib.lists.last (lib.lists.sort lib.strings.versionOlder (lib.attrsets.attrNames mapping));
 
   /**
-    Configure Helix to format the current buffer with Prettier
+    Configure MitOS to format the current buffer with Prettier
 
     # Inputs
 

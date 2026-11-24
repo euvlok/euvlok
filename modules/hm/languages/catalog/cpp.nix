@@ -25,11 +25,11 @@ in
       # valgrind #!tbh quite useless
       ;
   };
-  helix.languageServers.clangd = {
+  mitos.languageServers.clangd = {
     command = lib.meta.getExe' llvmPackages.clang-tools "clangd";
     args = clangdArguments;
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "c";
       auto-format = true;

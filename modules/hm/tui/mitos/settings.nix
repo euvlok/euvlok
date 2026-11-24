@@ -2,19 +2,20 @@ _:
 let
   editor = {
     # Core
-    auto-format = true;
-    auto-save = false;
+    format.on-save = true;
+    files.auto-save.focus-lost = false;
     idle-timeout = 50;
 
     # Visual
-    color-modes = true;
-    cursorline = true;
-    cursor-shape = {
-      insert = "bar";
-      normal = "block";
-      select = "underline";
+    cursor = {
+      highlight-line = true;
+      shape = {
+        insert = "bar";
+        normal = "block";
+        select = "underline";
+      };
     };
-    gutters = [
+    gutters.layout = [
       "diagnostics"
       "line-numbers"
       "spacer"
@@ -22,31 +23,42 @@ let
     ];
     indent-guides.render = true;
     line-number = "relative";
-    rulers = [
+    rulers.columns = [
       72
       80
     ];
-    statusline.center = [ "position-percentage" ];
-    true-color = true;
+    statusline = {
+      right = [
+        "diagnostics"
+        "selections"
+        "register"
+        "search-position"
+        "position"
+        "position-percentage"
+        "file-encoding"
+      ];
+      mode.color = true;
+    };
     whitespace.characters = {
       nbsp = "⍽";
       newline = "⏎";
       space = "·";
       tab = "→";
       tabpad = "·";
-      trail = "•";
     };
 
     # LSP and Completion
-    completion-replace = true;
-    completion-trigger-len = 1;
+    completion = {
+      replace = true;
+      trigger-length = 1;
+    };
     lsp = {
-      display-messages = true;
-      display-inlay-hints = true;
+      messages.enable = true;
+      inlay-hints.enable = true;
     };
 
     # File and Buffer
-    bufferline = "always";
+    bufferline.show = "always";
     file-picker = {
       git-global = true;
       git-ignore = true;
@@ -60,12 +72,13 @@ let
       wrap-around = true;
     };
 
-    mouse = true;
+    mouse.enable = true;
   };
 in
 {
-  programs.helix.settings = {
+  euvlok.home.mitos.settings = {
     inherit editor;
+    terminal.true-color = true;
     keys = {
       normal = {
         space.space = "file_picker";

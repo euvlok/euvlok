@@ -8,8 +8,8 @@
       scalafmt
       ;
   };
-  helix.languageServers.metals.command = "metals";
-  helix.languages = [
+  mitos.languageServers.metals.command = "metals";
+  mitos.languages = [
     {
       name = "scala";
       auto-format = true;

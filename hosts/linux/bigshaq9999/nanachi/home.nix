@@ -34,7 +34,6 @@
         loadSessionVariables = false;
       };
       zsh.enable = true;
-      helix.defaultEditor = true;
     };
 
     catppuccin = {
@@ -52,7 +51,10 @@
         enable = true;
         floorp.enable = true;
       };
-      helix.enable = true;
+      mitos = {
+        enable = true;
+        defaultEditor = true;
+      };
       nixcord.enable = true;
       yazi.enable = true;
     };

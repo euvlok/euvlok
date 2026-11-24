@@ -18,8 +18,8 @@ let
   };
 
   editor = {
-    nvim = "hx";
-    nano = "hx";
+    nvim = "ms";
+    nano = "ms";
   };
 
   rustdogshit = {

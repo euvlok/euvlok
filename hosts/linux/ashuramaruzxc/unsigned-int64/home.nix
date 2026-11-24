@@ -27,7 +27,7 @@ let
     programs.nh.enable = true;
     programs.zsh.enable = true;
     euvlok.home = {
-      helix.enable = true;
+      mitos.enable = true;
       yazi.enable = true;
     };
   };
@@ -36,7 +36,7 @@ let
     programs.fastfetch.enable = true;
     programs.nh.enable = true;
     euvlok.home = {
-      helix.enable = true;
+      mitos.enable = true;
       yazi.enable = true;
     };
   };
@@ -47,7 +47,7 @@ let
       programs.ghostty.enable = true;
       programs.nh.enable = true;
       euvlok.home = {
-        helix.enable = true;
+        mitos.enable = true;
         yazi.enable = true;
       };
       euvlok.catppuccinGtk = {

@@ -77,5 +77,5 @@ let
   ];
 in
 {
-  programs.helix.languages = { inherit language-server language; };
+  euvlok.home.mitos.languages = { inherit language-server language; };
 }

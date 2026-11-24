@@ -17,7 +17,7 @@ in
       pythonPackages.jupyter
     ]);
   };
-  helix.languageServers = {
+  mitos.languageServers = {
     ruff = {
       command = lib.meta.getExe pkgs.unstable.ruff;
       args = [ "server" ];
@@ -29,7 +29,7 @@ in
       config.ty = tySettings;
     };
   };
-  helix.languages = [
+  mitos.languages = [
     {
       name = "python";
       auto-format = true;

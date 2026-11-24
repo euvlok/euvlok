@@ -29,16 +29,16 @@ let
           default = [ ];
           description = "Extra packages to install alongside the ${displayName} toolchain";
         };
-        helix = {
+        mitos = {
           languageServers = lib.options.mkOption {
             type = tomlType;
             default = { };
-            description = "Helix language server definitions for ${displayName}";
+            description = "MitOS language server definitions for ${displayName}";
           };
           languages = lib.options.mkOption {
             type = lib.types.listOf tomlType;
             default = [ ];
-            description = "Helix language definitions for ${displayName}";
+            description = "MitOS language definitions for ${displayName}";
           };
         };
         zed = {
@@ -75,9 +75,9 @@ let
           (definition.packages or [ ])
           ++ lib.lists.optional (config.version != null) config.versions.${config.version};
         versions = lib.attrsets.mapAttrs (_: lib.modules.mkDefault) (definition.versionMap or { });
-        helix = {
-          languageServers = defaultSettings (definition.helix.languageServers or { });
-          languages = definition.helix.languages or [ ];
+        mitos = {
+          languageServers = defaultSettings (definition.mitos.languageServers or { });
+          languages = definition.mitos.languages or [ ];
         };
         zed = {
           extensions = definition.zed.extensions or [ ];
@@ -96,7 +96,7 @@ let
 in
 {
   imports = [
-    ./helix.nix
+    ./mitos.nix
     ./zed.nix
   ];
 

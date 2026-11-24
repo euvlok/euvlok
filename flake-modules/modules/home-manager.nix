@@ -31,7 +31,7 @@
   languages = {
     imports = [
       ../../modules/hm/languages
-      ../../modules/hm/tui/helix
+      ../../modules/hm/tui/mitos
       ../../modules/hm/gui/zed.nix
     ];
   };

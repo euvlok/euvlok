@@ -14,7 +14,7 @@ let
     (import ../../../../slop.nix).homeManager.hosts.unsignedInt8
     ../../../hm/ashuramaruzxc/aliases.nix
     ../../../hm/ashuramaruzxc/git.nix
-    ../../../hm/ashuramaruzxc/helix.nix
+    ../../../hm/ashuramaruzxc/mitos.nix
     ../../../hm/ashuramaruzxc/ssh.nix
     ../../../hm/ashuramaruzxc/starship.nix
   ];
@@ -69,7 +69,7 @@ let
           zen-browser.enable = true;
           defaultSearchEngine = "kagi";
         };
-        helix.enable = true;
+        mitos.enable = true;
         nixcord.enable = true;
         yazi.enable = true;
         zellij.enable = true;
