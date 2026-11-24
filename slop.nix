@@ -795,11 +795,11 @@ let
       darwinSources = {
         aarch64-darwin = {
           arch = "arm64";
-          hash = "sha256-LmknIDqT5OUjj/BBHRH9btI8uXoOawOxDkA/MNAuLTc=";
+          hash = "sha256-vApC0Bqb3t4cHCuHYVGoGFYNax6vH0WuQC09IinDQiA=";
         };
         x86_64-darwin = {
           arch = "x64";
-          hash = "sha256-yTDtyu5WhUi1gfqn83j8yKTk11nXukB+7E2Y/v2ds1c=";
+          hash = "sha256-cmF8hhqG8+Krp/YEIrsM95Ono5aaOH3lLmpoXT6XDU8=";
         };
       };
       darwinSource = darwinSources.${stdenvNoCC.hostPlatform.system};
@@ -862,7 +862,7 @@ let
     in
     stdenvNoCC.mkDerivation (finalAttrs: {
       pname = "codex-bundled-plugins";
-      version = if isDarwin then "26.1117.31558" else lib.strings.getVersion chatgpt;
+      version = if isDarwin then "26.1117.41037" else lib.strings.getVersion chatgpt;
       src =
         if isDarwin then
           fetchurl {
@@ -1663,11 +1663,11 @@ in
       sources = {
         x86_64-linux = {
           arch = "x86_64";
-          hash = "sha256-mz8DW+HGZHFHdXLYkzSeaiDmGuGWQWJChej0I1GWuCw=";
+          hash = "sha256-9QOliJMdqwacAsyC3s1S5g/IgZqn2Zh9xPwtSf/Xf4g=";
         };
         aarch64-linux = {
           arch = "aarch64";
-          hash = "sha256-z55Io6SlJnVk5+CgWRYams00B5GCLVJpppVDlbkhtFI=";
+          hash = "sha256-5trIJOq/2AKdA55EMaZd1uOd3qAWef0LbeYm0MKafyI=";
         };
       };
       /**
@@ -1706,7 +1706,7 @@ in
         };
       payload = stdenvNoCC.mkDerivation (finalAttrs: {
         pname = "chatgpt-unwrapped";
-        version = "26.1117.31558";
+        version = "26.1117.41037";
         src = fetchSource finalAttrs.version stdenvNoCC.hostPlatform.system;
         nativeBuildInputs = [ rpmextract ];
         sourceRoot = ".";
