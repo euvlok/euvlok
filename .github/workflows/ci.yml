@@ -235,7 +235,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
 
-      - name: Evaluate native host outputs
+      - name: Evaluate host system derivation
         env:
           CHECK_HOST: ${{ matrix.name }}
         run: bash .github/scripts/check-flake.sh host "${CHECK_HOST}"
@@ -276,4 +276,4 @@ jobs:
             ${{ inputs['head-sha'] != '' || github.event_name == 'pull_request' || secrets.CACHIX_AUTH_TOKEN == '' }}
 
       - name: Run development checks
-        run: nix run nixpkgs#devenv -- test --no-eval-cache
+        run: nix run --inputs-from . nixpkgs#devenv -- test --no-eval-cache

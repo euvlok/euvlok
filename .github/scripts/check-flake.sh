@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Keep shared checks and native hosts independently runnable in CI
+# Keep shared builds and host evaluations independently runnable in CI
 selection="${1:-all}"
 case "${selection}" in
   all | shared) ;;
@@ -18,18 +18,34 @@ case "${selection}" in
 esac
 
 project_root="$(git rev-parse --show-toplevel)"
-native_system="$(nix config show --json | jq -r .system.value)"
-check_dir="$(mktemp -d)"
-trap 'rm -rf "${check_dir}"' EXIT
+native_system="$(nix config show system)"
 
-cat >"${check_dir}/flake.nix" <<'NIX'
+check_shared() (
+  check_dir="$(mktemp -d)"
+  trap 'rm -rf "${check_dir}"' EXIT
+
+  # Use the checkout's tracked source and existing lock without a wrapper lock
+  nix flake prefetch --json --out-link "${check_dir}/project-source" "${project_root}" |
+    jq -e --arg system "${native_system}" \
+      '{project: "path:\(.storePath)?narHash=\(.hash | @uri)", system: $system}' \
+      >"${check_dir}/project.json"
+
+  cat >"${check_dir}/flake.nix" <<'NIX'
 {
-  inputs.project.url = "path:PROJECT_ROOT";
   outputs =
-    { project, ... }:
+    _:
     let
+      settings = builtins.fromJSON (builtins.readFile ./project.json);
+      project = builtins.getFlake settings.project;
       lib = project.inputs.nixpkgs.lib;
-      selection = lib.trivial.importJSON ./selection.json;
+      perSystemOutputs = [
+        "apps"
+        "checks"
+        "devShells"
+        "formatter"
+        "legacyPackages"
+        "packages"
+      ];
       hostOutputs = [
         "nixosConfigurations"
         "darwinConfigurations"
@@ -37,61 +53,47 @@ cat >"${check_dir}/flake.nix" <<'NIX'
         "hostChecks"
         "hostChecksBySystem"
       ];
-      selectHost = name: lib.attrsets.intersectAttrs { ${name} = null; };
     in
-    if selection == null then
-      lib.attrsets.removeAttrs project.outputs hostOutputs
-    else
-      {
-        schemas = project.schemas;
-      }
-      // lib.attrsets.genAttrs (lib.lists.remove "hostChecksBySystem" hostOutputs) (
-        output: selectHost selection.name project.${output}
-      )
-      // {
-        hostChecksBySystem.${selection.system} =
-          selectHost selection.name
-            project.hostChecksBySystem.${selection.system};
-      };
+    lib.attrsets.mapAttrs (
+      output: value:
+      if lib.lists.elem output perSystemOutputs then
+        lib.attrsets.intersectAttrs { ${settings.system} = null; } value
+      else
+        value
+    ) (lib.attrsets.removeAttrs project.outputs hostOutputs);
 }
 NIX
 
-# JSON strings are valid Nix strings once interpolation markers are escaped
-PROJECT_ROOT="${project_root}" CHECK_DIR="${check_dir}" python3 - <<'PY'
-import json
-import os
-from pathlib import Path
-
-flake = Path(os.environ["CHECK_DIR"]) / "flake.nix"
-url = json.dumps("path:" + os.environ["PROJECT_ROOT"]).replace("${", r"\${")
-flake.write_text(flake.read_text().replace('"path:PROJECT_ROOT"', url))
-PY
-
-if [[ "${selection}" != host ]]; then
-  printf 'null\n' >"${check_dir}/selection.json"
   echo '::group::Shared flake outputs'
   nix flake check "path:${check_dir}"
   echo '::endgroup::'
+)
+
+if [[ "${selection}" != host ]]; then
+  check_shared
 fi
 
 if [[ "${selection}" != shared ]]; then
-  host_metadata="$(nix eval --json "${project_root}#hostMetadata")"
-  hosts="$(jq -c --arg system "${native_system}" \
-    --arg name "${2:-}" \
-    'to_entries[] | select(.value.system == $system) |
-      select($name == "" or .key == $name) |
-      {name: .key, system: .value.system}' <<<"${host_metadata}")"
+  host_metadata="$(nix eval --json --no-update-lock-file "${project_root}#hostMetadata")"
+  hosts="$(jq -r --arg system "${native_system}" --arg name "${2:-}" '
+    to_entries[] |
+    select(if $name == "" then .value.system == $system else .key == $name end) |
+    [.key, .value.system] | @tsv
+  ' <<<"${host_metadata}")"
 
   if [[ "${selection}" == host && -z "${hosts}" ]]; then
-    echo "Host $2 is not native to ${native_system}" >&2
+    echo "Unknown host: $2" >&2
     exit 1
   fi
 
-  while IFS= read -r host; do
+  while IFS=$'\t' read -r host system; do
     [[ -n "${host}" ]] || continue
-    printf '%s\n' "${host}" >"${check_dir}/selection.json"
-    echo "::group::Host $(jq -r .name <<<"${host}")"
-    nix flake check --no-build --option allow-import-from-derivation false "path:${check_dir}"
+    echo "::group::Host ${host} (${system})"
+    # Unlike flake check --no-build, eval can materialize sources on a cold store
+    drv_path="$(nix eval --raw --no-eval-cache --no-update-lock-file \
+      --option allow-import-from-derivation false \
+      "${project_root}#hostChecksBySystem.${system}.${host}")"
+    printf '%s\n' "${drv_path}"
     echo '::endgroup::'
   done <<<"${hosts}"
 fi
