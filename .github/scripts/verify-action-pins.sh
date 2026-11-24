@@ -2,32 +2,36 @@
 # shellcheck shell=bash
 
 set -euo pipefail
-shopt -s extglob
 
 mapfile -d '' workflow_files < <(
   git ls-files -z --cached --others --exclude-standard -- \
-    '.github/**/*.yaml' '.github/**/*.yml'
+    ':(glob).github/workflows/*.yaml' ':(glob).github/workflows/*.yml' \
+    ':(glob).github/actions/**/action.yaml' ':(glob).github/actions/**/action.yml'
 )
 
-mapfile -t action_refs < <(
-  grep -hE '^[[:space:]]*uses:' "${workflow_files[@]}" |
-    while IFS= read -r line; do
-      value=${line#*:}
-      value=${value%%#*}
-      value=${value##+([[:space:]])}
-      value=${value%%+([[:space:]])}
-      value=${value#\"}
-      value=${value%\"}
-      value=${value#\'}
-      value=${value%\'}
-      printf '%s\n' "${value}"
-    done |
-    sort -u
-)
+if ((${#workflow_files[@]} == 0)); then
+  echo "No GitHub workflows or actions found" >&2
+  exit 1
+fi
 
-for action_ref in "${action_refs[@]}"; do
+action_refs="$(
+  yq -Nr '
+    (.jobs[]?.uses, .jobs[]?.steps[]?.uses, .runs.steps[]?.uses,
+      (.runs.image | select(tag == "!!str") | select(test("^docker://")))) | select(. != null)
+  ' "${workflow_files[@]}" | sort -u
+)"
+
+while IFS= read -r action_ref; do
   case "${action_ref}" in
-    ./* | docker://*) continue ;;
+    "" | ./*) continue ;;
+    docker://*)
+      if [[ ! ${action_ref} =~ @sha256:[0-9a-f]{64}$ ]]; then
+        printf 'Docker action is not pinned to a SHA-256 digest: %s\n' \
+          "${action_ref}" >&2
+        exit 1
+      fi
+      continue
+      ;;
   esac
 
   if [[ ! ${action_ref} =~ ^([^/[:space:]]+/[^/@[:space:]]+)(/[^@[:space:]]+)?@([0-9a-f]{40})$ ]]; then
@@ -45,4 +49,4 @@ for action_ref in "${action_refs[@]}"; do
   fi
 
   printf 'Verified %s\n' "${action_ref}"
-done
+done <<<"${action_refs}"
