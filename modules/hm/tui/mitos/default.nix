@@ -19,12 +19,12 @@ in
     package = lib.options.mkPackageOption pkgs "mitos" { };
     defaultEditor = lib.options.mkEnableOption "MitOS as the default editor";
     settings = lib.options.mkOption {
-      type = toml.type;
+      inherit (toml) type;
       default = { };
       description = "MitOS configuration written to mitos/config.toml.";
     };
     languages = lib.options.mkOption {
-      type = toml.type;
+      inherit (toml) type;
       default = { };
       description = "MitOS language configuration written to mitos/languages.toml.";
     };
