@@ -10,7 +10,6 @@
     ../shared/system/hyperv.nix
     ../shared/system/lxc.nix
     ../shared/system/desktop.nix
-    ../shared/system/nix-credentials.nix
     ../shared/system/pam-security.nix
     ../shared/system/workstation.nix
     ../shared/system/settings.nix
