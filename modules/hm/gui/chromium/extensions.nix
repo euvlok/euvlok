@@ -67,9 +67,9 @@ in
       id = "lckanjgmijmafbedllaakclkaicjfmnk";
       name = "ClearURLs";
       update_policy = "pinned";
-      version = "1.27.3";
-      url = "https://github.com/ClearURLs/Addon/releases/download/1.27.3/ClearURLs.zip";
-      sha256 = "sha256-LVyHnT59j1YrD/u0vVtKlIhO9ATY7VY3v02iYBVW0Ug=";
+      version = "1.28.0";
+      url = "https://gitlab.com/ClearURLs/ClearUrls/-/jobs/18247859715/artifacts/raw/ClearURLs.zip";
+      sha256 = "sha256-nHOqiQRo301HRh9TUWwLpQQOaT5FqqAglwDSRIQacGE=";
       load_unpacked = true;
     }
   ];
