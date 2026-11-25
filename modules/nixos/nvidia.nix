@@ -42,7 +42,11 @@ in
 
       hardware.nvidia = {
         open = true;
-        package = nvidiaDriver;
+        package =
+          if pkgs.stdenv.hostPlatform.isx86_64 then
+            pkgs.nvidia-patch.patch-fbc nvidiaDriver
+          else
+            nvidiaDriver;
         videoAcceleration = true;
         modesetting.enable = true;
         powerManagement.enable = true;
@@ -66,8 +70,19 @@ in
         inherit (pkgs.nvtopPackages) full;
       };
 
-      # Home Manager wraps the selected browser with its command-line arguments
-      nixpkgs.overlays = [ euvlokInputs.nvidia-patch.overlays.default ];
+      nixpkgs.overlays = [
+        euvlokInputs.nvidia-patch.overlays.default
+        (_: prev: {
+          nvidia-patch-list = prev.nvidia-patch-list // {
+            fbc = {
+              # The 620.70.06 patch also matches the pinned 620.73.04 driver
+              "620.73.04" =
+                ''s/\x85\xc0\x0f\x85\x1c\x01\x00\x00\x48\x8d/\x85\xc0\x90\x90\x90\x90\x90\x90\x48\x8d/g'';
+            }
+            // prev.nvidia-patch-list.fbc;
+          };
+        })
+      ];
     })
   ];
 }
