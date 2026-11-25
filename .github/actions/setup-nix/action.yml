@@ -13,7 +13,7 @@ inputs:
   extra-cachix-caches:
     description: Additional Cachix cache names used as substituters.
     required: false
-    default: catppuccin,eupkgs,hyprland,nix-community,nixos-raspberrypi
+    default: catppuccin,hyprland,nix-community,nixos-raspberrypi
   cachix-auth-token:
     description: Cachix auth token used to push build results.
     required: false
