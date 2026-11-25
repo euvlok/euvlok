@@ -1,14 +1,12 @@
 { config, ... }:
 {
-  systemd.tmpfiles.rules = [
-    "d /etc/.Trash-${toString config.users.users.ashuramaru.uid} 0700 ashuramaru users -"
-  ];
-
-  services = {
-    fstrim.enable = true;
-    fstrim.interval = "weekly";
-    gvfs.enable = true;
+  systemd.tmpfiles.settings.desktop."/etc/.Trash-${toString config.users.users.ashuramaru.uid}".d = {
+    mode = "0700";
+    user = "ashuramaru";
+    group = "users";
   };
+
+  services.gvfs.enable = true;
   nix.settings.trusted-users = [
     "@wheel"
     "ashuramaru"

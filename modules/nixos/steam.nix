@@ -8,8 +8,6 @@
   options.euvlok.nixos.steam.enable = lib.options.mkEnableOption "Steam";
 
   config = lib.modules.mkIf config.euvlok.nixos.steam.enable {
-    hardware.steam-hardware.enable = true;
-
     # nixpkgs.config replaces lists, so preserve host-specific exceptions while
     # allowing the NW.js runtime required by games using its bundled Chromium.
     nixpkgs.config.allowInsecurePredicate =
