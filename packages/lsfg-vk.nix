@@ -16,7 +16,6 @@ basePackage.overrideAttrs (previous: {
   buildInputs = previous.buildInputs ++ [
     qt6.qtbase
     qt6.qtdeclarative
-    qt6.qttools
     qt6.qtwayland
   ];
 
@@ -25,6 +24,11 @@ basePackage.overrideAttrs (previous: {
     (lib.strings.cmakeBool "LSFGVK_BUILD_UI" true)
     (lib.strings.cmakeBool "LSFGVK_BUILD_CLI" true)
   ];
+
+  postInstall = (previous.postInstall or "") + ''
+    substituteInPlace "$out/share/applications/gay.pancake.lsfg-vk-ui.desktop" \
+      --replace-fail 'Exec=lsfg-vk-ui ' "Exec=$out/bin/lsfg-vk-ui "
+  '';
 
   # Preserve upstream's late Vulkan RPATH patch on the actual CLI
   # Automatic Qt wrapping would replace it before that patch runs
