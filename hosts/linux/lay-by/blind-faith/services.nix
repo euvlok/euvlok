@@ -69,7 +69,7 @@
     };
 
     syncthing = {
-      enable = false;
+      enable = true;
       settings.folders = {
         "Music" = {
           path = "/media/HDD/spotmusic/";
