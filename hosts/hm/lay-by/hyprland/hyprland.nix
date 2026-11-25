@@ -1,4 +1,24 @@
-_: {
+{ pkgs, ... }:
+{
+  services.hyprpolkitagent.enable = true;
+  # Preserve the packaged agent's Wayland guard and service lifecycle
+  systemd.user.services.hyprpolkitagent = {
+    Unit.ConditionEnvironment = "WAYLAND_DISPLAY";
+    Service = {
+      Slice = "session.slice";
+      TimeoutStopSec = "5sec";
+      Restart = "on-failure";
+    };
+  };
+
+  services.wlsunset = {
+    enable = true;
+    package = pkgs.unstable.wlsunset;
+    sunrise = "7:00";
+    sunset = "21:00";
+    systemdTarget = "hyprland-session.target";
+  };
+
   wayland.windowManager.hyprland.extraConfig = ''
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto", vrr = 1 })
     hl.monitor({ output = "Unknown-1", disabled = true })
@@ -12,8 +32,6 @@ _: {
     hl.on("hyprland.start", function()
       hl.exec_cmd("waybar")
       hl.exec_cmd("hyprctl setcursor BreezeX-Dark 24")
-      hl.exec_cmd("wlsunset -S 7:00 -s 21:00")
-      hl.exec_cmd("systemctl --user start hyprpolkitagent")
       hl.exec_cmd("xrandr --output DP-1 --primary")
       hl.exec_cmd("keepassxc --minimized")
     end)

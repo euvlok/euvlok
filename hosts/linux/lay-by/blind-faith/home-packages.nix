@@ -49,7 +49,6 @@
       signal-desktop
       #freecad
       #libreoffice
-      wlsunset
       piper
       ;
     inherit (pkgs.unstable)

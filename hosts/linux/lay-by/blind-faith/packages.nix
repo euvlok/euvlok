@@ -9,7 +9,6 @@
       git
       libsecret
       ffmpeg
-      hyprpolkitagent
       usbutils
       net-tools
       desktop-file-utils
