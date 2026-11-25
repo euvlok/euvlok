@@ -1,13 +1,14 @@
 _: {
-  programs.ssh.extraConfig = ''
-    Host ictlab-frontend
-    	Hostname ictlab.usth.edu.vn
-    	User student10
-    	Port 22222
-
-    Host ict14
-    	Hostname ict14
-    	ProxyJump ictlab-frontend
-    	User student10
-  '';
+  programs.ssh.settings = {
+    ictlab-frontend = {
+      HostName = "ictlab.usth.edu.vn";
+      User = "student10";
+      Port = 22222;
+    };
+    ict14 = {
+      HostName = "ict14";
+      ProxyJump = "ictlab-frontend";
+      User = "student10";
+    };
+  };
 }
