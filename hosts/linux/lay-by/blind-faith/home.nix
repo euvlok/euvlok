@@ -40,6 +40,10 @@
           fps_limit = 200;
           no_display = true;
         };
+        programs.antigravity = {
+          enable = true;
+          package = pkgs.antigravity-ide-fhs;
+        };
         programs.antigravity-cli.enable = true;
         fonts.fontconfig.enable = true;
         home.pointerCursor.enable = true;
