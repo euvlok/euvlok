@@ -28,7 +28,7 @@
       imports = [
         { home.stateVersion = "26.11"; }
         (import ../../../../slop.nix).homeManager.hosts.faputa
-        (import ../../../../modules/hm/gui/raycast.nix {
+        (lib.modules.importApply ../../../../modules/hm/gui/raycast.nix {
           avatarId = "97749920";
           fallbackName = "nanachi-gh";
           inherit raycastModule raycastPackage;

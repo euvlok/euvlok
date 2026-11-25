@@ -59,8 +59,6 @@
       # Android
       android-tools
       scrcpy
-
-      gnupg
       ;
   };
 }

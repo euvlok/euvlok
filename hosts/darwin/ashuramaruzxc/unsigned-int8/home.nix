@@ -202,7 +202,7 @@ in
     sharedModules = [ sharedModule ];
     users.ashuramaru.imports = [
       personalModule
-      (import ../../../../modules/hm/gui/raycast.nix {
+      (lib.modules.importApply ../../../../modules/hm/gui/raycast.nix {
         avatarId = "72100551";
         fallbackName = "ashuramaruzxc";
         inherit raycastModule raycastPackage;

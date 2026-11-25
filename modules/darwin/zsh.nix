@@ -7,7 +7,7 @@
 let
   hmConfig = config.home-manager.users.${config.system.primaryUser};
 
-  # Consume Home Manager's merged, string-typed aliases rather than host sources
+  # nix-darwin renders shellAliases in zprofile, not after Oh My Zsh in zshrc
   shellAliases = hmConfig.programs.zsh.shellAliases;
   shellAliasesStr = lib.generators.toKeyValue {
     mkKeyValue = name: value: "alias ${name}=${lib.strings.escapeShellArg value}";
@@ -39,7 +39,7 @@ let
     plugin: "source ${plugin.src}"
   ) customPlugins;
 
-  omzPluginsStr = "plugins=(${lib.strings.concatStringsSep " " omzPlugins})";
+  omzPluginsStr = lib.strings.toShellVar "plugins" omzPlugins;
 in
 {
   programs.zsh = {
