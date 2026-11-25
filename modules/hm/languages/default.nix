@@ -5,7 +5,7 @@
   ...
 }:
 let
-  catalog = import ./catalog { inherit pkgs lib; };
+  catalog = import ./catalog.nix { inherit pkgs lib; };
   languageType = lib.types.submodule (
     { name, config, ... }:
     let

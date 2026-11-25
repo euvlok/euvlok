@@ -83,31 +83,11 @@ let
       ];
     };
   };
-
-  /**
-    Import a language definition with the catalog's shared arguments
-
-    # Inputs
-
-    `file`
-    : Path to a function accepting the shared catalog arguments
-
-    # Type
-    ```
-    callLanguage :: Path -> AttrSet
-    ```
-
-    # Examples
-    :::{.example}
-    ## `callLanguage` usage example
-    ```nix
-    (callLanguage ./cpp.nix).packages
-    => (import ./cpp.nix { inherit pkgs lib versionMappings getLatestVersion prettierFormatter; }).packages
-    ```
-    :::
-  */
-  callLanguage =
-    file:
+in
+lib.filesystem.packagesFromDirectoryRecursive {
+  directory = ./catalog;
+  callPackage =
+    file: _:
     import file {
       inherit
         pkgs
@@ -117,16 +97,4 @@ let
         prettierFormatter
         ;
     };
-in
-lib.attrsets.mapAttrs'
-  (
-    name: _:
-    lib.attrsets.nameValuePair (lib.strings.removeSuffix ".nix" name) (
-      callLanguage (lib.path.append ./. name)
-    )
-  )
-  (
-    lib.attrsets.filterAttrs (
-      name: type: type == "regular" && lib.strings.hasSuffix ".nix" name && name != "default.nix"
-    ) (lib.filesystem.readDir ./.)
-  )
+}
