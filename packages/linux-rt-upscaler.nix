@@ -1,5 +1,6 @@
 {
   lib,
+  dbus,
   fetchFromGitHub,
   libX11,
   libXdamage,
@@ -12,6 +13,7 @@
   vulkan-headers,
   vulkan-loader,
   wayland,
+  xdotool,
 }:
 
 python3Packages.buildPythonApplication (finalAttrs: {
@@ -48,7 +50,10 @@ python3Packages.buildPythonApplication (finalAttrs: {
     wayland
   ];
 
-  build-system = [ python3Packages.setuptools ];
+  build-system = [
+    python3Packages.setuptools
+    python3Packages.wheel
+  ];
 
   dependencies = [
     python3Packages.pillow
@@ -62,7 +67,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     install -Dm444 data/applications/io.github.baronsmv.linux-rt-upscaler.desktop \
       $out/share/applications/io.github.baronsmv.linux-rt-upscaler.desktop
     substituteInPlace $out/share/applications/io.github.baronsmv.linux-rt-upscaler.desktop \
-      --replace-fail EXEC_PATH_PLACEHOLDER upscale-gui
+      --replace-fail EXEC_PATH_PLACEHOLDER "$out/bin/${finalAttrs.meta.mainProgram}"
     install -Dm444 data/icons/hicolor/256x256/apps/io.github.baronsmv.linux-rt-upscaler.png \
       -t $out/share/icons/hicolor/256x256/apps
     install -Dm444 data/icons/hicolor/scalable/apps/io.github.baronsmv.linux-rt-upscaler.svg \
@@ -70,6 +75,17 @@ python3Packages.buildPythonApplication (finalAttrs: {
   '';
 
   dontWrapQtApps = true;
+  # Keep window activation and the desktop-portal color scheme lookup
+  # working even when neither helper is on the user's PATH
+  makeWrapperArgs = [
+    "--prefix"
+    "PATH"
+    ":"
+    (lib.strings.makeBinPath [
+      dbus
+      xdotool
+    ])
+  ];
   preFixup = ''
     makeWrapperArgs+=("''${qtWrapperArgs[@]}")
   '';
