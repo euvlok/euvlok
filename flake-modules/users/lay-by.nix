@@ -7,7 +7,7 @@
 let
   zenBrowserPackage =
     (import inputs.zen-browser {
-      pkgs = import inputs.nixpkgs-unstable-small { system = "x86_64-linux"; };
+      pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
     }).default;
 in
 {
@@ -22,7 +22,7 @@ in
       (lib.modules.importApply ../../hosts/linux/lay-by/blind-faith {
         sharedModule = config.flake.nixosModules.default;
         stylixModule = inputs.stylix.nixosModules.stylix;
-        unstableSource = inputs.nixpkgs-unstable;
+        unstableSource = inputs.users-nixpkgs;
         configurationModule =
           lib.modules.importApply ../../hosts/linux/lay-by/blind-faith/configuration.nix
             {

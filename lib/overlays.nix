@@ -18,7 +18,7 @@
       `buildPlatform` (optional, default: `hostPlatform`)
       : Build system, in the same form as `hostPlatform`
 
-      `unstableSource` (optional, default: `inputs.nixpkgs-unstable-small`)
+      `unstableSource` (optional, default: `inputs.nixpkgs`)
       : Importable Nixpkgs source for the unstable package set
 
       `localPackagesOverlay` (optional, default: `inputs.self.overlays.packages`)
@@ -32,7 +32,7 @@
     mkNixpkgsOverlay :: {
       hostPlatform :: PlatformSpec | Null ? null;
       buildPlatform :: PlatformSpec | Null ? hostPlatform;
-      unstableSource :: Path | AttrSet ? inputs.nixpkgs-unstable-small;
+      unstableSource :: Path | AttrSet ? inputs.nixpkgs;
       localPackagesOverlay :: Overlay ? inputs.self.overlays.packages;
     } -> Overlay
     ```
@@ -62,7 +62,7 @@
     {
       hostPlatform ? null,
       buildPlatform ? hostPlatform,
-      unstableSource ? inputs.nixpkgs-unstable-small,
+      unstableSource ? inputs.nixpkgs,
       localPackagesOverlay ? inputs.self.overlays.packages,
     }:
     import ../overlay.nix {

@@ -125,13 +125,13 @@
     };
     artcraft = {
       url = "github:Hy4ri/artcraft-flake";
-      inputs.nixpkgs.follows = "users-nixpkgs-unstable-small";
+      inputs.nixpkgs.follows = "users-nixpkgs";
     };
     codex-desktop-linux = {
       url = "github:ilysenko/codex-desktop-linux";
       inputs = {
         flake-utils.follows = "users-flake-utils";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
       };
     };
     cursorgen-source = {
@@ -146,7 +146,7 @@
       url = "github:v4rakh/ecolinker";
       inputs = {
         flake-parts.follows = "users-flake-parts";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
       };
     };
     flatpak-declarative.url = "github:in-a-dil-emma/declarative-flatpak";
@@ -167,7 +167,7 @@
       url = "github:nix-community/nix-jetbrains-plugins";
       inputs = {
         flake-compat.follows = "";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
         systems.follows = "users-flake-utils/systems";
       };
     };
@@ -178,11 +178,10 @@
         nixpkgs.follows = "users-nixpkgs";
       };
     };
-    nixpkgs-unstable.follows = "users-nixpkgs";
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs = {
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
         systems.follows = "users-flake-utils/systems";
       };
     };
@@ -190,7 +189,7 @@
       url = "github:danth/stylix";
       inputs = {
         flake-parts.follows = "users-flake-parts";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
         systems.follows = "users-flake-utils/systems";
       };
     };
@@ -200,7 +199,6 @@
       inputs.nixpkgs-lib.follows = "users-nixpkgs";
     };
     users-flake-utils.url = "github:numtide/flake-utils";
-    users-nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
-    users-nixpkgs-unstable-small.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.zst";
+    users-nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
   };
 }

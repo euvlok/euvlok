@@ -17,7 +17,7 @@
     codex-desktop-linux = {
       inputs = {
         flake-utils.follows = "users-flake-utils";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
       };
       url = "github:ilysenko/codex-desktop-linux";
     };
@@ -28,7 +28,7 @@
     ecolinker = {
       inputs = {
         flake-parts.follows = "users-flake-parts";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
       };
       url = "github:v4rakh/ecolinker";
     };
@@ -36,7 +36,7 @@
     nix-jetbrains-plugins = {
       inputs = {
         flake-compat.follows = "";
-        nixpkgs.follows = "users-nixpkgs-unstable-small";
+        nixpkgs.follows = "users-nixpkgs";
         systems.follows = "users-flake-utils/systems";
       };
       url = "github:nix-community/nix-jetbrains-plugins";

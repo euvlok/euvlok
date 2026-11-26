@@ -2,7 +2,7 @@
   inputs,
   hostPlatform ? null,
   buildPlatform ? hostPlatform,
-  unstableSource ? inputs.nixpkgs-unstable-small,
+  unstableSource ? inputs.nixpkgs,
   localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let

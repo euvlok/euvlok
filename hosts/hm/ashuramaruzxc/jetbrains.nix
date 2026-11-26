@@ -3,7 +3,7 @@ final: prev:
 let
   # Plugin metadata must cover these IDEs' exact pname/version pairs
   # Keep flake-modules/users/flake.lock's nix-jetbrains-plugins pin in sync
-  # with the root nixpkgs-unstable-small input used by this package set
+  # with the root nixpkgs input used by this package set
   pkgs = final.unstable;
 
   /**
