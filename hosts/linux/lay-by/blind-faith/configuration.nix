@@ -26,22 +26,56 @@
   boot.kernelParams = [
     "video=HDMI-A-1:d"
     "preempt=full"
+    "nowatchdog"
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.kernel.sysctl = {
     "kernel.split_lock_mitigate" = 0;
-    "vm.swappiness" = 60;
-    "vm.vfs_cache_pressure" = 75;
+    "kernel.nmi_watchdog" = 0;
+    "vm.swappiness" = 100;
+    "vm.vfs_cache_pressure" = 50;
+    "vm.page-cluster" = 0;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+    "vm.dirty_bytes" = 268435456;
+    "vm.dirty_background_bytes" = 67108864;
+    "vm.dirty_writeback_centisecs" = 1500;
+    "vm.compaction_proactiveness" = 0;
+    "net.core.netdev_max_backlog" = 4096;
+    "net.ipv4.tcp_fastopen" = 3;
   };
 
-  # 4 GiB logical capacity; compressed pages allocate RAM on demand.
-  # Prefer zram to disk swap without enabling the shared module's sysctl tuning.
+  systemd.tmpfiles.settings."10-thp-gaming" = {
+    "/sys/kernel/mm/transparent_hugepage/enabled".w.argument = "madvise";
+    "/sys/kernel/mm/transparent_hugepage/defrag".w.argument = "defer+madvise";
+    "/sys/kernel/mm/transparent_hugepage/shmem_enabled".w.argument = "advise";
+    "/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none".w.argument = "409";
+  };
+
+  boot.initrd.luks.devices."luks-78ea3416-4e3a-4009-93a2-375fb7872b9e" = {
+    allowDiscards = true;
+    bypassWorkqueues = true;
+  };
+
+  fileSystems."/".options = [
+    "defaults"
+    "noatime"
+  ];
+
+  fileSystems."/media/HDD".options = [
+    "defaults"
+    "noatime"
+    "compress=zstd:1"
+  ];
+
+  # Allocate up to 75% of RAM as logical zram capacity on demand before hitting
+  # the disk swapfile, without enabling the shared zram module's swappiness=180.
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryMax = 4 * 1024 * 1024 * 1024;
-    priority = 15;
+    memoryPercent = 75;
+    priority = 100;
   };
 
   swapDevices = [
@@ -64,12 +98,31 @@
     adminIdentities = [ "unix-group:wheel" ];
   };
 
-  nix.settings = {
-    # max-jobs = 12;
-    trusted-users = [
-      "hushh"
-      "@wheel"
-    ];
+  security.pam.loginLimits = [
+    {
+      domain = "@gamemode";
+      type = "soft";
+      item = "nice";
+      value = "-20";
+    }
+    {
+      domain = "@gamemode";
+      type = "hard";
+      item = "nice";
+      value = "-20";
+    }
+  ];
+
+  nix = {
+    daemonCPUSchedPolicy = "batch";
+    daemonIOSchedClass = "idle";
+    settings = {
+      # max-jobs = 12;
+      trusted-users = [
+        "hushh"
+        "@wheel"
+      ];
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -81,6 +134,7 @@
       "wheel"
       "input"
       "disk"
+      "gamemode"
       "libvirtd"
       "wireshark"
     ];
@@ -89,16 +143,21 @@
 
   networking.firewall.enable = false;
 
-  # Set some annoying env vars to make sure gayland and nshitia play nice together
-  environment.variables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    NVD_BACKEND = "direct";
-    WLR_DRM_NO_ATOMIC = "1";
-    TERMINAL = "alacritty";
-    EDITOR = "nvim";
-    TERM = "alacritty";
+  euvlok.nixos.gui.wlrootsWorkarounds = false;
+
+  hardware.nvidia.moduleParams.nvidia.NVreg_EnablePCIERelaxedOrderingMode = 1;
+
+  environment = {
+    sessionVariables = {
+      __GL_SHADER_DISK_CACHE = "1";
+      __GL_SHADER_DISK_CACHE_SIZE = "10737418240";
+      __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
+    };
+    variables = {
+      TERMINAL = "alacritty";
+      EDITOR = "nvim";
+      TERM = "alacritty";
+    };
   };
 
   virtualisation.libvirtd.enable = true;

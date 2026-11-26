@@ -21,6 +21,26 @@
     serviceConfig.MemoryLow = "8G";
   };
 
+  systemd.oomd = {
+    enable = true;
+    enableUserSlices = true;
+  };
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.scx.loader.manage-schedulers" && subject.isInGroup("gamemode")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
+  systemd.services.syncthing.serviceConfig = {
+    Nice = 15;
+    CPUWeight = 20;
+    IOWeight = 20;
+    IOSchedulingClass = "idle";
+  };
+
   systemd.services.navidrome.serviceConfig = {
     BindReadOnlyPaths = [ "/media/HDD/spotmusic/" ];
   };

@@ -20,10 +20,10 @@
   };
 
   wayland.windowManager.hyprland.extraConfig = ''
-    hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto", vrr = 1 })
+    hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto", vrr = 2 })
     hl.monitor({ output = "Unknown-1", disabled = true })
     hl.monitor({ output = "HDMI-A-1", mode = "1920x1080", position = "0x0", scale = 1 })
-    hl.monitor({ output = "DP-1", mode = "2560x1080@200", position = "1920x0", scale = 1 })
+    hl.monitor({ output = "DP-1", mode = "2560x1080@200", position = "1920x0", scale = 1, vrr = 2 })
 
     hl.env("XCURSOR_SIZE", "24")
     hl.env("HYPRCURSOR_SIZE", "24")
@@ -38,6 +38,8 @@
 
     hl.config({
       render = { direct_scanout = 1 },
+      cursor = { no_hardware_cursors = 2 },
+      misc = { vrr = 2 },
       general = {
         gaps_in = 1,
         gaps_out = 2,
@@ -56,7 +58,7 @@
           passes = 2,
           ignore_opacity = true,
           vibrancy = 0.1606,
-          new_optimizations = false,
+          new_optimizations = true,
         },
       },
       animations = { enabled = true },
@@ -103,7 +105,15 @@
     hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
     hl.window_rule({ name = "lay-by-suppress-maximize", match = { class = ".*" }, suppress_event = "maximize" })
-    hl.window_rule({ name = "lay-by-fullscreen-no-blur", match = { fullscreen = true }, no_blur = true })
+    hl.window_rule({
+      name = "lay-by-fullscreen-direct-scanout",
+      match = { fullscreen = true },
+      opacity = "1.0 override 1.0 override 1.0 override",
+      no_blur = true,
+      no_shadow = true,
+      no_anim = true,
+      rounding = 0,
+    })
     hl.layer_rule({ name = "lay-by-waybar-blur", match = { namespace = "waybar" }, blur = true })
   '';
 }

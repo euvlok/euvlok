@@ -1,4 +1,37 @@
-{ lib, ... }: {
+{ lib, pkgs, ... }:
+let
+  nvidiaStatus = pkgs.writeShellApplication {
+    name = "waybar-nvidia-status";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      runtime_dir="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+      if [ -e "$runtime_dir/gamemode-active" ]; then
+        printf 'GM\n'
+        exit 0
+      fi
+
+      if ! command -v nvidia-smi >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      if ! stats="$(nvidia-smi --query-gpu=temperature.gpu,utilization.gpu --format=csv,noheader,nounits 2>/dev/null)"; then
+        exit 0
+      fi
+
+      IFS=',' read -r temp gpu <<<"$stats"
+      temp="''${temp//[[:space:]]/}"
+      gpu="''${gpu//[[:space:]]/}"
+      threshold=76
+
+      if ((temp > threshold)); then
+        printf '%s %%{F#FE3120}%s°C\n' "$gpu" "$temp"
+      else
+        printf '%s%% %s°C\n' "$gpu" "$temp"
+      fi
+    '';
+  };
+in
+{
   programs.waybar.enable = true;
   programs.waybar.settings = [
     {
@@ -74,7 +107,7 @@
       "custom/nvidia" = {
         format = " {}";
         interval = 1;
-        exec = lib.trivial.readFile ./scripts/nvidia.sh;
+        exec = lib.meta.getExe nvidiaStatus;
       };
       # There might already be a custom module for this but I'm just going to use my old script.
       "custom/weather" = {

@@ -6,6 +6,9 @@ _: {
     Slice = {
       # Best-effort protection; swap remains available under memory pressure.
       MemoryLow = "8G";
+      CPUWeight = 200;
+      IOWeight = 200;
+      ManagedOOMPreference = "omit";
     };
   };
 }
