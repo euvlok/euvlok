@@ -13,6 +13,7 @@
     networkmanager = {
       enable = true;
       unmanaged = [ "interface-name:ve-*" ];
+      wifi.powersave = false;
       ensureProfiles.profiles.ethernet = {
         ethernet.wake-on-lan = 64;
         ipv4.routing-rule1 = "priority 2500 to 172.16.31.1/32 table 254";

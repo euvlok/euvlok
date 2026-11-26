@@ -59,9 +59,8 @@ let
       "jetbrains"
     ]
     ++ [
-      pkgs.unstable.piper
-      pkgs.unstable.softmaker-office-nx
-
+      pkgs.piper
+      pkgs.euro-office-desktopeditors
     ];
 in
 {

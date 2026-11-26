@@ -147,8 +147,6 @@
       trace = false;
       packageNames = [
         "ansel"
-        # "gmic"
-        "libreoffice"
         "mlt"
         "obs-studio"
         "octave"

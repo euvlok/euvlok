@@ -97,8 +97,12 @@
       ### ------------------------------------ ###
       "pcie_aspm=default"
     ];
+    # The world default regdomain (00) disables 6 GHz for the Steam Frame
+    # adapter, and rtw89 power saving causes latency spikes on its link
     extraModprobeConfig = ''
       options hid_apple fnmode=2
+      options cfg80211 ieee80211_regdom=UA
+      options rtw89_core disable_ps_mode=Y
     '';
     swraid = {
       enable = true;
