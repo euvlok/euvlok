@@ -175,7 +175,7 @@ let
           swift-collections =
             if swiftPrev.swift-collections.version == "1.7.6" then
               swiftPrev.swift-collections.overrideAttrs (old: {
-                # Reserve 0x200 bytes for the Span compatibility rpaths added in postInstall.
+                # Reserve 0x200 bytes for the Span compatibility rpaths added in postInstall
                 cmakeFlags = (old.cmakeFlags or [ ]) ++ [
                   (prev.lib.cmakeFeature "CMAKE_SHARED_LINKER_FLAGS" "-Xlinker -headerpad -Xlinker 200")
                 ];
@@ -184,18 +184,6 @@ let
               swiftPrev.swift-collections;
         }
       );
-      llvmPackages_latest = prev.llvmPackages_latest // {
-        lldb =
-          if prev.llvmPackages_latest.lldb.version == "23.1.3" then
-            prev.llvmPackages_latest.lldb.overrideAttrs (old: {
-              # LLVM's xcrun fallback cannot find codesign in the build sandbox.
-              cmakeFlags = (old.cmakeFlags or [ ]) ++ [
-                "-DCMAKE_CODESIGN=${lib.meta.getExe' final.darwin.sigtool "codesign"}"
-              ];
-            })
-          else
-            prev.llvmPackages_latest.lldb;
-      };
     };
 
   /**

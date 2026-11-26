@@ -206,7 +206,9 @@ in
     };
   };
 
-  # Keep the WAN default route, WireGuard subnet, and local DNS independent of Tailscale.
+  # Keep the WAN default route,
+  # WireGuard subnet,
+  # and local DNS independent of Tailscale
   sops.secrets.tailscale_auth.restartUnits = [ "tailscaled-autoconnect.service" ];
   services.tailscale = {
     enable = true;

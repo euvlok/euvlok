@@ -14,7 +14,7 @@ let
   };
 in
 {
-  # Zed's mutable settings merge retains keys removed from older generations.
+  # Zed's mutable settings merge retains keys removed from older generations
   home.activation.removeRetiredZedIntegrations =
     lib.modules.mkIf (zed.enable && zed.mutableUserSettings)
       (
@@ -70,6 +70,12 @@ in
       // lib.attrsets.optionalAttrs config.euvlok.home.codex.enable {
         default_model = subscribedModel;
         favorite_models = [ subscribedModel ];
+      };
+
+      agent_servers.Antigravity = {
+        type = "custom";
+        command = lib.meta.getExe pkgs.unstable.antigravity-cli;
+        args = [ "acp" ];
       };
 
       autosave.after_delay.milliseconds = 1000;
