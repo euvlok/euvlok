@@ -234,9 +234,9 @@ let
           ".codex";
     };
   codexSettings = {
-    model = "gpt-6.1-sol";
+    model = "gpt-6.2-sol";
     model_reasoning_effort = "high";
-    plan_mode_reasoning_effort = "high";
+    plan_mode_reasoning_effort = "xhigh";
     approval_policy = "on-request";
     approvals_reviewer = "auto_review";
     default_permissions = ":workspace";
@@ -2077,7 +2077,7 @@ in
           gitlab_simsoft = { };
           forjego_tenjin = { };
         };
-        programs.ai.omp.settings.modelRoles.default = "openai-codex/gpt-6.1-sol";
+        programs.ai.omp.settings.modelRoles.default = "openai-codex/gpt-6.2-sol";
       };
       faputa = { pkgs, ... }: {
         imports = [
