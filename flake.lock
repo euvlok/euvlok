@@ -700,11 +700,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795696200,
-        "narHash": "sha256-NnJQ/VG2Vx/i4aXk533wfnW3Bnb5+r1HqbY7Wad2fns=",
+        "lastModified": 1795706326,
+        "narHash": "sha256-iVQPcg/X4/bs9nTDvQMy49HfVVPJso53uQWvuYzPBco=",
         "owner": "4evy",
         "repo": "tweezle",
-        "rev": "dc5317c48157e6ee87e91633e1cf7c0c59e360d3",
+        "rev": "dba7d170fba941ba63b59d0156337fb4082ffac2",
         "type": "github"
       },
       "original": {
