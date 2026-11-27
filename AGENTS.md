@@ -23,7 +23,9 @@ The [Open PR workflow](.github/workflows/open-pr.yml) opens a PR as
 `github-actions[bot]` against `master` using the repository template.
 
 1. Check that the workflow is on both `master` and the feature branch.
+
 2. Get approval, then publish the feature branch.
+
 3. Dispatch the workflow with the approved title. Add `-f body="$body"` only if
    the user requests extra text.
 
@@ -33,6 +35,7 @@ The [Open PR workflow](.github/workflows/open-pr.yml) opens a PR as
 
 4. If the dispatch returns no URL, find the run for the dispatched SHA with
    `gh run list -w open-pr.yml -b "$branch"`. Don't dispatch again.
+
 5. Track CI with `gh run watch "$run_id" --exit-status`. Inspect failures
    with `gh run view "$run_id" --log-failed`.
 
