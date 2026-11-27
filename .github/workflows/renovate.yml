@@ -86,9 +86,7 @@ jobs:
         shell: bash
         run: |
           gh api user --jq '
-            "username=" + .login + "\ngit-author=" + .login +
-            " <" + (.id | tostring) + "+" + .login +
-            "@users.noreply.github.com>"
+            "username=\(.login)\ngit-author=\(.login) <\(.id)+\(.login)@users.noreply.github.com>"
           ' >>"${GITHUB_OUTPUT}"
 
       - name: Run dependency maintenance

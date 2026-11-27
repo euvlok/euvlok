@@ -143,10 +143,9 @@ jobs:
           # Remove obsolete generated imports after uploading their replacements
           gh release view catppuccin-userstyles --json assets > "$RUNNER_TEMP/release-assets.json"
           jq -r --slurpfile manifest "$output/manifest.json" '
-            ($manifest[0].assets | map(.name)) as $current |
             .assets[].name |
             select(test("^catppuccin-(.*-)?import\\.json$")) |
-            select(. as $name | $current | index($name) | not)
+            select(IN($manifest[0].assets[].name) | not)
           ' "$RUNNER_TEMP/release-assets.json" > "$RUNNER_TEMP/obsolete-imports.txt"
           while IFS= read -r asset; do
             gh release delete-asset catppuccin-userstyles "$asset" --yes

@@ -212,7 +212,7 @@ jobs:
         id: hosts
         run: |
           metadata="$(nix eval --json .#hostMetadata)"
-          matrix="$(jq --compact-output '{include: [to_entries[] | .value + {name: .key}]}' <<<"${metadata}")"
+          matrix="$(jq --compact-output '{include: (to_entries | map(.value + {name: .key}))}' <<<"${metadata}")"
           echo "matrix=${matrix}" >>"${GITHUB_OUTPUT}"
 
   hosts:
