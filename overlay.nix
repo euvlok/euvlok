@@ -235,8 +235,8 @@ let
     prev:
     let
       # Keep secondary imports independent of the parent's elaborated platforms
-      localSystem = if buildPlatform == null then prev.stdenvNoCC.buildPlatform.system else buildPlatform;
-      targetSystem = if hostPlatform == null then prev.stdenvNoCC.hostPlatform.system else hostPlatform;
+      localSystem = lib.trivial.defaultTo prev.stdenvNoCC.buildPlatform.system buildPlatform;
+      targetSystem = lib.trivial.defaultTo prev.stdenvNoCC.hostPlatform.system hostPlatform;
       isNative = lib.systems.equals (lib.systems.elaborate localSystem) (
         lib.systems.elaborate targetSystem
       );

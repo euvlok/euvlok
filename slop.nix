@@ -224,7 +224,7 @@ let
         CODEX_CLI_PATH = lib.meta.getExe config.euvlok.home.codex.package;
       };
 
-      settings = if config.programs.codex.settings == null then { } else config.programs.codex.settings;
+      settings = lib.trivial.defaultTo { } config.programs.codex.settings;
 
       # Match Home Manager's file keys, including the leading slash for XDG
       # paths
@@ -586,16 +586,14 @@ let
         from pathlib import Path
 
 
-        def discover_skill_directories(roots: list[Path]) -> list[str]:
+        def discover_skill_directories(roots: list[Path]) -> set[str]:
             # rglob ignores missing roots and does not recurse into symlinked dirs
-            return sorted(
-                {
-                    str(skill_file.parent.parent.resolve())
-                    for root in roots
-                    for skill_file in root.rglob("SKILL.md")
-                    if skill_file.is_file()
-                }
-            )
+            return {
+                str(skill_file.parent.parent.resolve())
+                for root in roots
+                for skill_file in root.rglob("SKILL.md")
+                if skill_file.is_file()
+            }
 
 
         def main() -> None:
@@ -606,10 +604,9 @@ let
             args = parser.parse_args()
 
             settings = json.loads(args.settings.read_text())
-            directories = settings.get("skills.customDirectories", [])
-            settings["skills.customDirectories"] = sorted(
-                set(directories) | set(discover_skill_directories(args.skill_root))
-            )
+            directories = set(settings.get("skills.customDirectories", []))
+            directories.update(discover_skill_directories(args.skill_root))
+            settings["skills.customDirectories"] = sorted(directories)
             for key, value in settings.items():
                 command_value = value if isinstance(value, str) else json.dumps(value)
                 subprocess.run(
@@ -1859,7 +1856,7 @@ let
         || effectiveDefaultPermissions.deny != [ ];
       defaultPermissionsManifest = jsonFormat.generate "antigravity-cli-default-permissions.json" effectiveDefaultPermissions;
       activeProfiles = lib.attrsets.filterAttrs (_: profile: profile.enable) cfg.profiles;
-      profileTarget = if hmCfg.package != null then hmCfg.package else launcher;
+      profileTarget = lib.trivial.defaultTo launcher hmCfg.package;
       profilePackages = lib.attrsets.mapAttrsToList (
         name: profile:
         let
@@ -2114,8 +2111,8 @@ let
                                 if ($static[$key] | length) == 0 then .
                                 else
                                   ((.[$key] // []) | if type == "array" then . else error("expected permissions." + $key + " array in settings.json") end) as $existing
-                                  | ($static[$key] | map(select(. as $rule | ($existing | index($rule)) == null))) as $missing
-                                  | . + { ($key): ($existing + $missing) }
+                                  | ($static[$key] | map(select(. as $rule | all($existing[]; . != $rule)))) as $missing
+                                  | .[$key] = ($existing + $missing)
                                 end
                               ) as $merged
                             | $dynamic | .permissions = $merged
@@ -2529,11 +2526,11 @@ in
                   fileobj=BytesIO(get(base + location.attrib["href"]))
               ) as metadata:
                   packages = ET.parse(metadata).getroot()
-              releases = [
+              releases = (
                   p.find("p:version", pkg_ns).attrib["ver"]
                   for p in packages
                   if p.findtext("p:name", namespaces=pkg_ns) == "chatgpt"
-              ]
+              )
               versions.append(max(releases, key=lambda v: tuple(map(int, v.split(".")))))
           if len(set(versions)) != 1:
               raise SystemExit("ChatGPT Linux architectures have different latest versions")

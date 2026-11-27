@@ -235,22 +235,24 @@ let
               .uid = $c.datasourceUid
             elif has("targets") then
               (.id | tostring) as $id
-              | if $id == "67" then .targets |= map(select(.refId | IN("A", "B", "E", "G"))) else . end
               | .targets |= map(
-                  .expr = ($c.queries[$id][.refId] // error("Unmapped EcoFlow target: " + $id + "/" + .refId))
+                  select($id != "67" or (.refId | IN("A", "B", "E", "G")))
+                  | .expr = ($c.queries[$id][.refId] // error("Unmapped EcoFlow target: " + $id + "/" + .refId))
                   | del(.exemplar)
                 )
             else . end
           else . end
         )
       | del(.__inputs, .__elements, .__requires)
-      | .id = null
-      | .uid = "ecoflow-delta-2"
-      | .title = "EcoFlow DELTA 2"
-      | .description = "DELTA 2 telemetry"
-      | .editable = false
-      | .version = 2
-      | .timezone = "browser"
+      | . += {
+          id: null,
+          uid: "ecoflow-delta-2",
+          title: "EcoFlow DELTA 2",
+          description: "DELTA 2 telemetry",
+          editable: false,
+          version: 2,
+          timezone: "browser"
+        }
       | .tags += ["ecolinker"]
       | .links += [{title: "Original EcoFlow dashboard", type: "link", url: "https://grafana.com/grafana/dashboards/17812-ecoflow/", targetBlank: true}]
       | .templating.list |= map(
