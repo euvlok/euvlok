@@ -44,7 +44,7 @@
     kernelPackages = pkgs.linuxPackages_xanmod;
     # This host does not use SCTP. Block autoload until the kernel fix is available.
     extraModprobeConfig = ''
-      install sctp ${pkgs.coreutils}/bin/false
+      install sctp ${lib.meta.getExe' pkgs.coreutils "false"}
     '';
     kernelModules = [
       # dkms

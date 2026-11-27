@@ -11,12 +11,12 @@
   };
   imports = [
     {
-      options.services.nginx.virtualHosts = lib.mkOption {
+      options.services.nginx.virtualHosts = lib.options.mkOption {
         type = lib.types.attrsOf (
           lib.types.submodule (
             { config, ... }:
             {
-              forceSSL = lib.mkForce false;
+              forceSSL = lib.modules.mkForce false;
               onlySSL = !config.rejectSSL;
               quic = true;
               listen =
@@ -39,9 +39,13 @@
   ];
 
   # Advertise HTTP/3 to first-time clients of the private DNS zone.
-  services.unbound.settings.server.local-data = map (
-    name: ''"${name}. 10800 IN HTTPS 1 . alpn=h3,h2"''
-  ) (lib.filter (lib.hasSuffix ".tenjin.com") (lib.attrNames config.services.nginx.virtualHosts));
+  services.unbound.settings.server.local-data =
+    map (name: ''"${name}. 10800 IN HTTPS 1 . alpn=h3,h2"'')
+      (
+        lib.lists.filter (lib.strings.hasSuffix ".tenjin.com") (
+          lib.attrsets.attrNames config.services.nginx.virtualHosts
+        )
+      );
 
   sops.secrets.minecraft = {
     mode = "0640";

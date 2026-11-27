@@ -66,7 +66,7 @@ let
     };
   };
 in
-assert lib.assertMsg (
+assert lib.asserts.assertMsg (
   lib.versions.major intellij-idea.buildNumber == "263"
   && lib.strings.versionAtLeast intellij-idea.buildNumber "263.7307"
 ) "The pinned plugins require IntelliJ IDEA 263.7307 or later within build series 263";

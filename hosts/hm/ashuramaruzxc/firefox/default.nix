@@ -176,6 +176,6 @@ in
     };
     nativeMessagingHosts = lib.modules.mkIf (
       pkgs.stdenvNoCC.hostPlatform.isLinux && pkgs.stdenvNoCC.hostPlatform.isx86_64
-    ) (lib.attrsets.attrValues { inherit (pkgs.unstable) keepassxc; });
+    ) (lib.attrsets.attrValues { inherit (pkgs) keepassxc; });
   };
 }
