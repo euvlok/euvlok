@@ -2,7 +2,6 @@
 """Discover unbranded Taskcluster artifacts, then delegate updates to nix-update"""
 
 import json
-import os
 import subprocess
 import sys
 import urllib.request
@@ -23,7 +22,7 @@ def read_json(url):
 def write_pins(destination, contents):
     temporary = destination.with_suffix(".json.tmp")
     temporary.write_text(contents)
-    os.replace(temporary, destination)
+    temporary.replace(destination)
 
 
 def main():
