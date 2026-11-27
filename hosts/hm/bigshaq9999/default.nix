@@ -11,5 +11,8 @@
     ../shared/nixcord.nix
   ];
 
-  home.packages = [ pkgs.antigravity-cli ];
+  home.packages = [
+    pkgs.antigravity-cli
+    pkgs.euro-office-desktopeditors
+  ];
 }

@@ -141,6 +141,7 @@ let
   productivityPackages = lib.attrsets.attrValues {
     inherit (pkgs)
       anki-bin
+      euro-office-desktopeditors
       inkscape
       # audacity
       ;

@@ -83,6 +83,7 @@ let
     };
 
     productivity = lib.attrsets.attrValues {
+      inherit (pkgs) euro-office-desktopeditors;
       inherit (pkgs.unstable)
         anki
         gImageReader

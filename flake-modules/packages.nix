@@ -24,6 +24,9 @@
       overlayAttrs = {
         catppuccin-gtk-fausto = final.callPackage ../packages/catppuccin-gtk.nix { };
         catppuccin-userstyles = final.callPackage ../packages/catppuccin-userstyles { };
+        euro-office-desktopeditors = final.callPackage ../packages/euro-office-desktopeditors.nix {
+          upstream = pkgs.euro-office-desktopeditors;
+        };
         linux-rt-upscaler = final.callPackage ../packages/linux-rt-upscaler.nix { };
         lsfg-vk = final.callPackage ../packages/lsfg-vk.nix {
           basePackage = final.callPackage (providerInputs.nixpkgs + /pkgs/by-name/ls/lsfg-vk/package.nix) { };
