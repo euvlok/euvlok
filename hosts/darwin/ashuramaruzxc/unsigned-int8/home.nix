@@ -110,7 +110,7 @@ let
   ];
 
   macosPackages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
+    inherit (pkgs)
       alt-tab-macos
       betterdisplay
       iina
@@ -125,18 +125,15 @@ let
   };
 
   socialPackages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
+    inherit (pkgs)
       signal-desktop
-      telegram-desktop
       whatsapp-for-mac
       ;
+    inherit (pkgs.stable) telegram-desktop;
   };
 
   multimediaPackages = lib.attrsets.attrValues {
-    inherit (pkgs)
-      nicotine-plus
-      qbittorrent
-      ;
+    inherit (pkgs) nicotine-plus qbittorrent;
   };
   productivityPackages = lib.attrsets.attrValues {
     inherit (pkgs)
@@ -149,19 +146,16 @@ let
   };
 
   authPackages = lib.attrsets.attrValues {
-    inherit (pkgs)
-      keepassxc
-      yubikey-manager
-      ;
+    inherit (pkgs) keepassxc yubikey-manager;
   };
 
   gamingPackages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
+    inherit (pkgs)
       osu-lazer-bin
       prismlauncher
-      ryubing
       winetricks
       ;
+    inherit (pkgs.stable) ryubing;
   };
 
   allPackages =
@@ -173,23 +167,7 @@ let
     ++ gamingPackages
     ++ (lib.attrsets.attrValues { inherit (pkgs.jetbrains) rider clion idea; });
 
-  userExtras = [
-    { home.packages = allPackages; }
-    {
-      programs = {
-        btop.enable = true;
-        rbw = {
-          enable = true;
-          settings = {
-            email = "ashuramaru@tenjin-dk.com";
-            base_url = "bitwarden.tenjin-dk.com";
-            lock_timeout = 600;
-            pinentry = pkgs.pinentry_mac;
-          };
-        };
-      };
-    }
-  ];
+  userExtras = [ { home.packages = allPackages; } ];
 
   ashuramaru = commonImports ++ [ catppuccinConfig ] ++ sopsConfig ++ hmModuleConfig ++ userExtras;
 in

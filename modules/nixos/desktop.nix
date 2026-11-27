@@ -13,9 +13,9 @@
 
     programs.ssh.askPassword = lib.modules.mkForce (
       if config.euvlok.nixos.plasma.enable then
-        lib.meta.getExe pkgs.unstable.kdePackages.ksshaskpass
+        lib.meta.getExe pkgs.kdePackages.ksshaskpass
       else
-        lib.meta.getExe pkgs.unstable.seahorse
+        lib.meta.getExe pkgs.seahorse
     );
   };
 }

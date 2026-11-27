@@ -60,9 +60,7 @@
     };
 
     home.packages = lib.attrsets.attrValues {
-      inherit (pkgs)
-        telegram-desktop
-        ;
+      inherit (pkgs.stable) telegram-desktop;
     };
   };
 }

@@ -97,7 +97,7 @@
   environment.systemPackages = lib.attrsets.attrValues {
     container = containerPackage;
 
-    inherit (pkgs.unstable)
+    inherit (pkgs)
       # Literally should be bultin but apple being apple
       # Utils
       wireguard-tools
@@ -127,6 +127,6 @@
   # ];
 
   # Use Determinate's native macOS Virtualization.framework Linux builder
-  # instead of nix-darwin's NixOS VM builder.
+  # instead of nix-darwin's NixOS VM builder
   determinateNix.determinateNixd.builder.state = "enabled";
 }

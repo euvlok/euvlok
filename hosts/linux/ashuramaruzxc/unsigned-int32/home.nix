@@ -18,7 +18,7 @@ let
   cursorModule = lib.modules.importApply ../shared/home/cursor.nix {
     inherit cursorPackage;
     cursorName = cursorPackage.themeName;
-    iconPackage = pkgs.unstable.kdePackages.breeze-icons;
+    iconPackage = pkgs.kdePackages.breeze-icons;
   };
 
   baseImports = [

@@ -140,11 +140,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795682362,
-        "narHash": "sha256-2RLl3DMsyVDXsIUwnpDfTlAyoO+124hNQV183/TXbdI=",
+        "lastModified": 1795768200,
+        "narHash": "sha256-0MuzAMih/F1lROfUsEH7dxaP2R17Qu6heI75PtXM19M=",
         "owner": "euvlok",
         "repo": "pkgs",
-        "rev": "69f954622328d2f9c29de395ea108783642ef093",
+        "rev": "1ab57c80c443cfe993aed5023116e23591540714",
         "type": "github"
       },
       "original": {
@@ -470,8 +470,9 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 315532800,
+        "lastModified": 1795085501,
         "narHash": "sha256-kqy60mdSH4GQAv3kzSeefteaiCv9arf3P+auosZrpo0=",
+        "rev": "0bb8272318b4ca41bf0edc6224df3e3e3046b70d",
         "type": "tarball",
         "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1124497.0bb8272318b4/nixexprs.tar.zst"
       },
@@ -482,11 +483,11 @@
     },
     "nixpkgs-unstable-small": {
       "locked": {
-        "lastModified": 1795682493,
-        "narHash": "sha256-HTvSA1Kwe1itfwUKnnlkjDJKIJC7If/T3nH9vzfHjQs=",
-        "rev": "aa156634ecca12217a808ff1d8fc2793115923bb",
+        "lastModified": 1795743064,
+        "narHash": "sha256-s1DU9pnpTro4oEPtIekDqq11uuwe1lnUIHYvHeAwbgI=",
+        "rev": "5e50e88b70dff025f88e08f2b56de55137a13fe3",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-27.05pre1130545.aa156634ecca/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/unstable-small/nixos-27.05pre1131214.5e50e88b70df/nixexprs.tar.zst"
       },
       "original": {
         "type": "tarball",

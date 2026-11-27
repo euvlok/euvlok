@@ -72,7 +72,7 @@ in
     environment = {
       systemPackages =
         lib.attrsets.attrValues {
-          inherit (pkgs.unstable)
+          inherit (pkgs)
             adwaita-icon-theme
             adwaita-qt
             adwaita-qt6
@@ -139,7 +139,7 @@ in
         }
         ++ lib.lists.optionals config.catppuccin.enable [
           catppuccinGtk
-          (pkgs.unstable.catppuccin-kde.override {
+          (pkgs.catppuccin-kde.override {
             accents = [ config.catppuccin.accent ];
             flavour = [ config.catppuccin.flavor ];
             winDecStyles = [ "classic" ];

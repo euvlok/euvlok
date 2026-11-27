@@ -15,8 +15,8 @@
 
   services.protonmail-bridge = {
     enable = true;
-    package = pkgs.unstable.protonmail-bridge;
-    # Bridge checks for this executable before enabling libsecret, even with KWallet.
+    package = pkgs.protonmail-bridge;
+    # Bridge checks for this executable before enabling libsecret
     extraPackages = [ pkgs.gnome-keyring ];
   };
   programs = {
@@ -34,7 +34,7 @@
       window-width = 140;
     };
     btop.enable = true;
-    direnv.nix-direnv.package = pkgs.unstable.nix-direnv;
+    direnv.nix-direnv.package = pkgs.nix-direnv;
 
   };
 

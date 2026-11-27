@@ -36,7 +36,7 @@
     };
     opentabletdriver = {
       enable = true;
-      package = pkgs.unstable.opentabletdriver;
+      package = pkgs.opentabletdriver;
       daemon.enable = true;
     };
     i2c.enable = true;
@@ -44,13 +44,10 @@
   };
 
   services = {
-    ollama.enable = true;
-    displayManager.gdm.enable = lib.modules.mkForce false;
-    displayManager.cosmic-greeter.enable = lib.modules.mkForce false;
     hardware.openrgb = {
       enable = true;
       motherboard = "amd";
-      package = pkgs.unstable.openrgb-with-all-plugins;
+      package = pkgs.openrgb-with-all-plugins;
     };
     hardware.bolt.enable = true;
     xserver = {
@@ -65,7 +62,7 @@
           via # qmk/via
           yubikey-personalization
           ;
-        inherit (pkgs.unstable) opentabletdriver;
+        inherit (pkgs) opentabletdriver;
       };
       extraRules = ''
         # Prevent USB devices from waking the machine from suspend.
@@ -181,24 +178,12 @@
       inherit (pkgs)
         # yubico
         yubioath-flutter
-
         apfsprogs
-        ccache
         fcitx5-gtk
         gpgme
         ;
-      inherit (pkgs.unstable)
-        cargo
-        rust-analyzer
-        rustc
-        rustfmt
-        ;
-      inherit (pkgs.unstable.kdePackages)
-        bluedevil
-        ;
-      inherit (pkgs.unstable)
-        openrgb-with-all-plugins
-        ;
+      inherit (pkgs.kdePackages) bluedevil;
+      inherit (pkgs) openrgb-with-all-plugins;
     };
   };
 

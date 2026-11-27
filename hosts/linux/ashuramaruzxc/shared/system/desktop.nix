@@ -5,10 +5,7 @@
   ];
 
   environment.systemPackages = lib.attrsets.attrValues {
-    inherit (pkgs.unstable)
-      bitwarden-desktop
-      keepassxc
-      ;
+    inherit (pkgs) bitwarden-desktop keepassxc;
   };
 
   services.libinput.mouse = {

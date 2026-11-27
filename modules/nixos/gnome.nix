@@ -21,14 +21,12 @@ in
 
     programs.kdeconnect = {
       enable = true;
-      package = lib.modules.mkIf (
-        !config.euvlok.nixos.plasma.enable
-      ) pkgs.unstable.gnomeExtensions.gsconnect;
+      package = lib.modules.mkIf (!config.euvlok.nixos.plasma.enable) pkgs.gnomeExtensions.gsconnect;
     };
 
     services = {
       dbus.packages = [ (pkgs.gcr_3 or pkgs.gcr) ];
-      udev.packages = lib.attrsets.attrValues { inherit (pkgs.unstable) gnome-settings-daemon; };
+      udev.packages = lib.attrsets.attrValues { inherit (pkgs) gnome-settings-daemon; };
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
       gnome = {
@@ -50,7 +48,7 @@ in
     environment = {
       systemPackages =
         lib.attrsets.attrValues {
-          inherit (pkgs.unstable)
+          inherit (pkgs)
             apostrophe # Markdown Editor
             decibels # Audio Player
             gnome-obfuscate # Censor Private Info
@@ -59,12 +57,12 @@ in
             resources # Task Manager
             textpieces
             ;
-          inherit (pkgs.unstable.gnomeExtensions) appindicator clipboard-indicator;
+          inherit (pkgs.gnomeExtensions) appindicator clipboard-indicator;
         }
         ++ lib.lists.optional config.catppuccin.enable catppuccinGtk;
 
       gnome.excludePackages = lib.attrsets.attrValues {
-        inherit (pkgs.unstable)
+        inherit (pkgs)
           epiphany # Browser
           evince # Docs
           geary # Email

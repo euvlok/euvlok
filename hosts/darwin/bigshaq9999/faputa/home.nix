@@ -102,7 +102,7 @@
       ++ [
         {
           home.packages = lib.attrsets.attrValues {
-            inherit (pkgs.unstable)
+            inherit (pkgs)
               # Make macos useful
               alt-tab-macos
               ice-bar

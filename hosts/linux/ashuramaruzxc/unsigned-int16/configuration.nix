@@ -65,7 +65,7 @@
   environment = {
     systemPackages = lib.attrsets.attrValues {
       inherit (pkgs) fcitx5-gtk;
-      inherit (pkgs.unstable.kdePackages) bluedevil;
+      inherit (pkgs.kdePackages) bluedevil;
     };
   };
 

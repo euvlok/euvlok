@@ -7,14 +7,11 @@ let
     audio = lib.attrsets.attrValues { inherit (pkgs) crosspipe pavucontrol qpwgraph; };
 
     development = lib.attrsets.attrValues {
-      inherit (pkgs.unstable)
-        android-studio
-        nixd
-        ;
+      inherit (pkgs) android-studio nixd;
     };
 
     gaming = lib.attrsets.attrValues {
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         cemu
         dolphin-emu
         eden
@@ -37,18 +34,10 @@ let
 
     important =
       lib.attrsets.attrValues {
-        inherit (pkgs.unstable)
-          bitwarden-desktop
-          keepassxc
-          ;
+        inherit (pkgs) bitwarden-desktop keepassxc;
       }
       ++ [
-        (
-          if pkgs.stdenvNoCC.hostPlatform.isx86_64 then
-            pkgs.unstable.thunderbird-bin
-          else
-            pkgs.unstable.thunderbird
-        )
+        (if pkgs.stdenvNoCC.hostPlatform.isx86_64 then pkgs.thunderbird-bin else pkgs.thunderbird)
       ];
 
     jetbrains = [
@@ -66,10 +55,7 @@ let
         tenacity
         vlc
         ;
-      inherit (pkgs.unstable.kdePackages)
-        k3b
-        kamera
-        ;
+      inherit (pkgs.kdePackages) k3b kamera;
     };
 
     networking = lib.attrsets.attrValues {
@@ -83,20 +69,20 @@ let
     };
 
     productivity = lib.attrsets.attrValues {
-      inherit (pkgs) euro-office-desktopeditors;
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         anki
+        euro-office-desktopeditors
         gImageReader
         obsidian
         pdftk
         treesheets
         whisper-cpp
         ;
-      inherit (pkgs.unstable.kdePackages) francis;
+      inherit (pkgs.kdePackages) francis;
     };
 
     social = lib.attrsets.attrValues {
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         dino
         nextcloud-client
         signal-desktop

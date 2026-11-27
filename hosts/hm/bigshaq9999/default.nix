@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./git.nix
@@ -12,7 +17,7 @@
   ];
 
   home.packages = [
-    pkgs.antigravity-cli
     pkgs.euro-office-desktopeditors
-  ];
+  ]
+  ++ lib.lists.optional (!config.programs.antigravity-cli.enable) pkgs.antigravity-cli;
 }

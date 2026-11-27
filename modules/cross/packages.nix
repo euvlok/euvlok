@@ -107,7 +107,7 @@ let
   linuxOnlyPkgs =
     lib.attrsets.attrValues {
       # Networking
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         iftop # TUI display of bandwidth usage on an interface
         iputils
         mtr # Network diagnostic tool (traceroute + ping)
@@ -116,32 +116,32 @@ let
         ;
 
       # System / Hardware
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         hdparm
         lm_sensors # Tools for monitoring hardware sensors
         psmisc
         ;
 
-      inherit (pkgs.unstable)
+      inherit (pkgs)
         xclip # X11 clipboard CLI utility
         wl-clipboard-rs # Wayland clipboard utilities (wl-copy/wl-paste)
         clipcat # Clipboard manager (X11/Wayland)
         ;
 
       # Misc
-      inherit (pkgs.unstable) sysstat;
+      inherit (pkgs) sysstat;
     }
     # Pacakges only meant for Desktops
     ++ lib.lists.optionals graphicalLinux (
       lib.attrsets.attrValues {
-        inherit (pkgs.unstable)
+        inherit (pkgs)
           networkmanagerapplet
           pavucontrol # PulseAudio Volume Control GUI
           playerctl # Control media players via MPRIS (CLI)
           ;
 
-        inherit (pkgs.unstable.kdePackages) ffmpegthumbs;
-        inherit (pkgs.unstable.kdePackages) breeze breeze-gtk breeze-icons;
+        inherit (pkgs.kdePackages) ffmpegthumbs;
+        inherit (pkgs.kdePackages) breeze breeze-gtk breeze-icons;
       }
     );
 in

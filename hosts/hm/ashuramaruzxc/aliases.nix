@@ -3,11 +3,11 @@ let
   video2gif = pkgs.writeShellApplication {
     name = "video2gif";
     runtimeInputs = [
-      pkgs.unstable.coreutils
-      pkgs.unstable.fd
-      pkgs.unstable.ffmpeg
-      pkgs.unstable.gifski
-      pkgs.unstable.parallel
+      pkgs.coreutils
+      pkgs.fd
+      pkgs.ffmpeg
+      pkgs.gifski
+      pkgs.parallel
     ];
     text = lib.trivial.readFile ./scripts/video2gif.sh;
   };

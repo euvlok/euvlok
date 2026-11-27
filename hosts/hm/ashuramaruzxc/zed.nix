@@ -42,7 +42,7 @@ in
   programs.zed-editor = {
     enableMcpIntegration = true;
     installRemoteServer = true;
-    package = pkgs.unstable.zed-editor;
+    package = pkgs.zed-editor;
 
     extensions = [
       "docker-compose"
@@ -74,8 +74,16 @@ in
 
       agent_servers.Antigravity = {
         type = "custom";
-        command = lib.meta.getExe pkgs.unstable.antigravity-cli;
-        args = [ "acp" ];
+        command = lib.meta.getExe (
+          if config.programs.antigravity-cli.enable && config.programs.antigravity-cli.package != null then
+            config.programs.antigravity-cli.package
+          else
+            pkgs.antigravity-cli
+        );
+        args = [
+          "acp"
+          "--disable-telemetry"
+        ];
       };
 
       autosave.after_delay.milliseconds = 1000;
