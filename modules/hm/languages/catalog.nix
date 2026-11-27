@@ -16,8 +16,6 @@ let
     dotnet =
       let
         versions = [
-          "8"
-          "9"
           "10"
           "11"
         ];

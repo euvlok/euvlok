@@ -2,7 +2,7 @@
   inputs,
   hostPlatform ? null,
   buildPlatform ? hostPlatform,
-  unstableSource ? inputs.nixpkgs,
+  unstableSource ? inputs.nixpkgs-unstable-small,
   localPackagesOverlay ? inputs.self.overlays.packages,
 }:
 let
@@ -170,6 +170,24 @@ let
         }
     // lib.attrsets.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
       inherit (final.stable) ffmpeg ffmpeg-headless ffmpeg-full;
+      llvmPackages_latest =
+        let
+          llvm = prev.llvmPackages_latest;
+        in
+        if llvm.lldb.version == "23.1.3" then
+          llvm
+          // {
+            lldb = llvm.lldb.overrideAttrs (old: {
+              # xcrun cannot discover codesign inside the Darwin build sandbox
+              cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+                (lib.strings.cmakeFeature "CMAKE_CODESIGN" (
+                  lib.meta.getExe' prev.buildPackages.darwin.sigtool "codesign"
+                ))
+              ];
+            });
+          }
+        else
+          llvm;
       swiftPackages = prev.swiftPackages.overrideScope (
         _swiftFinal: swiftPrev: {
           swift-collections =
@@ -177,7 +195,7 @@ let
               swiftPrev.swift-collections.overrideAttrs (old: {
                 # Reserve 0x200 bytes for the Span compatibility rpaths added in postInstall
                 cmakeFlags = (old.cmakeFlags or [ ]) ++ [
-                  (prev.lib.cmakeFeature "CMAKE_SHARED_LINKER_FLAGS" "-Xlinker -headerpad -Xlinker 200")
+                  (prev.lib.strings.cmakeFeature "CMAKE_SHARED_LINKER_FLAGS" "-Xlinker -headerpad -Xlinker 200")
                 ];
               })
             else

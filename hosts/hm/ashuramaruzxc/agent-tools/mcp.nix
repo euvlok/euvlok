@@ -232,11 +232,14 @@ in
       {
         programs.mcp = {
           enable = lib.modules.mkIf (
-            config.programs.zed-editor.enable || config.programs.claude-code.enable
+            config.programs.zed-editor.enable
+            || config.programs.claude-code.enable
+            || config.programs.antigravity-cli.enable
           ) true;
           servers = lib.attrsets.mapAttrs (_: generic) servers;
         };
         programs.claude-code.enableMcpIntegration = true;
+        programs.antigravity-cli.enableMcpIntegration = true;
       }
       (lib.modules.mkIf config.programs.codex.enable {
         programs.codex.settings.mcp_servers = lib.attrsets.mapAttrs (_: codexServer) servers;

@@ -59,5 +59,8 @@ in
     (lib.modules.mkIf config.programs.claude-code.enable {
       programs.claude-code.skills = sharedSkills;
     })
+    (lib.modules.mkIf config.programs.antigravity-cli.enable {
+      programs.antigravity-cli.skills = sharedSkills;
+    })
   ];
 }
