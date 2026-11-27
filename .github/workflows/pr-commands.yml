@@ -38,18 +38,27 @@ jobs:
             const { default: merge } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/pr/merge.ts`);
             await merge({ github, context, core });
 
-  # A confirmed merge still needs master CI if posting the reply fails
+  # A confirmed merge still needs master workflows if posting the reply fails
   dispatch:
-    name: Dispatch master CI
+    name: Dispatch master ${{ matrix.name }}
     needs: merge
     if: always() && needs.merge.outputs.merged == 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
-      actions: write # Start master checks after a confirmed merge
+      actions: write # Start master workflows after a confirmed merge
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: CI
+            workflow: ci.yml
+          - name: userstyles release
+            workflow: build-catppuccin-userstyles.yml
     steps:
       - name: Dispatch master workflow
-        run: gh workflow run ci.yml --repo "$GH_REPO" --ref master
+        run: gh workflow run "$WORKFLOW" --repo "$GH_REPO" --ref master
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          WORKFLOW: ${{ matrix.workflow }}
