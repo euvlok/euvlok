@@ -105,9 +105,10 @@
 #
 #
 let
-  # Embedded Python uses the Python 3.15 standard library without extra packages
+  # Python 3.15 helpers use only the standard library without extra packages
   codexEnabled.euvlok.home.codex.enable = true;
   claudeCodeEnabled.euvlok.home.claude-code.enable = true;
+  antigravityCliEnabled.euvlok.home.antigravity-cli.enable = true;
   /**
     Write a standalone Python script using Python 3.15 on the host
 
@@ -1499,6 +1500,665 @@ let
         };
       };
     };
+  antigravityCli =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      cfg = config.euvlok.home.antigravity-cli;
+      hmCfg = config.programs.antigravity-cli;
+      jsonFormat = pkgs.formats.json { };
+      environment = lib.attrsets.filterAttrs (_: value: value != null) cfg.environment;
+      mainProgram = cfg.package.meta.mainProgram or "agy";
+      launcher = pkgs.symlinkJoin {
+        name = "antigravity-cli-euvlok";
+        version = cfg.package.version or "";
+        paths = [ cfg.package ];
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        postBuild = lib.strings.optionalString (environment != { }) ''
+          wrapProgram "$out/bin/"${lib.strings.escapeShellArg mainProgram} ${
+            lib.strings.concatMapAttrsStringSep " " (
+              name: value:
+              lib.strings.escapeShellArgs [
+                "--set"
+                name
+                value
+              ]
+            ) environment
+          }
+        '';
+        inherit (cfg.package) meta;
+      };
+      statusLineScript =
+        pkgs.writers.writePython3 "antigravity-statusline.py"
+          {
+            libraries = [ pkgs.python3Packages.rich ];
+          }
+          ''
+            from datetime import datetime, timezone
+            import json
+            import math
+            import os
+            from pathlib import Path
+            import re
+            import sys
+
+            from rich.console import Console
+            from rich.text import Text
+
+            STRIP_RE = re.compile(
+                r"\x1b(?:\][^\x07\x1b]*(?:\x07|\x1b\\)?|"
+                r"\[[0-?]*[ -/]*[@-~]|[@-Z\\-_])|\x9b[0-?]*[ -/]*[@-~]"
+                r"|[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]"
+            )
+            WS_RE = re.compile(r"[\x00-\x1f\x7f-\x9f\s]+")
+            LEFT_RE = re.compile(r"(?i)(?:^|[\s_-])left$")
+
+
+            def clean(v: object) -> str:
+                if not isinstance(v, str):
+                    return ""
+                s = v.encode("utf-8", "replace").decode("utf-8")
+                return WS_RE.sub(" ", STRIP_RE.sub("", s)).strip()
+
+
+            def num(v: object) -> float | None:
+                if isinstance(v, bool) or not isinstance(v, (int, float)):
+                    return None
+                try:
+                    n = float(v)
+                except OverflowError:
+                    return None
+                return n if math.isfinite(n) else None
+
+
+            def fmt_pct(
+                lbl: str, val: float, red: int, yel: int, sfx: str
+            ) -> tuple[Text, tuple[int, float]]:
+                cl = max(0.0, min(100.0, val))
+                pct = round(cl)
+                s = "<1%" if 0.0 < cl < 1.0 else f"{pct}%"
+                if pct <= red:
+                    return Text(f"{lbl} {s}{sfx}", "bold red"), (2, -cl)
+                if pct <= yel:
+                    return Text(f"{lbl} {s}{sfx}", "yellow"), (1, -cl)
+                t = [(sfx, "dim")] if sfx else []
+                return (
+                    Text.assemble((f"{lbl} ", "dim"), (s, "bold green"), *t),
+                    (0, 0.0),
+                )
+
+
+            def fmt_reset(e: dict) -> str:
+                now, delta = datetime.now(timezone.utc), None
+                for raw in (e.get("reset_time"), e.get("resets_at")):
+                    try:
+                        if isinstance(raw, str):
+                            s = clean(raw)
+                            if not any(c in s for c in "-:T"):
+                                continue
+                            dt = datetime.fromisoformat(s)
+                            if dt.tzinfo is None:
+                                dt = dt.replace(tzinfo=timezone.utc)
+                        elif (ep := num(raw)) is not None:
+                            ep = ep / 1e3 if ep > 1e12 else ep
+                            dt = datetime.fromtimestamp(ep, timezone.utc)
+                        else:
+                            continue
+                        if math.isfinite(s := (dt - now).total_seconds()):
+                            if s > 0:
+                                delta = s
+                                break
+                    except (ValueError, TypeError, OverflowError, OSError):
+                        pass
+                if delta is None and (sec := num(e.get("reset_in_seconds"))):
+                    delta = sec if sec > 0 else None
+                if not delta:
+                    return ""
+                m = int(delta // 60)
+                if m >= 1440:
+                    d, h = divmod(m // 60, 24)
+                    return f" - {d}d{h}h" if h else f" - {d}d"
+                if m >= 60:
+                    h, r = divmod(m, 60)
+                    return f" - {h}h{r}m" if r else f" - {h}h"
+                return f" - {m}m" if m >= 1 else " - <1m"
+
+
+            def build_line(p: dict) -> Text:
+                items: list[list] = []
+                drops: list[tuple[tuple, int, Text | None]] = []
+
+                def add(grp: int, txt: Text, prio: tuple) -> int:
+                    items.append([grp, txt])
+                    drops.append((prio, len(items) - 1, None))
+                    return len(items) - 1
+
+                def first(*vals: object) -> str:
+                    return next((s for v in vals if (s := clean(v))), "")
+
+                def getd(k: str) -> dict:
+                    return v if isinstance(v := p.get(k), dict) else {}
+
+                model = getd("model")
+                name = first(model.get("display_name"), model.get("id"))
+                m_idx = (
+                    add(0, Text(name, "bold magenta"), (7, 0)) if name else -1
+                )
+                if name and (eff := clean(model.get("effort"))):
+                    pat = rf"(?<![A-Za-z0-9]){re.escape(eff)}(?![A-Za-z0-9])"
+                    if not re.search(pat, name, re.I):
+                        add(0, Text(eff, "magenta"), (5, 0))
+
+                ws = getd("workspace")
+                pdir = first(
+                    ws.get("project_dir"), ws.get("current_dir"), p.get("cwd")
+                )
+                if pdir:
+                    proj = clean(Path(pdir).name) or pdir
+                    add(1, Text(proj, "bright_blue"), (4, 1))
+                br = first(
+                    getd("git").get("branch"), getd("vcs").get("branch"),
+                    p.get("worktree_name"), ws.get("worktree_name"),
+                )
+                if br:
+                    add(1, Text(br, "cyan"), (4, 0))
+
+                ctx = getd("context_window")
+                raw_sz = ctx.get("context_window_size")
+                if raw_sz is None or (num(raw_sz) or 0) > 0:
+                    rem = num(ctx.get("remaining_percentage"))
+                    u = num(ctx.get("used_percentage"))
+                    if rem is None and u is not None:
+                        rem = 100.0 - u
+                    if rem is not None:
+                        txt, urg = fmt_pct("ctx", rem, 15, 30, " left")
+                        add(2, txt, (8, *urg, 1) if urg[0] else (6, 1))
+                c_raw = p.get("cost")
+                cost = num(c_raw)
+                if cost is None and isinstance(c_raw, dict):
+                    ks = ("total_usd", "total_cost_usd", "total", "amount", "usd")
+                    cost = next(
+                        (c for k in ks if (c := num(c_raw.get(k))) is not None),
+                        None,
+                    )
+                if cost is not None and cost >= 0:
+                    add(2, Text("$" + f"{cost or 0.0:.2f}", "magenta"), (6, 0))
+
+                for i, (k, e) in enumerate(
+                    sorted(getd("quota").items(), key=lambda x: str(x[0]))
+                ):
+                    if not isinstance(e, dict) or e.get("disabled") is True:
+                        continue
+                    raw = first(e.get("display_name"), e.get("label"), str(k))
+                    if not raw:
+                        continue
+                    lbl = raw.removeprefix("gemini-") or raw
+                    sfx = "" if LEFT_RE.search(lbl) else " left"
+                    frac = num(e.get("remaining_fraction"))
+                    a_raw = e.get("remaining_amount")
+                    amt = num(a_raw)
+                    if frac is not None:
+                        plain, urg = fmt_pct(lbl, frac * 100.0, 10, 25, sfx)
+                    elif amt is not None and amt >= 0:
+                        if amt == 0:
+                            plain, urg = Text(f"{lbl} 0{sfx}", "bold red"), (2, 0.0)
+                        else:
+                            a_s = str(a_raw) if type(a_raw) is int else f"{amt:g}"
+                            t = [(sfx, "dim")] if sfx else []
+                            plain = Text.assemble(
+                                (f"{lbl} ", "dim"), (a_s, "green"), *t
+                            )
+                            urg = (0, 0.0)
+                    else:
+                        continue
+                    rst = fmt_reset(e)
+                    full = Text.assemble(plain, (rst, "dim")) if rst else plain
+                    idx = add(3, full, (8, *urg, -i) if urg[0] else (3, -i))
+                    if rst:
+                        drops.append(((2, *urg, -i), idx, plain))
+
+                m_i = 0
+                if (vm := clean(getd("vim").get("mode"))) and vm.upper() != "NORMAL":
+                    add(4, Text(f"[{vm.lower()}]", "bold cyan"), (1, -m_i))
+                    m_i += 1
+                if cm := clean(p.get("cycle_mode")):
+                    add(4, Text(cm, "cyan"), (1, -m_i))
+                    m_i += 1
+                if isinstance(en := getd("sandbox").get("enabled"), bool):
+                    st = ("sandbox", "green") if en else ("unsandboxed", "dim")
+                    add(4, Text(*st), (1, -m_i))
+
+                c_i = 0
+                if isinstance(subs := p.get("subagents"), list):
+                    n = sum(
+                        isinstance(x, dict) and x.get("status") == "running"
+                        for x in subs
+                    )
+                    if n > 0:
+                        s = "s" if n > 1 else ""
+                        add(5, Text(f"{n} subagent{s}", "yellow"), (0, -c_i))
+                        c_i += 1
+                for k, w in (("task_count", "task"), ("artifact_count", "artifact")):
+                    if type(n := p.get(k)) is int and n > 0:
+                        s = "s" if n > 1 else ""
+                        add(5, Text(f"{n} {w}{s}", "dim"), (0, -c_i))
+                        c_i += 1
+
+                def join(skip: int = -1) -> Text:
+                    gs = [
+                        Text(" · ", "dim").join(ps)
+                        for g in range(6)
+                        if (
+                            ps := [
+                                t
+                                for i, (gr, t) in enumerate(items)
+                                if gr == g and t is not None and i != skip
+                            ]
+                        )
+                    ]
+                    return Text(" | ", "dim").join(gs)
+
+                line, tw = join(), num(p.get("terminal_width"))
+                max_w = int(tw) if tw is not None and tw >= 1 else None
+                if max_w is None or line.cell_len <= max_w:
+                    return line
+
+                for _, idx, repl in sorted(drops, key=lambda d: d[0]):
+                    if line.cell_len <= max_w:
+                        break
+                    if repl is None and sum(t is not None for _, t in items) <= 1:
+                        break
+                    if idx == m_idx and repl is None:
+                        rest = join(skip=m_idx)
+                        if rest and (avail := max_w - 3 - rest.cell_len) >= 2:
+                            short = items[idx][1].copy()
+                            short.truncate(avail, overflow="ellipsis")
+                            items[idx][1] = short
+                            return join()
+                    items[idx][1] = repl
+                    line = join()
+                if line.cell_len > max_w:
+                    line.truncate(max_w, overflow="ellipsis")
+                return line
+
+
+            def main() -> None:
+                if hasattr(sys.stdout, "reconfigure"):
+                    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+                try:
+                    raw = sys.stdin.buffer.read().decode("utf-8").strip()
+                    payload = json.loads(raw) if raw else None
+                except (OSError, UnicodeDecodeError, ValueError, RecursionError):
+                    return
+                if not isinstance(payload, dict):
+                    return
+                if not (line := build_line(payload)).plain:
+                    return
+                nc = bool(os.environ.get("NO_COLOR")) or (
+                    os.environ.get("CLICOLOR") == "0"
+                    and os.environ.get("CLICOLOR_FORCE", "") in ("", "0")
+                )
+                Console(
+                    color_system=None if nc else "standard",
+                    force_terminal=not nc, no_color=nc, highlight=False,
+                    markup=False, emoji=False, soft_wrap=True,
+                ).print(line)
+
+
+            if __name__ == "__main__":
+                main()
+          '';
+      # Home Manager installs skills and migrated commands under
+      # ~/.gemini/antigravity-cli/skills, while Antigravity CLI discovers
+      # global skills from ~/.gemini/config/skills and ~/.gemini/config/skills.json
+      hasManagedSkills = hmCfg.skills != { } || hmCfg.commands != { };
+      skillsEntryPath = "~/.gemini/antigravity-cli/skills";
+      skillsManifest = jsonFormat.generate "antigravity-cli-skills.json" {
+        entries = [ { path = skillsEntryPath; } ];
+      };
+      hasKeybindings = cfg.keybindings != { };
+      keybindingsFile = jsonFormat.generate "antigravity-cli-keybindings.json" cfg.keybindings;
+      hasExplicitPermissions = hmCfg.permissions != null || hmCfg.settings ? permissions;
+      defaultAskCommands = [
+        "sudo"
+        "rm"
+        "rmdir"
+        "unlink"
+        "git commit"
+        "git push"
+        "git send-pack"
+        "git-push"
+        "git-send-pack"
+        "git lfs push"
+        "jj git push"
+        "jj gerrit upload"
+        "git reset"
+        "git restore"
+        "git clean"
+        "git checkout"
+        "git switch"
+        "git rebase"
+        "git merge"
+        "git cherry-pick"
+        "git stash"
+      ];
+      effectiveDefaultPermissions = {
+        allow = lib.lists.unique (
+          lib.lists.optional cfg.autoApproveMcp "mcp(*)" ++ cfg.defaultPermissions.allow
+        );
+        ask = lib.lists.unique cfg.defaultPermissions.ask;
+        deny = lib.lists.unique cfg.defaultPermissions.deny;
+      };
+      hasDefaultPermissions =
+        effectiveDefaultPermissions.allow != [ ]
+        || effectiveDefaultPermissions.ask != [ ]
+        || effectiveDefaultPermissions.deny != [ ];
+      defaultPermissionsManifest = jsonFormat.generate "antigravity-cli-default-permissions.json" effectiveDefaultPermissions;
+      activeProfiles = lib.attrsets.filterAttrs (_: profile: profile.enable) cfg.profiles;
+      profileTarget = if hmCfg.package != null then hmCfg.package else launcher;
+      profilePackages = lib.attrsets.mapAttrsToList (
+        name: profile:
+        let
+          settingsFile = jsonFormat.generate "antigravity-cli-${name}-settings.json" profile.settings;
+          extraArgs =
+            profile.args
+            ++ lib.lists.optionals (profile.settings != { }) [
+              "--settings"
+              "${settingsFile}"
+            ];
+        in
+        pkgs.writeShellApplication {
+          name = "${mainProgram}-${name}";
+          meta.mainProgram = "${mainProgram}-${name}";
+          text = ''
+            exec ${lib.meta.getExe profileTarget} ${lib.strings.escapeShellArgs extraArgs} "$@"
+          '';
+        }
+      ) activeProfiles;
+    in
+    {
+      options.euvlok.home.antigravity-cli = {
+        enable = lib.options.mkEnableOption "Antigravity CLI";
+        package = lib.options.mkPackageOption pkgs "antigravity-cli" {
+          default = [
+            "unstable"
+            "antigravity-cli"
+          ];
+        };
+        environment = lib.options.mkOption {
+          type = lib.types.addCheck (lib.types.attrsOf (lib.types.nullOr lib.types.str)) (
+            variables:
+            lib.lists.all (name: lib.strings.isValidPosixName name) (lib.attrsets.attrNames variables)
+          );
+          default = { };
+          example = {
+            AGY_CLI_HIDE_LOGO = "1";
+            ANTIGRAVITY_SENTRY_SAMPLE_RATE = null;
+          };
+          description = ''
+            Environment variables exported by the Antigravity CLI launcher.
+            Names must be valid shell identifiers; null omits a default
+            without removing an inherited value. Set credentials in the
+            launching environment instead, since these values are public in
+            the Nix store.
+          '';
+        };
+        autoApproveMcp = lib.options.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = ''
+            Ensure `mcp(*)` is present in global Antigravity CLI allow rules,
+            appending without clobbering existing runtime grants in mutable mode
+            unless `programs.antigravity-cli.permissions` or
+            `programs.antigravity-cli.settings.permissions` is explicitly set.
+          '';
+        };
+        defaultPermissions = {
+          allow = lib.options.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Default allow rules merged into global Antigravity CLI permissions.";
+          };
+          ask = lib.options.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Default ask rules merged into global Antigravity CLI permissions.";
+          };
+          deny = lib.options.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Default deny rules merged into global Antigravity CLI permissions.";
+          };
+        };
+        keybindings = lib.options.mkOption {
+          type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+          default = { };
+          example = {
+            "edit.open_editor" = [ "ctrl+x" ];
+          };
+          description = ''
+            Keybinding overrides written to `~/.gemini/antigravity-cli/keybindings.json`
+            (merged in place when `programs.antigravity-cli.mutableSettings` is true).
+          '';
+        };
+        profiles = lib.options.mkOption {
+          type = lib.types.addCheck (lib.types.attrsOf (
+            lib.types.submodule {
+              options = {
+                enable = lib.options.mkOption {
+                  type = lib.types.bool;
+                  default = true;
+                  description = "Whether to install the wrapper executable for this profile.";
+                };
+                args = lib.options.mkOption {
+                  type = lib.types.listOf lib.types.str;
+                  default = [ ];
+                  description = "Extra CLI flags passed to the wrapped Antigravity CLI launcher.";
+                };
+                settings = lib.options.mkOption {
+                  inherit (jsonFormat) type;
+                  default = { };
+                  description = "Session-only settings JSON passed via `--settings`.";
+                };
+              };
+            }
+          )) (profiles: lib.lists.all lib.strings.isValidPosixName (lib.attrsets.attrNames profiles));
+          default = { };
+          description = ''
+            Named Antigravity CLI profile wrappers installed as `agy-<name>`.
+            Set `profiles.<name>.enable = false` to disable a default profile wrapper.
+          '';
+        };
+      };
+
+      config = lib.modules.mkIf cfg.enable {
+        # Do not hardcode SSL_CERT_FILE here: Go treats it exclusively, which
+        # would break TLS on hosts without tenjin-ca.nix (e.g. faputa)
+        euvlok.home.antigravity-cli = {
+          environment = mkSettingsDefaults lib {
+            AGY_CLI_DISABLE_AUTO_UPDATE = "true";
+            ANTIGRAVITY_DISABLE_EMBEDDED_RIPGREP = "true";
+            ANTIGRAVITY_SENTRY_SAMPLE_RATE = "0";
+            NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
+          };
+          defaultPermissions = mkSettingsDefaults lib {
+            ask = lib.lists.map (command: "command(${command})") defaultAskCommands;
+            deny = [
+              "read_file(.env)"
+              "read_file(${config.home.homeDirectory}/.ssh)"
+            ];
+          };
+          keybindings = lib.modules.mkMerge [
+            (mkSettingsDefaults lib {
+              "edit.open_editor" = [ "ctrl+x" ];
+            })
+            (lib.modules.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin (
+              mkSettingsDefaults lib {
+                "view.toggle_trajectory" = [ "ctrl+t" ];
+              }
+            ))
+          ];
+          profiles = mkSettingsDefaults lib {
+            safe = {
+              args = [ "--sandbox" ];
+              settings = {
+                agentMode = "";
+                allowNonWorkspaceAccess = false;
+                enableTerminalSandbox = true;
+                toolPermission = "request-review";
+                permissions.ask = [
+                  "mcp(*)"
+                  "read_url(*)"
+                  "execute_url(*)"
+                ];
+              };
+            };
+            review = {
+              args = [
+                "--mode"
+                "plan"
+                "--sandbox"
+              ];
+              settings = {
+                agentMode = "plan";
+                allowNonWorkspaceAccess = false;
+                enableTerminalSandbox = true;
+                toolPermission = "request-review";
+                permissions.deny = [
+                  "write_file(*)"
+                  "mcp(*)"
+                  "execute_url(*)"
+                ];
+              };
+            };
+          };
+        };
+
+        programs.antigravity-cli = {
+          enable = true;
+          package = lib.modules.mkDefault launcher;
+          mutableSettings = lib.modules.mkDefault true;
+          settings = mkSettingsDefaults lib {
+            agentMode = "accept-edits";
+            allowNonWorkspaceAccess = false;
+            clearScrollbackOnResize = false;
+            enableTerminalSandbox = false;
+            notifications = true;
+            queuedMessages = "queue";
+            showFeedbackSurvey = false;
+            showTips = false;
+            statusLine = {
+              type = "command";
+              command = "${statusLineScript}";
+              enabled = true;
+            };
+            toolPermission = "always-proceed";
+          };
+          permissions = lib.modules.mkIf (hasDefaultPermissions && !hmCfg.mutableSettings) {
+            allow = lib.modules.mkDefault effectiveDefaultPermissions.allow;
+            ask = lib.modules.mkDefault effectiveDefaultPermissions.ask;
+            deny = lib.modules.mkDefault effectiveDefaultPermissions.deny;
+          };
+        };
+
+        home = {
+          packages = profilePackages;
+          activation = {
+            antigravitySkillsManifest = lib.modules.mkIf (hasManagedSkills && hmCfg.mutableSettings) (
+              lib.hm.dag.entryAfter [ "linkGeneration" ] (
+                lib.hm.generators.mkImpureConfigMerger {
+                  inherit pkgs;
+                  format = "json";
+                  empty = "{}";
+                  path = "${config.home.homeDirectory}/.gemini/config/skills.json";
+                  staticSettings = skillsManifest;
+                  mode = "600";
+                  jqOperation = ''
+                    if ($dynamic | type) == "object" then
+                      $dynamic
+                      | .entries = (
+                          ((.entries // []) | map(select((.path // "") != ${lib.strings.toJSON skillsEntryPath})))
+                          + $static.entries
+                        )
+                    else
+                      error("expected JSON object in skills.json")
+                    end
+                  '';
+                }
+              )
+            );
+            antigravityDefaultPermissions =
+              lib.modules.mkIf (hasDefaultPermissions && hmCfg.mutableSettings && !hasExplicitPermissions)
+                (
+                  lib.hm.dag.entryAfter
+                    [
+                      "linkGeneration"
+                      "antigravitySettings"
+                    ]
+                    (
+                      lib.hm.generators.mkImpureConfigMerger {
+                        inherit pkgs;
+                        format = "json";
+                        empty = "{}";
+                        path = "${config.home.homeDirectory}/.gemini/antigravity-cli/settings.json";
+                        staticSettings = defaultPermissionsManifest;
+                        mode = "600";
+                        jqOperation = ''
+                          if ($dynamic | type) == "object" then
+                            (($dynamic.permissions // {}) | if type == "object" then . else error("expected permissions object in settings.json") end) as $perms
+                            | reduce ["allow", "ask", "deny"][] as $key ($perms;
+                                if ($static[$key] | length) == 0 then .
+                                else
+                                  ((.[$key] // []) | if type == "array" then . else error("expected permissions." + $key + " array in settings.json") end) as $existing
+                                  | ($static[$key] | map(select(. as $rule | ($existing | index($rule)) == null))) as $missing
+                                  | . + { ($key): ($existing + $missing) }
+                                end
+                              ) as $merged
+                            | $dynamic | .permissions = $merged
+                          else
+                            error("expected JSON object in settings.json")
+                          end
+                        '';
+                      }
+                    )
+                );
+            antigravityKeybindings = lib.modules.mkIf (hasKeybindings && hmCfg.mutableSettings) (
+              lib.hm.dag.entryAfter [ "linkGeneration" ] (
+                lib.hm.generators.mkImpureConfigMerger {
+                  inherit pkgs;
+                  format = "json";
+                  empty = "{}";
+                  path = "${config.home.homeDirectory}/.gemini/antigravity-cli/keybindings.json";
+                  staticSettings = keybindingsFile;
+                  mode = "600";
+                  jqOperation = ''
+                    if ($dynamic | type) == "object" then
+                      $dynamic * $static
+                    else
+                      error("expected JSON object in keybindings.json")
+                    end
+                  '';
+                }
+              )
+            );
+          };
+          file = {
+            ".gemini/config/skills.json" = lib.modules.mkIf (hasManagedSkills && !hmCfg.mutableSettings) {
+              source = skillsManifest;
+            };
+            ".gemini/antigravity-cli/keybindings.json" =
+              lib.modules.mkIf (hasKeybindings && !hmCfg.mutableSettings)
+                {
+                  source = keybindingsFile;
+                };
+          };
+        };
+      };
+    };
   opencode =
     {
       pkgs,
@@ -1943,6 +2603,7 @@ in
       imports = [
         codex
         claudeCode
+        antigravityCli
         opencode
       ];
     };
@@ -2066,31 +2727,33 @@ in
     };
     codex = codexEnabled;
     claude-code = claudeCodeEnabled;
+    antigravity-cli = antigravityCliEnabled;
     hosts = {
-      unsignedInt8 = _: {
-        imports = [
-          codexEnabled
-          claudeCodeEnabled
-        ];
-        sops.secrets = {
-          context7_api_key = { };
-          gitlab_simsoft = { };
-          forjego_tenjin = { };
-        };
-        programs.ai.omp.settings.modelRoles.default = "openai-codex/gpt-6.2-sol";
-      };
       faputa = { pkgs, ... }: {
         imports = [
           codexEnabled
           claudeCodeEnabled
+          antigravityCliEnabled
         ];
         home.packages = [
           pkgs.chatgpt
           pkgs.eupkgs.opencode
         ];
       };
+      unsignedInt8 = _: {
+        imports = [
+          codexEnabled
+          claudeCodeEnabled
+          antigravityCliEnabled
+        ];
+        sops.secrets = {
+          context7_api_key = { };
+          gitlab_simsoft = { };
+          forjego_tenjin = { };
+        };
+      };
       /**
-        Instantiate this host's Codex and Claude Code Home Manager module
+        Instantiate this host's Codex, Claude Code, and Antigravity CLI Home Manager module
 
         # Inputs
 
@@ -2118,8 +2781,13 @@ in
           codexDesktopModule
           codexEnabled
           claudeCodeEnabled
+          antigravityCliEnabled
         ];
-        sops.secrets.context7_api_key = { };
+        sops.secrets = {
+          context7_api_key = { };
+          gitlab_simsoft = { };
+          forjego_tenjin = { };
+        };
         programs.codexDesktopLinux = {
           enable = true;
           computerUseUi.enable = true;
