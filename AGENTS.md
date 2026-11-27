@@ -2,57 +2,78 @@
 
 AI agents may edit this file only with explicit human permission.
 
-## Git and GitHub
+## Local version control
 
-- Commit all your work. Use `scope: summary` subjects, e.g. `ci: fix checks`.
-- Commit bodies explain only why the change was made. Omit verification notes
-  and link relevant issues and PRs.
-- Use `redirect.github.com` for GitHub links to avoid backlinks.
-- Push directly to `master` only with explicit human approval.
-- Prefer `gh` over web search for GitHub repository lookups.
+- Commit all your work. Use `scope: summary` subjects, such as `ci: fix checks`.
+- Explain only why the change was made. Link relevant issues and PRs. Omit
+  verification notes.
 
-### Opening a bot PR
+## GitHub
 
-The [Open PR workflow](.github/workflows/open-pr.yml) must be on both `master`
-and the feature branch. Get approval for the push, dispatch, and PR wording.
-Push the feature branch, then dispatch from it:
+- Never push to `master`.
+- Get approval before any GitHub mutation. Get the proposed title and body
+  approved before opening a PR or changing either.
+- Use only `gh` for GitHub reads and writes. If no dedicated command exists,
+  use `gh api`. If `gh` can't perform the operation, report the blocker.
+- Use `redirect.github.com` for GitHub links.
 
-```sh
-gh workflow run open-pr.yml -R euvlok/euvlok --ref "$branch" -f title="$title"
-```
+### Open a bot PR
 
-The workflow opens the PR as `github-actions[bot]` against `master` using the
-repository PR template. Add `-f body="$body"` only if the user requests extra
-text.
+The [Open PR workflow](.github/workflows/open-pr.yml) opens a PR as
+`github-actions[bot]` against `master` using the repository template.
 
-Track the returned run (includes CI). If no URL is returned, find the dispatched
-SHA with `gh run list -w open-pr.yml -b "$branch"` instead of dispatching again.
-Wait with `gh run watch "$run_id" --exit-status` and inspect failures with
-`gh run view "$run_id" --log-failed`.
+1. Check that the workflow is on both `master` and the feature branch.
+2. Get approval, then publish the feature branch.
+3. Dispatch the workflow with the approved title. Add `-f body="$body"` only if
+   the user requests extra text.
+
+   ```sh
+   gh workflow run open-pr.yml -R euvlok/euvlok --ref "$branch" -f title="$title"
+   ```
+
+4. If the dispatch returns no URL, find the run for the dispatched SHA with
+   `gh run list -w open-pr.yml -b "$branch"`. Don't dispatch again.
+5. Track CI with `gh run watch "$run_id" --exit-status`. Inspect failures
+   with `gh run view "$run_id" --log-failed`.
+
+### Check PR status and reviews
 
 - Prefer `--json` and `--jq`. For `gh pr checks --json bucket,name,link`, read
-  `bucket`, not the exit code. Fetch inline review comments with
+  `bucket`, not the exit code.
+- Fetch inline review comments with
   `gh api --paginate "repos/euvlok/euvlok/pulls/$pr/comments"`.
-- For PR waits, use `gh event listen` as described in the [official `gh`
-  skill][gh-skill]. Get approval before creating a subscription.
+- To wait for PR events, get approval for the subscription, then use
+  `gh event listen` as described in the [official `gh` skill][gh-skill].
 
 [gh-skill]: https://redirect.github.com/cli/cli/blob/HEAD/skills/gh/SKILL.md
 
-## Nix Preferences
+## Documentation
+
+Create Markdown files or edit `README.md` only when explicitly asked.
+
+## Formatting
+
+- Format commit prose and new or edited code comments with `rumdl fmt`. Enable
+  `MD013` prose reflow at 80 columns. Keep subjects on one line and add
+  trailers after formatting.
+- Pass comment text to `rumdl fmt --stdin --silent` without comment markers
+  or source indentation. Restore both afterward.
+
+## Nix preferences
 
 ### Before writing Nix
 
-- Look for local Nixpkgs sources to consult. For Home Manager or nix-darwin
-  code, also look for that project's local sources.
+- Look for local Nixpkgs sources. For Home Manager or nix-darwin code, also
+  consult that project's local sources.
 - Consult the flake-parts source before writing or editing any flake code.
 
 ### Code style
 
-- Prefer Nixpkgs `lib` over `builtins` and namespaced helpers (`lib.foo.bar`)
-  over top-level aliases (`lib.fooBar`) where equivalents exist.
-- Prefer `finalAttrs` callbacks over `let ... in ...` where possible. Never
-  use `rec`. Use `let ... in ...` instead.
-- Never use `with`. Bind names explicitly, e.g. `inherit (lib) ...;`.
+- Prefer Nixpkgs `lib` over `builtins`. Prefer namespaced helpers
+  (`lib.foo.bar`) over equivalent top-level aliases (`lib.fooBar`).
+- Prefer `finalAttrs` callbacks to `let ... in ...` where possible. Use
+  `let ... in ...` instead of `rec`.
+- Bind names explicitly (for example, `inherit (lib) ...;`). Don't use `with`.
 
 ### Packages and scripts
 
@@ -65,122 +86,13 @@ Wait with `gh run watch "$run_id" --exit-status` and inspect failures with
 - Use `lib.meta.getExe` for `meta.mainProgram` and `lib.meta.getExe'` for a
   named executable. Avoid top-level aliases and handwritten `/bin/` paths.
 
-### Documenting custom functions
+### Document custom functions
 
-Follow the [Nixpkgs style][nixdoc-style]. Put `/** ... */` directly above the
-binding. Summarize behavior and constraints, list inputs in call order (with
-required fields and defaults), and show the signature with `::` and `->`.
-Show a call and its result with `=>`, plus a default or edge case if useful.
+Put a `/** ... */` comment directly above the binding. Describe what the
+function does and any constraints. List inputs in call order, with required
+fields and defaults. Write the signature with `::` and `->`. Show a call and
+its result with `=>`. Add a default or edge case if useful.
 
-[nixdoc-style]: https://redirect.github.com/NixOS/nixpkgs/blob/master/lib/README.md#reference-documentation
+See the [Nixpkgs doc-comment example][nixdoc-example] for the format.
 
-#### Template
-
-````nix
-/**
-  Describe what the function does and any behavior callers need to know
-
-  # Inputs
-
-  `arg`
-
-  : Explain what the argument means and any constraints
-
-  # Type
-
-  ```
-  functionName :: InputType -> OutputType
-  ```
-
-  # Examples
-  :::{.example}
-  ## `functionName` usage example
-
-  ```nix
-  functionName input
-  => result
-  ```
-
-  :::
-*/
-````
-
-#### Example: curried arguments
-
-````nix
-/**
-  Qualify a name with a namespace, leaving it unchanged if the namespace is empty
-
-  # Inputs
-
-  `namespace`
-
-  : Prefix to place before the name, or `""` to leave it unqualified
-
-  `name`
-
-  : Name to qualify
-
-  # Type
-
-  ```
-  qualifyName :: String -> String -> String
-  ```
-
-  # Examples
-  :::{.example}
-  ## `qualifyName` usage example
-
-  ```nix
-  qualifyName "tools" "lint"
-  => "tools/lint"
-  qualifyName "" "lint"
-  => "lint"
-  ```
-
-  :::
-*/
-qualifyName =
-  namespace: name:
-  if namespace == "" then name else "${namespace}/${name}";
-````
-
-#### Example: attribute-set argument with a default
-
-````nix
-/**
-  Combine a namespace and a name into a cache key
-
-  # Inputs
-
-  `options` (attribute set)
-
-  : `name` (required)
-    : Name of the cache entry
-
-    `namespace` (optional, default: `"local"`)
-    : Namespace for the cache entry
-
-  # Type
-
-  ```
-  mkCacheKey :: { name :: String; namespace :: String ? "local"; } -> String
-  ```
-
-  # Examples
-  :::{.example}
-  ## `mkCacheKey` usage example
-
-  ```nix
-  mkCacheKey { name = "build"; }
-  => "local:build"
-  mkCacheKey { name = "build"; namespace = "ci"; }
-  => "ci:build"
-  ```
-
-  :::
-*/
-mkCacheKey =
-  { name, namespace ? "local" }:
-  "${namespace}:${name}";
-````
+[nixdoc-example]: https://redirect.github.com/NixOS/nixpkgs/blob/5443877a69b93421b165477bfd673b673065aebe/lib/strings.nix#L66-L94
